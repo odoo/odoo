@@ -179,8 +179,8 @@ var KanbanView = View.extend({
                 } else {
                     e_ids.push(ids[x]);
                 }
-                dataset.ids = e_string.concat(e_ids);
             }
+            dataset.ids = e_string.concat(e_ids);
         }
         return dataset
             .read_slice(this.fields_keys.concat(['__last_update']), options)
