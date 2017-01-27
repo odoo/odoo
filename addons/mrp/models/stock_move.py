@@ -3,7 +3,7 @@
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 from odoo.addons import decimal_precision as dp
 
 
@@ -226,7 +226,8 @@ class StockMove(models.Model):
         # Create extra moves where necessary
         for move in moves:
             rounding = move.product_uom.rounding
-            if float_compare(move.quantity_done, 0.0, precision_rounding=rounding) <= 0:
+            move.quantity_done = float_round(move.quantity_done, precision_rounding=rounding, rounding_method ='UP')
+            if move.quantity_done <= 0:
                 continue
             moves_todo |= move
             moves_todo |= move._create_extra_move()
