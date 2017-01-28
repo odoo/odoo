@@ -5,6 +5,7 @@
 # Translators:
 # Akram Alfusayal <akram_ma@hotmail.com>, 2016
 # aymen rahmani <aymen.isims@gmail.com>, 2016
+# Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2017
 # Malak T. Sabra <malaksabra2005@gmail.com>, 2016
 # Martin Trigaux, 2016
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2016
@@ -15,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-22 07:25+0000\n"
-"PO-Revision-Date: 2017-01-04 18:45+0000\n"
+"PO-Revision-Date: 2017-01-28 08:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -5739,6 +5740,12 @@ msgid "Automatic Installation"
 msgstr "تحميل تلقائي"
 
 #. module: base
+#: code:addons/base/module/module.py:693
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
 msgid ""
 "Automatically set to let administators find new terms that might need to be "
@@ -5934,7 +5941,7 @@ msgstr "Basque / Euskara"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_deposit
 msgid "Batch Deposit"
-msgstr ""
+msgstr "دفعة الإيداع"
 
 #. module: base
 #: selection:res.currency,position:0
@@ -6847,7 +6854,7 @@ msgstr "Company Tagline"
 #: model:ir.model.fields,field_description:base.field_res_partner_company_type
 #: model:ir.model.fields,field_description:base.field_res_users_company_type
 msgid "Company Type"
-msgstr ""
+msgstr "نوع الشركة"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_contact_address
@@ -7541,7 +7548,7 @@ msgstr "علامة العملة، لاستخدامها عند طباعة الم�
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Current Company"
-msgstr ""
+msgstr "الشركة الحالية"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate
@@ -8396,7 +8403,7 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_light_multi_company
 msgid "Enable Light Multi Company"
-msgstr ""
+msgstr "تفعيل الشركات المتعددة"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8716,12 +8723,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_fax
 #, python-format
 msgid "Fax"
-msgstr ""
+msgstr "الفاكس"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Fax:"
-msgstr ""
+msgstr "الفاكس"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank_state
@@ -10615,7 +10622,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_is_company
 #: model:ir.model.fields,field_description:base.field_res_users_is_company
 msgid "Is a Company"
-msgstr ""
+msgstr "هذه شركة"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_customer
@@ -12933,7 +12940,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_parent_id
 msgid "Parent Company"
-msgstr ""
+msgstr "الشركة الأم"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_parent_left
@@ -13160,12 +13167,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_phone
 #, python-format
 msgid "Phone"
-msgstr ""
+msgstr "رقم الهاتف"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Phone:"
-msgstr ""
+msgstr "رقم الهاتف"
 
 #. module: base
 #: model:res.country,name:base.pn
@@ -13844,7 +13851,7 @@ msgstr "Reg"
 #: model:ir.model.fields,field_description:base.field_res_partner_parent_id
 #: model:ir.model.fields,field_description:base.field_res_users_parent_id
 msgid "Related Company"
-msgstr ""
+msgstr "شركة متعلقة"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_related
@@ -15735,7 +15742,7 @@ msgstr ""
 #. module: base
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "اختيار الشركة غير متاح لهذا المستخدم"
 
 #. module: base
 #: sql_constraint:res.country:0
@@ -15750,12 +15757,12 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "اسم الشركة يجب أن لا يتكرر!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users_company_id
 msgid "The company this user is currently working for."
-msgstr ""
+msgstr "الشركة التي يعمل فيها هذا المستخدم"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.act_ir_actions_todo_form
@@ -16243,6 +16250,13 @@ msgstr ""
 #: selection:ir.module.module,state:0
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:694
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
 msgstr ""
 
 #. module: base
@@ -18154,7 +18168,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float
 msgid "ir.qweb.field.float"
-msgstr ""
+msgstr "الأشعة.الويب.حقل.عوامة"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_html
@@ -18478,7 +18492,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_model_ids
 #: model:ir.model.fields,field_description:base.field_wkf_instance_transition_ids
 msgid "unknown"
-msgstr ""
+msgstr "غير معروف"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create

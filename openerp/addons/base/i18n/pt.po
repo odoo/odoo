@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-22 07:25+0000\n"
-"PO-Revision-Date: 2016-11-03 16:06+0000\n"
+"PO-Revision-Date: 2017-01-28 08:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -5739,6 +5739,12 @@ msgid "Automatic Installation"
 msgstr "Instalação Automática"
 
 #. module: base
+#: code:addons/base/module/module.py:693
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
 msgid ""
 "Automatically set to let administators find new terms that might need to be "
@@ -7047,7 +7053,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_partner_category_form
 #: model:ir.ui.view,arch_db:base.view_partner_category_list
 msgid "Contact Tags"
-msgstr ""
+msgstr "Tags de Contacto"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
@@ -16246,6 +16252,13 @@ msgid "To be upgraded"
 msgstr "A ser atualizado"
 
 #. module: base
+#: code:addons/base/module/module.py:694
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Todo"
 msgstr "A fazer"
@@ -18425,7 +18438,7 @@ msgstr ""
 msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
-msgstr ""
+msgstr "o utilizador terá acesso a todos os registos da aplicação de vendas."
 
 #. module: base
 #: model:res.groups,comment:base.group_sale_salesman
