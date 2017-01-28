@@ -21,7 +21,8 @@ class account_invoice(osv.osv):
 
     @api.cr_uid_context
     def _get_reference_type(self, cursor, user, context=None):
-        """Add BBA Structured Communication Type and change labels from 'reference' into 'communication' """
+        """Add BBA Structured Communication Type and change
+        labels from 'reference' into 'communication' """
         res = super(account_invoice, self)._get_reference_type(cursor, user,
                 context=context)
         res[[i for i,x in enumerate(res) if x[0] == 'none'][0]] = \
