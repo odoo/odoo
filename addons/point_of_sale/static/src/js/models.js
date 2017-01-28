@@ -682,6 +682,8 @@ exports.PosModel = Backbone.Model.extend({
             flushed.always(function(ids){
                 pushed.resolve();
             });
+
+            return flushed;
         });
         return pushed;
     },
@@ -782,6 +784,11 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         var timeout = typeof options.timeout === 'number' ? options.timeout : 7500 * orders.length;
 
+        // Keep the order ids that are about to be sent to the
+        // backend. In between create_from_ui and the success callback
+        // new orders may have been added to it.
+        var order_ids_to_sync = _.pluck(orders, 'id');
+
         // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
         // then we want to notify the user that we are waiting on something )
         var posOrderModel = new Model('pos.order');
@@ -796,8 +803,8 @@ exports.PosModel = Backbone.Model.extend({
                 timeout: timeout
             }
         ).then(function (server_ids) {
-            _.each(orders, function (order) {
-                self.db.remove_order(order.id);
+            _.each(order_ids_to_sync, function (order_id) {
+                self.db.remove_order(order_id);
             });
             self.set('failed',false);
             return server_ids;
