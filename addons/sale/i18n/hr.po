@@ -11,13 +11,14 @@
 # Marko Carević <marko.carevic@live.com>, 2016
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016
 # Mario Jureša <mario.juresa@uvid.hr>, 2016
+# Tina Milas <tina@uvid.hr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Mario Jureša <mario.juresa@uvid.hr>, 2016\n"
+"Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -233,7 +234,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:64
 #, python-format
 msgid "<p><b>Confirm the order</b> if the customer purchases.</p>"
-msgstr ""
+msgstr "<p><b>Potvrdi narudžbu</b> ako kupac kupi.</p>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -331,11 +332,13 @@ msgstr "Avans od %s"
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Advanced pricing based on formulas (discounts, margins, rounding)"
 msgstr ""
+"Napredno naplaćivanje temelji se na formulama (popusti, marže, "
+"zaokruživanje)"
 
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
 msgid "All the products and the customers can be used in sales orders"
-msgstr ""
+msgstr "Svi proizvodi i kupci mogu se koristiti u prodajnim nalozima"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -357,6 +360,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Omogućuje korištenje različitih cijena, bazirano na pravilima po kategorijama kupaca.\n"
+"Primjer: 10% za trgovce, popust od 5 kn na odabrani proizvod itd."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_uom
@@ -381,6 +386,8 @@ msgstr "Količina iz ponude za račun"
 msgid ""
 "An informative or blocking warning can be set on a product or a customer"
 msgstr ""
+"Informativno ili blokirajuće upozorenje može biti postavljeno na proizvodu "
+"ili kupcu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
@@ -641,7 +648,7 @@ msgstr "Odredbe i uvjeti"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_note
 msgid "Default Terms and Conditions *"
-msgstr ""
+msgstr "Uvjeti o korištenju"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_deposit_product_id_setting
@@ -892,6 +899,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Ako je prodaja zaključena, više se ne može mijenjati. Međutim, još uvijek "
+"možete izdati račun ili isporučiti robu."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1036,6 +1045,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"Kreirat će se nacrt računa kojeg se modificirati\n"
+"prije validacije."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1114,6 +1125,8 @@ msgid ""
 "Let's create a new quotation.<br/><i>Note that colored buttons usually "
 "points to the next logical actions in any screen.</i>"
 msgstr ""
+"Kreirajmo novu ponudi.<br/><i>Obratite pozornost na obojeni gumb. On obično "
+"pokazuje sljedeći logični korak.</i> "
 
 #. module: sale
 #. openerp-web
@@ -1249,6 +1262,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
+"Imajte na umu da jednom kada ponuda postane prodajne nalog, bit će premještena\n"
+"iz popisa ponuda na popis prodajnih naloga."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1256,6 +1271,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "            from the Quotations list to the Sales Order list."
 msgstr ""
+"Imajte na umu da jednom kada ponuda postane prodajne nalog, bit će premještena\n"
+"iz popisa ponuda na popis prodajnih naloga."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1295,6 +1312,7 @@ msgstr ""
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr ""
+"Kad je ponuda spremna, moći ćete ju spremiti, ispisati ili poslati mailom."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
@@ -1399,7 +1417,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:13
 #, python-format
 msgid "Organize your sales activities with the <b>Sales app</b>."
-msgstr ""
+msgstr "Organizirajte svoju prodaju s <b>Prodajnom aplikacijom</b>."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1939,6 +1957,7 @@ msgstr "Pošalji e-mailom"
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Send quotations your customer can approve & pay online (advanced)"
 msgstr ""
+"Pošaljite ponudu koju Vaš kupac može potvrditi i platiti online (napredno)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2062,7 +2081,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
 msgid "Tax Display"
-msgstr ""
+msgstr "Prikaz poreza"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
@@ -2222,7 +2241,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Timesheets on project"
-msgstr ""
+msgstr "Kontrolne kartice na projektu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -2323,6 +2342,8 @@ msgstr "Koristite cjenik za prilagodbu cijena po kupcima"
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
 msgstr ""
+"Koristite breadcrumb navigaciju kako biste se <b>vratili na prethodne "
+"zaslone</b>."
 
 #. module: sale
 #. openerp-web
@@ -2330,6 +2351,8 @@ msgstr ""
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
 msgstr ""
+"Koristite ovaj menu kako biste pristupili ponudama, prodajnim nalozima i "
+"kupcima."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2384,6 +2407,8 @@ msgid ""
 "Write the name of your customer to create one on the fly, or select an "
 "existing one."
 msgstr ""
+"Napišite ime Vašeg kupca kako biste kreirali novog kupca ili odabrali "
+"postojećeg."
 
 #. module: sale
 #. openerp-web
@@ -2399,6 +2424,8 @@ msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
 msgstr ""
+"Ne možete izbrisati poslanu ponudu ili prodajni nalog! Pokušajte to otkazati"
+" prije."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:883
@@ -2420,7 +2447,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr ""
+msgstr "Ovdje ćete pronaći sve narudžbe koje su spremne za fakturirati."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
@@ -2428,6 +2455,8 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sale Order, then create the Invoice and collect the Payment."
 msgstr ""
+"Vaši slijedeći postupci trebaju teći kako slijedi: potvrdite ponudu\n"
+"u prodajni nalog, potom kreirajte račun i naplatite."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -2435,6 +2464,8 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "            to a Sale Order, then create the Invoice and collect the Payment."
 msgstr ""
+"Vaši slijedeći postupci trebaju teći kako slijedi: potvrdite ponudu\n"
+"u prodajni nalog, potom kreirajte račun i naplatite."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order

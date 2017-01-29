@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_stock
-#
+# 
 # Translators:
+# Tal Gruper <excaliberx@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2015-10-01 09:22+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
-"Language: he\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Tal Gruper <excaliberx@gmail.com>, 2017\n"
+"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: he\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
@@ -46,7 +47,8 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,module_sale_order_dates:0
 msgid ""
-"Allow to modify the sales order dates to postpone deliveries and procurements"
+"Allow to modify the sales order dates to postpone deliveries and "
+"procurements"
 msgstr ""
 
 #. module: sale_stock
@@ -62,7 +64,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr "חברות"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_sale_order_dates
@@ -114,8 +116,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-the-"
-"art transportation practices."
+"costs and responsibilities between buyer and seller and reflect state-of-"
+"the-art transportation practices."
 msgstr ""
 
 #. module: sale_stock
@@ -150,8 +152,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr ""
 
 #. module: sale_stock
@@ -194,7 +196,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_order
 msgid "Procurement"
-msgstr "רכש"
+msgstr ""
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_sale_order_dates:0
@@ -202,9 +204,14 @@ msgid "Procurements and deliveries dates are based on the sales order dates"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+msgid "Product"
+msgstr "מוצר"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
 msgid "Product Template"
-msgstr "תבנית לפריט"
+msgstr "תבנית למוצר"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -234,17 +241,17 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 msgid "Sales Order"
-msgstr "הזמנה"
+msgstr "הזמנת מכירות"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "שורת פריט בהזמנה"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "נתונים על מכירות"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
@@ -275,12 +282,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
 #: model:ir.ui.view,arch_db:sale_stock.view_sales_config_inherit_sale_stock
 msgid "Shipping"
-msgstr "משלוח"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
-msgstr "פרטי משלוח"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
@@ -311,7 +318,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "העברה"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_move_to_refund_so
@@ -330,7 +337,7 @@ msgstr "מחסן"
 #: code:addons/sale_stock/models/sale_order.py:201
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "אזהרה"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:157

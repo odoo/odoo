@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Hamid Darabi <hamid.darabi@gmail.com>, 2016
-# aryasadeghy <aryasadeghy@gmail.com>, 2016
+# arya <aryasadeghy@gmail.com>, 2016
 # elaheh pourrezaie <elaheh.pourrezaie@hotmail.com>, 2016
 # Faraz Sadri <ifarazir@gmail.com>, 2016
 # mehdi samadi <mehsamadi@gmail.com>, 2016
@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-11-14 15:54+0000\n"
+"POT-Creation-Date: 2017-01-27 11:58+0000\n"
+"PO-Revision-Date: 2017-01-27 11:58+0000\n"
 "Last-Translator: mehdi samadi <mehsamadi@gmail.com>, 2016\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -4731,6 +4731,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module_auto_install
 msgid "Automatic Installation"
 msgstr "نصب خودکار"
+
+#. module: base
+#: code:addons/base/module/module.py:650
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
@@ -14427,6 +14433,13 @@ msgstr "برای برداشته‌شدن"
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
 msgstr "برای ارتقا"
+
+#. module: base
+#: code:addons/base/module/module.py:651
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
