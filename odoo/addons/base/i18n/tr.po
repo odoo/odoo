@@ -25,8 +25,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-11-14 15:54+0000\n"
+"POT-Creation-Date: 2017-01-27 11:58+0000\n"
+"PO-Revision-Date: 2017-01-27 11:58+0000\n"
 "Last-Translator: UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2016\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -207,6 +207,8 @@ msgid ""
 "\n"
 "        Allows to use python code to define taxes"
 msgstr ""
+"\n"
+"Vergileri tanımlamak için python kodunu kullanmaya izin verir"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -4946,6 +4948,12 @@ msgid "Automatic Installation"
 msgstr "Otomatik Yükleme"
 
 #. module: base
+#: code:addons/base/module/module.py:650
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
 msgid ""
 "Automatically set to let administators find new terms that might need to be "
@@ -5640,7 +5648,7 @@ msgstr "Alt IDler"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_child_ids
 msgid "Child Tags"
-msgstr ""
+msgstr "Alt Etiketler"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_child_ids
@@ -7312,7 +7320,7 @@ msgstr "Dominik Cumhuriyeti - muhasebe"
 #. module: base
 #: selection:ir.actions.todo,state:0
 msgid "Done"
-msgstr "Ok"
+msgstr "Biten"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -11027,12 +11035,12 @@ msgstr "Belgelerim"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "My Partners"
-msgstr "Benim İş Ortaklarım"
+msgstr "İş Ortaklarım"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "My filters"
-msgstr "Benim filtrelerim"
+msgstr "Filtrelerim"
 
 #. module: base
 #: model:res.country,name:base.mm
@@ -11863,7 +11871,7 @@ msgstr "İş Ortakları"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
 msgid "Partners Geolocation"
-msgstr ""
+msgstr "İş Ortağı Coğrafik Konumu"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:742
@@ -12378,7 +12386,7 @@ msgstr "Satınalma Yönetimi"
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase
 msgid "Purchase Orders, Receipts, Vendor Bills"
-msgstr ""
+msgstr "Satınalma Siparişi, Makbuz, Tedarikçi Faturaları"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
@@ -12388,7 +12396,7 @@ msgstr "Satınalma Talepleri"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp
 msgid "Purchase and MRP Management"
-msgstr ""
+msgstr "Satınalma ve MRP Yönetimi"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_purchase_management
@@ -12431,7 +12439,7 @@ msgstr "Eleme"
 #: model:ir.module.module,description:base.module_website_event_questions
 #: model:ir.module.module,shortdesc:base.module_website_event_questions
 msgid "Questions on Events"
-msgstr ""
+msgstr "Etkinliklerle ilgili Sorular"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_settings_dashboard
@@ -12605,7 +12613,7 @@ msgstr "Kendini çağırma (recursivity) tespit edildi."
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data_reference
 msgid "Reference"
-msgstr "Kaynak"
+msgstr "Referans"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_ref_object
@@ -12633,7 +12641,7 @@ msgstr "İlişkili Firma"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_related
 msgid "Related Field"
-msgstr ""
+msgstr "İlişkili Alan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_partner_id
@@ -12880,7 +12888,7 @@ msgstr "Reunion (Fransız)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_parent_right
 msgid "Right parent"
-msgstr "Üst Yetki"
+msgstr "Sağ üst"
 
 #. module: base
 #: selection:res.lang,direction:0
@@ -12944,7 +12952,7 @@ msgstr "Çalışan %s"
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_cron_view
 msgid "Run Manually"
-msgstr ""
+msgstr "Elle Çalıştır"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_run_ir_action_todo
@@ -13052,7 +13060,7 @@ msgstr "Satış ve Satınalma Fişleri"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_service_rating
 msgid "Sale Service Rating"
-msgstr ""
+msgstr "Satış Hizmet Puanlama"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales
@@ -13117,7 +13125,7 @@ msgstr "San Marino"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank_sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr ""
+msgstr "Arındırılmış Hesap Numarası"
 
 #. module: base
 #: model:res.country,name:base.sa
@@ -13262,7 +13270,7 @@ msgstr "Seçim Seçenekleri"
 #: model:ir.model.fields,field_description:base.field_res_partner_self
 #: model:ir.model.fields,field_description:base.field_res_users_self
 msgid "Self"
-msgstr ""
+msgstr "Kendin"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_sale
@@ -13320,7 +13328,7 @@ msgstr "Sıra Kodu"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_padding
 msgid "Sequence Size"
-msgstr ""
+msgstr "Sıra Boyutu"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -13617,7 +13625,7 @@ msgstr "Üzgünüz, bu belgeyi değiştirmek için izin verilmez."
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_sort
 msgid "Sort"
-msgstr ""
+msgstr "Sırala"
 
 #. module: base
 #: code:addons/models.py:4134
@@ -13808,7 +13816,7 @@ msgstr "Tümünü Durdur"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_store
 msgid "Stored"
-msgstr ""
+msgstr "Saklanmış"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_store_fname
@@ -14317,7 +14325,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.currency:0
 msgid "The currency code must be unique!"
-msgstr ""
+msgstr "Para birim kodu benzersiz olmalı!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_res_model
@@ -14460,7 +14468,7 @@ msgstr "Grup adı \"-\" ile başlayamaz"
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique within an application!"
-msgstr ""
+msgstr "Grubun adı bir uygulamada benzersiz olmalıdır!"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -14470,7 +14478,7 @@ msgstr "Dil adı tekil olmak zorunda!"
 #. module: base
 #: sql_constraint:ir.module.module:0
 msgid "The name of the module must be unique!"
-msgstr ""
+msgstr "Modülün adı benzersiz olmalı!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence_number_increment
@@ -14713,7 +14721,7 @@ msgstr "Saat Biçimi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project_timesheet
 msgid "Timesheet in Website Portal"
-msgstr ""
+msgstr " Zaman Çizelge WebSite Portalı"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue_sheet
@@ -14803,6 +14811,13 @@ msgstr "Kaldırılacak"
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
 msgstr "Yükseltilecek"
+
+#. module: base
+#: code:addons/base/module/module.py:651
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -15187,7 +15202,7 @@ msgstr "Amerika Birleşik Devletleri (A.B.D.)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us
 msgid "United States - Accounting"
-msgstr ""
+msgstr "USA - Muhasebe Hesapları"
 
 #. module: base
 #: selection:ir.module.module.dependency,state:0
@@ -15262,7 +15277,7 @@ msgstr "Güncelleme Tarihi"
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Update Language Terms"
-msgstr ""
+msgstr "Dil Terimlerini Güncelle"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_update
@@ -15577,7 +15592,7 @@ msgstr "Vietnam"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_vn
 msgid "Vietnam - Accounting"
-msgstr ""
+msgstr "Vietnam Hesap Planı"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_view_id
@@ -15631,7 +15646,7 @@ msgstr "Görünüm devralma modu"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_mode
 msgid "View mode"
-msgstr ""
+msgstr "Görünüm modu"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_view_type
@@ -16011,7 +16026,7 @@ msgstr "Çalıştırılacak Sihirbaz"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Worflow Signal"
-msgstr ""
+msgstr "İş Akış Sinyali"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -16231,13 +16246,13 @@ msgstr "Özyinelemeli Partner hiyerarşileri oluşturamazsınız."
 #: code:addons/base/res/res_users.py:340
 #, python-format
 msgid "You cannot deactivate the admin user."
-msgstr ""
+msgstr "Yönetici kullanıcısını devre dışı bırakamazsınız."
 
 #. module: base
 #: code:addons/base/res/res_users.py:342
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
-msgstr ""
+msgstr "Şu anda oturum açtığınız kullanıcıyı devre dışı bırakamazsınız."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:232
@@ -16259,12 +16274,12 @@ msgstr "Kullanıcının Tercih Ettiği dil silemezsiniz!"
 #: code:addons/base/ir/ir_values.py:412
 #, python-format
 msgid "You do not have the permission to perform this operation!!!"
-msgstr ""
+msgstr "Bu işlemi gerçekleştirecek izniniz yok !!!"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
 msgid "You should try other search criteria."
-msgstr ""
+msgstr "Başka bir arama kriteri denemelisiniz."
 
 #. module: base
 #: code:addons/base/module/module.py:332

@@ -1,54 +1,47 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
-#
+# 
 # Translators:
-# ilan kl <ilan@qaroads.co.il>, 2016
+# Tal Gruper <excaliberx@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
-"PO-Revision-Date: 2016-07-23 18:10+0000\n"
-"Last-Translator: ilan kl <ilan@qaroads.co.il>\n"
-"Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
-"Language: he\n"
+"PO-Revision-Date: 2016-10-10 08:43+0000\n"
+"Last-Translator: Tal Gruper <excaliberx@gmail.com>, 2017\n"
+"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: he\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
 msgid ""
 "\n"
-"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
-"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y"
-"%m%dT%H%M%SZ')\n"
-"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m"
-"%dT%H%M%SZ')\n"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td>\n"
 "                    <a href=\"/\">\n"
-"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" "
-"style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
 "                    </a>\n"
 "                </td>\n"
 "                <td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    % if 'website_url' in object.event_id and object."
-"event_id.website_url:\n"
-"                        <a href=\"/event\" style=\"text-decoration:none;"
-"color:#717188;\">More Events</a>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">More Events</a>\n"
 "                    % endif\n"
 "                </td>\n"
 "            </tr>\n"
 "        </tbody>\n"
 "    </table>\n"
-"    <table style=\"width:600px;margin:0px auto;background:white;border:1px "
-"solid #e1e1e1;\">\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
@@ -57,10 +50,8 @@ msgid ""
 "                    </h2>\n"
 "                    <p style=\"font-size:16px;\">\n"
 "                        Please keep in mind that the event\n"
-"                        % if 'website_url' in object.event_id and object."
-"event_id.website_url:\n"
-"                            <a href=\"${object.event_id.website_url}\" style="
-"\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
 "                        % endif\n"
@@ -71,111 +62,64 @@ msgid ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;"
-"\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
-"                            <td style=\"padding:25px 0px;vertical-align:top;"
-"\">\n"
-"                                <img src=\"/web_editor/font_to_img/61505/"
-"rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
 "                            </td>\n"
-"                            <td style=\"padding:30px 10px 25px 10px;"
-"width:50%;vertical-align:top;\">\n"
+"                            <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
 "                                % if object.event_id.address_id.street:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">"
-"${object.event_id.address_id.street},</p>\n"
-"                                    % set location = object.event_id."
-"address_id.street\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street},</p>\n"
+"                                    % set location = object.event_id.address_id.street\n"
 "                                % endif\n"
 "                                % if object.event_id.address_id.street2:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">"
-"${object.event_id.address_id.street2},</p>\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.street2)\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2},</p>\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
 "                                % endif\n"
 "                                % if object.event_id.address_id.city:\n"
 "                                    ${object.event_id.address_id.city},\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.city)\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
 "                                % endif\n"
-"                                % if object.event_id.address_id.state_id."
-"name:\n"
-"                                    ${object.event_id.address_id.state_id."
-"name},\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.state_id.name)\n"
+"                                % if object.event_id.address_id.state_id.name:\n"
+"                                    ${object.event_id.address_id.state_id.name},\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
 "                                % endif\n"
 "                                % if object.event_id.address_id.zip:\n"
 "                                    ${object.event_id.address_id.zip},\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.zip)\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
 "                                % endif\n"
-"                                % if object.event_id.address_id.country_id."
-"name:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">"
-"${object.event_id.address_id.country_id.name}</p>\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.country_id.name)\n"
+"                                % if object.event_id.address_id.country_id.name:\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
 "                                % endif\n"
 "                            </td>\n"
-"                            <td style=\"padding:25px 0px;vertical-align:top;"
-"\">\n"
-"                                <img src=\"/web_editor/font_to_img/61555/"
-"rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
 "                            </td>\n"
-"                            <td style=\"padding:25px 10px 25px 10px;"
-"width:50%;line-height:20px;vertical-align:top;\">\n"
-"                                <div><strong>From</strong> ${object.event_id."
-"date_begin_located}</div>\n"
-"                                <div><strong>To</strong> ${object.event_id."
-"date_end_located}</div>\n"
-"                                <div style=\"font-size:12px;color:#9e9e9e"
-"\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
 "                            </td>\n"
 "                        </tr>\n"
 "                    </table>\n"
 "                    % if object.event_id.organizer_id.email:\n"
-"                        <table style=\"width:100%;border-top:1px solid "
-"#e1e1e1;\">\n"
+"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                            <tr>\n"
 "                                <td style=\"padding:10px 0px 25px 0px;\">\n"
-"                                    <h2 style=\"font-weight:300;margin:10px "
-"0px\">Questions about this event?</h2>\n"
-"                                    <div>Please contact the organizer at <a "
-"href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-"
-"decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></"
-"div>\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Questions about this event?</h2>\n"
+"                                    <div>Please contact the organizer at <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></div>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
 "                    % endif\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;"
-"\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;\">\n"
-"                                <strong>Add this event to your calendar</"
-"strong>\n"
-"                                <a href=\"https://www.google.com/calendar/"
-"render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/"
-"${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid "
-"#875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new"
-"\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style="
-"\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
-"                                <a href=\"https://bay02.calendar.live.com/"
-"calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart="
-"${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px "
-"5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-"
-"radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/"
-"rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> "
-"Outlook</a>\n"
-"                                <a href=\"https://calendar.yahoo.com/?"
-"v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st="
-"${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}"
-"&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M"
-"%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
-"decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/"
-"font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" "
-"height=\"16\"> Yahoo</a>\n"
+"                                <strong>Add this event to your calendar</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
 "                            </td>\n"
 "                        </tr>\n"
 "                    </table>\n"
@@ -183,25 +127,17 @@ msgid ""
 "            </tr>\n"
 "        </tbody>\n"
 "    </table>\n"
-"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;"
-"border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
-"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new"
-"\">\n"
-"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?"
-"autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:"
-"mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;"
-"\" />\n"
+"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
 "        </a>\n"
 "    </div>\n"
 "    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td style=\"padding-top:10px;font-size: 12px;\">\n"
-"                    <div>This email was sent to <a href=\"mailto:${object."
-"email}\" style=\"text-decoration:none;color:#875A7B;\">${object.email}</a></"
-"div>\n"
-"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;"
-"\">Copyright © ${object.company_id.name}</p>\n"
+"                    <div>This email was sent to <a href=\"mailto:${object.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.email}</a></div>\n"
+"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Copyright © ${object.company_id.name}</p>\n"
 "                </td>\n"
 "            </tr>\n"
 "        </tbody>\n"
@@ -214,43 +150,33 @@ msgstr ""
 #: model:mail.template,body_html:event.event_subscription
 msgid ""
 "\n"
-"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
-"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y"
-"%m%dT%H%M%SZ')\n"
-"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m"
-"%dT%H%M%SZ')\n"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td>\n"
 "                    <a href=\"/\">\n"
-"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" "
-"style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
 "                    </a>\n"
 "                </td>\n"
 "                <td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    % if 'website_url' in object.event_id and object."
-"event_id.website_url:\n"
-"                        <a href=\"/event\" style=\"text-decoration:none;"
-"color:#717188;\">More Events</a>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">More Events</a>\n"
 "                    % endif\n"
 "                </td>\n"
 "            </tr>\n"
 "        </tbody>\n"
 "    </table>\n"
-"    <table style=\"width:600px;margin:0px auto;background:white;border:1px "
-"solid #e1e1e1;\">\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
 "                    <h2 style=\"font-weight:300;\">\n"
-"                        Hi ${object.name}, here is your order confirmation "
-"for\n"
-"                        % if 'website_url' in object.event_id and object."
-"event_id.website_url:\n"
-"                            <a href=\"${object.event_id.website_url}\" style="
-"\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        Hi ${object.name}, here is your order confirmation for\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
 "                        % endif\n"
@@ -259,111 +185,64 @@ msgid ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;"
-"\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
-"                            <td style=\"padding:25px 0px;vertical-align:top;"
-"\">\n"
-"                                <img src=\"/web_editor/font_to_img/61505/"
-"rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
 "                            </td>\n"
-"                            <td style=\"padding:30px 10px 25px 10px;"
-"width:50%;vertical-align:top;\">\n"
+"                            <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
 "                                % if object.event_id.address_id.street:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">"
-"${object.event_id.address_id.street},</p>\n"
-"                                    % set location = object.event_id."
-"address_id.street\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street},</p>\n"
+"                                    % set location = object.event_id.address_id.street\n"
 "                                % endif\n"
 "                                % if object.event_id.address_id.street2:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">"
-"${object.event_id.address_id.street2},</p>\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.street2)\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2},</p>\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
 "                                % endif\n"
 "                                % if object.event_id.address_id.city:\n"
 "                                    ${object.event_id.address_id.city},\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.city)\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
 "                                % endif\n"
-"                                % if object.event_id.address_id.state_id."
-"name:\n"
-"                                    ${object.event_id.address_id.state_id."
-"name},\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.state_id.name)\n"
+"                                % if object.event_id.address_id.state_id.name:\n"
+"                                    ${object.event_id.address_id.state_id.name},\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
 "                                % endif\n"
 "                                % if object.event_id.address_id.zip:\n"
 "                                    ${object.event_id.address_id.zip},\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.zip)\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
 "                                % endif\n"
-"                                % if object.event_id.address_id.country_id."
-"name:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">"
-"${object.event_id.address_id.country_id.name}</p>\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.country_id.name)\n"
+"                                % if object.event_id.address_id.country_id.name:\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
 "                                % endif\n"
 "                            </td>\n"
-"                            <td style=\"padding:25px 0px;vertical-align:top;"
-"\">\n"
-"                                <img src=\"/web_editor/font_to_img/61555/"
-"rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
 "                            </td>\n"
-"                            <td style=\"padding:25px 10px 25px 10px;"
-"width:50%;line-height:20px;vertical-align:top;\">\n"
-"                                <div><strong>From</strong> ${object.event_id."
-"date_begin_located}</div>\n"
-"                                <div><strong>To</strong> ${object.event_id."
-"date_end_located}</div>\n"
-"                                <div style=\"font-size:12px;color:#9e9e9e"
-"\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
 "                            </td>\n"
 "                        </tr>\n"
 "                    </table>\n"
 "                    % if object.event_id.organizer_id.email:\n"
-"                        <table style=\"width:100%;border-top:1px solid "
-"#e1e1e1;\">\n"
+"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                            <tr>\n"
 "                                <td style=\"padding:10px 0px 25px 0px;\">\n"
-"                                    <h2 style=\"font-weight:300;margin:10px "
-"0px\">Questions about this event?</h2>\n"
-"                                    <div>Please contact the organizer at <a "
-"href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-"
-"decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></"
-"div>\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Questions about this event?</h2>\n"
+"                                    <div>Please contact the organizer at <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></div>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
 "                    % endif\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;"
-"\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;\">\n"
-"                                <strong>Add this event to your calendar</"
-"strong>\n"
-"                                <a href=\"https://www.google.com/calendar/"
-"render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/"
-"${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid "
-"#875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new"
-"\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style="
-"\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
-"                                <a href=\"https://bay02.calendar.live.com/"
-"calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart="
-"${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px "
-"5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-"
-"radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/"
-"rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> "
-"Outlook</a>\n"
-"                                <a href=\"https://calendar.yahoo.com/?"
-"v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st="
-"${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}"
-"&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M"
-"%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
-"decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/"
-"font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" "
-"height=\"16\"> Yahoo</a>\n"
+"                                <strong>Add this event to your calendar</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
 "                            </td>\n"
 "                        </tr>\n"
 "                    </table>\n"
@@ -371,25 +250,17 @@ msgid ""
 "            </tr>\n"
 "        </tbody>\n"
 "    </table>\n"
-"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;"
-"border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
-"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new"
-"\">\n"
-"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?"
-"autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:"
-"mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;"
-"\" />\n"
+"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
 "        </a>\n"
 "    </div>\n"
 "    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td style=\"padding-top:10px;font-size: 12px;\">\n"
-"                    <div>This email was sent to <a href=\"mailto:${object."
-"email}\" style=\"text-decoration:none;color:#875A7B;\">${object.email}</a></"
-"div>\n"
-"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;"
-"\">Copyright © ${object.company_id.name}</p>\n"
+"                    <div>This email was sent to <a href=\"mailto:${object.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.email}</a></div>\n"
+"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Copyright © ${object.company_id.name}</p>\n"
 "                </td>\n"
 "            </tr>\n"
 "        </tbody>\n"
@@ -439,15 +310,15 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_2
 msgid ""
-"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
-"event or change the dates on which it is held.)</em>"
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
+" event or change the dates on which it is held.)</em>"
 msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 msgid ""
-"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo "
-"Programming</i></font>"
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
+" Programming</i></font>"
 msgstr ""
 
 #. module: event
@@ -512,8 +383,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid ""
-"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
-"class=\"oe_read_only\">\n"
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
 msgstr ""
@@ -523,10 +393,10 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<span style=\"text-align: -webkit-center; \">This course is dedicated "
-"to developers who need to grasp knowledge of the <strong>business "
-"applications development </strong>process. This course is for new developers "
-"or for IT professionals eager to learn more about technical aspects.</span>"
+"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
+"developers who need to grasp knowledge of the <strong>business applications "
+"development </strong>process. This course is for new developers or for IT "
+"professionals eager to learn more about technical aspects.</span>"
 msgstr ""
 
 #. module: event
@@ -539,7 +409,8 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<strong>Having attended this course, participants should be able to:</strong>"
+"<strong>Having attended this course, participants should be able "
+"to:</strong>"
 msgstr ""
 
 #. module: event
@@ -624,7 +495,7 @@ msgstr "החל"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
-msgstr "התווסף לארכיון"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -655,7 +526,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_registration_id
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
-msgstr "משתתף"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -675,7 +546,7 @@ msgstr ""
 #: model:ir.ui.menu,name:event.menu_action_registration
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Attendees"
-msgstr "משתתפים"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_auto_confirmation
@@ -759,7 +630,7 @@ msgstr "בטל"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Cancel Event"
-msgstr "בטל אירוע"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -772,7 +643,7 @@ msgstr ""
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
-msgstr "בוטלה"
+msgstr "בוטל"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_type_id
@@ -807,7 +678,7 @@ msgstr "חברה"
 #: code:addons/event/models/event.py:416
 #, python-format
 msgid "Compose Email"
-msgstr "כתוב דוא\"ל"
+msgstr ""
 
 #. module: event
 #: model:event.type,name:event.event_type_2
@@ -822,7 +693,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
-msgstr "הגדרות תצורה"
+msgstr "הגדרות"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
@@ -833,7 +704,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Confirm"
-msgstr "אשר"
+msgstr "אישור"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -861,7 +732,7 @@ msgstr ""
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Confirmed"
-msgstr "מאושר"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -876,7 +747,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_partner_id
 msgid "Contact"
-msgstr "צור קשר"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -888,7 +759,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
 msgid "Country"
-msgstr "ארץ"
+msgstr "מדינה"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -922,7 +793,7 @@ msgstr "נוצר ב-"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_create_date
 msgid "Creation Date"
-msgstr "תאריך היצירה"
+msgstr "תאריך יצירה"
 
 #. module: event
 #: code:addons/event/models/event.py:393
@@ -934,14 +805,14 @@ msgstr "לקוח"
 #: code:addons/event/models/event.py:395
 #, python-format
 msgid "Customer Email"
-msgstr "דוא\"ל של לקוח"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 1"
-msgstr "יום 1"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -960,7 +831,7 @@ msgstr ""
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Day(s)"
-msgstr "ימים"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_max
@@ -975,12 +846,12 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Delete"
-msgstr "מחק"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_description
 msgid "Description"
-msgstr "תיאור"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1023,7 +894,7 @@ msgstr "בוצע"
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Draft"
-msgstr "טיוטה"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1050,7 +921,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
 msgid "End Date"
-msgstr "תאריך סיום"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
@@ -1065,7 +936,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event"
-msgstr "אירוע"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_event_badge
@@ -1096,12 +967,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_event_date
 msgid "Event Date"
-msgstr "תאריך האירוע"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_event_end_date
 msgid "Event End Date"
-msgstr "תאריך סיום האירוע"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1194,7 +1065,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
-msgstr "אירועים"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_report_event_registration
@@ -1239,7 +1110,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Extended Filters..."
-msgstr "מסננים מתקדמים..."
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1305,7 +1176,7 @@ msgstr ""
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Hour(s)"
-msgstr "שעות"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1319,8 +1190,8 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"I did not expect such a great learning experience. I feel like I can develop "
-"anything now."
+"I did not expect such a great learning experience. I feel like I can develop"
+" anything now."
 msgstr ""
 
 #. module: event
@@ -1339,8 +1210,8 @@ msgstr "מזהה"
 #: model:ir.model.fields,help:event.field_event_event_state
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the "
-"status is set to 'Done'. If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the"
+" status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
 
@@ -1386,7 +1257,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_nbr
 msgid "Interval"
-msgstr "מרווח"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1550,17 +1421,17 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Modules"
-msgstr "מודולים"
+msgstr ""
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Month(s)"
-msgstr "חודש(ים)"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "My Events"
-msgstr "האירועים שלי"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -1638,8 +1509,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
-"    track registrations and participations, automate the confirmation "
-"emails,\n"
+"    track registrations and participations, automate the confirmation emails,\n"
 "    sell tickets, etc."
 msgstr ""
 
@@ -1651,7 +1521,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
 msgid "Organizer"
-msgstr "מארגן"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1825,7 +1695,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reports"
-msgstr "דוחות"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1868,12 +1738,12 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Send by Email"
-msgstr "שליחה בדוא\"ל"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_done
 msgid "Sent"
-msgstr "נשלח"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1888,7 +1758,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
-msgstr "הגדרות"
+msgstr ""
 
 #. module: event
 #: model:event.type,name:event.event_type_3
@@ -1898,12 +1768,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_origin
 msgid "Source Document"
-msgstr "מסמך מקור"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin
 msgid "Start Date"
-msgstr "תאריך התחלה"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin_located
@@ -1936,8 +1806,8 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_reply_to
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect "
-"to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect"
+" to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
 msgstr ""
@@ -1977,7 +1847,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_tz
 msgid "Timezone"
-msgstr "אזור זמן"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1990,7 +1860,7 @@ msgstr ""
 #: code:addons/event/models/event.py:434
 #, python-format
 msgid "Today"
-msgstr ""
+msgstr "היום"
 
 #. module: event
 #: code:addons/event/models/event.py:436
@@ -2006,7 +1876,7 @@ msgstr ""
 #. module: event
 #: model:event.type,name:event.event_type_4
 msgid "Training"
-msgstr "הדרכה"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2019,7 +1889,7 @@ msgstr ""
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Unconfirmed"
-msgstr "לא מאושר"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_unconfirmed
@@ -2048,18 +1918,18 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
 msgid "Unit"
-msgstr "יחידה"
+msgstr ""
 
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Unlimited"
-msgstr "בלתי־מוגבל"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
-msgstr "הודעות שלא נקראו"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
@@ -2104,7 +1974,7 @@ msgstr ""
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Week(s)"
-msgstr "שבוע(ות)"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2130,7 +2000,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Workflows"
-msgstr "רצפי עבודה"
+msgstr "תהליכי עבודה"
 
 #. module: event
 #: code:addons/event/models/event.py:246
