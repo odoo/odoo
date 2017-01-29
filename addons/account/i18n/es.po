@@ -26,7 +26,7 @@
 # Iván Todorovich <ivan.todorovich@gmail.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
-# José Antonio Cuello <jcuello@artextrading.com>, 2016
+# José Antonio Cuello <yopli2000@gmail.com>, 2016
 # Javier Ramirez <elbomba887@gmail.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
@@ -1813,7 +1813,7 @@ msgstr "Importe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
 msgid "Amount Currency"
-msgstr ""
+msgstr "Moneda de importes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -5362,18 +5362,20 @@ msgstr "Factura debe estar en estado borrador o proforma para validarla."
 msgid ""
 "Invoice must be in draft, Pro-forma or open state in order to be cancelled."
 msgstr ""
+"La factura debe esta en estado borrador, pro-forma o abierta para poder ser "
+"cancelada."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
 #, python-format
 msgid "Invoice must be paid in order to set it to register payment."
-msgstr ""
+msgstr "La factura debe estar pagada para registrar el pago."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
 msgid "Invoice must be validated in order to set it to register payment."
-msgstr ""
+msgstr "La factura debe estar validada para registrar el pago."
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -5527,6 +5529,9 @@ msgid ""
 "journal entry since it would create a gap in the numbering. You should "
 "create the journal entry again and cancel it thanks to a regular revert."
 msgstr ""
+"No está permitido borrar un apunte bancario si se ha creado una entrada en "
+"el diario puesto que crearía un salto en la numeración. Debería crear la "
+"entrada en el diario de nuevo y cancelando gracias a una entrada inversa."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:322
@@ -5536,6 +5541,9 @@ msgid ""
 "since it would create a gap in the numbering. You should create the journal "
 "entry again and cancel it thanks to a regular revert."
 msgstr ""
+"No está permitido borrar un apunte de pago si se ha creado una entrada en el"
+" diario puesto que crearía un salto en la numeración. Debería crear la "
+"entrada en el diario de nuevo y cancelando gracias a una entrada inversa."
 
 #. module: account
 #. openerp-web
@@ -7849,7 +7857,7 @@ msgstr "Modelos de conciliación"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_partial_reconcile_ids
 msgid "Reconciliation Parts"
-msgstr ""
+msgstr "Partes de reconciliación"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -8295,7 +8303,7 @@ msgstr "Segundo monto"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_amount_type
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_amount_type
 msgid "Second Amount type"
-msgstr ""
+msgstr "Segundo tipo de importe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_analytic_account_id
@@ -8311,7 +8319,7 @@ msgstr "Segundo diario"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_label
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_label
 msgid "Second Journal Item Label"
-msgstr ""
+msgstr "Etiqueta para segundo diario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_tax_id
@@ -8456,6 +8464,9 @@ msgid ""
 "Set this field to true if this tax can be used in the tax adjustment wizard,"
 " used to manually fill some data in the tax declaration"
 msgstr ""
+"Establece este campo a verdadero si este impuesto puede ser usado en el "
+"asistente de ajuste de impuestos, usado para rellenar manualmente algunos "
+"datos en la declaración de impuestos."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_visible

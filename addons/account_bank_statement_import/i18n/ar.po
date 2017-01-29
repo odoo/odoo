@@ -70,7 +70,7 @@ msgstr "السماح بإلغاء القيود"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
 #, python-format
 msgid "Already imported items"
-msgstr ""
+msgstr "لقد تم ادخال المواد سابقا"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
@@ -132,6 +132,8 @@ msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
 " journal."
 msgstr ""
+"لا يمكن العثور هذا الكشف الحساب ادخل في أي دفتر اليومية  . يرجى اختيار دفتر "
+"اليومية يدويا."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
@@ -154,7 +156,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Choose a file to import..."
-msgstr ""
+msgstr "اختر ملف للتنزيل..."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
@@ -173,6 +175,8 @@ msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
 msgstr ""
+"لا يمكن أن يكون له معنى من الملف المعطى.\n"
+"هل تثبيت الموديول لدعم هذا النوع من الملفات؟"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
@@ -230,6 +234,7 @@ msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
 msgstr ""
+"تحميل كشف حساب مصرفي من البنك الذي تتعامل معه وادخاله هنا. التصميم المدعوم:"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -247,6 +252,8 @@ msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
 msgstr ""
+"احصل على كشف الحساب المصرفي على شكل الكتروني من البنك الذي تتعامل معه واختر "
+"هنا."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
@@ -281,7 +288,7 @@ msgstr "استيراد كشف الحساب"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
 msgid "Import Bank Statement Journal Creation Wizard"
-msgstr ""
+msgstr "ادخل معالج إنشاء كشف الحساب الدفتر اليومية."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -336,6 +343,8 @@ msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
 msgstr ""
+"فقط اضغط موافق لإنشاء حساب / دفتر اليومية و أنهي الإدخال. إذا كان هذا خطأ، "
+"أضغط إلغاء لإيقاف  الادخال."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
@@ -430,7 +439,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Select a bank statement file to import"
-msgstr ""
+msgstr "حدد ملف كشف حساب بنكي لادخال"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
@@ -459,13 +468,15 @@ msgid ""
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
 msgstr ""
+"كشف الحساب الذي تقوم بإدخاله غير مسجل حاليا في الأودو. لمتابعة الإدخال تحتاج"
+" إلى إنشاء دفتر اليومية البنك لهذا الحساب."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr ""
+msgstr "الحساب في الكشف  (%s)ليس مطابقا مع الدفتر اليومية(%s)."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:161
@@ -474,6 +485,7 @@ msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s) !"
 msgstr ""
+"عملة كشف الحساب المصرفي  (%s) ليست مطابقة للعملة في الدفتر اليومية(%s) !"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id

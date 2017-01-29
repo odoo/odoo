@@ -1,42 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
-#
+# 
 # Translators:
-# ilan kl <ilan@qaroads.co.il>, 2016
-# yizhaq agronov <yizhaq@gmail.com>, 2016
-#, fuzzy
+# Leonid Froenchenko <lfroen@gmail.com>, 2017
+# Tal Gruper <excaliberx@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-07-23 18:10+0000\n"
-"Last-Translator: ilan kl <ilan@qaroads.co.il>\n"
-"Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
-"Language: he\n"
+"PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"Last-Translator: Tal Gruper <excaliberx@gmail.com>, 2017\n"
+"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  he.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  he.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: he\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
 "<b>Note:</b> Set the same email address on your employee form than\n"
-"                            the one you use are your \"From:\". Otherwise, "
-"your\n"
+"                            the one you use are your \"From:\". Otherwise, your\n"
 "                            expenses will not be accepted by email."
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"<i class=\"text-muted oe_edit_only\">Use [Reference] as a subject prefix for "
-"incoming receipts</i>"
+"<i class=\"text-muted oe_edit_only\">Use [Reference] as a subject prefix for"
+" incoming receipts</i>"
 msgstr ""
 
 #. module: hr_expense
@@ -45,8 +40,8 @@ msgstr ""
 #, python-format
 msgid ""
 "<p>Managers can validate or refuse expense reports.</p><p>If you refuse a "
-"report, explain the reason using the <i>New Message</i> button in the bottom."
-"</p>"
+"report, explain the reason using the <i>New Message</i> button in the "
+"bottom.</p>"
 msgstr ""
 
 #. module: hr_expense
@@ -54,9 +49,9 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tour.js:19
 #, python-format
 msgid ""
-"<p>Once completed, you can <b>submit the expense</b> for approval.</"
-"p><p><i>Tip: from the list view, select all expenses to submit them all at "
-"once, in a single report.</i></p>"
+"<p>Once completed, you can <b>submit the expense</b> for "
+"approval.</p><p><i>Tip: from the list view, select all expenses to submit "
+"them all at once, in a single report.</i></p>"
 msgstr ""
 
 #. module: hr_expense
@@ -71,8 +66,8 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
-"<strong class=\"text-info\">[PRODUCT CODE]</strong> Free Description <strong "
-"class=\"text-primary\">PRICE</strong>"
+"<strong class=\"text-info\">[PRODUCT CODE]</strong> Free Description <strong"
+" class=\"text-primary\">PRICE</strong>"
 msgstr ""
 
 #. module: hr_expense
@@ -98,7 +93,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Total</strong>"
-msgstr "<strong>סה\"כ</strong>"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -108,18 +103,16 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
-"<strong>Your email gateway is not configured.</strong> Please configure your "
-"email\n"
-"                            gateway from the Settings app, menu <i>General "
-"Settings</i>."
+"<strong>Your email gateway is not configured.</strong> Please configure your email\n"
+"                            gateway from the Settings app, menu <i>General Settings</i>."
 msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_register_payment.py:79
 #, python-format
 msgid ""
-"A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related "
-"to your expense %s has been made."
+"A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related"
+" to your expense %s has been made."
 msgstr ""
 
 #. module: hr_expense
@@ -135,7 +128,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Accounting"
-msgstr ""
+msgstr "חשבונאות"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_accounting_date
@@ -184,12 +177,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Apply"
-msgstr ""
+msgstr "החל"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Approve"
-msgstr "אשר"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
@@ -289,7 +282,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
 msgid "Configuration"
-msgstr "הגדרות תצורה"
+msgstr "הגדרות"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -341,7 +334,7 @@ msgstr "מטבע"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_date
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Date"
-msgstr "תאריך"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_prefix
@@ -352,12 +345,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Department"
-msgstr "מחלקה"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_description
 msgid "Description"
-msgstr "תיאור"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_display_name
@@ -372,7 +365,7 @@ msgstr "השם המוצג"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Documents"
-msgstr "מסמכים"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -390,7 +383,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Employee"
-msgstr "עובד"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense,payment_mode:0
@@ -412,7 +405,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expense"
-msgstr "הוצאות"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_name
@@ -728,7 +721,7 @@ msgstr "עודכן לאחרונה על"
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_manager
 msgid "Manager"
-msgstr ""
+msgstr "מנהל"
 
 #. module: hr_expense
 #. openerp-web
@@ -783,7 +776,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "New Mail"
-msgstr "דוא\"ל חדש"
+msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:251
@@ -867,7 +860,7 @@ msgstr "שולם"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_partner_id
 msgid "Partner"
-msgstr ""
+msgstr "שותף"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_amount
@@ -934,7 +927,7 @@ msgstr "מחיר"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Product"
-msgstr "פריט"
+msgstr "מוצר"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -944,7 +937,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
 msgid "Product Template"
-msgstr "תבנית לפריט"
+msgstr "תבנית למוצר"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -959,7 +952,7 @@ msgstr "כמות"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_description
 msgid "Reason"
-msgstr "סיבה"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -1052,8 +1045,8 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:88
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure"
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure"
 msgstr ""
 
 #. module: hr_expense
@@ -1128,7 +1121,7 @@ msgstr "סיכום ביניים"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_tax_ids
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Taxes"
-msgstr "מע\"מ"
+msgstr "מיסים"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_register_payment_wizard_hide_payment_method
@@ -1140,12 +1133,9 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
-"The <strong class=\"text-info\">PRODUCT CODE</strong> is optional and should "
-"be the\n"
-"                            internal code of one of your expense product. "
-"This\n"
-"                            will set the right product automatically on "
-"your\n"
+"The <strong class=\"text-info\">PRODUCT CODE</strong> is optional and should be the\n"
+"                            internal code of one of your expense product. This\n"
+"                            will set the right product automatically on your\n"
 "                            expense Odoo."
 msgstr ""
 
@@ -1182,8 +1172,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
 "The photo of the receipt and the description of the email will\n"
-"                            be attached to the expense. That way, you get "
-"everything attached\n"
+"                            be attached to the expense. That way, you get everything attached\n"
 "                            to fill the remaining fields later on."
 msgstr ""
 
@@ -1219,8 +1208,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
 "To create expenses by email, take photos of your\n"
-"                            receipts and send them by email with the "
-"following\n"
+"                            receipts and send them by email with the following\n"
 "                            information:"
 msgstr ""
 
@@ -1232,7 +1220,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_total_amount
 msgid "Total"
-msgstr "סה\"כ"
+msgstr "סך הכל"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_total_amount
@@ -1240,7 +1228,7 @@ msgstr "סה\"כ"
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Total Amount"
-msgstr "סה\"כ"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_unit_amount
@@ -1251,7 +1239,7 @@ msgstr "מחיר ליחידה"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_uom_id
 msgid "Unit of Measure"
-msgstr "יחידת מידה"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_approved_expense
@@ -1312,16 +1300,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid ""
 "You can setup a generic email alias to create\n"
-"                                    incoming expenses easily. Write an email "
-"with the receipt\n"
-"                                    in attachment to create an expense line "
-"in one click. If the mail\n"
-"                                    subject contains the product's internal "
-"reference between brackets,\n"
-"                                    the product will be set automatically. "
-"Type the expense amount\n"
-"                                    in the mail subject to set it on the "
-"expense too."
+"                                    incoming expenses easily. Write an email with the receipt\n"
+"                                    in attachment to create an expense line in one click. If the mail\n"
+"                                    subject contains the product's internal reference between brackets,\n"
+"                                    the product will be set automatically. Type the expense amount\n"
+"                                    in the mail subject to set it on the expense too."
 msgstr ""
 
 #. module: hr_expense
@@ -1390,7 +1373,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "or"
-msgstr "או"
+msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:305

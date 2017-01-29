@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_holidays
+#   * hr_holidays
 # 
 # Translators:
 # José Vicente <txusev@gmail.com>, 2016
@@ -23,10 +23,10 @@
 # José Antonio Cuello <yopli2000@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-01-26 14:11+0000\n"
+"PO-Revision-Date: 2017-01-26 14:11+0000\n"
 "Last-Translator: José Antonio Cuello <yopli2000@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -59,6 +59,12 @@ msgstr "!important; font-size: 10px\" &gt;"
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:125
+#, python-format
+msgid "%g remaining out of %g"
+msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:331
@@ -709,18 +715,22 @@ msgstr "Tipos de ausencias"
 #, python-format
 msgid "Leave request must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
+"La solicitud de ausencia debe estar confirmada (\"Por Aprobar\") para poder "
+"aprobarla."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:460
 #, python-format
 msgid "Leave request must be confirmed in order to approve it."
-msgstr ""
+msgstr "La solicitud de ausencia debe ser confirmada para poder aprobarla."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:519
 #, python-format
 msgid "Leave request must be confirmed or validated in order to refuse it."
 msgstr ""
+"La solicitud de ausencia debe ser confirmada o validada para poder "
+"rechazarla."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:432
@@ -728,6 +738,8 @@ msgstr ""
 msgid ""
 "Leave request must be in Draft state (\"To Submit\") in order to confirm it."
 msgstr ""
+"La solicitud de ausencia debe estar en estado Borrador (\"Por Confirmar\") "
+"para poder confirmarla."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:417
@@ -736,6 +748,8 @@ msgid ""
 "Leave request state must be \"Refused\" or \"To Approve\" in order to reset "
 "to Draft."
 msgstr ""
+"El estado de la solicitud de ausencia debe ser \"Rechazada\" o \"Aprobada\" "
+"para poder devolverla a Borrador."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_leave_to_approve_count
@@ -810,7 +824,7 @@ msgstr "Ausencias por tipo"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Leaves of Your Team Member"
-msgstr ""
+msgstr "Ausencias de los miembros de tu equipo"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_approvals
@@ -820,7 +834,7 @@ msgstr "Ausencias por aprobar"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request_approved
 msgid "Leaves to be reported in Payslip"
-msgstr ""
+msgstr "Las ausencias son reportadas en Payslip"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -840,7 +854,7 @@ msgstr "Ausencias/asignaciones rechazadas"
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_confirmed
 msgid "Leaves/Allocations Confirmed"
-msgstr ""
+msgstr "Ausencias/Asignaciones confirmadas"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_first_validated
@@ -850,7 +864,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2016"
-msgstr ""
+msgstr "Ausencias Legales 2016"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1013,12 +1027,16 @@ msgstr ""
 #, python-format
 msgid "Only an HR Manager can apply the second approval on leave requests."
 msgstr ""
+"Sólo un administrador de HR puede aplicar una segunda aprobación en la "
+"petición de ausencia."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:415
 #, python-format
 msgid "Only an HR Manager or the concerned employee can reset to draft."
 msgstr ""
+"Sólo un administrador de HR o el propio empleado puede volver al estado "
+"borrador."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:440
@@ -1026,12 +1044,16 @@ msgstr ""
 #, python-format
 msgid "Only an HR Officer or Manager can approve leave requests."
 msgstr ""
+"Sólo un oficial o un administrador de HR puede aprobar la solicitud de "
+"ausencia."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:514
 #, python-format
 msgid "Only an HR Officer or Manager can refuse leave requests."
 msgstr ""
+"Sólo un oficial o un administrador de HR puede rechazar la solicitud de "
+"ausencia."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_parent_id
@@ -1260,6 +1282,8 @@ msgid ""
 "This color will be used in the leaves summary located in Reporting > Leaves "
 "by Department."
 msgstr ""
+"Este color será usado en el resumen de ausencias en Listados > Ausencias por"
+" Departamento."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken
@@ -1308,7 +1332,7 @@ msgstr "A enviar"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_total_employee
 msgid "Total Employee"
-msgstr ""
+msgstr "Total Empleado"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_remaining_leaves_user
@@ -1445,7 +1469,7 @@ msgstr "días"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 msgid "e.g. Report to the next month..."
-msgstr ""
+msgstr "p.e. Informar el siguiente mes..."
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1455,7 +1479,7 @@ msgstr "de"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_report_hr_holidays_report_holidayssummary
 msgid "report.hr_holidays.report_holidayssummary"
-msgstr ""
+msgstr "report.hr_holidays.report_holidayssummary"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
