@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Arek Smagacz <arek.smagacz@gmail.com>, 2015
-# zbik2607 <darek@krokus.com.pl>, 2016
+# zbik2607 <darek@krokus.com.pl>, 2016-2017
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2015-2016
 # Jaroslaw Kaczmarski, 2015
 # Mariusz, 2016
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-22 07:25+0000\n"
-"PO-Revision-Date: 2016-12-30 22:20+0000\n"
+"PO-Revision-Date: 2017-01-28 10:02+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -5740,6 +5740,12 @@ msgid "Automatic Installation"
 msgstr "Instalacja automatyczna"
 
 #. module: base
+#: code:addons/base/module/module.py:693
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
 msgid ""
 "Automatically set to let administators find new terms that might need to be "
@@ -10501,7 +10507,7 @@ msgstr "Błędny identyfikator bazy danych '%s' dla pola '%%(field)s'"
 msgid ""
 "Invalid date/time format directive specified. Please refer to the list of "
 "allowed directives, displayed when you edit a language."
-msgstr "Niedozwolony format dyrektywy date/time. Sprawdź lsitę dozwolonych dyrektyw wyświetlaną w trakcie edycji."
+msgstr "Niedozwolony format dyrektywy date/time. Sprawdź listę dozwolonych dyrektyw wyświetlaną w trakcie edycji języka."
 
 #. module: base
 #: code:addons/models.py:672
@@ -16245,6 +16251,13 @@ msgstr "Do usunięcia"
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
 msgstr "Do aktualizacji"
+
+#. module: base
+#: code:addons/base/module/module.py:694
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
