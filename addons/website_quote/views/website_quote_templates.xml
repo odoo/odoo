@@ -304,11 +304,9 @@
                             </div>
                             <div class="modal-body" id="sign-dialog">
                               <p>
-                                  <span>I agree that by signing this proposal, I
-                                  accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
+                                  <span>I accept this proposal of </span><b t-field="quotation.company_id"/><span> for an amount of </span>
                                   <b data-id="total_amount" t-field="quotation.amount_total"
-                                    t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
-                                  <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
+                                    t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/><span t-if="quotation.payment_term_id"> and I agree to pay in accordance with payment terms: </span><b t-field="quotation.payment_term_id"/>.
                               </p>
                               <div id="signer" class="form-group">
                                   <label class="control-label" for="name">Your Name:</label>
@@ -331,11 +329,9 @@
                           </div>
                           <div class="modal-body" id="sign-dialog">
                             <p>
-                                <span>I agree that by paying this proposal, I
-                                accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
+                                <span>I accept this proposal of </span><b t-field="quotation.company_id"/><span> for an amount of </span>
                                 <b data-id="total_amount" t-field="quotation.amount_total"
-                                  t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
-                                <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
+                                  t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/><span t-if="quotation.payment_term_id"> and I agree to pay in accordance with payment terms: </span><b t-field="quotation.payment_term_id"/>.
                             </p>
                           </div>
                           <div class="modal-footer">
@@ -368,6 +364,10 @@
                                     <t t-foreach="acquirers or []" t-as="acquirer">
                                         <div t-att-data-id="acquirer.id" class="oe_quote_acquirer_button hidden pull-right">
                                           <div t-raw="buttons.get(acquirer.id)"/>
+                                          <div t-if="acquirer.save_token == 'ask'">
+                                              <input type="checkbox" name="odoo_save_token" id="odoo_save_token"/>
+                                              <label for="odoo_save_token">Save my payment data</label>
+                                          </div>
                                           <div t-field="acquirer.pre_msg"/>
                                         </div>
                                     </t>

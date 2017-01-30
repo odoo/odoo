@@ -71,10 +71,11 @@ class SaleOrder(models.Model):
         'Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
     quote_viewed = fields.Boolean('Quotation Viewed')
     require_payment = fields.Selection([
-        (0, 'Not mandatory on website quote validation'),
-        (1, 'Immediate after website order validation'),
-        (2, 'Immediate after website order validation and save a token'),
-    ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
+        (0, 'Online Signature'),
+        (1, 'Online Payment'),
+    ], 'Payment', help="Choose how you want to confirm an order to launch the delivery process. You can either request a digital signature or an upfront payment. With a digital signature, you can request the payment when issuing the invoice.")
+    payment_acquirer_id = fields.Many2one('payment.acquirer', string='Payment Acquirer', copy=False)
+    payment_tx_id = fields.Many2one('payment.transaction', string='Transaction', copy=False)
 
     @api.one
     def _compute_amount_undiscounted(self):
