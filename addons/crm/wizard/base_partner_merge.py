@@ -277,6 +277,7 @@ class MergePartnerAutomatic(models.TransientModel):
         # remove fields that can not be updated (id and parent_id)
         values.pop('id', None)
         parent_id = values.pop('parent_id', None)
+        dst_partner = dst_partner.with_context(dict(self._context))
         dst_partner.write(values)
         # try to update the parent_id
         if parent_id and parent_id != dst_partner.id:
