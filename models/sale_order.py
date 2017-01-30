@@ -267,9 +267,9 @@ class SaleOrderLine(models.Model):
         PS: RCO told me it was ok
         """
         order = self.env['sale.order'].browse(vals['order_id'])
-        if self.env.context.get('sale_coupon_no_loop', False):
+        if not self.env.context.get('sale_coupon_no_loop', False):
             order.with_context(sale_coupon_no_loop=True).write({'order_line': [(0, False, vals)]})
-            return order.order_line.sorted('creation_date', reverse=True)[0]
+            return order.order_line.sorted('create_date', reverse=True)[0]
         return super(SaleOrderLine, self).create(vals)
 
     def unlink(self):
