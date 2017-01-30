@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import logging
 import werkzeug
 
 from odoo import fields, http, _
 from odoo.http import request
 from odoo.addons.website_mail.controllers.main import _message_post_helper
 from odoo.addons.website_portal.controllers.main import get_records_pager
+
+_logger = logging.getLogger(__name__)
 
 
 class sale_quote(http.Controller):
@@ -69,6 +71,7 @@ class sale_quote(http.Controller):
                 'submit_txt': _('Pay & Confirm')
             }
             values['buttons'] = {}
+            acquirer_ids = []
             for acquirer in values['acquirers']:
                 values['buttons'][acquirer.id] = acquirer.with_context(**extra_context).render(
                     '/',
@@ -80,6 +83,8 @@ class sale_quote(http.Controller):
                         'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
                         'partner_id': order_sudo.partner_id.id,
                     })
+                acquirer_ids.append(acquirer.id)
+            values['tokens'] = request.env['payment.token'].search([('partner_id', '=', Order.partner_id.id), ('acquirer_id', 'in', acquirer_ids)])
         history = request.session.get('my_quotes_history', [])
         values.update(get_records_pager(history, order_sudo))
         return request.render('website_quote.so_quotation', values)
@@ -156,13 +161,36 @@ class sale_quote(http.Controller):
         Option.write({'line_id': OrderLine.id})
         return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (Order.id, token))
 
+    @http.route(['/quote/payment/transaction_token/confirm'], type='json', auth="public", website=True)
+    def payment_transaction_token_confirm(self, tx_id, **kwargs):
+        tx = request.env['payment.transaction'].sudo().browse(int(tx_id))
+        if (tx and tx.payment_token_id and
+                tx.partner_id == tx.sale_order_id.partner_id):
+            try:
+                s2s_result = tx.s2s_do_transaction()
+                valid_state = 'authorized' if tx.acquirer_id.auto_confirm == 'authorize' else 'done'
+                if not s2s_result or tx.state != valid_state:
+                    return dict(success=False, error=_("Payment transaction failed (%s)") % tx.state_message)
+                else:
+                    # Auto-confirm SO if necessary
+                    tx._confirm_so()
+                    return dict(success=True, url="/quote/%s/%s" % (tx.sale_order_id.id, tx.sale_order_id.access_token))
+            except Exception, e:
+                _logger.warning(_("Payment transaction (%s) failed : <%s>") % (tx.id, str(e)))
+                return dict(success=False, error=_("Payment transaction failed (Contact Administrator)"))
+        return dict(success=False, error='Tx missmatch')
+
+    @http.route(['/quote/payment/transaction_token'], type='http', methods=['POST'], auth="public", website=True)
+    def payment_transaction_token(self, tx_id, **kwargs):
+        tx = request.env['payment.transaction'].sudo().browse(int(tx_id))
+        if (tx and tx.payment_token_id and tx.partner_id == tx.sale_order_id.partner_id):
+            return request.render("website_quote.payment_token_form_confirm", dict(tx=tx, quotation=tx.sale_order_id))
+        else:
+            return request.redirect("/quote/%s/%s%s" % (tx.sale_order_id.id, tx.sale_order_id.access_token, "?error=no_token_or_missmatch_tx"))
+
     # note dbo: website_sale code
     @http.route(['/quote/<int:order_id>/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
-    def payment_transaction(self, acquirer_id, order_id):
-        return self.payment_transaction_token(acquirer_id, order_id, None)
-
-    @http.route(['/quote/<int:order_id>/transaction/<int:acquirer_id>/<token>'], type='json', auth="public", website=True)
-    def payment_transaction_token(self, acquirer_id, order_id, token):
+    def payment_transaction(self, acquirer_id, order_id, tx_type='form', token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -182,6 +210,9 @@ class sale_quote(http.Controller):
         if Transaction:
             if Transaction.sale_order_id != Order or Transaction.state in ['error', 'cancel'] or Transaction.acquirer_id.id != acquirer_id:
                 Transaction = False
+            elif token and Transaction.payment_token_id and token != Transaction.payment_token_id.id:
+                # new or distinct token
+                Transaction = False
             elif Transaction.state == 'draft':
                 Transaction.write({
                     'amount': Order.amount_total,
@@ -189,7 +220,7 @@ class sale_quote(http.Controller):
         if not Transaction:
             Transaction = PaymentTransaction.create({
                 'acquirer_id': acquirer_id,
-                'type': Order._get_payment_type(),
+                'type': tx_type,
                 'amount': Order.amount_total,
                 'currency_id': Order.pricelist_id.currency_id.id,
                 'partner_id': Order.partner_id.id,
@@ -199,13 +230,17 @@ class sale_quote(http.Controller):
                 'callback_res_id': Order.id,
                 'callback_method': '_confirm_online_quote',
             })
-            request.session['quote_%s_transaction_id' % Order.id] = Transaction.id
+            if token and request.env['payment.token'].sudo().browse(int(token)).partner_id == Order.partner_id:
+                Transaction.payment_token_id = token
 
-            # update quotation
-            Order.write({
-                'payment_acquirer_id': acquirer_id,
-                'payment_tx_id': Transaction.id
-            })
+            request.session['quote_%s_transaction_id' % Order.id] = Transaction.id
+        # update quotation
+        Order.write({
+            'payment_acquirer_id': acquirer_id,
+            'payment_tx_id': Transaction.id
+        })
+        if token:
+            return request.env.ref('website_quote.payment_token_form').render(dict(tx=Transaction), engine='ir.qweb')
 
         return Transaction.acquirer_id.with_context(
             submit_class='btn btn-primary',
@@ -215,7 +250,7 @@ class sale_quote(http.Controller):
             Order.pricelist_id.currency_id.id,
             values={
                 'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
-                'type': Order._get_payment_type(),
+                'type': tx_type,
                 'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
                 'partner_id': Order.partner_shipping_id.id or Order.partner_invoice_id.id,
                 'billing_partner_id': Order.partner_invoice_id.id,

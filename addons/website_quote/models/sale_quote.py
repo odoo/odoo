@@ -15,13 +15,16 @@ class SaleQuoteTemplate(models.Model):
     quote_line = fields.One2many('sale.quote.line', 'quote_id', 'Quotation Template Lines', copy=True)
     note = fields.Text('Terms and conditions')
     options = fields.One2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True)
-    number_of_days = fields.Integer('Quotation Duration',
-        help='Number of days for the validity date computation of the quotation')
+    number_of_days = fields.Integer(
+        string='Quotation Duration',
+        help="# of days granted to the customer to accept the quotation. A validity date is "
+             "automatically set on quotations based on this value.")
     require_payment = fields.Selection([
-        (0, 'Not mandatory on website quote validation'),
-        (1, 'Immediate after website order validation'),
-        (2, 'Immediate after website order validation and save a token'),
-    ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
+        (0, 'Online Signature'),
+        (1, 'Online Payment')], string='Payment',
+        help="Choose how you want to confirm an order to launch the delivery process. You can either "
+             "request a digital signature or an upfront payment. With a digital signature, you can "
+             "request the payment when issuing the invoice.")
     mail_template_id = fields.Many2one(
         'mail.template', 'Confirmation Mail',
         domain=[('model', '=', 'sale.order')],
