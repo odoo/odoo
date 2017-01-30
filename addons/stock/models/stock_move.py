@@ -575,7 +575,9 @@ class StockMove(models.Model):
                 # in case the move is returned, we want to try to find quants before forcing the assignment
                 if not move.origin_returned_move_id:
                     continue
-            if move.product_id.type == 'consu':
+            # if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
+            ancestors = move.find_move_ancestors()
+            if move.product_id.type == 'consu' and not ancestors:
                 moves_to_assign |= move
                 continue
             else:
@@ -584,8 +586,6 @@ class StockMove(models.Model):
                 # we always search for yet unassigned quants
                 main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
 
-                # if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
-                ancestors = move.find_move_ancestors()
                 if move.state == 'waiting' and not ancestors:
                     # if the waiting move hasn't yet any ancestor (PO/MO not confirmed yet), don't find any quant available in stock
                     main_domain[move.id] += [('id', '=', False)]
