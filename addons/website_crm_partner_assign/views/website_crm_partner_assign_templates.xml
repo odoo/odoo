@@ -307,13 +307,13 @@
                     </form>
                 </div>
             </div>
-            <div class="panel panel-default">
-                <t t-if="not opportunities">
-                    <div class="alert alert-warning mt8" role="alert">
-                        There are no opportunities.
-                    </div>
-                </t>
-                <table t-if="opportunities" class="table table-hover">
+            <t t-if="not opportunities">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no opportunities.
+                </div>
+            </t>
+            <div class="panel panel-default" t-if="opportunities">
+                <table class="table table-hover">
                     <thead>
                         <tr class="active">
                             <th class="col-xs-2">Date</th>
