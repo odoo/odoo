@@ -45,7 +45,8 @@ return Widget.extend({
         this.$save_search = this.$('.o_save_search');
         this.$save_name = this.$('.o_save_name');
         this.$inputs = this.$save_name.find('input');
-        this.$divider = this.$('.divider');
+        this.$user_divider = this.$('.divider.user_filter');
+        this.$shared_divider = this.$('.divider.shared_filter');
         this.$inputs.eq(0).val(this.searchview.get_title());
         var $shared_filter = this.$inputs.eq(1),
             $default_filter = this.$inputs.eq(2);
@@ -204,7 +205,11 @@ return Widget.extend({
         var self = this;
         var key = this.key_for(filter);
 
-        this.$divider.show();
+        if (filter.user_id) {
+            this.$user_divider.show();
+        } else {
+            this.$shared_divider.show();
+        }
         if (!(key in this.$filters)) {
             var $filter = $('<li>')
                 .addClass(filter.user_id ? 'o-searchview-custom-private'
@@ -219,7 +224,7 @@ return Widget.extend({
                         },
                     },
                 }))
-                .insertBefore(this.$divider);
+                .insertBefore(filter.user_id ? this.$user_divider : this.$shared_divider);
             this.$filters[key] = $filter;
         }
         this.$filters[key].unbind('click').click(function () {
@@ -252,8 +257,13 @@ return Widget.extend({
                 $filter.remove();
                 delete self.$filters[key];
                 delete self.filters[key];
-                if (_.isEmpty(self.filters)) {
-                    self.$divider.hide();
+                var has_user_filter = _.find(self.filters, function(filter) { return filter.user_id; });
+                var has_shared_filer = _.find(self.filters, function(filter) { return !filter.user_id; });
+                if (!has_user_filter) {
+                    self.$user_divider.hide();
+                }
+                if (!has_shared_filer) {
+                    self.$shared_divider.hide();
                 }
             });
     },
