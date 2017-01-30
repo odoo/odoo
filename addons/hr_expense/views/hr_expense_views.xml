@@ -79,7 +79,7 @@
                                 <field name="quantity" class="oe_inline"/>
                                 <field name="product_uom_id" widget="selection" class="oe_inline" groups="product.group_uom"/>
                             </div>
-                            <field name="tax_ids" widget="many2many_tags" groups="account.group_account_user"/>
+                            <field name="tax_ids" widget="many2many_tags" groups="account.group_account_user" domain="[('type_tax_use', '=', 'purchase')]"/>
                         </group><group>
                             <field name="date"/>
                             <field name="employee_id"/>
