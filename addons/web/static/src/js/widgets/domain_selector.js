@@ -50,7 +50,7 @@ var DomainNode = Widget.extend({
         "click .o_domain_add_node_button": function (e) {
             e.preventDefault();
             e.stopPropagation();
-            this.trigger_up("add_node_clicked", {newBranch: !!$(e.target).data("branch"), child: this});
+            this.trigger_up("add_node_clicked", {newBranch: !!$(e.currentTarget).data("branch"), child: this});
         },
     },
     /// A DomainNode needs a model and domain to work. It can also receives a set of options

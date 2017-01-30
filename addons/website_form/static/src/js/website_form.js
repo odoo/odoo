@@ -13,6 +13,14 @@ odoo.define('website_form.animation', function (require) {
     snippet_animation.registry.form_builder_send = snippet_animation.Class.extend({
         selector: '.s_website_form',
 
+        willStart: function(){
+            var def;
+            if(!$.fn.datetimepicker){
+                def = ajax.loadJS("/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js");
+            }
+            return $.when(this._super.apply(this, arguments), def);
+        },
+
         start: function() {
             var self = this;
             qweb.add_template('/website_form/static/src/xml/website_form.xml');
@@ -21,22 +29,23 @@ odoo.define('website_form.animation', function (require) {
             // Initialize datetimepickers
             var l10n = _t.database.parameters;
             var datepickers_options = {
-                startDate: moment({ y: 1900 }),
-                endDate: moment().add(200, "y"),
+                minDate: moment({ y: 1900 }),
+                maxDate: moment().add(200, "y"),
                 calendarWeeks: true,
                 icons : {
                     time: 'fa fa-clock-o',
                     date: 'fa fa-calendar',
+                    next: 'fa fa-chevron-right',
+                    previous: 'fa fa-chevron-left',
                     up: 'fa fa-chevron-up',
-                    down: 'fa fa-chevron-down'
+                    down: 'fa fa-chevron-down',
                    },
-                language : moment.locale(),
+                locale : moment.locale(),
                 format : time.strftime_to_moment_format(l10n.date_format +' '+ l10n.time_format),
-            }
+            };
             this.$target.find('.o_website_form_datetime').datetimepicker(datepickers_options);
 
             // Adapt options to date-only pickers
-            datepickers_options.pickTime = false;
             datepickers_options.format = time.strftime_to_moment_format(l10n.date_format);
             this.$target.find('.o_website_form_date').datetimepicker(datepickers_options);
         },

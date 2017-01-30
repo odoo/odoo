@@ -12,4 +12,4 @@ class StockConfigSettings(models.TransientModel):
     default_picking_policy = fields.Selection([
         ('direct', 'Ship products as soon as available, with back orders'),
         ('one', 'Ship all products at once')
-        ], "Shipping Management", default='direct', default_model="sale.order")
+        ], "Shipping Management", default='direct', default_model="sale.order", required=True)

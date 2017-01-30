@@ -8,7 +8,7 @@ class SaleConfiguration(models.TransientModel):
     _inherit = 'sale.config.settings'
 
     sale_note = fields.Text(related='company_id.sale_note', string="Terms & Conditions")
-    default_use_sale_note = fields.Boolean(default_model='sale.config.settings')
+    default_use_sale_note = fields.Boolean(string='Default Terms & Conditions', default_model='sale.config.settings')
     group_product_variant = fields.Boolean("Attributes & Variants",
         implied_group='product.group_product_variant')
     group_sale_pricelist = fields.Boolean("Use pricelists to adapt your price per customers",
@@ -26,7 +26,7 @@ class SaleConfiguration(models.TransientModel):
         help="""Ability to select a package type in sales orders and 
                 to force a quantity that is a multiple of the number of units per package.""")
     module_sale_margin = fields.Boolean("Margins")
-    group_sale_layout = fields.Boolean("Sales Reports Layout", implied_group='sale.group_sale_layout')
+    group_sale_layout = fields.Boolean("Sections on Sales Orders", implied_group='sale.group_sale_layout')
     group_warning_sale = fields.Boolean("Warnings", implied_group='sale.group_warning_sale')
     module_website_quote = fields.Boolean("Online Quotations & Templates")
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
@@ -69,7 +69,7 @@ class SaleConfiguration(models.TransientModel):
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
 
     group_multi_currency = fields.Boolean("Multi-Currencies", implied_group='base.group_multi_currency')
-    module_sale_stock = fields.Boolean("Inventory")
+    module_sale_stock = fields.Boolean("Inventory Management")
     module_delivery = fields.Boolean("Shipping Costs")
     module_delivery_dhl = fields.Boolean("DHL")
     module_delivery_fedex = fields.Boolean("FedEx")
@@ -79,9 +79,9 @@ class SaleConfiguration(models.TransientModel):
     module_timesheet_grid_sale = fields.Boolean("Timesheets")
     module_sale_ebay = fields.Boolean("eBay")
     module_print_docsaway = fields.Boolean("Docsaway")
-    module_web_clearbit = fields.Boolean("Clearbit")
+    module_web_clearbit = fields.Boolean("Customer Autocomplete")
     module_product_email_template = fields.Boolean("Specific Email")
-    module_sale_coupon = fields.Boolean("Manage coupons and promotional offers")
+    module_sale_coupon = fields.Boolean("Coupons & Promotions")
 
     @api.model
     def get_default_sale_pricelist_setting(self, fields):

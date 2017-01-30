@@ -344,7 +344,7 @@ class FleetVehicle(models.Model):
         if xml_id:
             res = self.env['ir.actions.act_window'].for_xml_id('fleet', xml_id)
             res.update(
-                context=dict(self.env.context, default_vehicle_id=self.id),
+                context=dict(self.env.context, default_vehicle_id=self.id, group_by=False),
                 domain=[('vehicle_id', '=', self.id)]
             )
             return res
@@ -656,5 +656,3 @@ class FleetVehicleLogContract(models.Model):
     def run_scheduler(self):
         self.scheduler_manage_auto_costs()
         self.scheduler_manage_contract_expiration()
-
-

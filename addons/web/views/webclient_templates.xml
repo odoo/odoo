@@ -21,8 +21,8 @@
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/mimetypes.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/animation.less"/>
-
-        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap-datetimepicker/src/less/bootstrap-datetimepicker.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/datepicker.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap-datetimepicker/src/less/_bootstrap-datetimepicker.less"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2/select2.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
 
@@ -92,7 +92,6 @@
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/webclient_layout.less"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/webclient.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/datepicker.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/domain_selector.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/model_field_selector.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/progress_bar.less"/>
@@ -269,7 +268,7 @@
 
                 <div class="form-group field-password">
                     <label for="password" class="control-label">Password</label>
-                    <input type="password" name="password" id="password" class="form-control" required="required" t-att-autofocus="'autofocus' if login else None"/>
+                    <input type="password" name="password" id="password" class="form-control" required="required" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                 </div>
 
                 <p class="alert alert-danger" t-if="error">

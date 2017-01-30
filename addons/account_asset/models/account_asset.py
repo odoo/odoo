@@ -42,7 +42,10 @@ class AccountAssetCategory(models.Model):
 
     @api.onchange('account_asset_id')
     def onchange_account_asset(self):
-        self.account_depreciation_id = self.account_asset_id
+        if self.type == "purchase":
+            self.account_depreciation_id = self.account_asset_id
+        elif self.type == "sale":
+            self.account_depreciation_expense_id = self.account_asset_id
 
     @api.onchange('type')
     def onchange_type(self):

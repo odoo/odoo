@@ -34,11 +34,11 @@ class HrEmployee(models.Model):
     @api.multi
     def _compute_manual_attendance(self):
         for employee in self:
-            employee.manual_attendance = employee.user_id.has_group('hr.group_hr_attendance') if employee.user_id else False
+            employee.manual_attendance = employee.user_id.has_group('hr_attendance.group_hr_attendance') if employee.user_id else False
 
     @api.multi
     def _inverse_manual_attendance(self):
-        manual_attendance_group = self.env.ref('hr.group_hr_attendance')
+        manual_attendance_group = self.env.ref('hr_attendance.group_hr_attendance')
         for employee in self:
             if employee.user_id:
                 if employee.manual_attendance:
@@ -74,7 +74,7 @@ class HrEmployee(models.Model):
     @api.multi
     def attendance_manual(self, next_action, entered_pin=None):
         self.ensure_one()
-        if self.env['res.users'].browse(SUPERUSER_ID).has_group('hr_attendance.group_hr_attendance_use_pin') and (self.user_id and self.user_id.id != self._uid or not self.user_id):
+        if not (entered_pin is None) or self.env['res.users'].browse(SUPERUSER_ID).has_group('hr_attendance.group_hr_attendance_use_pin') and (self.user_id and self.user_id.id != self._uid or not self.user_id):
             if entered_pin != self.pin:
                 return {'warning': _('Wrong PIN')}
         return self.attendance_action(next_action)

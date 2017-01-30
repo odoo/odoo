@@ -14,9 +14,9 @@
             <field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified" />
             <field name="arch" type="xml">
                 <field name="department_id" position="after">
-                    <field name="total_attendance" widget="float_time" groups="hr.group_hr_attendance"/>
+                    <field name="total_attendance" widget="float_time" groups="hr_attendance.group_hr_attendance"/>
                     <field name="total_timesheet" widget="float_time"/>
-                    <field name="total_difference" widget="float_time" groups="hr.group_hr_attendance"/>
+                    <field name="total_difference" widget="float_time" groups="hr_attendance.group_hr_attendance"/>
                 </field>
             </field>
         </record>
@@ -47,7 +47,7 @@
                                 <span class="o_stat_text">Timesheet</span>
                             </div>
                         </button>
-                        <button type="object" groups="hr.group_hr_attendance"
+                        <button type="object" groups="hr_attendance.group_hr_attendance"
                             class="oe_stat_button" icon="fa-users"
                             name="action_sheet_report">
                             <field name="attendance_count" widget="statinfo" string="Attendances"/>
@@ -55,9 +55,9 @@
                     </div>
                 </div>
                 <xpath expr="//page[@class='o_hr_timesheet_sheet_details']" position="after">
-                    <page string="Attendances" groups="hr.group_hr_attendance">
+                    <page string="Attendances" groups="hr_attendance.group_hr_attendance">
                         <group>
-                            <group groups="hr.group_hr_attendance">
+                            <group groups="hr_attendance.group_hr_attendance">
                                 <field name="total_attendance" widget="float_time"/>
                                 <field name="total_difference" widget="float_time"/>
                             </group>
@@ -115,7 +115,7 @@
             context="{'search_default_sheet_id': [active_id]}"
             id="act_hr_timesheet_sheet_sheet_by_account"
             name="Timesheet by Account"
-            groups="hr.group_hr_attendance"
+            groups="hr_attendance.group_hr_attendance"
             res_model="hr_timesheet_sheet.sheet.account"
             src_model="hr_timesheet_sheet.sheet"/>
 
@@ -123,7 +123,7 @@
             context="{'search_default_sheet_id': [active_id]}"
             id="act_hr_timesheet_sheet_sheet_by_day"
             name="Timesheet by Day"
-            groups="hr.group_hr_attendance"
+            groups="hr_attendance.group_hr_attendance"
             res_model="hr_timesheet_sheet.sheet.day"
             src_model="hr_timesheet_sheet.sheet"/>
 
@@ -133,9 +133,9 @@
             <field name="arch" type="xml">
                 <tree decoration-info="total_difference&lt;0.1" decoration-danger="total_difference&gt;=0.1" string="Period">
                     <field name="name"/>
-                    <field name="total_attendance" widget="float_time" sum="Total Attendances" groups="hr.group_hr_attendance"/>
+                    <field name="total_attendance" widget="float_time" sum="Total Attendances" groups="hr_attendance.group_hr_attendance"/>
                     <field name="total_timesheet" widget="float_time" sum="Total Timesheet"/>
-                    <field name="total_difference" widget="float_time" sum="Total Difference" groups="hr.group_hr_attendance"/>
+                    <field name="total_difference" widget="float_time" sum="Total Difference" groups="hr_attendance.group_hr_attendance"/>
                 </tree>
             </field>
         </record>

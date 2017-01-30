@@ -118,7 +118,7 @@ class report_custom(report_int):
         report = report.read()[0]
         fields = env['ir.report.custom.fields'].browse(report['fields_child0']).read()
         fields.sort(key=lambda x: x['sequence'])
-        model_name = env['ir.model'].browse(report['model_id'][0]).sudo().model
+        model_name = env['ir.model'].sudo().browse(report['model_id'][0]).model
 
         fct = {
             'id': lambda x: x,

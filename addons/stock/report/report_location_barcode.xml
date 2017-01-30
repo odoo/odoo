@@ -9,7 +9,7 @@
 </template>
 
 <template id="report_location_barcode">
-    <t t-call="report.html_container">
+    <t t-call="report.basic_layout">
         <div t-foreach="[docs[x:x+4] for x in xrange(0, len(docs), 4)]" t-as="page_docs" class="page page_stock_location_barcodes">
             <t t-foreach="page_docs" t-as="o">
                 <t t-if="o.barcode"><t t-set="content" t-value="o.barcode"/></t>

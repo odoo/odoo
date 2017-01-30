@@ -2095,9 +2095,8 @@ class One2many(_RelationalMulti):
     _description_relation_field = property(attrgetter('inverse_name'))
 
     def convert_to_onchange(self, value, record, fnames=()):
-        if fnames:
-            # do not serialize self's inverse field
-            fnames = [name for name in fnames if name != self.inverse_name]
+        fnames = set(fnames or value.fields_view_get()['fields'])
+        fnames.discard(self.inverse_name)
         return super(One2many, self).convert_to_onchange(value, record, fnames)
 
     def check_schema(self, model):

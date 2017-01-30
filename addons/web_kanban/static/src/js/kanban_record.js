@@ -78,7 +78,22 @@ var KanbanRecord = Widget.extend({
             var widget = new Widget(self, field, $field);
             widget.replace($field);
             self.sub_widgets.push(widget);
+            self._set_field_display(widget, field);
         });
+    },
+
+    _set_field_display: function(widget, field) {
+        // attribute display
+        if (field.__attrs.display === 'right') {
+            widget.$el.addClass('pull-right');
+        } else if (field.__attrs.display === 'full') {
+            widget.$el.addClass('o_text_block');
+        }
+
+        // attribute bold
+        if (field.__attrs.bold) {
+            widget.$el.addClass('o_text_bold');
+        }
     },
 
     start: function() {
@@ -98,6 +113,7 @@ var KanbanRecord = Widget.extend({
 
     renderElement: function () {
         this._super();
+        this.setup_color();
         this.setup_color_picker();
         this.$el.addClass('o_kanban_record');
         this.$el.data('record', this);
@@ -265,6 +281,17 @@ var KanbanRecord = Widget.extend({
 
     update_record: function (event) {
         this.trigger_up('kanban_record_update', event.data);
+    },
+
+    /*
+     * If an attribute `color` is set on the kanban record,
+     * this will add the corresponding color class.
+     */
+    setup_color: function() {
+        var color_field = this.$el.attr('color');
+        if (color_field && color_field in this.fields) {
+            this.$el.addClass(this.kanban_color(this.values[color_field].value));
+        }
     },
 
     setup_color_picker: function() {

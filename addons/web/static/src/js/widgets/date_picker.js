@@ -23,32 +23,38 @@ var DateWidget = Widget.extend({
 
         this.name = parent.name;
         this.options = _.defaults(options || {}, {
-            pickTime: this.type_of_date === 'datetime',
-            useSeconds: this.type_of_date === 'datetime',
-            startDate: moment({ y: 1900 }),
-            endDate: moment().add(200, "y"),
+            format : time.strftime_to_moment_format((this.type_of_date === 'datetime')? (l10n.date_format + ' ' + l10n.time_format) : l10n.date_format),
+            minDate: moment({ y: 1900 }),
+            maxDate: moment().add(200, "y"),
             calendarWeeks: true,
             icons: {
                 time: 'fa fa-clock-o',
                 date: 'fa fa-calendar',
+                next: 'fa fa-chevron-right',
+                previous: 'fa fa-chevron-left',
                 up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down'
+                down: 'fa fa-chevron-down',
             },
-            language : moment.locale(),
-            format : time.strftime_to_moment_format((this.type_of_date === 'datetime')? (l10n.date_format + ' ' + l10n.time_format) : l10n.date_format),
+            locale : moment.locale(),
+            allowInputToggle: true,
+            keyBinds: null,
         });
     },
     start: function() {
         this.$input = this.$('input.o_datepicker_input');
+        this.$input.focus(function(e) {
+            e.stopImmediatePropagation();
+        });
         this.$el.datetimepicker(this.options);
         this.picker = this.$el.data('DateTimePicker');
+        this.$input.click(this.picker.toggle.bind(this.picker));
         this.set_readonly(false);
         this.set_value(false);
     },
     set_value: function(value) {
         this.set({'value': value});
         this.$input.val((value)? this.format_client(value) : '');
-        this.picker.setValue(this.format_client(value));
+        this.picker.date(this.format_client(value));
     },
     get_value: function() {
         return this.get('value');
@@ -88,17 +94,17 @@ var DateWidget = Widget.extend({
             value = this.$input.val();
         }
 
-        // temporarily set pickTime to true to bypass datetimepicker hiding on setValue
-        // see https://github.com/Eonasdan/bootstrap-datetimepicker/issues/603
-        var saved_picktime = this.picker.options.pickTime;
-        this.picker.options.pickTime = true;
-        this.picker.setValue(value);
-        this.picker.options.pickTime = saved_picktime;
+        this.picker.date(value);
     },
     change_datetime: function(e) {
         if(this.is_valid()) {
             this.set_value_from_ui();
             this.trigger("datetime_changed");
+        }
+        //Close the datetimepicker when a date is selected
+        //We check only if the date has changed.
+        if(!e.date.isSame(e.oldDate, 'day')){
+            this.picker.hide();
         }
     },
     commit_value: function() {
