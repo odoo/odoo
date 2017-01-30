@@ -385,8 +385,7 @@ class InventoryLine(models.Model):
         Quant = self.env['stock.quant']
         for line in self:
             neg_quants = self.env['stock.quant']
-            if float_utils.float_compare(line.theoretical_qty, 0, precision_rounding=line.product_id.uom_id.rounding) >= 0: 
-                neg_quants = Quant.search([('qty', '<', 0.0), ('product_id', '=', line.product_id.id),
+            neg_quants = Quant.search([('qty', '<', 0.0), ('product_id', '=', line.product_id.id),
                                            ('location_id', '=', line.location_id.id), ('package_id', '=', line.package_id.id), 
                                            ('lot_id', '=', line.prod_lot_id.id), ('owner_id', '=', line.partner_id.id)])
             if float_utils.float_compare(line.theoretical_qty, line.product_qty, precision_rounding=line.product_id.uom_id.rounding) == 0:
@@ -394,6 +393,8 @@ class InventoryLine(models.Model):
                     continue
             
             neg_quant_qty = - sum([x.qty for x in neg_quants])
+            if float_utils.float_compare(line.theoretical_qty, 0, precision_rounding=line.product_id.uom_id.rounding) < 0:
+                neg_quant_qty -= (-line.theoretical_qty) # subtract total negative quantity
             diff = line.theoretical_qty - line.product_qty
             vals = {
                 'name': _('INV:') + (line.inventory_id.name or ''),
@@ -407,12 +408,12 @@ class InventoryLine(models.Model):
                 'restrict_partner_id': line.partner_id.id}
             move_neg = False
             move_pos = False
-            if diff < 0 or neg_quants:  # found more than expected
+            if diff < 0 or neg_quant_qty:  # found more than expected
                 vals['location_id'] = line.product_id.property_stock_inventory.id
                 vals['location_dest_id'] = line.location_id.id
                 vals['product_uom_qty'] = abs(diff) + neg_quant_qty
                 move_neg = moves.create(vals)
-            if diff > 0 or neg_quants:
+            if diff > 0 or neg_quant_qty:
                 vals['location_id'] = line.location_id.id
                 vals['location_dest_id'] = line.product_id.property_stock_inventory.id
                 vals['product_uom_qty'] = diff + neg_quant_qty
