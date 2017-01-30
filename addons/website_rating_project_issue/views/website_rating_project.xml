@@ -183,10 +183,10 @@
                                 </t>
                             </div>
                             <div>
-                                <t t-set="type" t-value="'Tasks'"/>
+                                <t t-set="type" t-value="'Customer Ratings for Tasks'"/>
                                 <t t-set="topdata" t-value="partner_task_rating"/>
                                 <t t-call="website_rating_project_issue.project_data_satisfaction"/>
-                                <t t-set="type" t-value="'Issues'"/>
+                                <t t-set="type" t-value="'Customer Ratings for Issues'"/>
                                 <t t-set="topdata" t-value="partner_issue_rating"/>
                                 <t t-call="website_rating_project_issue.project_data_satisfaction"/>
                             </div>
