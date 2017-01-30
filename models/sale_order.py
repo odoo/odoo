@@ -222,12 +222,12 @@ class SaleOrder(models.Model):
                            order.code_promo_program_id
         for program in applied_programs:
             values = order._get_reward_line_values(program)
-            line_id = order.order_line.filtered(lambda line: line.product_id == program.discount_line_product_id).id
+            lines = order.order_line.filtered(lambda line: line.product_id == program.discount_line_product_id)
             # Remove reward line if price or qty equal to 0
             if values['product_uom_qty'] and values['price_unit']:
-                order.write({'order_line': [(1, line_id, values)]})
+                order.write({'order_line': [(1, line.id, values) for line in lines]})
             else:
-                order.write({'order_line': [(2, line_id, False)]})
+                order.write({'order_line': [(2, line.id, False) for line in lines]})
 
     def _remove_invalid_reward_lines(self):
         '''Unlink reward order lines that are not applicable anymore'''
