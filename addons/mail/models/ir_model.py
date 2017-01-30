@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class IrModel(models.Model):
     _inherit = 'ir.model'
-    _order = 'is_mail_thread DESC, model ASC'
+    _order = 'is_mail_thread DESC, name ASC'
 
     is_mail_thread = fields.Boolean(
         string="Mail Thread", oldname='mail_thread', default=False,
