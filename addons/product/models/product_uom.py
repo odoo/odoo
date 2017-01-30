@@ -84,7 +84,7 @@ class ProductUoM(models.Model):
             if misc_category:
                 values['category_id'] = misc_category.id
             else:
-                values['category_id'] = EnglishUoMCateg.name_create('Unsorted/Imported Units').id
+                values['category_id'] = EnglishUoMCateg.name_create('Unsorted/Imported Units')[0]
         new_uom = self.create(values)
         return new_uom.name_get()[0]
 
