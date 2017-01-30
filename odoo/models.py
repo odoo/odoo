@@ -290,7 +290,7 @@ class BaseModel(object):
                            VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
                            RETURNING id """, params)
         model = self.env['ir.model'].browse(cr.fetchone()[0])
-        self._context['todo'].append((10, model.modified, [list(params)]))
+        self._context['todo'].append((10, model.modified, [['name', 'info', 'transient']]))
 
         if self._module == self._context.get('module'):
             # self._module is the name of the module that last extended self
