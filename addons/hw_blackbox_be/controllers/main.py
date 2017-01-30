@@ -7,6 +7,7 @@ import subprocess
 from os.path import isfile
 from os import listdir
 from threading import Thread, Lock
+import time
 
 from openerp import http
 
@@ -16,12 +17,14 @@ _logger = logging.getLogger(__name__)
 
 DRIVER_NAME = 'fiscal_data_module'
 
+
 class Blackbox(Thread):
     def __init__(self):
         Thread.__init__(self)
         self.blackbox_lock = Lock()
-        self.set_status('connecting')
-        self.device_path = self._find_device_path_by_probing()
+        self.device_path = None
+        self.status = {'status': 'Disconnected'}
+        self.lockedstart()
 
     def set_status(self, status, messages=[]):
         self.status = {
@@ -30,7 +33,21 @@ class Blackbox(Thread):
         }
 
     def get_status(self):
+        self.lockedstart()
         return self.status
+
+    def lockedstart(self):
+        with self.blackbox_lock:
+            if not self.isAlive():
+                self.daemon = True
+                self.start()
+
+    def run(self):
+        self.device_path = None
+        while True:
+            with self.blackbox_lock:
+                self.device_path = self._find_device_path_by_probing()
+            time.sleep(5)
 
     # There is no real way to find a serial device, all you can really
     # find is the name of the serial to usb interface, which in the
@@ -40,6 +57,7 @@ class Blackbox(Thread):
     # we'll do is probe every serial device with an FDM status
     # request. The first device to give an answer that makes sense
     # wins.
+
     def _find_device_path_by_probing(self):
         with hw_proxy.rs232_lock:
             path = "/dev/serial/by-path/"
@@ -51,21 +69,42 @@ class Blackbox(Thread):
                 _logger.warning(path + " doesn't exist")
                 self.set_status("disconnected", ["No RS-232 device (or emulated ones) found"])
             else:
+                for known_path, dev in hw_proxy.rs232_devices.items():
+                    discon_dev = known_path.split('/')[-1]
+                    if discon_dev not in devices:
+                        if hw_proxy.rs232_devices[known_path] == DRIVER_NAME:
+                            self.device_path = None
+                            del hw_proxy.rs232_devices[known_path]
+
+                if self.device_path and hw_proxy.rs232_devices.get(self.device_path) == DRIVER_NAME:
+                    self.set_status('connected', [self.device_path.split('/')[-1]])
+                    return self.device_path
+
                 for device in devices:
-                    if device in hw_proxy.rs232_devices:
-                        continue
                     path_to_device = path + device
+                    if device in hw_proxy.rs232_devices:
+                        if hw_proxy.rs232_devices[path_to_device] != 'scale':
+                            continue
                     _logger.debug("Probing " + device)
 
-                    if self._send_to_blackbox(probe_message, 21, path_to_device, just_wait_for_ack=True):
+                    try:
+                        blackbox_response = self._send_to_blackbox(probe_message, 21, path_to_device, just_wait_for_ack=True)
+                    except serial.SerialException as se:
+                        _logger.warn(str(se))
+                        blackbox_response = None
+                    except OSError as oe:
+                        _logger.warn(str(oe))
+                        blackbox_response = None
+
+                    if blackbox_response and blackbox_response != "":
                         _logger.info(device + " will be used as the blackbox")
                         self.set_status("connected", [device])
-                        hw_proxy.rs232_devices[device] = DRIVER_NAME
+                        hw_proxy.rs232_devices[path_to_device] = DRIVER_NAME
                         return path_to_device
 
                 _logger.warning("Blackbox could not be found")
                 self.set_status("disconnected", ["Couldn't find the Fiscal Data Module"])
-                return ""
+                return None
 
     def _lrc(self, msg):
         lrc = 0

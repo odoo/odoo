@@ -212,12 +212,12 @@ class Scale(Thread):
                 devices = [device for device in listdir(self.input_dir)]
 
                 for device in devices:
-                    driver = hw_proxy.rs232_devices.get(device)
+                    path = self.input_dir + device
+                    driver = hw_proxy.rs232_devices.get(path)
                     if driver and driver != DRIVER_NAME:
                         # belongs to another driver
                         _logger.info('Ignoring %s, belongs to %s', device, driver)
                         continue
-                    path = self.input_dir + device
                     for protocol in SCALE_PROTOCOLS:
                         _logger.info('Probing %s with protocol %s', path, protocol)
                         connection = serial.Serial(path,
