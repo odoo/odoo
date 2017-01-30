@@ -165,6 +165,7 @@ class SaleOrder(models.Model):
         coupon = self.env['sale.coupon'].create({
             'program_id': program.id,
             'state': 'reserved',
+            'partner_id': self.partner_id.id,
             'order_id': self.id,
             'discount_line_product_id': program.discount_line_product_id.id
         })
