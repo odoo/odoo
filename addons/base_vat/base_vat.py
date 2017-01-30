@@ -58,8 +58,13 @@ _ref_vat = {
 class res_partner(osv.osv):
     _inherit = 'res.partner'
 
-    def _split_vat(self, vat):
+    def _get_vat_infos(self, partner):
+        vat = partner.vat
+        country_id = partner.country_id
         vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
+        # Prevent confusion between VAT number for Mexico and Malta, both beginning by 'MT'
+        if country_id.name == 'Mexico':
+            vat_country = country_id.code
         return vat_country, vat_number
 
     def simple_vat_check(self, cr, uid, country_code, vat_number, context=None):
@@ -106,7 +111,7 @@ class res_partner(osv.osv):
         for partner in self.browse(cr, uid, ids, context=context):
             if not partner.vat:
                 continue
-            vat_country, vat_number = self._split_vat(partner.vat)
+            vat_country, vat_number = self._get_vat_infos(partner)
             if not check_func(cr, uid, vat_country, vat_number, context=context):
                 _logger.info("Importing VAT Number [%s] is not valid !", vat_number)
                 return False
@@ -118,7 +123,7 @@ class res_partner(osv.osv):
             #  it starts with 2 letters
             #  has more than 3 characters
             return cn[0] in string.ascii_lowercase and cn[1] in string.ascii_lowercase
-        vat_country, vat_number = self._split_vat(self.browse(cr, uid, ids)[0].vat)
+        vat_country, vat_number = self._get_vat_infos(self.browse(cr, uid, ids)[0])
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
         error_partner = self.browse(cr, uid, ids, context=context)
         if default_vat_check(vat_country, vat_number):
