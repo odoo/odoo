@@ -18,6 +18,7 @@ class AccountAnalyticAccount(models.Model):
     _order = 'code, name asc'
 
     @api.multi
+    @api.depends('line_ids.account_id', 'line_ids.amount')
     def _compute_debit_credit_balance(self):
         analytic_line_obj = self.env['account.analytic.line']
         domain = [('account_id', 'in', self.mapped('id'))]
@@ -53,9 +54,9 @@ class AccountAnalyticAccount(models.Model):
     # use auto_join to speed up name_search call
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, track_visibility='onchange')
 
-    balance = fields.Monetary(compute='_compute_debit_credit_balance', string='Balance')
-    debit = fields.Monetary(compute='_compute_debit_credit_balance', string='Debit')
-    credit = fields.Monetary(compute='_compute_debit_credit_balance', string='Credit')
+    balance = fields.Monetary(compute='_compute_debit_credit_balance', string='Balance', store=True)
+    debit = fields.Monetary(compute='_compute_debit_credit_balance', string='Debit', store=True)
+    credit = fields.Monetary(compute='_compute_debit_credit_balance', string='Credit', store=True)
 
     currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True)
 
