@@ -38,9 +38,9 @@ class SaleOrderLine(models.Model):
         # nothing policy. A product can have several BoMs, we don't know which one was used when the
         # delivery was created.
         bom_delivered = {}
-        for bom in self.product_id.product_tmpl_id.bom_ids:
-            if bom.type != 'phantom':
-                continue
+        bom_id = self.env['mrp.bom']._bom_find(product_id=self.product_id.id, properties=self.property_ids.ids)
+        bom = self.env['mrp.bom'].browse(bom_id)
+        if bom and bom.type == 'phantom':
             bom_delivered[bom.id] = False
             product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, bom.product_uom)
             bom_exploded = self.env['mrp.bom']._bom_explode(bom, self.product_id, product_uom_qty_bom)[0]
