@@ -197,7 +197,7 @@ class WebsiteSurvey(http.Controller):
         # Return non empty answers in a JSON compatible format
         for answer in previous_answers:
             if not answer.skipped:
-                answer_tag = '%s_%s_%s' % (answer.survey_id.id, answer.page_id.id, answer.question_id.id)
+                answer_tag = 'survey_%s_%s_%s' % (answer.survey_id.id, answer.page_id.id, answer.question_id.id)
                 answer_value = None
                 if answer.answer_type == 'free_text':
                     answer_value = answer.value_free_text
@@ -255,7 +255,7 @@ class WebsiteSurvey(http.Controller):
         # Answer validation
         errors = {}
         for question in questions:
-            answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
+            answer_tag = "survey_%s_%s_%s" % (survey.id, page_id, question.id)
             errors.update(questions_obj.validate_question(cr, uid, question, post, answer_tag, context=context))
 
         ret = {}
@@ -274,7 +274,7 @@ class WebsiteSurvey(http.Controller):
             user_input = user_input_obj.browse(cr, SUPERUSER_ID, user_input_id, context=context)
             user_id = uid if user_input.type != 'link' else SUPERUSER_ID
             for question in questions:
-                answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
+                answer_tag = "survey_%s_%s_%s" % (survey.id, page_id, question.id)
                 user_input_line_obj.save_lines(cr, user_id, user_input_id, question, post, answer_tag, context=context)
 
             go_back = post['button_submit'] == 'previous'
