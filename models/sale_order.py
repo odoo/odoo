@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    applied_coupon_ids = fields.One2many('sale.coupon', 'order_id', string="Applied Coupons", copy=False)
+    applied_coupon_ids = fields.One2many('sale.coupon', 'sales_order_id', string="Applied Coupons", copy=False)
     generated_coupon_ids = fields.One2many('sale.coupon', 'order_id', string="Offered Coupons", copy=False)
     reward_amount = fields.Float(compute='_compute_reward_total')
     no_code_promo_program_ids = fields.Many2many('sale.coupon.program', string="Applied Immediate Promo Programs",
