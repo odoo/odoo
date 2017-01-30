@@ -105,3 +105,4 @@ class TestEquipment(TransactionCase):
         # As it is generating the requests for one month in advance, we should have 4 requests in total
         tot_requests = self.maintenance_request.search([('equipment_id', '=', equipment_cron.id)])
         self.assertEqual(len(tot_requests), 1, 'The cron should have generated just 1 request for the High Maintenance Monitor.')
+        
