@@ -266,23 +266,14 @@ class BaseModel(object):
         pass
 
     @api.model_cr_context
-    def _field_create(self):
+    def _reflect(self):
         """ Reflect the model and its fields in the models 'ir.model' and
         'ir.model.fields'. Also create entries in 'ir.model.data' if the key
         'module' is passed to the context.
         """
-        # reflect the model in 'ir.model'
-        self.env['ir.model']._reflect(self)
-
-        # reflect the fields in 'ir.model.fields'
-        cr = self.env.cr
-        cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", (self._name,))
-        existing = {row['name']: row for row in cr.dictfetchall()}
-
-        reflect = self.env['ir.model.fields']._reflect
-        for field in self._fields.itervalues():
-            reflect(field, existing)
-
+        self.env['ir.model']._reflect_model(self)
+        self.env['ir.model.fields']._reflect_model(self)
+        self.env['ir.model.constraint']._reflect_model(self)
         self.invalidate_cache()
 
     @api.model
@@ -2065,64 +2056,8 @@ class BaseModel(object):
                               self._table, row['attname'])
 
     @api.model_cr
-    def _save_constraint(self, constraint_name, type, definition, module):
-        """
-        Record the creation of a constraint for this model, to make it possible
-        to delete it later when the module is uninstalled. Type can be either
-        'f' or 'u' depending on the constraint being a foreign key or not.
-        """
-        if not module:
-            # no need to save constraints for custom models as they're not part
-            # of any module
-            return
-        assert type in ('f', 'u')
-        cr = self._cr
-        cr.execute("""
-            SELECT type, definition FROM ir_model_constraint, ir_module_module
-            WHERE ir_model_constraint.module=ir_module_module.id
-                AND ir_model_constraint.name=%s
-                AND ir_module_module.name=%s
-            """, (constraint_name, module))
-        constraints = cr.dictfetchone()
-        if not constraints:
-            cr.execute("""
-                INSERT INTO ir_model_constraint
-                    (name, date_init, date_update, module, model, type, definition)
-                VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
-                    (SELECT id FROM ir_module_module WHERE name=%s),
-                    (SELECT id FROM ir_model WHERE model=%s), %s, %s)""",
-                    (constraint_name, module, self._name, type, definition))
-        elif constraints['type'] != type or (definition and constraints['definition'] != definition):
-            cr.execute("""
-                UPDATE ir_model_constraint
-                SET date_update=now() AT TIME ZONE 'UTC', type=%s, definition=%s
-                WHERE name=%s AND module = (SELECT id FROM ir_module_module WHERE name=%s)""",
-                    (type, definition, constraint_name, module))
-
-    @api.model_cr
     def _drop_constraint(self, source_table, constraint_name):
         self._cr.execute("ALTER TABLE %s DROP CONSTRAINT %s" % (source_table, constraint_name))
-
-    @api.model_cr
-    def _save_relation_table(self, relation_table, module):
-        """
-        Record the creation of a many2many for this model, to make it possible
-        to delete it later when the module is uninstalled.
-        """
-        cr = self._cr
-        cr.execute("""
-            SELECT 1 FROM ir_model_relation, ir_module_module
-            WHERE ir_model_relation.module=ir_module_module.id
-                AND ir_model_relation.name=%s
-                AND ir_module_module.name=%s
-            """, (relation_table, module))
-        if not cr.rowcount:
-            cr.execute("""INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
-                                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
-                    (SELECT id FROM ir_module_module WHERE name=%s),
-                    (SELECT id FROM ir_model WHERE model=%s))""",
-                       (relation_table, module, self._name))
-            self.invalidate_cache()
 
     # checked version: for direct m2o starting from ``self``
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
@@ -2246,7 +2181,7 @@ class BaseModel(object):
         stored_fields = []              # new-style stored fields with compute
         todo_end = self._context['todo']
         update_custom_fields = self._context.get('update_custom_fields', False)
-        self._field_create()
+        self._reflect()
         create = not self._table_exist()
 
         if self._auto:
@@ -2491,7 +2426,8 @@ class BaseModel(object):
         query = 'ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s'
         for table1, column, table2, ondelete, module in self._foreign_keys:
             cr.execute(query % (table1, column, table2, ondelete))
-            self._save_constraint("%s_%s_fkey" % (table1, column), 'f', False, module)
+            conname = "%s_%s_fkey" % (table1, column)
+            self.env['ir.model.constraint']._reflect_constraint(self, conname, 'f', False, module)
         cr.commit()
         del type(self)._foreign_keys
 
@@ -2561,15 +2497,15 @@ class BaseModel(object):
         """
         cr = self._cr
 
-        def unify_cons_text(txt):
+        def cons_text(txt):
             return txt.lower().replace(', ',',').replace(' (','(')
 
-        def drop(name, definition, old_definition):
+        def drop(name, definition):
             try:
                 cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (self._table, name))
                 cr.commit()
-                _schema.debug("Table '%s': dropped constraint '%s'. Reason: its definition changed from '%s' to '%s'",
-                              self._table, name, old_definition, definition)
+                _schema.debug("Table '%s': dropped constraint '%s'. Reason: its definition changed to '%s'",
+                              self._table, name, definition)
             except Exception:
                 _schema.warning("Table '%s': unable to drop constraint '%s'!", self._table, definition)
                 cr.rollback()
@@ -2587,36 +2523,16 @@ class BaseModel(object):
                                 self._table, definition, query)
                 cr.rollback()
 
-        # map each constraint on the name of the module where it is defined
-        constraint_module = {
-            constraint[0]: cls._module
-            for cls in reversed(type(self).mro())
-            if not getattr(cls, 'pool', None)
-            for constraint in getattr(cls, '_local_sql_constraints', ())
-        }
-
         for (key, definition, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
-
-            # using 1 to get result if no imc but one pgc
-            cr.execute("""SELECT definition, 1
-                          FROM ir_model_constraint imc
-                          RIGHT JOIN pg_constraint pgc
-                          ON (pgc.conname = imc.name)
-                          WHERE pgc.conname=%s
-                          """, (conname, ))
-            existing = cr.dictfetchone()
-            if not existing:
+            cr.execute("SELECT pg_get_constraintdef(oid) FROM pg_constraint WHERE conname=%s", (conname,))
+            if not cr.rowcount:
                 # constraint does not exists
                 add(conname, definition)
-            elif unify_cons_text(definition) != existing['definition']:
-                # constraint exists but its definition has changed
-                drop(conname, definition, existing['definition'] or '')
+            elif cons_text(definition) != cons_text(cr.fetchone()[0]):
+                # constraint exists but its definition may have changed
+                drop(conname, definition)
                 add(conname, definition)
-
-            # we need to add the constraint:
-            module = constraint_module.get(key)
-            self._save_constraint(conname, 'u', unify_cons_text(definition), module)
 
     @api.model_cr
     def _execute_sql(self):

@@ -27,19 +27,19 @@ class IrModelFields(models.Model):
 
         return super(IrModelFields, self).write(vals)
 
-    def _reflect_values(self, field, existing):
-        vals = super(IrModelFields, self)._reflect_values(field, existing)
+    def _reflect_field_params(self, field):
+        params = super(IrModelFields, self)._reflect_field_params(field)
 
-        vals['serialization_field_id'] = None
+        params['serialization_field_id'] = None
         if getattr(field, 'sparse', None):
             model = self.env[field.model_name]
             serialization_field = model._fields.get(field.sparse)
             if serialization_field is None:
                 raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (field.sparse, field.name))
-            serialization_record = self._reflect(serialization_field, existing)
-            vals['serialization_field_id'] = serialization_record.id
+            serialization_record = self._reflect_field(serialization_field)
+            params['serialization_field_id'] = serialization_record.id
 
-        return vals
+        return params
 
     def _instanciate_attrs(self, field_data, partial):
         attrs = super(IrModelFields, self)._instanciate_attrs(field_data, partial)
