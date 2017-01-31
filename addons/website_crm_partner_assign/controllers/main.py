@@ -94,13 +94,13 @@ class WebsiteAccount(website_account):
         this_week_end_date = fields.Date.to_string(fields.Date.from_string(today) + datetime.timedelta(days=7))
 
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
+            'all': {'label': _('Active'), 'domain': []},
             'today': {'label': _('Today Activities'), 'domain': [('activity_date_deadline', '=', today)]},
             'week': {'label': _('This Week Activities'),
                      'domain': [('activity_date_deadline', '>=', today), ('activity_date_deadline', '<=', this_week_end_date)]},
             'overdue': {'label': _('Overdue Activities'), 'domain': [('activity_date_deadline', '<', today)]},
-            'won': {'label': _('Won'), 'domain': [('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]},
-            'lost': {'label': _('Lost'), 'domain': [('active', '=', False)]},
+            'won': {'label': _('Won'), 'domain': [('stage_id.probability', '=', 100), ('stage_id.on_change', '=', True)]},
+            'lost': {'label': _('Lost'), 'domain': [('active', '=', False), ('probability', '=', 0)]},
         }
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
@@ -119,6 +119,8 @@ class WebsiteAccount(website_account):
         if not filterby:
             filterby = 'all'
         domain += searchbar_filters[filterby]['domain']
+        if filterby == 'lost':
+            CrmLead = CrmLead.with_context(active_test=False)
 
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('crm.lead', domain)
