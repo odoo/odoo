@@ -370,8 +370,7 @@ var Gui = core.Class.extend({
 
         var blob = new Blob([contents]);
 
-        var evt  = document.createEvent("HTMLEvents");
-            evt.initEvent("click");
+        var evt  = new Event("click");
 
         $("<a>",{
             download: name || 'document.txt',
