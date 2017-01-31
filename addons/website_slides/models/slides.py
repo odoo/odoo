@@ -494,11 +494,12 @@ class Slide(models.Model):
     # --------------------------------------------------
 
     @api.model
-    def _fetch_data(self, base_url, data, content_type=False):
+    def _fetch_data(self, base_url, data, content_type=False, extra_params=False):
         result = {'values': dict()}
         try:
             if data:
-                base_url = base_url + '?%s' % urlencode(data)
+                sep = '?' if not extra_params else '&'
+                base_url = base_url + '%s%s' % (sep, urlencode(data))
             req = urllib2.Request(base_url)
             content = urllib2.urlopen(req).read()
             if content_type == 'json':
@@ -610,12 +611,14 @@ class Slide(models.Model):
             values['datas'] = values['image']
             values['slide_type'] = 'infographic'
         elif google_values['mimeType'].startswith('application/vnd.google-apps'):
-            values['datas'] = self._fetch_data(google_values['exportLinks']['application/pdf'], {}, 'pdf')['values']
             values['slide_type'] = get_slide_type(values)
-            if google_values['exportLinks'].get('text/plain'):
-                values['index_content'] = self._fetch_data(google_values['exportLinks']['text/plain'], {})['values']
-            if google_values['exportLinks'].get('text/csv'):
-                values['index_content'] = self._fetch_data(google_values['exportLinks']['text/csv'], {})['values']
+            if 'exportLinks' in google_values:
+                values['datas'] = self._fetch_data(google_values['exportLinks']['application/pdf'], params, 'pdf', extra_params=True)['values']
+                # Content indexing
+                if google_values['exportLinks'].get('text/plain'):
+                    values['index_content'] = self._fetch_data(google_values['exportLinks']['text/plain'], params, extra_params=True)['values']
+                elif google_values['exportLinks'].get('text/csv'):
+                    values['index_content'] = self._fetch_data(google_values['exportLinks']['text/csv'], params, extra_params=True)['values']
         elif google_values['mimeType'] == 'application/pdf':
             # TODO: Google Drive PDF document doesn't provide plain text transcript
             values['datas'] = self._fetch_data(google_values['webContentLink'], {}, 'pdf')['values']
