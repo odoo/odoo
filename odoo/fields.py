@@ -2261,7 +2261,8 @@ class Many2many(_RelationalMulti):
         # they will be automatically removed when dropping the corresponding ir.model.field
         # table name for custom relation all starts with x_, see __init__
         if not rel.startswith('x_'):
-            model._save_relation_table(rel, self._module)
+            IMR = model.env['ir.model.relation']
+            IMR._reflect_relation(model, rel, self._module)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (rel,))
         if not cr.dictfetchall():
             if self.comodel_name not in model.env:

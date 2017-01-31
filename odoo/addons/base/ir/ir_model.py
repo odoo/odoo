@@ -212,21 +212,24 @@ class IrModel(models.Model):
         }
         return self.create(vals).name_get()[0]
 
-    def _reflect(self, model):
-        """ Reflect the given model and its fields in the models 'ir.model' and
-        'ir.model.fields'. Also create entries in 'ir.model.data' if the key
-        'module' is passed into the context.
-        """
-        cr = self.env.cr
-
-        # create/update the entries in 'ir.model' and 'ir.model.data'
-        params = {
+    def _reflect_model_params(self, model):
+        """ Return the values to write to the database for the given model. """
+        return {
             'model': model._name,
             'name': model._description,
             'info': next(cls.__doc__ for cls in type(model).mro() if cls.__doc__),
             'state': 'manual' if model._custom else 'base',
             'transient': model._transient,
         }
+
+    def _reflect_model(self, model):
+        """ Reflect the given model and return the corresponding record. Also
+            create entries in 'ir.model.data'.
+        """
+        cr = self.env.cr
+
+        # create/update the entries in 'ir.model' and 'ir.model.data'
+        params = self._reflect_model_params(model)
         query_update(cr, self._table, params, ['model'])
         if not cr.rowcount:
             query_insert(cr, self._table, params)
@@ -654,8 +657,15 @@ class IrModelFields(models.Model):
             res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
         return res
 
-    def _reflect_values(self, field, existing):
-        """ Return the values corresponding to the given ``field``. """
+    @tools.ormcache('model_name')
+    def _existing_field_data(self, model_name):
+        """ Return the given model's existing field data. """
+        cr = self._cr
+        cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", [model_name])
+        return {row['name']: row for row in cr.dictfetchall()}
+
+    def _reflect_field_params(self, field):
+        """ Return the values to write to the database for the given field. """
         model = self.env['ir.model']._get(field.model_name)
         return {
             'model_id': model.id,
@@ -679,19 +689,18 @@ class IrModelFields(models.Model):
             'column2': field.column2 if field.type == 'many2many' else None,
         }
 
-    def _reflect(self, field, existing):
-        """ Reflect the given field in the model `ir.model.fields` and return
-            its corresponding record.
-        """
-        vals = self._reflect_values(field, existing)
-        existing_data = existing.get(field.name)
+    def _reflect_field(self, field):
+        """ Reflect the given field and return its corresponding record. """
+        fields_data = self._existing_field_data(field.model_name)
+        field_data = fields_data.get(field.name)
+        params = self._reflect_field_params(field)
 
-        if existing_data is None:
+        if field_data is None:
             cr = self.env.cr
             # create an entry in this table
-            query_insert(cr, self._table, vals)
+            query_insert(cr, self._table, params)
             record = self.browse(cr.fetchone())
-            self._context['todo'].append((20, record.modified, [list(vals)]))
+            self._context['todo'].append((20, record.modified, [list(params)]))
             # create a corresponding xml id
             module = field._module or self._context.get('module')
             if module:
@@ -703,24 +712,29 @@ class IrModelFields(models.Model):
                 cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
                                VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
                            (module, xmlid, record._name, record.id))
-            # update existing (for recursive calls)
-            existing[field.name] = dict(vals, id=record.id)
+            # update fields_data (for recursive calls)
+            fields_data[field.name] = dict(params, id=record.id)
             return record
 
-        diff = {key for key, val in vals.items() if existing_data[key] != val}
+        diff = {key for key, val in params.items() if field_data[key] != val}
         if diff:
             cr = self.env.cr
             # update the entry in this table
-            query_update(cr, self._table, vals, ['model', 'name'])
+            query_update(cr, self._table, params, ['model', 'name'])
             record = self.browse(cr.fetchone())
             self._context['todo'].append((20, record.modified, [diff]))
-            # update existing (for recursive calls)
-            existing_data.update(vals)
+            # update fields_data (for recursive calls)
+            field_data.update(params)
             return record
 
         else:
             # nothing to update, simply return the corresponding record
-            return self.browse(existing_data['id'])
+            return self.browse(field_data['id'])
+
+    def _reflect_model(self, model):
+        """ Reflect the given model's fields. """
+        for field in model._fields.itervalues():
+            self._reflect_field(field)
 
     def _instanciate_attrs(self, field_data, partial):
         """ Return the parameters for a field instance for ``field_data``. """
@@ -849,6 +863,53 @@ class IrModelConstraint(models.Model):
         default['name'] = self.name + '_copy'
         return super(IrModelConstraint, self).copy(default)
 
+    def _reflect_constraint(self, model, conname, type, definition, module):
+        """ Reflect the given constraint, to make it possible to delete it later
+            when the module is uninstalled. ``type`` is either 'f' or 'u'
+            depending on the constraint being a foreign key or not.
+        """
+        if not module:
+            # no need to save constraints for custom models as they're not part
+            # of any module
+            return
+        assert type in ('f', 'u')
+        cr = self._cr
+        query = """ SELECT type, definition
+                    FROM ir_model_constraint c, ir_module_module m
+                    WHERE c.module=m.id AND c.name=%s AND m.name=%s """
+        cr.execute(query, (conname, module))
+        cons = cr.dictfetchone()
+        if not cons:
+            query = """ INSERT INTO ir_model_constraint
+                            (name, date_init, date_update, module, model, type, definition)
+                        VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                            (SELECT id FROM ir_module_module WHERE name=%s),
+                            (SELECT id FROM ir_model WHERE model=%s), %s, %s) """
+            cr.execute(query, (conname, module, model._name, type, definition))
+        elif cons['type'] != type or (definition and cons['definition'] != definition):
+            query = """ UPDATE ir_model_constraint
+                        SET date_update=now() AT TIME ZONE 'UTC', type=%s, definition=%s
+                        WHERE name=%s AND module=(SELECT id FROM ir_module_module WHERE name=%s) """
+            cr.execute(query, (type, definition, conname, module))
+
+    def _reflect_model(self, model):
+        """ Reflect the _sql_constraints of the given model. """
+        def cons_text(txt):
+            return txt.lower().replace(', ',',').replace(' (','(')
+
+        # map each constraint on the name of the module where it is defined
+        constraint_module = {
+            constraint[0]: cls._module
+            for cls in reversed(type(model).mro())
+            if not getattr(cls, 'pool', None)
+            for constraint in getattr(cls, '_local_sql_constraints', ())
+        }
+
+        for (key, definition, _) in model._sql_constraints:
+            conname = '%s_%s' % (model._table, key)
+            module = constraint_module.get(key)
+            self._reflect_constraint(model, conname, 'u', cons_text(definition), module)
+
 
 class IrModelRelation(models.Model):
     """
@@ -896,6 +957,22 @@ class IrModelRelation(models.Model):
             _logger.info('Dropped table %s', table)
 
         self._cr.commit()
+
+    def _reflect_relation(self, model, table, module):
+        """ Reflect the table of a many2many field for the given model, to make
+            it possible to delete it later when the module is uninstalled.
+        """
+        cr = self._cr
+        query = """ SELECT 1 FROM ir_model_relation r, ir_module_module m
+                    WHERE r.module=m.id AND r.name=%s AND m.name=%s """
+        cr.execute(query, (table, module))
+        if not cr.rowcount:
+            query = """ INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
+                        VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                                (SELECT id FROM ir_module_module WHERE name=%s),
+                                (SELECT id FROM ir_model WHERE model=%s)) """
+            cr.execute(query, (table, module, model._name))
+            self.invalidate_cache()
 
 
 class IrModelAccess(models.Model):
