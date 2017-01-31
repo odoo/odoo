@@ -44,7 +44,6 @@ class SaleOrder(models.Model):
                 order._update_existing_reward_lines()
         return res
 
-
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         self.generated_coupon_ids.write({'state': 'new'})
