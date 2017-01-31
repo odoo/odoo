@@ -614,6 +614,7 @@ class Database(http.Controller):
         d['databases'] = []
         try:
             d['databases'] = http.db_list()
+            d['incompatible_databases'] = odoo.service.db.list_db_incompatible(d['databases'])
         except odoo.exceptions.AccessDenied:
             monodb = db_monodb()
             if monodb:

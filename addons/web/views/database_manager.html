@@ -129,7 +129,7 @@
       {% if databases %}
         <div class="list-group">
           {% for db in databases %}
-          <a href="/web?db={{ db }}" class="list-group-item">
+          <a href="/web?db={{ db }}" class="list-group-item" {{ 'style=background-color:#d9d9d9' if  db in incompatible_databases }} >
             {{ db }}
             {% if manage %}
             <div class="text-right pull-right">
