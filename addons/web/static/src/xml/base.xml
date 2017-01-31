@@ -802,7 +802,7 @@
 </div>
 
 <div t-name="FieldSelector" class="o_field_selector">
-    <input type="text" t-att-value="widget.chain" t-att-readonly="!(widget.debug) and 1 or None"/>
+    <input type="text" t-att-value="widget.chain" t-att-readonly="!(widget.options.debugMode) and 1 or None"/>
     <div class="o_field_selector_controls">
         <i class="fa fa-exclamation-triangle o_field_selector_warning hidden" title="Invalid field chain"/>
     </div>
@@ -818,13 +818,15 @@
     </div>
 </div>
 <ul t-name="FieldSelector.page" t-attf-class="o_field_selector_page #{animation}">
-    <li t-foreach="lines" t-as="line"
-        t-attf-class="o_field_selector_item #{line.relation and 'o_field_selector_next_page' or 'o_field_selector_select_button'}#{line_index == 0 and ' active' or ''}"
-        t-att-data-name="line.name">
-        <t t-esc="line.string"/>
-        <div t-if="debug" class="text-muted o_field_selector_item_title"><t t-esc="line.name"/> (<t t-esc="line.type"/>)</div>
-        <i t-if="line.relation" class="fa fa-chevron-right o_field_selector_relation_icon" t-att-data-name="line.name"/>
-    </li>
+    <t t-foreach="lines" t-as="line">
+        <t t-set="relationToFollow" t-value="followRelations &amp;&amp; line.relation"/>
+        <li t-attf-class="o_field_selector_item #{relationToFollow and 'o_field_selector_next_page' or 'o_field_selector_select_button'}#{line_index == 0 and ' active' or ''}"
+            t-att-data-name="line.name">
+            <t t-esc="line.string"/>
+            <div t-if="debug" class="text-muted o_field_selector_item_title"><t t-esc="line.name"/> (<t t-esc="line.type"/>)</div>
+            <i t-if="relationToFollow" class="fa fa-chevron-right o_field_selector_relation_icon"/>
+        </li>
+    </t>
 </ul>
 
 <t t-name="web.datepicker">
