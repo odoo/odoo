@@ -598,7 +598,10 @@ class Picking(models.Model):
                     continue
                 move_quants = move.reserved_quant_ids
                 picking_quants += move_quants
-                forced_qty = (move.state == 'assigned') and move.product_qty - sum([x.qty for x in move_quants]) or 0
+                forced_qty = 0.0
+                if move.state == 'assigned':
+                    qty = move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id, round=False)
+                    forced_qty = qty - sum([x.qty for x in move_quants])
                 # if we used force_assign() on the move, or if the move is incoming, forced_qty > 0
                 if float_compare(forced_qty, 0, precision_rounding=move.product_id.uom_id.rounding) > 0:
                     if forced_qties.get(move.product_id):
