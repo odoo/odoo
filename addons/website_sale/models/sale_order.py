@@ -139,7 +139,7 @@ class SaleOrder(models.Model):
 
         # Remove zero of negative lines
         if quantity <= 0:
-            order_line.unlink()
+            order_line.order_id.write({'order_line': [(2, order_line.id, False)]})
         else:
             # update line
             values = self._website_product_id_change(self.id, product_id, qty=quantity)
@@ -149,7 +149,7 @@ class SaleOrder(models.Model):
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
                 values['price_unit'] = order_line._get_display_price(order_line.product_id)
 
-            order_line.write(values)
+            order_line.order_id.write({'order_line': [(1, order_line.id, values)]})
 
         return {'line_id': order_line.id, 'quantity': quantity}
 
