@@ -74,7 +74,7 @@ class Blackbox(Thread):
                     if discon_dev not in devices:
                         if hw_proxy.rs232_devices[known_path] == DRIVER_NAME:
                             self.device_path = None
-                            del hw_proxy.rs232_devices[known_path]
+                        del hw_proxy.rs232_devices[known_path]
 
                 if self.device_path and hw_proxy.rs232_devices.get(self.device_path) == DRIVER_NAME:
                     self.set_status('connected', [self.device_path.split('/')[-1]])
@@ -82,19 +82,12 @@ class Blackbox(Thread):
 
                 for device in devices:
                     path_to_device = path + device
-                    if device in hw_proxy.rs232_devices:
+                    if path_to_device in hw_proxy.rs232_devices:
                         if hw_proxy.rs232_devices[path_to_device] != 'scale':
                             continue
                     _logger.debug("Probing " + device)
 
-                    try:
-                        blackbox_response = self._send_to_blackbox(probe_message, 21, path_to_device, just_wait_for_ack=True)
-                    except serial.SerialException as se:
-                        _logger.warn(str(se))
-                        blackbox_response = None
-                    except OSError as oe:
-                        _logger.warn(str(oe))
-                        blackbox_response = None
+                    blackbox_response = self._send_to_blackbox(probe_message, 21, path_to_device, just_wait_for_ack=True)
 
                     if blackbox_response and blackbox_response != "":
                         _logger.info(device + " will be used as the blackbox")
@@ -161,40 +154,43 @@ class Blackbox(Thread):
         if not device_path:
             return ""
 
-        ser = serial.Serial(port=device_path,
-                            baudrate=19200,
-                            timeout=3)
-        MAX_NACKS = 1
-        got_response = False
-        sent_nacks = 0
+        to_return = None
 
-        if self._send_and_wait_for_ack(packet, ser):
-            if just_wait_for_ack:
-                return True
+        try:
+            with serial.Serial(port=device_path, baudrate=19200, timeout=3) as ser:
+                MAX_NACKS = 1
+                got_response = False
+                sent_nacks = 0
 
-            while not got_response and sent_nacks < MAX_NACKS:
-                stx = ser.read(1)
-                response = ser.read(response_size)
-                etx = ser.read(1)
-                bcc = ser.read(1)
+                if self._send_and_wait_for_ack(packet, ser):
+                    if just_wait_for_ack:
+                        to_return = True
 
-                if stx == chr(0x02) and etx == chr(0x03) and bcc and self._lrc(response) == ord(bcc):
-                    got_response = True
-                    ser.write(chr(0x06))
+                    while not got_response and sent_nacks < MAX_NACKS:
+                        stx = ser.read(1)
+                        response = ser.read(response_size)
+                        etx = ser.read(1)
+                        bcc = ser.read(1)
+
+                        if stx == chr(0x02) and etx == chr(0x03) and bcc and self._lrc(response) == ord(bcc):
+                            got_response = True
+                            ser.write(chr(0x06))
+                        else:
+                            _logger.warning("received ACK but not a valid response, sending NACK...")
+                            sent_nacks += 1
+                            ser.write(chr(0x15))
+
+                    if not got_response:
+                        _logger.error("sent " + str(MAX_NACKS) + " NACKS without receiving response, giving up.")
+                        to_return = ""
+
+                    to_return = response
                 else:
-                    _logger.warning("received ACK but not a valid response, sending NACK...")
-                    sent_nacks += 1
-                    ser.write(chr(0x15))
-
-            if not got_response:
-                _logger.error("sent " + str(MAX_NACKS) + " NACKS without receiving response, giving up.")
-                return ""
-
-            ser.close()
-            return response
-        else:
-            ser.close()
-            return ""
+                    to_return = ""
+        except:
+            _logger.warning('There has been an error when contacting the blackbox on ' + device_path, exc_info=True)
+            self.device_path = None
+        return to_return
 
 if isfile("/home/pi/registered_blackbox_be"):
     blackbox_thread = Blackbox()
