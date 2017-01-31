@@ -5,6 +5,7 @@ import datetime
 import werkzeug
 
 from collections import OrderedDict
+from werkzeug.exceptions import NotFound
 
 from odoo import fields
 from odoo import http
@@ -149,16 +150,21 @@ class WebsiteAccount(website_account):
         })
         return request.render("website_crm_partner_assign.portal_my_opportunities", values)
 
-    @http.route(['/my/lead/<model("crm.lead"):lead>'], type='http', auth="user", website=True)
-    def portal_my_lead(self, lead=None, **kw):
+    @http.route(['''/my/lead/<model('crm.lead', "[('type','=', 'lead')]"):lead>'''], type='http', auth="user", website=True)
+    def portal_my_lead(self, lead, **kw):
+        if lead.type != 'lead':
+            raise NotFound()
         return request.render("website_crm_partner_assign.portal_my_lead", {'lead': lead})
 
-    @http.route(['/my/opportunity/<model("crm.lead"):lead>'], type='http', auth="user", website=True)
-    def portal_my_opportunity(self, lead=None, **kw):
+    @http.route(['''/my/opportunity/<model('crm.lead', "[('type','=', 'opportunity')]"):opp>'''], type='http', auth="user", website=True)
+    def portal_my_opportunity(self, opp, **kw):
+        if opp.type != 'opportunity':
+            raise NotFound()
+
         return request.render(
             "website_crm_partner_assign.portal_my_opportunity", {
-                'opportunity': lead,
-                'user_activity': lead.activity_ids.filtered(lambda activity: activity.user_id == request.env.user)[:1],
+                'opportunity': opp,
+                'user_activity': opp.activity_ids.filtered(lambda activity: activity.user_id == request.env.user)[:1],
                 'stages': request.env['crm.stage'].search([('probability', '!=', '100')], order='sequence desc'),
                 'activity_types': request.env['mail.activity.type'].sudo().search([]),
                 'states': request.env['res.country.state'].sudo().search([]),
