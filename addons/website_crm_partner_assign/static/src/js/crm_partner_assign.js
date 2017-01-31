@@ -124,6 +124,7 @@ $('.edit_opp_confirm').on('click',function(){
     $btn.prop('disabled', true);
     new Model('crm.lead')
         .call("update_lead_portal", [[parseInt($('.edit_opp_form .opportunity_id').val())],{
+            date_deadline: $('.edit_opp_form .date_deadline').val(),
             planned_revenue: parseFloat($('.edit_opp_form .planned_revenue').val()),
             probability: parseFloat($('.edit_opp_form .probability').val()),
             activity_type_id: parseInt($('.edit_opp_form .next_activity').find(":selected").attr('data')),
