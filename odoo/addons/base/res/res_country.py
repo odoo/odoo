@@ -91,7 +91,7 @@ class CountryGroup(models.Model):
     _description = "Country Group"
     _name = 'res.country.group'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     country_ids = fields.Many2many('res.country', 'res_country_res_country_group_rel',
                                    'res_country_group_id', 'res_country_id', string='Countries')
 
@@ -105,7 +105,7 @@ class CountryState(models.Model):
     name = fields.Char(string='State Name', required=True,
                help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton')
     code = fields.Char(string='State Code', help='The state code.', required=True)
-
+    image = fields.Binary(attachment=True, required=False)
     _sql_constraints = [
         ('name_code_uniq', 'unique(country_id, code)', 'The code of the state must be unique by country !')
     ]
