@@ -215,8 +215,8 @@ class mrp_bom(osv.osv):
             return False
         if context.get('company_id'):
             domain = domain + [('company_id', '=', context['company_id'])]
-        domain = domain + [ '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
-                            '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT))]
+        domain = domain + [ '|', ('date_start', '=', False), ('date_start', '<=', (context and context.get('bom_effectivity_date') or time.strftime(DEFAULT_SERVER_DATE_FORMAT))),
+                            '|', ('date_stop', '=', False), ('date_stop', '>=', (context and context.get('bom_effectivity_date') or time.strftime(DEFAULT_SERVER_DATE_FORMAT)))]
         # order to prioritize bom with product_id over the one without
         ids = self.search(cr, uid, domain, order='sequence, product_id', context=context)
         # Search a BoM which has all properties specified, or if you can not find one, you could
@@ -237,8 +237,8 @@ class mrp_bom(osv.osv):
         @param product: Selected product produced.
         @return: True or False
         """
-        if line.date_start and line.date_start > time.strftime(DEFAULT_SERVER_DATE_FORMAT) or \
-            line.date_stop and line.date_stop < time.strftime(DEFAULT_SERVER_DATE_FORMAT):
+        if line.date_start and line.date_start >= (context and context.get('bom_effectivity_date') or time.strftime(DEFAULT_SERVER_DATE_FORMAT)) or \
+            line.date_stop and line.date_stop < (context and context.get('bom_effectivity_date') or time.strftime(DEFAULT_SERVER_DATE_FORMAT)):
                 return True
         # all bom_line_id variant values must be in the product
         if line.attribute_value_ids:
