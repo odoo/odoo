@@ -129,7 +129,10 @@
       {% if databases %}
         <div class="list-group">
           {% for db in databases %}
-          <a href="/web?db={{ db }}" class="list-group-item">
+          <a href="/web?db={{ db }}" class="list-group-item" >
+            {% if db in incompatible_databases %}
+              <i class="icon fa fa-warning pull-right text-warning" title="This database may not be compatible"></i>
+            {% endif %}
             {{ db }}
             {% if manage %}
             <div class="text-right pull-right">
