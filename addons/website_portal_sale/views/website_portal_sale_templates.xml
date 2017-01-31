@@ -311,28 +311,28 @@
                         <div class="col-md-6">
                           <strong>Product</strong>
                         </div>
-                        <div class="col-md-2 text-right">
+                        <div class="hidden-sm hidden-xs col-md-2 text-right">
                           <strong>Unit Price</strong>
                         </div>
-                        <div class="col-md-2 text-right">
+                        <div class="hidden-sm hidden-xs col-md-2 text-right">
                           <strong>Quantity</strong>
                         </div>
-                        <div class="col-md-2 text-right">
+                        <div class="hidden-sm hidden-xs col-md-2 text-right">
                           <strong>Subtotal</strong>
                         </div>
                       </div>
                       <t t-foreach="order.order_line" t-as="ol">
                         <div class="row orders_vertical_align">
-                            <div class="col-md-1 text-center">
-                                <img t-att-src="'/web/image/product.product/%s/image_small/48x48' % ol.product_id.id"/>
+                            <div class="visible-lg col-lg-1 text-center">
+                              <span t-field="ol.product_id.image_small" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}" />
                             </div>
-                            <div id='product_name' class="col-md-5">
+                            <div id='product_name' class="col-lg-4 col-sm-6 col-xs-4">
                               <span t-esc="ol.product_id.name"/>
                             </div>
-                          <div class="col-md-2 text-right">
+                          <div class="col-xs-3 text-right">
                             <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                           </div>
-                          <div class="col-md-2 text-right">
+                          <div class="col-xs-2 text-right">
                             <t t-if="ol._name == 'sale.order.line'">
                               <span t-esc="ol.product_uom_qty"/>
                             </t>
@@ -340,7 +340,7 @@
                               <span t-esc="ol.quantity"/>
                             </t>
                           </div>
-                          <div class="col-md-2 text-right">
+                          <div class="col-sm-2 col-xs-3 text-right">
                             <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                           </div>
                         </div>
@@ -354,29 +354,30 @@
                             <strong>Contact</strong>
                           </div>
                           <div t-field="order.user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
+                          <br/>
                         </div>
                         <div class="col-md-6">
                           <div class="row">
-                            <div class="col-md-10 text-right">
+                            <div class="col-md-10 col-xs-8 text-right">
                               Untaxed Amount:
                             </div>
-                            <div class="col-md-2 text-right">
+                            <div class="col-md-2 col-xs-4 text-right">
                               <span t-field="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                             </div>
                           </div>
                           <div class="row">
-                            <div class="col-md-10 text-right">
+                            <div class="col-md-10 col-xs-8 text-right">
                               Taxes:
                             </div>
-                            <div class="col-md-2 text-right">
+                            <div class="col-md-2 col-xs-4 text-right">
                               <span t-field="order.amount_tax" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                             </div>
                           </div>
                           <div class="row">
-                            <div class="col-md-10 text-right">
+                            <div class="col-md-10 col-xs-8 text-right">
                               <strong>Total:</strong>
                             </div>
-                            <div class="col-md-2 text-right">
+                            <div class="col-md-2 col-xs-4 text-right">
                               <strong><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></strong>
                             </div>
                           </div>
