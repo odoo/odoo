@@ -232,7 +232,7 @@ class IrModel(models.Model):
             query_insert(cr, self._table, params)
 
         record = self.browse(cr.fetchone())
-        self._context['todo'].append((10, record.modified, [['name', 'info', 'transient']]))
+        self._context['todo'].append((10, record.modified, [set(params) - {'model', 'state'}]))
 
         if model._module == self._context.get('module'):
             # self._module is the name of the module that last extended self
@@ -707,13 +707,13 @@ class IrModelFields(models.Model):
             existing[field.name] = dict(vals, id=record.id)
             return record
 
-        if not all(existing_data[key] == val for key, val in vals.iteritems()):
+        diff = {key for key, val in vals.items() if existing_data[key] != val}
+        if diff:
             cr = self.env.cr
             # update the entry in this table
             query_update(cr, self._table, vals, ['model', 'name'])
             record = self.browse(cr.fetchone())
-            modified = set(vals) - set(['model', 'name'])
-            self._context['todo'].append((20, record.modified, [modified]))
+            self._context['todo'].append((20, record.modified, [diff]))
             # update existing (for recursive calls)
             existing_data.update(vals)
             return record
