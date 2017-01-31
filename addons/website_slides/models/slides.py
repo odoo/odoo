@@ -566,12 +566,13 @@ class Slide(models.Model):
     def _parse_google_document(self, document_id, only_preview_fields):
         def get_slide_type(vals):
             # TDE FIXME: WTF ??
-            image = Image.open(io.BytesIO(vals['image'].decode('base64')))
-            width, height = image.size
-            if height > width:
-                return 'document'
-            else:
-                return 'presentation'
+            slide_type = 'presentation'
+            if vals.get('image'):
+                image = Image.open(io.BytesIO(vals['image'].decode('base64')))
+                width, height = image.size
+                if height > width:
+                    return 'document'
+            return slide_type
 
         # Google drive doesn't use a simple API key to access the data, but requires an access
         # token. However, this token is generated in module google_drive, which is not in the
