@@ -191,7 +191,8 @@
                         <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight" groups="base.group_user"/>
                         <button string="Finish Event" name="button_done" states="confirm" type="object" class="oe_highlight" groups="base.group_user"/>
                         <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" groups="base.group_user"/>
-                        <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" groups="base.group_user"/>
+                        <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" groups="base.group_user" attrs="{'invisible': ['|', ('seats_expected', '!=', 0)]}"/>
+                        <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" groups="base.group_user" confirm="Are you sure you want to cancel this event? All the linked attendees will be cancelled as well." attrs="{'invisible': ['|', ('seats_expected', '=', 0)]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
                     <sheet>
