@@ -303,11 +303,10 @@ class EventEvent(models.Model):
     def button_draft(self):
         self.state = 'draft'
 
-    @api.one
+    @api.multi
     def button_cancel(self):
-        for event_reg in self.registration_ids:
-            if event_reg.state == 'done':
-                raise UserError(_("You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event."))
+        if any('done' in event.mapped('registration_ids.state') for event in self):
+            raise UserError(_("There are already attendees who attended this event. Please reset it to draft if you want to cancel this event."))
         self.registration_ids.write({'state': 'cancel'})
         self.state = 'cancel'
 
