@@ -360,10 +360,17 @@ var Gui = core.Class.extend({
     debug_email: function(debug_type,date_string,data) {
         var self = this;
         var email_to = this.pos.get_cashier().email || "";
-        var subject_line = "[POS][DEBUG] Support "+debug_type;
-        
+        var subject_line = "[Odoo][DEBUG] Support "+debug_type + "  " + date_string;
+        var custom_text = "";
+
+        if (debug_type === 'error') {
+            custom_text = " that happened unfortunately";
+        } else {
+            custom_text = " you requested";
+        }
+
         var body = "<p>Hello,</p>"+
-                        "<p>Please find the export of debug type ["+debug_type+"]</p>"+
+                        "<p>Please find below the content of the "+ debug_type + custom_text +".</p>"+
                         "<pre><code>"+data+"</code></pre>"+
                         "<p>Best Regards</p>";
 

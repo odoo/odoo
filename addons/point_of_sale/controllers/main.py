@@ -47,12 +47,12 @@ class PosController(http.Controller):
         mail_to_send = None
         try:
             mail_body = ("<p>Hello,</p>" +
-                         "<p>Please find in attachment the export of debug type [" + debug_type + "]</p>" +
+                         "<p>Please find in attachment the content of the " + debug_type + ".</p>" +
                          "<p>Best Regards</p>")
 
             attachement = Ir_attachment.create({
                 'name': subject,
-                'datas_fname': date_string + '.txt',
+                'datas_fname': debug_type + '_' + date_string + '.txt',
                 'datas': str(data).encode('base64'),
             })
 

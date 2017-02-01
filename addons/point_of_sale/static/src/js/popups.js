@@ -105,8 +105,9 @@ var ErrorTracebackPopupWidget = ErrorPopupWidget.extend({
         this._super(opts);
 
         this.$('.email').off('click').click(function(){
-            self.gui.debug_email("Traceback",
-                'IMPORTANT: Bug Report From Odoo Point Of Sale',
+            var date_string =  (new Date()).toUTCString().replace(/\ |:|,/g,'_');
+            self.gui.debug_email("error",
+                date_string,
                 self.options.body);
         });
     }
@@ -131,7 +132,7 @@ var ConfirmPopupWidget = PopupWidget.extend({
 
         this.$('.email').off('click').click(function(){
             var date_string =  (new Date()).toUTCString().replace(/\ |:|,/g,'_');
-            self.gui.debug_email("Export",
+            self.gui.debug_email("export",
                 date_string,
                 self.options.body);
         });
