@@ -1151,6 +1151,7 @@
     </template>
 
     <template id="address" name="Address Management">
+        <t t-set="no_footer">1</t>
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="container oe_website_sale">
@@ -1163,17 +1164,17 @@
                         <div class="col-md-9 oe_cart">
                             <div class="row">
                                 <t t-if="mode == ('new', 'billing')">
-                                    <h2 class="page-header mt16">Your Address
+                                    <h2 class="page-header mt16 ml16">Your Address
                                         <small> or </small>
                                         <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', 'Sign Up') or ('login', 'Log In')"/>
                                         <a t-attf-href='/web/{{connect[0]}}?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px"><t t-esc='connect[1]'/></a>
                                     </h2>
                                 </t>
                                 <t t-if="mode == ('edit', 'billing')">
-                                    <h2 class="page-header mt16">Your Address</h2>
+                                    <h2 class="page-header mt16 ml16">Your Address</h2>
                                 </t>
                                 <t t-if="mode[1] == 'shipping'">
-                                    <h2 class="page-header mt16">Shipping Address </h2>
+                                    <h2 class="page-header mt16 ml16">Shipping Address </h2>
                                 </t>
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
                                     <h4 class="text-danger" t-esc="err" />

@@ -232,26 +232,29 @@ class CrmLead(models.Model):
                 'planned_revenue': values['planned_revenue'],
                 'probability': values['probability'],
                 'priority': values['priority'],
+                'date_deadline': values['date_deadline'] or False,
             }
             # As activities may belong to several users, only the current portal user activity
             # will be modified by the portal form. If no activity exist we create a new one instead
             # that we assign to the portal user.
+
             user_activity = lead.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
-            if user_activity:
-                user_activity.sudo().write({
-                    'activity_type_id': values['activity_type_id'],
-                    'summary': values['activity_summary'],
-                    'date_deadline': values['activity_date_deadline'],
-                })
-            else:
-                self.env['mail.activity'].sudo().create({
-                    'res_model_id': self.env.ref('crm.model_crm_lead').id,
-                    'res_id': lead.id,
-                    'user_id': self.env.user.id,
-                    'activity_type_id': values['activity_type_id'],
-                    'summary': values['activity_summary'],
-                    'date_deadline': values['activity_date_deadline'],
-                })
+            if values['activity_date_deadline']:
+                if user_activity:
+                    user_activity.sudo().write({
+                        'activity_type_id': values['activity_type_id'],
+                        'summary': values['activity_summary'],
+                        'date_deadline': values['activity_date_deadline'],
+                    })
+                else:
+                    self.env['mail.activity'].sudo().create({
+                        'res_model_id': self.env.ref('crm.model_crm_lead').id,
+                        'res_id': lead.id,
+                        'user_id': self.env.user.id,
+                        'activity_type_id': values['activity_type_id'],
+                        'summary': values['activity_summary'],
+                        'date_deadline': values['activity_date_deadline'],
+                    })
             lead.write(lead_values)
 
     @api.model

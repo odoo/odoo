@@ -102,7 +102,7 @@ class IrUiMenu(models.Model):
             'ir.actions.report.xml': lambda action: action.model,
             'ir.actions.server': lambda action: action.model_id.model,
         }
-        for menu in action_menus:
+        for menu in action_menus.sudo():
             get_model = MODEL_GETTER.get(menu.action._name)
             if not get_model or not get_model(menu.action) or \
                     access.check(get_model(menu.action), 'read', False):
