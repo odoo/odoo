@@ -80,6 +80,13 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record id="invoice_analysis_comp_rule" model="ir.rule">
+        <field name="name">Invoice Analysis multi-company</field>
+        <field name="model_id" ref="model_account_invoice_report"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
     <record id="account_fiscal_position_comp_rule" model="ir.rule">
         <field name="name">Account fiscal Mapping company rule</field>
         <field name="model_id" ref="model_account_fiscal_position"/>

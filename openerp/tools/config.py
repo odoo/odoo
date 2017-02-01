@@ -568,9 +568,13 @@ class configmanager(object):
 
     @property
     def addons_data_dir(self):
-        d = os.path.join(self['data_dir'], 'addons', release.series)
+        add_dir = os.path.join(self['data_dir'], 'addons')
+        d = os.path.join(add_dir, release.series)
         if not os.path.exists(d):
             try:
+                # bootstrap parent dir +rwx
+                if not os.path.exists(add_dir):
+                    os.makedirs(add_dir, 0700)
                 # try to make +rx placeholder dir, will need manual +w to activate it
                 os.makedirs(d, 0500)
             except OSError:
