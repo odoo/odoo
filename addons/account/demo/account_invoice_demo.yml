@@ -61,7 +61,7 @@
     reference_type: none
     payment_term_id: account.account_payment_term_immediate
     type: 'out_invoice'
-    date_invoice: !eval time.strftime('%Y-%m-%d')
+    date_invoice: !eval (datetime.today() + timedelta(days=-15)).strftime('%Y-%m-%d')
     invoice_line_ids:
       - product_id: product.consu_delivery_02
         price_unit: 642.0
