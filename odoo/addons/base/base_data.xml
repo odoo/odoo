@@ -37,7 +37,7 @@
         <record model="res.partner" id="base.partner_root">
             <field name="name">Administrator</field>
             <field name="company_id" ref="main_company"/>
-            <field name="customer" eval="True"/>
+            <field name="customer" eval="False"/>
             <field name="email">admin@example.com</field>
         </record>
 
@@ -90,7 +90,6 @@ Administrator</span>]]></field>
         <record id="public_partner" model="res.partner">
             <field name="name">Public user</field>
             <field name="active" eval="False"/>
-            <field name="customer" eval="True"/>
         </record>
         
         <record id="public_user" model="res.users">
