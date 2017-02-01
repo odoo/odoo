@@ -37,15 +37,13 @@ class PosController(http.Controller):
     def send_email(self, debug_type, date_string=None, data=None, **kwargs):
         Mail_mail = request.env['mail.mail']
         Ir_attachment = request.env['ir.attachment']
-        user_from = request.env['res.users'].search([("id", "=", request.session.uid)])
-        email_to = user_from.email
+        user_from = request.env['res.users'].browse(request.session.uid)
 
         if not date_string:
             date_string = json.loads(data).keys()[0] + "_" + datetime.now().strftime("%Y-%m-%d_%H_%M_%S")
 
-        subject = "[POS][DEBUG] Support " + date_string
+        subject = "[Odoo][DEBUG] Support " + date_string
 
-        result = None
         mail_to_send = None
         try:
             mail_body = ("<p>Hello,</p>" +
@@ -55,7 +53,7 @@ class PosController(http.Controller):
             mail_to_send = Mail_mail.create({
                 'subject': subject,
                 'body_html': mail_body,
-                'email_to': email_to,
+                'email_to': user_from.email,
                 "email_from": user_from.email})
 
             attachement = Ir_attachment.create({
@@ -69,13 +67,10 @@ class PosController(http.Controller):
                                 })
 
             mail_to_send.send()
-            if not mail_to_send.mail_sent:
-                return {'status': 'Failed',
-                        'message': "The email has not been sent"}
 
             _logger.info("Email Sent")
             return {'status': "Success",
-                    'message': "E-Mail sent to " + email_to}
+                    'message': "E-Mail sent to " + user_from.email}
 
         except MailDeliveryException as mde:
             return {'status': 'Failed',
