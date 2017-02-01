@@ -209,6 +209,10 @@ var PivotView = View.extend({
         this.do_push_state({});
         this.data_loaded.done(function () {
             self.display_table(); 
+            self.$buttons.find('.o_pivot_measures_list li').removeClass('selected');
+            self.active_measures.forEach(function (measure) {
+                self.$buttons.find('li[data-field="' + measure + '"]').addClass('selected');
+            });
         });
         return this._super();
     },
