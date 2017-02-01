@@ -1,4 +1,4 @@
-Ecuador, February 1, 201y
+Ecuador, February 1, 2017
 
 Odoo-Group-Ecuador agrees to the terms of the Odoo Corporate Contributor License Agreement v1.0.
 
