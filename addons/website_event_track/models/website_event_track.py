@@ -87,6 +87,8 @@ class Track(models.Model):
 
     @api.model
     def create(self, vals):
+        if not vals.get('stage_id'):
+            vals['stage_id'] = self.stage_find(vals.get('event_id'), [('fold', '=', False)])
         res = super(Track, self).create(vals)
         res.message_post_with_view(
             'website_event_track.event_track_template_new',
@@ -143,6 +145,17 @@ class Track(models.Model):
         if 'stage_id' in changes and test_track.stage_id.mail_template_id:
             res['stage_id'] = (test_track.stage_id.mail_template_id, {'composition_mode': 'mass_mail'})
         return res
+
+    @api.multi
+    def message_get_suggested_recipients(self):
+        recipients = super(Track, self).message_get_suggested_recipients()
+        try:
+            for speaker in self:
+                if speaker.speaker_email != speaker.speaker_id.email:
+                    speaker._message_add_suggested_recipient(recipients, email=speaker.speaker_email, reason=_('Speaker Email'))
+        except AccessError:     # no read access rights -> ignore suggested recipients
+            pass
+        return recipients
 
 class TrackStage(models.Model):
     _name = 'event.track.stage'

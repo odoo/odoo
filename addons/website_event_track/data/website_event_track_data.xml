@@ -15,6 +15,34 @@
             <field name="sequence">1</field>
         </record>
 
+        <record id="event_track_stage0" model="event.track.stage">
+            <field name="name">Proposal</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="event_track_stage1" model="event.track.stage">
+            <field name="name">Confirmed</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="event_track_stage2" model="event.track.stage">
+            <field name="name">Announced</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="event_track_stage3" model="event.track.stage">
+            <field name="name">Published</field>
+            <field name="sequence">4</field>
+        </record>
+        <record id="event_track_stage4" model="event.track.stage">
+            <field name="name">Refused</field>
+            <field name="sequence">5</field>
+            <field name="fold" eval="True"/>
+        </record>
+        <record id="event_track_stage5" model="event.track.stage">
+            <field name="name">Cancelled</field>
+            <field name="sequence">6</field>
+            <field name="fold" eval="True"/>
+            <field name="is_cancel" eval="True"/>
+        </record>
+
         <!-- Event-related subtypes for new track / Chatter -->
         <record id="mt_event_track" model="mail.message.subtype">
             <field name="name">New Track</field>

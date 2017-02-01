@@ -126,12 +126,12 @@ class WebsiteEventTrackController(http.Controller):
                 tags.append(tag.id)
 
         partner = Partner.sudo().search([('email', '=', post['email_from'])])
-        if not partner:
-            partner = Partner.sudo().create({
-                'name': post['speaker_name'],
-                'phone': post['phone'],
-                'email': post['email_from']
-                })
+        # if not partner:
+        #     partner = Partner.sudo().create({
+        #         'name': post['speaker_name'],
+        #         'phone': post['phone'],
+        #         'email': post['email_from']
+        #         })
         track = request.env['event.track'].sudo().create({
             'name': post['track_name'],
             'speaker_name': post['speaker_name'],
@@ -143,4 +143,6 @@ class WebsiteEventTrackController(http.Controller):
             'tag_ids': [(6, 0, tags)],
             'description': escape(post['description'])
         })
+        if partner:
+            track.sudo().write({'speaker_id': partner.id})
         return request.render("website_event_track.event_track_proposal_success", {'track': track, 'event': event})
