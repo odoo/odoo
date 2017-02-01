@@ -54,7 +54,7 @@ function get_fc_defaultOptions() {
         monthNamesShort: moment.monthsShort(),
         dayNames: moment.weekdays(),
         dayNamesShort: moment.weekdaysShort(),
-        firstDay: moment._locale._week.dow,
+        firstDay: moment().startOf('week').isoWeekday(),
         weekNumberCalculation: function(date) {
             return moment(date).week();
         },
