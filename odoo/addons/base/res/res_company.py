@@ -158,8 +158,15 @@ class Company(models.Model):
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
 
-    def _get_sync_address_fields(self):
-        return ['street', 'street2', 'city', 'zip', 'state_id', 'country_id', 'fax']
+    def _get_sync_address_fields(self, partner):
+        return {
+            'street'     : partner.street,
+            'street2'    : partner.street2,
+            'city'       : partner.city,
+            'zip'        : partner.zip,
+            'state_id'   : partner.state_id,
+            'country_id' : partner.country_id,
+            'fax'        : partner.fax}
 
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address
@@ -168,8 +175,7 @@ class Company(models.Model):
             address_data = company.partner_id.sudo().address_get(adr_pref=['contact'])
             if address_data['contact']:
                 partner = company.partner_id.browse(address_data['contact'])
-                for field in self._get_sync_address_fields():
-                    setattr(company, field, getattr(partner, field))
+                company.write(self._get_sync_address_fields(partner))
 
     def _inverse_street(self):
         for company in self:
