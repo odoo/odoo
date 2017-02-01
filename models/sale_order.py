@@ -21,6 +21,15 @@ class SaleOrder(models.Model):
         for order in self:
             order.reward_amount = sum([line.price_subtotal for line in order.order_line.filtered(lambda line: line.is_reward_line)])
 
+    @api.multi
+    def _recompute_coupon_lines(self):
+        if self.env.context.get('coupon_recompute', False):
+            return
+        for order in self.with_context(coupon_recompute=True):
+            order._remove_invalid_reward_lines()
+            order._create_new_no_code_promo_reward_lines()
+            order._update_existing_reward_lines()
+
     def copy(self, default=None):
         order = super(SaleOrder, self).copy(dict(default or {}, order_line=False))
         for line in self.order_line.filtered(lambda line: not line.is_reward_line):
@@ -30,18 +39,14 @@ class SaleOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super(SaleOrder, self).create(vals)
-        res._create_new_no_code_promo_reward_lines()
-        res._update_existing_reward_lines()
+        res = super(SaleOrder, self.with_context(coupon_recompute=True)).create(vals)
+        res = res.with_context(coupon_recompute=False)
+        res._recompute_coupon_lines()
         return res
 
     def write(self, vals):
-        res = super(SaleOrder, self).write(vals)
-        if 'order_line' in vals and self.env.context.get('sale_coupon_no_loop', True):
-            for order in self.with_context(sale_coupon_no_loop=False):
-                order._remove_invalid_reward_lines()
-                order._create_new_no_code_promo_reward_lines()
-                order._update_existing_reward_lines()
+        res = super(SaleOrder, self.with_context(coupon_recompute=True)).write(vals)
+        self._recompute_coupon_lines()
         return res
 
     def action_confirm(self):
@@ -251,25 +256,14 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def create(self, vals):
-        """
-        Override the sale order line creation to transform the line creation into a ORM request
-        This horrible hack is due to the fact that with the coupons mechanism, a line creation may
-        lead to the creation, the modification or the deletion of another line. If we override the
-        create, write and unlink methods on the sale.order.line model, we may have issues like
-        cache mismatch on computed fields and so on. Due to this reason, we override the write
-        method on the sale.order and do the actions according to the situation. A write is done on
-        the sales order if we create, write or unlink a sales order line with an ORM command. To avoid
-        having places where creating a sales order doens't activate the coupon mechanism, (It is the
-        case in website_sale or website_quote for example) we do this hack here where we create the line
-        on the order with an ORM command and return the newly created order line. I hope that you'll
-        find in your heart enough faith to forgive me.
-        PS: RCO told me it was ok
-        """
-        order = self.env['sale.order'].browse(vals['order_id'])
-        if not self.env.context.get('sale_coupon_no_loop', False):
-            order.with_context(sale_coupon_no_loop=True).write({'order_line': [(0, False, vals)]})
-            return order.order_line.sorted('create_date', reverse=True)[0]
-        return super(SaleOrderLine, self).create(vals)
+        res = super(SaleOrderLine, self).create(vals)
+        self.order_id._recompute_coupon_lines()
+        return res
+
+    def write(self, vals):
+        res = super(SaleOrderLine, self).write(vals)
+        self.mapped('order_id')._recompute_coupon_lines()
+        return res
 
     def unlink(self):
         # Reactivate coupons related to unlinked reward line
@@ -284,5 +278,7 @@ class SaleOrderLine(models.Model):
         if related_program:
             self.order_id.no_code_promo_program_ids -= related_program
             self.order_id.code_promo_program_id -= related_program
-        res = super(SaleOrderLine, self.with_context(sale_coupon_no_loop=False)).unlink()
+        orders = self.mapped('order_id')
+        res = super(SaleOrderLine, self).unlink()
+        orders._recompute_coupon_lines()
         return res
