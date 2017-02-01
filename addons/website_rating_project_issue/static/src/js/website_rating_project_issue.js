@@ -13,7 +13,7 @@ base.ready().then(function () {
 
         setTimeout("location.reload(true);", 300000);
         $('.o-rating-image').popover({
-            placement: 'top',
+            placement: 'bottom',
             trigger: 'hover',
             html: 'true',
             content: function () {
