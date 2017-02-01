@@ -390,8 +390,12 @@ class AccountInvoice(models.Model):
             easily the next step of the workflow
         """
         self.ensure_one()
+        Report = self.env['report']
+        if not self.sent:
+            ctx = dict(self._context, report_as_attachment=True)
+            Report = Report.with_context(ctx)
         self.sent = True
-        return self.env['report'].get_action(self, 'account.report_invoice')
+        return Report.get_action(self, 'account.report_invoice')
 
     @api.multi
     def action_invoice_sent(self):
