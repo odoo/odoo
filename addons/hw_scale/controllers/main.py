@@ -128,6 +128,13 @@ class Scale(Thread):
         self.path_to_scale = ''
         self.protocol = None
 
+    def _check_device(self):
+        with hw_proxy.rs232_lock:
+            if self.device and hw_proxy.rs232_devices.get(self.path_to_scale) == 'scale':
+                return self.device
+        self.device = None
+        return False
+
     def lockedstart(self):
         with self.lock:
             if not self.isAlive():
@@ -200,16 +207,13 @@ class Scale(Thread):
         return weight, weight_info, status
 
     def get_device(self):
-        if self.device:
-            return self.device
-
         with hw_proxy.rs232_lock:
             try:
                 if not os.path.exists(self.input_dir):
                     self.set_status('disconnected', 'No RS-232 device found')
                     return None
 
-                devices = [device for device in listdir(self.input_dir)]
+                devices = listdir(self.input_dir)
 
                 for device in devices:
                     path = self.input_dir + device
@@ -266,30 +270,31 @@ class Scale(Thread):
 
     def read_weight(self):
         with self.scalelock:
-            p = self.protocol
-            try:
-                self.device.write(p.weightCommand + p.commandTerminator)
-                time.sleep(p.commandDelay)
-                answer = self._get_raw_response(self.device)
-                weight, weight_info, status = self._parse_weight_answer(p, answer)
-                if status:
-                    self.set_status('error', status)
+            if self._check_device():
+                p = self.protocol
+                try:
+                    self.device.write(p.weightCommand + p.commandTerminator)
+                    time.sleep(p.commandDelay)
+                    answer = self._get_raw_response(self.device)
+                    weight, weight_info, status = self._parse_weight_answer(p, answer)
+                    if status:
+                        self.set_status('error', status)
+                        self.device = None
+                    else:
+                        if weight is not None:
+                            self.weight = weight
+                        if weight_info is not None:
+                            self.weight_info = weight_info
+                except Exception as e:
+                    self.set_status(
+                        'error',
+                        "Could not weigh on scale %s with protocol %s: %s" %
+                        (self.path_to_scale, p.name, e))
                     self.device = None
-                else:
-                    if weight is not None:
-                        self.weight = weight
-                    if weight_info is not None:
-                        self.weight_info = weight_info
-            except Exception as e:
-                self.set_status(
-                    'error',
-                    "Could not weigh on scale %s with protocol %s: %s" %
-                    (self.path_to_scale, p.name, e))
-                self.device = None
 
     def set_zero(self):
         with self.scalelock:
-            if self.device:
+            if self._check_device():
                 try:
                     self.device.write(self.protocol.zeroCommand + self.protocol.commandTerminator)
                     time.sleep(self.protocol.commandDelay)
@@ -302,7 +307,7 @@ class Scale(Thread):
 
     def set_tare(self):
         with self.scalelock:
-            if self.device:
+            if self._check_device():
                 try:
                     self.device.write(self.protocol.tareCommand + self.protocol.commandTerminator)
                     time.sleep(self.protocol.commandDelay)
@@ -315,7 +320,7 @@ class Scale(Thread):
 
     def clear_tare(self):
         with self.scalelock:
-            if self.device:
+            if self._check_device():
                 p = self.protocol
                 try:
                     # if the protocol has no clear, we can just tare again
@@ -333,7 +338,7 @@ class Scale(Thread):
         self.device = None
 
         while True:
-            if self.device:
+            if self._check_device():
                 old_weight = self.weight
                 self.read_weight()
                 if self.weight != old_weight:
@@ -351,10 +356,12 @@ class Scale(Thread):
                     # retry later to support "plug and play"
                     time.sleep(10)
 
+
 scale_thread = None
 if serial:
     scale_thread = Scale()
     hw_proxy.drivers[DRIVER_NAME] = scale_thread
+
 
 class ScaleDriver(hw_proxy.Proxy):
     @http.route('/hw_proxy/scale_read/', type='json', auth='none', cors='*')
