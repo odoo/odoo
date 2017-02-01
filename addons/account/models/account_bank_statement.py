@@ -749,33 +749,27 @@ class AccountBankStatementLine(models.Model):
         }
 
     def _prepare_reconciliation_move_line(self, move, amount):
-        """ Prepare the dict of values to create the move line from a statement line.
+        """ Prepare the dict of values to balance the move.
 
             :param recordset move: the account.move to link the move line
             :param float amount: the amount of transaction that wasn't already reconciled
         """
         company_currency = self.journal_id.company_id.currency_id
-        statement_currency = self.journal_id.currency_id or company_currency
-        st_line_currency = self.currency_id or statement_currency
-
+        statement_currency = self.currency_id or self.journal_id.currency_id or company_currency
         amount_currency = False
-        if statement_currency != company_currency or st_line_currency != company_currency:
-            # First get the ratio total mount / amount not already reconciled
-            if statement_currency == company_currency:
-                total_amount = self.amount
-            elif st_line_currency == company_currency:
-                total_amount = self.amount_currency
-            else:
-                total_amount = statement_currency.with_context({'date': self.date}).compute(self.amount, company_currency, round=False)
+        total_amount = 0
+        # to prevent currency rounding error, we perform the following:
+        # we convert amount (which is in company_currency) in statement currency and multiply it by a ratio that is computed
+        # by iterating over each account_move_line and converting their amount_currency to company_currency.
+        for aml in move.line_ids:
+            if aml.currency_id and aml.currency_id != company_currency:
+                total_amount += aml.currency_id.with_context({'date': self.date}).compute(-aml.amount_currency, company_currency, round=False)
+        if total_amount:
             if float_compare(total_amount, amount, precision_digits=company_currency.rounding) == 0:
                 ratio = 1.0
             else:
                 ratio = total_amount / amount
-            # Then use it to adjust the statement.line field that correspond to the move.line amount_currency
-            if statement_currency != company_currency:
-                amount_currency = self.amount * ratio
-            elif st_line_currency != company_currency:
-                amount_currency = self.amount_currency * ratio
+            amount_currency = company_currency.with_context({'date': self.date}).compute(amount, statement_currency, round=False) * ratio
         return {
             'name': self.name,
             'date': self.date,
@@ -789,7 +783,7 @@ class AccountBankStatementLine(models.Model):
             'debit': amount > 0 and amount or 0.0,
             'statement_id': self.statement_id.id,
             'journal_id': self.statement_id.journal_id.id,
-            'currency_id': statement_currency != company_currency and statement_currency.id or (st_line_currency != company_currency and st_line_currency.id or False),
+            'currency_id': statement_currency != company_currency and statement_currency.id or False,
             'amount_currency': amount_currency,
         }
 
@@ -953,8 +947,7 @@ class AccountBankStatementLine(models.Model):
 
                 (new_aml | counterpart_move_line).reconcile()
 
-            # Create the move line for the statement line using the bank statement line as the remaining amount
-            # This leaves out the amount already reconciled and avoids rounding errors from currency conversion
+            # Balance the move
             st_line_amount = -sum([x.balance for x in move.line_ids])
             aml_obj.with_context(check_move_validity=False).create(self._prepare_reconciliation_move_line(move, st_line_amount))
 
