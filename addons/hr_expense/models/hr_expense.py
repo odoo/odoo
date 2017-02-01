@@ -276,7 +276,7 @@ class HrExpense(models.Model):
 
                 #convert eml into an osv-valid format
                 lines = map(lambda x:(0, 0, expense._prepare_move_line(x)), move_lines)
-                move.write({'line_ids': lines})
+                move.with_context(dont_create_taxes=True).write({'line_ids': lines})
                 move.post()
                 expense.write({'account_move_id': move.id, 'state': 'post'})
                 if expense.payment_mode == 'company_account':

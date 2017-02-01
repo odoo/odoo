@@ -87,7 +87,6 @@ class mrp_production(osv.osv):
                     'product_uom': sub_product.product_uom.id,
                     'location_id': source,
                     'location_dest_id': production.location_dest_id.id,
-                    'move_dest_id': production.move_prod_id.id,
                     'production_id': production.id,
                     'origin': production.name,
                     'subproduct_id': sub_product.id

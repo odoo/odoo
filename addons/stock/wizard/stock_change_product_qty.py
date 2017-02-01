@@ -36,7 +36,7 @@ class ProductChangeQuantity(models.TransientModel):
     def onchange_location_id(self):
         # TDE FIXME: should'nt we use context / location ?
         if self.location_id and self.product_id:
-            availability = self.product_id._product_available()
+            availability = self.product_id.with_context(compute_child=False)._product_available()
             self.new_quantity = availability[self.product_id.id]['qty_available']
 
     @api.onchange('product_id')

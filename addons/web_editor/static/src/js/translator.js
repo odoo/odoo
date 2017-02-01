@@ -177,6 +177,10 @@ var Translate = Widget.extend({
     },
     rte_changed: function (node) {
         var $node = $(node);
+        $node.find("p").each(function () { // remove <p/> element which might have been inserted because of copy-paste
+            var $p = $(this);
+            $p.after($p.html()).remove();
+        });
         var trans = this.getTranlationObject($node[0]);
         $node.toggleClass('o_dirty', trans.value !== $node.html().replace(/[ \t\n\r]+/, ' '));
     },
