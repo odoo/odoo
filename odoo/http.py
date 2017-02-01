@@ -52,7 +52,8 @@ from odoo.tools import ustr, consteq, frozendict
 
 from odoo.modules.module import module_manifest
 
-from pybrasil.valor import decimal
+from odoo.tools.lazy_decimal import Decimal as LazyDecimal
+from odoo.tools.lazy_decimal import json_decimal_default
 
 
 _logger = logging.getLogger(__name__)
@@ -600,7 +601,7 @@ class JsonRequest(WebRequest):
         # Read POST content or POST Form Data named "request"
         try:
             #self.jsonrequest = json.loads(request)
-            self.jsonrequest = json.loads(request, parse_float=decimal.Decimal)
+            self.jsonrequest = json.loads(request, parse_float=LazyDecimal)
         except ValueError:
             msg = 'Invalid JSON data: %r' % (request,)
             _logger.info('%s: %s', self.httprequest.path, msg)
@@ -626,11 +627,11 @@ class JsonRequest(WebRequest):
             response['session_id'] = self.session.sid
             mime = 'application/javascript'
             #body = "%s(%s);" % (self.jsonp, json.dumps(response),)
-            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=decimal.json_decimal_default),)
+            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=json_decimal_default),)
         else:
             mime = 'application/json'
             #body = json.dumps(response)
-            body = json.dumps(response, default=decimal.json_decimal_default)
+            body = json.dumps(response, default=json_decimal_default)
 
         return Response(
                     body, headers=[('Content-Type', mime),
