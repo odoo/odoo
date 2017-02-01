@@ -50,23 +50,21 @@ class PosController(http.Controller):
                          "<p>Please find in attachment the export of debug type [" + debug_type + "]</p>" +
                          "<p>Best Regards</p>")
 
-            mail_to_send = Mail_mail.create({
-                'subject': subject,
-                'body_html': mail_body,
-                'email_to': user_from.email,
-                "email_from": user_from.email})
-
             attachement = Ir_attachment.create({
                 'name': subject,
                 'datas_fname': date_string + '.txt',
                 'datas': str(data).encode('base64'),
-                'res_model': 'mail.mail',
-                'res_id': mail_to_send.id})
+            })
 
-            mail_to_send.write({'attachment_ids': [(6, 0, [attachement.id])]
-                                })
+            mail_to_send = Mail_mail.create({
+                'subject': subject,
+                'body_html': mail_body,
+                'email_to': user_from.email,
+                "email_from": user_from.email,
+                'attachment_ids': [(6, 0, [attachement.id])]
+            })
 
-            mail_to_send.send()
+            mail_to_send.send(raise_exception=True)
 
             _logger.info("Email Sent")
             return {'status': "Success",
