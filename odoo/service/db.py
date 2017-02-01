@@ -363,6 +363,8 @@ def list_db_incompatible(databases):
                     incompatible_databases.append(database_name)
             else:
                 incompatible_databases.append(database_name)
+        # release connection
+        odoo.sql_db.close_db(database_name)
     return incompatible_databases
 
 
