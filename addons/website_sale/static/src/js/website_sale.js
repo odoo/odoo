@@ -234,7 +234,7 @@ $('.oe_website_sale').each(function () {
         var product_id = false;
         for (var k in variant_ids) {
             if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
-                openerp.website.ready(function() {
+                openerp.website.ready().then(function() {
                     $price.html(price_to_str(variant_ids[k][2]));
                     $default_price.html(price_to_str(variant_ids[k][3]));
                 });
