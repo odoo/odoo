@@ -240,7 +240,7 @@ class AuthorizeAPI():
         tx = etree.SubElement(root, "transactionRequest")
         etree.SubElement(tx, "transactionType").text = "priorAuthCaptureTransaction"
         etree.SubElement(tx, "amount").text = str(amount)
-        etree.SubElement(tx, "refTransId").text = transaction_id
+        etree.SubElement(tx, "refTransId").text = transaction_id if transaction_id else None
         response = self._authorize_request(root)
         res = dict()
         res['x_response_code'] = response.find('transactionResponse/responseCode').text
@@ -260,7 +260,7 @@ class AuthorizeAPI():
         root = self._base_tree('createTransactionRequest')
         tx = etree.SubElement(root, "transactionRequest")
         etree.SubElement(tx, "transactionType").text = "voidTransaction"
-        etree.SubElement(tx, "refTransId").text = transaction_id
+        etree.SubElement(tx, "refTransId").text = transaction_id if transaction_id else None
         response = self._authorize_request(root)
         res = dict()
         res['x_response_code'] = response.find('transactionResponse/responseCode').text
