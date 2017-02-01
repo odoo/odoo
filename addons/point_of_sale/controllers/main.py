@@ -40,6 +40,9 @@ class PosController(http.Controller):
         user_from = request.env['res.users'].browse(request.session.uid)
 
         if not date_string:
+            # Data is the content of the export
+            # The pos exports paid or unpaid orders under the form of a dict containing only one key (either paid_orders or unpaid_orders)
+            # We retrieve it below
             date_string = json.loads(data).keys()[0] + "_" + datetime.now().strftime("%Y-%m-%d_%H_%M_%S")
 
         subject = "[Odoo][DEBUG] Support " + date_string
