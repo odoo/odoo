@@ -86,20 +86,26 @@ sub-folders are conventional and not strictly necessary.
     application (or at least its web-browser side) as javascript. It should
     currently look like::
 
-        odoo.oepetstore = function(instance, local) {
-            var _t = instance.web._t,
-                _lt = instance.web._lt;
-            var QWeb = instance.web.qweb;
+        odoo.define('oepetstore.client_action', function(require) {
+            'use strict';
 
-            local.HomePage = instance.Widget.extend({
+            var core = require('web.core');
+            var Widget = require('web.Widget');
+            var Class = require('web.Class');
+
+            var QWeb = core.qweb;
+
+            var _t = core._t;
+            var _lt = core._lt;
+
+            var Homepage = Widget.extend({
                 start: function() {
-                    console.log("pet store home page loaded");
-                },
+                   console.log('pet store home page loaded');
+                }
             });
 
-            instance.web.client_actions.add(
-                'petstore.homepage', 'instance.oepetstore.HomePage');
-        }
+            core.action_registry.add('petstore.homepage', Homepage);
+        });
 
 Which only prints a small message in the browser's console.
 
@@ -142,13 +148,10 @@ in order to both namespace code and correctly order its loading.
 
 ``oepetstore/static/js/petstore.js`` contains a module declaration::
 
-    odoo.oepetstore = function(instance, local) {
-        local.xxx = ...;
-    }
+    odoo.define('module name', function(require) {});
 
 In Odoo web, modules are declared as functions set on the global ``odoo``
-variable. The function's name must be the same as the addon (in this case
-``oepetstore``) so the framework can find it, and automatically initialize it.
+variable.
 
 When the web client loads your module it will call the root function
 and provide two parameters:
@@ -176,7 +179,8 @@ system based on John Resig's `Simple JavaScript Inheritance`_.
 New classes are defined by calling the :func:`~odoo.web.Class.extend`
 method of :class:`odoo.web.Class`::
 
-    var MyClass = instance.web.Class.extend({
+    var Class = require('web.Class');
+    var MyClass = Class.extend({
         say_hello: function() {
             console.log("hello");
         },
@@ -194,7 +198,8 @@ Classes are instantiated using the ``new`` operator::
 
 And attributes of the instance can be accessed via ``this``::
 
-    var MyClass = instance.web.Class.extend({
+    var Class = require('web.Class');
+    var MyClass = Class.extend({
         say_hello: function() {
             console.log("hello", this.name);
         },
@@ -209,7 +214,8 @@ Classes can provide an initializer to perform the initial setup of the
 instance, by defining an ``init()`` method. The initializer receives the
 parameters passed when using the ``new`` operator::
 
-    var MyClass = instance.web.Class.extend({
+    var Class = require('web.Class');
+    var MyClass = Class.extend({
         init: function(name) {
             this.name = name;
         },
@@ -226,6 +232,7 @@ It is also possible to create subclasses from existing (used-defined) classes
 by calling :func:`~odoo.web.Class.extend` on the parent class, as is done
 to subclass :class:`~odoo.web.Class`::
 
+    var Class = require('web.Class');
     var MySpanishClass = MyClass.extend({
         say_hello: function() {
             console.log("hola", this.name);
@@ -239,6 +246,7 @@ to subclass :class:`~odoo.web.Class`::
 When overriding a method using inheritance, you can use ``this._super()`` to
 call the original method::
 
+    var Class = require('web.Class');
     var MySpanishClass = MyClass.extend({
         say_hello: function() {
             this._super();
@@ -259,17 +267,17 @@ call the original method::
     to its value should be retained, it should not be accessed via ``this``::
 
         // broken, will generate an error
-        say_hello: function () {
-            setTimeout(function () {
+        say_hello: function() {
+            setTimeout(function() {
                 this._super();
             }.bind(this), 0);
         }
 
         // correct
-        say_hello: function () {
+        say_hello: function() {
             // don't forget .bind()
             var _super = this._super.bind(this);
-            setTimeout(function () {
+            setTimeout(function() {
                 _super();
             }.bind(this), 0);
         }
@@ -293,7 +301,8 @@ Your First Widget
 
 The initial demonstration module already provides a basic widget::
 
-    local.HomePage = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var HomePage = Widget.extend({
         start: function() {
             console.log("pet store home page loaded");
         },
@@ -305,8 +314,7 @@ It extends :class:`~odoo.Widget` and overrides the standard method
 
 This line at the end of the file::
 
-    instance.web.client_actions.add(
-        'petstore.homepage', 'instance.oepetstore.HomePage');
+    core.action_registry.add("petstore.homepage", Homepage);
 
 registers our basic widget as a client action. Client actions will be
 explained later, for now this is just what allows our widget to
@@ -343,7 +351,8 @@ on the page when ``HomePage`` is launched.
 
 Let's add some content to the widget's root element, using jQuery::
 
-    local.HomePage = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var HomePage = Widget.extend({
         start: function() {
             this.$el.append("<div>Hello dear Odoo user!</div>");
         },
@@ -360,7 +369,8 @@ That message will now appear when you open :menuselection:`Pet Store
 The ``HomePage`` widget is used by Odoo Web and managed automatically.
 To learn how to use a widget "from scratch" let's create a new one::
 
-    local.GreetingsWidget = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var GreetingsWidget = Widget.extend({
         start: function() {
             this.$el.append("<div>We are so happy to see you again in this menu!</div>");
         },
@@ -369,10 +379,11 @@ To learn how to use a widget "from scratch" let's create a new one::
 We can now add our ``GreetingsWidget`` to the ``HomePage`` by using the
 ``GreetingsWidget``'s :func:`~odoo.Widget.appendTo` method::
 
-    local.HomePage = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var HomePage = Widget.extend({
         start: function() {
             this.$el.append("<div>Hello dear Odoo user!</div>");
-            var greeting = new local.GreetingsWidget(this);
+            var greeting = new GreetingsWidget(this);
             return greeting.appendTo(this.$el);
         },
     });
@@ -392,11 +403,12 @@ DOM Explorer. But first let's alter our widgets slightly so we can more easily
 find where they are, by :attr:`adding a class to their root elements
 <odoo.Widget.className>`::
 
-    local.HomePage = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var HomePage = Widget.extend({
         className: 'oe_petstore_homepage',
         ...
     });
-    local.GreetingsWidget = instance.Widget.extend({
+    var GreetingsWidget = Widget.extend({
         className: 'oe_petstore_greetings',
         ...
     });
@@ -428,7 +440,7 @@ Widget Parents and Children
 
 In the previous part, we instantiated a widget using this syntax::
 
-    new local.GreetingsWidget(this);
+    new GreetingsWidget(this);
 
 The first argument is ``this``, which in that case was a ``HomePage``
 instance. This tells the widget being created which other widget is its
@@ -443,32 +455,36 @@ Due to multiple technical and conceptual reasons, it is necessary for a widget
 to know who is its parent and who are its children.
 
 :func:`~odoo.Widget.getParent`
-    can be used to get the parent of a widget::
 
-        local.GreetingsWidget = instance.Widget.extend({
-            start: function() {
-                console.log(this.getParent().$el );
-                // will print "div.oe_petstore_homepage" in the console
-            },
-        });
+can be used to get the parent of a widget::
+
+    var Widget = require('web.Widget');
+    var GreetingsWidget = Widget.extend({
+        start: function() {
+            console.log(this.getParent().$el );
+            // will print "div.oe_petstore_homepage" in the console
+        },
+    });
 
 :func:`~odoo.Widget.getChildren`
-    can be used to get a list of its children::
+can be used to get a list of its children::
 
-        local.HomePage = instance.Widget.extend({
-            start: function() {
-                var greeting = new local.GreetingsWidget(this);
-                greeting.appendTo(this.$el);
-                console.log(this.getChildren()[0].$el);
-                // will print "div.oe_petstore_greetings" in the console
-            },
-        });
+    var Widget = require('web.Widget');
+    var HomePage = Widget.extend({
+        start: function() {
+            var greeting = new GreetingsWidget(this);
+            greeting.appendTo(this.$el);
+            console.log(this.getChildren()[0].$el);
+            // will print "div.oe_petstore_greetings" in the console
+        },
+    });
 
 When overriding the :func:`~odoo.Widget.init` method of a widget it is
 *of the utmost importance* to pass the parent to the ``this._super()`` call,
 otherwise the relation will not be set up correctly::
 
-    local.GreetingsWidget = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var GreetingsWidget = Widget.extend({
         init: function(parent, name) {
             this._super(parent);
             this.name = name;
@@ -478,7 +494,7 @@ otherwise the relation will not be set up correctly::
 Finally, if a widget does not have a parent (e.g. because it's the root
 widget of the application), ``null`` can be provided as parent::
 
-    new local.GreetingsWidget(null);
+    new GreetingsWidget(null);
 
 Destroying Widgets
 ------------------
@@ -560,7 +576,8 @@ Now we can use this template inside of the ``HomePage`` widget. Using the
 ``QWeb`` loader variable defined at the top of the page, we can call to the
 template defined in the XML file::
 
-    local.HomePage = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var HomePage = Widget.extend({
         start: function() {
             this.$el.append(QWeb.render("HomePageTemplate"));
         },
@@ -573,7 +590,9 @@ However, because :class:`~odoo.Widget` has special integration for QWeb
 the template can be set directly on the widget via its
 :attr:`~odoo.Widget.template` attribute::
 
-    local.HomePage = instance.Widget.extend({
+
+    var Widget = require('web.Widget');
+    var HomePage = Widget.extend({
         template: "HomePageTemplate",
         start: function() {
             ...
@@ -635,7 +654,8 @@ essentially be that set up by :func:`~odoo.Widget.init`):
 
 ::
 
-    local.HomePage = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var HomePage = Widget.extend({
         template: "HomePageTemplate",
         init: function(parent) {
             this._super(parent);
@@ -850,31 +870,34 @@ Exercise
 
         ::
 
-            odoo.oepetstore = function(instance, local) {
-                var _t = instance.web._t,
-                    _lt = instance.web._lt;
-                var QWeb = instance.web.qweb;
+            odoo.define('homepage.client_action', function (require) {
+                'use strict';
 
-                local.HomePage = instance.Widget.extend({
+                var core = require('web.core');
+                var Widget = require('web.Widget');
+
+                var QWeb = core.qweb;
+
+                var Homepage = Widget.extend({
                     start: function() {
-                        var products = new local.ProductsWidget(
-                            this, ["cpu", "mouse", "keyboard", "graphic card", "screen"], "#00FF00");
+                        var products = new productsWidget(
+                            this, ["cpu","mouse","keyboard","graphic card", "screen"],
+                        "#00FF00");
                         products.appendTo(this.$el);
                     },
                 });
 
-                local.ProductsWidget = instance.Widget.extend({
+                var productsWidget = Widget.extend({
                     template: "ProductsWidget",
-                    init: function(parent, products, color) {
+                    init : function(parent, products, color){
                         this._super(parent);
                         this.products = products;
                         this.color = color;
                     },
                 });
 
-                instance.web.client_actions.add(
-                    'petstore.homepage', 'instance.oepetstore.HomePage');
-            }
+                core.action_registry.add("petstore.homepage", Homepage);
+            });
 
         .. code-block:: xml
 
@@ -921,7 +944,8 @@ Selecting DOM elements within a widget can be performed by calling the
 But because it's a common operation, :class:`~odoo.Widget` provides an
 equivalent shortcut through the :func:`~odoo.Widget.$` method::
 
-    local.MyWidget = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var MyWidget = Widget.extend({
         start: function() {
             this.$("input.my_input")...
         },
@@ -942,7 +966,8 @@ Easier DOM Events Binding
 We have previously bound DOM events using normal jQuery event handlers (e.g.
 ``.click()`` or ``.change()``) on widget elements::
 
-    local.MyWidget = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var MyWidget = Widget.extend({
         start: function() {
             var self = this;
             this.$(".my_button").click(function() {
@@ -965,7 +990,8 @@ While this works it has a few issues:
 Widgets thus provide a shortcut to DOM event binding via
 :attr:`~odoo.Widget.events`::
 
-    local.MyWidget = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var MyWidget = Widget.extend({
         events: {
             "click .my_button": "button_clicked",
         },
@@ -1005,12 +1031,13 @@ Widgets provide an event system (separate from the DOM/jQuery event system
 described above): a widget can fire events on itself, and other widgets (or
 itself) can bind themselves and listen for these events::
 
-    local.ConfirmWidget = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var ConfirmWidget = Widget.extend({
         events: {
-            'click button.ok_button': function () {
+            'click button.ok_button': function() {
                 this.trigger('user_chose', true);
             },
-            'click button.cancel_button': function () {
+            'click button.cancel_button': function() {
                 this.trigger('user_chose', false);
             }
         },
@@ -1032,9 +1059,10 @@ data and passed directly to listeners.
 We can then set up a parent event instantiating our generic widget and
 listening to the ``user_chose`` event using :func:`~odoo.Widget.on`::
 
-    local.HomePage = instance.Widget.extend({
+    var Widget = require('web.Widget');
+    var HomePage = Widget.extend({
         start: function() {
-            var widget = new local.ConfirmWidget(this);
+            var widget = new ConfirmWidget(this);
             widget.on("user_chose", this, this.user_chose);
             widget.appendTo(this.$el);
         },
@@ -1119,12 +1147,15 @@ Exercise
 
         ::
 
-            odoo.oepetstore = function(instance, local) {
-                var _t = instance.web._t,
-                    _lt = instance.web._lt;
-                var QWeb = instance.web.qweb;
+            odoo.define('homepage.client_action', function (require) {
+                'use strict';
 
-                local.ColorInputWidget = instance.Widget.extend({
+                var core = require('web.core');
+                var Widget = require('web.Widget');
+
+                var QWeb = core.qweb;
+
+                var ColorInputWidget = Widget.extend({
                     template: "ColorInputWidget",
                     events: {
                         'change input': 'input_changed'
@@ -1135,29 +1166,29 @@ Exercise
                     },
                     input_changed: function() {
                         var color = [
-                            "#",
-                            this.$(".oe_color_red").val(),
-                            this.$(".oe_color_green").val(),
-                            this.$(".oe_color_blue").val()
+                        "#",
+                        this.$(".odoo_color_red").val(),
+                        this.$(".odoo_color_green").val(),
+                        this.$(".odoo_color_blue").val()
                         ].join('');
                         this.set("color", color);
                     },
                 });
 
-                local.HomePage = instance.Widget.extend({
+                var HomePage = Widget.extend({
                     template: "HomePage",
                     start: function() {
-                        this.colorInput = new local.ColorInputWidget(this);
+                        this.colorInput = new ColorInputWidget(this);
                         this.colorInput.on("change:color", this, this.color_changed);
                         return this.colorInput.appendTo(this.$el);
                     },
                     color_changed: function() {
-                        this.$(".oe_color_div").css("background-color", this.colorInput.get("color"));
+                        this.$(".odoo_color_div").css("background-color", this.colorInput.get("color"));
                     },
                 });
 
-                instance.web.client_actions.add('petstore.homepage', 'instance.oepetstore.HomePage');
-            }
+                core.action_registry.add("petstore.homepage", HomePage);
+            });
 
         .. code-block:: xml
 
@@ -1165,21 +1196,21 @@ Exercise
             <templates xml:space="preserve">
                 <t t-name="ColorInputWidget">
                     <div>
-                        Red: <input type="text" class="oe_color_red" value="00"></input><br />
-                        Green: <input type="text" class="oe_color_green" value="00"></input><br />
-                        Blue: <input type="text" class="oe_color_blue" value="00"></input><br />
+                        Red: <input type="text" class="odoo_color_red" value="00"></input><br />
+                        Green: <input type="text" class="odoo_color_green" value="00"></input><br />
+                        Blue: <input type="text" class="odoo_color_blue" value="00"></input><br />
                     </div>
                 </t>
                 <t t-name="HomePage">
                     <div>
-                        <div class="oe_color_div"></div>
+                        <div class="odoo_color_div"></div>
                     </div>
                 </t>
             </templates>
 
         .. code-block:: css
 
-            .oe_color_div {
+            .odoo_color_div {
                 width: 100px;
                 height: 100px;
                 margin: 10px;
@@ -1191,7 +1222,8 @@ Modify existing widgets and classes
 The class system of the Odoo web framework allows direct modification of
 existing classes using the :func:`~odoo.web.Class.include` method::
 
-    var TestClass = instance.web.Class.extend({
+    var Class = require('web.Class');
+    var TestClass = Class.extend({
         testMethod: function() {
             return "hello";
         },
@@ -1223,8 +1255,8 @@ The process to translate text in Python and JavaScript code is very
 similar. You could have noticed these lines at the beginning of the
 ``petstore.js`` file::
 
-    var _t = instance.web._t,
-        _lt = instance.web._lt;
+    var _t = core._t;
+    var _lt = core._lt;
 
 These lines are simply used to import the translation functions in the current
 JavaScript module. They are used thus::
@@ -1249,8 +1281,9 @@ translation is defined for that text, it will return the original text as-is.
 
         this.$el.text(_.str.sprintf(
             _t("Hello, %(user)s!"), {
-            user: "Ed"
-        }));
+              user: "Ed"
+            }
+        ));
 
     This makes translatable strings more readable to translators, and gives
     them more flexibility to reorder or ignore parameters.
@@ -1298,11 +1331,15 @@ returns a literal dictionary.
 
 Here is a sample widget that calls ``my_method()`` and displays the result::
 
-    local.HomePage = instance.Widget.extend({
+    var HomePage = Widget.extend({
+        init: function(parent, context){
+            this._super(parent, context);
+            this.context = context.context;
+        },
         start: function() {
             var self = this;
-            var model = new instance.web.Model("oepetstore.message_of_the_day");
-            model.call("my_method", {context: new instance.web.CompoundContext()}).then(function(result) {
+            var model = new Model("oepetstore.message_of_the_day");
+            model.call("my_method", [self.context]).then(function(result) {
                 self.$el.append("<div>Hello " + result["hello"] + "</div>");
                 // will show "Hello world" to the user
             });
@@ -1352,13 +1389,13 @@ Odoo model. It takes the following positional arguments:
 :func:`~odoo.Widget.call` returns a deferred resolved with the value
 returned by the model's method as first argument.
 
-CompoundContext
+Context
 ---------------
 
 The previous section used a ``context`` argument which was not explained in
 the method call::
 
-    model.call("my_method", {context: new instance.web.CompoundContext()})
+    model.call("my_method", [self.context])
 
 The context is like a "magic" argument that the web client will always give to
 the server when calling a method. The context is a dictionary containing
@@ -1370,18 +1407,19 @@ is used by people in different countries.
 The ``argument`` is necessary in all methods, otherwise bad things could
 happen (such as the application not being translated correctly). That's why,
 when you call a model's method, you should always provide that argument. The
-solution to achieve that is to use :class:`odoo.web.CompoundContext`.
+solution to achieve that is to use the object :``context``.
 
-:class:`~odoo.web.CompoundContext` is a class used to pass the user's
+``context`` is a class used to pass the user's
 context (with language, time zone, etc...) to the server as well as adding new
 keys to the context (some models' methods use arbitrary keys added to the
 context). It is created by giving to its constructor any number of
-dictionaries or other :class:`~odoo.web.CompoundContext` instances. It will
+dictionaries or other ``context`` instances. It will
 merge all those contexts before sending them to the server.
 
 .. code-block:: javascript
 
-    model.call("my_method", {context: new instance.web.CompoundContext({'new_key': 'key_value'})})
+    self.context['new_key'] = 'key_value'
+    model.call("my_method", [self.context])
 
 .. code-block:: python
 
@@ -1393,7 +1431,7 @@ merge all those contexts before sending them to the server.
 You can see the dictionary in the argument ``context`` contains some keys that
 are related to the configuration of the current user in Odoo plus the
 ``new_key`` key that was added when instantiating
-:class:`~odoo.web.CompoundContext`.
+:class:`~context`.
 
 Queries
 -------
@@ -1453,25 +1491,31 @@ Exercises
 
         .. code-block:: javascript
 
-            odoo.oepetstore = function(instance, local) {
-                var _t = instance.web._t,
-                    _lt = instance.web._lt;
-                var QWeb = instance.web.qweb;
+            odoo.define('homepage.client_action', function (require) {
+                'use strict';
 
-                local.HomePage = instance.Widget.extend({
+                var core = require('web.core');
+                var Widget = require('web.Widget');
+                var Class = require('web.Class');
+                var Model = require('web.Model');
+
+                var _t = core._t,
+                    _lt = core._lt;
+
+                var QWeb = core.qweb;
+
+                var HomePage = Widget.extend({
                     template: "HomePage",
                     start: function() {
-                        return new local.MessageOfTheDay(this).appendTo(this.$el);
+                        return new MessageOfTheDay(this).appendTo(this.$el);
                     },
                 });
 
-                instance.web.client_actions.add('petstore.homepage', 'instance.oepetstore.HomePage');
-
-                local.MessageOfTheDay = instance.Widget.extend({
+                var MessageOfTheDay = Widget.extend({
                     template: "MessageOfTheDay",
                     start: function() {
                         var self = this;
-                        return new instance.web.Model("oepetstore.message_of_the_day")
+                        return new Model("oepetstore.message_of_the_day")
                             .query(["message"])
                             .order_by('-create_date', '-id')
                             .first()
@@ -1481,7 +1525,8 @@ Exercises
                     },
                 });
 
-            }
+                core.action_registry.add("petstore.homepage", HomePage);
+            });
 
         .. code-block:: xml
 
@@ -1531,27 +1576,34 @@ Exercises
 
         .. code-block:: javascript
 
-            odoo.oepetstore = function(instance, local) {
-                var _t = instance.web._t,
-                    _lt = instance.web._lt;
-                var QWeb = instance.web.qweb;
+            odoo.define('homepage.client_action', function (require) {
+                'use strict';
 
-                local.HomePage = instance.Widget.extend({
+                var core = require('web.core');
+                var Widget = require('web.Widget');
+                var Class = require('web.Class');
+                var Model = require('web.Model');
+
+                var _t = core._t,
+                    _lt = core._lt;
+
+                var QWeb = core.qweb;
+
+                var HomePage = Widget.extend({
                     template: "HomePage",
-                    start: function () {
+                    start: function() {
                         return $.when(
-                            new local.PetToysList(this).appendTo(this.$('.oe_petstore_homepage_left')),
-                            new local.MessageOfTheDay(this).appendTo(this.$('.oe_petstore_homepage_right'))
+                            new PetToysList(this).appendTo(this.$('.oe_petstore_homepage_left')),
+                            new MessageOfTheDay(this).appendTo(this.$('.oe_petstore_homepage_right'))
                         );
                     }
                 });
-                instance.web.client_actions.add('petstore.homepage', 'instance.oepetstore.HomePage');
 
-                local.MessageOfTheDay = instance.Widget.extend({
+                var MessageOfTheDay = Widget.extend({
                     template: 'MessageOfTheDay',
-                    start: function () {
+                    start: function() {
                         var self = this;
-                        return new instance.web.Model('oepetstore.message_of_the_day')
+                        return new Model('oepetstore.message_of_the_day')
                             .query(["message"])
                             .order_by('-create_date', '-id')
                             .first()
@@ -1561,11 +1613,11 @@ Exercises
                     }
                 });
 
-                local.PetToysList = instance.Widget.extend({
+                var PetToysList = Widget.extend({
                     template: 'PetToysList',
-                    start: function () {
+                    start: function() {
                         var self = this;
-                        return new instance.web.Model('product.product')
+                        return new Model('product.product')
                             .query(['name', 'image'])
                             .filter([['categ_id.name', '=', "Pet Toys"]])
                             .limit(5)
@@ -1577,7 +1629,8 @@ Exercises
                             });
                     }
                 });
-            }
+                core.action_registry.add("petstore.homepage", HomePage);
+            });
 
         .. code-block:: xml
 
@@ -1669,7 +1722,7 @@ type, and calling an action manager instance with it.
 :func:`~odoo.Widget.do_action` is a shortcut of :class:`~odoo.Widget`
 looking up the "current" action manager and executing the action::
 
-    instance.web.TestWidget = instance.Widget.extend({
+    TestWidget = Widget.extend({
         dispatch_to_new_action: function() {
             this.do_action({
                 type: 'ir.actions.act_window',
@@ -1711,12 +1764,12 @@ attributes are:
 
         .. code-block:: javascript
 
-            local.PetToysList = instance.Widget.extend({
+            var PetToysList = Widget.extend({
                 template: 'PetToysList',
                 events: {
                     'click .oe_petstore_pettoy': 'selected_item',
                 },
-                start: function () {
+                start: function() {
                     var self = this;
                     return new instance.web.Model('product.product')
                         .query(['name', 'image'])
@@ -1763,10 +1816,10 @@ beyond that *everything* is handled by custom client code.
 
 Our widget is registered as the handler for the client action through this::
 
-    instance.web.client_actions.add('petstore.homepage', 'instance.oepetstore.HomePage');
+    core.action_registry.add('petstore.homepage', HomePage);
 
 
-``instance.web.client_actions`` is a :class:`~odoo.web.Registry` in which
+``core.action_registry`` is a :class:`~odoo.web.Registry` in which
 the action manager looks up client action handlers when it needs to execute
 one. The first parameter of :class:`~odoo.web.Registry.add` is the name
 (tag) of the client action, and the second parameter is the path to the widget
@@ -1776,7 +1829,7 @@ When a client action must be executed, the action manager looks up its tag
 in the registry, walks the specified path and displays the widget it finds at
 the end.
 
-.. note:: a client action handler can also be a regular function, in whch case
+.. note:: a client action handler can also be a regular function, in which case
           it'll be called and its result (if any) will be interpreted as the
           next action to execute.
 
@@ -1937,7 +1990,10 @@ user will not be able to modify the content of the field.
 
 .. code-block:: javascript
 
-    local.FieldChar2 = instance.web.form.AbstractField.extend({
+
+    var Form = require('web.form_common');
+    ..
+    var FieldChar2 = Form.AbstractField.extend({
         init: function() {
             this._super.apply(this, arguments);
             this.set("value", "");
@@ -1947,7 +2003,7 @@ user will not be able to modify the content of the field.
         },
     });
 
-    instance.web.form.widgets.add('char2', 'instance.oepetstore.FieldChar2');
+    core.form_widget_registry.add('char2', FieldChar2);
 
 In this example, we declare a class named ``FieldChar2`` inheriting from
 ``AbstractField``. We also register this class in the registry
@@ -1984,7 +2040,7 @@ sets a widget property named ``effective_readonly``. The field should watch
 for changes in that widget property and display the correct mode
 accordingly. Example::
 
-    local.FieldChar2 = instance.web.form.AbstractField.extend({
+    var FieldChar2 = Form.AbstractField.extend({
         init: function() {
             this._super.apply(this, arguments);
             this.set("value", "");
@@ -2015,7 +2071,7 @@ accordingly. Example::
         },
     });
 
-    instance.web.form.widgets.add('char2', 'instance.oepetstore.FieldChar2');
+    core.form_widget_registry.add('char2', FieldChar2);
 
 .. code-block:: xml
 
@@ -2073,7 +2129,7 @@ lot of verifications to know the state of the ``effective_readonly`` property:
 
         .. code-block:: javascript
 
-            local.FieldColor = instance.web.form.AbstractField.extend({
+            var FieldColor = Form.AbstractField.extend({
                 events: {
                     'change input': function (e) {
                         if (!this.get('effective_readonly')) {
@@ -2104,7 +2160,23 @@ lot of verifications to know the state of the ``effective_readonly`` property:
                     }
                 },
             });
-            instance.web.form.widgets.add('color', 'instance.oepetstore.FieldColor');
+            core.form_widget_registry.add('color', FieldColor);
+
+            ..
+
+            var MessageOfTheDay = Widget.extend({
+                template: 'MessageOfTheDay',
+                start: function() {
+                    var self = this;
+                    return new Model('oepetstore.message_of_the_day')
+                        .query(["message", "color"])
+                        .order_by('-create_date', '-id')
+                        .first()
+                        .then(function (result) {
+                            self.$(".oe_mywidget_message_of_the_day").text(result.message).css('color', result.color);
+                        });
+                }
+            });
 
         .. code-block:: xml
 
@@ -2118,6 +2190,22 @@ lot of verifications to know the state of the ``effective_readonly`` property:
                     </t>
                 </div>
             </t>
+
+        .. code-block:: xml
+
+            <record model="ir.ui.view" id="message_of_the_day_form_view">
+                <field name="name">message_of_the_day.form</field>
+                <field name="model">oepetstore.message_of_the_day</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form string="Message of the day">
+                        <group>
+                            <field name="message" colspan="4"/>
+                            <field name="color" widget="color"/>
+                        </group>
+                    </form>
+                </field>
+            </record>
 
         .. code-block:: css
 
@@ -2152,7 +2240,7 @@ Form widgets can interact with form fields by listening for their changes and
 fetching or altering their values. They can access form fields through
 their :attr:`~odoo.web.form.FormWidget.field_manager` attribute::
 
-    local.WidgetMultiplication = instance.web.form.FormWidget.extend({
+    var WidgetMultiplication = Form.FormWidget.extend({
         start: function() {
             this._super();
             this.field_manager.on("field_changed:integer_a", this, this.display_result);
@@ -2166,7 +2254,7 @@ their :attr:`~odoo.web.form.FormWidget.field_manager` attribute::
         }
     });
 
-    instance.web.form.custom_widgets.add('multiplication', 'instance.oepetstore.WidgetMultiplication');
+    core.form_custom_registry.add('multiplication', WidgetMultiplication);
 
 :attr:`~odoo.web.form.FormWidget` is generally the
 :class:`~odoo.web.form.FormView` itself, but features used from it should
@@ -2190,11 +2278,12 @@ the most useful being:
 
     .. code-block:: html
 
-        <iframe width="400" height="300" src="https://maps.google.com/?ie=UTF8&amp;ll=XXX,YYY&amp;output=embed">
+        <iframe width="400" height="300"
+            t-attf-src="https://www.google.com/maps/embed/v1/place?q=XXX,YYY&amp;key=KEY">
         </iframe>
 
     where ``XXX`` should be replaced by the latitude and ``YYY`` by the
-    longitude.
+    longitude and ``KEY`` by the google API key (https://developers.google.com/maps/documentation/javascript/get-api-key).
 
     Display the two position fields and a map widget using them in a new
     notebook page of the product's form view.
@@ -2203,30 +2292,52 @@ the most useful being:
 
         .. code-block:: javascript
 
-            local.WidgetCoordinates = instance.web.form.FormWidget.extend({
-                start: function() {
-                    this._super();
-                    this.field_manager.on("field_changed:provider_latitude", this, this.display_map);
-                    this.field_manager.on("field_changed:provider_longitude", this, this.display_map);
-                    this.display_map();
-                },
-                display_map: function() {
-                    this.$el.html(QWeb.render("WidgetCoordinates", {
-                        "latitude": this.field_manager.get_field_value("provider_latitude") || 0,
-                        "longitude": this.field_manager.get_field_value("provider_longitude") || 0,
-                    }));
-                }
-            });
+                var WidgetCoordinates = Form.FormWidget.extend({
+                    start: function() {
+                        this._super();
+                        console.log(this.field_manager);
+                        this.field_manager.on("field_changed:latitude", this, this.display_map);
+                        this.field_manager.on("field_changed:longitude", this, this.display_map);
+                        this.display_map();
+                    },
+                    display_map: function() {
+                        this.$el.html(QWeb.render("WidgetCoordinates", {
+                            "latitude": this.field_manager.get_field_value("latitude") || 0,
+                            "longitude": this.field_manager.get_field_value("longitude") || 0,
+                        }));
+                    }
+                });
 
-            instance.web.form.custom_widgets.add('coordinates', 'instance.oepetstore.WidgetCoordinates');
+                core.form_custom_registry.add('coordinates', WidgetCoordinates);
 
         .. code-block:: xml
 
             <t t-name="WidgetCoordinates">
                 <iframe width="400" height="300"
-                    t-attf-src="https://maps.google.com/?ie=UTF8&amp;ll={{latitude}},{{longitude}}&amp;output=embed">
+                    t-attf-src="https://www.google.com/maps/embed/v1/place?q={{latitude}},{{longitude}}&amp;key=YOUR_KEY">
                 </iframe>
             </t>
+
+    Don't forget to change your oepetstore/petstore.xml file
+
+    .. code-block:: xml
+
+        <record id="product_normal_form_view_inherit" model="ir.ui.view">
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="max_quantity"/>
+                </field>
+                <notebook>
+                    <page string="Map">
+                        <field name="latitude"/><br/>
+                        <field name="longitude"/>
+                        <widget type="coordinates"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
 
 .. exercise:: Get the Current Coordinate
 
@@ -2252,45 +2363,44 @@ the most useful being:
 
         .. code-block:: javascript
 
-            local.WidgetCoordinates = instance.web.form.FormWidget.extend({
+            var WidgetCoordinates = Form.FormWidget.extend({
                 events: {
-                    'click button': function () {
+                    'click button': function() {
                         navigator.geolocation.getCurrentPosition(
                             this.proxy('received_position'));
                     }
                 },
                 start: function() {
-                    var sup = this._super();
-                    this.field_manager.on("field_changed:provider_latitude", this, this.display_map);
-                    this.field_manager.on("field_changed:provider_longitude", this, this.display_map);
-                    this.on("change:effective_readonly", this, this.display_map);
+                    this.field_manager.on("field_changed:latitude", this, this.display_map);
+                    this.field_manager.on("field_changed:longitude", this, this.display_map);
                     this.display_map();
-                    return sup;
+                    return this._super();
                 },
                 display_map: function() {
                     this.$el.html(QWeb.render("WidgetCoordinates", {
-                        "latitude": this.field_manager.get_field_value("provider_latitude") || 0,
-                        "longitude": this.field_manager.get_field_value("provider_longitude") || 0,
+                        "latitude": this.field_manager.get_field_value("latitude") || 0,
+                        "longitude": this.field_manager.get_field_value("longitude") || 0,
                     }));
-                    this.$("button").toggle(! this.get("effective_readonly"));
                 },
                 received_position: function(obj) {
                     this.field_manager.set_values({
-                        "provider_latitude": obj.coords.latitude,
-                        "provider_longitude": obj.coords.longitude,
+                        "latitude": obj.coords.latitude,
+                        "longitude": obj.coords.longitude,
                     });
                 },
             });
 
-            instance.web.form.custom_widgets.add('coordinates', 'instance.oepetstore.WidgetCoordinates');
+            core.form_custom_registry.add('coordinates', WidgetCoordinates);
 
         .. code-block:: xml
 
             <t t-name="WidgetCoordinates">
                 <iframe width="400" height="300"
-                    t-attf-src="https://maps.google.com/?ie=UTF8&amp;ll={{latitude}},{{longitude}}&amp;output=embed">
+                    t-attf-src="https://www.google.com/maps/embed/v1/place?q={{latitude}},{{longitude}}&amp;key=AIzaSyC6vLt-bzYH0U6h1aZJmQee8jpxtcjeRVY">
                 </iframe>
-                <button>Get My Current Coordinate</button>
+                <div>
+                    <button>Get My Current Coordinate</button>
+                </div>
             </t>
 
 .. [#classes] as a separate concept from instances. In many languages classes
