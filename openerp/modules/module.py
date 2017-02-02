@@ -77,9 +77,13 @@ class AddonsImportHook(object):
         _1, _2, module_part = module_name.split('.')
         # Note: we don't support circular import.
         f, path, descr = imp.find_module(module_part, ad_paths)
-        mod = imp.load_module('openerp.addons.' + module_part, f, path, descr)
-        sys.modules['openerp.addons.' + module_part] = mod
-        return mod
+        try:
+            mod = imp.load_module('openerp.addons.' + module_part, f, path, descr)
+            sys.modules['openerp.addons.' + module_part] = mod
+            return mod
+        finally:
+            if f:
+                f.close()
 
 def initialize_sys_path():
     """
