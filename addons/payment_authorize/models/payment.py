@@ -148,6 +148,17 @@ class TxAuthorize(models.Model):
     # --------------------------------------------------
 
     @api.model
+    def create(self, vals):
+        # The reference is used in the Authorize form to fill a field (invoiceNumber) which is
+        # limited to 20 characters. We truncate the reference now, since it will be reused at
+        # payment validation to find back the transaction.
+        if 'reference' in vals and 'acquirer_id' in vals:
+            acquier = self.env['payment.acquirer'].browse(vals['acquirer_id'])
+            if acquier.provider == 'authorize':
+                vals['reference'] = vals.get('reference', '')[:20]
+        return super(TxAuthorize, self).create(vals)
+
+    @api.model
     def _authorize_form_get_tx_from_data(self, data):
         """ Given a data dict coming from authorize, verify it and find the related
         transaction record. """

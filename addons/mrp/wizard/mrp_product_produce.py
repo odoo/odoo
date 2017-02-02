@@ -6,7 +6,7 @@ from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 
 class MrpProductProduce(models.TransientModel):
     _name = "mrp.product.produce"
@@ -80,13 +80,16 @@ class MrpProductProduce(models.TransientModel):
             raise UserError(_('You should at least produce some quantity'))
         for move in moves.filtered(lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel')):
             if move.unit_factor:
-                move.quantity_done_store += quantity * move.unit_factor
+                rounding = move.product_uom.rounding
+                move.quantity_done_store += float_round(quantity * move.unit_factor, precision_rounding=rounding)
         moves = self.production_id.move_finished_ids.filtered(lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel'))
         for move in moves:
+            rounding = move.product_uom.rounding
             if move.product_id.id == self.production_id.product_id.id:
-                move.quantity_done_store += quantity
+                move.quantity_done_store += float_round(quantity, precision_rounding=rounding)
             elif move.unit_factor:
-                move.quantity_done_store += quantity * move.unit_factor
+                # byproducts handling
+                move.quantity_done_store += float_round(quantity * move.unit_factor, precision_rounding=rounding)
         self.check_finished_move_lots()
         if self.production_id.state == 'confirmed':
             self.production_id.write({

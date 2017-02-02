@@ -957,7 +957,14 @@ class expression(object):
 
                 if call_null:
                     o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                    push(create_substitution_leaf(leaf, ('id', o2m_op, select_distinct_from_where_not_null(cr, field.inverse_name, comodel._table)), model))
+                    # determine ids from field.inverse_name
+                    if comodel._fields[field.inverse_name].store:
+                        ids1 = select_distinct_from_where_not_null(cr, field.inverse_name, comodel._table)
+                    else:
+                        domain = [(field.inverse_name, '!=', False)]
+                        recs = comodel.search(domain).sudo().with_context(prefetch_fields=False)
+                        ids1 = recs.mapped(field.inverse_name).ids
+                    push(create_substitution_leaf(leaf, ('id', o2m_op, ids1), model))
 
             elif field.type == 'many2many':
                 rel_table, rel_id1, rel_id2 = field.relation, field.column1, field.column2
