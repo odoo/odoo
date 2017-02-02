@@ -276,13 +276,13 @@ class ir_property(osv.osv):
             elif value <= 0 and operator == '>=':
                 operator = '<'
                 include_zero = True
-            elif value <= 0 and operator == '>':
+            elif value < 0 and operator == '>':
                 operator = '<='
                 include_zero = True
             elif value >= 0 and operator == '<=':
                 operator = '>'
                 include_zero = True
-            elif value >= 0 and operator == '<':
+            elif value > 0 and operator == '<':
                 operator = '>='
                 include_zero = True
 

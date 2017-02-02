@@ -3,14 +3,14 @@
 # * gamification
 # 
 # Translators:
-# grazziano <g.negocios@outlook.com.br>, 2015
+# grazziano <gra.negocia@gmail.com>, 2015
 # Mateus Lopes <mateus1@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:18+0000\n"
-"PO-Revision-Date: 2016-10-01 19:49+0000\n"
+"PO-Revision-Date: 2017-01-06 12:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -149,7 +149,7 @@ msgstr "<br/>Recompensas especiais foram enviadas aos melhores usuários. O Rank
 msgid ""
 "<span class=\"o_stat_text\">Related</span>\n"
 "                                    <span class=\"o_stat_text\">Goals</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Objetivos</span>\n                                    <span class=\"o_stat_text\">Relacionados</span>"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
@@ -157,14 +157,14 @@ msgid ""
 "A badge is a symbolic token granted to a user as a sign of reward.\n"
 "                    It can be deserved automatically when some conditions are met or manually by users.\n"
 "                    Some badges are harder than others to get with specific conditions."
-msgstr ""
+msgstr "Um crachá é um símbolo simbólico concedido a um usuário como um sinal de recompensa. Pode ser merecido automaticamente quando algumas condições são atendidas ou manualmente pelos usuários. Alguns crachás são mais difíceis do que outros para obter com condições específicas."
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid ""
 "A goal definition is a technical model of goal defining a condition to reach.\n"
 "                    The dates, values to reach or users are defined in goal instance."
-msgstr ""
+msgstr "Uma definição de objetivo é um modelo técnico de objetivo definindo uma condição para alcançar. As datas, valores a alcançar ou usuários são definidos na instância de objetivo."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition
@@ -178,7 +178,7 @@ msgstr "Um objetivo é considerado completo quando o valor atual é comparado ao
 msgid ""
 "A goal is defined by a user and a goal definition.\n"
 "                    Goals can be created automatically by using challenges."
-msgstr ""
+msgstr "Um objetivo é definido por um usuário e por uma definição de objetivo. Os gols podem ser criados automaticamente usando desafios."
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -237,7 +237,7 @@ msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
 "                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                    The goals are created for the specified users or member of the group."
-msgstr ""
+msgstr "Atribuir uma lista de objetivos aos usuários escolhidos para avaliá-los.\nO desafio pode usar um período (semanal, mensal ...) para a criação automática de metas.\nOs objetivos são criados para os usuários especificados ou membros do grupo."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_user_ids
@@ -396,7 +396,7 @@ msgstr "Marque para definir um limite mensal por pessoa para enviar esta medalha
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
 msgid "Click to create a badge."
-msgstr ""
+msgstr "Clique para criar um orçamento."
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.challenge_list_action
@@ -406,7 +406,7 @@ msgstr "Clique para criar um desafio"
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid "Click to create a goal definition."
-msgstr ""
+msgstr "Clique para criar uma definição de objetivo"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_list_action
@@ -1169,7 +1169,7 @@ msgstr "Nenhum limite de envio mensal"
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_problem_solver
 msgid "No one can solve challenges like you do."
-msgstr ""
+msgstr "Ninguém pode resolver desafios como você."
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -1732,7 +1732,7 @@ msgstr "O valor para comparar ao campo distinto. A expressão pode conter refer�
 msgid ""
 "There is no goals associated to this challenge matching your search.\n"
 "                Make sure that your challenge is active and assigned to at least one user."
-msgstr ""
+msgstr "Não há metas associadas a este desafio que correspondam à sua pesquisa.\nCertifique-se de que o desafio está ativo e atribuído a pelo menos um usuário."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
@@ -1853,7 +1853,7 @@ msgstr "Com esta opção habilitada, um usuário pode receber uma medalha apenas
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_idea
 msgid "With your brilliant ideas, you are an inspiration to others."
-msgstr ""
+msgstr "Com suas ideias brilhantes, você é uma inspiração para os outros."
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1877,7 +1877,7 @@ msgstr "Você não pode conceder uma medalha a você"
 #: code:addons/gamification/models/challenge.py:235
 #, python-format
 msgid "You can not reset a challenge with unfinished goals."
-msgstr ""
+msgstr "Você não pode redefinir um desafio com metas inacabadas."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1887,7 +1887,7 @@ msgstr "Você ainda pode conceder"
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_good_job
 msgid "You did great at your job."
-msgstr ""
+msgstr "Você foi ótimo no seu trabalho."
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:227
@@ -1904,7 +1904,7 @@ msgstr "Você já enviou esta medalha muitas vezes este mês."
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_hidden
 msgid "You have found the hidden badge"
-msgstr ""
+msgstr "Você encontrou o crachá escondido"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view

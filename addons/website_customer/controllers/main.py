@@ -42,7 +42,7 @@ class WebsiteCustomer(http.Controller):
 
         if tag_id:
             tag_id = unslug(tag_id)[1] or 0
-            domain += [('tag_ids', 'in', tag_id)]
+            domain += [('website_tag_ids', 'in', tag_id)]
 
         # group by country, based on customers found with the search(domain)
         countries = partner_obj.read_group(
