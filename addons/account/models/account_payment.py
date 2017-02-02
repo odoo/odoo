@@ -211,7 +211,7 @@ class account_payment(models.Model):
     payment_difference_handling = fields.Selection([('open', 'Keep open'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference", copy=False)
     writeoff_account_id = fields.Many2one('account.account', string="Difference Account", domain=[('deprecated', '=', False)], copy=False)
     writeoff_move_name = fields.Char(
-        string='Account move name',
+        string='Account Move Name',
         help='Change the name of the account move when posting in a counterpart account',
         default='Counterpart')
 
