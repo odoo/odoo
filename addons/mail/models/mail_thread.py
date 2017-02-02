@@ -1049,19 +1049,20 @@ class MailThread(models.AbstractModel):
             bounce_match = bounce_re.search(email_to)
 
             if bounce_match:
-                bounced_mail_id, bounced_model, bounced_thread_id = bounce_match.group(1), bounce_match.group(2), int(bounce_match.group(3))
+                bounced_mail_id, bounced_model, bounced_thread_id = bounce_match.group(1), bounce_match.group(2), bounce_match.group(3)
 
                 email_part = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
                 dsn_part = next((part for part in message.walk() if part.get_content_type() == 'message/delivery-status'), None)
 
-                partner, partner_address = self.env['res.partner'], False
+                partners, partner_address = self.env['res.partner'], False
                 if dsn_part and len(dsn_part.get_payload()) > 1:
                     dsn = dsn_part.get_payload()[1]
                     final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
                     partner_address = final_recipient_data.split(';', 1)[1].strip()
                     if partner_address:
-                        partner = partner.sudo().search([('email', 'like', partner_address)])
-                        partner.message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
+                        partners = partners.sudo().search([('email', 'like', partner_address)])
+                        for partner in partners:
+                            partner.message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
 
                 mail_message = self.env['mail.message']
                 if email_part:
@@ -1069,19 +1070,19 @@ class MailThread(models.AbstractModel):
                     bounced_message_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
                     mail_message = MailMessage.sudo().search([('message_id', 'in', bounced_message_id)])
 
-                if partner and mail_message:
+                if partners and mail_message:
                     notifications = self.env['mail.notification'].sudo().search([
                         ('mail_message_id', '=', mail_message.id),
-                        ('res_partner_id', '=', partner.id)])
+                        ('res_partner_id', 'in', partners.ids)])
                     notifications.write({
                         'email_status': 'bounce'
                     })
 
                 if bounced_model in self.env and hasattr(self.env[bounced_model], 'message_receive_bounce') and bounced_thread_id:
-                    self.env[bounced_model].browse(bounced_thread_id).message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
+                    self.env[bounced_model].browse(int(bounced_thread_id)).message_receive_bounce(partner_address, partners, mail_id=bounced_mail_id)
 
                 _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s: dest %s (partner %s)',
-                             email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id, partner_address, partner.id)
+                             email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id, partner_address, partners)
                 return []
 
         # 0. First check if this is a bounce message or not.

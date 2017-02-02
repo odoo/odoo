@@ -269,7 +269,7 @@
 
                 <div class="form-group field-password">
                     <label for="password" class="control-label">Password</label>
-                    <input type="password" name="password" id="password" class="form-control" required="required" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
+                    <input type="password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                 </div>
 
                 <p class="alert alert-danger" t-if="error">

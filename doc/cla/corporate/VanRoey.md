@@ -14,3 +14,4 @@ List of contributors:
 
 Yenthe Van Ginneken  yenthe.vanginneken@vanroey.be https://github.com/Yenthe666
 Vincent Adriaensen vincent.adriaensen@vanroey.be https://github.com/vincentadriaensen
+Pol Van Dingenen pol.vandingenen@vanroey.be https://github.com/Cyhexy

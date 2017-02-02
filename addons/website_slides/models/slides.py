@@ -572,8 +572,21 @@ class Slide(models.Model):
                 return 'document'
             else:
                 return 'presentation'
-        key = self.env['ir.config_parameter'].sudo().get_param('website_slides.google_app_key')
-        fetch_res = self._fetch_data('https://www.googleapis.com/drive/v2/files/%s' % document_id, {'projection': 'BASIC', 'key': key}, "json")
+
+        # Google drive doesn't use a simple API key to access the data, but requires an access
+        # token. However, this token is generated in module google_drive, which is not in the
+        # dependencies of website_slides. We still keep the 'key' parameter just in case, but that
+        # is probably useless.
+        params = {}
+        params['projection'] = 'BASIC'
+        if 'google.drive.config' in self.env:
+            access_token = self.env['google.drive.config'].get_access_token()
+            if access_token:
+                params['access_token'] = access_token
+        if not params.get('access_token'):
+            params['key'] = self.env['ir.config_parameter'].sudo().get_param('website_slides.google_app_key')
+
+        fetch_res = self._fetch_data('https://www.googleapis.com/drive/v2/files/%s' % document_id, params, "json")
         if fetch_res.get('error'):
             return fetch_res
 
