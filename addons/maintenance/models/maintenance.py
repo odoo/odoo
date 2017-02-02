@@ -153,43 +153,34 @@ class MaintenanceEquipment(models.Model):
                 ('equipment_id', '=', equipment.id),
                 ('maintenance_type', '=', 'preventive'),
                 ('stage_id.done', '!=', True),
-                ('close_date', '!=', True)], order="request_date asc", limit=1)
+                ('close_date', '=', False)], order="request_date asc", limit=1)
             last_maintenance_done = self.env['maintenance.request'].search([
                 ('equipment_id', '=', equipment.id),
                 ('maintenance_type', '=', 'preventive'),
                 ('stage_id.done', '=', True),
-                ('close_date', '=', True)], order="close_date desc", limit=1)
+                ('close_date', '!=', False)], order="close_date desc", limit=1)
             next_date = False
             if next_maintenance_todo and last_maintenance_done:
-                date_gap = fields.Date.from_string(next_maintenance_todo.request_date) - fields.Date.from_string(last_maintenance_done.request_date)
-                # If the gap between the last_maintenance_done and the next_maintenance_todo one is bigger than 2 times the period
-                if date_gap > 0 and date_gap * 2 > timedelta(days=equipment.period):
-                    # If the next_maintenance_todo is in the future
-                    if fields.Date.from_string(next_maintenance_todo.request_date) > fields.Date.from_string(date_now):
-                        # If the new date still in the past, we set it for today
-                        if fields.Date.from_string(last_maintenance_done) + timedelta(days=equipment.period) < fields.Date.from_string(date_now):
-                            next_date = date_now
-                        else:
-                            next_date = fields.Date.to_string(fields.Date.from_string(last_maintenance_done.request_date) + timedelta(days=equipment.period))
-                    # If the next_maintenance_todo is in the past we let it
+                next_date = next_maintenance_todo.request_date
+                date_gap = fields.Date.from_string(next_maintenance_todo.request_date) - fields.Date.from_string(last_maintenance_done.close_date)
+                # If the gap between the last_maintenance_done and the next_maintenance_todo one is bigger than 2 times the period and next request is in the future
+                if date_gap > timedelta(0) and date_gap > timedelta(days=equipment.period) * 2 and fields.Date.from_string(next_maintenance_todo.request_date) > fields.Date.from_string(date_now):
+                    # If the new date still in the past, we set it for today
+                    if fields.Date.from_string(last_maintenance_done.close_date) + timedelta(days=equipment.period) < fields.Date.from_string(date_now):
+                        next_date = date_now
                     else:
-                        next_date = next_maintenance_todo.request_date
-                else:
-                    next_date = next_maintenance_todo.request_date
+                        next_date = fields.Date.to_string(fields.Date.from_string(last_maintenance_done.close_date) + timedelta(days=equipment.period))
             elif next_maintenance_todo:
+                next_date = next_maintenance_todo.request_date
                 date_gap = fields.Date.from_string(next_maintenance_todo.request_date) - fields.Date.from_string(date_now)
                 # If next maintenance to do is in the future, and in more than 2 times the period, we insert an new request
-                if date_gap > 0 and date_gap * 2 > timedelta(days=equipment.period):
+                if date_gap > timedelta(0) and date_gap > timedelta(days=equipment.period) * 2:
                     next_date = fieds.Date.to_string(fileds.Date.from_string(date_now)+timedelta(days=equipment.period))
-                else:
-                    next_date = next_maintenance_todo.request_date
             elif last_maintenance_done:
-                next_todo = fileds.Date.from_string(date_now)+timedelta(days=equipment.period)
+                next_date = fileds.Date.from_string(last_maintenance_done.close_date)+timedelta(days=equipment.period)
                 # If when we add the period to the last maintenance done and we still in past, we plan it for today
                 if next_todo < fileds.Date.from_string(date_now):
                     next_date = date_now
-                else:
-                    next_date = fieds.Date.to_string(fileds.Date.from_string(last_maintenance_done.request_date)+timedelta(days=equipment.period))
             else:
                 next_date = fields.Date.to_string(fields.Date.from_string(date_now) + timedelta(days=equipment.period))
 
