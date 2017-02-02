@@ -5491,14 +5491,11 @@ def itemgetter_tuple(items):
     return operator.itemgetter(*items)
 
 def convert_pgerror_23502(model, fields, info, e):
-    m = re.match(r'^null value in column "(?P<field>\w+)" violates '
-                 r'not-null constraint\n',
-                 tools.ustr(e))
-    field_name = m and m.group('field')
-    if not m or field_name not in fields:
+    field_name = e.diag.column_name
+    if field_name not in fields:
         return {'message': tools.ustr(e)}
     message = _(u"Missing required value for the field '%s'.") % field_name
-    field = fields.get(field_name)
+    field = fields[field_name]
     if field:
         message = _(u"Missing required value for the field '%s' (%s)") % (field['string'], field_name)
     return {
@@ -5507,13 +5504,11 @@ def convert_pgerror_23502(model, fields, info, e):
     }
 
 def convert_pgerror_23505(model, fields, info, e):
-    m = re.match(r'^duplicate key (?P<field>\w+) violates unique constraint',
-                 tools.ustr(e))
-    field_name = m and m.group('field')
-    if not m or field_name not in fields:
+    field_name = e.diag.column_name
+    if field_name not in fields:
         return {'message': tools.ustr(e)}
     message = _(u"The value for the field '%s' already exists.") % field_name
-    field = fields.get(field_name)
+    field = fields[field_name]
     if field:
         message = _(u"%s This might be '%s' in the current model, or a field "
                     u"of the same name in an o2m.") % (message, field['string'])
