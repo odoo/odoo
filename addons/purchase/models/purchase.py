@@ -57,7 +57,7 @@ class PurchaseOrder(models.Model):
             else:
                 order.invoice_status = 'no'
 
-    @api.depends('order_line.invoice_lines.invoice_id.state')
+    @api.depends('order_line.invoice_lines.invoice_id')
     def _compute_invoice(self):
         for order in self:
             invoices = self.env['account.invoice']
@@ -75,7 +75,9 @@ class PurchaseOrder(models.Model):
             types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
         return types[:1]
 
-    @api.depends('order_line.move_ids')
+    @api.depends('order_line.move_ids.returned_move_ids',
+                 'order_line.move_ids.state',
+                 'order_line.move_ids.picking_id')
     def _compute_picking(self):
         for order in self:
             pickings = self.env['stock.picking']
