@@ -10,32 +10,14 @@ var ModelFieldSelector = Widget.extend({
     template: "FieldSelector",
     events: {
         // Handle popover opening and closing
-        "focusin input, .o_field_selector_popover": function (e) {
-            if (this._hidePopoverTimeout !== undefined) {
-                clearTimeout(this._hidePopoverTimeout);
-                this._hidePopoverTimeout = undefined;
-                return;
-            }
-            if (this.$input.is(e.currentTarget)) {
-                this.showPopover();
-            }
+        "focusin": function () {
+            clearTimeout(this._hidePopoverTimeout);
+            this.showPopover();
         },
-        "focusout input, .o_field_selector_popover": function () {
-            if (this._hidePopoverTimeout !== undefined) {
-                return;
-            }
-            this._hidePopoverTimeout = setTimeout((function () {
-                this.hidePopover();
-                this._hidePopoverTimeout = undefined;
-            }).bind(this), 100);
+        "focusout": function () {
+            this._hidePopoverTimeout = _.defer(this.hidePopover.bind(this));
         },
-        "click .o_field_selector_close": function () {
-            if (this._hidePopoverTimeout !== undefined) {
-                clearTimeout(this._hidePopoverTimeout);
-                this._hidePopoverTimeout = undefined;
-            }
-            this.hidePopover();
-        },
+        "click .o_field_selector_close": "hidePopover",
 
         // Handle popover field navigation
         "click .o_field_selector_prev_page": "goToPrevPage",
@@ -183,16 +165,20 @@ var ModelFieldSelector = Widget.extend({
         this.valid = valid;
     },
     /// The showPopover method shows the popover to select the field chain. It prepares the popover pages
-    /// before actually showing it.
+    /// before actually showing it. (if already open, does nothing)
     showPopover: function () {
+        if (this._isOpen) return;
+        this._isOpen = true;
         this._prefill().then((function () {
             this.displayPage();
             this.$popover.removeClass("hidden");
         }).bind(this));
     },
     /// The hidePopover method closes the popover and mark the field as selected. If the field chain changed,
-    /// it notifies its parents.
+    /// it notifies its parents. (if not open, does nothing)
     hidePopover: function () {
+        if (!this._isOpen) return;
+        this._isOpen = false;
         this.$popover.addClass("hidden");
         this.isSelected = true;
         if (this.dirty) {
