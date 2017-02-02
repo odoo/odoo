@@ -357,10 +357,14 @@ def list_db_incompatible(databases):
             cr.execute("SELECT 1 FROM information_schema.tables WHERE table_name='ir_module_module'")
             if cr.fetchone():
                 cr.execute("SELECT latest_version FROM ir_module_module WHERE name=%s", ('base',))
-                base_version = cr.fetchone()[0]
-                # e.g. 10.saas~15
-                if '.'.join(base_version.split('.')[:2]) != server_version:
+                base_version = cr.fetchone()
+                if not base_version or not base_version[0]:
                     incompatible_databases.append(database_name)
+                else:
+                    # e.g. 10.saas~15
+                    local_version = '.'.join(base_version[0].split('.')[:2])
+                    if local_version != server_version:
+                        incompatible_databases.append(database_name)
             else:
                 incompatible_databases.append(database_name)
         # release connection
