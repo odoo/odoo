@@ -75,7 +75,7 @@
 
         <menuitem id="menu_event_configuration" name="Configuration" parent="event_main_menu"
             sequence="100"/>
-        <menuitem name="Event Categories" id="menu_event_type" action="action_event_type" parent="menu_event_configuration"/>
+        <menuitem name="Event Categories" id="menu_event_type" action="action_event_type" parent="menu_event_configuration" groups="base.group_no_one"/>
 
         <!-- EVENT.REGISTRATION ACTIONS -->
         <record id="act_event_registration_from_event" model="ir.actions.act_window">

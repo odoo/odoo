@@ -74,6 +74,18 @@
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my"
+                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Upcoming Activities (7 days)" name="activities_week"
+                        domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                 ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                        ]"/>
+                    <filter string="Overdue Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" context="{'group_by':'stage_id'}"/>
                         <filter string="Date" context="{'group_by':'date'}"/>
@@ -132,6 +144,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -230,7 +243,8 @@
             id="menu_event_track_location"
             name="Locations"
             action="action_event_track_location"
-            parent="event.menu_event_configuration"/>
+            parent="event.menu_event_configuration"
+            groups="base.group_no_one"/>
 
         <!-- EVENTS/CONFIGURATION/EVENT Sponsor Types -->
         <record model="ir.ui.view" id="view_event_sponsor_type_form">
@@ -267,7 +281,7 @@
         <menuitem
             id="menu_event_sponsor_type"
             action="action_event_sponsor_type"
-            parent="event.menu_event_configuration"/>
+            parent="event.menu_event_configuration" groups="base.group_no_one"/>
 
         <!-- EVENT.SPONSOR VIEWS -->
         <record model="ir.ui.view" id="view_event_sponsor_tree">
@@ -333,7 +347,8 @@
         <menuitem
             id="menu_event_track_tag"
             action="action_event_track_tag"
-            parent="event.menu_event_configuration"/>
+            parent="event.menu_event_configuration"
+            groups="base.group_no_one"/>
 
         <!-- EVENTS TRACK STAGES-->
         <record id="event_track_stage_view_search" model="ir.ui.view">
