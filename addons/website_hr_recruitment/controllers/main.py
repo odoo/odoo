@@ -9,13 +9,13 @@ from odoo.http import request
 class WebsiteHrRecruitment(http.Controller):
     @http.route([
         '/jobs',
-        '/jobs/country/<model("res.country"):country>',
-        '/jobs/department/<model("hr.department"):department>',
-        '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>',
+        '''/jobs/country/<model("res.country", "[('has_job', '=', True)]"):country>''',
+        '''/jobs/department/<model("hr.department", "[('has_job', '=', True)]"):department>''',
+        '''/jobs/country/<model("res.country", "[('has_job', '=', True)]"):country>/department/<model("hr.department", "[('has_job', '=', True), ('country_id', '=', country[0])]"):department>''',
         '/jobs/office/<int:office_id>',
-        '/jobs/country/<model("res.country"):country>/office/<int:office_id>',
-        '/jobs/department/<model("hr.department"):department>/office/<int:office_id>',
-        '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/office/<int:office_id>',
+        '''/jobs/country/<model("res.country", "[('has_job', '=', True)]"):country>/office/<int:office_id>''',
+        '''/jobs/department/<model("hr.department", "[('has_job', '=', True)]"):department>/office/<int:office_id>''',
+        '''/jobs/country/<model("res.country", "[('has_job', '=', True)]"):country>/department/<model("hr.department", "[('has_job', '=', True), ('country_id', '=', country[0])]"):department>/office/<int:office_id>'''
     ], type='http', auth="public", website=True)
     def jobs(self, country=None, department=None, office_id=None, **kwargs):
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
