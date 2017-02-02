@@ -3,6 +3,9 @@
 
 import logging
 
+from PyPDF2 import PdfFileWriter, PdfFileReader
+from StringIO import StringIO
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.safe_eval import safe_eval
@@ -296,3 +299,17 @@ class DeliveryCarrier(models.Model):
             raise UserError(_("Selected product in the delivery method doesn't fulfill any of the delivery carrier(s) criteria."))
 
         return price
+
+    # We have merge pdf file data into different delivery module
+    def merge_pdf(self, label_name, label_data ):
+        pdfwriter = PdfFileWriter()
+        for label_binary_data in label_data:
+            reader = PdfFileReader(StringIO(label_binary_data[1]), strict=False)
+            for page in range(0, reader.getNumPages()):
+                pdfwriter.addPage(reader.getPage(page))
+        output = StringIO()
+        pdfwriter.write(output)
+        output_value = output.getvalue()
+        output.close()
+        labels = [('Label%s.pdf'%(label_name), output_value)]
+        return labels
