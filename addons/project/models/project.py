@@ -394,7 +394,6 @@ class Task(models.Model):
             self.partner_id = self.project_id.partner_id
             self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
-            self.partner_id = False
             self.stage_id = False
 
     @api.onchange('user_id')
@@ -415,7 +414,7 @@ class Task(models.Model):
     @api.constrains('date_start', 'date_end')
     def _check_dates(self):
         if any(self.filtered(lambda task: task.date_start and task.date_end and task.date_start > task.date_end)):
-            return ValidationError(_('Error ! Task starting date must be lower than its ending date.'))
+            raise ValidationError(_('Error ! Task starting date must be lower than its ending date.'))
 
     # Override view according to the company definition
     @api.model

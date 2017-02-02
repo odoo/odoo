@@ -43,7 +43,9 @@ class ChangeProductionQty(models.TransientModel):
             if wizard.product_qty < produced:
                 raise UserError(_("You have already processed %d. Please input a quantity higher than %d ")%(produced, produced))
             production.write({'product_qty': wizard.product_qty})
-            factor = production.product_uom_id._compute_quantity(production.product_qty - production.qty_produced, production.bom_id.product_uom_id) / production.bom_id.product_qty
+            done_moves = production.move_finished_ids.filtered(lambda x: x.state == 'done' and x.product_id == production.product_id)
+            qty_produced = production.product_id.uom_id._compute_quantity(sum(done_moves.mapped('product_qty')), production.product_uom_id)
+            factor = production.product_uom_id._compute_quantity(production.product_qty - qty_produced, production.bom_id.product_uom_id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             for line, line_data in lines:
                 production._update_raw_move(line, line_data)
@@ -51,7 +53,7 @@ class ChangeProductionQty(models.TransientModel):
             for bom, bom_data in boms:
                 for operation in bom.routing_id.operation_ids:
                     operation_bom_qty[operation.id] = bom_data['qty']
-            self._update_product_to_produce(production, production.product_qty - production.qty_produced)
+            self._update_product_to_produce(production, production.product_qty - qty_produced)
             moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves.do_unreserve()
             moves.action_assign()

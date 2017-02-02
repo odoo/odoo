@@ -58,9 +58,6 @@ tour.register('project_tour', {
     extra_trigger: '.o_kanban_project_tasks',
     content: _t("Click on a card to get the details of the task."),
     position: "bottom",
-    run: function (actions) {
-        actions.auto(".o_kanban_record .oe_kanban_action[data-type=edit]");
-    },
 }, {
     trigger: ".o_form_button_edit",
     extra_trigger: '.o_form_project_tasks',

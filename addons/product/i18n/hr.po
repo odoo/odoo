@@ -10,13 +10,14 @@
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2016
 # Mario Jureša <mario.juresa@uvid.hr>, 2016
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016
+# Tina Milas <tina@uvid.hr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 14:00+0000\n"
 "PO-Revision-Date: 2016-09-29 14:00+0000\n"
-"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016\n"
+"Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,12 +34,12 @@ msgstr "Kategorija proizvoda"
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Varijante proizvoda"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_product_count
 msgid "# Products"
-msgstr ""
+msgstr "# Proizvodi"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:438
@@ -154,7 +155,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Proizvodi</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -683,7 +684,7 @@ msgstr "Tvrtka"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_company_id
 msgid "Company id"
-msgstr ""
+msgstr "ID tvrtke"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -855,7 +856,7 @@ msgstr "Prilagođeno računalo, isporučuje se u kit-u."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Šifra kupca"
 
 #. module: product
 #: model:product.product,name:product.product_delivery_02
@@ -942,7 +943,7 @@ msgstr "Naziv za prikaz"
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
 msgid "Dozen(s)"
-msgstr ""
+msgstr "Tucet(i)"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_03
@@ -1423,7 +1424,7 @@ msgstr "Bitne značajke"
 #: model:product.product,name:product.product_product_27
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Laptop Customized"
-msgstr ""
+msgstr "Prilagođeni laptop"
 
 #. module: product
 #: model:product.product,name:product.product_product_25
@@ -1983,7 +1984,7 @@ msgstr "JM proizvoda"
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "Kategorije jedinica mjera proizvoda"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
@@ -2060,6 +2061,11 @@ msgid "Public Price"
 msgstr "Javna cijena"
 
 #. module: product
+#: model:product.pricelist,name:product.list0
+msgid "Public Pricelist"
+msgstr "Javni cjenik"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template_description_purchase
 msgid "Purchase Description"
@@ -2074,7 +2080,7 @@ msgstr "Nabavna jedinica mjere"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
 msgid "Quantity per Package"
-msgstr ""
+msgstr "Količina po pakiranju"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -2737,21 +2743,16 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.pricelist,name:product.list0
-msgid "USD"
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Ultrafast wireless."
-msgstr ""
+msgstr "Ultra brza bezžična mreža"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Ultrathin design"
-msgstr ""
+msgstr "Ultra tanki dizajn"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
@@ -2887,7 +2888,7 @@ msgstr "Informacije dobavljača"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Vendor Pricelists"
-msgstr ""
+msgstr "Cjenici dobavljača"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3132,12 +3133,12 @@ msgstr "fl oz"
 #. module: product
 #: model:product.uom,name:product.product_uom_foot
 msgid "foot(ft)"
-msgstr ""
+msgstr "stopa(ft)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_gal
 msgid "gal(s)"
-msgstr ""
+msgstr "galon(a)"
 
 #. module: product
 #: model:product.product,name:product.product_product_8
@@ -3185,7 +3186,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_inch
 msgid "inch(es)"
-msgstr ""
+msgstr "inč(a)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm

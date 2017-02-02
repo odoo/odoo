@@ -134,7 +134,7 @@ dom.hasProgrammaticStyle = function (node) {
 };
 dom.mergeFilter = function (prev, cur, parent) {
     // merge text nodes
-    if (prev && (dom.isText(prev) || ("H1 H2 H3 H4 H5 H6 LI P".indexOf(prev.tagName) !== -1 && prev !== cur.parentNode)) && dom.isText(cur)) {
+    if (prev && (dom.isText(prev) || (['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'P'].indexOf(prev.tagName) !== -1 && prev !== cur.parentNode)) && dom.isText(cur)) {
         return true;
     }
     if (prev && prev.tagName === "P" && dom.isText(cur)) {
@@ -938,12 +938,19 @@ $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDi
   var dimension = sDim.split('x');
   var r = range.create();
   if (!r) return;
-  r = r.deleteContents();
+  r = r.deleteContents(true);
 
-  var isBodyContainer = dom.isBodyContainer;
-  dom.isBodyContainer = dom.isNotBreakable;
-  r.insertNode(editor.table.createTable(dimension[0], dimension[1]));
-  dom.isBodyContainer = isBodyContainer;
+  var table = editor.table.createTable(dimension[0], dimension[1]);
+  var parent = r.sc;
+  while (dom.isText(parent.parentNode) || dom.isRemovableEmptyNode(parent.parentNode)) {
+    parent = parent.parentNode;
+  }
+  var node = dom.splitTree(parent, {'node': r.sc, 'offset': r.so}) || r.sc;
+  node.parentNode.insertBefore(table, node);
+
+  if ($(node).text() === '' || node.textContent === '\u00A0') {
+    node.parentNode.removeChild(node);
+  }
 
   editor.afterCommand($editable);
   event.preventDefault();

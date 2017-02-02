@@ -5,6 +5,8 @@ import time
 from datetime import datetime, timedelta
 from dateutil import relativedelta
 
+import babel
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.safe_eval import safe_eval
@@ -185,7 +187,7 @@ class HrPayslip(models.Model):
                 \n* If the payslip is confirmed then status is set to \'Done\'.
                 \n* When user cancel payslip the status is \'Rejected\'.""")
     line_ids = fields.One2many('hr.payslip.line', 'slip_id', string='Payslip Lines', readonly=True,
-        states={'draft': [('readonly', False)]}, domain=[('appears_on_payslip', '=', True)])
+        states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', string='Company', readonly=True, copy=False,
         default=lambda self: self.env['res.company']._company_default_get(),
         states={'draft': [('readonly', False)]})
@@ -545,9 +547,10 @@ class HrPayslip(models.Model):
             return res
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         employee = self.env['hr.employee'].browse(employee_id)
+        locale = self.env.context.get('lang', 'en_US')
         res['value'].update({
-                    'name': _('Salary Slip of %s for %s') % (employee.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-                    'company_id': employee.company_id.id
+            'name': _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale))),
+            'company_id': employee.company_id.id,
         })
 
         if not self.env.context.get('contract'):
@@ -593,7 +596,8 @@ class HrPayslip(models.Model):
         date_to = self.date_to
 
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
-        self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(ttyme.strftime('%B-%Y')))
+        locale = self.env.context.get('lang', 'en_US')
+        self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
         self.company_id = employee.company_id
 
         if not self.env.context.get('contract') or not self.contract_id:

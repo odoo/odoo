@@ -7,7 +7,6 @@ import dateutil
 import email
 import hashlib
 import hmac
-import json
 import lxml
 import logging
 import pytz
@@ -1054,19 +1053,20 @@ class MailThread(models.AbstractModel):
             bounce_match = bounce_re.search(email_to)
 
             if bounce_match:
-                bounced_mail_id, bounced_model, bounced_thread_id = bounce_match.group(1), bounce_match.group(2), int(bounce_match.group(3))
+                bounced_mail_id, bounced_model, bounced_thread_id = bounce_match.group(1), bounce_match.group(2), bounce_match.group(3)
 
                 email_part = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
                 dsn_part = next((part for part in message.walk() if part.get_content_type() == 'message/delivery-status'), None)
 
-                partner, partner_address = self.env['res.partner'], False
+                partners, partner_address = self.env['res.partner'], False
                 if dsn_part and len(dsn_part.get_payload()) > 1:
                     dsn = dsn_part.get_payload()[1]
                     final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
                     partner_address = final_recipient_data.split(';', 1)[1].strip()
                     if partner_address:
-                        partner = partner.sudo().search([('email', 'like', partner_address)])
-                        partner.message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
+                        partners = partners.sudo().search([('email', 'like', partner_address)])
+                        for partner in partners:
+                            partner.message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
 
                 mail_message = self.env['mail.message']
                 if email_part:
@@ -1074,19 +1074,19 @@ class MailThread(models.AbstractModel):
                     bounced_message_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
                     mail_message = MailMessage.sudo().search([('message_id', 'in', bounced_message_id)])
 
-                if partner and mail_message:
+                if partners and mail_message:
                     notifications = self.env['mail.notification'].sudo().search([
                         ('mail_message_id', '=', mail_message.id),
-                        ('res_partner_id', '=', partner.id)])
+                        ('res_partner_id', 'in', partners.ids)])
                     notifications.write({
                         'email_status': 'bounce'
                     })
 
                 if bounced_model in self.env and hasattr(self.env[bounced_model], 'message_receive_bounce') and bounced_thread_id:
-                    self.env[bounced_model].browse(bounced_thread_id).message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
+                    self.env[bounced_model].browse(int(bounced_thread_id)).message_receive_bounce(partner_address, partners, mail_id=bounced_mail_id)
 
                 _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s: dest %s (partner %s)',
-                             email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id, partner_address, partner.id)
+                             email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id, partner_address, partners)
                 return []
 
         # 0. First check if this is a bounce message or not.
@@ -1098,7 +1098,12 @@ class MailThread(models.AbstractModel):
                          message_id, email_from, email_to)
             return []
 
-        # 1. message is a reply to an existing message (exact match of message_id or compat-mode)
+        # 1. Check if message is a reply on a thread
+        msg_references = [ref for ref in tools.mail_header_msgid_re.findall(thread_references) if 'reply_to' not in ref]
+        mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
+        is_a_reply = bool(mail_messages)
+
+        # 1.1 Handle forward to an alias with a different model: do not consider it as a reply
         if reply_model and reply_thread_id:
             other_alias = Alias.search([
                 '&',
@@ -1106,35 +1111,30 @@ class MailThread(models.AbstractModel):
                 ('alias_name', '=', email_to_localpart)
             ])
             if other_alias and other_alias.alias_model_id.model != reply_model:
-                reply_match = False
+                is_a_reply = False
 
-        if reply_match:
-            msg_references = tools.mail_header_msgid_re.findall(thread_references)
-            mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
+        if is_a_reply:
+            model, thread_id = mail_messages.model, mail_messages.res_id
+            if not reply_private:  # TDE note: not sure why private mode as no alias search, copying existing behavior
+                dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)], limit=1)
 
-            if mail_messages:
-                model, thread_id = mail_messages.model, mail_messages.res_id
-                if not reply_private:  # TDE note: not sure why private mode as no alias search, copying existing behavior
-                    dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)], limit=1)
+            route = self.message_route_verify(
+                message, message_dict,
+                (model, thread_id, custom_values, self._uid, dest_aliases),
+                update_author=True, assert_model=reply_private, create_fallback=True,
+                allow_private=reply_private, drop_alias=True)
+            if route:
+                _logger.info(
+                    'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                    email_from, email_to, message_id, model, thread_id, custom_values, self._uid)
+                return [route]
+            elif route is False:
+                return []
 
-                route = self.message_route_verify(
-                    message, message_dict,
-                    (model, thread_id, custom_values, self._uid, dest_aliases),
-                    update_author=True, assert_model=reply_private, create_fallback=True,
-                    allow_private=reply_private, drop_alias=True)
-                if route:
-                    _logger.info(
-                        'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                        email_from, email_to, message_id, model, thread_id, custom_values, self._uid)
-                    return [route]
-                elif route is False:
-                    return []
-
-        # no route found for a matching reference (or reply), so parent is invalid
-        message_dict.pop('parent_id', None)
-
-        # 4. Look for a matching mail.alias entry
+        # 2. Look for a matching mail.alias entry
         if rcpt_tos_localparts:
+            # no route found for a matching reference (or reply), so parent is invalid
+            message_dict.pop('parent_id', None)
             dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)])
             if dest_aliases:
                 routes = []
@@ -1161,6 +1161,8 @@ class MailThread(models.AbstractModel):
 
         # 5. Fallback to the provided parameters, if they work
         if fallback_model:
+            # no route found for a matching reference (or reply), so parent is invalid
+            message_dict.pop('parent_id', None)
             route = self.message_route_verify(
                 message, message_dict,
                 (fallback_model, thread_id, custom_values, self._uid, None),
@@ -2046,6 +2048,17 @@ class MailThread(models.AbstractModel):
         """
         if not partner_ids:
             return
+
+        if self.env.context.get('mail_auto_subscribe_no_notify'):
+            return
+
+        # send the email only to the current record and not all the ids matching active_domain !
+        # by default, send_mail for mass_mail use the active_domain instead of active_ids.
+        if 'active_domain' in self.env.context:
+            ctx = dict(self.env.context)
+            ctx.pop('active_domain')
+            self = self.with_context(ctx)
+
         for record in self:
             record.message_post_with_view(
                 'mail.message_user_assigned',

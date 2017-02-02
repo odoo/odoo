@@ -12,7 +12,7 @@ import urlparse
 from email.utils import formataddr
 from lxml import etree
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
@@ -350,6 +350,13 @@ class Partner(models.Model, FormatAddress):
                 result['value'] = {key: convert(self.parent_id[key]) for key in address_fields}
         return result
 
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        if self.country_id:
+            return {'domain': {'state_id': [('country_id', '=', self.country_id.id)]}}
+        else:
+            return {'domain': {'state_id': []}}
+
     @api.onchange('email')
     def onchange_email(self):
         if not self.image and not self._context.get('yaml_onchange') and self.email:
@@ -490,7 +497,12 @@ class Partner(models.Model, FormatAddress):
                         raise UserError(_("You can not change the company as the partner/user has multiple user linked with different companies."))
         tools.image_resize_images(vals)
 
-        result = super(Partner, self).write(vals)
+        result = True
+        # To write in SUPERUSER on field is_company and avoid access rights problems.
+        if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.uid == SUPERUSER_ID:
+            result = super(Partner, self).sudo().write({'is_company': vals.get('is_company')})
+            del vals['is_company']
+        result = result and super(Partner, self).write(vals)
         for partner in self:
             if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')

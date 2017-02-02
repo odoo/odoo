@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-02-10 09:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
@@ -64,16 +64,6 @@ msgstr "日"
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_value
 msgid "Default Value"
 msgstr "預設值"
-
-#. module: subscription
-#: model:ir.model.fields,help:subscription.field_subscription_document_fields_value
-msgid "Default value is considered for field when new document is generated."
-msgstr ""
-
-#. module: subscription
-#: model:ir.model.fields,help:subscription.field_subscription_subscription_note
-msgid "Description or Summary of Subscription"
-msgstr ""
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_display_name
@@ -133,30 +123,10 @@ msgid "ID"
 msgstr "編號"
 
 #. module: subscription
-#: model:ir.model.fields,help:subscription.field_subscription_document_active
-msgid ""
-"If the active field is set to False, it will allow you to hide the "
-"subscription document without removing it."
-msgstr ""
-
-#. module: subscription
-#: model:ir.model.fields,help:subscription.field_subscription_subscription_active
-msgid ""
-"If the active field is set to False, it will allow you to hide the "
-"subscription without removing it."
-msgstr ""
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Internal Notes"
 msgstr "內部備註"
-
-#. module: subscription
-#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
-#, fuzzy
-msgid "Internal Qty"
-msgstr "間隔量"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_type
@@ -205,12 +175,6 @@ msgid "Notes"
 msgstr "備註"
 
 #. module: subscription
-#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
-#, fuzzy
-msgid "Number of Documents"
-msgstr "文件數"
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_model
 msgid "Object"
 msgstr "物件"
@@ -222,40 +186,15 @@ msgid "Partner"
 msgstr "伙伴"
 
 #. module: subscription
-#: code:addons/subscription/models/subscription.py:88
-#, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist!"
-msgstr ""
-
-#. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Process"
 msgstr "處理程序"
-
-#. module: subscription
-#: model:ir.actions.act_window,name:subscription.action_subscription_form
-#: model:ir.ui.menu,name:subscription.menu_action_subscription_form
-msgid "Recurring Documents"
-msgstr ""
-
-#. module: subscription
-#: model:ir.actions.act_window,name:subscription.action_document_form
-#: model:ir.ui.menu,name:subscription.menu_action_document_form
-msgid "Recurring Types"
-msgstr ""
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 #: selection:subscription.subscription,state:0
 msgid "Running"
 msgstr "運行中"
-
-#. module: subscription
-#: model:ir.model.fields,help:subscription.field_subscription_subscription_cron_id
-msgid "Scheduler which runs on subscription"
-msgstr ""
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
@@ -290,12 +229,6 @@ msgstr "停止"
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Subscription"
 msgstr "訂閱"
-
-#. module: subscription
-#: model:ir.ui.view,arch_db:subscription.view_subscription_form
-#, fuzzy
-msgid "Subscription Data"
-msgstr "訂閱資料"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
@@ -337,18 +270,6 @@ msgid "User"
 msgstr "用戶"
 
 #. module: subscription
-#: model:ir.model.fields,help:subscription.field_subscription_subscription_doc_source
-msgid ""
-"User can choose the source document on which he wants to create documents"
-msgstr ""
-
-#. module: subscription
 #: selection:subscription.subscription,interval_type:0
 msgid "Weeks"
 msgstr "週"
-
-#. module: subscription
-#: code:addons/subscription/models/subscription.py:111
-#, python-format
-msgid "You cannot delete an active subscription!"
-msgstr ""

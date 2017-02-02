@@ -173,6 +173,11 @@ class AssetsBundle(object):
             ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.name, type)),  # The wilcards are id, version and pagination number (if any)
             '!', ('url', '=like', '/web/content/%-{}/%'.format(self.version))
         ]
+
+        # force bundle invalidation on other workers
+        if 'xml' not in tools.config['dev_mode']:
+            self.env['ir.qweb']._get_asset.clear_cache(self.env['ir.qweb'])
+
         return ira.sudo().search(domain).unlink()
 
     def get_attachments(self, type):
@@ -385,7 +390,7 @@ class AssetsBundle(object):
 
     def get_preprocessor_error(self, stderr, source=None):
         """Improve and remove sensitive information from sass/less compilator error messages"""
-        error = stderr.split('Load paths')[0].replace('  Use --trace for backtrace.', '')
+        error = misc.ustr(stderr).split('Load paths')[0].replace('  Use --trace for backtrace.', '')
         if 'Cannot load compass' in error:
             error += "Maybe you should install the compass gem using this extra argument:\n\n" \
                      "    $ sudo gem install compass --pre\n"

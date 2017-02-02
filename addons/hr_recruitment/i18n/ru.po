@@ -3,17 +3,6 @@
 # * hr_recruitment
 # 
 # Translators:
-# Максим Дронь <dronmax@gmail.com>, 2016
-# KingOPl Slav <87slava13@gmail.com>, 2016
-# Masha Koc <mariya.kos.ua@gmail.com>, 2016
-# Viktor Pogrebniak <vp@aifil.ru>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Sergey Vilizhanin <sv@grimmette.ru>, 2016
-# Andrey Samorukov <andrey.samorukov@me.com>, 2016
-# Denis Trepalin <zekarious@gmail.com>, 2016
-# Max Belyanin <maxbelyanin@gmail.com>, 2016
-# Gennady Marchenko <gennadym@gmail.com>, 2016
-# Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2016
 # Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -39,6 +28,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Уважаемый ${object.partner_name or 'applicant'},</p>\n"
+"<p>Благодарим вас за Ваш запрос.<br />\n"
+"К сожалению Ваш профиль не соответствует нашим потребностям</p>\n"
+"<p>Если у Вас есть какие-либо вопросы, пожалуйста, сообщите нам об этом.</p>\n"
+"<p>Всего хорошего,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -51,6 +46,13 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Уважаемый ${object.partner_name or 'applicant'},</p>\n"
+"<p>Благодарим вас за Ваш запрос.<br />\n"
+"Ваше резюме заинтересовало нас. Мы свяжемся с Вами как можно скорее, что бы планировать</p>\n"
+"дальнейшие шаги процесса набора персонала.</p>\n"
+"<p>Если у Вас есть какие-либо вопросы, пожалуйста, сообщите нам об этом.</p>\n"
+"<p>Всего хорошего,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
@@ -65,6 +67,15 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>Уважаемые,</p>\n"
+"<p>Я очень рад сообщить, что <strong> ${object.name} </strong> будете\n"
+"присоединятся к нам как ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    в ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Пожалуйста приветствуйте его/ее и помогите ему/ей найти его/ее место.</p>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -129,6 +140,8 @@ msgid ""
 "Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
 "Qualified &gt; First Interview &gt; Recruited</i>"
 msgstr ""
+"Добавьте столбцы для определения <b>этапов интервью</b>.<br><i>нап. Новый> "
+"Аттестован > Первое интервью > Нанят</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
@@ -354,7 +367,7 @@ msgstr "Категория претендента"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Click here to create a new job position."
-msgstr ""
+msgstr "Нажмите здесь, чтобы создать новую вакансию."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -459,7 +472,7 @@ msgstr "Создать сотрудника"
 #: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create a Job Position"
-msgstr ""
+msgstr "Создать Вакансию"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
@@ -471,6 +484,8 @@ msgstr "Создать алиас"
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
 msgstr ""
+"Создайте несколько псевдонимов, которые позволят вам отслеживать, откуда "
+"заявители пришли."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -608,7 +623,7 @@ msgstr "Отображаемое имя"
 #. module: hr_recruitment
 #: selection:hr.recruitment.config.settings,module_hr_recruitment_survey:0
 msgid "Do not use interview forms"
-msgstr ""
+msgstr "Не использовать интервью формы"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -768,7 +783,7 @@ msgstr "Существующие сотрудники"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_department
 msgid "Hr Department"
-msgstr ""
+msgstr "Отдел кадров"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -832,7 +847,7 @@ msgstr "Кампания вакансии"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Job Email"
-msgstr ""
+msgstr "Email вакансии"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
@@ -870,7 +885,7 @@ msgstr "Штатное расписание"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Job Specific"
-msgstr ""
+msgstr "Конкретная вакансия"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -936,7 +951,7 @@ msgstr "Последний раз обновлено"
 #, python-format
 msgid ""
 "Let's have a look at the <b>applications pipeline</b> for this job position."
-msgstr ""
+msgstr "Давайте взглянем на <b>конвейер приложений</b> для этой должности."
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -1054,7 +1069,7 @@ msgstr "Без темы"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "No document yet."
-msgstr ""
+msgstr "Документов еще нет."
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1101,6 +1116,8 @@ msgid ""
 "Once a job position is created, you can track related applications\n"
 "                  and manage the recruitment process."
 msgstr ""
+"Когда позиция вакансии создана, вы можете отслеживать связанных заявителей\n"
+"                  и управлять процессом найма."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
@@ -1109,11 +1126,14 @@ msgid ""
 "                  and manage the recruitment process related to the job\n"
 "                  position."
 msgstr ""
+"Когда позиция вакансии создана, вы можете отслеживать заявителей\n"
+"                  и управлять процессом набора персонала, связанных с позицией \n"
+"                  вакансии."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Ongoing"
-msgstr ""
+msgstr "Постоянно"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
@@ -1255,7 +1275,7 @@ msgstr "Отказано"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reopen Application"
-msgstr ""
+msgstr "Пере открыть Заявителя"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1375,6 +1395,8 @@ msgstr "Специальный электронный адрес"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Конкретные вакансии, которые используют этот этап. Другие вакансии не будут "
+"использовать этот этап."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1502,6 +1524,9 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Эти псевдонимы могут быть email или url-адресами для каждого источника. "
+"Когда заявитель прибудет сюда через один из них вы будете знать, откуда он "
+"прибыл."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1545,6 +1570,10 @@ msgid ""
 "                files so that you can search keywords from the content of these\n"
 "                files."
 msgstr ""
+"Это меню позволяет вам искать резюме и мотивационные\n"
+"               письма. Odoo автоматически индексирует. PDF. DOC, DOCX. TXT\n"
+"               файлы, так что вы можете искать ключевые слова из содержимого этих\n"
+"               файлов."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
@@ -1563,6 +1592,8 @@ msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
 msgstr ""
+"Попробуйте отправить электронное письмо на этот адрес, он автоматически "
+"создаст приложение."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1585,7 +1616,7 @@ msgstr "Дата Обновления"
 #. module: hr_recruitment
 #: selection:hr.recruitment.config.settings,module_hr_recruitment_survey:0
 msgid "Use interview forms during the recruitment process"
-msgstr ""
+msgstr "Используйте формы интервью во время процесса набора"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_template_id
@@ -1597,7 +1628,7 @@ msgstr "Использовать шаблон"
 #: code:addons/hr_recruitment/static/src/js/tour.js:25
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
-msgstr ""
+msgstr "Используйте хлебные крошки, чтобы <b>вернуться к панели</b>."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
@@ -1621,6 +1652,7 @@ msgstr "Очень хорошо"
 #, python-format
 msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
 msgstr ""
+"Хотите <b>начать набор</b> как профессионал?ke a pro? <i>Начать здесь.</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
@@ -1630,7 +1662,7 @@ msgstr "Адреса наблюдателей"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
 msgid "Welcome ${object.name} "
-msgstr ""
+msgstr "Добро пожаловать $${object.name} "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -1659,7 +1691,7 @@ msgstr "напр. пригласить на собеседование"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. Sales Manager"
-msgstr ""
+msgstr "нап. Менеджер Продаж"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_config_settings

@@ -6,13 +6,14 @@
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Manami Hashi <manami@roomsfor.hk>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2016\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,13 +24,13 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr ""
+msgstr "<strong>顧客参照：</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>インコタームズ:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -51,7 +52,7 @@ msgstr "受注明細で製造オーダプロパティが指定できるように
 msgid ""
 "Allow to modify the sales order dates to postpone deliveries and "
 "procurements"
-msgstr ""
+msgstr "受注の日付を修正して配送や調達を延期できるようにする"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -120,7 +121,7 @@ msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
-msgstr ""
+msgstr "インコタームは一連の販売条件です。 これらは、買い手と売り手の間の取引コストと責任を分け、最先端の輸送実務を反映するために使用されます。"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
@@ -132,7 +133,7 @@ msgstr "国際取引条件は国際間の取り引きで使用する、事前に
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "在庫ルート"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice
@@ -183,7 +184,7 @@ msgstr "オーダのルート"
 #: code:addons/sale_stock/models/sale_order.py:156
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "注文数量が減少しました！"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -193,7 +194,7 @@ msgstr "梱包"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
 msgid "Picking associated to this sale"
-msgstr ""
+msgstr "この販売に関連付けられたピッキング"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_order
@@ -203,7 +204,7 @@ msgstr "調達"
 #. module: sale_stock
 #: selection:sale.config.settings,module_sale_order_dates:0
 msgid "Procurements and deliveries dates are based on the sales order dates"
-msgstr ""
+msgstr "調達や配送の日付は受注の日付に基づく"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
@@ -263,7 +264,7 @@ msgstr "販売安全日数"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
 msgid "Sales Safety Days *"
-msgstr ""
+msgstr "販売安全日数 *"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -305,17 +306,17 @@ msgstr "在庫移動"
 #: code:addons/sale_stock/models/sale_order.py:202
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr ""
+msgstr "この製品は%.2f %s. でパッケージ化されています。 %.2f %s を売るべきです。"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
 msgid "To Refund"
-msgstr ""
+msgstr "返金"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
 msgid "To Refund in SO"
-msgstr ""
+msgstr "SOから返金"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -327,7 +328,7 @@ msgstr "移動"
 #: model:ir.model.fields,help:sale_stock.field_stock_return_picking_line_to_refund_so
 msgid ""
 "Trigger a decrease of the delivered quantity in the associated Sale Order"
-msgstr ""
+msgstr "関連する販売注文の出荷数量の減少をトリガーします。"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -347,7 +348,7 @@ msgstr "警告"
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr ""
+msgstr "注文数量を減らしています！ 必要に応じて納品順序を手動で更新することを忘れないでください。"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:146
@@ -356,6 +357,8 @@ msgid ""
 "You plan to sell %s %s but you only have %s %s available!\n"
 "The stock on hand is %s %s."
 msgstr ""
+"あなたは %s %s を販売しようとしていますが、 %s %s しか利用できません！\n"
+"手元にある在庫は %s %s です。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
@@ -365,4 +368,4 @@ msgstr "sale.config.settings"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking_line
 msgid "stock.return.picking.line"
-msgstr ""
+msgstr "stock.return.picking.line"

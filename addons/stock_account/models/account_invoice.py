@@ -38,13 +38,21 @@ class AccountInvoice(models.Model):
             cacc = accounts['expense'].id
             if dacc and cacc:
                 price_unit = i_line._get_anglo_saxon_price_unit()
+                if inv.currency_id.id != company_currency:
+                    currency_id = inv.currency_id.id
+                    amount_currency = i_line._get_price(company_currency, price_unit)
+                else:
+                    currency_id = False
+                    amount_currency = False
                 return [
                     {
                         'type': 'src',
                         'name': i_line.name[:64],
                         'price_unit': price_unit,
                         'quantity': i_line.quantity,
-                        'price': i_line._get_price(company_currency, price_unit),
+                        'price': price_unit * i_line.quantity,
+                        'currency_id': currency_id,
+                        'amount_currency': amount_currency,
                         'account_id':dacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
@@ -57,7 +65,9 @@ class AccountInvoice(models.Model):
                         'name': i_line.name[:64],
                         'price_unit': price_unit,
                         'quantity': i_line.quantity,
-                        'price': -1 * i_line._get_price(company_currency, price_unit),
+                        'price': -1 * price_unit * i_line.quantity,
+                        'currency_id': currency_id,
+                        'amount_currency': -1 * amount_currency,
                         'account_id':cacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
@@ -73,7 +83,11 @@ class AccountInvoiceLine(models.Model):
 
     def _get_anglo_saxon_price_unit(self):
         self.ensure_one()
-        return self.product_id.standard_price
+        price = self.product_id.standard_price
+        if not self.uom_id or self.product_id.uom_id == self.uom_id:
+            return price
+        else:
+            return self.product_id.uom_id._compute_price(price, self.uom_id)
 
     def _get_price(self, company_currency, price_unit):
         if self.invoice_id.currency_id.id != company_currency.id:
@@ -85,5 +99,6 @@ class AccountInvoiceLine(models.Model):
     def get_invoice_line_account(self, type, product, fpos, company):
         if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type == 'product':
             accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
-            return accounts['stock_input']
+            if accounts['stock_input']:
+                return accounts['stock_input']
         return super(AccountInvoiceLine, self).get_invoice_line_account(type, product, fpos, company)

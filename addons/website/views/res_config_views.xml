@@ -108,19 +108,16 @@
                                 <field name="favicon" widget="image" class="oe_avatar oe_left"/>
                             </div>
                             <field name="module_website_form_editor" widget="radio"/>
-                            <field name="module_website_version" widget="radio"/>
-                            <label for="id"/>
+
+                            <label for="module_website_version"/>
                             <div>
-                                <a href="https://www.odoo.com/slides/slide/how-a-b-testing-can-help-you-optimize-your-website-341" target="_blank">More Info</a>
+                                <field name="module_website_version" widget="upgrade_radio"/>
+                                <a href="https://www.odoo.com/slides/slide/how-a-b-testing-can-help-you-optimize-your-website-341" target="_blank"> More Info</a>
                             </div>
                         </group>
                         <group string="Performance Optimization" name="optimization" groups="base.group_no_one">
                             <label for="id" string="Speed"/>
                             <div>
-                                <div>
-                                    <field name="compress_html"/>
-                                    <label for="compress_html"/>
-                                </div>
                                 <div>
                                     <field name="cdn_activated"/>
                                     <label for="cdn_activated"/>

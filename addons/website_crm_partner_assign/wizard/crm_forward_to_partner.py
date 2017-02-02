@@ -99,7 +99,7 @@ class CrmLeadForwardToPartner(models.TransientModel):
             for lead_data in partner_leads['leads']:
                 leads |= lead_data['lead_id']
             values = {'partner_assigned_id': partner_id, 'user_id': partner_leads['partner'].user_id.id}
-            leads.write(values)
+            leads.with_context(mail_auto_subscribe_no_notify=1).write(values)
             self.env['crm.lead'].message_subscribe([partner_id])
         return True
 

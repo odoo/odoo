@@ -33,8 +33,10 @@ class PaymentAcquirerStripe(models.Model):
         self.ensure_one()
         stripe_tx_values = dict(tx_values)
         temp_stripe_tx_values = {
+            'company': self.company_id.name,
             'amount': tx_values.get('amount'),
             'currency': tx_values.get('currency') and tx_values.get('currency').name or '',
+            'currency_id': tx_values.get('currency') and tx_values.get('currency').id or '',
             'address_line1': tx_values['partner_address'],
             'address_city': tx_values['partner_city'],
             'address_country': tx_values['partner_country'] and tx_values['partner_country'].name or '',
@@ -79,7 +81,7 @@ class PaymentAcquirerStripe(models.Model):
 class PaymentTransactionStripe(models.Model):
     _inherit = 'payment.transaction'
 
-    def _create_stripe_charge(self, acquirer_ref=None, tokenid=None):
+    def _create_stripe_charge(self, acquirer_ref=None, tokenid=None, email=None):
         api_url_charge = 'https://%s/charges' % (self.acquirer_id._get_stripe_api_url())
         charge_params = {
             'amount': int(self.amount*100),  # Stripe takes amount in cents (https://support.stripe.com/questions/which-zero-decimal-currencies-does-stripe-support)
@@ -90,6 +92,8 @@ class PaymentTransactionStripe(models.Model):
             charge_params['customer'] = acquirer_ref
         if tokenid:
             charge_params['card'] = str(tokenid)
+        if email:
+            charge_params['receipt_email'] = email
         r = requests.post(api_url_charge,
                           auth=(self.acquirer_id.stripe_secret_key, ''),
                           params=charge_params,

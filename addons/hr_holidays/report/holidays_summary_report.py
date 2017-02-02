@@ -58,8 +58,12 @@ class HrHolidaySummaryReport(models.AbstractModel):
             ('date_to', '>=', str(start_date))
         ])
         for holiday in holidays:
-            date_from = fields.Date.from_string(holiday.date_from)
-            date_to = fields.Date.from_string(holiday.date_to)
+            # Convert date to user timezone, otherwise the report will not be consistent with the
+            # value displayed in the interface.
+            date_from = fields.Datetime.from_string(holiday.date_from)
+            date_from = fields.Datetime.context_timestamp(holiday, date_from).date()
+            date_to = fields.Datetime.from_string(holiday.date_to)
+            date_to = fields.Datetime.context_timestamp(holiday, date_to).date()
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:
                     res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name

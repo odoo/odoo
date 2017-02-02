@@ -167,13 +167,13 @@ class Lead(FormatAddress, models.Model):
     def _compute_kanban_state(self):
         today = date.today()
         for lead in self:
-            kanban_state = 'red'
+            kanban_state = 'grey'
             if lead.date_action:
                 lead_date = fields.Date.from_string(lead.date_action)
                 if lead_date >= today:
                     kanban_state = 'green'
                 else:
-                    kanban_state = 'grey'
+                    kanban_state = 'red'
             lead.kanban_state = kanban_state
 
     @api.depends('date_open')
@@ -310,7 +310,7 @@ class Lead(FormatAddress, models.Model):
             vals.update(self._onchange_stage_id_values(vals.get('stage_id')))
         if vals.get('probability') >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
-        elif vals.get('probability') < 100:
+        elif 'probability' in vals and vals['probability'] < 100:
             vals['date_closed'] = False
         return super(Lead, self).write(vals)
 
@@ -520,7 +520,7 @@ class Lead(FormatAddress, models.Model):
         merge_message = _('Merged leads') if result_type == 'lead' else _('Merged opportunities')
         subject = merge_message + ": " + ", ".join(opportunities.mapped('name'))
         # message bodies
-        message_bodies = opportunities._mail_body(CRM_LEAD_FIELDS_TO_MERGE)
+        message_bodies = opportunities._mail_body(list(CRM_LEAD_FIELDS_TO_MERGE))
         message_body = "\n\n".join(message_bodies)
         return self.message_post(body=message_body, subject=subject)
 
@@ -607,7 +607,7 @@ class Lead(FormatAddress, models.Model):
 
         # merge all the sorted opportunity. This means the value of
         # the first (head opp) will be a priority.
-        merged_data = opportunities._merge_data(CRM_LEAD_FIELDS_TO_MERGE)
+        merged_data = opportunities._merge_data(list(CRM_LEAD_FIELDS_TO_MERGE))
 
         # force value for saleperson and sales team
         if user_id:
@@ -1144,7 +1144,7 @@ class Tag(models.Model):
     _name = "crm.lead.tag"
     _description = "Category of lead"
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer('Color Index')
 
     _sql_constraints = [

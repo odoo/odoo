@@ -3,30 +3,15 @@
 # * delivery
 # 
 # Translators:
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-# Joray <13637815@qq.com>, 2016
-# Jonathon <jonathonli@gmail.com>, 2016
-# fausthuang <faust_huang@hotmail.com>, 2016
-# Eddie Lim <bhweelim@yahoo.com>, 2016
-# zhining wu <wzn63@21cn.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# THL <wt39181819@gmail.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# liulixia <liu.lixia@elico-corp.com>, 2016
-# ChinaMaker <tiexinliu@126.com>, 2016
-# zhangpeiqing <zpq001@live.com>, 2016
-# Ted Wang <feiyuwang2012@gmail.com>, 2016
-# Xiaoming Deng <sumandeng@hotmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Yuan Xulei <hi@yxl.name>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Xiaoming Deng <sumandeng@hotmail.com>, 2016\n"
+"Last-Translator: Yuan Xulei <hi@yxl.name>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -166,7 +151,7 @@ msgstr "免费送货的订单金额，以公司本位币显示"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "已归档"
+msgstr "已存档"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
@@ -412,7 +397,7 @@ msgstr "客户交货时间"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
 msgid "Customer Ref"
-msgstr "客户参考"
+msgstr "客户单号"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -611,7 +596,7 @@ msgstr "如果你打算根据发货的实际数量开票的话，就填写这一
 msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
-msgstr "填写此表，您可以根据您的客户的送货地址进行过滤。"
+msgstr "填写此表，你可以根据你的客户的送货地址进行过滤。"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -694,7 +679,7 @@ msgstr "分组"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
 msgid "HS Code"
-msgstr "危险品代码"
+msgstr "HS编码"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
@@ -902,7 +887,7 @@ msgid ""
 "Create a task and track hours: Create a task on the sale order validation and track the work hours."
 msgstr ""
 "手动设置订单数量：基于手动输入的数量发票，而无需创建一个帐户分析。\n"
-"合同时间表：基于跟踪小时的相关时间表发票。\n"
+"合同时间表：基于跟踪小时的相关工时表发票。\n"
 "创建任务和跟踪时间：创建对销售订单验证任务，并跟踪工作时间。"
 
 #. module: delivery
@@ -1089,7 +1074,7 @@ msgstr "封装代码"
 #: code:addons/delivery/models/stock_picking.py:128
 #, python-format
 msgid "Package Details"
-msgstr "包装明细行"
+msgstr "包装详情"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1649,7 +1634,7 @@ msgstr "该位置将被使用以替换默认的，同样的，库存移动的源
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr "该位置将被使用以替换默认的，同样当您做盘点时，库存移动的源位置将被生成。"
+msgstr "该位置将被使用以替换默认的，同样当你做盘点时，库存移动的源位置将被生成。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_pos_categ_id
@@ -1679,7 +1664,7 @@ msgstr "总毛利率(%)"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin_rate
 msgid "Total margin * 100 / Turnover"
-msgstr "总毛利* 100 / 营业额"
+msgstr "总毛利* 100 / 周转"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_track_service
@@ -1695,7 +1680,7 @@ msgstr "追踪"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr "跟踪参考"
+msgstr "物流单号"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1705,12 +1690,12 @@ msgstr "调拨"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_turnover
 msgid "Turnover"
-msgstr "营业额"
+msgstr "周转"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin
 msgid "Turnover - Standard price"
-msgstr "营业额  -  标准价格"
+msgstr "周转  -  标准价格"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_id
@@ -1893,7 +1878,7 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
-"您在同一批货出货不同的包装类型。\n"
+"你在同一批货出货不同的包装类型。\n"
 "包装类型: '％s' "
 
 #. module: delivery
@@ -1902,7 +1887,7 @@ msgstr ""
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
-msgstr "快递服务商的网站对您的配送方式没有跟踪此订单的链接。"
+msgstr "快递服务商的网站对你的配送方式没有跟踪此订单的链接。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from

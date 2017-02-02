@@ -131,7 +131,7 @@ Configuration
 '''''''''''''
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`{%PROGRAMFILES%}\\Odoo 9.0-{id}\\server\\odoo.conf`.
+:file:`{%PROGRAMFILES%}\\Odoo 10.0-{id}\\server\\odoo.conf`.
 
 The configuration file can be edited to connect to a remote Postgresql, edit
 file locations or set a dbfilter.
@@ -145,13 +145,13 @@ Deb
 Community
 '''''''''
 
-To install Odoo 9.0 Community on Debian-based distribution, execute the following
+To install Odoo 10.0 Community on Debian-based distribution, execute the following
 commands as root:
 
 .. code-block:: console
 
     # wget -O - https://nightly.odoo.com/odoo.key | apt-key add -
-    # echo "deb http://nightly.odoo.com/9.0/nightly/deb/ ./" >> /etc/apt/sources.list
+    # echo "deb http://nightly.odoo.com/10.0/nightly/deb/ ./" >> /etc/apt/sources.list.d/odoo.list
     # apt-get update && apt-get install odoo
 
 You can then use the usual ``apt-get upgrade`` command to keep your installation up-to-date.
@@ -159,7 +159,7 @@ You can then use the usual ``apt-get upgrade`` command to keep your installation
 Enterprise
 ''''''''''
 
-For Odoo 9.0 Enterprise, get the package from the Download_ page. You can then
+For Odoo 10.0 Enterprise, get the package from the Download_ page. You can then
 use ``gdebi``:
 
 .. code-block:: console
@@ -220,7 +220,7 @@ RPM
 Community
 '''''''''
 
-Execute the following commands to install Odoo 9.0 Community on your server:
+Execute the following commands to install Odoo 10.0 Community on your server:
 
 .. code-block:: console
 
@@ -228,7 +228,7 @@ Execute the following commands to install Odoo 9.0 Community on your server:
     $ sudo postgresql-setup initdb
     $ sudo systemctl enable postgresql
     $ sudo systemctl start postgresql
-    $ sudo yum-config-manager --add-repo=https://nightly.odoo.com/9.0/nightly/rpm/odoo.repo
+    $ sudo yum-config-manager --add-repo=https://nightly.odoo.com/10.0/nightly/rpm/odoo.repo
     $ sudo yum install -y odoo
     $ sudo systemctl enable odoo
     $ sudo systemctl start odoo
@@ -236,7 +236,7 @@ Execute the following commands to install Odoo 9.0 Community on your server:
 Enterprise
 ''''''''''
 
-For Odoo 9.0 Enterprise, get the package from the Download_ page. Then run:
+For Odoo 10.0 Enterprise, get the package from the Download_ page. Then run:
 
 .. code-block:: console
 
@@ -244,7 +244,7 @@ For Odoo 9.0 Enterprise, get the package from the Download_ page. Then run:
     $ sudo postgresql-setup initdb
     $ sudo systemctl enable postgresql
     $ sudo systemctl start postgresql
-    $ sudo yum localinstall odoo_9.0.latest.noarch.rpm
+    $ sudo yum localinstall odoo_10.0.latest.noarch.rpm
     $ sudo systemctl enable odoo
     $ sudo systemctl start odoo
 
@@ -553,5 +553,5 @@ default db to serve on localhost:8069
 .. _the repository: https://github.com/odoo/odoo
 .. _git: http://git-scm.com
 .. _Editions: https://www.odoo.com/pricing#pricing_table_features
-.. _nightly: https://nightly.odoo.com/9.0/nightly/
+.. _nightly: https://nightly.odoo.com/10.0/nightly/
 .. _extra: https://nightly.odoo.com/extra/

@@ -14,6 +14,5 @@ import product
 import product_attribute
 import product_pricelist
 import product_uom
-import res_currency
 import res_company
 import res_partner

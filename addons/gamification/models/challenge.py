@@ -505,11 +505,6 @@ class Challenge(models.Model):
 
             goals = Goals.search(domain, order="completeness desc, current desc")
             for ranking, goal in enumerate(goals):
-                # bail immediately if any goal of the challenge hasn't been
-                # reached
-                if goal.state != 'reached':
-                    return []
-
                 if user and goal.user_id == user:
                     line_data['own_goal_id'] = goal.id
                 elif restrict_top and ranking > restrict_top:

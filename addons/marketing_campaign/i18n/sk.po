@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-02-27 16:58+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -18,42 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_3
-#, fuzzy
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to let you know that you have entered the select circle "
-"of our Gold Partners!</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-"Dobrý deň, s potešením Vám oznamujeme, že ste vstúpili do vybraného kruhu "
-"našich Zlatých partnerov"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_2
-#, fuzzy
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to welcome you among our Silver Partners as of today!</"
-"p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-"Dobrý den, s potešením Vás vítame medzi našimi Striebornými partnermi od "
-"dnešného dňa!"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_1
-#, fuzzy
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>You will receive your welcome pack via email shortly.</p>\n"
-"<p>Thank you,</p>\n"
-msgstr "Dobrý deň, o chvíľu obdržíte uvítací balíček emailom."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -105,7 +69,7 @@ msgid "Activity"
 msgstr "Aktivity"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:479
+#: code:addons/marketing_campaign/models/marketing_campaign.py:384
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "Po %(interval_nbr)d %(interval_type)s"
@@ -145,7 +109,7 @@ msgid "Automatic"
 msgstr "Automatická"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:478
+#: code:addons/marketing_campaign/models/marketing_campaign.py:383
 #, python-format
 msgid "Automatic transition"
 msgstr "Automatický prechod"
@@ -247,7 +211,10 @@ msgid "Cancelled"
 msgstr "Zrušené"
 
 #. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_object_id
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_object_id
 msgid "Choose the resource on which you want this campaign to be run"
 msgstr "Zvoľte zdroj na ktorom chcete aby táto kampaň bola spustená"
 
@@ -277,7 +244,7 @@ msgid "Congratulations! You are now one of our Gold Partners!"
 msgstr "Gratulujeme! Stali ste sa jedným z našich Zlatých partnernov."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:480
+#: code:addons/marketing_campaign/models/marketing_campaign.py:385
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -313,7 +280,7 @@ msgid "Created on"
 msgstr "Vytvorené"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Custom Action"
 msgstr "Upravená akcia"
 
@@ -389,18 +356,18 @@ msgid "Draft"
 msgstr "Návrh"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:170
+#: code:addons/marketing_campaign/models/marketing_campaign.py:127
 #, python-format
 msgid "Duplicating campaigns is not supported."
 msgstr "Duplikovanie kampaní nie je podporované."
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Email"
 msgstr "Email"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:752
+#: code:addons/marketing_campaign/models/marketing_campaign.py:586
 #, python-format
 msgid "Email Preview"
 msgstr "Náhľad emailu"
@@ -408,12 +375,6 @@ msgstr "Náhľad emailu"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
-msgstr "Emailová šablóna"
-
-#. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_email_template_preview
-#, fuzzy
-msgid "Email Template Preview"
 msgstr "Emailová šablóna"
 
 #. module: marketing_campaign
@@ -719,9 +680,10 @@ msgid "Mode"
 msgstr "Model"
 
 #. module: marketing_campaign
-#: constraint:marketing.campaign.segment:0
-msgid "Model of filter must be same as resource model of Campaign "
-msgstr "Model filtra musí byť rovnaký ako zdrojovy model kampane"
+#: code:addons/marketing_campaign/models/marketing_campaign.py:198
+#, python-format
+msgid "Model of filter must be same as resource model of Campaign"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -793,20 +755,6 @@ msgstr "Objekt"
 #: selection:campaign.analysis,month:0
 msgid "October"
 msgstr "Október"
-
-#. module: marketing_campaign
-#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
-#, fuzzy
-msgid ""
-"Odoo's marketing campaign allows you to automate communication\n"
-"            to your prospects. You can define a segment (set of conditions) "
-"on\n"
-"            your leads and partners to fulfill the campaign."
-msgstr ""
-"Odoo marketingová kampaň vúm umožňuje automatizovať komunikáciu\n"
-"s vašimi záujemcami. Môžete definovať sefinovať segment (súbor podmienok) "
-"na\n"
-"vašich iniciatívach a partneroch pre splnenie kampane."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -884,7 +832,7 @@ msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Report"
 msgstr "Výkaz"
 
@@ -1046,22 +994,15 @@ msgstr "Synchronizovať manuálne"
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
 msgid ""
 "Test - It creates and process all the activities directly (without waiting "
-"for the delay on transitions) but does not send emails or produce reports.\n"
+"for the delay on transitions) but does not send emails or produce reports. \n"
 "Test in Realtime - It creates and processes all the activities directly but "
 "does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to "
-"validate all workitem manually.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has "
+"to \n"
+" validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and "
 "reports (be very careful with this mode, you're live!)"
 msgstr ""
-"Test - vytvára a spracúva všetky aktivity priamo (bez čakania na zdržanie na "
-"prechodoch) ale neposiela emaily ani nevytvára výkazy.\n"
-"Test v reálnom čase - vytvára a spracúva všetky aktivity priamo ale "
-"neposiela emaily ani nevytvára výkazy.\n"
-"S manuálnym potvrdením - kampaň prebieha normálne, ale používateľ musí "
-"overiť všetky pracovné položky manuálne.\n"
-"Normálne - kampaň prebieha normálne a automaticky posiela všetky emaily a "
-"výkazy (buďte veľmi opatrný s týmto módom, idete naživo!)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1079,9 +1020,10 @@ msgid "Test in Realtime"
 msgstr "Testovať v reálnom čase"
 
 #. module: marketing_campaign
-#: constraint:marketing.campaign.transition:0
-msgid "The To/From Activity of transition must be of the same Campaign "
-msgstr "Komu/Od aktivita prechodu musí byť z rovnakej kampane"
+#: code:addons/marketing_campaign/models/marketing_campaign.py:401
+#, python-format
+msgid "The To/From Activity of transition must be of the same Campaign"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -1089,14 +1031,14 @@ msgid "The action to perform when this activity is activated"
 msgstr "Akcia na vykonanie keď je táto aktivita aktivovaná"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:114
+#: code:addons/marketing_campaign/models/marketing_campaign.py:107
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr ""
 "Kampaň nemôže byť označená ako hotová pokiaľ nie sú všetky segmenty zavreté."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:104
+#: code:addons/marketing_campaign/models/marketing_campaign.py:99
 #, python-format
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
@@ -1106,13 +1048,13 @@ msgstr ""
 "kampane a označte jednu ako začiatočný bod."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:92
+#: code:addons/marketing_campaign/models/marketing_campaign.py:87
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
 msgstr "Kampaň nemôže začať. Nie sú v nej žiadne aktivity."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:777
+#: code:addons/marketing_campaign/models/marketing_campaign.py:609
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr "Súčasný krok pre túto položku nemá žiadny email alebo výkaz na náhľad."
@@ -1146,22 +1088,15 @@ msgid "The report to generate when this activity is activated"
 msgstr "Výkaz na vygenerovanie keď je táto činnosť aktivovaná"
 
 #. module: marketing_campaign
-#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_type
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_action_type
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
-"   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save "
-"it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields "
-"of the resource record\n"
-"  "
+"- Email: send an email using a predefined email template \n"
+"- Report: print an existing Report defined on the resource item and save it "
+"into a specific directory \n"
+"- Custom Action: execute a predefined action, e.g. to modify the fields of "
+"the resource record"
 msgstr ""
-"Typ akcie na vykonanie keď sa položka stane aktívnou, ako sú\"\n"
-"- Email: poslať email pomocou preddefinovanej šablóny\n"
-"- Výkaz: vytlačte existujúci výkaz definovaný na zdrojovej položke a uložte "
-"ho do špecifickej zložky\n"
-"- Vlastná akcia: vykonať preddefinoanú akciu, napr. upraviť polia záznamu "
-"zdroja"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
@@ -1187,7 +1122,7 @@ msgid "Trigger"
 msgstr "Spúštač"
 
 #. module: marketing_campaign
-#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_type
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_action_type
 msgid "Type"
 msgstr "Typ"
 
@@ -1230,6 +1165,3 @@ msgstr "Rok(y)"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
-
-#~ msgid "Open Marketing Menu"
-#~ msgstr "Otvoriť marketingové menu"

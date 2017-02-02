@@ -160,13 +160,13 @@ Sending a signal from a subflow
 '''''''''''''''''''''''''''''''
 
 When a workflow is embedded in an activity (as a subflow) of a workflow, the
-sublow can send a signal from its own activities to the parent workflow by
+subflow can send a signal from its own activities to the parent workflow by
 giving a signal name in the attribute ``signal_send``. Odoo processes those
 activities by sending the value of ``signal_send`` prefixed by "subflow."  to
 the parent workflow instance.
 
 In other words, it is possible to react and get transitions in the parent
-workflow as activities are executed in the sublow.
+workflow as activities are executed in the subflow.
 
 Server actions
 ''''''''''''''

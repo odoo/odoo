@@ -16,7 +16,7 @@ class MassMailingTag(models.Model):
     _description = 'Mass Mailing Tag'
     _order = 'name'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     color = fields.Integer(string='Color Index')
 
     _sql_constraints = [

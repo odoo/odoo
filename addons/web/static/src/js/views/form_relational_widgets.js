@@ -1062,8 +1062,10 @@ var One2ManyListView = X2ManyListView.extend({
             this._dataset_changed = false;
         });
 
-        this.on('warning', this, function(e) { // In case of a one2many, we do not want any warning which comes from the editor
-            e.stop_propagation();
+        this.on('warning', this, function(e) { // In case of editable list view, we do not want any warning which comes from the editor
+            if (this.editable()) {
+                e.stop_propagation();
+            }
         });
     },
     do_add_record: function () {
@@ -1209,7 +1211,7 @@ var One2ManyListView = X2ManyListView.extend({
         this.dataset.x2m.internal_dataset_changed = false;
 
         var self = this;
-        return this.save_edition().done(function () {
+        return this.save_edition(true).done(function () {
             if (self._dataset_changed) {
                 self.dataset.trigger('dataset_changed');
             }

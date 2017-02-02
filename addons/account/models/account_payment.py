@@ -134,12 +134,15 @@ class account_register_payments(models.TransientModel):
             raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
 
         total_amount = sum(inv.residual * MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] for inv in invoices)
+        communication = ' '.join([ref for ref in invoices.mapped('reference') if ref])
+
         rec.update({
             'amount': abs(total_amount),
             'currency_id': invoices[0].currency_id.id,
             'payment_type': total_amount > 0 and 'inbound' or 'outbound',
             'partner_id': invoices[0].commercial_partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'communication': communication,
         })
         return rec
 
@@ -389,7 +392,18 @@ class account_payment(models.Model):
         #Reconcile with the invoices
         if self.payment_difference_handling == 'reconcile' and self.payment_difference:
             writeoff_line = self._get_shared_move_line_vals(0, 0, 0, move.id, False)
-            debit_wo, credit_wo, amount_currency_wo, currency_id = aml_obj.with_context(date=self.payment_date).compute_amount_fields(self.payment_difference, self.currency_id, self.company_id.currency_id, invoice_currency)
+            amount_currency_wo, currency_id = aml_obj.with_context(date=self.payment_date).compute_amount_fields(self.payment_difference, self.currency_id, self.company_id.currency_id, invoice_currency)[2:]
+            # the writeoff debit and credit must be computed from the invoice residual in company currency
+            # minus the payment amount in company currency, and not from the payment difference in the payment currency
+            # to avoid loss of precision during the currency rate computations. See revision 20935462a0cabeb45480ce70114ff2f4e91eaf79 for a detailed example.
+            total_residual_company_signed = self._compute_total_invoices_amount()
+            total_payment_company_signed = self.currency_id.with_context(date=self.payment_date).compute(self.amount, self.company_id.currency_id)
+            if self.invoice_ids[0].type in ['in_invoice', 'out_refund']:
+                amount_wo = total_payment_company_signed - total_residual_company_signed
+            else:
+                amount_wo = total_residual_company_signed - total_payment_company_signed
+            debit_wo = amount_wo > 0 and amount_wo or 0.0
+            credit_wo = amount_wo < 0 and -amount_wo or 0.0
             writeoff_line['name'] = _('Counterpart')
             writeoff_line['account_id'] = self.writeoff_account_id.id
             writeoff_line['debit'] = debit_wo

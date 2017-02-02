@@ -1,0 +1,249 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
+"PO-Revision-Date: 2016-12-15 11:40+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_BE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.8.11\n"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_tax_refund_account_id
+#: model:ir.model.fields,help:account.field_account_tax_template_refund_account_id
+msgid ""
+"Account that will be set on invoice tax lines for refunds. Leave empty to "
+"use the expense account."
+msgstr ""
+"Compte utilisé sur les lignes de taxes des notes de crédit. Laissez vide "
+"pour utiliser le compte de dépense."
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.invoice_supplier_form
+msgid "Ask Refund"
+msgstr "Demander une notes de crédit"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_partner_bank_id
+msgid ""
+"Bank Account Number to which the invoice will be paid. A Company bank "
+"account if this is a Customer Invoice or Vendor Refund, otherwise a Partner "
+"bank account number."
+msgstr ""
+"Numéro de compte bancaire sur lequel la facture doit être payée. Un compte "
+"bancaire de la société si c'est une facture client ou une note de crédit "
+"fournisseur, sinon le numéro de compte bancaire du fournisseur."
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Bill Refund"
+msgstr "Note de crédit fournisseur"
+
+#. module: account
+#: model:ir.filters,name:account.filter_invoice_refund
+msgid "By Refund"
+msgstr "Par note de crédit"
+
+#. module: account
+#: selection:account.invoice.refund,filter_refund:0
+msgid "Cancel: create refund and reconcile"
+msgstr "Annuler : créer la note de crédit et lettrer"
+
+#. module: account
+#: code:addons/account/wizard/account_invoice_refund.py:54
+#, python-format
+msgid "Cannot refund draft/proforma/cancelled invoice."
+msgstr ""
+"Impossible de faire une note de crédit pour une facture draft/proforma/"
+"annulée."
+
+#. module: account
+#: code:addons/account/wizard/account_invoice_refund.py:56
+#, python-format
+msgid ""
+"Cannot refund invoice which is already reconciled, invoice should be "
+"unreconciled first. You can only refund this invoice."
+msgstr ""
+"Ne peut pas faire une note de crédit sur une facture qui est déjà lettrée, "
+"la facture devrait d'abord être délettrée. Vous pouvez faire un avoir "
+"seulement sur cette facture."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_journal_refund_sequence
+msgid ""
+"Check this box if you don't want to share the same sequence for invoices and "
+"refunds made from this journal"
+msgstr ""
+"Cochez cette case si vous ne souhaitez pas partager une même numérotation "
+"pour les factures et notes de crédit de ce journal"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_invoice_refund
+msgid "Create Refund"
+msgstr "Créer une note de crédit"
+
+#. module: account
+#: selection:account.invoice.refund,filter_refund:0
+msgid "Create a draft refund"
+msgstr "Créer une note de crédit en brouillon"
+
+#. module: account
+#: selection:account.invoice,type:0 selection:account.invoice.report,type:0
+#: code:addons/account/models/account_payment.py:488
+#, python-format
+msgid "Customer Refund"
+msgstr "Note de crédit client"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence
+msgid "Dedicated Refund Sequence"
+msgstr "Séquence dédiée aux notes de crédit"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.invoice_form
+#: model:ir.ui.view,arch_db:account.invoice_supplier_form
+msgid "Draft Refund"
+msgstr "Note de crédit brouillon"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:906
+#, python-format
+msgid ""
+"Duplicated vendor reference detected. You probably encoded twice the same "
+"vendor bill/refund."
+msgstr ""
+"Doublon de référence fournisseur détecté. Vous avez probablement saisi deux "
+"fois la même facture/la même note de crédit fournisseur."
+
+#. module: account
+#: model:ir.model,name:account.model_account_invoice_refund
+msgid "Invoice Refund"
+msgstr "Note de crédit"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_refund_invoice_id
+msgid "Invoice for which this invoice is the refund"
+msgstr "Facture source de cet note de crédit\t."
+
+#. module: account
+#: code:addons/account/wizard/account_invoice_refund.py:114
+#, python-format
+msgid "Invoice refund"
+msgstr "Note de crédit"
+
+#. module: account
+#: selection:account.invoice.refund,filter_refund:0
+msgid "Modify: create refund, reconcile and create a new draft invoice"
+msgstr ""
+"Modifier : créer une note de crédit, le lettrer et créer une nouvelle "
+"facture en brouillon"
+
+#. module: account
+#: model:ir.actions.act_window,help:account.action_move_journal_line
+msgid ""
+"Odoo automatically creates one journal entry per accounting\n"
+"                document: invoice, refund, vendor payment, bank statements,\n"
+"                etc. So, you should record journal entries manually only/"
+"mainly\n"
+"                for miscellaneous operations."
+msgstr ""
+"Odoo crée automatiquement une écriture par document comptable : facture, "
+"note de crédit, paiement fournisseur, relevés bancaires, etc. Donc, vous "
+"devriez enregistrer des écritures manuelles seulement/principalement pour "
+"des opérations diverses."
+
+#. module: account
+#: code:addons/account/models/account_move.py:140
+#, python-format
+msgid "Please define a sequence for the refunds"
+msgstr "Spécifiez une séquence pour les notes de crédit"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:958
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model:ir.ui.view,arch_db:account.invoice_form
+#: model:ir.ui.view,arch_db:account.invoice_supplier_form
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#, python-format
+msgid "Refund"
+msgstr "Note de crédit"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_refund_date_invoice
+msgid "Refund Date"
+msgstr "Date de la note de crédit"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
+msgid "Refund Entry Sequence"
+msgstr "Séquence d'écriture de note de crédit"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_invoice_refund
+#: model:ir.ui.view,arch_db:account.invoice_form
+msgid "Refund Invoice"
+msgstr "Note de crédit"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_refund_filter_refund
+msgid "Refund Method"
+msgstr "\t"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_refund_filter_refund
+msgid ""
+"Refund base on this type. You can not Modify and Cancel if the invoice is "
+"already reconciled"
+msgstr ""
+"Base de note de crédit sur ce type. Vous ne pouvez pas modifier et annuler "
+"si la facture est déjà lettrée"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
+msgid "Refunds"
+msgstr "Notes\t de crédit"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_refund_account_id
+#: model:ir.model.fields,field_description:account.field_account_tax_template_refund_account_id
+msgid "Tax Account on Refunds"
+msgstr "Compte de taxe pour les notes de crédit"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_journal_refund_sequence_id
+msgid ""
+"This field contains the information related to the numbering of the refund "
+"entries of this journal."
+msgstr ""
+"Ce champ contient les informations relatives à la numérotation des entrées "
+"de note de crédit de ce journal."
+
+#. module: account
+#: selection:account.invoice,type:0 selection:account.invoice.report,type:0
+#: code:addons/account/models/account_invoice.py:959
+#: code:addons/account/models/account_payment.py:491
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+#, python-format
+msgid "Vendor Refund"
+msgstr "Note de crédit fournisseur"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:449
+#, python-format
+msgid ""
+"You cannot delete an invoice which is not draft or cancelled. You should "
+"refund it instead."
+msgstr ""
+"Impossible de supprimer une facture qui n'est ni en brouillon ni annulée. "
+"Vous pouvez par contre créer une note de crédit."

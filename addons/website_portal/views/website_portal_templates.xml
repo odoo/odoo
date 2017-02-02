@@ -87,7 +87,7 @@
     </template>
 
     <template id="contact" name="Contact">
-        <h3 class="page-header">Contact</h3>
+        <h3 class="page-header">Saleman</h3>
           <h5 t-esc="sales_rep.name"/>
           <p><a t-att-href="'mailto:'+sales_rep.email" t-esc="sales_rep.email"/></p>
           <p t-esc="sales_rep.phone"/>
@@ -119,11 +119,11 @@
                                       </div>
                                     </div>
                                     <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-6">
-                                        <label class="control-label" for="contact_name">Your Name</label>
+                                        <label class="control-label" for="name">Your Name</label>
                                         <input type="text" name="name" class="form-control" t-att-value="name or partner.name" />
                                     </div>
                                     <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6">
-                                        <label class="control-label" for="contact_name">Email</label>
+                                        <label class="control-label" for="email">Email</label>
                                         <input type="email" name="email" class="form-control" t-att-value="email or partner.email" />
                                     </div>
                                     <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-lg-6">

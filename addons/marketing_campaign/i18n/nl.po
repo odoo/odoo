@@ -43,6 +43,10 @@ msgid ""
 "<p>We are delighted to welcome you among our Silver Partners as of today!</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>Hallo,</p>\n"
+"<p>We zijn verheugt om je te verwelkomen tot de groep van Silver partners sinds vandaag!</p>\n"
+"<p>Bedankt,</p>\n"
 
 #. module: marketing_campaign
 #: model:mail.template,body_html:marketing_campaign.email_template_1
@@ -807,6 +811,8 @@ msgid ""
 "            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fulfill the campaign."
 msgstr ""
+"Odoo's marketingcampagnes geven u de mogelijkheid om de interactie\n"
+"met uw prospects te automatiseren. U kunt een segment bepalen (een reeks voorwaarden) voor uw leads en relaties om de campagne uit te voeren."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -883,7 +889,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
 #: selection:marketing.campaign.activity,action_type:0
 msgid "Report"
-msgstr "Rapport"
+msgstr "Rapportage"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.report_marketing_campaign
@@ -1047,6 +1053,11 @@ msgid ""
 " validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
 msgstr ""
+"Test - Het maakt en verwerkt alle activiteiten direct (zonder wachten op vertraging bij overgangen) maar verstuurt geen emails en maakt geen rapporten. \n"
+"\n"
+"Test in Realtime - Het maakt en verwerkt alle activiteiten direct maar verstuurt geen emails en maakt geen rapporten. Met handmatige bevestiging - de campagne loopt normaal, maar de gebruiker moet alle activiteiten handmatig bevestigen. \n"
+"\n"
+"Normaal - de campagne loopt normaal en verstuurt alle emails en rapporten (wees voorzichtig met deze stand, u bent live!)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1068,6 +1079,7 @@ msgstr "Test in realtime"
 #, python-format
 msgid "The To/From Activity of transition must be of the same Campaign"
 msgstr ""
+"De naar/van activiteit van de overgang moet van dezelfde campagne zijn"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -1141,6 +1153,11 @@ msgid ""
 "- Report: print an existing Report defined on the resource item and save it into a specific directory \n"
 "- Custom Action: execute a predefined action, e.g. to modify the fields of the resource record"
 msgstr ""
+"De soort actie om uit te voeren als een item bij deze actie komt, zoals:\n"
+"   - Email: verstuur een email gebruik makend van een voorgedefinieerde email sjabloon\n"
+"   - Report: druk een bestaand overzicht af gedefinieerd bij het resource item en sla het op in de aangegeven map\n"
+"   - Aangepaste actie: voor een voorgedefinieerde actie uit, bijv. om velden in het resource record te wijzigen\n"
+"  "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start

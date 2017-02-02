@@ -427,8 +427,8 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 return;
             }
             var ds = new data.DataSetStatic(self, model, self.build_context());
-            ds.call('search_count', [domain]).then(function (results) {
-                self.$('.o_count').text(results + _t(' selected records'));
+            ds.call('search_count', [domain, ds.get_context()]).then(function (results) {
+                self.$('.o_count').text(results + ' ' + _t(' selected records'));
                 if (self.get('effective_readonly')) {
                     self.$('button').text(_t('See selection '));
                 }
@@ -955,7 +955,8 @@ var FieldRadio = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     },
     get_value: function () {
         var value = this.get('value');
-        return ((value instanceof Array)? value[0] : value) || false;
+        value = ((value instanceof Array)? value[0] : value);
+        return  _.isUndefined(value) ? false : value;
     },
     render_value: function () {
         var self = this;
@@ -1006,6 +1007,7 @@ var FieldReference = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         this.m2o = new FieldMany2One(this.fm, { attrs: {
             name: 'Referenced Document',
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
+            context: this.build_context().eval(),
         }});
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.appendTo(this.$el);
@@ -1584,8 +1586,8 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
         if (!window.ace && !this.loadJS_def) {
             this.loadJS_def = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
                 return $.when(ajax.loadJS('/web/static/lib/ace/mode-python.js'),
-                    ajax.loadJS('/web/static/lib/ace/mode-xml.js'),
-                    ajax.loadJS('/web/static/lib/ace/theme-monokai.js'));
+                    ajax.loadJS('/web/static/lib/ace/mode-xml.js')
+                );
             });
         }
         return $.when(this._super(), this.loadJS_def);
@@ -1596,7 +1598,6 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
 
             this.aceEditor = ace.edit(this.$('.ace-view-editor')[0]);
             this.aceEditor.setOptions({"maxLines": Infinity});
-            this.aceEditor.setTheme("ace/theme/monokai");
             this.aceEditor.$blockScrolling = true;
 
             var scrollIntoViewIfNeeded = _.throttle(function () {

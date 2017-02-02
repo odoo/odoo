@@ -6,13 +6,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
 # Manami Hashi <manami@roomsfor.hk>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2016\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +60,7 @@ msgstr "取消"
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
-msgstr ""
+msgstr "商品 %sの在庫入力勘定を見つけることができません。 この操作を処理する前に、製品カテゴリまたはロケーションを定義する必要があります。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:246
@@ -68,7 +69,7 @@ msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
 "on the product category, or on the location, before processing this "
 "operation."
-msgstr ""
+msgstr "商品 %sの在庫出力勘定を見つけることができません。 この操作を処理する前に、製品カテゴリまたはロケーションを定義する必要があります。"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -92,12 +93,12 @@ msgstr "日付指定で、過去日時点の在庫を抽出することができ
 msgid ""
 "Choose the accounting date at which you want to value the stock moves "
 "created by the inventory instead of the default one (the inventory end date)"
-msgstr ""
+msgstr "デフォルトの在庫移動(在庫終了日)の代わりに在庫によって作成された在庫移動を評価する会計日を選択します。"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose your date"
-msgstr ""
+msgstr "日付を選択"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
@@ -109,7 +110,7 @@ msgstr "会社"
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Compute from average price"
-msgstr ""
+msgstr "平均価格から計算"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:319
@@ -117,7 +118,7 @@ msgstr ""
 msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
-msgstr ""
+msgstr "構成エラー。 この操作を処理するには、製品またはそのカテゴリの価格差異勘定を設定してください。"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -128,7 +129,7 @@ msgstr "原価"
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
 msgid "Cost method"
-msgstr ""
+msgstr "原価計算法"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
@@ -140,7 +141,7 @@ msgstr "原価計算法"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "カウンターパートアカウント"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -202,6 +203,8 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"製品に対して永久評価が有効になっている場合、システムは在庫移動に対応する仕訳入力を自動的に作成しますが、原価計算方法で指定された製品価格が使用されます。"
+" 商品カテゴリに設定された在庫変動勘定は現在の在庫金額を表し、在庫入力勘定と在庫勘定は入出庫商品の取引を保持します。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
@@ -214,6 +217,8 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"製品に対して永久評価が有効になっている場合、システムは在庫移動に対応する仕訳入力を自動的に作成しますが、原価計算方法で指定された製品価格が使用されます。"
+" 商品カテゴリに設定された在庫変動勘定は現在の在庫金額を表し、在庫入力勘定と在庫勘定は入出庫商品の取引を保持します。"
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -313,7 +318,7 @@ msgstr "在庫評価および原価計算法を管理"
 #: code:addons/stock_account/models/product.py:109
 #, python-format
 msgid "No difference between standard price and new price!"
-msgstr ""
+msgstr "標準価格と新価格との差がありません！"
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -404,7 +409,7 @@ msgstr "現在の在庫評価を抽出します。"
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Set standard price"
-msgstr ""
+msgstr "標準価格を設定"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
@@ -422,7 +427,7 @@ msgstr "標準原価"
 #: code:addons/stock_account/models/product.py:131
 #, python-format
 msgid "Standard Price changed"
-msgstr ""
+msgstr "標準価格変更済"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
@@ -432,6 +437,9 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"標準価格：原価は、特定の期間の終了時に(通常は年に1回)手動で更新されます。\n"
+"平均価格：原価は入荷ごとに再計算され、製品評価に使用されます。\n"
+"実価格：表示される原価は最後に出荷される商品の価格です(在庫損失の場合などに使用されます)。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -440,11 +448,14 @@ msgid ""
 "Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
 msgstr ""
+"標準価格：原価は、特定の期間の終了時に(通常は年に1回)手動で更新されます。\n"
+"平均価格：原価は入荷ごとに再計算され、製品評価に使用されます。\n"
+"実価格：表示される原価は最後に出荷される商品の価格です(在庫損失の場合などに使用されます)。"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Stock Accounting"
-msgstr ""
+msgstr "在庫勘定"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -502,7 +513,7 @@ msgstr "時点在庫評価"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Templates for Account Chart"
-msgstr ""
+msgstr "勘定科目表のテンプレート"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:273
@@ -511,7 +522,7 @@ msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
 "probably a configuration error. Check the costing method and the standard "
 "price"
-msgstr ""
+msgstr "商品 %s の見積金額はゼロです。 つまり、設定エラーが考えられます。 原価計算方法と標準原価の確認をしてください"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
@@ -546,7 +557,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "評価"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
@@ -614,7 +625,7 @@ msgstr "製品がリアルタイム在庫評価が有効である時、このア
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
 msgid "Wizard that opens the stock valuation history table"
-msgstr ""
+msgstr "在庫評価履歴テーブルを開くウィザード"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:242
@@ -622,7 +633,7 @@ msgstr ""
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts"
-msgstr ""
+msgstr "製品カテゴリに定義されている在庫記録がありません。勘定コード表がインストールされているかどうか確認してください"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:111
@@ -631,7 +642,7 @@ msgstr ""
 msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr ""
+msgstr "商品カテゴリに定義されている在庫評価勘定はありません。 この操作を処理する前に定義する必要があります。"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -646,4 +657,4 @@ msgstr "stock.config.settings"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_history
 msgid "stock.history"
-msgstr ""
+msgstr "stock.history"

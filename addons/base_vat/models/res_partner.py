@@ -120,7 +120,7 @@ class ResPartner(models.Model):
             # by default, a VAT number is valid if:
             #  it starts with 2 letters
             #  has more than 3 characters
-            return cn[0] in string.ascii_lowercase and cn[1] in string.ascii_lowercase
+            return len(cn) == 2 and cn[0] in string.ascii_lowercase and cn[1] in string.ascii_lowercase
 
         vat_country, vat_number = self._split_vat(self.vat)
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"

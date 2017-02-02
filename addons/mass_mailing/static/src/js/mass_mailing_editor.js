@@ -259,6 +259,7 @@ snippets_editor.Class.include({
          */
         check_selected_theme();
         $body.addClass(selected_theme.className);
+        switch_images(selected_theme, $snippets);
 
         $dropdown.insertAfter($snippets_menu);
 
@@ -292,6 +293,7 @@ snippets_editor.Class.include({
         }
 
         function switch_images(theme_params, $container) {
+            if (!theme_params) return;
             $container.find("img").each(function () {
                 var $img = $(this);
                 var src = $img.attr("src");
@@ -349,7 +351,7 @@ snippets_editor.Class.include({
 
 var callback = window ? window["callback"] : undefined;
 odoo_top[callback+"_updown"] = function (value, fields_values, field_name) {
-    if (!window) {
+    if (!window || window.closed) {
         delete odoo_top[callback+"_updown"];
         return;
     }

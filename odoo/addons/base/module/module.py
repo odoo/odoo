@@ -643,6 +643,15 @@ class Module(models.Model):
         if not self.env.user.has_group('base.group_system'):
             raise AccessDenied()
 
+        # One-click install is opt-in - cfr Issue #15225
+        ad_dir = tools.config.addons_data_dir
+        if not os.access(ad_dir, os.W_OK):
+            msg = (_("Automatic install of downloaded Apps is currently disabled.") + "\n\n" +
+                   _("To enable it, make sure this directory exists and is writable on the server:") +
+                   "\n%s" % ad_dir)
+            _logger.warning(msg)
+            raise UserError(msg)
+
         apps_server = urlparse.urlparse(self.get_apps_server())
 
         OPENERP = odoo.release.product_name.lower()
@@ -708,7 +717,7 @@ class Module(models.Model):
             to_install = self.search([('name', 'in', urls.keys()), ('state', '=', 'uninstalled')])
             post_install_action = to_install.button_immediate_install()
 
-            if installed:
+            if installed or to_install:
                 # in this case, force server restart to reload python code...
                 self._cr.commit()
                 odoo.service.server.restart()

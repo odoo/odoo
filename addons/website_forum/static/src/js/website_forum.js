@@ -138,7 +138,7 @@ if(!$('.website_forum').length) {
             });
     });
 
-    $('.o_js_validation_queue a').on('click', function (ev) {
+    $(".o_js_validation_queue a[href*='/validate']").on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var self = $(this);

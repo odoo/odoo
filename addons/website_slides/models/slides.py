@@ -241,7 +241,7 @@ class SlideTag(models.Model):
     _name = 'slide.tag'
     _description = 'Slide Tag'
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
 
     _sql_constraints = [
         ('slide_tag_unique', 'UNIQUE(name)', 'A tag must be unique!'),
@@ -476,7 +476,7 @@ class Slide(models.Model):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
-            html_body = publish_template.with_context({'base_url': base_url}).render_template(publish_template.body_html, 'slide.slide', slide.id)
+            html_body = publish_template.with_context(base_url=base_url).render_template(publish_template.body_html, 'slide.slide', slide.id)
             subject = publish_template.render_template(publish_template.subject, 'slide.slide', slide.id)
             slide.channel_id.message_post(
                 subject=subject,
@@ -487,7 +487,7 @@ class Slide(models.Model):
     @api.one
     def send_share_email(self, email):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        return self.channel_id.share_template_id.with_context({'email': email, 'base_url': base_url}).send_mail(self.id)
+        return self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(self.id)
 
     # --------------------------------------------------
     # Parsing methods
@@ -572,8 +572,21 @@ class Slide(models.Model):
                 return 'document'
             else:
                 return 'presentation'
-        key = self.env['ir.config_parameter'].sudo().get_param('website_slides.google_app_key')
-        fetch_res = self._fetch_data('https://www.googleapis.com/drive/v2/files/%s' % document_id, {'projection': 'BASIC', 'key': key}, "json")
+
+        # Google drive doesn't use a simple API key to access the data, but requires an access
+        # token. However, this token is generated in module google_drive, which is not in the
+        # dependencies of website_slides. We still keep the 'key' parameter just in case, but that
+        # is probably useless.
+        params = {}
+        params['projection'] = 'BASIC'
+        if 'google.drive.config' in self.env:
+            access_token = self.env['google.drive.config'].get_access_token()
+            if access_token:
+                params['access_token'] = access_token
+        if not params.get('access_token'):
+            params['key'] = self.env['ir.config_parameter'].sudo().get_param('website_slides.google_app_key')
+
+        fetch_res = self._fetch_data('https://www.googleapis.com/drive/v2/files/%s' % document_id, params, "json")
         if fetch_res.get('error'):
             return fetch_res
 

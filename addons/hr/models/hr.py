@@ -193,6 +193,10 @@ class Employee(models.Model):
 
     @api.multi
     def write(self, vals):
+        if 'address_home_id' in vals:
+            account_id = vals.get('bank_account_id') or self.bank_account_id.id
+            if account_id:
+                self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
         tools.image_resize_images(vals)
         return super(Employee, self).write(vals)
 
@@ -228,6 +232,11 @@ class Employee(models.Model):
             if name in auto_follow_fields and name in updated_fields and field.comodel_name == 'res.users':
                 user_field_lst.append(name)
         return user_field_lst
+
+    @api.multi
+    def _message_auto_subscribe_notify(self, partner_ids):
+        # Do not notify user it has been marked as follower of its employee.
+        return
 
 
 class Department(models.Model):

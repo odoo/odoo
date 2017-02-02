@@ -21,8 +21,9 @@ class AccountPartialReconcileCashBasis(models.Model):
                 #TOCHECK: normal and cash basis taxes shoudn't be mixed together (on the same invoice line for example) as it will
                 #create reporting issues. Not sure of the behavior to implement in that case, though.
                 # amount to write is the current cash_basis amount minus the one before the reconciliation
+                currency_id = line.currency_id or line.company_id.currency_id
                 matched_percentage = value_before_reconciliation[move.id]
-                amount = (line.credit_cash_basis - line.debit_cash_basis) - (line.credit - line.debit) * matched_percentage
+                amount = currency_id.round((line.credit_cash_basis - line.debit_cash_basis) - (line.credit - line.debit) * matched_percentage)
                 if not line.tax_exigible:
                     if line.tax_line_id and line.tax_line_id.use_cash_basis:
                         # group by line account
@@ -42,16 +43,16 @@ class AccountPartialReconcileCashBasis(models.Model):
                         for tax in line.tax_ids:
                             line_to_create.append((0, 0, {
                                 'name': '/',
-                                'debit': line.debit_cash_basis - line.debit * matched_percentage,
-                                'credit': line.credit_cash_basis - line.credit * matched_percentage,
+                                'debit': currency_id.round(line.debit_cash_basis - line.debit * matched_percentage),
+                                'credit': currency_id.round(line.credit_cash_basis - line.credit * matched_percentage),
                                 'account_id': line.account_id.id,
                                 'tax_ids': [(6, 0, [tax.id])],
                                 'tax_exigible': True,
                             }))
                             line_to_create.append((0, 0, {
                                 'name': '/',
-                                'credit': line.debit_cash_basis - line.debit * matched_percentage,
-                                'debit': line.credit_cash_basis - line.credit * matched_percentage,
+                                'credit': currency_id.round(line.debit_cash_basis - line.debit * matched_percentage),
+                                'debit': currency_id.round(line.credit_cash_basis - line.credit * matched_percentage),
                                 'account_id': line.account_id.id,
                                 'tax_exigible': True,
                             }))
@@ -68,14 +69,16 @@ class AccountPartialReconcileCashBasis(models.Model):
         # Create counterpart vals
         for key, v in total_by_cash_basis_account.items():
             k, tax_id = key
-            line_to_create.append((0, 0, {
-                'name': '/',
-                'debit': abs(v) if v < 0 else 0.0,
-                'credit': v if v > 0 else 0.0,
-                'account_id': k,
-                'tax_line_id': tax_id,
-                'tax_exigible': True,
-            }))
+            # Only entries with cash flow must be created
+            if not self.company_id.currency_id.is_zero(v):
+                line_to_create.append((0, 0, {
+                    'name': '/',
+                    'debit': abs(v) if v < 0 else 0.0,
+                    'credit': v if v > 0 else 0.0,
+                    'account_id': k,
+                    'tax_line_id': tax_id,
+                    'tax_exigible': True,
+                }))
         return line_to_create, move_date
 
     def create_tax_cash_basis_entry(self, value_before_reconciliation):

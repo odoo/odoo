@@ -9,8 +9,8 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Denis Baranov <baranov@itlibertas.com>, 2016
-# Max Belyanin <maxbelyanin@gmail.com>, 2016
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
+# Max Belyanin <maxbelyanin@gmail.com>, 2016
 # Evgeny <transingularity@gmail.com>, 2016
 # Danil Bochevkin <danil.borchevkin@gmail.com>, 2016
 # Denis Trepalin <zekarious@gmail.com>, 2016
@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
+"PO-Revision-Date: 2016-11-14 15:53+0000\n"
 "Last-Translator: Aider Kerimov <lorri.aaargh@gmail.com>, 2016\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -110,11 +110,9 @@ msgstr "№ заказа продаж"
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
 msgid ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 msgstr ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -325,7 +323,7 @@ msgid "Addresses in Sales Orders"
 msgstr "Адреса в заказах продаж"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:146
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:153
 #, python-format
 msgid "Advance: %s"
 msgstr "Продвижение: %s"
@@ -638,22 +636,22 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_default_invoice_policy
 msgid "Default Invoicing"
-msgstr "По умолчанию Выставление Счетов-фактур"
+msgstr "Стандартное выставление счетов"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company_sale_note
 msgid "Default Terms and Conditions"
-msgstr "Сроки и условия реализации заказа по умолчанию"
+msgstr "Стандартные условия"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_note
 msgid "Default Terms and Conditions *"
-msgstr ""
+msgstr "Стандартные условия *"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Default product used for payment advances"
-msgstr "Продукт По умолчанию, используемый для платежа авансированной суммы"
+msgstr "Стандартный продукт по предоплате"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered
@@ -663,12 +661,12 @@ msgstr "Доставлено"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered Quantity"
-msgstr "Доставленное Количество"
+msgstr "Доставленное количество"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr "Доставленное Количество"
+msgstr "Доставленное количество"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_partner_shipping_id
@@ -684,7 +682,7 @@ msgstr "Время выполнения доставки"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_invoice_partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr ""
+msgstr "Адрес доставки для текущего счёта"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
@@ -700,7 +698,7 @@ msgstr "Депозит"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
-msgstr "Депозит Продукта"
+msgstr "Депозит продукта"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
@@ -712,7 +710,7 @@ msgstr "Описание"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Digital Products"
-msgstr ""
+msgstr "Цифровые продукты"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -743,7 +741,7 @@ msgstr "Скидка по строкам"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_pricelist_discount_policy
 msgid "Discount policy"
-msgstr ""
+msgstr "Стандартная политика"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_delivery_address:0
@@ -766,7 +764,7 @@ msgstr "Отображаемое имя"
 #. module: sale
 #: model:res.groups,name:sale.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr "Показать Инкотермс в Заказе клиента и связанных с ними счет-фактурах"
+msgstr "Показать инкотермс в клиентском заказе и связанных с ним счетах"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
@@ -779,20 +777,20 @@ msgid "Do not personalize sales orders and invoice reports"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:85
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
 #, python-format
 msgid "Down Payment"
-msgstr "Авансовый Платеж"
+msgstr "Авансовый платеж"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr "Авансовый Платеж Сумма"
+msgstr "Авансовый платеж сумма"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr "Авансовый Платеж Продукт"
+msgstr "Авансовый платеж продукт"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -805,10 +803,10 @@ msgid "Down payment (percentage)"
 msgstr "Авансовый платеж (в процентах)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:82
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "Авансовый Платеж %s%%"
+msgstr "Авансовый платеж %s%%"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -867,7 +865,7 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
-msgstr "Счет выставлен Полностью"
+msgstr "Счет выставлен полностью"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
@@ -931,12 +929,12 @@ msgstr "Адрес выставления счета"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr "Счет Подтвержден"
+msgstr "Счет подтвержден"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
 msgid "Invoice Created"
-msgstr "Счет Создан"
+msgstr "Счет создан"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_line
@@ -1198,7 +1196,7 @@ msgstr "Сообщение по позиции заказа продаж"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "More Info"
-msgstr "Больше Информации"
+msgstr "Подробности"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1230,7 +1228,7 @@ msgstr "Создать"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr "Новая Оферта"
+msgstr "Новое предложение"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -1251,12 +1249,12 @@ msgstr "Нет скидок в строках заказов продаж, то�
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "No incoterm on reports"
-msgstr "Нет Инкотермс в отчетах"
+msgstr "Отключить инкотермс в отчетах"
 
 #. module: sale
 #: selection:sale.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr "Нет вариантов на продукты"
+msgstr "Нет вариантов для товаров"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
@@ -1286,7 +1284,7 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr "Нечего выставить в Счет"
+msgstr "Нечего выставить в счет"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -1371,12 +1369,12 @@ msgstr "Статус заказа"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
-msgstr "Заказанное Кол-во"
+msgstr "Заказанное кол-во"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Quantity"
-msgstr "Заказанное Кол-во"
+msgstr "Заказанное кол-во"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_invoice_policy
@@ -1432,12 +1430,12 @@ msgstr "Партнёр"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr "Страна Партнера"
+msgstr "Страна партнера"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr "Страна Партнера"
+msgstr "Страна партнера"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -1561,20 +1559,20 @@ msgstr "Категории продукции"
 #: model:ir.model.fields,field_description:sale.field_sale_report_categ_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
-msgstr "Категория Продукта"
+msgstr "Категория продукта"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_tmpl_id
 msgid "Product Template"
-msgstr "Шаблон Продукта"
+msgstr "Шаблон продукта"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_variant
 #: model:ir.ui.menu,name:sale.menu_product
 #: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
-msgstr "Варианты Продукта"
+msgstr "Варианты продукта"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_template_action
@@ -1687,7 +1685,7 @@ msgstr "Предложения цен"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Quotations & Sales"
-msgstr "Предложения цен и Продажи"
+msgstr "Предложения цен и продажи"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -1747,7 +1745,7 @@ msgstr "Позиции заказа"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr "Изменения Заказа Продаж"
+msgstr "Изменение заказа"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -2139,7 +2137,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:144
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
@@ -2149,7 +2147,7 @@ msgstr ""
 "'Услуга'. Пожалуйста, используйте другой продукт или обновить этот продукт."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:142
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:145
 #, python-format
 msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
@@ -2162,13 +2160,13 @@ msgstr ""
 "счета-фактуры."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:79
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:78
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "Значение суммы авансового платежа должно быть положительным."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:75
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:74
 #, python-format
 msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
@@ -2365,7 +2363,7 @@ msgid "Warning"
 msgstr "Внимание"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:853
+#: code:addons/sale/models/sale.py:854
 #, python-format
 msgid "Warning for %s"
 msgstr "Предупреждение для %s"
@@ -2417,7 +2415,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:882
+#: code:addons/sale/models/sale.py:883
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2015-11-15 13:23+0000\n"
 "Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -18,42 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_3
-#, fuzzy
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to let you know that you have entered the select circle "
-"of our Gold Partners!</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-"Сайн байна уу, Танд манай Алтан түнш болсныг дуулгахдаа бид таатай байна."
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_2
-#, fuzzy
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to welcome you among our Silver Partners as of today!</"
-"p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-"Сайн байна уу? Өнөөдөр таныг манай Мөнгөн харилцагч болсныг мэдэгдэхэд "
-"таатай байна!"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_1
-#, fuzzy
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>You will receive your welcome pack via email shortly.</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-"Сайн байна уу? Таныг урьсан багцыг товчхоноор эмэйлээр та хүлээн авах болно."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -101,7 +65,7 @@ msgid "Activity"
 msgstr "Ажилбар"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:479
+#: code:addons/marketing_campaign/models/marketing_campaign.py:384
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "%(interval_nbr)d %(interval_type)s-н дараа"
@@ -141,7 +105,7 @@ msgid "Automatic"
 msgstr "Автомат"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:478
+#: code:addons/marketing_campaign/models/marketing_campaign.py:383
 #, python-format
 msgid "Automatic transition"
 msgstr "Автомат шилжилт"
@@ -243,7 +207,10 @@ msgid "Cancelled"
 msgstr "Цуцлагдсан"
 
 #. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_object_id
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_object_id
 msgid "Choose the resource on which you want this campaign to be run"
 msgstr "Энэ аян явагдах нөөцийг сонгоно уу"
 
@@ -273,7 +240,7 @@ msgid "Congratulations! You are now one of our Gold Partners!"
 msgstr "Баяр хүргэе! Та одоо Алтан Түнш боллоо."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:480
+#: code:addons/marketing_campaign/models/marketing_campaign.py:385
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -309,7 +276,7 @@ msgid "Created on"
 msgstr "Үүсгэсэн"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Custom Action"
 msgstr "Өөриймшүүлсэн Үйлдэл"
 
@@ -384,18 +351,18 @@ msgid "Draft"
 msgstr "Ноорог"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:170
+#: code:addons/marketing_campaign/models/marketing_campaign.py:127
 #, python-format
 msgid "Duplicating campaigns is not supported."
 msgstr ""
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Email"
 msgstr "Имэйл"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:752
+#: code:addons/marketing_campaign/models/marketing_campaign.py:586
 #, python-format
 msgid "Email Preview"
 msgstr "Э-мэйл уридчлан харах"
@@ -403,12 +370,6 @@ msgstr "Э-мэйл уридчлан харах"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
-msgstr "Э-мэйл үлгэр"
-
-#. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_email_template_preview
-#, fuzzy
-msgid "Email Template Preview"
 msgstr "Э-мэйл үлгэр"
 
 #. module: marketing_campaign
@@ -711,9 +672,10 @@ msgid "Mode"
 msgstr "Горим"
 
 #. module: marketing_campaign
-#: constraint:marketing.campaign.segment:0
-msgid "Model of filter must be same as resource model of Campaign "
-msgstr "Шүүлтүүрийн модель нь аяны нөөцийн модельтой ижил байх ёстой "
+#: code:addons/marketing_campaign/models/marketing_campaign.py:198
+#, python-format
+msgid "Model of filter must be same as resource model of Campaign"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -871,7 +833,7 @@ msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Report"
 msgstr "Тайлан"
 
@@ -1034,23 +996,15 @@ msgstr "Гараар Ижилтгэх"
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
 msgid ""
 "Test - It creates and process all the activities directly (without waiting "
-"for the delay on transitions) but does not send emails or produce reports.\n"
+"for the delay on transitions) but does not send emails or produce reports. \n"
 "Test in Realtime - It creates and processes all the activities directly but "
 "does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to "
-"validate all workitem manually.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has "
+"to \n"
+" validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and "
 "reports (be very careful with this mode, you're live!)"
 msgstr ""
-"Тест - Энэ нь бүх үйл ажиллагааг шууд үүсгэж боловсруүлдаг (шилжилтүүд даар "
-"огт хүлээдэггүй) боловч ямарч эмэйл илгээдэггүй, тайлан үүсгэдэггүй.\n"
-"Бодит хугацаанд тестлэх - Энэ нь бүх үйл ажиллагааг шууд үүсгэж "
-"боловсруүлдаг боловч ямарч эмэйл илгээдэггүй, тайлан үүсгэдэггүй..\n"
-"Гар баталгаажилттай - аян хэвийн явагдах боловч хэрэглэгч ажил бүрийг гараар "
-"баталгаажуулах шаардлагатай.\n"
-"Хэвийн - Аян хэвийн явагдах бөгөөд автоматаар бүх эмэйл болон тайланг "
-"илгээдэг (энэ горимыг хэрэглэхдээ маш болгоомжтой байх хэрэгтэй, учир нь "
-"бодит амьдрал дээр явагдана)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1068,9 +1022,10 @@ msgid "Test in Realtime"
 msgstr "Бодит хугацааны тест"
 
 #. module: marketing_campaign
-#: constraint:marketing.campaign.transition:0
-msgid "The To/From Activity of transition must be of the same Campaign "
-msgstr "Хэнээс/Хэнд шилжилтийн үйл ажиллагаа нь ижил Аян дотор байх ёстой. "
+#: code:addons/marketing_campaign/models/marketing_campaign.py:401
+#, python-format
+msgid "The To/From Activity of transition must be of the same Campaign"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -1078,13 +1033,13 @@ msgid "The action to perform when this activity is activated"
 msgstr "Үйл ажиллагаа идэвхжихэд хийгдэх үйлдэл"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:114
+#: code:addons/marketing_campaign/models/marketing_campaign.py:107
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr "Бүх сегментүүдийг хаахаас өмнө аянг хийгдсэнээр тэмдэглэх боломжгүй."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:104
+#: code:addons/marketing_campaign/models/marketing_campaign.py:99
 #, python-format
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
@@ -1094,13 +1049,13 @@ msgstr ""
 "үйл явдлуудын нэгийг эхлэлийн цэг болгон тэмдэглэнэ үү."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:92
+#: code:addons/marketing_campaign/models/marketing_campaign.py:87
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
 msgstr "Аян эхлэх боломжгүй. Дотор нь ямар ч үйл ажиллагаа алга."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:777
+#: code:addons/marketing_campaign/models/marketing_campaign.py:609
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""
@@ -1135,24 +1090,15 @@ msgid "The report to generate when this activity is activated"
 msgstr "Энэ үйл ажиллагаа идэвхжихэд үүсэх тайлан"
 
 #. module: marketing_campaign
-#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_type
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_action_type
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
-"   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save "
-"it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields "
-"of the resource record\n"
-"  "
+"- Email: send an email using a predefined email template \n"
+"- Report: print an existing Report defined on the resource item and save it "
+"into a specific directory \n"
+"- Custom Action: execute a predefined action, e.g. to modify the fields of "
+"the resource record"
 msgstr ""
-"Ямарваа зүйл энэ үйл ажиллагаанд орж ирэхэд хийгдэх үйлдлийн төрөл, "
-"тухайлбал:\n"
-"   - Эмэйл: Урьдчилан тодорхойлсон үлгэр ашиглан эмэйл илгээгдэнэ\n"
-"   - Тайлан: нөөц дээр тодорхойлогдсон тайлан хэвлэж түүнийгээ тодорхой "
-"директорт хадгалдаг\n"
-"   - Өөриймшүүлсэн Үйлдэл: урьдчилан тодорхойлсон үйлдлийг хэрэгжүүлнэ, ж: "
-"нөөцийн бичлэгүүдийг засварлах\n"
-"  "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
@@ -1178,7 +1124,7 @@ msgid "Trigger"
 msgstr "Гол"
 
 #. module: marketing_campaign
-#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_type
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_action_type
 msgid "Type"
 msgstr "Төрөл"
 
@@ -1221,6 +1167,3 @@ msgstr "Жил(үүд)"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
-
-#~ msgid "Open Marketing Menu"
-#~ msgstr "Маркетинг цэс нээх"

@@ -15,10 +15,10 @@
 # Volluta <volluta@tutanota.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:55+0000\n"
-"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"POT-Creation-Date: 2016-11-22 14:03+0000\n"
+"PO-Revision-Date: 2016-11-22 14:03+0000\n"
 "Last-Translator: Volluta <volluta@tutanota.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -755,7 +755,7 @@ msgstr "Geavanceerd"
 #. module: stock
 #: selection:stock.config.settings,group_stock_adv_location:0
 msgid "Advanced routing of products using rules"
-msgstr "Geavanceerde routings van producten door middel van regels"
+msgstr "Geavanceerde routes van producten door middel van regels"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -1380,7 +1380,7 @@ msgstr "Bedrijven"
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Company"
-msgstr "Bedijf"
+msgstr "Bedrijf"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_date_done
@@ -2075,7 +2075,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_lot_form
 msgid "Discard"
-msgstr "Negeren"
+msgstr "Annuleren"
 
 #. module: stock
 #: model:stock.location,name:stock.location_dispatch_zone
@@ -3559,7 +3559,7 @@ msgstr "Partij/Serienummer verplicht"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation_lot
 msgid "Lot/Serial number for pack ops"
-msgstr "Partij/Serienummer voor pak operaties"
+msgstr "Partij/Serienummer voor verpakking bewerkingen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_production_lot
@@ -4011,7 +4011,7 @@ msgstr "Geen tracering"
 #. module: stock
 #: selection:stock.config.settings,group_stock_adv_location:0
 msgid "No automatic routing of products"
-msgstr "Geen automatische productorders van producten"
+msgstr "Geen automatische routes van producten"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:823
@@ -4089,8 +4089,8 @@ msgid ""
 "Number of days after the orderpoint is triggered to receive the products or "
 "to order to the vendor"
 msgstr ""
-"Aantal dagen na het orderpunt is afgegaan om producten te ontvangen of een "
-"order te maken bij de leverancier"
+"Aantal dagen nadat de aanvulregel is uitgevoerd om producten te ontvangen of"
+" een order te maken bij de leverancier"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_delay
@@ -4225,6 +4225,7 @@ msgstr "Bewerkingsnaam"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
+#: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
 msgstr "Bewerkingsoorten"
 
@@ -5015,8 +5016,8 @@ msgid ""
 "Products you scrap will be removed from the stock and moved to a specific "
 "scrap location, for reporting purposes."
 msgstr ""
-"Producten die u verwerpt worden uit de voorraad verwijderd en verplaatst "
-"naar een specifieke locatie schroot, voor rapportage doeleinden."
+"Producten die u afkeurt worden uit de voorraad verwijderd en verplaatst naar"
+" een specifieke locatie schroot, voor rapportage doeleinden."
 
 #. module: stock
 #: code:addons/stock/models/product.py:326
@@ -5247,7 +5248,7 @@ msgstr "Echte hoeveelheid"
 #: model:ir.model.fields,field_description:stock.field_product_product_reception_count
 #: model:ir.ui.view,arch_db:stock.product_kanban_stock_view
 msgid "Receipt"
-msgstr "Kassabon"
+msgstr "Ontvangst"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_reception_route_id
@@ -5647,7 +5648,7 @@ msgstr "Planners"
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Scrap"
-msgstr "Afgekeurd"
+msgstr "Afkeuren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_scrap_location_id
@@ -6246,7 +6247,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The RFQ becomes a Purchase Order and a Transfer Order is created"
 msgstr ""
-"De offerteaanvraag of RfQ wordt een inkooporder, en een transferorder wordt "
+"De offerteaanvraag wordt een inkooporder, en een magazijnverplaatsing wordt "
 "aangemaakt"
 
 #. module: stock
@@ -6409,7 +6410,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The quotation becomes a Sale Order and a Transfer Order is created"
 msgstr ""
-"De offerte veranderd in een Verkoop Order en een Transfer Order wordt "
+"De offerte wijzigt in een verkooporder en een magazijnverplaatsing wordt "
 "aangemaakt."
 
 #. module: stock
@@ -7271,7 +7272,7 @@ msgid ""
 msgstr ""
 "Wij handelen het hele importproces voor u \n"
 "af: u hoeft enkel het CSV-bestand met al\n"
-"uw gegevens naar uw Odoo projectbeheerder\n"
+"uw gegevens naar uw Odoo project leider\n"
 "te versturen."
 
 #. module: stock
@@ -7528,8 +7529,8 @@ msgid ""
 "You cannot scrap a move without having available stock for %s. You can "
 "correct it with an inventory adjustment."
 msgstr ""
-"U kunt een bewerking niet verwerpen zonder er voorraad is voor %s. U kunt "
-"dit corrigeren met een voorraad aanpassing."
+"U kunt een bewerking niet afkeuren zonder er voorraad is voor %s. U kunt dit"
+" corrigeren met een voorraad aanpassing."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:144
@@ -7630,6 +7631,12 @@ msgstr ""
 #, python-format
 msgid "You may only return Done pickings"
 msgstr "Je kunt alleen leveringen welke gereed zijn retourneren"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:21
+#, python-format
+msgid "You must define a warehouse for the company: %s."
+msgstr "U moet een magazijn aanmaken voor het bedrijf: %s."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:553

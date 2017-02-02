@@ -39,7 +39,7 @@ loaded = []
 class AddonsHook(object):
     """ Makes modules accessible through openerp.addons.* and odoo.addons.* """
 
-    def find_module(self, name, path):
+    def find_module(self, name, path=None):
         if name.startswith(('odoo.addons.', 'openerp.addons.'))\
                 and name.count('.') == 2:
             return self
@@ -128,7 +128,7 @@ def initialize_sys_path():
     global hooked
 
     dd = tools.config.addons_data_dir
-    if dd not in ad_paths:
+    if os.access(dd, os.R_OK) and dd not in ad_paths:
         ad_paths.append(dd)
 
     for ad in tools.config['addons_path'].split(','):

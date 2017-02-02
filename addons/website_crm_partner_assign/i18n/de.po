@@ -6,8 +6,8 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Thomas A. Jaeger <tj@jamotion.ch>, 2016
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
-# Tina Rittmüller <tr@ife.de>, 2016
 # Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
+# Tina Rittmüller <tr@ife.de>, 2016
 # Anja Funk <anja.funk@afimage.de>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
@@ -18,10 +18,10 @@
 # Henry Mineehen <info@mineehen.de>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:36+0000\n"
-"PO-Revision-Date: 2016-09-19 12:36+0000\n"
+"POT-Creation-Date: 2016-11-14 15:55+0000\n"
+"PO-Revision-Date: 2016-11-14 15:55+0000\n"
 "Last-Translator: Henry Mineehen <info@mineehen.de>, 2016\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,6 @@ msgstr ""
 #: model:mail.template,body_html:website_crm_partner_assign.email_template_lead_forward_mail
 msgid ""
 "\n"
-"            \n"
 "<p>Hello,</p>\n"
 "\n"
 "\n"
@@ -66,38 +65,6 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
-"\n"
-"            \n"
-"<p>Hallo,</p>\n"
-"\n"
-"\n"
-"<p>Wir sind durch Interessenten Ihrer Region angesprochen worden. Daher wurden die folgenen Interessenten übertragen an ${ctx['partner_id'].name}:</p>\n"
-"\n"
-"<ol>\n"
-"% for lead in ctx['partner_leads']:\n"
-"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Unbestimmter Betreff'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Ansprechpartner nicht festgelegt'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Land nicht festgelegt' }, ${lead.lead_id.email_from or 'Email nicht festgelegt'}, ${lead.lead_id.phone or ''} </li></br>\n"
-"% endfor\n"
-"</ol>\n"
-"\n"
-"% if ctx.get('partner_in_portal'):\n"
-"<p>Schauen Sie bitte in Ihr <a href=\"${object.get_portal_url()}\">Partner Portal</a> für Einzelheiten. Zu jedem Lead sind in der linken oberen Ecke zwei Schaltflächen, die Sie nutzen sollten nachdem Sie mit dem Lead Kontakt aufgenommen haben: \"Ich bin interessiert\" & \"Ich bin nicht interessiert\".</p>\n"
-"% else:\n"
-"<p>\n"
-"    Sie haben noch keinen Zugang zu unserem Portal. Bitte sprechen Sie \n"
-"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'Ihren Benutzerverwalter %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'uns'} an.\n"
-"</p>\n"
-"% endif\n"
-"<p>Der Lead wird einem anderen Partner übermittelt, wenn Sie diesen nicht innerhalb von 20 Tagen ansprechen.</p>\n"
-"\n"
-"<p>Vielen Dank,</p>\n"
-"\n"
-"<pre>\n"
-"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
-"</pre>\n"
-"% if not ctx['partner_id'].user_id:\n"
-"P.S.: Es sieht so aus, als wäre Ihnen kein Benutzerverwalter zugeordnet, sprechen Sie uns bitte an.\n"
-"% endif\n"
-"            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases
@@ -130,23 +97,6 @@ msgstr ""
 #, python-format
 msgid "<p>I am interested by this lead.</p>"
 msgstr "<p>Ich bin an diesem Lead interessiert.</p>"
-
-#. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:203
-#, python-format
-msgid "<p>I am not interested by this lead. I contacted the lead.</p>"
-msgstr ""
-"<p>Ich bin nicht an diesem Interessent interessiert und habe diesen "
-"kontaktiert.</p>"
-
-#. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:205
-#, python-format
-msgid ""
-"<p>I am not interested by this lead. I have not contacted the lead.</p>"
-msgstr ""
-"<p>Ich bin nicht an dem Interessent interessiert. Ich habe den Interessent "
-"nicht angeschrieben.</p>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -212,7 +162,7 @@ msgid "Active"
 msgstr "Aktiv"
 
 #. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:230
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:235
 #, python-format
 msgid "Activity Done"
 msgstr ""
@@ -408,6 +358,7 @@ msgstr "Kundenname"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Date"
 msgstr "Datum"
 
@@ -576,6 +527,18 @@ msgid "High"
 msgstr "Hoch"
 
 #. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:203
+#, python-format
+msgid "I am not interested by this lead. I contacted the lead."
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:205
+#, python-format
+msgid "I am not interested by this lead. I have not contacted the lead."
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_id
@@ -599,11 +562,6 @@ msgstr "Implementiert durch"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date
 msgid "Invoice Account Date"
 msgstr "Rechnungsbuchdatum"
-
-#. module: website_crm_partner_assign
-#: model:ir.model,name:website_crm_partner_assign.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr "Statistik Rechnungen"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation___last_update
@@ -690,7 +648,7 @@ msgid "Leads Analysis"
 msgstr "Statistik Verkaufskontakte"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9936
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9922
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr "Ebene"
@@ -1106,6 +1064,11 @@ msgstr ""
 #, python-format
 msgid "This Week Activities"
 msgstr "Aktivitäten dieser Woche"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
+msgid "This lead is a spam"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:95

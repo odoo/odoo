@@ -75,7 +75,7 @@ class PortalWizardUser(models.TransientModel):
     _description = 'Portal User Config'
 
     wizard_id = fields.Many2one('portal.wizard', string='Wizard', required=True, ondelete='cascade')
-    partner_id = fields.Many2one('res.partner', string='Contact', required=True, readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Contact', required=True, readonly=True, ondelete='cascade')
     email = fields.Char('Email')
     in_portal = fields.Boolean('In Portal')
     user_id = fields.Many2one('res.users', string='Login User')
@@ -137,7 +137,10 @@ class PortalWizardUser(models.TransientModel):
                 user_portal = None
                 # create a user if necessary, and make sure it is in the portal group
                 if not user:
-                    company_id = wizard_user.partner_id.company_id.id
+                    if wizard_user.partner_id.company_id:
+                        company_id = wizard_user.partner_id.company_id.id
+                    else:
+                        company_id = self.env['res.company']._company_default_get('res.users')
                     user_portal = wizard_user.sudo().with_context(company_id=company_id)._create_user()
                 else:
                     user_portal = user
