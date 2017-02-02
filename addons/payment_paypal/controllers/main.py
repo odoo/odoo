@@ -28,7 +28,7 @@ class PaypalController(http.Controller):
         return return_url
 
     def _parse_pdt_response(self, response):
-        """ Parse a text response for a PDT verification .
+        """ Parse a text response for a PDT verification.
 
             :param response str: text response, structured in the following way:
                 STATUS\nkey1=value1\nkey2=value2...\n
@@ -72,7 +72,7 @@ class PaypalController(http.Controller):
         if pdt_request:
             # this means we are in PDT instead of DPN like before
             # fetch the PDT token
-            new_post['at'] = request.env['ir.config_parameter'].sudo().get_param('payment_paypal.pdt_token')
+            new_post['at'] = tx and tx.acquirer_id.paypal_pdt_token or ''
             new_post['cmd'] = '_notify-synch'  # command is different in PDT than IPN/DPN
         validate_url = paypal_urls['paypal_form_url']
         urequest = urllib2.Request(validate_url, werkzeug.url_encode(new_post))
@@ -80,10 +80,10 @@ class PaypalController(http.Controller):
         resp = uopen.read()
         if pdt_request:
             resp, post = self._parse_pdt_response(resp)
-        if resp == 'VERIFIED' or pdt_request and resp == 'SUCCESS':
+        if resp in ['VERIFIED', 'SUCCESS']:
             _logger.info('Paypal: validated data')
             res = request.env['payment.transaction'].sudo().form_feedback(post, 'paypal')
-        elif resp == 'INVALID' or pdt_request and resp == 'FAIL':
+        elif resp in ['INVALID', 'FAIL']:
             _logger.warning('Paypal: answered INVALID/FAIL on data verification')
         else:
             _logger.warning('Paypal: unrecognized paypal answer, received %s instead of VERIFIED/SUCCESS or INVALID/FAIL (validation: %s)' % (resp, 'PDT' if pdt_request else 'IPN/DPN'))
