@@ -19,9 +19,21 @@ var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
 var session = require('web.session');
 var Widget = require('web.Widget');
+var Webclient = require('web.WebClient');
+var Notification = require('web.notification');
 
 var QWeb = core.qweb;
 var _t = core._t;
+
+Webclient.include({
+    show_application: function() {
+        return this._super.apply(this, arguments).done(_.bind(function() {
+            if (_.last(odoo.session_info.server_version_info) == 'e') {
+                this.trigger_up('show_notification_bar');
+            }
+        }, this));
+    }
+});
 
 /**
  * Widget : Invite People to Channel Dialog
@@ -110,23 +122,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             event.stopPropagation();
             var channel_id = $(event.target).data("channel-id");
             chat_manager.unsubscribe(chat_manager.get_channel(channel_id));
-        },
-        "click .o_mail_annoying_notification_bar .fa-close": function () {
-            this.$(".o_mail_annoying_notification_bar").slideUp();
-        },
-        "click .o_mail_request_permission": function (event) {
-            event.preventDefault();
-            this.$(".o_mail_annoying_notification_bar").slideUp();
-            var def = window.Notification.requestPermission();
-            if (def) {
-                def.then(function (value) {
-                    if (value === 'denied') {
-                        utils.send_notification(_t('Permission denied'), _t('Odoo will not have the permission to send native notifications on this device.'));
-                    } else {
-                        utils.send_notification(_t('Permission granted'), _t('Odoo has now the permission to send you native notifications on this device.'));
-                    }
-                });
-            }
         },
         "keydown": function (event) {
             if (event.which === $.ui.keyCode.ESCAPE && this.selected_message) {
@@ -258,6 +253,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
 
         this.render_sidebar();
+
+        //Note: Show notification bar for native notification permission
+        var notification_bar = new Notification.NotificationBar();
+        notification_bar.appendTo(this.$('.o_mail_notification_bar'));
+
         return $.when(def1, def2, def3, def4)
             .then(this.set_channel.bind(this, default_channel))
             .then(function () {
@@ -682,6 +682,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 });
 
+Notification.NotificationBar.include({
+    send_notification: function(title, content) {
+        utils.send_notification(title, content);
+    }
+});
 
 core.action_registry.add('mail.chat.instant_messaging', ChatAction);
 

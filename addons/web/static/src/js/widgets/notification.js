@@ -4,6 +4,8 @@ odoo.define('web.notification', function (require) {
 var core = require('web.core');
 var Widget = require('web.Widget');
 
+var _t = core._t;
+
 var Notification = Widget.extend({
     template: 'Notification',
     events: {
@@ -64,10 +66,46 @@ var NotificationManager = Widget.extend({
     },
 });
 
+var NotificationBar = Widget.extend({
+    template: 'NotificationBar',
+
+    events: {
+        "click .o_annoying_notification_bar, .fa-close": function () {
+            this.$el.slideUp();
+        },
+        "click .o_request_permission": function (event) {
+            event.preventDefault();
+            this.on_click_request_permission();
+        },
+    },
+    init: function () {
+        this._super.apply(this, arguments);
+        this.notification_bar = (window.Notification && window.Notification.permission === "default");
+    },
+    send_notification: function(title, content) {
+        this.do_notify(title, content);
+    },
+    on_click_request_permission: function () {
+        this.$el.slideUp();
+        var def = window.Notification.requestPermission();
+        var self = this;
+        if (def) {
+            def.then(function (value) {
+                if (value === 'denied') {
+                    self.send_notification(_t('Permission denied'), _t('Odoo will not have the permission to send native notifications on this device.'));
+                } else {
+                    self.send_notification(_t('Permission granted'), _t('Odoo has permission to send you native notifications on this device.'));
+                }
+            });
+        }
+    }
+});
+
 return {
     Notification: Notification,
     Warning: Warning,
     NotificationManager: NotificationManager,
+    NotificationBar: NotificationBar,
 };
 
 });
