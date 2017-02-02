@@ -978,7 +978,7 @@
                 <t t-if="widget.options.blob">
                     <div class="button icon download">
                         <t t-if="widget.options.blob.isAttDownload">
-                    <a t-attf-href="{{ widget.options.blob.url_blob }}" t-attf-download="{{ widget.options.blob.filename }}">
+                    <a t-attf-href="{{ widget.options.blob.url_blob }}" t-attf-download="{{ widget.options.blob.filename }}" class="blob_download">
                         <i class="fa fa-download" style="color: rgb(168,89,89);"></i>
                     </a>
                 </t>
@@ -1613,7 +1613,7 @@
                 <t t-if="widget.options.blob">
                     <div class="button icon download">
                         <t t-if="widget.options.blob.isAttDownload">
-                    <a t-attf-href="{{ widget.options.blob.url_blob }}" t-attf-download="{{ widget.options.blob.filename }}">
+                    <a t-attf-href="{{ widget.options.blob.url_blob }}" t-attf-download="{{ widget.options.blob.filename }}" class="blob_download" > 
                         <i class="fa fa-download"></i>
                     </a>
                 </t>
