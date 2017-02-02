@@ -67,8 +67,8 @@ renderer.createPalette = function ($container, options) {
     var $palettes = $container.find(".note-color .note-color-palette");
     $palettes.prepend(html);
 
-    var $bg = $palettes.first().find("button:not(.note-color-btn)").addClass("note-color-btn");
-    var $fore = $palettes.last().find("button:not(.note-color-btn)").addClass("note-color-btn");
+    var $bg = $palettes.filter(":even").find("button:not(.note-color-btn)").addClass("note-color-btn");
+    var $fore = $palettes.filter(":odd").find("button:not(.note-color-btn)").addClass("note-color-btn");
     $bg.each(function () {
         var $el = $(this);
         var className = 'bg-' + $el.data('color');
@@ -146,10 +146,7 @@ renderer.tplPopovers = function (lang, options) {
         })).appendTo($resizefa);
     }
     var $colorfa = $airPopover.find('.note-color').clone();
-    $colorfa.find(".btn-group:first").remove();
     $colorfa.find("ul.dropdown-menu").css('min-width', '172px');
-    $colorfa.find('button[data-event="color"]').attr('data-value', '{"foreColor": "#f00"}')
-        .find("i").css({'background': '', 'color': '#f00'});
     $resizefa.after($colorfa);
 
     // show dialog box and delete
