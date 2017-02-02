@@ -10,6 +10,7 @@ from odoo.tools import float_utils
 class Inventory(models.Model):
     _name = "stock.inventory"
     _description = "Inventory"
+    _order = "date desc, id desc"
 
     @api.model
     def _default_location_id(self):
