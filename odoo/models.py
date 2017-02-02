@@ -30,6 +30,7 @@ import operator
 import pytz
 import re
 from collections import defaultdict, MutableMapping, OrderedDict
+from contextlib import closing
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
 
@@ -5090,45 +5091,61 @@ def itemgetter_tuple(items):
         return lambda gettable: (gettable[items[0]],)
     return operator.itemgetter(*items)
 
-def convert_pgerror_23502(model, fields, info, e):
-    m = re.match(r'^null value in column "(?P<field>\w+)" violates '
-                 r'not-null constraint\n',
-                 tools.ustr(e))
-    field_name = m and m.group('field')
-    if not m or field_name not in fields:
+def convert_pgerror_not_null(model, fields, info, e):
+    if e.diag.table_name != model._table:
         return {'message': tools.ustr(e)}
-    message = _(u"Missing required value for the field '%s'.") % field_name
-    field = fields.get(field_name)
-    if field:
-        message = _(u"Missing required value for the field '%s' (%s)") % (field['string'], field_name)
+
+    field_name = e.diag.column_name
+    field = fields[field_name]
+    message = _(u"Missing required value for the field '%s' (%s)") % (field['string'], field_name)
     return {
         'message': message,
         'field': field_name,
     }
 
-def convert_pgerror_23505(model, fields, info, e):
-    m = re.match(r'^duplicate key (?P<field>\w+) violates unique constraint',
-                 tools.ustr(e))
-    field_name = m and m.group('field')
-    if not m or field_name not in fields:
+def convert_pgerror_unique(model, fields, info, e):
+    # new cursor since we're probably in an error handler in a blown
+    # transaction which may not have been rollbacked/cleaned yet
+    with closing(model.env.registry.cursor()) as cr:
+        cr.execute("""
+            SELECT
+                conname AS "constraint name",
+                t.relname AS "table name",
+                ARRAY(
+                    SELECT attname FROM pg_attribute
+                    WHERE attrelid = conrelid
+                      AND attnum = ANY(conkey)
+                ) as "columns"
+            FROM pg_constraint
+            JOIN pg_class t ON t.oid = conrelid
+            WHERE conname = %s
+        """, [e.diag.constraint_name])
+        constraint, table, ufields = cr.fetchone() or (None, None, None)
+    # if the unique constraint is on an expression or on an other table
+    if not ufields or model._table != table:
         return {'message': tools.ustr(e)}
-    message = _(u"The value for the field '%s' already exists.") % field_name
-    field = fields.get(field_name)
-    if field:
-        message = _(u"%s This might be '%s' in the current model, or a field "
-                    u"of the same name in an o2m.") % (message, field['string'])
+
+    # TODO: add stuff from e.diag.message_hint? provides details about the constraint & duplication values but may be localized...
+    if len(ufields) == 1:
+        field_name = ufields[0]
+        field = fields[field_name]
+        message = _(u"The value for the field '%s' already exists (this is probably '%s' in the current model).") % (field_name, field['string'])
+        return {
+            'message': message,
+            'field': field_name,
+        }
+    field_strings = [fields[fname]['string'] for fname in ufields]
+    message = _(u"The values for the fields '%s' already exist (they are probably '%s' in the current model).") % (', '.join(ufields), ', '.join(field_strings))
     return {
         'message': message,
-        'field': field_name,
+        # no field, unclear which one we should pick and they could be in any order
     }
 
 PGERROR_TO_OE = defaultdict(
     # shape of mapped converters
     lambda: (lambda model, fvg, info, pgerror: {'message': tools.ustr(pgerror)}), {
-    # not_null_violation
-    '23502': convert_pgerror_23502,
-    # unique constraint error
-    '23505': convert_pgerror_23505,
+    '23502': convert_pgerror_not_null,
+    '23505': convert_pgerror_unique,
 })
 
 def _normalize_ids(arg, atoms=set(IdType)):
