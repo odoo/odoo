@@ -1044,7 +1044,9 @@ function init () {
 
     bus.on('notification', null, on_notification);
 
-    return session.rpc('/mail/client_action').then(function (result) {
+    return session.is_bound.then(function(){
+        return session.rpc('/mail/client_action');
+    }).then(function (result) {
         _.each(result.channel_slots, function (channels) {
             _.each(channels, add_channel);
         });
