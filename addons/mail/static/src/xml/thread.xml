@@ -113,6 +113,10 @@
             <div class="o_thread_title">No starred message</div>
             <div> You can mark any message as 'starred', and it shows up in this channel.</div>
         </t>
+        <t t-if="options.channel_id==='channel_moderation'">
+            <div class="o_thread_title">You have no messages to moderate.</div>
+            <div> Messages which need moderation will appear here.</div>
+        </t>
     </div>
 
     <t t-name="mail.ChatThread.Content">
@@ -154,6 +158,7 @@
             </div>
             <div t-att-class="'o_thread_message_core' + (message.is_note ? ' o_mail_note' : '')">
                 <p t-if="message.display_author" class="o_mail_info">
+                    <input t-if="message.is_moderation" type="checkbox" class="moderation_checkbox" t-att-data-message-id="message.id"/>
                     <t t-if="message.is_note">
                         Note by
                     </t>
@@ -195,7 +200,7 @@
                         </span>
                     </span>
                     <span t-attf-class="o_thread_icons">
-                        <i t-if="options.display_stars &amp;&amp; !message.is_system_notification"
+                        <i t-if="options.display_stars &amp;&amp; !message.is_system_notification &amp;&amp; !message.is_moderation"
                             t-att-class="'fa fa-lg o_thread_icon o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
                             t-att-data-message-id="message.id" title="Mark as Todo"/>
                        <i t-if="message.record_name &amp;&amp; message.model != 'mail.channel' &amp;&amp; options.display_reply_icon"
@@ -204,6 +209,10 @@
                         <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
                            class="fa fa-check o_thread_icon o_thread_message_needaction"
                            t-att-data-message-id="message.id" title="Mark as Read"/>
+
+                        <t t-if="message.is_moderation and message.model == 'mail.channel'">
+                            <t t-call="mail.ModeratorActions"/>
+                        </t>
                     </span>
                 </p>
                 <div class="o_thread_message_content">
@@ -226,6 +235,19 @@
         <t t-if="options.messages_separator_position == message.id">
             <t t-call="mail.MessagesSeparator"/>
         </t>
+    </t>
+
+    <t t-name="mail.ModeratorActions">
+        <i class="o_thread_icon ml4 o_thread_message_moderation text-success"
+           t-att-data-message-id="message.id" data-moderator-action="accept" title="Accept"><strong>Accept |</strong></i>
+        <i class="o_thread_icon ml4 o_thread_message_moderation text-danger"
+           t-att-data-message-id="message.id" data-moderator-action="reject" title="Remove message with explanation"><strong>Reject |</strong></i>
+        <i class="o_thread_icon ml4 o_thread_message_moderation text-danger"
+           t-att-data-message-id="message.id" data-moderator-action="discard" title="Remove message without explanation"><strong>Discard |</strong></i>
+        <i class="o_thread_icon ml4 o_thread_message_moderation text-success"
+           t-att-data-message-id="message.id" data-moderator-action="allow" title="Add this email address to white list of people"><strong>Allow |</strong></i>
+        <i class="o_thread_icon ml4 o_thread_message_moderation text-danger"
+           t-att-data-message-id="message.id" data-moderator-action="ban" title="Ban this email address"><strong>Ban</strong></i>
     </t>
 
     <t t-name="mail.MessagesSeparator">
