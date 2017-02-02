@@ -37,6 +37,15 @@ var Thread = Widget.extend({
             var message_id = $(event.currentTarget).data('message-id');
             this.trigger("mark_as_read", message_id);
         },
+        "click .o_thread_message_moderation": function (event) {
+            var $button = $(event.currentTarget);
+            var message_id = $button.data('message-id');
+            var moderator_action = $button.data('moderator-action');
+            this.trigger("moderator_action", message_id, moderator_action);
+        },
+        "change .moderation_checkbox": function (event) {
+            this.trigger("toggle_moderator_action_button");
+        },
         "click .o_thread_message_star": function (event) {
             var message_id = $(event.currentTarget).data('message-id');
             this.trigger("toggle_star_status", message_id);

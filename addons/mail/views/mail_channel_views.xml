@@ -96,6 +96,7 @@
                         </div>
                         <group class="o_label_nowrap">
                             <field name="email_send"/>
+                            <field name="is_moderate" attrs="{'invisible': [('email_send', '=', False)]}"/>
                             <field name="description" placeholder="Topics discussed in this group..."/>
                         </group>
                         <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}">
@@ -119,13 +120,29 @@
                                     <field name="group_ids" widget="many2many_tags"/>
                                 </group>
                             </page>
-                            <page string="Members">
+                            <page string="Members" attrs="{'invisible': [('is_moderate', '=', True)]}">
                                 <field name="channel_last_seen_partner_ids" mode="tree" context="{'active_test': False}">
                                     <tree string="Members" editable="bottom">
                                         <field name="partner_id"/>
                                         <field name="partner_email"/>
                                     </tree>
                                 </field>
+                            </page>
+                            <page string="Moderation" attrs="{'invisible': [('is_moderate', '=', False)]}">
+                                <group>
+                                    <field name="moderator_ids" widget="many2many_tags"/>
+                                    <field name="auto_notification"/>
+                                    <field name="notification_message" attrs="{'invisible': [('auto_notification', '=', False)]}"/>
+                                </group>
+                                <group string="Emails">
+                                    <field name="channel_moderate_partner_ids" nolabel="1">
+                                        <tree editable="bottom" string="Emails">
+                                            <field name="partner_id"/>
+                                            <field name="partner_email"/>
+                                            <field name="moderator_action"/>
+                                        </tree>
+                                    </field>
+                                </group>
                             </page>
                             <page string="Integrations" invisible="0" name="mail_channel_integrations"></page>
                         </notebook>

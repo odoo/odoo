@@ -106,6 +106,8 @@ class Message(models.Model):
     message_id = fields.Char('Message-Id', help='Message unique identifier', index=True, readonly=1, copy=False)
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
+    moderator_status = fields.Selection([('pending_moderation', 'Pending Moderation'), ('accepted', 'Accepted')], string="Moderator Status")
+    moderator_id = fields.Many2one('res.users', string="Moderated By")
 
     @api.multi
     def _get_needaction(self):
@@ -265,6 +267,61 @@ class Message(models.Model):
         notification = {'type': 'toggle_star', 'message_ids': [self.id], 'starred': starred}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
+    @api.multi
+    def get_moderation_count(self):
+        """ compute the number of to moderate messages of the current user (moderator)"""
+        return self.search_count([
+            ('channel_ids.moderator_ids', '=', self.env.user.id),
+            ('channel_ids.is_moderate', '=', True),
+            ('moderator_status', '=', 'pending_moderation'),
+            ('message_type', '=', 'email')
+        ])
+
+    @api.multi
+    def moderator_action(self, moderator_action=''):
+        """ Moderator actions
+            :param moderator_action
+                 * accept       - moderate message and broadcast that message to followers of relevant channels.
+                 * reject       - message will be deleted from the database without broadcast
+                                  and send a message to the author with an explanation that the moderators can edit.
+                 * discard      - message will be deleted from the database without broadcast.
+                 * allow        - add email address to white list people of specific channel,
+                                  so that next time if mail come from same email address on same channel then,
+                                  it will automatically boradcast to relevant channels without any approvel from moderator.
+                 * ban          - add email adderss to black list people of specific channel,
+                                  so from next time persion holding that email address will never send mail on that channel.
+        """
+        for message in self.filtered(lambda m: m.moderator_status == 'pending_moderation'):
+            if moderator_action == 'accept':
+                message.accept_message()
+            elif moderator_action in ['reject', 'discard']:
+                message.unlink()
+            elif moderator_action in ['allow', 'ban']:
+                channels = message.channel_ids.filtered(lambda c: c.is_moderate)
+                channels.add_to_moderated_email_list(message.email_from, moderator_action, message.author_id.id)
+                message.accept_message() if moderator_action == 'allow' else message.unlink()
+        return True
+
+    def accept_message(self):
+        self.write({'moderator_status': 'accepted', 'moderator_id': self.env.uid})
+        #notify to followers of channel by email
+        channels = self.channel_ids.filtered(lambda c: c.is_moderate)
+        partners = channels.mapped('channel_partner_ids') - self.env.user.partner_id
+        partners._notify(self)
+        channels._notify(self)
+
+    @api.model
+    def notify_moderator(self):
+        """ This method will notify to moderators if any message need a moderation.
+            this method will call only once in a day.
+        """
+        messages = self.search([('moderator_status', '=', 'pending_moderation'), ('message_type', '=', 'email')])
+        #Find the Moderators from messages
+        moderators = messages.mapped('channel_ids').filtered(lambda c: c.is_moderate).mapped('moderator_ids')
+        template = self.env.ref('mail.moderator_notification_email', raise_if_not_found=False)
+        for moderator in moderators.filtered(lambda m: m.email):
+            template.with_context(lang=moderator.lang).send_mail(moderator.id, raise_exception=True)
+
     #------------------------------------------------------
     # Message loading for web interface
     #------------------------------------------------------
@@ -400,6 +457,7 @@ class Message(models.Model):
                     'id': 59,
                     'subject': False
                     'is_note': True # only if the subtype is internal
+                    'moderator_status': 'pending_moderation'
                 }
         """
         message_values = self.read([
@@ -409,6 +467,7 @@ class Message(models.Model):
             'channel_ids', 'partner_ids',  # recipients
             'needaction_partner_ids',  # list of partner ids for whom the message is a needaction
             'starred_partner_ids',  # list of partner ids for whom the message is starred
+            'moderator_status',
         ])
         message_tree = dict((m.id, m) for m in self.sudo())
         self._message_read_dict_postprocess(message_values, message_tree)
@@ -825,23 +884,62 @@ class Message(models.Model):
         if message_values:
             self.write(message_values)
 
-        # notify partners and channels
-        # those methods are called as SUPERUSER because portal users posting messages
-        # have no access to partner model. Maybe propagating a real uid could be necessary.
-        email_channels = channels_sudo.filtered(lambda channel: channel.email_send)
-        notif_partners = partners_sudo.filtered(lambda partner: 'inbox' in partner.mapped('user_ids.notification_type'))
-        if email_channels or partners_sudo - notif_partners:
-            partners_sudo.search([
-                '|',
-                ('id', 'in', (partners_sudo - notif_partners).ids),
-                ('channel_ids', 'in', email_channels.ids),
-                ('email', '!=', self_sudo.author_id.email or self_sudo.email_from),
-            ])._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
-        channels_sudo._notify(self)
-
+        # check if moderation is required or not, if required then do not notify to followers else notify
+        moderate_channels = channels_sudo.filtered(lambda c: c.is_moderate)
+        if not self.need_moderation(moderate_channels):
+            # notify partners and channels
+            # those methods are called as SUPERUSER because portal users posting messages
+            # have no access to partner model. Maybe propagating a real uid could be necessary.
+            email_channels = channels_sudo.filtered(lambda channel: channel.email_send)
+            notif_partners = partners_sudo.filtered(lambda partner: 'inbox' in partner.mapped('user_ids.notification_type'))
+            if email_channels or partners_sudo - notif_partners:
+                partners_sudo.search([
+                    '|',
+                    ('id', 'in', (partners_sudo - notif_partners).ids),
+                    ('channel_ids', 'in', email_channels.ids),
+                    ('email', '!=', self_sudo.author_id.email or self_sudo.email_from),
+                ])._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
+            channels_sudo._notify(self)
+        else:
+            self.channel_moderation_process(moderate_channels)
         # Discard cache, because child / parent allow reading and therefore
         # change access rights.
         if self.parent_id:
             self.parent_id.invalidate_cache()
 
         return True
+
+    def need_moderation(self, channels=False):
+        """ This method will check that moderation is required on newly arrival message
+        """
+        if self.message_type == 'email' and channels and not channels.is_moderated_email(self.email_from, 'allow'):
+            return True
+        return False
+
+    def channel_moderation_process(self, moderate_channels):
+        # we have only one channel on message when message type is email ?
+        if not moderate_channels.is_moderated_email(self.email_from, 'ban'):
+            self.moderator_status = 'pending_moderation'
+            for channel in moderate_channels.filtered(lambda c: c.auto_notification):
+                #notify to the sender on message being waiting for moderation.
+                self.create_notification_email({
+                    'body_html': channel.notification_message,
+                    'subject': 'Re: %s' % self.subject,
+                    'email_to': self.email_from, 'auto_delete': True})
+            #notify to moderator for newly message arrival which need moderation
+            self._moderator_message_notifications()
+
+    def _moderator_message_notifications(self):
+        """ Generate the bus notifications for the given message
+            :param message : the mail.message to sent
+        """
+        message_values = self.message_format()[0]
+        notifications = []
+        for moderator in self.channel_ids.mapped('moderator_ids'):
+            notification = {'type': 'moderation', 'message': message_values}
+            notifications.append([(self._cr.dbname, 'res.partner', moderator.partner_id.id), notification])
+        self.env['bus.bus'].sendmany(notifications)
+
+    @api.model
+    def create_notification_email(self, vals):
+        self.env['mail.mail'].create(vals).send()

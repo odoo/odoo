@@ -1221,6 +1221,10 @@ class MailThread(models.AbstractModel):
             else:
                 subtype = 'mail.mt_comment'
             new_msg = thread.message_post(subtype=subtype, partner_ids=partner_ids, **message_dict)
+            #remove message without notify if 'email from' is in ban list on specific channel
+            if new_msg.message_type == 'email' and new_msg.channel_ids.filtered(lambda c: c.is_moderate).is_moderated_email(new_msg.email_from, 'ban'):
+                new_msg.unlink()
+                return thread_id
 
             if original_partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
