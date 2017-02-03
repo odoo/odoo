@@ -34,8 +34,7 @@ class PackOperation(models.Model):
     product_qty = fields.Float('To Do', default=0.0, digits=dp.get_precision('Product Unit of Measure'), required=True)
     ordered_qty = fields.Float('Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'))
     qty_done = fields.Float('Done', default=0.0, digits=dp.get_precision('Product Unit of Measure'))
-    # TDE FIXME: what what what what ??
-    is_done = fields.Boolean(compute='_compute_is_done', inverse='_set_is_done', string='Done', oldname='processed_boolean')
+    is_done = fields.Boolean(compute='_compute_is_done', string='Done', readonly=False, oldname='processed_boolean')
     package_id = fields.Many2one('stock.quant.package', 'Source Package')
     pack_lot_ids = fields.One2many('stock.pack.operation.lot', 'operation_id', 'Lots Used')
     result_package_id = fields.Many2one(
@@ -73,9 +72,8 @@ class PackOperation(models.Model):
     def _compute_is_done(self):
         self.is_done = self.qty_done > 0.0
 
-    @api.one
-    def _set_is_done(self):
-        # TDE FIXME: whuuuut ???
+    @api.onchange('is_done')
+    def on_change_is_done(self):
         if not self.product_id:
             if self.is_done and self.qty_done == 0:
                 self.qty_done = 1.0
