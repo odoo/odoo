@@ -89,12 +89,13 @@ en Odoo):
                 ],
     'data': [
         # Basic accounting data
-        'data/coa_template.xml',
+        'data/l10n_do_chart_data.xml',
         'data/account.account.template.csv',
-        'data/tax_template.xml',
-        'data/account_defaults.xml',
+        'data/account_chart_template_data.xml',
+        'data/account_account_tag_data.xml',
+        'data/account.tax.template.xml',
         # Country States
-        'data/l10n_do_base_data.xml',
+        'data/l10n_do_state_data.xml',
         # Adds fiscal position
         'data/fiscal_position_template.xml',
         # configuration wizard, views, reports...
