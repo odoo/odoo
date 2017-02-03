@@ -155,6 +155,7 @@ var ModelFieldSelector = Widget.extend({
     },
     /// The removeChainNode method removes the last field name at the end of the current field chain.
     removeChainNode: function () {
+        this.dirty = true;
         this.setChain(this.chain.substring(0, this.chain.lastIndexOf(".")));
     },
     /// The validate method toggles the valid status of the widget and display the error message if it
