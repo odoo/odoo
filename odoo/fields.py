@@ -16,7 +16,8 @@ import psycopg2
 
 from odoo.sql_db import LazyCursor
 from odoo.tools import float_precision, float_repr, float_round, frozendict, \
-                       html_sanitize, human_size, pg_varchar, ustr, OrderedSet
+                       html_sanitize, human_size, pg_varchar, table_exists, \
+                       table_kind, ustr, OrderedSet
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.translate import html_translate, _
@@ -2263,18 +2264,15 @@ class Many2many(_RelationalMulti):
         if not rel.startswith('x_'):
             IMR = model.env['ir.model.relation']
             model.pool.post_init(IMR._reflect_relation, model, rel, self._module)
-        cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (rel,))
-        if not cr.dictfetchall():
+        if not table_exists(cr, rel):
             if self.comodel_name not in model.env:
                 raise UserError(_('Many2many comodel does not exist: %r') % (self.comodel_name,))
             comodel = model.env[self.comodel_name]
             cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s"))' % (rel, id1, id2, id1, id2))
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
-            cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (comodel._table,))
-            if not cr.fetchall():
+            if table_kind(cr, comodel._table) != 'v':
                 model.pool.post_init(model._m2o_add_foreign_key_unchecked, rel, id2, comodel, 'cascade', self._module)
-            cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (model._table,))
-            if not cr.fetchall():
+            if table_kind(cr, model._table) != 'v':
                 model.pool.post_init(model._m2o_add_foreign_key_unchecked, rel, id1, model, 'cascade', self._module)
 
             cr.execute('CREATE INDEX ON "%s" ("%s")' % (rel, id1))

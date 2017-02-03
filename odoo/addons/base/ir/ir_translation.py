@@ -255,19 +255,9 @@ class IrTranslation(models.Model):
     @api.model_cr_context
     def _auto_init(self):
         res = super(IrTranslation, self)._auto_init()
-        cr = self._cr
-
-        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname LIKE 'ir_translation_%'")
-        indexes = [row[0] for row in cr.fetchall()]
-
         # Add separate md5 index on src (no size limit on values, and good performance).
-        if 'ir_translation_src_md5' not in indexes:
-            cr.execute('CREATE INDEX ir_translation_src_md5 ON ir_translation (md5(src))')
-            cr.commit()
-
-        if 'ir_translation_ltn' not in indexes:
-            cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
-            cr.commit()
+        tools.create_index(self._cr, 'ir_translation_src_md5', self._table, ['md5(src)'])
+        tools.create_index(self._cr, 'ir_translation_ltn', self._table, ['name', 'lang', 'type'])
         return res
 
     @api.model
