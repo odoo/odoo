@@ -66,7 +66,7 @@
                             <field name="owner_user_id" string="Requested By"/>
                             <field name="equipment_id"  context="{'default_category_id':category_id}"/>
                             <field name="category_id" groups="maintenance.group_equipment_manager"/>
-                            <field name="request_date" groups="base.group_no_one"/>
+                            <field name="request_date"/>
                             <field name="close_date" groups="base.group_no_one"/>
                             <field name="archive" invisible="1"/>
                             <field name="maintenance_type" widget="radio"/>
@@ -391,7 +391,7 @@
                                 <div class="oe_kanban_footer_left mt4 label label-danger" t-if="record.maintenance_open_count.raw_value" >
                                     <t t-raw="record.maintenance_open_count.raw_value"/> Request
                                 </div>
-                                <div class="oe_kanban_footer_left mt4 label label-default" t-if="record.maintenance_open_count.raw_value == 0 and record.next_action_date.raw_value" >
+                                <div class="oe_kanban_footer_left mt4 label label-default" t-if="record.next_action_date.raw_value" >
                                     <t t-raw="moment(record.next_action_date.raw_value).format('MMMM Do')"/>
                                 </div>
                             </div>
