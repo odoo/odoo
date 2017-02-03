@@ -8,6 +8,7 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2016
 msgid ""
 msgstr ""
@@ -288,7 +289,7 @@ msgstr ""
 #: code:addons/calendar/static/src/js/base_calendar.js:95
 #, python-format
 msgid " [Me]"
-msgstr "[Me]"
+msgstr "[Minä]"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
@@ -298,12 +299,12 @@ msgstr "${object.event_id.name} - Muistutus"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name} invitation"
-msgstr ""
+msgstr "${object.event_id.name} kutsu"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name}: Date updated"
-msgstr ""
+msgstr "${object.event_id.name}: Päiväys päivitetty"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:639
@@ -352,7 +353,7 @@ msgstr "Hyväksytty"
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts_active
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_active
 msgid "Active"
-msgstr "Active"
+msgstr "Aktiivinen"
 
 #. module: calendar
 #. openerp-web
@@ -364,7 +365,7 @@ msgstr "Lisää kalenteri"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_allday
 msgid "All Day"
-msgstr "koko päivän"
+msgstr "Koko päivä"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:634
@@ -411,7 +412,7 @@ msgstr "Saatavuus"
 #: selection:calendar.event,show_as:0
 #, python-format
 msgid "Busy"
-msgstr "Kiireinen"
+msgstr "Varattu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_byday
@@ -461,7 +462,7 @@ msgstr "Yleinen nimi"
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Confirmed"
-msgstr "Confirmado"
+msgstr "Vahvistettu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_partner_id
@@ -516,7 +517,7 @@ msgstr "Päivä(t)"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Decline"
-msgstr "Kieltäydy"
+msgstr "Hylkää"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
@@ -551,7 +552,7 @@ msgstr "Näyttönimi"
 #: code:addons/calendar/static/src/js/base_calendar.js:156
 #, python-format
 msgid "Do you really want to delete this filter from favorites ?"
-msgstr ""
+msgstr "Haluatko varmasti poistaa tämän suodattimen suosikeista?"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_duration
@@ -600,7 +601,7 @@ msgstr "Loppupäivä"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_datetime
 msgid "End Datetime"
-msgstr "Päätöspäivä"
+msgstr "Loppuaika"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
@@ -616,13 +617,13 @@ msgstr "Päättyy"
 #: code:addons/calendar/models/calendar.py:821
 #, python-format
 msgid "Ending date cannot be set before starting date."
-msgstr ""
+msgstr "Loppuaika ei voi olla ennen alkuaikaa."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:819
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
-msgstr ""
+msgstr "Loppuaika ei voi olla ennen alkuaikaa."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -756,7 +757,7 @@ msgstr "Kutsun yksityiskohdat"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Invitation for"
-msgstr ""
+msgstr "Kutsu"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1204,7 +1205,7 @@ msgstr "Kolmas"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence...<br/>"
-msgstr ""
+msgstr "Tämä tapahtuma on linkitetty toistuvaistapahtumaan...<br/>"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_th

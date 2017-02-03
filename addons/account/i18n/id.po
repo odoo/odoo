@@ -14,21 +14,22 @@
 # Andhitia Rama <andhitia.r@gmail.com>, 2016
 # William Surya Permana <zarambie_game@yahoo.com>, 2016
 # Budi Iskandar <budiiskandar11@gmail.com>, 2016
-# Edi RepoDev <repopamor@gmail.com>, 2016
+# Edi Santoso <repopamor@gmail.com>, 2016
 # firman firman <firman.olxbpn@gmail.com>, 2016
-# Lorenz Adam Damara <lorenzrenz@gmail.com>, 2016
+# Lorenz Damara <lorenzrenz@gmail.com>, 2016
 # Dhaman <dhaman@indonesian-odoo.com>, 2016
 # Yani Dama Putera <yanidp@gmail.com>, 2016
 # Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2016
 # Hendro Yulianto <hyulianto@gmail.com>, 2016
 # alfieqashwa <alfieqashwa@gmail.com>, 2016
+# Rizki Mudhar <mudharrizki@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: alfieqashwa <alfieqashwa@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-01-11 13:04+0000\n"
+"PO-Revision-Date: 2017-01-11 13:04+0000\n"
+"Last-Translator: Rizki Mudhar <mudharrizki@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -601,7 +602,7 @@ msgstr "<strong>Komentar:</strong>"
 #: model:ir.ui.view,arch_db:account.report_journal
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 msgid "<strong>Company:</strong>"
-msgstr ""
+msgstr "<strong>Perusahaan:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -701,7 +702,7 @@ msgstr "<strong>Tanggal Tagihan:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Journal:</strong>"
-msgstr ""
+msgstr "<strong>Jurnal:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -854,7 +855,7 @@ msgstr "<strong>Tanggal Mulai:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>Subtotal :</strong>"
-msgstr ""
+msgstr "<strong>Subtotal :</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -943,7 +944,7 @@ msgstr ""
 #: code:addons/account/models/account.py:535
 #, python-format
 msgid "A bank account can only belong to one journal."
-msgstr ""
+msgstr "Akun Bank hanya dapat digunakan untuk satu jurnal"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -987,7 +988,7 @@ msgstr "Daftar pajak dan tarif mereka."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of your customer and supplier payment terms."
-msgstr ""
+msgstr "Daftar Batas Waktu Pembayaran untuk Kustomer dan Supplier Anda"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1662,7 +1663,7 @@ msgstr "Semua garis entri Akun harus diproses untuk menutup pernyataan."
 #. module: account
 #: selection:account.config.settings,group_warning_account:0
 msgid "All the partners can be used in invoices"
-msgstr ""
+msgstr "Semua Partner Bisa Digunakan Dalam Invoice"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_update_posted
@@ -1732,6 +1733,7 @@ msgstr "Mengizinkan anda menggunakan akunting analitik"
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
@@ -1739,6 +1741,11 @@ msgstr "Mengizinkan anda menggunakan akunting analitik"
 #, python-format
 msgid "Amount"
 msgstr "Jumlah"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
+msgid "Amount Currency"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -1749,12 +1756,12 @@ msgstr "Jumlah Karena"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
 msgid "Amount Due in Company Currency"
-msgstr ""
+msgstr "Jumlah Sesuai Dengan Mata Uang Yang Digunakan Dalam Perusahaan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
 msgid "Amount Due in Invoice Currency"
-msgstr ""
+msgstr "Jumlah Sesuai Dengan Mata Uang Yang Digunakan Dalam Invoice"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
@@ -1875,7 +1882,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_tag_menu
 msgid "Analytic Accounts Tags"
-msgstr ""
+msgstr "Tag Akun Analisis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_analytic
@@ -1903,7 +1910,7 @@ msgstr "Baris Analitik"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Tag Analisis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_account_analytic_id
@@ -1923,12 +1930,12 @@ msgstr "Baris-baris Analitik"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_analytic_tag_ids
 msgid "Analytic tags"
-msgstr ""
+msgstr "Tag Analisis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_exigible
 msgid "Appears in VAT report"
-msgstr ""
+msgstr "Muncul Di Laporan VAT"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_applicability
@@ -1977,6 +1984,9 @@ msgid ""
 "\n"
 "-This installs the module account_asset."
 msgstr ""
+"Asset management: Memungkinkan Anda mengelola aset-aset yang dimiliki oleh perusahaan maupun perorangan. Juga dapat melacak penyusutan yang terjadi pada aset-aset tersebut. dan Terbentuknya account move dari deretan penyusutan tsb.\n"
+"\n"
+"-Ini Akan Menginstall Modul account_aset"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -2056,7 +2066,7 @@ msgstr "paruh"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Bad Debtor"
-msgstr ""
+msgstr "Debitur Buruk"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2140,7 +2150,7 @@ msgstr "Akun bank awalan"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_bank_account_code_prefix
 msgid "Bank Accounts Prefix *"
-msgstr ""
+msgstr "Akun Bank Prefix *"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_statements_source
@@ -2248,7 +2258,7 @@ msgstr "Dasar"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "Base Amount"
-msgstr ""
+msgstr "Basis Jumlah"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2262,7 +2272,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "Milik Penguna Perusahaan Saat Ini"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2521,7 +2531,7 @@ msgstr "Tunai akun awalan"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_cash_account_code_prefix
 msgid "Cash Accounts Prefix *"
-msgstr ""
+msgstr "Akun Kas Prefix *"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:203
@@ -2629,6 +2639,8 @@ msgid ""
 "Chart of Accounts has been\n"
 "                            installed. You should review it and create any additional accounts."
 msgstr ""
+"Chart of Account telah diinstal. Anda harus meninjau kembali dan membuat "
+"akun tambahan"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_list
@@ -2915,7 +2927,7 @@ msgstr "Mata uang perusahaan"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_company_currency_id
 msgid "Company currency id"
-msgstr ""
+msgstr "id Mata Uang Perusahaan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_has_chart_of_accounts
@@ -3163,7 +3175,7 @@ msgstr "Buat draft pengembalian"
 #. module: account
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Create and post move"
-msgstr ""
+msgstr "Membuat dan Menampilkan Pergerakan"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:248
@@ -3182,7 +3194,7 @@ msgstr "Membuat tagihan tagihan"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:81
 #, python-format
 msgid "Create model"
-msgstr ""
+msgstr "Membuat Model"
 
 #. module: account
 #. openerp-web
@@ -3335,7 +3347,7 @@ msgstr "Kredit"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_credit_card
 msgid "Credit Card"
-msgstr ""
+msgstr "Kartu kredit"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -3345,7 +3357,7 @@ msgstr "Catatan kredit"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_credit_account_id
 msgid "Credit account"
-msgstr ""
+msgstr "Akun Kredit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_credit
@@ -3474,7 +3486,7 @@ msgstr "Pelanggan Pembayaran"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_payment_term_id
 msgid "Customer Payment Terms"
-msgstr ""
+msgstr "Batas waktu pembayaran Kustomer"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -3573,7 +3585,7 @@ msgstr "Metode debit"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_debit_account_id
 msgid "Debit account"
-msgstr ""
+msgstr "Akun Debit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_debit
@@ -4021,11 +4033,6 @@ msgid "Email composition wizard"
 msgstr "Petunjuk komposisi email"
 
 #. module: account
-#: model:ir.model,name:account.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "Pemandu penyusun email untuk Survey"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_enable_filter
 msgid "Enable Comparison"
 msgstr "Izinkan Perbandingan"
@@ -4441,12 +4448,12 @@ msgstr "Bebas referensi"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Payable accounts"
-msgstr ""
+msgstr "Dari Akun Hutang"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Receivable accounts"
-msgstr ""
+msgstr "Dari Akun Piutang"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -5276,19 +5283,19 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:587
 #, python-format
 msgid ""
-"Invoice must be in draft,Pro-forma or open state in order to be cancelled."
+"Invoice must be in draft, Pro-forma or open state in order to be cancelled."
 msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
 #, python-format
-msgid "Invoice must be paid in order to set it to register payemnt."
+msgid "Invoice must be paid in order to set it to register payment."
 msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
-msgid "Invoice must be validated in order to set it to register payemnt."
+msgid "Invoice must be validated in order to set it to register payment."
 msgstr ""
 
 #. module: account
@@ -7354,6 +7361,12 @@ msgid "Please create some invoice lines."
 msgstr "Harap membuat tagihan beberapa baris."
 
 #. module: account
+#: code:addons/account/models/account_move.py:140
+#, python-format
+msgid "Please define a sequence for the refunds"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:141
 #, python-format
 msgid "Please define a sequence on the journal."
@@ -8999,6 +9012,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_line_amount_currency
+#: model:ir.model.fields,help:account.field_account_analytic_line_analytic_amount_currency
 msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
@@ -9007,7 +9021,7 @@ msgstr ""
 "perusahaan satu."
 
 #. module: account
-#: code:addons/account/models/account_move.py:426
+#: code:addons/account/models/account_move.py:436
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"

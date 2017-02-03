@@ -11,6 +11,15 @@ class Inventory(models.Model):
     _name = "stock.inventory"
     _description = "Inventory"
 
+    @api.model
+    def _default_location_id(self):
+        company_user = self.env.user.company_id
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
+        if warehouse:
+            return warehouse.lot_stock_id.id
+        else:
+            raise UserError(_('You must define a warehouse for the company: %s.') % (company_user.name,))
+
     name = fields.Char(
         'Inventory Reference',
         readonly=True, required=True,
@@ -43,7 +52,7 @@ class Inventory(models.Model):
         'stock.location', 'Inventoried Location',
         readonly=True, required=True,
         states={'draft': [('readonly', False)]},
-        default=lambda self: getattr(self.env.ref('stock.warehouse0', raise_if_not_found=False) or self.env['stock.warehouse'], 'lot_stock_id').id)
+        default=_default_location_id)
     product_id = fields.Many2one(
         'product.product', 'Inventoried Product',
         readonly=True,
@@ -114,6 +123,11 @@ class Inventory(models.Model):
             self.category_id = False
         if self.filter == 'product':
             self.exhausted = True
+
+    @api.onchange('location_id')
+    def onchange_location_id(self):
+        if self.location_id.company_id:
+            self.company_id = self.location_id.company_id
 
     @api.one
     @api.constrains('filter', 'product_id', 'lot_id', 'partner_id', 'package_id')
@@ -195,6 +209,11 @@ class Inventory(models.Model):
         # Empty recordset of products to filter
         products_to_filter = self.env['product.product']
 
+        # case 0: Filter on company
+        if self.company_id:
+            domain += ' AND company_id = %s'
+            args += (self.company_id.id,)
+        
         #case 1: Filter on One owner only or One product for a specific owner
         if self.partner_id:
             domain += ' AND owner_id = %s'
@@ -319,11 +338,11 @@ class InventoryLine(models.Model):
             theoretical_qty = self.product_id.uom_id._compute_quantity(theoretical_qty, self.product_uom_id)
         self.theoretical_qty = theoretical_qty
 
-    @api.onchange('product_id', 'product_uom_id')
-    def onchange_product_or_uom(self):
+    @api.onchange('product_id')
+    def onchange_product(self):
         res = {}
         # If no UoM or incorrect UoM put default one from product
-        if self.product_id and (not self.product_uom_id or self.product_id.uom_id.category_id != self.product_uom_id.category_id):
+        if self.product_id:
             self.product_uom_id = self.product_id.uom_id
             res['domain'] = {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return res

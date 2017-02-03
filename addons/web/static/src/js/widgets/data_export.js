@@ -403,6 +403,7 @@ var DataExport = Dialog.extend({
     },
     add_field: function(field_id, string) {
         var $field_list = this.$('.o_fields_list');
+        field_id = this.records[field_id].value || field_id;
         if($field_list.find("option[value='" + field_id + "']").length === 0) {
             $field_list.append(new Option(string, field_id));
         }

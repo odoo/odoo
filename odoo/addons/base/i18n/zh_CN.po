@@ -3,15 +3,16 @@
 # * base
 # 
 # Translators:
-# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
-# zhanghao <zhanghao@jointd.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Yuan Xulei <hi@yxl.name>, 2016
+# 卓忆科技 <zhanghao@jointd.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-11-14 15:54+0000\n"
-"Last-Translator: zhanghao <zhanghao@jointd.com>, 2016\n"
+"POT-Creation-Date: 2017-01-27 11:58+0000\n"
+"PO-Revision-Date: 2017-01-27 11:58+0000\n"
+"Last-Translator: 卓忆科技 <zhanghao@jointd.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -204,9 +205,9 @@ msgstr ""
 "\n"
 "        **DOY =** 年中的一天, **SSS =** 序列号, **DD =** 校验数字\n"
 "\n"
-"    3) 客户参考 : +++RRR/RRRR/SSSDDD+++\n"
+"    3) 客户单号 : +++RRR/RRRR/SSSDDD+++\n"
 "\n"
-"        **R..R =** 客户参考而非数字字符, **SSS =** 序列号, **DD =** 校验数字  \n"
+"        **R..R =** 客户单号而非数字字符, **SSS =** 序列号, **DD =** 校验数字  \n"
 "\n"
 "        \n"
 "\n"
@@ -983,21 +984,20 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"\\n\n"
-"面向商业的社交网络\\n\n"
-"===================================\\n\n"
-"社会化网络模块提供了一个统一的社交网络抽象层，通过一个完全集成电子邮件和消息管理系统，允许应用基于单据展示完整的通信记录。\\n\n"
-"\\n\n"
-"它使用户能阅读和发送消息以及电子邮件。它还提供一个组合了订阅机制的反馈页面，允许通过关注单据并不断的得到最新消息。\\n\n"
-"\\n\n"
-"主要特性\\n\n"
-"---------\\n\n"
-"* 干净和更新的沟通历史，任何Odoo单据，它可作为讨论话题； \\n\n"
-"* 订阅机制，用来得最新消息；\\n\n"
-"* 统一反馈页面，用来查看最新消息和随后文件活动；\\n\n"
-"* 用户沟通，通过反馈页面；\\n\n"
-"* 基于单据的线程讨论设计；\\n\n"
-"* 依赖于全局发送邮件服务器，一个集成的邮件管理系统，允许通过可配置调度处理引擎来发送电子邮件；\\n\n"
+"面向商业的社交网络\n"
+"===================================\n"
+"社会化网络模块提供了一个统一的社交网络抽象层，通过一个完全集成电子邮件和消息管理系统，允许应用基于单据展示完整的通信记录。\n"
+"\n"
+"它使用户能阅读和发送消息以及电子邮件。它还提供一个组合了订阅机制的反馈页面，允许通过关注单据并不断的得到最新消息。\n"
+"\n"
+"主要特性\n"
+"---------\n"
+"* 干净和更新的沟通历史，任何Odoo单据，它可作为讨论话题； \n"
+"* 订阅机制，用来得最新消息；\n"
+"* 统一反馈页面，用来查看最新消息和随后文件活动；\n"
+"* 用户沟通，通过反馈页面；\n"
+"* 基于单据的线程讨论设计；\n"
+"* 依赖于全局发送邮件服务器，一个集成的邮件管理系统，允许通过可配置调度处理引擎来发送电子邮件；\n"
 "* 包括一个可扩展的通用电子邮件撰写助手，它变为邮件群发助手，能解释简单*占位符表达式*，从而在电子邮件被真正发送时使用动态数据。"
 
 #. module: base
@@ -1908,13 +1908,13 @@ msgstr ""
 "============================\n"
 "\n"
 "本应用允许管理雇员每日费用. 提供访问雇员薪酬记录、提供权限完成确认和拒绝记录.在完成确认后创建雇员发票 .\n"
-"雇员能够编码他们的费用和确认流程，由管理员确认后自动完成记账.\n"
+"雇员能够编码他们的费用和确认流程，由经理确认后自动完成记账.\n"
 "\n"
 "\n"
 "整个流程实现:\n"
 "---------------------------------\n"
 "* 费用草稿\n"
-"* 由雇员提交到他的管理员\n"
+"* 由雇员提交到他的经理\n"
 "* 经理确认\n"
 "* 会计师确认和记账条目生成\n"
 "\n"
@@ -2320,7 +2320,7 @@ msgid ""
 "===========================\n"
 msgstr ""
 "\n"
-"Odoo 客户参考\n"
+"Odoo 客户单号\n"
 "===========================\n"
 
 #. module: base
@@ -4169,6 +4169,19 @@ msgid ""
 "still unreserve a picking.\n"
 "    "
 msgstr ""
+"\n"
+"当销售订单确认此模块会自动从库存保留拣货\n"
+"============================================================================================\n"
+"在销售订单确认或数量增加后，\n"
+"如果需要的数量可用，此分拣就会从库存中被保留。\n"
+"\n"
+"\n"
+"通过最简单的配置, 这个模块就可以工作：\n"
+"先来的，先服务。 并且, 当未安装时\n"
+"您可以手动保留或在考虑预期日期和优先级的情况下运行计划。\n"
+"\n"
+"如果此自动预留会预留太多，您可以\n"
+"只保留一个分拣。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban_gauge
@@ -4363,18 +4376,17 @@ msgstr ""
 "\n"
 "车辆、租赁、保险、花费\n"
 "==================================\n"
-"使用此模块，Odoo帮助你管理你的车辆，\n"
-"包括与车辆相关的合同，服务，加油记录，以及其它管理车辆\n"
-"服务，加油记录，以及其它管理车辆\n"
-"或车队所必须的要素。\n"
+"使用此模块，Odoo帮助您管理您的所有车辆，\n"
+"包括与车辆相关的合同，保养服务，加油记录，里程表，花费，\n"
+"以及其它车辆管理的必要功能。\n"
 "\n"
 "主要特性\n"
 "-------------\n"
 "* 为车队增加车辆\n"
 "* 管理车辆合同\n"
 "* 车辆合同到期提醒\n"
-"* 为所有车辆增加服务、加油记录、里程表\n"
-"* 显示某一车辆或某一种服务的所有费用\n"
+"* 为所有车辆增加保养、加油记录、里程表\n"
+"* 显示某一车辆或某种服务类型的所有费用\n"
 "* 费用图表分析\n"
 
 #. module: base
@@ -5717,7 +5729,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Arch 文件名"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
@@ -5895,6 +5907,12 @@ msgstr "通过 Gengo API 自动翻译"
 #: model:ir.model.fields,field_description:base.field_ir_module_module_auto_install
 msgid "Automatic Installation"
 msgstr "自动安装"
+
+#. module: base
+#: code:addons/base/module/module.py:650
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
@@ -7560,14 +7578,14 @@ msgstr "货币代码（ISO 4217）"
 #: model:ir.model,name:base.model_res_currency_rate
 #: model:ir.ui.view,arch_db:base.view_currency_rate_form
 msgid "Currency Rate"
-msgstr "汇率"
+msgstr "货币比率"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_view_currency_rates
 #: model:ir.ui.view,arch_db:base.view_currency_rate_search
 #: model:ir.ui.view,arch_db:base.view_currency_rate_tree
 msgid "Currency Rates"
-msgstr "汇率"
+msgstr "货币比率"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_symbol
@@ -7582,7 +7600,7 @@ msgstr "当前公司"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate
 msgid "Current Rate"
-msgstr "当前汇率"
+msgstr "当前比率"
 
 #. module: base
 #: selection:ir.actions.act_window,target:0
@@ -7650,7 +7668,7 @@ msgstr "客户点评"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_customer
 msgid "Customer References"
-msgstr "客户参考"
+msgstr "客户单号"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -8489,7 +8507,7 @@ msgstr "活动"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event
 msgid "Events Organization"
-msgstr ""
+msgstr "活动组织"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale
@@ -9081,7 +9099,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_email_formatted
 #: model:ir.model.fields,field_description:base.field_res_users_email_formatted
 msgid "Formatted Email"
-msgstr ""
+msgstr "格式化的邮件"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum
@@ -9643,7 +9661,7 @@ msgstr "帮你管理你的工资表"
 msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
-msgstr "帮助你管理你的项目和任务，通过跟踪它们，生成计划等"
+msgstr "帮助你管理你的项目和任务，通过跟踪它们，生成规划等"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_purchase_management
@@ -9754,7 +9772,7 @@ msgstr "HR招聘面试表单"
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_survey
 msgid "Human Resources Survey"
-msgstr ""
+msgstr "人力资源调查"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu
@@ -13217,7 +13235,7 @@ msgstr "发布你的经销商渠道"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_customer
 msgid "Publish Your Customer References"
-msgstr "发布你的客户参考"
+msgstr "发布你的客户单号"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_published_version
@@ -13367,7 +13385,7 @@ msgstr "比率"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate_ids
 msgid "Rates"
-msgstr "汇率"
+msgstr "比率"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access_perm_read
@@ -14072,7 +14090,7 @@ msgstr "安全与身份验证"
 #: code:addons/base/ir/ir_fields.py:305
 #, python-format
 msgid "See all possible values"
-msgstr "查看所有可能的值"
+msgstr "查看所有的可能值"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_model_object_field
@@ -15382,12 +15400,12 @@ msgstr "用整数表示的工作优先级：0表示高优先级，10表示低优
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate_rate
 msgid "The rate of the currency to the currency of rate 1"
-msgstr "货币与货币之间的汇兑比率（中国国内企业应将其设置为本位币，本位币的汇率为1比1）"
+msgstr "币别到其他币别的比率为 1"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate
 msgid "The rate of the currency to the currency of rate 1."
-msgstr "币别到其他币别的汇率为 1"
+msgstr "币别到其他币别的比率为 1"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_res_id
@@ -15648,6 +15666,13 @@ msgstr "将要移除的模块"
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
 msgstr "将要升级的"
+
+#. module: base
+#: code:addons/base/module/module.py:651
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -16453,7 +16478,7 @@ msgstr "视图名称"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_form
 msgid "View Rates"
-msgstr "查看汇率"
+msgstr "查看比率"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_id

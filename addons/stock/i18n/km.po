@@ -5,13 +5,15 @@
 # Translators:
 # Sengtha Chay <sengtha@gmail.com>, 2016
 # Samkhann Seang <seangsamkhann@gmail.com>, 2016
+# Chan Nath <channath@gmail.com>, 2016
+# AN Souphorn <ansouphorn@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-22 14:03+0000\n"
 "PO-Revision-Date: 2016-11-22 14:03+0000\n"
-"Last-Translator: Samkhann Seang <seangsamkhann@gmail.com>, 2016\n"
+"Last-Translator: AN Souphorn <ansouphorn@gmail.com>, 2017\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1279,7 +1281,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Content"
-msgstr ""
+msgstr "មាតិកា"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_posx
@@ -1472,7 +1474,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_create_date
 #: model:ir.model.fields,field_description:stock.field_stock_quant_create_date
 msgid "Creation Date"
-msgstr ""
+msgstr "ថ្ងៃបង្កើត"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_date
@@ -1866,7 +1868,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_lot_form
 msgid "Discard"
-msgstr ""
+msgstr "បោះបង់"
 
 #. module: stock
 #: model:stock.location,name:stock.location_dispatch_zone
@@ -1974,7 +1976,7 @@ msgstr ""
 #: selection:stock.inventory,state:0 selection:stock.picking,state:0
 #: selection:stock.scrap,state:0
 msgid "Draft"
-msgstr ""
+msgstr "ព្រៀង"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2220,7 +2222,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Group By"
-msgstr ""
+msgstr "Group By"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -5311,7 +5313,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_sequence
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Sequence"
-msgstr ""
+msgstr "Sequence"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:658
@@ -6990,6 +6992,12 @@ msgid "You may only return Done pickings"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:21
+#, python-format
+msgid "You must define a warehouse for the company: %s."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move.py:553
 #: code:addons/stock/models/stock_pack_operation.py:234
 #, python-format
@@ -7158,7 +7166,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "on"
-msgstr ""
+msgstr "នៅ"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

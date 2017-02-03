@@ -15,8 +15,13 @@ class PaymentTransaction(models.Model):
     def _generate_and_pay_invoice(self, tx, acquirer_name):
         tx.sale_order_id._force_lines_to_invoice_policy_order()
 
-        created_invoice = tx.sale_order_id.action_invoice_create()
-        created_invoice = self.env['account.invoice'].browse(created_invoice)
+        # force company to ensure journals/accounts etc. are correct
+        # company_id needed for default_get on account.journal
+        # force_company needed for company_dependent fields
+        ctx_company = {'company_id': tx.sale_order_id.company_id.id,
+                       'force_company': tx.sale_order_id.company_id.id}
+        created_invoice = tx.sale_order_id.with_context(**ctx_company).action_invoice_create()
+        created_invoice = self.env['account.invoice'].browse(created_invoice).with_context(**ctx_company)
 
         if created_invoice:
             _logger.info('<%s> transaction completed, auto-generated invoice %s (ID %s) for %s (ID %s)',

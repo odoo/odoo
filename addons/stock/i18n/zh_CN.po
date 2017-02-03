@@ -3,14 +3,16 @@
 # * stock
 # 
 # Translators:
-# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# 卓忆科技 <zhanghao@jointd.com>, 2016
+# Yuan Xulei <hi@yxl.name>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-22 14:03+0000\n"
 "PO-Revision-Date: 2016-11-22 14:03+0000\n"
-"Last-Translator: Jeffery Chen Fan <jeffery9@gmail.com>, 2016\n"
+"Last-Translator: Yuan Xulei <hi@yxl.name>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -705,7 +707,7 @@ msgstr "一次性全部"
 msgid ""
 "All items couldn't be shipped, the remaining ones will be shipped as soon as"
 " they become available."
-msgstr ""
+msgstr "产品尚未全部运送完毕，剩余产品有货时会立刻运送。"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:90
@@ -2895,7 +2897,7 @@ msgstr "盘亏"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "Inventory Move"
-msgstr "存货调拨"
+msgstr "库存移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_name
@@ -2954,14 +2956,14 @@ msgstr "是一个退货位置？"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_scrap_location
 msgid "Is a Scrap Location?"
-msgstr "是一个废品位置？"
+msgstr "是一个报废位置？"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "It is also possible to import your initial inventory from an Excel or CSV file.\n"
 "                        If you want to do that, contact your Odoo project manager."
-msgstr "你可以用excel或者CSV文件导入你的期初库存，如果想那么做的话，可以联系你的项目管理员"
+msgstr "你可以用excel或者CSV文件导入你的期初库存，如果想那么做的话，可以联系你的项目经理"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3281,7 +3283,7 @@ msgstr "批次拆分"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "批次/序列"
+msgstr "批次/序列号"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_lot_id
@@ -5135,7 +5137,7 @@ msgstr "保留"
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
 msgid "Reserve products immediately after the sale order confirmation"
-msgstr ""
+msgstr "销售订单确认后立即保留产品"
 
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
@@ -7123,6 +7125,12 @@ msgstr ""
 #, python-format
 msgid "You may only return Done pickings"
 msgstr "你只能退回已完成的分拣"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:21
+#, python-format
+msgid "You must define a warehouse for the company: %s."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:553

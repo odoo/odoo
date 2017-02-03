@@ -9,8 +9,9 @@
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
-# Marko Happonen <marko.happonen@sprintit.fi>, 2016
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2016
+# Marko Happonen <marko.happonen@sprintit.fi>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 msgid ""
@@ -547,12 +548,12 @@ msgstr "Voidaan myydä"
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Peru"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_category_id
 msgid "Category"
-msgstr "Categoría"
+msgstr "Ryhmä"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_type
@@ -563,13 +564,13 @@ msgstr "Ryhmän tyyppi"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "Ryhmän nimi"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:427
 #, python-format
 msgid "Category: %s"
-msgstr ""
+msgstr "Ryhmä: %s"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -672,7 +673,7 @@ msgstr "Yritys"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_company_id
 msgid "Company id"
-msgstr ""
+msgstr "Yrityksen tunniste"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -682,7 +683,7 @@ msgstr "Laske hinta"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "Compute price"
-msgstr ""
+msgstr "Laske hinta"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
@@ -843,7 +844,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Asiakkaan viite"
 
 #. module: product
 #: model:product.product,name:product.product_delivery_02
@@ -1376,7 +1377,7 @@ msgstr "Sisäinen"
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
 #: model:ir.model.fields,field_description:product.field_product_template_categ_id
 msgid "Internal Category"
-msgstr "Sisäinen kategoria"
+msgstr "Sisäinen ryhmä"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_code
@@ -1496,7 +1497,7 @@ msgstr "Pituus / Etäisyys"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_attribute_line_ids
 msgid "Lines"
-msgstr "Detalle"
+msgstr "Rivit"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -1663,7 +1664,7 @@ msgstr "Lisätiedot"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Other Information"
-msgstr "Otra Información"
+msgstr "Lisätiedot"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_base_pricelist_id
@@ -1941,7 +1942,7 @@ msgstr "Tuoteryhmät"
 #: model:ir.model,name:product.model_product_category
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_categ_id
 msgid "Product Category"
-msgstr "Tuote kategoria"
+msgstr "Tuoteryhmä"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2049,6 +2050,11 @@ msgstr "Tuotteet: "
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "Julkinen hinta"
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "Public Pricelist"
+msgstr "Julkinen hinnasto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
@@ -2734,11 +2740,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.pricelist,name:product.list0
-msgid "USD"
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Ultrafast wireless."
@@ -3214,22 +3215,22 @@ msgstr "unssi(a)"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_line
 msgid "product.attribute.line"
-msgstr ""
+msgstr "product.attribute.line"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_price
 msgid "product.attribute.price"
-msgstr ""
+msgstr "product.attribute.price"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
 msgid "product.attribute.value"
-msgstr ""
+msgstr "product.attribute.value"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_history
 msgid "product.price.history"
-msgstr ""
+msgstr "product.price.history"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_qt
@@ -3255,7 +3256,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "report.product.report_pricelist"
-msgstr ""
+msgstr "report.product.report_pricelist"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form

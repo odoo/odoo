@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2015-09-07 16:38+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
@@ -43,6 +43,12 @@ msgid "Close"
 msgstr "Zatvori"
 
 #. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:31
+#, python-format
+msgid "Could not select database '%s'"
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
 msgid "Created by"
 msgstr "Kreirao"
@@ -58,20 +64,10 @@ msgid "Display Name"
 msgstr "Ime za prikaz"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:94
+#: code:addons/base_import_module/models/ir_module.py:96
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "Fajl '%s'  je prešao maksimalnu dozvoljenu veličinu"
-
-#. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:86
-#, fuzzy, python-format
-msgid "File is not a zip file!"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Fajl nije zip datoteka!\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Datoteka nije zip datoteka!"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_force
@@ -95,32 +91,9 @@ msgid "Import App"
 msgstr "Aplikacija za import"
 
 #. module: base_import_module
-#: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
-#: model:ir.model,name:base_import_module.model_base_import_module
-#: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
-#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
-#, fuzzy
-msgid "Import Module"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Importuj modul\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Uvezi Modul"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
 msgid "Import message"
 msgstr "Poruka"
-
-#. module: base_import_module
-#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
-#, fuzzy
-msgid "Import module"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Importuj modul\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Uvezi modul"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module_imported
@@ -148,34 +121,16 @@ msgid "Module"
 msgstr "Modul"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_module_file
-#, fuzzy
-msgid "Module .ZIP file"
+#: code:addons/base_import_module/models/ir_module.py:86
+#, python-format
+msgid "No file sent."
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-".ZIP datoteka modula\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Modul .ZIP datoteka"
 
 #. module: base_import_module
-#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
-#, fuzzy
-msgid "Open Modules"
+#: code:addons/base_import_module/controllers/main.py:25
+#, python-format
+msgid "Only administrators can upload a module"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Otvoreni moduli\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Otvoreni Moduli"
-
-#. module: base_import_module
-#: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
-#, fuzzy
-msgid "Select module package to import (.zip file):"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Odaberi paket modula za import (npr. ,zip fajl):\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Selektuj paket modula za Uvoz (npr. ,zip fajl):"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_state
@@ -183,7 +138,7 @@ msgid "Status"
 msgstr "Status"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:33
+#: code:addons/base_import_module/models/ir_module.py:35
 #, python-format
 msgid "Unmet module dependencies: %s"
 msgstr ""

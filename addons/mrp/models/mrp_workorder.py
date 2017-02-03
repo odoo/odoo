@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 from odoo.addons import decimal_precision as dp
 
 
@@ -275,7 +275,8 @@ class MrpWorkorder(models.Model):
         raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')) and x.bom_line_id)
         for move in raw_moves:
             if move.unit_factor:
-                move.quantity_done += self.qty_producing * move.unit_factor
+                rounding = move.product_uom.rounding
+                move.quantity_done += float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding)
 
         # Transfer quantities from temporary to final move lots or make them final
         for move_lot in self.active_move_lot_ids:
@@ -377,8 +378,6 @@ class MrpWorkorder(models.Model):
         self.ensure_one()
         self.end_all()
         self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
-        if not self.production_id.workorder_ids.filtered(lambda x: x.state not in ('done','cancel')):
-            self.production_id.post_inventory() # User should put it to done manually
 
     @api.multi
     def end_previous(self, doall=False):

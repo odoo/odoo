@@ -290,9 +290,10 @@ class BaseModel(object):
                            VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
                            RETURNING id """, params)
         model = self.env['ir.model'].browse(cr.fetchone()[0])
-        self._context['todo'].append((10, model.modified, [list(params)]))
+        self._context['todo'].append((10, model.modified, [['name', 'info', 'transient']]))
 
-        if 'module' in self._context:
+        if self._module == self._context.get('module'):
+            # self._module is the name of the module that last extended self
             xmlid = 'model_' + self._name.replace('.', '_')
             cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
                        (xmlid, self._context['module']))
@@ -665,10 +666,11 @@ class BaseModel(object):
         methods = []
         for attr, func in getmembers(cls, is_constraint):
             for name in func._constrains:
-                if name not in cls._fields:
+                field = cls._fields.get(name)
+                if not field:
                     _logger.warning("method %s.%s: @constrains parameter %r is not a field name", cls._name, attr, name)
-                if not cls._fields[name].store:
-                    _logger.warning("method %s.%s: @constrains parameter %r is not stored", cls._name, attr, name)
+                if not (field.store or field.inverse):
+                    _logger.warning("method %s.%s: @constrains parameter %r is not writeable", cls._name, attr, name)
             methods.append(func)
 
         # optimization: memoize result on cls, it will not be recomputed
@@ -3553,6 +3555,8 @@ class BaseModel(object):
                     record._cache.update(record._convert_to_cache(new_vals, update=True))
                 for key in new_vals:
                     self._fields[key].determine_inverse(self)
+                # check Python constraints for inversed fields
+                self._validate_fields(set(new_vals) - set(old_vals))
 
         return True
 
@@ -3812,6 +3816,8 @@ class BaseModel(object):
         with self.env.protecting(protected_fields, record):
             for key in new_vals:
                 self._fields[key].determine_inverse(record)
+            # check Python constraints for inversed fields
+            record._validate_fields(set(new_vals) - set(old_vals))
 
         return record
 

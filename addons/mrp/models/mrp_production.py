@@ -94,7 +94,7 @@ class MrpProduction(models.Model):
         help="Bill of Materials allow you to define the list of required raw materials to make a finished product.")
     routing_id = fields.Many2one(
         'mrp.routing', 'Routing',
-        readonly=True, related='bom_id.routing_id', store=True,
+        readonly=True, compute='_compute_routing', store=True,
         help="The list of operations (list of work centers) to produce the finished product. The routing "
              "is mainly used to compute work center costs during operations and to plan future loads on "
              "work centers based on production planning.")
@@ -151,6 +151,15 @@ class MrpProduction(models.Model):
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     priority = fields.Selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
                                 readonly=True, states={'confirmed': [('readonly', False)]}, default='1')
+
+    @api.multi
+    @api.depends('bom_id.routing_id', 'bom_id.routing_id.operation_ids')
+    def _compute_routing(self):
+        for production in self:
+            if production.bom_id.routing_id.operation_ids:
+                production.routing_id = production.bom_id.routing_id.id
+            else:
+                production.routing_id = False
 
     @api.multi
     @api.depends('workorder_ids')
@@ -243,10 +252,6 @@ class MrpProduction(models.Model):
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
-    @api.onchange('bom_id')
-    def onchange_bom_id(self):
-        self.routing_id = self.bom_id.routing_id.id
-
     @api.model
     def create(self, values):
         if not values.get('name', False) or values['name'] == _('New'):
@@ -271,8 +276,8 @@ class MrpProduction(models.Model):
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             production._generate_raw_moves(lines)
             # Check for all draft moves whether they are mto or not
-            self._adjust_procure_method()
-            self.move_raw_ids.action_confirm()
+            production._adjust_procure_method()
+            production.move_raw_ids.action_confirm()
         return True
 
     def _generate_finished_moves(self):
@@ -345,7 +350,7 @@ class MrpProduction(models.Model):
             mto_route = False
         for move in self.move_raw_ids:
             product = move.product_id
-            routes = product.route_ids + product.categ_id.route_ids
+            routes = product.route_ids + product.route_from_categ_ids
             # TODO: optimize with read_group?
             pull = self.env['procurement.rule'].search([('route_id', 'in', [x.id for x in routes]), ('location_src_id', '=', move.location_id.id),
                                                         ('location_id', '=', move.location_dest_id.id)], limit=1)
@@ -474,18 +479,17 @@ class MrpProduction(models.Model):
         self.write({'state': 'cancel'})
         return True
 
-    @api.multi
     def _cal_price(self, consumed_moves):
+        self.ensure_one()
         return True
 
     @api.multi
     def post_inventory(self):
         for order in self:
-            moves_to_do = order.move_raw_ids
+            moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves_to_do.action_done()
-            #order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel')).move_validate()
             order._cal_price(moves_to_do)
-            moves_to_finish = order.move_finished_ids
+            moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
             moves_to_finish.action_done()
             for move in moves_to_finish:
                 #Group quants by lots

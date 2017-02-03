@@ -75,12 +75,13 @@ class MailController(http.Controller):
             return cls._redirect_to_messaging()
 
         # the record has a window redirection: check access rights
-        if not RecordModel.sudo(uid).check_access_rights('read', raise_exception=False):
-            return cls._redirect_to_messaging()
-        try:
-            record_sudo.sudo(uid).check_access_rule('read')
-        except AccessError:
-            return cls._redirect_to_messaging()
+        if uid is not None:
+            if not RecordModel.sudo(uid).check_access_rights('read', raise_exception=False):
+                return cls._redirect_to_messaging()
+            try:
+                record_sudo.sudo(uid).check_access_rule('read')
+            except AccessError:
+                return cls._redirect_to_messaging()
 
         url_params = {
             'view_type': record_action['view_type'],
@@ -114,7 +115,10 @@ class MailController(http.Controller):
         is_editable = request.env.user.has_group('base.group_no_one')
         partner_id = request.env.user.partner_id
         follower_id = None
-        for follower in request.env['mail.followers'].browse(follower_ids):
+        follower_recs = request.env['mail.followers'].sudo().browse(follower_ids)
+        res_ids = follower_recs.mapped('res_id')
+        request.env[res_model].browse(res_ids).check_access_rule("write")
+        for follower in follower_recs:
             is_uid = partner_id == follower.partner_id
             follower_id = follower.id if is_uid else follower_id
             followers.append({

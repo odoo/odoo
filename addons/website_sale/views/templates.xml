@@ -499,7 +499,7 @@
 
     <template inherit_id='website_sale.product' id="product_picture_magnify" customize_show="True" name="Activate Magnify">
         <xpath expr='//div[contains(@class, "js_sale")]' position='attributes'>
-            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
+            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-hover" />
         </xpath>
     </template>
 
@@ -1710,14 +1710,14 @@
         <div class="panel panel-info">
           <div class="panel-heading">Bill To:</div>
           <div class="panel-body">
-            <div t-field="order.partner_invoice_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
+            <div class='o_div_text_overflow' t-field="order.partner_invoice_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
           </div>
         </div>
         <t t-if="not order.only_services">
             <div class="panel panel-info">
               <div class="panel-heading">Ship To:</div>
               <div class="panel-body">
-                <div t-field="order.partner_shipping_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone']}" />
+                <div class='o_div_text_overflow' t-field="order.partner_shipping_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone']}" />
               </div>
             </div>
         </t>

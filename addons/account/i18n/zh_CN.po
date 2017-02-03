@@ -3,16 +3,18 @@
 # * account
 # 
 # Translators:
-# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Yuan Xulei <hi@yxl.name>, 2016
 # Talway <9010446@qq.com>, 2016
+# 老窦 北京 <2662059195@qq.com>, 2016
 # xiaobin wu <bd5dml@gmail.com>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"POT-Creation-Date: 2017-01-11 13:04+0000\n"
+"PO-Revision-Date: 2017-01-11 13:04+0000\n"
 "Last-Translator: Ted Wang <feiyuwang2012@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -71,7 +73,7 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-"*“草稿”状态是当用户使用\n"
+"*“草稿”状态是当用户使用，\n"
 "编码一个新的和未经证实的发票\n"
 "*“形式”状态时使用的发票没有发票号码,\n"
 "*“开放”状态时使用用户创建发票,发票号码是生成的。它保持打开状态,直到用户支付发票,\n"
@@ -471,7 +473,7 @@ msgstr "这个配置是你登录到公司相关。"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "<span>Duplicate</span>"
-msgstr "<span>复制</span>"
+msgstr "<span>副本</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1674,6 +1676,7 @@ msgstr "允许使用分析会计"
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
@@ -1681,6 +1684,11 @@ msgstr "允许使用分析会计"
 #, python-format
 msgid "Amount"
 msgstr "金额"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
+msgid "Amount Currency"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -2632,7 +2640,7 @@ msgstr "选择会计模板"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1890
 #, python-format
 msgid "Choose counterpart"
-msgstr "选择配对的"
+msgstr "选择对方"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_journal_form
@@ -3310,7 +3318,7 @@ msgstr "币种"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_currency_rate
 msgid "Currency Rate"
-msgstr "汇率"
+msgstr "货币比率"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_wizard_multi_charts_accounts_currency_id
@@ -3322,7 +3330,7 @@ msgstr "币按公司所在的国家。"
 #: code:addons/account/models/account_move.py:1339
 #, python-format
 msgid "Currency exchange rate difference"
-msgstr "货币汇率差异"
+msgstr "货币兑换比率差异"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -3892,7 +3900,7 @@ msgstr "检测到重复的供应商信息，你可能对同一个供应商账单
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_invoice_action_report_duplicate
 msgid "Duplicates"
-msgstr "重复"
+msgstr "副本"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:162
@@ -3919,11 +3927,6 @@ msgstr "要么通过两个，要么一个也不通过"
 #: model:ir.model,name:account.model_mail_compose_message
 msgid "Email composition wizard"
 msgstr "Email撰写向导"
-
-#. module: account
-#: model:ir.model,name:account.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "调查功能电子邮件撰写向导"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_enable_filter
@@ -4038,7 +4041,7 @@ msgstr "Excel 模板"
 #: code:addons/account/models/chart_template.py:185
 #, python-format
 msgid "Exchange Difference"
-msgstr "汇率差异"
+msgstr "兑换差异"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_currency_exchange_journal_id
@@ -4062,7 +4065,8 @@ msgid ""
 "Finance</strong> or the <strong>European Central Bank</strong>. You can "
 "activate this feature in the bottom of the"
 msgstr ""
-"汇率能自动的每天从 <strong>Yahoo 财务</strong> 或者 <strong>欧洲央行</strong>自动更新. 你可以激活此特性从"
+"兑换比率能自动的每天从 <strong>Yahoo 财务</strong> 或者 <strong>欧洲央行</strong>自动更新. "
+"你可以激活此特性从"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_expects_chart_of_accounts
@@ -4382,7 +4386,7 @@ msgstr "毛利润"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_income_currency_exchange_account_id
 #: model:ir.model.fields,field_description:account.field_res_company_income_currency_exchange_account_id
 msgid "Gain Exchange Rate Account"
-msgstr "汇率增益科目"
+msgstr "增益兑换比率科目"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form2
@@ -5048,7 +5052,7 @@ msgstr "发票号必须在公司范围内唯一"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_id
 msgid "Invoice Reference"
-msgstr "发票参考"
+msgstr "发票号"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
@@ -5097,20 +5101,20 @@ msgstr "发票确认前必须是草稿或形式发票状态。"
 #: code:addons/account/models/account_invoice.py:587
 #, python-format
 msgid ""
-"Invoice must be in draft,Pro-forma or open state in order to be cancelled."
-msgstr "发票必须处于草稿，形式或开放状态才能取消。"
+"Invoice must be in draft, Pro-forma or open state in order to be cancelled."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
 #, python-format
-msgid "Invoice must be paid in order to set it to register payemnt."
-msgstr "必须支付发票才能将其设置为注册付款。"
+msgid "Invoice must be paid in order to set it to register payment."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
-msgid "Invoice must be validated in order to set it to register payemnt."
-msgstr "登记付款前必须先确认发票。"
+msgid "Invoice must be validated in order to set it to register payment."
+msgstr ""
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -5863,7 +5867,7 @@ msgstr "损失科目"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_expense_currency_exchange_account_id
 #: model:ir.model.fields,field_description:account.field_res_company_expense_currency_exchange_account_id
 msgid "Loss Exchange Rate Account"
-msgstr "汇率损失科目"
+msgstr "损失兑换比率科目"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:184
@@ -6261,7 +6265,7 @@ msgstr "无匹配结果"
 msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
-msgstr "没有包含顾问的用户可以编辑之前到今天的账户。例如用它来做财政年度的锁定"
+msgstr "没有用户，包含顾问在内，能够在此日期之前（包括此日期）修改帐户。例如，使用它作为会计年度锁定。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_code_digits
@@ -6511,7 +6515,7 @@ msgid ""
 "Only users with the 'Adviser' role can edit accounts prior to and inclusive "
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
-msgstr "只有带有顾问角色的用户可以编辑从以前到今天的账户。例如用它来所偶定开启状态的财政年度的期间锁定"
+msgstr "只有具有“顾问”角色的用户才能在此日期之前（包括此日期）修改帐户。例如，使用它作为在开放会计年度内的期间锁定。"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -7047,7 +7051,7 @@ msgstr "价格百分比"
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price Tax Included"
-msgstr "价格百分比"
+msgstr "含税价格百分比"
 
 #. module: account
 #: selection:account.reconcile.model,second_amount_type:0
@@ -7104,6 +7108,12 @@ msgstr "请检查公司中设置的'移动账户'字段"
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "请创建发票明细行。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:140
+#, python-format
+msgid "Please define a sequence for the refunds"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:141
@@ -7388,7 +7398,7 @@ msgstr "数量"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_exchange_journal_id
 msgid "Rate Difference Journal"
-msgstr "汇率差异日记账"
+msgstr "比率差异日记账"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_description
@@ -8703,13 +8713,14 @@ msgstr "如果是多币种的分录，币种会用另外一个选项的币种呈
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_line_amount_currency
+#: model:ir.model.fields,help:account.field_account_analytic_line_analytic_amount_currency
 msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
 msgstr "如果不等于公司那一个，金额以相关科目的货币表示。"
 
 #. module: account
-#: code:addons/account/models/account_move.py:426
+#: code:addons/account/models/account_move.py:436
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
@@ -9037,7 +9048,7 @@ msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
 msgstr ""
-"这个能够让会计师管理分析账和交叉预算，一旦主预算和一般预算被定义下来，项目管理员就可以在每个相应的分析科目上设置计划的金额。\n"
+"这个能够让会计师管理分析账和交叉预算，一旦主预算和一般预算被定义下来，项目经理就可以在每个相应的分析科目上设置计划的金额。\n"
 "- 安装 account_budget"
 
 #. module: account
@@ -10022,7 +10033,7 @@ msgstr "你可以在这里设置你想要的格式。如果你离开自动格式
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
-msgstr "您不能在锁定日期 %s 之前和之后添加/修改条目"
+msgstr "你不能添加/修改 在锁定日期%s当日以及之前分录"
 
 #. module: account
 #: code:addons/account/models/account_move.py:187
@@ -10030,7 +10041,7 @@ msgstr "您不能在锁定日期 %s 之前和之后添加/修改条目"
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
-msgstr "在锁定日期之前，你不能添加/修改分录%s “检查公司的设置，或询问相关顾问”"
+msgstr "你不能添加/修改 在锁定日期%s当日以及之前的分录。检查公司设置，或询问具有“顾问”角色的人员"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:938
@@ -10220,7 +10231,7 @@ msgid ""
 "You should configure the 'Exchange Rate Journal' in the accounting settings,"
 " to manage automatically the booking of accounting entries related to "
 "differences between exchange rates."
-msgstr "你应该在会计设置中配置'汇率科目'，来自动的管理在汇率差异相关的日记账分录的预定"
+msgstr "你应该在会计设置中配置'兑换比率日记账'，来自动的管理在比率差异相关的日记账分录的预定"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1315
@@ -10229,7 +10240,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr "你应该在会计配置配置“汇率增益科目”，自动管理与汇率之间的差额的会计分录的预订"
+msgstr "你应该在会计配置配置“增益兑换比率科目”，自动管理与汇率之间的差额的会计分录的预订"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1317
@@ -10238,7 +10249,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr "你应该在会计配置配置“汇率损失科目”，自动管理与汇率之间的差额的会计分录的预订"
+msgstr "你应该在会计配置配置“损失兑换比率科目”，自动管理与汇率之间的差额的会计分录的预订"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:49

@@ -836,9 +836,6 @@ class expression(object):
                     new_leaf = create_substitution_leaf(leaf, dom_leaf, model)
                     push(new_leaf)
 
-            elif path[0] in MAGIC_COLUMNS:
-                push_result(leaf)
-
             # ----------------------------------------
             # PATH SPOTTED
             # -> many2one or one2many with _auto_join:
@@ -960,7 +957,14 @@ class expression(object):
 
                 if call_null:
                     o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                    push(create_substitution_leaf(leaf, ('id', o2m_op, select_distinct_from_where_not_null(cr, field.inverse_name, comodel._table)), model))
+                    # determine ids from field.inverse_name
+                    if comodel._fields[field.inverse_name].store:
+                        ids1 = select_distinct_from_where_not_null(cr, field.inverse_name, comodel._table)
+                    else:
+                        domain = [(field.inverse_name, '!=', False)]
+                        recs = comodel.search(domain).sudo().with_context(prefetch_fields=False)
+                        ids1 = recs.mapped(field.inverse_name).ids
+                    push(create_substitution_leaf(leaf, ('id', o2m_op, ids1), model))
 
             elif field.type == 'many2many':
                 rel_table, rel_id1, rel_id2 = field.relation, field.column1, field.column2
@@ -1134,8 +1138,8 @@ class expression(object):
         # final sanity checks - should never fail
         assert operator in (TERM_OPERATORS + ('inselect', 'not inselect')), \
             "Invalid operator %r in domain term %r" % (operator, leaf)
-        assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._fields \
-            or left in MAGIC_COLUMNS, "Invalid field %r in domain term %r" % (left, leaf)
+        assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._fields, \
+            "Invalid field %r in domain term %r" % (left, leaf)
         assert not isinstance(right, BaseModel), \
             "Invalid value %r in domain term %r" % (right, leaf)
 

@@ -169,6 +169,7 @@ class Attendee(models.Model):
                                                       'datas_fname': 'invitation.ics',
                                                       'datas': str(ics_file).encode('base64')})]
                 vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
+                vals['res_id'] = False
                 current_mail = self.env['mail.mail'].browse(mail_id)
                 current_mail.mail_message_id.write(vals)
                 mails_to_send |= current_mail
@@ -552,15 +553,15 @@ class Meeting(models.Model):
     def _get_recurrency_end_date(self):
         """ Return the last date a recurring event happens, according to its end_type. """
         self.ensure_one()
-        data = self.read(['final_date', 'recurrency', 'rrule_type', 'count', 'end_type', 'stop'])[0]
+        data = self.read(['final_date', 'recurrency', 'rrule_type', 'count', 'end_type', 'stop', 'interval'])[0]
 
         if not data.get('recurrency'):
             return False
 
         end_type = data.get('end_type')
         final_date = data.get('final_date')
-        if end_type == 'count' and all(data.get(key) for key in ['count', 'rrule_type', 'stop']):
-            count = data['count'] + 1
+        if end_type == 'count' and all(data.get(key) for key in ['count', 'rrule_type', 'stop', 'interval']):
+            count = (data['count'] + 1) * data['interval']
             delay, mult = {
                 'daily': ('days', 1),
                 'weekly': ('days', 7),
@@ -1071,7 +1072,7 @@ class Meeting(models.Model):
                 if self.month_by == 'date' and (self.day < 1 or self.day > 31):
                     raise UserError(_("Please select a proper day of the month."))
 
-                if self.month_by == 'day':  # Eg : Second Monday of the month
+                if self.month_by == 'day' and self.byday and self.week_list:  # Eg : Second Monday of the month
                     return ';BYDAY=' + self.byday + self.week_list
                 elif self.month_by == 'date':  # Eg : 16th of the month
                     return ';BYMONTHDAY=' + str(self.day)
@@ -1134,7 +1135,7 @@ class Meeting(models.Model):
             data['rrule_type'] = 'monthly'
 
         if rule._bymonthday:
-            data['day'] = rule._bymonthday[0]
+            data['day'] = list(rule._bymonthday)[0]
             data['month_by'] = 'date'
             data['rrule_type'] = 'monthly'
 
@@ -1357,11 +1358,11 @@ class Meeting(models.Model):
             super(Meeting, real_meetings).write(values)
 
             # set end_date for calendar searching
-            if values.get('recurrency') and values.get('end_type', 'count') in ('count', unicode('count')) and \
-                    (values.get('rrule_type') or values.get('count') or values.get('start') or values.get('stop')):
+            if any(field in values for field in ['recurrency', 'end_type', 'count', 'rrule_type', 'start', 'stop']):
                 for real_meeting in real_meetings:
-                    final_date = real_meeting._get_recurrency_end_date()
-                    super(Meeting, real_meeting).write({'final_date': final_date})
+                    if real_meeting.recurrency and real_meeting.end_type in ('count', unicode('count')):
+                        final_date = real_meeting._get_recurrency_end_date()
+                        super(Meeting, real_meeting).write({'final_date': final_date})
 
             attendees_create = False
             if values.get('partner_ids', False):
@@ -1461,7 +1462,8 @@ class Meeting(models.Model):
         for r in result:
             if r['user_id']:
                 user_id = type(r['user_id']) in (tuple, list) and r['user_id'][0] or r['user_id']
-                if user_id == self.env.user.id:
+                partner_id = self.env.user.partner_id.id
+                if user_id == self.env.user.id or partner_id in r.get("partner_ids", []):
                     continue
             if r['privacy'] == 'private':
                 for f in r.keys():

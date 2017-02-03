@@ -350,6 +350,13 @@ class Partner(models.Model, FormatAddress):
                 result['value'] = {key: convert(self.parent_id[key]) for key in address_fields}
         return result
 
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        if self.country_id:
+            return {'domain': {'state_id': [('country_id', '=', self.country_id.id)]}}
+        else:
+            return {'domain': {'state_id': []}}
+
     @api.onchange('email')
     def onchange_email(self):
         if not self.image and not self._context.get('yaml_onchange') and self.email:

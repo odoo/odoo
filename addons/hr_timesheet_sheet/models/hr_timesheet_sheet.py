@@ -27,7 +27,7 @@ class HrTimesheetSheet(models.Model):
             return (datetime.today() + relativedelta(weekday=0, days=-6)).strftime('%Y-%m-%d')
         elif r == 'year':
             return time.strftime('%Y-01-01')
-        return fields.date.context_today(self)
+        return fields.Date.context_today(self)
 
     def _default_date_to(self):
         user = self.env['res.users'].browse(self.env.uid)
@@ -38,7 +38,7 @@ class HrTimesheetSheet(models.Model):
             return (datetime.today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')
         elif r == 'year':
             return time.strftime('%Y-12-31')
-        return fields.date.context_today(self)
+        return fields.Date.context_today(self)
 
     def _default_employee(self):
         emp_ids = self.env['hr.employee'].search([('user_id', '=', self.env.uid)])

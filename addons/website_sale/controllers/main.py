@@ -498,8 +498,7 @@ class WebsiteSale(http.Controller):
                 shippings = Partner.sudo().search([("id", "child_of", order.partner_id.commercial_partner_id.ids)])
                 if partner_id not in shippings.mapped('id') and partner_id != order.partner_id.id:
                     return Forbidden()
-
-                Partner.browse(partner_id).sudo().update(checkout)
+                Partner.browse(partner_id).sudo().write(checkout)
         return partner_id
 
     def values_preprocess(self, order, mode, values):
@@ -522,7 +521,8 @@ class WebsiteSale(http.Controller):
         lang = request.lang if request.lang in request.website.mapped('language_ids.code') else None
         if lang:
             new_values['lang'] = lang
-
+        if mode == ('edit', 'billing') and order.partner_id.type == 'contact':
+            new_values['type'] = 'other'
         if mode[1] == 'shipping':
             new_values['parent_id'] = order.partner_id.commercial_partner_id.id
             new_values['type'] = 'delivery'
@@ -555,7 +555,7 @@ class WebsiteSale(http.Controller):
         else:
             if partner_id > 0:
                 if partner_id == order.partner_id.id:
-                        mode = ('edit', 'billing')
+                    mode = ('edit', 'billing')
                 else:
                     shippings = Partner.search([('id', 'child_of', order.partner_id.commercial_partner_id.ids)])
                     if partner_id in shippings.mapped('id'):

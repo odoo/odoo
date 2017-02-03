@@ -586,6 +586,22 @@ class WebClient(http.Controller):
 
 class Proxy(http.Controller):
 
+    @http.route('/web/proxy/load', type='json', auth="none")
+    def load(self, path):
+        """ Proxies an HTTP request through a JSON request.
+
+        It is strongly recommended to not request binary files through this,
+        as the result will be a binary data blob as well.
+
+        :param path: actual request path
+        :return: file content
+        """
+        from werkzeug.test import Client
+        from werkzeug.wrappers import BaseResponse
+
+        base_url = request.httprequest.base_url
+        return Client(request.httprequest.app, BaseResponse).get(path, base_url=base_url).data
+
     @http.route('/web/proxy/post/<path:path>', type='http', auth='user', methods=['GET'])
     def post(self, path):
         """Effectively execute a POST request that was hooked through user login"""
@@ -1217,7 +1233,7 @@ class Export(http.Controller):
         info = {}
         fields = self.fields_get(model)
         if ".id" in export_fields:
-            fields['.id'] = fields.pop('id', {'string': 'ID'})
+            fields['.id'] = fields.get('id', {'string': 'ID'})
 
         # To make fields retrieval more efficient, fetch all sub-fields of a
         # given field at the same time. Because the order in the export list is

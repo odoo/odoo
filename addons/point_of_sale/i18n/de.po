@@ -12,7 +12,6 @@
 # Henry Mineehen <info@mineehen.de>, 2016
 # Anja Funk <anja.funk@afimage.de>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
-# Rudolf Schnapka <rs@techno-flex.de>, 2016
 # Mathias Neef <mn@copado.de>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
 # Jasper Torlitz <inactive+jtorlitz@transifex.com>, 2016
@@ -22,6 +21,7 @@
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Maik Steinfeld <info@streward.de>, 2016
 # BT_astauder <andreas.stauder@brain-tec.ch>, 2016
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
 # Fabian Liesch <fabian.liesch@gmail.com>, 2016
 # Niki Waibel <niki.waibel@gmail.com>, 2016
 # Torsten Wichmann <t.wichmann@intero-technologies.de>, 2016
@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
+"POT-Creation-Date: 2016-12-22 13:48+0000\n"
+"PO-Revision-Date: 2016-12-22 13:48+0000\n"
 "Last-Translator: Torsten Wichmann <t.wichmann@intero-technologies.de>, 2016\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -64,6 +64,12 @@ msgstr "% discount"
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:72
+#, python-format
+msgid "(RESCUE FOR %(session)s)"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -288,11 +294,6 @@ msgstr "Buchungsjournal für den Verkauf"
 #: model:product.template,name:point_of_sale.partner_product_5_product_template
 msgid "Acsone.eu"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_activation
-msgid "Activation"
-msgstr "Aktivierung"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_active
@@ -552,8 +553,10 @@ msgid "Carrots"
 msgstr "Karotten"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:285
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_cash_control
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
+#, python-format
 msgid "Cash Control"
 msgstr "Kassenprüfung"
 
@@ -1283,13 +1286,6 @@ msgid "General Information"
 msgstr "Allgemeine Information"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_partner_weight
-msgid ""
-"Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
-msgstr "Ermöglicht automatische Zuweisung von Interessenten zu Partnern"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_sequence
 msgid "Gives the sequence order when displaying a list of product categories."
 msgstr "Reihenfolge in Liste der Produktkategorien"
@@ -1395,16 +1391,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image
 msgid "Image"
 msgstr "Bild"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_implemented_partner_ids
-msgid "Implementation References"
-msgstr "Implementierungsreferenzen"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_assigned_partner_id
-msgid "Implemented by"
-msgstr "Implementiert durch"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1598,16 +1584,6 @@ msgid "Lemon"
 msgstr "Zitronen"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_grade_id
-msgid "Level"
-msgstr "Ebene"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_partner_weight
-msgid "Level Weight"
-msgstr "Stufengewichtung"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_name
 msgid "Line No"
 msgstr "Zeile Nr."
@@ -1783,12 +1759,7 @@ msgid "Next Order"
 msgstr "Nächster Auftrag"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_review_next
-msgid "Next Partner Review"
-msgstr "Nächste Partnerbewertung"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:136
+#: code:addons/point_of_sale/models/pos_order.py:129
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
@@ -2114,11 +2085,6 @@ msgstr "Partner"
 #: model:pos.category,name:point_of_sale.partner_services
 msgid "Partner Services"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_partnership
-msgid "Partnership Date"
-msgstr "Beginn Partnerschaft"
 
 #. module: point_of_sale
 #. openerp-web

@@ -20,18 +20,20 @@
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
-# Frédéric LIETART <stuff@thelinuxfr.org>, 2016
+# Frédéric LIETART <stuff@tifred.fr>, 2016
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
 # Loic <loic.richard2@gmail.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
 # Sylvain LE GAL <sylvain.legal@grap.coop>, 2016
+# Alexis de Lattre <alexis@via.ecp.fr>, 2016
 # Henri Cornuau <hcornuau@gmail.com>, 2016
 # Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2016
 # ShevAbam <shevabam@gmail.com>, 2016
 # lucasdeliege <deliegelucas@gmail.com>, 2016
 # Nicolas Seinlet <nicolas@seinlet.com>, 2016
 # Benedicte HANET <hanetb@gmail.com>, 2016
+# zeroheure <xavier@alternatif.org>, 2016
 # Régis GEROMEGNACE <regis.geromegnace@gmail.com>, 2016
 # Nicolas JEUDY <nicolas@sudokeys.com>, 2016
 # Shark McGnark <peculiarcheese@gmail.com>, 2016
@@ -1957,7 +1959,7 @@ msgstr "Route de livraison"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_delivery
 msgid "Delivery Slip"
-msgstr "Bon de préparation"
+msgstr "Bon de livraison"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
@@ -3581,7 +3583,7 @@ msgstr "Réaliser les approvisionnements"
 #: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
-msgstr "Approvisionnement à la commande"
+msgstr "Approvisionner à la commande"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
@@ -5925,7 +5927,7 @@ msgstr "Démarrer l'inventaire"
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Status"
-msgstr "Statut"
+msgstr "État"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:92
@@ -7533,6 +7535,12 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:43
 #, python-format
 msgid "You may only return Done pickings"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:21
+#, python-format
+msgid "You must define a warehouse for the company: %s."
 msgstr ""
 
 #. module: stock

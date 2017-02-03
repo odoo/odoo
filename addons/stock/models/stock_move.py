@@ -411,6 +411,14 @@ class StockMove(models.Model):
         type (moves should already have them identical). Otherwise, create a new
         picking to assign them to. """
         Picking = self.env['stock.picking']
+
+        # If this method is called in batch by a write on a one2many and
+        # at some point had to create a picking, some next iterations could
+        # try to find back the created picking. As we look for it by searching
+        # on some computed fields, we have to force a recompute, else the
+        # record won't be found.
+        self.recompute()
+
         for move in self:
             picking = Picking.search([
                 ('group_id', '=', move.group_id.id),
@@ -567,7 +575,9 @@ class StockMove(models.Model):
                 # in case the move is returned, we want to try to find quants before forcing the assignment
                 if not move.origin_returned_move_id:
                     continue
-            if move.product_id.type == 'consu':
+            # if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
+            ancestors = move.find_move_ancestors()
+            if move.product_id.type == 'consu' and not ancestors:
                 moves_to_assign |= move
                 continue
             else:
@@ -576,8 +586,6 @@ class StockMove(models.Model):
                 # we always search for yet unassigned quants
                 main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
 
-                # if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
-                ancestors = move.find_move_ancestors()
                 if move.state == 'waiting' and not ancestors:
                     # if the waiting move hasn't yet any ancestor (PO/MO not confirmed yet), don't find any quant available in stock
                     main_domain[move.id] += [('id', '=', False)]
@@ -789,7 +797,11 @@ class StockMove(models.Model):
             # compute quantities for each lot + check quantities match
             lot_quantities = dict((pack_lot.lot_id.id, operation.product_uom_id._compute_quantity(pack_lot.qty, operation.product_id.uom_id)
             ) for pack_lot in operation.pack_lot_ids)
-            if operation.pack_lot_ids and float_compare(sum(lot_quantities.values()), operation.product_qty, precision_rounding=operation.product_uom_id.rounding) != 0.0:
+
+            qty = operation.product_qty
+            if operation.product_uom_id and operation.product_uom_id != operation.product_id.uom_id:
+                qty = operation.product_uom_id._compute_quantity(qty, operation.product_id.uom_id)
+            if operation.pack_lot_ids and float_compare(sum(lot_quantities.values()), qty, precision_rounding=operation.product_id.uom_id.rounding) != 0.0:
                 raise UserError(_('You have a difference between the quantity on the operation and the quantities specified for the lots. '))
 
             quants_taken = []
