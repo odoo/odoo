@@ -487,7 +487,7 @@ class Report(models.Model):
                 attachment = {
                     'name': filename,
                     'datas': datas,
-                    'datas_fname': report.attachment,
+                    'datas_fname': filename,
                     'res_model': model,
                     'res_id': docid,
                 }
