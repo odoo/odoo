@@ -50,9 +50,11 @@ var make_report_url = function (action) {
     // We may have to build a query string with `action.data`. It's the place
     // were report's using a wizard to customize the output traditionally put
     // their options.
+    var serialized_context = 'context=' + encodeURIComponent(JSON.stringify(action.context));
     if (_.isUndefined(action.data) || _.isNull(action.data) || (_.isObject(action.data) && _.isEmpty(action.data))) {
         if (action.context.active_ids) {
             var active_ids_path = '/' + action.context.active_ids.join(',');
+            active_ids_path += '?' + serialized_context
             // Update the report's type - report's url mapping.
             report_urls = _.mapObject(report_urls, function (value, key) {
                 return value += active_ids_path;
@@ -60,7 +62,7 @@ var make_report_url = function (action) {
         }
     } else {
         var serialized_options_path = '?options=' + encodeURIComponent(JSON.stringify(action.data));
-        serialized_options_path += '&context=' + encodeURIComponent(JSON.stringify(action.context));
+        serialized_options_path += '&' + serialized_context
         // Update the report's type - report's url mapping.
         report_urls = _.mapObject(report_urls, function (value, key) {
             return value += serialized_options_path;

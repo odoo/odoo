@@ -85,7 +85,10 @@ class ReportController(Controller):
         url, type = requestcontent[0], requestcontent[1]
         try:
             if type == 'qweb-pdf':
-                reportname = url.split('/report/pdf/')[1].split('?')[0]
+                url_split = url.split('/report/pdf/')[1].split('?')
+                reportname = url_split[0]
+                # decoding the args represented in JSON
+                data = url_decode(url_split[1]).items() if len(url_split) == 2 else {}
 
                 docids = None
                 if '/' in reportname:
@@ -93,10 +96,9 @@ class ReportController(Controller):
 
                 if docids:
                     # Generic report:
-                    response = self.report_routes(reportname, docids=docids, converter='pdf')
+                    response = self.report_routes(reportname, docids=docids, converter='pdf', **dict(data))
                 else:
                     # Particular report:
-                    data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
                     response = self.report_routes(reportname, converter='pdf', **dict(data))
 
                 report = request.env['report']._get_report_from_name(reportname)
