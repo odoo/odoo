@@ -2280,7 +2280,6 @@ class Many2many(_RelationalMulti):
             cr.execute('CREATE INDEX ON "%s" ("%s")' % (rel, id1))
             cr.execute('CREATE INDEX ON "%s" ("%s")' % (rel, id2))
             cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (rel, model._table, comodel._table))
-            cr.commit()
             _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", rel, model._table, comodel._table)
             return True
 

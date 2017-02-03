@@ -321,7 +321,6 @@ class Registry(Mapping):
         for model in models:
             model._auto_init()
             model.init()
-            cr.commit()
 
         while self._post_init_queue:
             func = self._post_init_queue.popleft()
@@ -343,7 +342,7 @@ class Registry(Mapping):
                 if name in missing:
                     _logger.info("Recreate table of model %s.", name)
                     env[name].init()
-                    cr.commit()
+            cr.commit()
             # check again, and log errors if tables are still missing
             for name, model in env.items():
                 if not model._abstract and not model._table_exist():
