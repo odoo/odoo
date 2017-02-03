@@ -755,21 +755,24 @@ class AccountBankStatementLine(models.Model):
             :param float amount: the amount of transaction that wasn't already reconciled
         """
         company_currency = self.journal_id.company_id.currency_id
-        statement_currency = self.currency_id or self.journal_id.currency_id or company_currency
+        statement_currency = self.journal_id.currency_id or company_currency
+        st_line_currency = self.currency_id or statement_currency
         amount_currency = False
         total_amount = 0
         # to prevent currency rounding error, we perform the following:
-        # we convert amount (which is in company_currency) in statement currency and multiply it by a ratio that is computed
+        # we convert amount (which is in company_currency) in statement currency (or journal currency) and multiply it by a ratio that is computed
         # by iterating over each account_move_line and converting their amount_currency to company_currency.
-        for aml in move.line_ids:
-            if aml.currency_id and aml.currency_id != company_currency:
-                total_amount += aml.currency_id.with_context({'date': self.date}).compute(-aml.amount_currency, company_currency, round=False)
-        if total_amount:
-            if float_compare(total_amount, amount, precision_digits=company_currency.rounding) == 0:
-                ratio = 1.0
-            else:
-                ratio = total_amount / amount
-            amount_currency = company_currency.with_context({'date': self.date}).compute(amount, statement_currency, round=False) * ratio
+        if st_line_currency != company_currency or statement_currency != company_currency:
+            for aml in move.line_ids:
+                if aml.currency_id and aml.currency_id != company_currency:
+                    total_amount += aml.currency_id.with_context({'date': self.date}).compute(-aml.amount_currency, company_currency, round=False)
+            if total_amount:
+                if float_compare(total_amount, amount, precision_digits=company_currency.rounding) == 0:
+                    ratio = 1.0
+                else:
+                    ratio = total_amount / amount
+                convert_currency = statement_currency != company_currency and statement_currency or st_line_currency
+                amount_currency = company_currency.with_context({'date': self.date}).compute(amount, convert_currency, round=False) * ratio
         return {
             'name': self.name,
             'date': self.date,
@@ -783,7 +786,7 @@ class AccountBankStatementLine(models.Model):
             'debit': amount > 0 and amount or 0.0,
             'statement_id': self.statement_id.id,
             'journal_id': self.statement_id.journal_id.id,
-            'currency_id': statement_currency != company_currency and statement_currency.id or False,
+            'currency_id': statement_currency != company_currency and statement_currency.id or (st_line_currency != company_currency and st_line_currency.id or False),
             'amount_currency': amount_currency,
         }
 
