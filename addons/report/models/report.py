@@ -425,8 +425,15 @@ class Report(models.Model):
             return self.render(report.report_name, docargs)
 
     @api.model
-    def get_pdf(self, docids, report_name, html=None, data=None, report_as_attachment=False):
+    def get_pdf(self, docids, report_name, html=None, data=None, attachment_name=None):
         """This method generates and returns pdf version of a report.
+
+        :param docids: The record ids.
+        :param report_name: The report name.
+        :param html:
+        :param data:
+        :param report_as_attachment:
+        :return:
         """
 
         if self._check_wkhtmltopdf() == 'install':
@@ -489,23 +496,21 @@ class Report(models.Model):
             context.get('set_viewport_size'),
         )
 
-        # Look for save_attachment both in the context and parameter
-        report_as_attachment = report_as_attachment or context.get('report_as_attachment')
+        # Look for attachment_name both in the context and parameter
+        attachment_name = attachment_name or context.get('attachment_name')
 
         # Save in attachment
-        if report_as_attachment and report.attachment:
+        if attachment_name:
             model = report.model
             for it, docid in enumerate(sorted_docids):
                 if not docid:
                     continue
                 with open(documents_paths[it], 'rb') as pdfdocument:
                     datas = base64.encodestring(pdfdocument.read())
-                record = self.env[model].browse(docid)
-                filename = safe_eval(report.attachment, {'object': record, 'time': time})
                 attachment_vals = {
-                    'name': filename,
+                    'name': attachment_name,
                     'datas': datas,
-                    'datas_fname': filename,
+                    'datas_fname': attachment_name,
                     'res_model': model,
                     'res_id': docid,
                 }

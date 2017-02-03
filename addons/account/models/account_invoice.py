@@ -391,8 +391,10 @@ class AccountInvoice(models.Model):
         """
         self.ensure_one()
         Report = self.env['report']
-        if not self.sent:
-            ctx = dict(self._context, report_as_attachment=True)
+        if not self.sent and self.state in ('open','paid'):
+            # attachment_name depending of invoice fields.
+            attachment_name = 'INV' + self.number.replace('/', '') + '.pdf'
+            ctx = dict(self._context, attachment_name=attachment_name)
             Report = Report.with_context(ctx)
         self.sent = True
         return Report.get_action(self, 'account.report_invoice')
