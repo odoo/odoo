@@ -366,6 +366,24 @@ class Report(models.Model):
 
         return headerhtml, contenthtml, footerhtml, sorted_docids, specific_paperformat_args
 
+    @api.model
+    def create_attachment(self, attachment_vals):
+        """Hook that can be used to modify the attachment before or directly after its creation.
+        For example, for e-invoicing in some countries, the attachment must contains additional
+        things like embedded files, signature of the company, etc.
+
+        :param attachment_vals: The attachment values.
+        :return: The attachment_id created or None in case of AccessError.
+        """
+        try:
+            attachment_id = self.env['ir.attachment'].create(attachment_vals)
+        except AccessError:
+            _logger.info("Cannot save PDF report %r as attachment", attachment_vals['name'])
+            return None
+        else:
+            _logger.info('The PDF document %s is now saved in the database', attachment_vals['name'])
+        return attachment_id
+
     #--------------------------------------------------------------------------
     # Main report methods
     #--------------------------------------------------------------------------
@@ -484,19 +502,14 @@ class Report(models.Model):
                     datas = base64.encodestring(pdfdocument.read())
                 record = self.env[model].browse(docid)
                 filename = safe_eval(report.attachment, {'object': record, 'time': time})
-                attachment = {
+                attachment_vals = {
                     'name': filename,
                     'datas': datas,
                     'datas_fname': filename,
                     'res_model': model,
                     'res_id': docid,
                 }
-                try:
-                    self.env['ir.attachment'].create(attachment)
-                except AccessError:
-                    _logger.info("Cannot save PDF report %r as attachment", filename)
-                else:
-                    _logger.info('The PDF document %s is now saved in the database', filename)
+                self.create_attachment(attachment_vals)
 
         temporary_file = []
         if len(documents_paths) > 1:
