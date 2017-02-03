@@ -143,12 +143,11 @@ class IrModel(models.Model):
     def _drop_table(self):
         for model in self:
             table = self.env[model.model]._table
-            self._cr.execute('select relkind from pg_class where relname=%s', (table,))
-            result = self._cr.fetchone()
-            if result and result[0] == 'v':
-                self._cr.execute('DROP view %s' % table)
-            elif result and result[0] == 'r':
-                self._cr.execute('DROP TABLE %s CASCADE' % table)
+            kind = tools.table_kind(self._cr, table)
+            if kind == 'v':
+                self._cr.execute('DROP VIEW "%s"' % table)
+            elif kind == 'r':
+                self._cr.execute('DROP TABLE "%s" CASCADE' % table)
         return True
 
     @api.multi
@@ -466,14 +465,9 @@ class IrModelFields(models.Model):
             if field.name in models.MAGIC_COLUMNS:
                 continue
             model = self.env[field.model]
-            self._cr.execute('SELECT relkind FROM pg_class WHERE relname=%s', (model._table,))
-            relkind = self._cr.fetchone()
-            self._cr.execute("""SELECT column_name FROM information_schema.columns
-                                WHERE table_name=%s AND column_name=%s""",
-                             (model._table, field.name))
-            column_name = self._cr.fetchone()
-            if column_name and (relkind and relkind[0] == 'r'):
-                self._cr.execute('ALTER table "%s" DROP column "%s" cascade' % (model._table, field.name))
+            if tools.column_exists(self._cr, model._table, field.name) and \
+                    tools.table_kind(self._cr, model._table) == 'r':
+                self._cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (model._table, field.name))
             if field.state == 'manual' and field.ttype == 'many2many':
                 rel_name = field.relation_table or model._fields[field.name].relation
                 tables_to_drop.add(rel_name)
@@ -946,15 +940,14 @@ class IrModelRelation(models.Model):
                 # as installed modules have defined this element we must not delete it!
                 continue
 
-            self._cr.execute("SELECT 1 FROM information_schema.tables WHERE table_name=%s", (name,))
-            if self._cr.fetchone():
+            if tools.table_exists(self._cr, name):
                 to_drop.add(name)
 
         self.unlink()
 
         # drop m2m relation tables
         for table in to_drop:
-            self._cr.execute('DROP TABLE %s CASCADE' % table,)
+            self._cr.execute('DROP TABLE "%s" CASCADE' % table,)
             _logger.info('Dropped table %s', table)
 
         self._cr.commit()
@@ -1185,12 +1178,10 @@ class IrModelData(models.Model):
     @api.model_cr_context
     def _auto_init(self):
         res = super(IrModelData, self)._auto_init()
-        self._cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_model_data_module_name_uniq_index'")
-        if not self._cr.fetchone():
-            self._cr.execute('CREATE UNIQUE INDEX ir_model_data_module_name_uniq_index ON ir_model_data (module, name)')
-        self._cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_model_data_model_res_id_index'")
-        if not self._cr.fetchone():
-            self._cr.execute('CREATE INDEX ir_model_data_model_res_id_index ON ir_model_data (model, res_id)')
+        tools.create_unique_index(self._cr, 'ir_model_data_module_name_uniq_index',
+                                  self._table, ['module', 'name'])
+        tools.create_index(self._cr, 'ir_model_data_model_res_id_index',
+                           self._table, ['model', 'res_id'])
         return res
 
     @api.multi

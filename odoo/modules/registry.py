@@ -15,7 +15,7 @@ import threading
 import odoo
 from .. import SUPERUSER_ID
 from odoo.tools import (assertion_report, lazy_classproperty, config,
-                        lazy_property, topological_sort, OrderedSet)
+                        lazy_property, table_exists, topological_sort, OrderedSet)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -333,7 +333,7 @@ class Registry(Mapping):
         # make sure all tables are present
         missing = [name
                    for name, model in env.items()
-                   if not model._abstract and not model._table_exist()]
+                   if not model._abstract and not table_exists(cr, model._table)]
         if missing:
             _logger.warning("Models have no table: %s.", ", ".join(missing))
             # recreate missing tables following model dependencies
@@ -345,7 +345,7 @@ class Registry(Mapping):
             cr.commit()
             # check again, and log errors if tables are still missing
             for name, model in env.items():
-                if not model._abstract and not model._table_exist():
+                if not model._abstract and not table_exists(cr, model._table):
                     _logger.error("Model %s has no table.", name)
 
     def clear_caches(self):
