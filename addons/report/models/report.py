@@ -500,13 +500,26 @@ class Report(models.Model):
         attachment_name = attachment_name or context.get('attachment_name')
 
         # Save in attachment
-        if attachment_name:
+        if attachment_name or report.attachment:
             model = report.model
             for it, docid in enumerate(sorted_docids):
                 if not docid:
                     continue
                 with open(documents_paths[it], 'rb') as pdfdocument:
                     datas = base64.encodestring(pdfdocument.read())
+
+                # Generate attachment based on 'attachment' field
+                if report.attachment:
+                    record = self.env[report.model].browse(docid)
+                    attachment_name = safe_eval(report.attachment, {'object': record, 'time': time})
+                    existing_report = self.env['ir.attachment'].search([
+                        ('datas_fname', '=', attachment_name),
+                        ('res_model', '=', report.model),
+                        ('res_id', '=', record.id)
+                    ], limit=1)
+                    if existing_report:
+                        continue
+
                 attachment_vals = {
                     'name': attachment_name,
                     'datas': datas,

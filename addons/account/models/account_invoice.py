@@ -386,20 +386,12 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def invoice_print(self):
-        """Call the action to generate the report for the invoice.
-        If this method is called for the first time, attach it to the invoice
-        with an 'ir.attachment'.
-
-        :return: An 'ir.actions.report.xml' action.
+        """ Print the invoice and mark it as sent, so that we can see more
+            easily the next step of the workflow
         """
         self.ensure_one()
-        Report = self.env['report']
-        if not self.sent and self.state in ('open','paid'):
-            attachment_name = 'INV' + self.number.replace('/', '') + '.pdf'
-            ctx = dict(self._context, attachment_name=attachment_name)
-            Report = Report.with_context(ctx)
         self.sent = True
-        return Report.get_action(self, 'account.report_invoice')
+        return self.env['report'].get_action(self, 'account.report_invoice')
 
     @api.multi
     def action_invoice_sent(self):

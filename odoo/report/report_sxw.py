@@ -392,15 +392,6 @@ class report_sxw(report_rml, preprocess.report):
             results = []
             for obj in objs:
                 aname = safe_eval(attach, {'object':obj, 'time':time})
-                result = False
-                if report_xml.attachment_use and aname and context.get('attachment_use', True):
-                    att = env['ir.attachment'].search([('datas_fname','=',aname+'.pdf'),('res_model','=',self.table),('res_id','=',obj.id)], limit=1)
-                    if att:
-                        if not att.datas:
-                            continue
-                        d = base64.decodestring(att.datas)
-                        results.append((d,'pdf'))
-                        continue
                 result = self.create_single_pdf(cr, uid, [obj.id], data, report_xml, context)
                 if not result:
                     return False
