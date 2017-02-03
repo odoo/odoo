@@ -463,8 +463,8 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 return;
             }
             var ds = new data.DataSetStatic(self, model, self.build_context());
-            ds.call('search_count', [domain]).then(function (results) {
-                self.$('.o_count').text(results + _t(' selected records'));
+            ds.call('search_count', [domain, ds.get_context()]).then(function (results) {
+                self.$('.o_count').text(results + ' ' + _t(' selected records'));
                 if (self.get('effective_readonly')) {
                     self.$('button').text(_t('See selection '));
                 }
@@ -1113,6 +1113,7 @@ var FieldReference = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         this.m2o = new FieldMany2One(fm, { attrs: {
             name: 'Referenced Document',
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
+            context: this.build_context().eval(),
         }});
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.appendTo(this.$(".oe_form_view_reference_m2o"));

@@ -561,7 +561,7 @@ class product_template(osv.osv):
             else:
                 company_id = context.get('force_company') or product.env.user.company_id.id
                 product = product.with_context(force_company=company_id)
-                res[product.id] = res[product.id] = product.sudo()[ptype]
+                res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
                 res[product.id] += product._name == "product.product" and product.price_extra or 0.0
             if 'uom' in context:
@@ -778,7 +778,7 @@ class product_product(osv.osv):
     _description = "Product"
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread']
-    _order = 'default_code,name_template'
+    _order = 'default_code,name_template,id'
 
     def _product_price(self, cr, uid, ids, name, arg, context=None):
         plobj = self.pool.get('product.pricelist')
@@ -917,9 +917,11 @@ class product_product(osv.osv):
             result[product.id] = price_extra
         return result
 
-    def _select_seller(self, cr, uid, product_id, partner_id=False, quantity=0.0, date=time.strftime(DEFAULT_SERVER_DATE_FORMAT), uom_id=False, context=None):
+    def _select_seller(self, cr, uid, product_id, partner_id=False, quantity=0.0, date=None, uom_id=False, context=None):
         if context is None:
             context = {}
+        if date is None:
+            date = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
         res = self.pool.get('product.supplierinfo').browse(cr, uid, [])
         for seller in product_id.seller_ids:
             # Set quantity in UoM of seller

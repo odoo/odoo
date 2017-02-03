@@ -273,6 +273,25 @@ class website(orm.Model):
     def sale_product_domain(self, cr, uid, ids, context=None):
         return [("sale_ok", "=", True)]
 
+    def _prepare_sale_order_values(self, cr, uid, w, partner, pricelist, context=None): 
+        affiliate_id = request.session.get('affiliate_id')
+        salesperson_id = affiliate_id if self.pool['res.users'].exists(cr, SUPERUSER_ID, affiliate_id, context=context) else request.website.salesperson_id.id    
+        addr = partner.address_get(['delivery', 'invoice'])
+        values = {
+            'partner_id': partner.id,
+            'pricelist_id': pricelist.id,
+            'payment_term_id': partner.property_payment_term_id.id if partner.property_payment_term_id else False,
+            'team_id': w.salesteam_id.id,
+            'partner_invoice_id': addr['invoice'],
+            'partner_shipping_id': addr['delivery'],
+            'user_id': salesperson_id or w.salesperson_id.id,
+        }
+        company_id = w.company_id or pricelist.company_id
+        if company_id:
+            values['company_id'] = company_id.id        
+        
+        return values
+
     def get_partner(self, cr, uid):
         return self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id
 
@@ -312,20 +331,9 @@ class website(orm.Model):
         # create so if needed
         if not sale_order_id and (force_create or code):
             # TODO cache partner_id session
-            user_obj = self.pool['res.users']
-            affiliate_id = request.session.get('affiliate_id')
-            salesperson_id = affiliate_id if user_obj.exists(cr, SUPERUSER_ID, affiliate_id, context=context) else request.website.salesperson_id.id
+            pricelist = self.pool['product.pricelist'].browse(cr, SUPERUSER_ID, [pricelist_id], context=context)
             for w in self.browse(cr, uid, ids):
-                addr = partner.address_get(['delivery', 'invoice'])
-                values = {
-                    'partner_id': partner.id,
-                    'pricelist_id': pricelist_id,
-                    'payment_term_id': partner.property_payment_term_id.id if partner.property_payment_term_id else False,
-                    'team_id': w.salesteam_id.id,
-                    'partner_invoice_id': addr['invoice'],
-                    'partner_shipping_id': addr['delivery'],
-                    'user_id': salesperson_id or w.salesperson_id.id,
-                }
+                values = self._prepare_sale_order_values(cr, uid, w, partner, pricelist, context=context)
                 sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
                 request.session['sale_order_id'] = sale_order_id
                 sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)

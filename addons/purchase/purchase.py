@@ -22,7 +22,12 @@ class PurchaseOrder(models.Model):
             amount_untaxed = amount_tax = 0.0
             for line in order.order_line:
                 amount_untaxed += line.price_subtotal
-                amount_tax += line.price_tax
+                # FORWARDPORT UP TO 10.0
+                if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                    taxes = line.taxes_id.compute_all(line.price_unit, line.order_id.currency_id, line.product_qty, product=line.product_id, partner=line.order_id.partner_id)
+                    amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
+                else:
+                    amount_tax += line.price_tax
             order.update({
                 'amount_untaxed': order.currency_id.round(amount_untaxed),
                 'amount_tax': order.currency_id.round(amount_tax),
@@ -441,10 +446,13 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def action_set_date_planned(self):
+        # implementation for 9.0 where PO date_planned is not stored
+        date_planned = self.env.context.get('date_planned')
+        if not date_planned:
+            return
         for order in self:
-            #DO NOT FORWARD PORT
             for line in order.order_line:
-                line.update({'date_planned': order.date_planned})
+                line.update({'date_planned': date_planned})
 
 
 class PurchaseOrderLine(models.Model):

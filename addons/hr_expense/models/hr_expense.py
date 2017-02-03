@@ -159,6 +159,7 @@ class HrExpense(models.Model):
             'amount_currency': line['price'] > 0 and abs(line.get('amount_currency')) or -abs(line.get('amount_currency')),
             'currency_id': line.get('currency_id'),
             'tax_line_id': line.get('tax_line_id'),
+            'tax_ids': line.get('tax_ids'),
             'ref': line.get('ref'),
             'quantity': line.get('quantity',1.00),
             'product_id': line.get('product_id'),
@@ -253,7 +254,7 @@ class HrExpense(models.Model):
 
                 #convert eml into an osv-valid format
                 lines = map(lambda x:(0, 0, expense._prepare_move_line(x)), move_lines)
-                move.write({'line_ids': lines})
+                move.with_context(dont_create_taxes=True).write({'line_ids': lines})
                 expense.write({'account_move_id': move.id, 'state': 'post'})
                 if expense.payment_mode == 'company_account':
                     expense.paid_expenses()

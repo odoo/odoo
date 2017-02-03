@@ -4,13 +4,13 @@
 # 
 # Translators:
 # David Hernandez <davidhernandez.ctam@gmail.com>, 2016
-# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-09-23 08:50+0000\n"
+"PO-Revision-Date: 2017-01-17 09:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
@@ -441,6 +441,16 @@ msgstr "Fecha de depreciación"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
 msgid "Depreciation Entry"
 msgstr "Asiento de amortización"
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
+msgid "Depreciation Entries: Asset Account"
+msgstr ""
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_income_recognition_id
+msgid "Depreciation Entries: Expense Account"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -888,7 +898,13 @@ msgid "Reason"
 msgstr "Motivo"
 
 #. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Recognition Account"
+msgstr ""
+
+#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_income_recognition_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Income Account"
 msgstr "Reconocimiento de la Cuenta de Utilidad"
 
@@ -1031,7 +1047,7 @@ msgstr "Vendedor"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Mensajes del sitio web"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_website_message_ids

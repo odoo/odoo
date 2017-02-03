@@ -927,6 +927,14 @@ class AccountMoveLine(models.Model):
         if 'analytic_account_id' in first_line_dict:
             del first_line_dict['analytic_account_id']
         if 'tax_ids' in first_line_dict:
+            tax_ids = []
+            #vals['tax_ids'] is a list of commands [[4, tax_id, None], ...]
+            for tax_id in vals['tax_ids']:
+                tax_ids.append(tax_id[1])
+            amount = first_line_dict['credit'] - first_line_dict['debit']
+            amount_tax = self.env['account.tax'].browse(tax_ids).compute_all(amount)['total_included']
+            first_line_dict['credit'] = amount_tax > 0 and amount_tax or 0.0
+            first_line_dict['debit'] = amount_tax < 0 and abs(amount_tax) or 0.0
             del first_line_dict['tax_ids']
 
         # Writeoff line in specified writeoff account
@@ -983,7 +991,7 @@ class AccountMoveLine(models.Model):
         rec_move_ids = self.env['account.partial.reconcile']
         for account_move_line in self:
             for invoice in account_move_line.payment_id.invoice_ids:
-                if account_move_line in invoice.payment_move_line_ids:
+                if invoice.id == self.env.context.get('invoice_id') and account_move_line in invoice.payment_move_line_ids:
                     account_move_line.payment_id.write({'invoice_ids': [(3, invoice.id, None)]})
             rec_move_ids += account_move_line.matched_debit_ids
             rec_move_ids += account_move_line.matched_credit_ids
@@ -1093,6 +1101,7 @@ class AccountMoveLine(models.Model):
             # Create tax lines
             for tax_vals in res['taxes']:
                 if tax_vals['amount']:
+                    tax = self.env['account.tax'].browse([tax_vals['id']])
                     account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
                     if not account_id: account_id = vals['account_id']
                     temp = {
@@ -1104,6 +1113,7 @@ class AccountMoveLine(models.Model):
                         'statement_id': vals.get('statement_id'),
                         'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
                         'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
+                        'analytic_account_id': vals.get('analytic_account_id') if tax.analytic else False,
                     }
                     bank = self.env["account.bank.statement"].browse(vals.get('statement_id'))
                     if bank.currency_id != bank.company_id.currency_id:

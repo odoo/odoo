@@ -18,8 +18,9 @@ class AccountAssetCategory(models.Model):
     name = fields.Char(required=True, index=True, string="Asset Type")
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain=[('account_type', '=', 'normal')])
     account_asset_id = fields.Many2one('account.account', string='Asset Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
-    account_income_recognition_id = fields.Many2one('account.account', string='Recognition Income Account', domain=[('internal_type','=','other'), ('deprecated', '=', False)], oldname='account_expense_depreciation_id')
-    account_depreciation_id = fields.Many2one('account.account', string='Depreciation Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
+    account_income_recognition_id = fields.Many2one('account.account', string='Depreciation Entries: Expense Account', domain=[('internal_type','=','other'), ('deprecated', '=', False)], oldname='account_expense_depreciation_id',
+        help="Account used in the periodical entries, to record a part of the asset as expense. But the asset account is used if empty.")
+    account_depreciation_id = fields.Many2one('account.account', string='Depreciation Entries: Asset Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
     journal_id = fields.Many2one('account.journal', string='Journal', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('account.asset.category'))
     method = fields.Selection([('linear', 'Linear'), ('degressive', 'Degressive')], string='Computation Method', required=True, default='linear',
@@ -436,7 +437,7 @@ class AccountAssetDepreciationLine(models.Model):
             journal_id = line.asset_id.category_id.journal_id.id
             partner_id = line.asset_id.partner_id.id
             categ_type = line.asset_id.category_id.type
-            debit_account = line.asset_id.category_id.account_asset_id.id
+            debit_account = line.asset_id.category_id.account_income_recognition_id.id or line.asset_id.category_id.account_asset_id.id
             credit_account = line.asset_id.category_id.account_depreciation_id.id
             prec = self.env['decimal.precision'].precision_get('Account')
             move_line_1 = {

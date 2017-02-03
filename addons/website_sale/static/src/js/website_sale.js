@@ -255,7 +255,7 @@ $('.oe_website_sale').each(function () {
         var precision = 2;
 
         if ($(".decimal_precision").length) {
-            precision = parseInt($(".decimal_precision").first().data('precision'));
+            precision = parseInt($(".decimal_precision").last().data('precision'));
         }
         var formatted = _.str.sprintf('%.' + precision + 'f', price).split('.');
         formatted[0] = utils.insert_thousand_seps(formatted[0]);
@@ -263,9 +263,12 @@ $('.oe_website_sale').each(function () {
     }
 
     $(oe_website_sale).on('change', 'input.js_product_change', function () {
+        var self = this;
         var $parent = $(this).closest('.js_product');
-        $parent.find(".oe_default_price:first .oe_currency_value").html( price_to_str(+$(this).data('lst_price')) );
-        $parent.find(".oe_price:first .oe_currency_value").html(price_to_str(+$(this).data('price')) );
+        $.when(base.ready()).then(function() {
+            $parent.find(".oe_default_price:first .oe_currency_value").html( price_to_str(+$(self).data('lst_price')) );
+            $parent.find(".oe_price:first .oe_currency_value").html(price_to_str(+$(self).data('price')) );
+        });
         update_product_image(this, +$(this).val());
     });
 
@@ -287,8 +290,10 @@ $('.oe_website_sale').each(function () {
         var product_id = false;
         for (var k in variant_ids) {
             if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
-                $price.html(price_to_str(variant_ids[k][2]));
-                $default_price.html(price_to_str(variant_ids[k][3]));
+                $.when(base.ready()).then(function() {
+                    $price.html(price_to_str(variant_ids[k][2]));
+                    $default_price.html(price_to_str(variant_ids[k][3]));
+                });
                 if (variant_ids[k][3]-variant_ids[k][2]>0.2) {
                     $default_price.closest('.oe_website_sale').addClass("discount");
                     $optional_price.closest('.oe_optional').show().css('text-decoration', 'line-through');
@@ -342,9 +347,12 @@ $('.oe_website_sale').each(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });
 
-    var state_options = $("select[name='state_id']:visible option:not(:first)");
+    $("select[name='state_id']").each(function(){
+        $(this).data('options', $(this).find('option:not(:first)'));
+    });
     $(oe_website_sale).on('change', "select[name='country_id']", function () {
-        var select = $("select[name='state_id']:visible");
+        var select = $("select[name='state_id']:enabled");
+        var state_options = select.data('options');
         var selected_state = select.val();
         state_options.detach();
         var displayed_state = state_options.filter("[data-country_id="+($(this).val() || 0)+"]");

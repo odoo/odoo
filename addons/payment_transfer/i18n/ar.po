@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-10-22 13:53+0000\n"
+"POT-Creation-Date: 2016-12-14 14:52+0000\n"
+"PO-Revision-Date: 2017-01-26 08:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,19 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:32
+#, python-format
+msgid ""
+"<div>\n"
+"<h3>Please use the following transfer details</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Communication</h4>\n"
+"<p>Please use the order name as communication reference.</p>\n"
+"</div>"
+msgstr ""
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:68
@@ -47,7 +60,7 @@ msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but won't be paid. Don't hesitate "
 "to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
+msgstr "<span><i>خطأ,</i> يرجى العلم بأن خطأ حدث أثناء العملية. وقد أكد هذا الأمر ولكن لن يتم دفع. لا تترددوا في الاتصال بنا إذا كان لديك أي أسئلة عن حالة طلبك.</span>"
 
 #. module: payment_transfer
 #: model:payment.acquirer,pending_msg:payment_transfer.payment_acquirer_transfer

@@ -75,7 +75,7 @@ class pad_common(osv.osv_memory):
         if url:
             try:
                 page = urllib2.urlopen('%s/export/html'%url).read()
-                mo = re.search('<body>(.*)</body>',page)
+                mo = re.search('<body>(.*)</body>', page, re.DOTALL)
                 if mo:
                     content = mo.group(1)
             except:

@@ -149,7 +149,7 @@ class AccountAccount(models.Model):
     @api.one
     def copy(self, default=None):
         default = dict(default or {})
-        default.update(code=_("%s (copy)") % (self.code or ''))
+        default.setdefault('code', _("%s (copy)") % (self.code or ''))
         return super(AccountAccount, self).copy(default)
 
     @api.multi
@@ -544,11 +544,11 @@ class AccountTax(models.Model):
     def unlink(self):
         company_id = self.env.user.company_id.id
         ir_values = self.env['ir.values']
-        supplier_taxes_id = set(ir_values.get_default('product.template', 'supplier_taxes_id', company_id=company_id))
+        supplier_taxes_id = set(ir_values.get_default('product.template', 'supplier_taxes_id', company_id=company_id) or [])
         deleted_sup_tax = self.filtered(lambda tax: tax.id in supplier_taxes_id)
         if deleted_sup_tax:
             ir_values.sudo().set_default('product.template', "supplier_taxes_id", list(supplier_taxes_id - set(deleted_sup_tax.ids)), for_all_users=True, company_id=company_id)
-        taxes_id = set(self.env['ir.values'].get_default('product.template', 'taxes_id', company_id=company_id))
+        taxes_id = set(self.env['ir.values'].get_default('product.template', 'taxes_id', company_id=company_id) or [])
         deleted_tax = self.filtered(lambda tax: tax.id in taxes_id)
         if deleted_tax:
             ir_values.sudo().set_default('product.template', "taxes_id", list(taxes_id - set(deleted_tax.ids)), for_all_users=True, company_id=company_id)

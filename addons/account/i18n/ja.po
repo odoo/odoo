@@ -3,6 +3,7 @@
 # * account
 # 
 # Translators:
+# Kazuki Eda <edak1209@gmail.com>, 2016
 # kent_ocean <ke.tanabe@gmail.com>, 2016
 # Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2016
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
@@ -16,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-12-10 00:22+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
+"PO-Revision-Date: 2016-12-22 14:38+0000\n"
+"Last-Translator: Kazuki Eda <edak1209@gmail.com>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,7 +121,7 @@ msgstr "取引数"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} 発注 (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:321
@@ -155,7 +156,7 @@ msgstr "、会計または購買がインストールされている場合"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr ""
+msgstr "-> 消込"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -2396,7 +2397,7 @@ msgstr "クリックして顧客請求書を作成してください。"
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Click to create a journal entry."
-msgstr ""
+msgstr "クリックして仕訳を作成してください。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -2406,7 +2407,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_operation_template
 msgid "Click to create a reconciliation model."
-msgstr ""
+msgstr "クリックして消込モデルを作成してください。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -3270,7 +3271,7 @@ msgstr "説明"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_note
 msgid "Description on the Invoice"
-msgstr ""
+msgstr "請求書に表示する内容"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_destination_account_id
