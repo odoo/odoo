@@ -506,7 +506,8 @@ class SaleOrder(models.Model):
                                          product=line.product_id, partner=line.order_partner_id)['taxes'][0]['amount']
                 res[group] += amount
                 if tax.include_base_amount:
-                    base_tax += tax.compute_all(line.price_reduce + base_tax, quantity=1)['taxes'][0]['amount']
+                    base_tax += tax.compute_all(line.price_reduce + base_tax, quantity=1, product=line.product_id,
+                                                partner=line.order_partner_id)['taxes'][0]['amount']
         res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = map(lambda l: (l[0].name, l[1]), res)
         return res
