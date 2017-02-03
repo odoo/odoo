@@ -2082,7 +2082,6 @@ class BaseModel(object):
                       source_table, source_field, dest_model._table, ondelete or 'set null')
         conname = "%s_%s_fkey" % (source_table, source_field)
         self.env['ir.model.constraint']._reflect_constraint(self, conname, 'f', None, module)
-        cr.commit()
 
     @api.model_cr
     def _m2o_fix_foreign_key(self, source_table, source_field, dest_model, ondelete):
@@ -2152,8 +2151,6 @@ class BaseModel(object):
             query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
                 self._table, column_name, field.column_format, column_name)
             self._cr.execute(query, (value,))
-            # this is a disgrace
-            self._cr.commit()
 
     @api.model_cr_context
     def _auto_init(self):
@@ -2201,7 +2198,6 @@ class BaseModel(object):
                 cr.execute('SELECT 1 FROM "%s" LIMIT 1' % self._table)
                 has_rows = cr.rowcount
 
-            cr.commit()
             if self._parent_store:
                 if not self._parent_columns_exist():
                     self._create_parent_columns()
@@ -2271,7 +2267,6 @@ class BaseModel(object):
                                     cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, name, column_type[1]))
                                     cr.execute('UPDATE "%s" SET "%s"=temp_change_size::%s' % (self._table, name, column_type[1]))
                                     cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
-                                cr.commit()
                                 _schema.debug("Table '%s': column '%s' (type varchar) changed size from %s to %s",
                                               self._table, name, f_pg_size or 'unlimited', field.size or 'unlimited')
                             for c in casts:
@@ -2287,7 +2282,6 @@ class BaseModel(object):
                                             cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, name, c[2]))
                                             cr.execute('UPDATE "%s" SET "%s"= __temp_type_cast%s' % (self._table, name, c[3]))
                                             cr.execute('ALTER TABLE "%s" DROP COLUMN  __temp_type_cast CASCADE' % (self._table,))
-                                        cr.commit()
                                         _schema.debug("Table '%s': column '%s' changed type from %s to %s",
                                                       self._table, name, c[0], c[1])
                                     break
@@ -2318,19 +2312,17 @@ class BaseModel(object):
                                     self._init_column(name)
                                 # add the NOT NULL constraint
                                 try:
-                                    cr.commit()
-                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, name), log_exceptions=False)
-                                    _schema.debug("Table '%s': column '%s': added NOT NULL constraint",
-                                                  self._table, name)
+                                    with cr.savepoint():
+                                        cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, name), log_exceptions=False)
+                                        _schema.debug("Table '%s': column '%s': added NOT NULL constraint",
+                                                      self._table, name)
                                 except Exception:
                                     msg = "Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"\
                                         "If you want to have it, you should update the records and execute manually:\n"\
                                         "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
                                     _schema.warning(msg, self._table, name, self._table, name)
-                                cr.commit()
                             elif not field.required and f_pg_notnull == 1:
                                 cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, name))
-                                cr.commit()
                                 _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
                                               self._table, name)
                             # Verify index
@@ -2339,7 +2331,6 @@ class BaseModel(object):
                             res2 = cr.dictfetchall()
                             if not res2 and field.index:
                                 cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, name, self._table, name))
-                                cr.commit()
                                 if field.type == 'text':
                                     # FIXME: for fields.text columns we should try creating GIN indexes instead (seems most suitable for an ERP context)
                                     msg = "Table '%s': Adding (b-tree) index for %s column '%s'."\
@@ -2349,7 +2340,6 @@ class BaseModel(object):
                                     _schema.warning(msg, self._table, field.type, name)
                             if res2 and not field.index:
                                 cr.execute('DROP INDEX "%s_%s_index"' % (self._table, name))
-                                cr.commit()
                                 msg = "Table '%s': dropping index for column '%s' of type '%s' as it is not required anymore"
                                 _schema.debug(msg, self._table, name, field.type)
 
@@ -2385,23 +2375,20 @@ class BaseModel(object):
                             cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, name, self._table, name))
                         if field.required:
                             try:
-                                cr.commit()
-                                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, name))
-                                _schema.debug("Table '%s': column '%s': added a NOT NULL constraint",
-                                              self._table, name)
+                                with cr.savepoint():
+                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, name))
+                                    _schema.debug("Table '%s': column '%s': added a NOT NULL constraint",
+                                                  self._table, name)
                             except Exception:
                                 msg = "WARNING: unable to set column %s of table %s not null !\n"\
                                     "Try to re-run: openerp-server --update=module\n"\
                                     "If it doesn't work, update records and execute manually:\n"\
                                     "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
                                 _logger.warning(msg, name, self._table, self._table, name, exc_info=True)
-                        cr.commit()
 
         else:
             cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (self._table,))
             create = not bool(cr.fetchone())
-
-        cr.commit()     # start a new transaction
 
         if self._auto:
             self._add_sql_constraints()
@@ -2411,7 +2398,6 @@ class BaseModel(object):
 
         if parent_store_compute:
             self._parent_store_compute()
-            cr.commit()
 
     @api.model_cr
     def init(self):
@@ -2455,7 +2441,6 @@ class BaseModel(object):
             _logger.error("parent_right field on model %s must be indexed! Add index=True to the field definition)", self._name)
         if self._fields[self._parent_name].ondelete not in ('cascade', 'restrict'):
             _logger.error("The field %s on model %s must be set as ondelete='cascade' or 'restrict'", self._parent_name, self._name)
-        self._cr.commit()
 
     @api.model_cr
     def _select_column_data(self):
@@ -2485,26 +2470,24 @@ class BaseModel(object):
 
         def drop(name, definition):
             try:
-                cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (self._table, name))
-                cr.commit()
-                _schema.debug("Table '%s': dropped constraint '%s'. Reason: its definition changed to '%s'",
-                              self._table, name, definition)
+                with cr.savepoint():
+                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (self._table, name))
+                    _schema.debug("Table '%s': dropped constraint '%s'. Reason: its definition changed to '%s'",
+                                  self._table, name, definition)
             except Exception:
                 _schema.warning("Table '%s': unable to drop constraint '%s'!", self._table, definition)
-                cr.rollback()
 
         def add(name, definition):
             query = 'ALTER TABLE "%s" ADD CONSTRAINT "%s" %s' % (self._table, name, definition)
             try:
-                cr.execute(query)
-                cr.commit()
-                _schema.debug("Table '%s': added constraint '%s' with definition=%s",
-                              self._table, name, definition)
+                with cr.savepoint():
+                    cr.execute(query)
+                    _schema.debug("Table '%s': added constraint '%s' with definition=%s",
+                                  self._table, name, definition)
             except Exception:
                 _schema.warning("Table '%s': unable to add constraint '%s'!\n"
                                 "If you want to have it, you should update the records and execute manually:\n%s",
                                 self._table, definition, query)
-                cr.rollback()
 
         def process(key, definition):
             conname = '%s_%s' % (self._table, key)
@@ -2528,7 +2511,6 @@ class BaseModel(object):
         """ Execute the SQL code from the _sql attribute (if any)."""
         if hasattr(self, "_sql"):
             self._cr.execute(self._sql)
-            self._cr.commit()
 
     #
     # Update objects that uses this one to update their _inherits fields
