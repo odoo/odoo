@@ -1459,7 +1459,7 @@ class Reference(Selection):
             if ((not validate or value._name in self.get_values(record.env))
                     and len(value) <= 1):
                 return value.with_env(record.env) or False
-        elif isinstance(value, basestring):
+        elif isinstance(value, basestring) and value != '':
             res_model, res_id = value.split(',')
             return record.env[res_model].browse(int(res_id))
         elif not value:
