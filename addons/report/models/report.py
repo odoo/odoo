@@ -430,10 +430,10 @@ class Report(models.Model):
 
         :param docids: The record ids.
         :param report_name: The report name.
-        :param html:
-        :param data:
-        :param report_as_attachment:
-        :return:
+        :param html: The optional html content.
+        :param data: The data to use for get_html.
+        :param attachment_name: The attachment filename.
+        :return: The content of the generated pdf as string.
         """
 
         if self._check_wkhtmltopdf() == 'install':
