@@ -21,7 +21,7 @@ class account_payment_method(models.Model):
     _name = "account.payment.method"
     _description = "Payment Methods"
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True)  # For internal identification
     payment_type = fields.Selection([('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True)
 
