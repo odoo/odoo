@@ -3097,6 +3097,9 @@ class BaseModel(object):
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                     (self._name, 'read')
                 )
+                _logger.info(
+                    _('The requested operation cannot be completed due to record rules: Document type: %s, Operation: %s, Records: %s, User: %s') % \
+                    (self._name, 'read', ','.join([str(r.id) for r in self][:6]), self._uid))
                 forbidden._cache.update(FailedValue(exc))
 
     @api.multi
