@@ -105,7 +105,9 @@ var ErrorTracebackPopupWidget = ErrorPopupWidget.extend({
         this._super(opts);
 
         this.$('.download').off('click').click(function(){
-            self.gui.download_file(self.options.body,'traceback.txt');
+            self.gui.prepare_download_link(self.options.body,
+                _t('error') + ' ' + moment().format('YYYY-MM-DD-HH-mm-ss') + '.txt',
+                '.download', '.download_error_file');
         });
 
         this.$('.email').off('click').click(function(){
