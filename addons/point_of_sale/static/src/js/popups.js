@@ -104,13 +104,10 @@ var ErrorTracebackPopupWidget = ErrorPopupWidget.extend({
         var self = this;
         this._super(opts);
 
-        this.$('.download').off('click').click(function(){
-            self.gui.download_file(self.options.body,'traceback.txt');
-        });
-
         this.$('.email').off('click').click(function(){
-            self.gui.send_email( self.pos.company.email,
-                _t('IMPORTANT: Bug Report From Odoo Point Of Sale'),
+            var date_string =  (new Date()).toUTCString().replace(/\ |:|,/g,'_');
+            self.gui.debug_email("error",
+                date_string,
                 self.options.body);
         });
     }
@@ -129,6 +126,17 @@ gui.define_popup({name:'error-barcode', widget: ErrorBarcodePopupWidget});
 
 var ConfirmPopupWidget = PopupWidget.extend({
     template: 'ConfirmPopupWidget',
+    show: function(opts) {
+        var self = this;
+        this._super(opts);
+
+        this.$('.email').off('click').click(function(){
+            var date_string =  (new Date()).toUTCString().replace(/\ |:|,/g,'_');
+            self.gui.debug_email("export",
+                date_string,
+                self.options.body);
+        });
+    },
 });
 gui.define_popup({name:'confirm', widget: ConfirmPopupWidget});
 
@@ -313,5 +321,11 @@ var OrderImportPopupWidget = PopupWidget.extend({
 });
 gui.define_popup({name:'orderimport', widget: OrderImportPopupWidget});
 
+var ExportConfirmWidget = ConfirmPopupWidget.extend({
+    template: 'ExportConfirmWidget',
+});
+gui.define_popup({name:'exportconfirmwidget', widget: ExportConfirmWidget});
+
 return PopupWidget;
+
 });

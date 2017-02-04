@@ -357,27 +357,39 @@ var Gui = core.Class.extend({
 
     /* ---- Gui: FILE I/O ---- */
 
-    // This will make the browser download 'contents' as a 
-    // file named 'name'
-    // if 'contents' is not a string, it is converted into
-    // a JSON representation of the contents. 
+    debug_email: function(debug_type,date_string,data) {
+        var self = this;
+        var email_to = this.pos.get_cashier().email || "";
+        var subject_line = "[Odoo][DEBUG] Support "+debug_type + "  " + date_string;
+        var custom_text = "";
 
-    download_file: function(contents, name) {
-        var URL = window.URL || window.webkitURL;
-        
-        if (typeof contents !== 'string') {
-            contents = JSON.stringify(contents,null,2);
+        if (debug_type === 'error') {
+            custom_text = " that happened unfortunately";
+        } else {
+            custom_text = " you requested";
         }
 
-        var blob = new Blob([contents]);
+        var body = "<p>Hello,</p>"+
+                        "<p>Please find below the content of the "+ debug_type + custom_text +".</p>"+
+                        "<pre><code>"+data+"</code></pre>"+
+                        "<p>Best Regards</p>";
 
-        var evt  = document.createEvent("HTMLEvents");
-            evt.initEvent("click");
+        var params = {
+            debug_type: debug_type,
+            date_string: date_string,
+            data:data
+        };  
+        session.rpc("/pos/debugging_mail", params, []).then(
+            function (result) {
+                if (result.status == "Error" || result.status == "Failed") {
+                    self.send_email(email_to, subject_line, body);
+                }
+            },
 
-        $("<a>",{
-            download: name || 'document.txt',
-            href: URL.createObjectURL(blob),
-        }).get(0).dispatchEvent(evt);
+            function (err) {
+                self.send_email(email_to, subject_line, body);
+            }
+        );
     },
 
     /* ---- Gui: EMAILS ---- */
