@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="auth_oauth_multi_token_form" model="ir.ui.view">
+            <field name="name">multi.token.res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="auth_oauth.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='oauth_uid']" position="after">
+                    <field name="oauth_access_max_token"/>
+                </xpath>
+                <xpath expr="//page[2]/group[1]" position="after">
+                    <group string="Last tokens">
+                        <field name="oauth_access_token_ids" nolabel="1">
+                            <tree limit="10">
+                                <field name="id" invisible="1"/>
+                                <field name="create_date"/>
+                                <field name="oauth_access_token"/>
+                                <field name="active_token"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <button string="Clear Tokens" type="object" name="clear_token" class="oe_highlight"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
