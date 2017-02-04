@@ -1,0 +1,136 @@
+<openerp>
+    <data>
+
+        <template id="assets_frontend_minerva" inherit_id="website.assets_frontend">
+            <xpath expr="." position="inside">
+                <script src="/minerva/static/src/js/filters.js"/>
+            </xpath>           
+        </template>
+        
+<!--   Main template end                         -->      
+
+        <template id="minerva.main">
+            <t t-call="website.layout">
+            <title>Paskaitu tvarkaraštis</title>
+            <table class="table table-bordered">
+                <tr>
+                
+                    <td style=" border:0">
+                        <select id="semester-select" class="form-control">
+                                <option data-parameter="null">Semestras</option>
+                                <t t-foreach="semestrai" t-as="semestras">
+                                    <t t-if="semestras.id==1">
+                                        <option t-att-data-semester-id="semestras.id" selected="Selected"><t t-esc="semestras.pavadinimas"/> </option>
+                                    </t>
+                                    <t t-if="semestras.id!=1">
+                                        <option t-att-data-semester-id="semestras.id"><t t-esc="semestras.pavadinimas"/></option>
+                                    </t>
+                            </t>
+                        </select>
+                    </td>
+                    
+                    <td style=" border:0">
+                        <div class="form-group">
+                            <select id="parameter-select" class="form-control">
+                                <option data-parameter="Pasinkite">Pasirinkite</option>
+                                <option data-parameter="Studento">Studento</option>
+                                <option data-parameter="Destytojo">Dėstytojo</option>
+                                <option data-parameter="Dalyko">Dalyko</option>
+                                <option data-parameter="Dienos">Dienos</option>
+                                <option data-parameter="Auditorijos">Auditorijos</option>
+                            </select>
+                        </div>
+                        
+                    </td>
+                    
+                    <td style=" border:0">
+                        <div class="form-group">
+                            <select id="groups-list" class="form-control"/>
+                        </div>
+
+                    </td>
+                    
+                </tr>
+            </table>
+            <table id="timetable"  class="table table-responsive" style= "word-wrap: break-word;" >
+               
+            </table>
+            </t>
+        </template>
+
+<!-- Egzaminai                                                   -->
+        <template id="exam_index" name="Egzaminai" priority="30" t-name="minerva.egzaminai">
+            <t t-call="website.layout">
+                <title>Egzaminų tvarkaraštis</title>
+                <table class="table table-bordered">
+                <tr>
+                
+                    <td>
+                        <select id="exam-semester-select" class="form-control">
+                            <option data-parameter="null">Semestras</option>
+                            <t t-foreach="semestrai" t-as="semestras">
+                                <t t-if="semestras.id==1">
+                                    <option t-att-data-semester-id="semestras.id" selected="Selected"><t t-esc="semestras.pavadinimas"/> </option>
+                                </t>
+                                <t t-if="semestras.id!=1">
+                                <option t-att-data-semester-id="semestras.id"><t t-esc="semestras.pavadinimas"/></option>
+                                </t>
+                                    
+                            </t>
+                        </select>
+                    </td>
+                    
+                    <td>
+                        <div class="form-group">
+                            <select id="exam-parameter-select" class="form-control">
+                                <option data-parameter="Pasinkite">Pasirinkite</option>
+                                <option data-parameter="Studento">Studento</option>
+                                <option data-parameter="Destytojo">Dėstytojo</option>
+                                <option data-parameter="Dalyko">Dalyko</option>
+                                <option data-parameter="Dienos">Dienos</option>
+                                <option data-parameter="Auditorijos">Auditorijos</option>
+                            </select>
+                        </div>
+                        
+                    </td>
+                    
+                    <td>
+                        <div class="exam-form-group">
+                            <select id="exam-groups-list" class="form-control">
+                                
+                            </select>
+                        </div>
+
+                    </td>
+                    
+                </tr>
+            </table>
+            <table id="examtable"  class="table table-responsive"  style= "word-wrap: break-word; ">
+               
+            </table>   
+            </t>          
+        </template>
+
+        <!-- <template id="listing"> -->
+        <!--   <ul> -->
+        <!--     <li t-foreach="objects" t-as="object"> -->
+        <!--       <a t-attf-href="#{ root }/objects/#{ object.id }"> -->
+        <!--         <t t-esc="object.display_name"/> -->
+        <!--       </a> -->
+        <!--     </li> -->
+        <!--   </ul> -->
+        
+        
+        <!-- </template> -->
+        <!-- <template id="object"> -->
+        <!--   <h1><t t-esc="object.display_name"/></h1> -->
+        <!--   <dl> -->
+        <!--     <t t-foreach="object._fields" t-as="field"> -->
+        <!--       <dt><t t-esc="field"/></dt> -->
+        <!--       <dd><t t-esc="object[field]"/></dd> -->
+        <!--     </t> -->
+        <!--   </dl> -->
+        <!-- </template> -->
+         
+    </data>
+</openerp>

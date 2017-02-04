@@ -1,0 +1,47 @@
+// Alerts
+//
+// Modify Bootstrap's default alert styles to mimick
+// the `.bs-callout` styles from Bootstrap's docs.
+//
+// @see https://github.com/twbs/bootstrap/blob/master/docs/assets/css/src/docs.css#L711
+// @see https://github.com/twbs/bootstrap/blob/master/less/alerts.less
+
+.alert {
+  background: #fff;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+  color: #333;
+  margin: 20px 0;
+  padding: 20px;
+
+  h4 {
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 5px;
+  }
+
+  &-danger {
+    border-left-color: #ce4844;
+
+    h4 {
+      color: #ce4844;
+    }
+  }
+
+  &-info {
+    border-left-color: #1b809e;
+
+    h4 {
+      color: #1b809e;
+    }
+  }
+
+  &-warning {
+    border-left-color: #aa6708;
+
+    h4 {
+      color: #aa6708;
+    }
+  }
+}

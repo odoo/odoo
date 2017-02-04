@@ -1,0 +1,24 @@
+.s2-docs-panels {
+    dt, dd {
+        border: 1px solid $panel-default-border;
+    }
+
+    dt {
+        background-color: $panel-default-heading-bg;
+        border-top-left-radius: $panel-border-radius;
+        border-top-right-radius: $panel-border-radius;
+        padding: 5px 7.5px;
+    }
+
+    dd {
+        background-color: $panel-bg;
+        border-bottom-left-radius: $panel-border-radius;
+        border-bottom-right-radius: $panel-border-radius;
+        margin-bottom: 0.75em;
+        padding: 7.5px;
+    }
+
+    dt + dd {
+        border-top: none;
+    }
+}

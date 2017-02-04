@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_op_classroom_tree" model="ir.ui.view">
+            <field name="name">op.classroom.tree</field>
+            <field name="model">op.classroom</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Classroom">
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="capacity" />
+                    <field name= "xcomputers"/>
+                    <field name = "xmultimedia"/>
+                    <field name="facilities" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_op_classroom_form" model="ir.ui.view">
+            <field name="name">op.classroom.form</field>
+            <field name="model">op.classroom</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Classroom">
+                    <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_user" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                        <group col="4">
+                            <field name="name" />
+                            <field name="code" />
+                            <field name="capacity" />
+                            <field name= "xcomputers"/>
+                            <field name= "xmultimedia" />
+                        </group>
+                        <notebook>  
+                            <page name="facilities" string="Iranga">
+                                <field name="facilities" colspan="4" nolabel="1" widget="many2many" />
+                            </page>
+                            <page name="name" string="Kita įranga">
+                                    
+                            </page>
+                        </notebook>
+                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_op_classroom_search" model="ir.ui.view">
+            <field name="name">op.classroom.search</field>
+            <field name="model">op.classroom</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Classroom">
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="capacity" />
+                    <field name= "xcomputers" />
+                    <field name= "xmultimedia"/>
+                    <field name="facilities" />
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter string="Name" domain="[]" context="{'group_by':'name'}" />
+                        <filter string="Code" domain="[]" context="{'group_by':'code'}" />
+                        <filter string="Capacity" domain="[]" context="{'group_by':'capacity'}" />
+                        <filter string="xmultimedia" domain="[]" context="{'group_by':'xmultimedia'}" />
+                        <!-- <filter string="Facilities" domain="[]" context="{'group_by':'Facility'}" 
+                            /> -->
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_open_op_classroom_view">
+            <field name="name">Auditorijos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.classroom</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_op_classroom_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_classroom_view_form">
+            <field name="act_window_id" ref="act_open_op_classroom_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_classroom_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_classroom_view_tree">
+            <field name="act_window_id" ref="act_open_op_classroom_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_classroom_tree" />
+        </record>
+    </data>
+</openerp>

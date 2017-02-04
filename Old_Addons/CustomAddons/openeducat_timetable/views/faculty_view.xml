@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_op_faculty_form_timetable_inherit" model="ir.ui.view">
+            <field name="name">op.faculty.form.timetable.inherit</field>
+            <field name="model">op.faculty</field>
+            <field name="inherit_id" ref="openeducat_core.view_op_faculty_form" />
+            <field name="priority" eval="9" />
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page name="time_table" string="Paskaitos">
+                        <field name="timetable_ids" colspan="4" />
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</openerp>

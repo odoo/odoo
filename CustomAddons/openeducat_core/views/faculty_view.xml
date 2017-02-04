@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="kanban_view_faculty">
+            <field name="name">Faculty Kanban</field>
+            <field name="model">op.faculty</field>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <a type="open">
+                                        <img t-att-src="kanban_image('op.faculty', 'photo', record.id.value)"
+                                            class="oe_employee_picture" />
+                                    </a>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <h4>
+                                        <a type="open">
+                                            <field name="name" />
+                                            
+                                        </a>
+                                    </h4>
+                                    <ul>
+                                        
+                                        <li t-if="record.phone.raw_value">
+                                            Tel:
+                                            <field name="phone" />
+                                        </li>
+                                        <li t-if="record.mobile.raw_value">
+                                            Mobilus:
+                                            <field name="mobile" />
+                                        </li>
+                                        <li t-if="record.email.raw_value">
+                                            <a t-attf-href="mailto:#{record.email.value}">
+                                                <field name="email" />
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <script> $('.oe_employee_picture').load(function() {
+                                if($(this).width() > $(this).height()) {
+                                $(this).addClass('oe_employee_picture_wide') } });
+                            </script>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="view_op_faculty_tree" model="ir.ui.view">
+            <field name="name">op.faculty.tree</field>
+            <field name="model">op.faculty</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Dėstytojas">
+                    <field name="name" />
+                    <field name="mobile" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_op_faculty_form" model="ir.ui.view">
+            <field name="name">op.faculty.form</field>
+            <field name="model">op.faculty</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Dėstytojas">
+                
+                    <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_user" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                        <field name="photo" widget="image" class="oe_left oe_avatar" />
+                        <div class="oe_title">
+                            
+                            <h1><table>
+                                <tr>
+                                <td><field name="edu_title"  style="padding-right:10px"  /></td>
+                                <td><field name="first_name" required="1" placeholder="Vardas" style="padding-right:10px" /></td>
+                                <td><field name="last_name" placeholder="Pavardė" style="padding-right:10px" /></td>
+                                </tr>
+                                </table>
+                            </h1>
+                        </div>
+                        <group col="2" colspan="4">
+                            <field name="phone" />
+                            <field name="mobile" />
+                            <field name="email" />
+                        </group>
+                        <notebook colspan="4">
+                                
+                            <page name= "Pageidavimai" string = " Pageidavimai">
+                                 <field name="pageidavimai" />
+                            </page> 
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_op_faculty_search" model="ir.ui.view">
+            <field name="name">op.faculty.search</field>
+            <field name="model">op.faculty</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Dėstytojas">
+                    <field name="name" />
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_open_op_faculty_view">
+            <field name="name">Dėstytojai</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.faculty</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_op_faculty_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_faculty_view_form">
+            <field name="act_window_id" ref="act_open_op_faculty_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_faculty_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_faculty_view_tree">
+            <field name="act_window_id" ref="act_open_op_faculty_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_faculty_tree" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_faculty_view_kanban">
+            <field name="act_window_id" ref="act_open_op_faculty_view" />
+            <field name="sequence" eval="5" />
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="kanban_view_faculty" />
+        </record>
+    </data>
+</openerp>

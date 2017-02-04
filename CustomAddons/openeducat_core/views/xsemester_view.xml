@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_op_xsemester_tree" model="ir.ui.view">
+            <field name="name">op.xsemester.tree</field>
+            <field name="model">op.xsemester</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Semestras">
+                    <field name="pavadinimas" />
+                    <field name = "sezonas" />
+                    <field name="start_date" />
+                    <field name="end_date" />
+                    <field name = "exam_start_date"/>
+                    <field name = "exam_end_date"/>
+
+
+                </tree>
+            </field>
+        </record>
+        <record id="view_op_xsemester_form" model="ir.ui.view">
+            <field name="name">op.xsemester.form</field>
+            <field name="model">op.xsemester</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Semestras">
+                    <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                        <group col="4">
+                            <field name="pavadinimas" />
+                            <field name = "sezonas"/>
+                            <field name="start_date" />
+                            <field name="end_date" />
+                            <field name = "exam_start_date"/>
+                            <field name = "exam_end_date"/>
+                            <field name = "active"/>
+                            <field name = "einamasis" />
+                            <field name=  "sekantis"/>
+                            
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_op_xsemester_search" model="ir.ui.view">
+            <field name="name">op.xsemester.search</field>
+            <field name="model">op.xsemester</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Semestras">
+                    <field name="pavadinimas" />
+                    <field name="start_date" />
+                    <field name="end_date" />
+                    <field name = "exam_start_date"/>
+                    <field name = "exam_end_date"/>
+                    <newline />
+                   <!--> <group expand="0" string="Group By...">
+                        <filter string="Type" domain="[]" context="{'group_by':'type'}" />
+                    </group> -->
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_open_op_xsemester_view">
+            <field name="name">Semestras</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.xsemester</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_op_xsemester_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_xsemester_view_form">
+            <field name="act_window_id" ref="act_open_op_xsemester_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_xsemester_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_xsemester_view_tree">
+            <field name="act_window_id" ref="act_open_op_xsemester_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_xsemester_tree" />
+        </record>
+    </data>
+</openerp>

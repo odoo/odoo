@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_op_subject_tree" model="ir.ui.view">
+            <field name="name">op.subject.tree</field>
+            <field name="model">op.subject</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Subject">
+                    <field name="name" />
+                    <field name="type" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_op_subject_form" model="ir.ui.view">
+            <field name="name">op.subject.form</field>
+            <field name="model">op.subject</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Subject">
+                    <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                        <group col="4">
+                            <field name="name" />
+                            <field name="type" />
+                        </group>
+                        <notebook>
+                            <page name= "name" string= "Tvarkaraščiai">
+                            </page>  
+                            <page name="name" string="Dėstytojai">
+                            </page>
+                            <page name="name" string="Grupės">
+                            </page>
+                           
+                            
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_op_subject_search" model="ir.ui.view">
+            <field name="name">op.subject.search</field>
+            <field name="model">op.subject</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Subject">
+                    <field name="name" />
+                    <field name="type" />
+                    <newline />
+               <!--     <filter string= "Archyvuoti" domain="[('active', '==' , False)]" /> -->
+                    <group expand="0" string="Group By...">
+                        <filter string="Type" domain="[]" context="{'group_by':'type'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_open_op_subject_view">
+            <field name="name">Studijų dalykai</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.subject</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_op_subject_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_subject_view_form">
+            <field name="act_window_id" ref="act_open_op_subject_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_subject_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_subject_view_tree">
+            <field name="act_window_id" ref="act_open_op_subject_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_subject_tree" />
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="op_faculty_create_employee_view" model="ir.ui.view">
+            <field name="name">wizard.op.faculty.employee.form</field>
+            <field name="model">wizard.op.faculty.employee</field>
+            <field name="arch" type="xml">
+                <form string="Create Employee">
+                    <header groups="base.group_user">
+                        <button name="create_employee" type="object" string="Create Employee" class="oe_highlight" />
+                        <button string="Cancel" special="cancel" />
+                    </header>
+                    <group col="4">
+                        <field name="user_boolean" />
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="faculty_create_employee_act">
+            <field name="name">Create Employee</field>
+            <field name="res_model">wizard.op.faculty.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="op_faculty_create_employee_view" />
+            <field name="context">{}</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+
+<!-- Jump to website after theme installation
+     ========================================================================== -->
+
+  <data noupdate="1">
+    <record id="base.open_menu" model="ir.actions.todo">
+      <field name="action_id" ref="website.action_website"/>
+      <field name="state">open</field>
+    </record>
+  </data>
+
+  <data>
+
+
+<!-- LESS
+     ========================================================================== -->
+
+    <template id="less" inherit_id="website.assets_frontend" active="True" priority="1">
+      <xpath expr="." position="inside">
+         <link href="/openeducat_core/static/src/css/main.css" rel="stylesheet" type="text/css"/>
+         <link href="/openeducat_core/static/src/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+      </xpath>
+    </template>
+
+
+<!-- JS
+     ========================================================================== -->
+
+    <template id="assets_editor" inherit_id="website.assets_editor" name="Editor assets">
+      <xpath expr="." position="inside">    
+      </xpath>
+    </template>
+
+  </data>
+</openerp>

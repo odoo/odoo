@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_time_table_report_form" model="ir.ui.view">
+            <field name="name">time.table.report.form</field>
+            <field name="model">time.table.report</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Time Table Report" version="7.0">
+                    <header>
+                        <span groups="base.group_user">
+                            <button string="Generate Time Table Report" type="object"
+                                name="gen_time_table_report" class="oe_highlight"/>
+                            <button special="cancel" string="Close" type="object" />
+                        </span>
+                    </header>
+                    <sheet>
+                        <div>
+                            <group colspan="4" cols="4">
+                                <field name="state" />
+                                <field name="start_date" />
+                                <field name="end_date" />
+                            </group>
+                            <group col="4" colspan="4">
+                                <field name="faculty_id"
+                                    attrs="{'required':[('state','=','faculty')],'invisible':[('state','!=','faculty')]}" />
+                            </group>
+                            <group col="4" colspan="4">
+                                <field name="course_id"
+                                    attrs="{'required':[('state','=','student')],'invisible':[('state','!=','student')]}" />
+                                <field name="batch_id" context="{'course_id': course_id,'get_parent_batch':1}"
+                                    attrs="{'required':[('state','=','student')],'invisible':[('state','!=','student')]}" />
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_open_time_table_report_view">
+            <field name="name">Generate TimeTable Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">time.table.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_time_table_report_view_form">
+            <field name="act_window_id" ref="act_open_time_table_report_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_time_table_report_form" />
+        </record>
+    </data>
+</openerp>

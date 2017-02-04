@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- exam tree view -->
+        <record id="view_op_exam_tree" model="ir.ui.view">
+            <field name="name">op.exam.tree</field>
+            <field name="model">op.exam</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Egzaminai">
+                    <field name= "start_datetime"/>
+                    <field name= "end_datetime"/>
+                    <field name= "subject_id"/>
+                    <field name= "faculty_id"/>
+                    <field name= "batch_id"/>
+                    <field name= "classroom_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- exam tree view -->
+        <!-- exam forrm view -->
+        
+        <record id="view_op_exam_form" model="ir.ui.view">
+            <field name="name">op.exam.form</field>
+            <field name="model">op.exam</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Egzaminai">
+                    <sheet>
+                        <group colspan="4" col="4">
+                            <field name= "subject_id"/>
+                            <field name= "start_datetime"/>
+                            <field name= "batch_id"/> 
+                            <field name= "end_datetime"/>                         
+                            <field name= "faculty_id"/>
+                            <field name= "xsemester_id"/>    
+                            <field name= "classroom_id"/>   
+                            <field name= "active"/>
+                            <field name = "archived"/>   
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--exam form view -->
+        
+        <record id="view_op_exam_search" model="ir.ui.view">
+            <field name="name">op.exam.search</field>
+            <field name="model">op.exam</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Egzaminai">
+                    <field name="faculty_id" select="True" />
+                    <field name="course_id" select="True" />
+                    <field name="batch_id" select="True" />
+                    <field name="subject_id" select="True" />
+                    <field name="start_datetime" select="True" />
+                    <field name="end_datetime" select="True" />
+                    <newline />
+                    <filter string="Today" domain="[('start_datetime', '&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00')),('start_datetime', '&lt;=', time.strftime('%%Y-%%m-%%d 23:59:59'))]" />
+                    <group expand="0" string="Group By...">
+                        <filter string= "Semestras" domain="[]"
+                            context ="{'group_by':xsemester_id'}"/>
+                        <filter string="Dėstytojas" domain="[]"
+                            context="{'group_by':'faculty_id'}" />
+                        <filter string="Kursas" domain="[]"
+                            context="{'group_by':'course_id'}" />
+                        <filter string="Grupe" domain="[]"
+                            context="{'group_by':'batch_id'}" />
+                        <filter string="Dalykas" domain="[]"
+                            context="{'group_by':'subject_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!-- Paskaitu tree view paieška -->
+        
+        <!-- Paskaitų kalendorius -->
+        <record id="view_op_exam_calendar" model="ir.ui.view">
+            <field name="name">op.exam.calendar</field>
+            <field name="model">op.exam</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <calendar string="Egzaminai" date_start="start_datetime"
+                    color="course_id" date_stop="end_datetime">
+                    <field name="faculty_id" />
+                    <field name="course_id" />
+                    <field name="batch_id" />
+                    <field name="subject_id" />
+                </calendar>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_exam_kanban">
+            <field name="name">exam.kanban</field>
+            <field name="model">op.exam</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="day" class="o_kanban_small_column"
+                color="course_id">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                        <span class="fa fa-bars fa-lg"/>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <t t-if="widget.editable"><li><a type="edit">Keisti</a></li></t>
+	                                    <t t-if="widget.deletable"><li><a type="delete">Istrinti</a></li></t>
+	                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                            <div class="oe_kanban_content">
+                               
+                                <div class="oe_kanban_left">
+                                    <li t-if="record.faculty_id.raw_value">
+                                        Dėstytojas:
+                                        <field name="faculty_id"/>
+                                    </li>
+                                    <li t-if="record.subject_id.raw_value">
+                                        Dalykas:
+                                        <field name="subject_id"/>
+                                    </li>
+                                    
+                                    <li t-if="record.batch_id.raw_value">
+                                        Grupė:
+                                        <field name="batch_id"/>
+                                    </li>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('op.faculty', 'photo', record.faculty_id.raw_value)" t-att-title="record.faculty_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </div>
+                    </t>
+                    </templates>
+                </kanban>
+            </field>
+         </record>
+        <!--             ACTIONS -->
+        <record model="ir.actions.act_window" id="act_open_op_exam_view">
+            <field name="name">Egzaminai</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.exam</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,calendar</field>
+            <field name="search_view_id" ref="view_op_exam_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_exam_view_form">
+            <field name="act_window_id" ref="act_open_op_exam_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_exam_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_exam_view_tree">
+            <field name="act_window_id" ref="act_open_op_exam_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_exam_tree" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_exam_view_kanban">
+            <field name="act_window_id" ref="act_open_op_exam_view" />
+            <field name="sequence" eval="15" />
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_exam_kanban" />
+        </record>
+    </data>
+</openerp>

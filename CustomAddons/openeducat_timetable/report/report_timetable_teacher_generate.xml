@@ -1,0 +1,205 @@
+<openerp>
+    <data>
+        <template id="report_timetable_teacher_generate">
+            <style>
+                .font{
+                font-size:18px;
+                font-family:"Helvetica"
+                }
+                @page{
+                size: A4;
+                }
+            </style>
+
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="font">
+                            <div class="page">
+                                <div>
+                                    <img class="img img-responsive" src="/static/static/img/logo.png"/>
+
+                                </div>
+                               
+                                <br></br>
+                                <div class="text-left">
+                                    <b>Dėstytojas :</b>
+                                     <span t-esc="get_full_name(data)" /> 
+                                </div>
+                                <br></br>
+                                <div class="row text-center">
+                                </div>
+                                <br></br>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <th class="text-left">Laikas </th>
+                                        <th class="text-center"> Savaitė </th>
+                                        <th class="text-center"> Dalykas </th>
+                                        <th class="text-center"> Grupė </th>
+                                        <th class="text-center"> Auditorija </th>
+                                    </thead>
+                                    <tbody id="main-table">  
+                                <!--
+                            <tr>
+                                <th ><b>Pirmadienis</b></th> <td></td><td></td><td></td><td></td>
+                                <t t-foreach="get_object(data)" t-as="timetable_line">
+                                    <t t-if= "timetable_line.day == '1'">
+                                        <tr>
+                                            <td> <t t-esc="timetable_line.period_id[1]"/> </td>
+                                            <t t-if= "timetable_line.week[0] != '0'">
+                                                [<t t-esc="timetable_line.week"/>] 
+                                            </t>
+                                                    
+                                            <td> 
+                                                    <t t-esc= "timetable_line.subject_id[1]"/> 
+                                                    <t t-if= "timetable_line.note">
+                                                        <t t-esc= "timetable_line.note"/> 
+                                                    </t>
+                                                    
+                                            </td>
+                                            <td><t t-esc="timetable_line.batch_id[1]"/></td>
+                                            <td> <t t-esc= "timetable_line.classroom_id[1]"/></td> 
+                                        </tr>
+                                    </t>
+                                    <tr></tr>
+                                        
+                                </t>
+                                
+                                
+                                
+                                <th >Antradienis</th> <td></td><td></td><td></td><td></td>
+                                    <t t-foreach="get_object(data)" t-as="timetable_line">
+                                        <t t-if= "timetable_line.day[0] == '2'">
+                                            <tr>
+                                                <td> <t t-esc="timetable_line.period_id[1]"/> </td>
+                                        
+                                                    <t t-if="timetable_line.week[0] != '0'">
+                                                    [<t t-esc="timetable_line.week"/>] 
+                                                    </t>
+                                                    
+                                                <td> 
+                                                    <t t-esc= "timetable_line.subject_id[1]"/> 
+                                                    <t t-if="timetable_line.note">
+                                                        <t t-esc= "timetable_line.note"/> 
+                                                    </t>
+                                                    
+                                                </td>
+                                                <td><t t-esc="timetable_line.batch_id[1]"/></td>
+                                                <td> <t t-esc= "timetable_line.classroom_id[1]"/></td> 
+                                            </tr>
+                                        </t>
+                                    <tr></tr>
+
+                                    </t>
+                                    
+                                    <th >Trečiadienis</th> <td></td><td></td><td></td><td></td>
+                                    <t t-foreach="get_object(data)" t-as="timetable_line">
+                                        <t t-if="timetable_line.day[0] == '3'">
+                                            <tr>
+                                                <td> <t t-esc="timetable_line.period_id[1]"/> </td>
+                                        
+                                                    <t t-if="timetable_line.week[0] != '0'">
+                                                    [<t t-esc="timetable_line.week"/>] 
+                                                    </t>
+                                                    
+                                                <td> 
+                                                    <t t-esc="timetable_line.subject_id[1]"/> 
+                                                    <t t-if="timetable_line.note">
+                                                        <t t-esc="timetable_line.note"/> 
+                                                    </t>
+                                                    
+                                                </td>
+                                                <td><t t-esc="timetable_line.batch_id[1]"/></td>
+                                                <td> <t t-esc="timetable_line.classroom_id[1]"/></td> 
+                                            </tr>
+                                        </t>
+                                    <tr></tr>
+
+                                    </t>
+                                    
+                                    <th >Ketvirtadienis</th> <td></td><td></td><td></td><td></td>
+                                    <t t-foreach="get_object(data)" t-as="timetable_line">
+                                        <t t-if= "timetable_line.day[0] == '4'">
+                                            <tr>
+                                                <td> <t t-esc="timetable_line.period_id[1]"/> </td>
+                                        
+                                                    <t t-if= "timetable_line.week[0] != '0'">
+                                                    [<t t-esc="timetable_line.week"/>] 
+                                                    </t>
+                                                    
+                                                <td> 
+                                                    <t t-esc= "timetable_line.subject_id[1]"/> 
+                                                    <t t-if= "timetable_line.note">
+                                                        <t t-esc= "timetable_line.note"/> 
+                                                    </t>
+                                                    
+                                                </td>
+                                                <td><t t-esc="timetable_line.batch_id[1]"/></td>
+                                                <td> <t t-esc= "timetable_line.classroom_id[1]"/></td> 
+                                            </tr>
+                                        </t>
+                                    <tr></tr>
+
+                                    </t>
+                                    
+                                    <th >Penktadienis</th> <td></td><td></td><td></td><td></td>
+                                    <t t-foreach="get_object(data)" t-as="timetable_line">
+                                        <t t-if= "timetable_line.day[0] == '5'">
+                                            <tr>
+                                                <td> <t t-esc="timetable_line.period_id[1]"/> </td>
+                                        
+                                                    <t t-if= "timetable_line.week[0] != '0'">
+                                                    [<t t-esc="timetable_line.week"/>] 
+                                                    </t>
+                                                    
+                                                <td> 
+                                                    <t t-esc= "timetable_line.subject_id[1]"/> 
+                                                    <t t-if= "timetable_line.note">
+                                                        <t t-esc= "timetable_line.note"/> 
+                                                    </t>
+                                                    
+                                                </td>
+                                                <td><t t-esc="timetable_line.batch_id[1]"/></td>
+                                                <td> <t t-esc= "timetable_line.classroom_id[1]"/></td> 
+                                            </tr>
+                                        </t>
+                                    <tr></tr>
+
+                                    </t>
+                                    
+                                    <th >Šeštadienis</th> <td></td><td></td><td></td><td></td>
+                                    <t t-foreach="get_object(data)" t-as="timetable_line">
+                                        <t t-if= "timetable_line.day[0] == '6'">
+                                            <tr>
+                                                <td> <t t-esc="timetable_line.period_id[1]"/> </td>
+                                        
+                                                    <t t-if= "timetable_line.week[0] != '0'">
+                                                    [<t t-esc="timetable_line.week"/>] 
+                                                    </t>
+                                                    
+                                                <td> 
+                                                    <t t-esc= "timetable_line.subject_id[1]"/> 
+                                                    <t t-if= "timetable_line.note">
+                                                        <t t-esc= "timetable_line.note"/> 
+                                                    </t>
+                                                    
+                                                </td>
+                                                <td><t t-esc="timetable_line.batch_id[1]"/></td>
+                                                <td> <t t-esc= "timetable_line.classroom_id[1]"/></td> 
+                                            </tr>
+                                        </t>
+                                    <tr></tr>
+
+                                    </t>
+                                    
+                            </tr> -->
+                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

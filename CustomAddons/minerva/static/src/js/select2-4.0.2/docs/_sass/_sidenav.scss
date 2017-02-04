@@ -1,0 +1,152 @@
+// Side navigation
+//
+// Scrollspy and affixed enhanced navigation to
+// highlight sections and secondary sections of docs content`.
+
+.s2-docs-sidebar {
+  // By default it is not affixed in mobile views, so undo that
+  &.affix {
+    position: static;
+  }
+
+  @media (min-width: 768px) {
+    padding-left: 20px;
+  }
+}
+
+// First level of nav
+.s2-docs-sidenav {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+// All levels of nav
+.s2-docs-sidebar .nav {
+  > li > a {
+    margin-left: -1px;
+    display: block;
+    padding: 4px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #767676;
+    border-left: 1px solid transparent;
+    transition: color .2s, border-color .2s;
+  }
+
+  > li > a code {
+    background-color: inherit;
+    color: inherit;
+  }
+
+  > li > a:hover,
+  > li > a:focus {
+    color: #428BCA;
+    text-decoration: none;
+    background-color: transparent;
+    border-left-color: #428BCA;
+  }
+
+  > .active > a,
+  > .active:hover > a,
+  > .active:focus > a {
+    padding-left: 19px;
+    font-weight: bold;
+    color: #428BCA;
+    background-color: transparent;
+    border-left: 2px solid #428BCA;
+  }
+
+  // Nav: second level (shown on .active)
+  .nav {
+    display: none; // Hide by default, but at >768px, show it
+    padding-bottom: 10px;
+  }
+
+  .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: normal;
+  }
+
+  .nav > li > a:hover,
+  .nav > li > a:focus {
+    padding-left: 30px;
+  }
+
+  .nav > .active > a,
+  .nav > .active:hover > a,
+  .nav > .active:focus > a {
+    padding-left: 29px;
+    font-weight: 400;
+  }
+}
+
+// Show and affix the side nav when space allows it
+@media (min-width: 992px) {
+  .s2-docs-sidebar .s2-docs-sidenav {
+    padding-top: 40px;
+    transition: border-color .2s;
+    border-left: 1px solid transparent;
+  }
+
+  .s2-docs-sidebar.affix .s2-docs-sidenav {
+    border-left-color: #eee;
+  }
+
+  .s2-docs-sidebar .nav > .active > ul {
+    display: block;
+  }
+
+  // Widen the fixed sidebar
+  .s2-docs-sidebar.affix,
+  .s2-docs-sidebar.affix-bottom {
+    width: 213px;
+  }
+
+  // Undo the static from mobile first approach
+  .s2-docs-sidebar.affix {
+    position: fixed;
+    top: 0px;
+  }
+
+  // Undo the static from mobile first approach
+  .s2-docs-sidebar.affix-bottom {
+    position: absolute;
+  }
+
+  .s2-docs-sidebar.affix-bottom .s2-docs-sidenav,
+  .s2-docs-sidebar.affix .s2-docs-sidenav {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  // Widen the fixed sidebar again
+  .s2-docs-sidebar.affix-bottom,
+  .s2-docs-sidebar.affix {
+    width: 263px;
+  }
+}
+
+/* Back to top (hidden on mobile) */
+.back-to-top {
+  display: none;
+  padding: 4px 10px;
+  margin-top: 10px;
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #999;
+
+  &:hover {
+    color: #428BCA;
+    text-decoration: none;
+  }
+
+  @media (min-width: 768px) {
+    display: block;
+  }
+}

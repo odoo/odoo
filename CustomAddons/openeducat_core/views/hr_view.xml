@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+         <record id="view_employee_form_address_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.form.address.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="address_home_id" position="replace">
+                    <field name="address_home_id" domain="[('supplier', '=', True)]" context="{'show_address': 1, 'employee': True}" options='{"always_reload": True, "highlight_first_line": True}'/>
+                </field>
+                <field name="address_id" position="replace">
+                    <field name="address_id" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}'/>
+                </field>
+                <field name="user_id" position="replace">
+                    <field name="user_id" string="Related User" domain="[('partner_id', '=', address_home_id)]"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

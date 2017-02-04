@@ -1,0 +1,153 @@
+<openerp>
+    <data>
+        <template id="report_timetable_student_generate">
+            <style>
+                .font{
+                font-size:18px;
+                font-family:"Helvetica"
+                }
+                @page{
+                size: A4;
+                }
+                table.center {
+                width:80%;
+                margin-left:10%;
+                }
+                td.spacer1{
+                padding-right:320px;
+                }
+                .table.gridtable {
+                font-size:11px;
+                border-width: 1px;
+                border-color: #cccccc;
+                border-collapse: collapse;
+                }
+                table.gridtable th {
+                border-width: 1px;
+                padding: 10px;
+                border-style: solid;
+                border-color: #cccccc;
+                }
+                table.gridtable td {
+                border-width: 1px;
+                padding: 10px;
+                border-style: solid;
+                border-color: #cccccc;
+                }
+            </style>
+
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="font">
+                            <div class="page">
+                                <div class="row text-center">
+                                    <h2>
+                                        <b>
+                                            <span t-field='res_company.name' />
+                                        </b>
+                                    </h2>
+                                </div>
+                                <div class="row text-center">
+                                    <h2>
+                                        <strong>Paskaitų tvarkaraštis</strong>
+                                    </h2>
+                                </div>
+                                <br></br>
+                                <table width="100%">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <b>Class: </b>
+                                                <span t-esc="data['course_id'][1]" />
+                                            </td>
+                                            <td class="text-right">
+                                                <b>Batch:</b>
+                                                <span t-esc="data['batch_id'][1]" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br></br>
+                                <div class="row text-center">
+                                    <b>From Date: </b>
+                                    <span t-esc="data['start_date']" />
+                                    <b>To Date:</b>
+                                    <span t-esc="data['end_date']" />
+                                </div>
+                                <br></br>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <th class="text-left">PERIOD </th>
+                                        <th class="text-center"> MON </th>
+                                        <th class="text-center"> TUES </th>
+                                        <th class="text-center"> WED </th>
+                                        <th class="text-center"> THUR </th>
+                                        <th class="text-center"> FRI </th>
+                                        <th class="text-center"> SAT </th>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="get_object(data)" t-as="a">
+                                            <td>
+                                                <span t-raw="'%s &lt;&gt;' %  a['name'] if  a['name']  else ''" />
+                                            </td>
+                                            <td>
+                                                <b>
+                                                    <span t-esc="a['line'].get('Monday',{'subject':''})['subject']" />
+                                                </b>
+                                                <br></br>
+                                                <span
+                                                    t-esc="a['line'].get('Monday',{'start_datetime':''})['start_datetime']" />
+                                            </td>
+                                            <td>
+                                                <b>
+                                                    <span t-esc="a['line'].get('Tuesday',{'subject':''})['subject']" />
+                                                </b>
+                                                <br></br>
+                                                <span
+                                                    t-esc="a['line'].get('Tuesday',{'start_datetime':''})['start_datetime']" />
+                                            </td>
+                                            <td>
+                                                <b>
+                                                    <span
+                                                        t-esc="a['line'].get('Wednesday',{'subject':''})['subject']" />
+                                                </b>
+                                                <br></br>
+                                                <span
+                                                    t-esc="a['line'].get('Wednesday',{'start_datetime':''})['start_datetime']" />
+                                            </td>
+                                            <td>
+                                                <b>
+                                                    <span t-esc="a['line'].get('Thursday',{'subject':''})['subject']" />
+                                                </b>
+                                                <br></br>
+                                                <span
+                                                    t-esc="a['line'].get('Thursday',{'start_datetime':''})['start_datetime']" />
+                                            </td>
+                                            <td>
+                                                <b>
+                                                    <span t-esc="a['line'].get('Friday',{'subject':''})['subject']" />
+                                                </b>
+                                                <br></br>
+                                                <span
+                                                    t-esc="a['line'].get('Friday',{'start_datetime':''})['start_datetime']" />
+                                            </td>
+                                            <td>
+                                                <b>
+                                                    <span t-esc="a['line'].get('Saturday',{'subject':''})['subject']" />
+                                                </b>
+                                                <br></br>
+                                                <span
+                                                    t-esc="a['line'].get('Saturday',{'start_datetime':''})['start_datetime']" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

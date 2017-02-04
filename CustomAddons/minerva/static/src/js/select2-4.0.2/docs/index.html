@@ -1,0 +1,237 @@
+---
+layout: home
+title: Select2 - The jQuery replacement for select boxes
+slug: home
+---
+
+<main class="jumbotron" role="main">
+  <div class="container text-center">
+    <h1>Select2</h1>
+    <p class="lead">
+      The jQuery replacement for select boxes
+    </p>
+    <p>
+      <a href="https://github.com/select2/select2/releases" class="btn btn-outline-inverse btn-lg">
+        Download Select2
+      </a>
+    </p>
+    <p class="version">
+      Currently v4.0.2-rc.1</a>
+    </p>
+  </div>
+</main>
+
+{% include notice-previous.html %}
+
+<div class="container">
+  <section id="lead" class="lead">
+    Select2 gives you a customizable select box with support for searching,
+    tagging, remote data sets, infinite scrolling, and many other highly used
+    options.
+  </section>
+
+  <hr class="half-rule">
+
+  <div class="s2-docs-featurette">
+    <div class="row">
+      <div class="col-sm-4">
+        <i class="fa fa-language"></i>
+        <h4>In your language</h4>
+        <p>
+          Select2 comes with support for
+          <a href="examples.html#rtl">RTL environments</a>,
+          <a href="examples.html#diacritics">searching with diacritics</a> and
+          <a href="examples.html#language">over 40 languages</a> built-in.
+        </p>
+      </div>
+
+      <div class="col-sm-4">
+        <i class="fa fa-database"></i>
+        <h4>Remote data support</h4>
+        <p>
+          <a href="examples.html#data-ajax">Using AJAX</a> you can efficiently
+          search large lists of items.
+        </p>
+      </div>
+
+      <div class="col-sm-4">
+        <i class="fa fa-paint-brush"></i>
+        <h4>Fits in with your theme</h4>
+        <p>
+          Fully skinnable, CSS built with Sass and an
+          <a href="https://github.com/fk/select2-bootstrap-theme">optional theme for Bootstrap 3</a>.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-4">
+        <i class="fa fa-plug"></i>
+        <h4>Fully extensible</h4>
+        <p>
+          The <a href="announcements-4.0.html#plugin-system">plugin system</a>
+          allows you to easily customize Select2 to work exactly how you want it
+          to.
+        </p>
+      </div>
+
+      <div class="col-sm-4">
+        <i class="fa fa-tag"></i>
+        <h4>Dynamic item creation</h4>
+        <p>
+          Allow users to type in a new option and
+          <a href="examples.html#tags">add it on the fly</a>.
+        </p>
+      </div>
+
+      <div class="col-sm-4">
+        <i class="fa fa-html5"></i>
+        <h4>Full browser support</h4>
+        <p>Support for both modern and legacy browsers is built-in, even including Internet Explorer 8.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="half-rule">
+
+  <section id="getting-started">
+    <h2>
+      Getting started with Select2
+    </h2>
+
+    <p>
+      In order to use Select2, you must include the JavaScript and CSS file on
+      your website. You can get these files built for you from many different
+      locations.
+    </p>
+
+    <h3>
+      Using Select2 from a CDN
+    </h3>
+
+    <p>
+      Select2 is hosted on both the
+      <a href="https://cdnjs.com/libraries/select2">cdnjs</a> and
+      <a href="https://www.jsdelivr.com/#!select2">jsDelivr</a> CDNs, allowing
+      you to quickly include Select2 on your website.
+    </p>
+
+    <ol>
+      <li>
+        <p>
+          Include the following lines of code in the <code>&lt;head&gt;</code>
+          section of your HTML.
+        </p>
+
+{% highlight html %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
+{% endhighlight %}
+
+        <div class="alert alert-info">
+          <i class="fa fa-info-circle"></i>
+          Immediately following a new release, it takes some time for CDNs to
+          catch up and get the new versions live on the CDN.
+        </div>
+      </li>
+      <li>
+        <p>
+          Initialize Select2 on the <code>&lt;select&gt;</code> element that you
+          want to make awesome.
+        </p>
+
+{% highlight html %}
+<script type="text/javascript">
+  $('select').select2();
+</script>
+{% endhighlight %}
+
+      </li>
+      <li>
+        Check out the <a href="examples.html">examples page</a> to start using
+        the additional features of Select2.
+      </li>
+    </ol>
+
+    <h3>
+      Downloading the code locally
+    </h3>
+
+    <p>
+      In some situations, you can't use Select2 from a CDN and you must include
+      the files through your own static file servers.
+    </p>
+
+    <ol>
+      <li>
+        <p>
+          <a href="https://github.com/select2/select2/tags">
+            Download the code
+          </a>
+          from GitHub and copy the <code>dist</code> directory to your project.
+        </p>
+      </li>
+      <li>
+        <p>
+          Include the following lines of code in the <code>&lt;head&gt;</code>
+          section of your HTML.
+        </p>
+
+{% highlight html %}
+<link href="path/to/select2.min.css" rel="stylesheet" />
+<script src="path/to/select2.min.js"></script>
+{% endhighlight %}
+
+      </li>
+      <li>
+        Check out the <a href="examples.html">examples page</a> to start using
+        the additional features of Select2.
+      </li>
+    </ol>
+  </section>
+
+  <section id="builds">
+    <h2>
+      The different Select2 builds
+    </h2>
+
+    <p>
+      Select2 provides multiple builds that are tailored to different
+      environments where it is going to be used. If you think you need to use
+      Select2 in a nonstandard environment, like when you are using AMD, you
+      should read over the list below.
+    </p>
+
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Build name</th>
+          <th>When you should use it</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="builds-standard">
+          <td>
+            Standard (<code>select2.js</code> / <code>select2.min.js</code>)
+          </td>
+          <td>
+            This is the build that most people should be using for Select2. It
+            includes the most commonly used features.
+          </td>
+        </tr>
+        <tr id="builds-full">
+          <td>
+            Full (<code>select2.full.js</code> / <code>select2.full.min.js</code>)
+          </td>
+          <td>
+            You should only use this build if you need the additional features
+            from Select2, like the
+            <a href="options.html#compatibility">compatibility modules</a> or
+            recommended includes like
+            <a href="https://github.com/jquery/jquery-mousewheel">jquery.mousewheel</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>

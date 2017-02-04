@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- Openeducat Menu -->
+        <menuitem id="menu_op_school_root" name="Duomenų valdymas"
+            sequence="10" groups="group_op_back_office,group_op_back_office_admin" />
+
+        <menuitem id="menu_op_general_main" name="General" parent="menu_op_school_root" sequence="30"/>
+
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_op_school_config" name="Nustatymai" parent="menu_op_school_root" sequence="40"/>
+
+        <menuitem id="menu_op_faculty_sub" name="Dėstytojai"
+            parent="menu_op_school_config" sequence="10" action="act_open_op_faculty_view"
+            groups="group_op_back_office,group_op_back_office_admin" />
+        <menuitem id="menu_op_subject_sub" name="Dalykai" sequence="20" parent="menu_op_school_config"
+            action="act_open_op_subject_view" 
+            groups="group_op_back_office,group_op_back_office_admin" />
+        <menuitem id="menu_op_batch_sub" name="Grupes" parent="menu_op_school_config" sequence="50"
+            action="act_open_op_batch_view" 
+            groups="group_op_back_office,group_op_back_office_admin" />
+        <menuitem id="menu_op_course_sub" name="Studijų programos" parent="menu_op_school_config" sequence="60"
+            action="act_open_op_course_view" 
+            groups="group_op_back_office,group_op_back_office_admin" />
+         <menuitem id="menu_op_xsemester_sub" name="Semestrai" parent="menu_op_school_config" sequence="70"
+            action="act_open_op_xsemester_view" 
+            groups="group_op_back_office,group_op_back_office_admin" />
+        
+
+        
+
+
+  <!--      <menuitem id="menu_op_school_config_general" name="General Management" parent="menu_op_school_config" sequence="80"/>
+
+        <menuitem id="menu_op_roll_number_sub" name="Roll Numbers"
+            parent="menu_op_school_config_general" sequence="10"
+            action="act_open_op_roll_number_view" groups="group_op_back_office,group_op_back_office_admin" />
+ -->
+        <!-- Activity Root -->
+        <menuitem id="menu_op_school_config_activity" name="Activity Management" parent="menu_op_school_config" sequence="40" />
+    </data>
+</openerp>

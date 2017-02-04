@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- paskaitų tree view -->
+        <record id="view_op_timetable_tree" model="ir.ui.view">
+            <field name="name">op.timetable.tree</field>
+            <field name="model">op.timetable</field>
+            <field name="priority" eval="7" />
+            <field name="arch" type="xml">
+                <tree string="Paskaitos">
+                    <field name= "day" />
+                    <field name= "week" />
+                    <field name= "period_id"  />
+                    <field name= "subject_id"  />
+                    <field name= "faculty_id" />
+                    <field name= "batch_id" />
+                    <field name= "note"/>
+                    <field name= "classroom_id" />
+                    <field name="einamasis" invisible="1" />
+                    <field name="sekantis" invisible="1" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_op_timetable_tree_all" model="ir.ui.view">
+            <field name="name">op.timetable.tree</field>
+            <field name="model">op.timetable</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Paskaitos">
+                    <field name= "day" />
+                    <field name= "week" />
+                    <field name= "period_id"  />
+                    <field name= "subject_id"  />
+                    <field name= "faculty_id" />
+                    <field name= "batch_id" />
+                    <field name= "note"/>
+                    <field name= "classroom_id" />
+                    <field name="einamasis" invisible="1" />
+                    <field name="sekantis" invisible="1" />
+                    <field name="xsemester_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!--pasaitu tree view -->
+        <!-- paskaitų forrm view -->
+        
+        <record id="view_op_timetable_form" model="ir.ui.view">
+            <field name="name">op.timetable.form</field>
+            <field name="model">op.timetable</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="'Paskaita'">
+                    <sheet>
+                     <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_user" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                        <newline/>
+                    </div>
+                        <group colspan="4" col="4">
+                                                  
+                            <field name= "subject_id"/>
+                            <field name= "day"/>
+                            <field name= "batch_id" options="{'no_create_edit': True}" />                          
+                            <field name= "period_id" options="{'no_create_edit': True}"/>
+                            <field name= "note"/>
+                            <field name= "week"/>
+                            <field name= "faculty_id" options="{'no_create_edit': True}"/>
+                            <field name= "classroom_id" options="{'no_create_edit': True}"/>     
+                              <field name= "xsemester_id" options="{'no_create_edit': True}" />
+
+                         </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--paskaitų form view -->
+        
+        <record id="view_op_timetable_search" model="ir.ui.view">
+            <field name="name">op.timetable.search</field>
+            <field name="model">op.timetable</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Paskaitos">
+                    <field name="faculty_id" select="True" />
+                    <field name="batch_id" select="True" />
+                    <field name="period_id" select="True" />
+                    <field name="subject_id" select="True" />
+                    <field name="start_datetime" select="True" invisible="1" />
+                    <field name="end_datetime" select="True"  attrs="{'required':[],'invisible':[]}"/>
+                    <field name="type" select="True" />
+                    <newline />
+                    <filter string="Einamasis Semestras" domain="['einamasis', '=', 'True']" />  <!-- PAtaisyti domena -->
+
+                    <group expand="0" string="Group By...">
+                        <filter string= "Semestras" domain="[]"
+                            context ="{'group_by':xsemester_id'}"/>
+                        <filter string="Dėstytojas" domain="[]"
+                            context="{'group_by':'faculty_id'}" />
+                        <filter string="Grupe" domain="[]"
+                            context="{'group_by':'batch_id'}" />
+                        <filter string="Paskaitos laikas" domain="[]"
+                            context="{'group_by':'period_id'}" />
+                        <filter string="Dalykas" domain="[]"
+                            context="{'group_by':'subject_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!-- Paskaitu tree view paieška -->
+        
+        <!-- Paskaitų kalendorius -->
+        
+        <record model="ir.ui.view" id="view_op_timetable_kanban">
+            <field name="name">op.timetable.kanban</field>
+            <field name="model">op.timetable</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="type" class="o_kanban_small_column">
+                    <field name="type"/>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                        <span class="fa fa-bars fa-lg"/>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <t t-if="widget.editable"><li><a type="edit">Keisti</a></li></t>
+	                                    <t t-if="widget.deletable"><li><a type="delete">Istrinti</a></li></t>
+	                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                            <div class="oe_kanban_content">
+                                <div>
+                                    <strong><field name="period_id"/></strong>
+                                </div>
+                                <div class="oe_kanban_left">
+                                    <li t-if="record.faculty_id.raw_value">
+                                        Dėstytojas:
+                                        <field name="faculty_id"/>
+                                    </li>
+                                    <li t-if="record.subject_id.raw_value">
+                                        Dalykas:
+                                        <field name="subject_id"/>
+                                    </li>
+                                    
+                                    <li t-if="record.batch_id.raw_value">
+                                        Grupė:
+                                        <field name="batch_id"/>
+                                    </li>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('op.faculty', 'photo', record.faculty_id.raw_value)" t-att-title="record.faculty_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </div>
+                    </t>
+                    </templates>
+                </kanban>
+            </field>
+         </record>
+         <record id="view_op_timetable_calendar" model="ir.ui.view">
+            <field name="name">op.timetable.calendar</field>
+            <field name="model">op.timetable</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <calendar string="TimeTables" date_start="start_datetime"
+                    color="batch_id" date_stop="end_datetime">
+                    <field name="faculty_id" />
+                    <field name="batch_id" />
+                    <field name="period_id" />
+                    <field name="subject_id" />
+                </calendar>
+            </field>
+        </record>
+        <!--             ACTIONS -->
+        <record model="ir.actions.act_window" id="act_open_op_timetable_view">
+            <field name="name">Paskaitos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.timetable</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_op_timetable_search" />
+            <field name="domain">[('einamasis', '=', 'True')]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window" id="act_open_op_timetable_view_all">
+            <field name="name">Paskaitos_visos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.timetable</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_op_timetable_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_timetable_view_form">
+            <field name="act_window_id" ref="act_open_op_timetable_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_timetable_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_timetable_view_tree">
+            <field name="name">Paskaitos</field>
+            <field name="act_window_id" ref="act_open_op_timetable_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">tree</field>
+            <field name="domain"></field>
+            <field name="view_id" ref="view_op_timetable_tree" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_timetable_view_tree">
+            <field name="name">Visos Paskaitos</field>
+            <field name="act_window_id" ref="act_open_op_timetable_view_all" />
+            <field name="sequence" eval="15" />
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="view_id" ref="view_op_timetable_tree_all" />
+        </record>
+      <!--  <record model="ir.actions.act_window.view" id="act_open_op_timetable_view_kanban">
+            <field name="act_window_id" ref="act_open_op_timetable_view" />
+            <field name="sequence" eval="15" />
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_op_timetable_kanban" />
+        </record> -->
+    </data>
+</openerp>
