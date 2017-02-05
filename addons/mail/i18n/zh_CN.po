@@ -4,10 +4,10 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Jeffery Chenn <jeffery9@gmail.com>, 2015
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2015
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
-# liAnGjiA <liangjia@qq.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016-2017
 # Michael Chong <michaelchong2005@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 # niulinlnc <admin@niulin.net>, 2015
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-09-08 15:46+0000\n"
+"PO-Revision-Date: 2017-02-04 02:34+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -106,7 +106,7 @@ msgid ""
 "                    This list contains messages sent to you.\n"
 "                </p>\n"
 "            "
-msgstr "<p>\n               <b>没有私人消息</b>\n                </p>\n                <p>\n                    这个列表包含了发给你的消息.\n                </p>\n            "
+msgstr "<p>\n               <b>暂无私人信息。</b>\n                </p>\n                <p>\n                    此处包含了odoo系统中用户发给您的私人消息，与公事消息区别开来，公是公私是私不混。\n                </p>\n            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_star_feeds
@@ -229,7 +229,7 @@ msgstr "别名联系安全"
 #. module: mail
 #: field:base.config.settings,alias_domain:0
 msgid "Alias Domain"
-msgstr "别名网域"
+msgstr "域别名"
 
 #. module: mail
 #: field:mail.alias,alias_name:0
@@ -239,7 +239,7 @@ msgstr "别名"
 #. module: mail
 #: field:mail.alias,alias_domain:0
 msgid "Alias domain"
-msgstr "别名网域"
+msgstr "域别名"
 
 #. module: mail
 #: field:mail.alias,alias_model_id:0
@@ -1817,7 +1817,7 @@ msgstr "To:"
 #: model:ir.actions.client,name:mail.action_mail_to_me_feeds
 #: model:ir.ui.menu,name:mail.mail_tomefeeds
 msgid "To: me"
-msgstr "发给我的"
+msgstr "私信"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -1935,7 +1935,7 @@ msgstr "该消息是否是一个内部备注(注释模式)"
 #. module: mail
 #: model:mail.group,name:mail.group_all_employees
 msgid "Whole Company"
-msgstr "整个公司"
+msgstr "公司群"
 
 #. module: mail
 #. openerp-web
@@ -1961,7 +1961,7 @@ msgstr "你不能在这里创建一个新的用户。\n 要创建一个新用户
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
-msgstr "你不能删除这些群组，因为整个公司群组被其它模块引用。"
+msgstr "你不能删除这些群组，因为公司群被其它模块引用。"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:171
@@ -2018,7 +2018,7 @@ msgstr "关注者"
 #: code:addons/mail/static/src/xml/mail.xml:348
 #, python-format
 msgid "like"
-msgstr "喜欢"
+msgstr "顶"
 
 #. module: mail
 #. openerp-web
@@ -2132,7 +2132,7 @@ msgstr "到"
 #: code:addons/mail/static/src/xml/mail.xml:349
 #, python-format
 msgid "unlike"
-msgstr "不喜欢"
+msgstr "踩"
 
 #. module: mail
 #. openerp-web

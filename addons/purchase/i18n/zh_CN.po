@@ -4,10 +4,10 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
-# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
-# liAnGjiA <liangjia@qq.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016-2017
 # 智源软件 <likaiyuan2006@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 # Shan Leiping <ccdos@163.com>, 2015
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-09-03 18:18+0000\n"
+"PO-Revision-Date: 2017-02-03 04:03+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -162,7 +162,7 @@ msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, san
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr "\n创建直运路线并且加入复杂的测试-这需要安装 “stock_dropshipp”模块。"
+msgstr "\n创建dropship（直运？）路线并且加入复杂的测试-这需要安装 “stock_dropshipp”模块。"
 
 #. module: purchase
 #: help:purchase.order.line,state:0
@@ -268,7 +268,7 @@ msgid ""
 "                You can generate a supplier invoice based on those receipts.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个新的进来的送货.\n                当开票方式是“基于进来的送货”时，这里能跟踪所有采购单的入库, 和还没有收到供应商发票的产品接收单。\n                你能基于这些收货单生成一个供应商发票。\n </p>"
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个新的进仓入库.\n                当开票方式是“基于进仓入库”时，这里能跟踪所有采购单的入库, 和还没有收到供应商发票的产品接收单。\n                你能基于这些收货单生成一个供应商发票。\n </p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -358,7 +358,7 @@ msgstr "提前招标程序"
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
 msgid "Alerts by products or supplier"
-msgstr "根据产品或者供应商的警报"
+msgstr "允许根据产品或者供应商发出警示消息"
 
 #. module: purchase
 #: help:purchase.config.settings,module_warning:0
@@ -366,7 +366,7 @@ msgid ""
 "Allow to configure notification on products and trigger them when a user wants to purchase a given product or a given supplier.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
-msgstr "允许配置产品的通知消息，当要销售给定产品或者给定的客户时 会被触发。\n例如：产品：该产品被弃用，不要采购多余5个。\n           供应商：别忘记要求快递。"
+msgstr "允许配置产品的警示消息，当要销售特定产品或者选择特定的供应商时会被触发警示消息。\n例如：产品：该产品被弃用，不要采购多于5个。\n           供应商：别忘记要求快递。"
 
 #. module: purchase
 #: help:account.config.settings,module_purchase_analytic_plans:0
@@ -468,7 +468,7 @@ msgid ""
 "Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n"
 "Based on generated invoice: create a draft invoice you can validate later.\n"
 "Based on incoming shipments: let you create an invoice when receipts are validated."
-msgstr "基于采购单行: 在”发票管理 ->基于采购单行”你可以单独为每个订单行开票。\n基于订单: 生成一个发票草稿供你以后确认。\n基于进来的送货: 入库后根据入库单手动开票。"
+msgstr "基于采购单行: 在”发票管理 ->基于采购单行”你可以单独为每个订单行开票。\n基于订单: 生成一个发票草稿供你以后确认。\n基于进仓入库: 入库后根据入库单手动开票。"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -479,7 +479,7 @@ msgstr "基于生成的发票草稿"
 #: selection:purchase.config.settings,default_invoice_method:0
 #: selection:purchase.order,invoice_method:0
 msgid "Based on incoming shipments"
-msgstr "基于进来的送货"
+msgstr "基于进仓入库"
 
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
@@ -995,7 +995,7 @@ msgstr "已收到发票"
 #. module: purchase
 #: field:stock.picking,reception_to_invoice:0
 msgid "Invoiceable on incoming shipment?"
-msgstr "基于进来的送货开票？"
+msgstr "基于进仓入库开票？"
 
 #. module: purchase
 #: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
@@ -1098,12 +1098,12 @@ msgstr "管理产品的不同计量单位"
 #. module: purchase
 #: field:purchase.config.settings,module_stock_dropshipping:0
 msgid "Manage dropshipping"
-msgstr "管理直运"
+msgstr "管理Dropshipping（外贸术语类似阿里巴巴的工厂直销1件代发）"
 
 #. module: purchase
 #: field:purchase.config.settings,group_purchase_pricelist:0
 msgid "Manage pricelist per supplier"
-msgstr "管理每个供应商的价格表"
+msgstr "允许管理每个供应商的价格表"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -1202,7 +1202,7 @@ msgstr "基于草稿发票"
 #: model:ir.actions.act_window,name:purchase.action_picking_tree_picking_to_invoice
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_picking_to_invoice
 msgid "On Incoming Shipments"
-msgstr "基于进来的送货"
+msgstr "基于进仓入库"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
@@ -1421,7 +1421,7 @@ msgstr "产品价值"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr "产品 按类别"
+msgstr "产品类别"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:851
@@ -1843,7 +1843,7 @@ msgstr "供应商"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Supplier Features"
-msgstr "供应商特征"
+msgstr "供应商特性"
 
 #. module: purchase
 #: view:res.partner:purchase.res_partner_view_purchase_account_buttons
