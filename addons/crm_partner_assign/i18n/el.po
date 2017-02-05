@@ -6,13 +6,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
 # Kostas Goutoudis <goutoudis@gmail.com>, 2016
+# Γιώργος Μηντζιλώνης, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 15:14+0000\n"
-"PO-Revision-Date: 2016-11-12 18:17+0000\n"
-"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
+"PO-Revision-Date: 2017-02-02 12:23+0000\n"
+"Last-Translator: Γιώργος Μηντζιλώνης\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +56,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\n<p> Γεια σας, </ p> \n\n\n<p>Έχουμε έρθει σε επαφή με αυτές τις προοπτικές που βρίσκονται στην περιοχή σας. Έτσι, οι ακόλουθες συστάσεις έχουν ανατεθεί σε $ ${ctx['partner_id'].name}: </ p> \n\n<ol>\n\n% για συστάσεις \n<li><a href=\"${lead.lead_link}\">${lead.lead_id.name ή 'Subject Undefined'}</a>, ${lead.lead_id.partner_name ή lead.lead_id.contact_name ή 'Contact Name Undefined'}, ${lead.lead_id.country_id και lead.lead_id.country_id.name ή 'Country Undefined' }, ${lead.lead_id.email_from ή 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n% τέλους για\n</ol>\n% αν ctx.get('partner_in_portal'):\n<p>Παρακαλώ συνδεθείτε στο <a href=\"${object.get_portal_url()}\">Διαδικτυακή Πύλη του Συνεργάτη</a> για να πάρετε λεπτομέρειες. Σε κάθε μολύβι υπάρχουν δύο κουμπιά στην πάνω αριστερή γωνία τα οποία πρέπει να πατήσετε αφού έρθετε σε επαφή με διευθυντή: \"Με ενδιαφέρει & δεν με ενδιαφέρει\". </p>\n% αλλιώς: <p>\nΔεν έχετε ακόμα μία πύλη πρόσβασης στην βάση δεδομένων μας. Παρακαλώ επικοινωνήστε ${ctx['partner_id'].user_id και ctx['partner_id'].user_id.email και 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) ή 'us'}.\n</p>\n% τέλος αν\n<p>Η καθοδήγηση θα σταλεί σε άλλο συνεργάτη αν δεν επικοινωνήσετε με τον διευθυντή προ 20 ημερών. </p>\n\n<p>Ευχαριστούμε</p>\n\n<pre>\n${ctx['partner_id'].user_id και ctx['partner_id'].user_id.signature | safe ή ''}\n</pre>\n% αν όχι ctx['partner_id'].user_id:\nΥ.Γ.: Φένεται πως δεν έχετε έναν λογαριασμό διαχειριστή αναθετημένο σε εσάς, παρακαλούμε επικοινωνήστε μας.\n% τέλος αν:"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
