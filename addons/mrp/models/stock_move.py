@@ -356,7 +356,7 @@ class StockMove(models.Model):
             for move in self:
                 move_qty = move.product_qty
                 total_qty += move_qty
-                price_unit = move.product_uom._compute_price(move.product_id.standard_price or 0, move.product_id.uom_id)
+                price_unit = move.product_id.uom_id._compute_price(move.product_id.standard_price or 0, move.product_uom)
                 dic_moves.append((move, price_unit * move_qty))
                 total_value += price_unit * move_qty
 
