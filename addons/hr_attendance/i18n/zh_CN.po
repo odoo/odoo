@@ -4,16 +4,16 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
-# liAnGjiA <liangjia@qq.com>, 2015-2016
+# liAnGjiA <liangjia@qq.com>, 2015-2017
 # liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-09-03 18:06+0000\n"
+"PO-Revision-Date: 2017-02-02 05:34+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -98,12 +98,12 @@ msgstr "考勤报错："
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
 msgid "Attendance Reasons"
-msgstr "考勤的原因"
+msgstr "补卡"
 
 #. module: hr_attendance
 #: view:hr.action.reason:hr_attendance.view_attendance_reason
 msgid "Attendance reasons"
-msgstr "考勤的原因"
+msgstr "补卡"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
@@ -127,7 +127,7 @@ msgstr "取消"
 #: code:addons/hr_attendance/static/src/js/attendance.js:35
 #, python-format
 msgid "Click to Sign In at %s."
-msgstr "单击登录在 %s."
+msgstr "现在时刻 %s您点击即生成考勤上班打卡记录。"
 
 #. module: hr_attendance
 #: field:hr.action.reason,create_uid:0 field:hr.attendance,create_uid:0
@@ -164,7 +164,7 @@ msgstr "签到日期"
 #. module: hr_attendance
 #: view:hr.action.reason:hr_attendance.edit_attendance_reason
 msgid "Define attendance reason"
-msgstr "定义考勤的原因"
+msgstr "补卡规则"
 
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
@@ -234,7 +234,7 @@ msgstr "最后一次更新"
 #: code:addons/hr_attendance/static/src/js/attendance.js:33
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr "上次登录时间是：%s,<br />%s.<br />鼠标再点击一下就是注销。"
+msgstr "前次打卡时间是：%s，<br />%s。<br />您点击即生成考勤下班打卡记录。"
 
 #. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
@@ -254,7 +254,7 @@ msgstr "月份"
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
 msgid "My Attendance"
-msgstr "我的签到记录"
+msgstr "我的考勤记录"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
@@ -286,12 +286,12 @@ msgstr "打印"
 #. module: hr_attendance
 #: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
 msgid "Print Attendance Report Error"
-msgstr "打印考勤报表错误"
+msgstr "打印考勤报表时发生错误"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_error
 msgid "Print Error Attendance Report"
-msgstr "打印错误考勤报表"
+msgstr "打印错误的考勤报表"
 
 #. module: hr_attendance
 #: field:hr.action.reason,name:0
@@ -304,7 +304,7 @@ msgstr "原因"
 #: view:hr.employee:hr_attendance.hr_attendance_employee
 #, python-format
 msgid "Sign In"
-msgstr "登录"
+msgstr "上班打卡"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:175
@@ -317,7 +317,7 @@ msgstr "签出"
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
 msgid "Sign in"
-msgstr "登录"
+msgstr "上班打卡"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -328,12 +328,12 @@ msgstr "签出"
 #: help:hr.attendance,action_desc:0
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr "为额外时间的登录/注销指定原因"
+msgstr "为超出上/下班以外的时间打卡指定原因"
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
 msgid "Specifies the reason for Signing In/Signing Out."
-msgstr "登录/注销的具体原因"
+msgstr "上/下班打卡考勤异常的原因"
 
 #. module: hr_attendance
 #: field:hr.attendance.error,init_date:0
@@ -346,7 +346,7 @@ msgid ""
 "The Time Tracking functionality aims to manage employee attendances from "
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
-msgstr "时间跟踪功能目的在于根据员工的登录/注销动作进行员工考勤管理。您也可以使用Odoo的网页服务特性将此功能连接至一考勤设备。"
+msgstr "时间跟踪功能目的在于根据员工的上班打卡/下班打卡动作进行员工考勤管理。您也可以使用Odoo的网页服务特性将此功能连接至一台考勤设备（例如中控考勤机阿里的钉钉智能云考勤机等）。"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -366,7 +366,7 @@ msgstr "总周期："
 #. module: hr_attendance
 #: field:hr.config.settings,group_hr_attendance:0
 msgid "Track attendances for all employees"
-msgstr "跟踪全体员工出席率"
+msgstr "追踪全体员工考勤率"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:182

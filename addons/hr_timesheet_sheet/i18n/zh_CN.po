@@ -4,9 +4,9 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016-2017
 # mrshelly <mrshelly@hotmail.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-09-03 18:10+0000\n"
+"PO-Revision-Date: 2017-02-02 05:34+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -91,7 +91,7 @@ msgstr "添加明细"
 #: field:hr.config.settings,timesheet_max_difference:0
 msgid ""
 "Allow a difference of time between timesheets and attendances of (in hours)"
-msgstr "允许计工单与出勤时间有差异（小时）"
+msgstr "允许计工单与考勤时间有差异(小时)"
 
 #. module: hr_timesheet_sheet
 #: help:hr.config.settings,timesheet_max_difference:0
@@ -99,7 +99,7 @@ msgstr "允许计工单与出勤时间有差异（小时）"
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
-msgstr "登录/注销和在一个计工单里的容许的差异小时。如果您不想这样控制设为0."
+msgstr "上班打卡/下班打卡和在一个计工单里的容许的差异小时。如果您不想这样控制设为0."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_account
@@ -452,7 +452,7 @@ msgid ""
 "the end of the period defined in the company, the timesheet is confirmed by "
 "the user and can be validated by his manager. If required, as defined on the"
 " project, you can generate the invoices based on the timesheet."
-msgstr "用\"我的计工单\"菜单开启您的计工单所以您能在系统预定你的活动。用相同方式，您能记录您的考勤（登录/注销）同时记录在不同项目的工作时间。在公司定义的期末，确认用户的计工单和经由经理使其生效。如果需要，可以定义为一个项目，你能给这计工单开发票。"
+msgstr "用\"我的计工单\"菜单开启您的计工单所以您能在系统预定你的活动。用相同方式，您能记录您的考勤(上班打卡/下班打卡)同时记录在不同项目的工作时间。在公司定义的期末，确认用户的计工单和经由经理使其生效。如果需要，可以定义为一个项目，你能给这计工单开发票。"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,state:0
@@ -543,7 +543,7 @@ msgstr "表"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Sign In"
-msgstr "登录"
+msgstr "上班打卡"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -573,7 +573,7 @@ msgstr "总计"
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
-msgstr "不包含登录及注销数值的计工单无法被核实。"
+msgstr "未包含上班打卡和下班打卡数据的计工单无法被核实。"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -675,7 +675,7 @@ msgstr "考勤合计"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
 msgid "Total Attendances"
-msgstr "工作时长"
+msgstr "考勤合计"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
@@ -771,7 +771,7 @@ msgstr "周"
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
-msgstr "您无法录入当前计工单日期外的出勤。"
+msgstr "您无法录入当前计工单日期外的考勤。"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
@@ -779,13 +779,13 @@ msgstr "您无法录入当前计工单日期外的出勤。"
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
 "to reset it before adding attendance."
-msgstr "在一张已提交的计工单上您无法录入出勤。在添加出勤信息前，联系您的主管将它重置。"
+msgstr "计工单状态为已提交因此您无法录入考勤打卡数据。在你添加考勤信息前，请联系您的主管先将它重置。"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
-msgstr "您无法删除一张包含出勤信息的计工单。"
+msgstr "您不可删除一张包含考勤数据的计工单。"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
@@ -804,7 +804,7 @@ msgstr "您无法复制计工单。"
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
-msgstr "无法录入当前时间表以外的出勤日期"
+msgstr "无法录入当前时间表以外的考勤日期"
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
