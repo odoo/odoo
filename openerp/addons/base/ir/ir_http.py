@@ -109,9 +109,11 @@ class ir_http(osv.AbstractModel):
             datas = attach[0]['datas'] or ''
             name = attach[0]['name']
 
-            if (not datas and name != request.httprequest.path and
-                    name.startswith(('http://', 'https://', '/'))):
-                return werkzeug.utils.redirect(name, 301)
+            if not datas:
+                if name != request.httprequest.path and name.startswith(('http://', 'https://', '/')):
+                    return werkzeug.utils.redirect(name, 301)
+                else:
+                    return werkzeug.utils.redirect(name, 204)
 
             response = werkzeug.wrappers.Response()
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
