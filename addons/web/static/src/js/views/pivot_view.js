@@ -57,6 +57,7 @@ var PivotView = View.extend({
         this.headers = {};
         this.cells = {};
         this.has_data = false;
+        this.$buttons = $();
 
         this.last_header_selected = null;
         this.sorted_column = {};
