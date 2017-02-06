@@ -73,8 +73,20 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="point_of_sale.view_account_journal_pos_user_form"></field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='amount_authorized_diff']" position="after">
-                    <field name="pos_mercury_config_id"/>
+                <xpath expr="//group[@name='amount_authorized']" position="after">
+                    <group  attrs="{'invisible': [('type', '!=', 'bank')]}">
+                        <field name="pos_mercury_config_id"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_account_bank_journal_form_inherited_pos_mercury" model="ir.ui.view">
+            <field name="name">account.bank.journal.form.inherited.pos.mercury</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="point_of_sale.view_account_bank_journal_form_inherited_pos"></field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='journal_user']" position="after">
+                    <field name="pos_mercury_config_id" attrs="{'invisible': [('journal_user', '=', False)]}"/>
                 </xpath>
             </field>
         </record>

@@ -362,11 +362,24 @@
                             <group>
                                 <field name="bank_acc_number"/>
                                 <field name="bank_id"/>
-                            </group><group>
+                            </group>
+                            <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Receivables">
                                 <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
+                            </group>
+                            <group string="Payables">
                                 <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
+                            </group>
+                            <group name="bank_statement" string="Bank Statements">
+                                <label for="bank_statements_source"/>
+                                <div name="bank_source">
+                                    <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"/>
+                                </div>
                             </group>
                         </group>
                     </sheet>

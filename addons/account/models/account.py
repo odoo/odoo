@@ -281,12 +281,14 @@ class AccountJournal(models.Model):
 
     inbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
         domain=[('payment_type', '=', 'inbound')], string='Debit Methods', default=lambda self: self._default_inbound_payment_methods(),
-        help="Means of payment for collecting money. Odoo modules offer various payments handling facilities, "
-             "but you can always use the 'Manual' payment method in order to manage payments outside of the software.")
+        help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
+             "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"\
+             "Batch Deposit: Encash several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings.")
     outbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
         domain=[('payment_type', '=', 'outbound')], string='Payment Methods', default=lambda self: self._default_outbound_payment_methods(),
-        help="Means of payment for sending money. Odoo modules offer various payments handling facilities, "
-             "but you can always use the 'Manual' payment method in order to manage payments outside of the software.")
+        help="Manual:Pay bill by cash or any other method outside of Odoo.\n"\
+             "Check:Pay bill by check and print it from Odoo.\n"\
+             "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings.")
     at_least_one_inbound = fields.Boolean(compute='_methods_compute', store=True)
     at_least_one_outbound = fields.Boolean(compute='_methods_compute', store=True)
     profit_account_id = fields.Many2one('account.account', string='Profit Account', domain=[('deprecated', '=', False)], help="Used to register a profit when the ending balance of a cash register differs from what the system computes")
