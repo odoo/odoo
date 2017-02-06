@@ -10,7 +10,7 @@
             <button name="toggle_active" position="before">
                 <field name="website_url" invisible="1"/>
                 <button class="oe_stat_button" name="website_publish_button"
-                    type="object" icon="fa-globe">
+                    type="object" icon="fa-globe" context="{'target': 'new'}">
                     <field name="website_published" widget="website_button"/>
                 </button>
             </button>
