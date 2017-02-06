@@ -278,13 +278,19 @@ var DebugWidget = PosBaseWidget.extend({
         });
 
         this.$('.button.export_unpaid_orders').click(function(){
-            self.gui.download_file(self.pos.export_unpaid_orders(),
-                "unpaid_orders_" + (new Date()).toUTCString().replace(/\ /g,'_') + '.json');
+            self.gui.prepare_download_link(
+                self.pos.export_unpaid_orders(),
+                _t("unpaid orders") + ' ' + moment().format('YYYY-MM-DD-HH-mm-ss') + '.json',
+                ".export_unpaid_orders", ".download_unpaid_orders"
+            );
         });
 
         this.$('.button.export_paid_orders').click(function() {
-            self.gui.download_file(self.pos.export_paid_orders(),
-                "paid_orders_" + (new Date()).toUTCString().replace(/\ /g,'_') + '.json');
+            self.gui.prepare_download_link(
+                self.pos.export_paid_orders(),
+                _t("paid orders") + ' ' + moment().format('YYYY-MM-DD-HH-mm-ss') + '.json',
+                ".export_paid_orders", ".download_paid_orders"
+            );
         });
 
         this.$('.button.import_orders input').on('change', function(event) {
