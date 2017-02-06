@@ -17,6 +17,12 @@ class AccountInvoiceLine(models.Model):
             fields=['product_id'],
         )
 
+        # Get free products
+        purchases += self.env['sale.order.line'].sudo().search_read(
+            domain=[('price_subtotal', '=', 0.0), ('order_id.partner_id', '=', partner.id)],
+            fields=['product_id'],
+        )
+
         # I only want product_ids, but search_read insists in giving me a list of
         # (product_id: <id>, name: <product code> <template_name> <attributes>)
         return map(lambda x: x['product_id'][0], purchases)

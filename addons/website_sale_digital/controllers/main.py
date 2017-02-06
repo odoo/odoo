@@ -34,11 +34,10 @@ class WebsiteSaleDigital(website_account):
             return response
         order = response.qcontext['order']
         invoiced_lines = request.env['account.invoice.line'].sudo().search([('invoice_id', 'in', order.invoice_ids.ids), ('invoice_id.state', '=', 'paid')])
+        products = invoiced_lines.mapped('product_id') | order.order_line.filtered(lambda r: not r.price_subtotal).mapped('product_id')
 
         purchased_products_attachments = {}
-        for il in invoiced_lines:
-            product = il.product_id
-
+        for product in products:
             # Search for product attachments
             Attachment = request.env['ir.attachment']
             product_id = product.id
