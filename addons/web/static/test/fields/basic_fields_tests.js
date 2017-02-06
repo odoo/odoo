@@ -1576,7 +1576,7 @@ QUnit.module('basic_fields', {
 
         // Focusing the field selector input should open the field selector
         // popover
-        $fieldSelector.find("> input").trigger('focusin');
+        $fieldSelector.trigger('focusin');
         var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
         assert.ok($fieldSelectorPopover.is(":visible"),
             "field selector popover should be visible");
@@ -1605,8 +1605,8 @@ QUnit.module('basic_fields', {
         // "color" field
         form.$buttons.find('.o_form_button_save').click();
         $domain = form.$(".o_form_field_domain");
-        assert.ok($domain.html().indexOf("color") >= 0,
-            "field selector readonly value should now contain 'color'");
+        assert.ok($domain.html().indexOf("Color index") >= 0,
+            "field selector readonly value should now contain 'Color index'");
         form.destroy();
     });
 
@@ -1642,7 +1642,7 @@ QUnit.module('basic_fields', {
             "there should be a field selector");
 
         // Focusing its input should open the field selector popover
-        $fieldSelector.find("> input").trigger('focusin');
+        $fieldSelector.trigger('focusin');
         var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
         assert.ok($fieldSelectorPopover.is(":visible"),
             "field selector popover should be visible");
@@ -1667,7 +1667,7 @@ QUnit.module('basic_fields', {
 
         // Refocusing the field selector input should open the popover again
         $fieldSelector = form.$(".o_field_selector");
-        $fieldSelector.find("> input").trigger('focusin');
+        $fieldSelector.trigger('focusin');
         $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
         assert.ok($fieldSelectorPopover.is(":visible"),
             "field selector popover should be visible");

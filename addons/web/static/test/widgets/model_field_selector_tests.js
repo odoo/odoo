@@ -55,15 +55,16 @@ QUnit.module('ModelFieldSelector', {
         var $target = $("#qunit-fixture");
 
         // Create the field selector and its mock environment
-        var fieldSelector = new ModelFieldSelector(null, "partner", "", {
+        var fieldSelector = new ModelFieldSelector(null, "partner", [], {
+            readonly: false,
             debugMode: true,
         });
         testUtils.addMockEnvironment(fieldSelector, {data: this.data});
         fieldSelector.appendTo($target);
+        var $value = fieldSelector.$("> .o_field_selector_value");
 
         // Focusing the field selector input should open a field selector popover
-        var $input = fieldSelector.$("> input");
-        $input.trigger('focusin');
+        fieldSelector.$el.trigger('focusin');
         var $fieldSelectorPopover = fieldSelector.$(".o_field_selector_popover:visible");
         assert.strictEqual($fieldSelectorPopover.length, 1,
             "field selector popover should be visible");
@@ -86,11 +87,11 @@ QUnit.module('ModelFieldSelector', {
         $barLi.click();
         assert.notOk($fieldSelectorPopover.is("visible"),
             "field selector popover should be closed now");
-        assert.strictEqual($input.val(), "bar",
-            "field selector input value should be 'bar'");
+        assert.strictEqual(getValueFromDOM($value), "Bar",
+            "field selector value should be displayed with a 'Bar' tag");
 
         // Focusing the input again should open the same popover
-        $input.trigger('focusin');
+        fieldSelector.$el.trigger('focusin');
         assert.ok($fieldSelectorPopover.is(":visible"),
             "field selector popover should be visible");
 
@@ -121,9 +122,15 @@ QUnit.module('ModelFieldSelector', {
         $lis.first().click();
         assert.notOk($fieldSelectorPopover.is("visible"),
             "field selector popover should be closed now");
-        assert.strictEqual($input.val(), "product_id.name",
-            "field selector input value should be 'product_id.name'");
+        assert.strictEqual(getValueFromDOM($value), "Product -> Product Name",
+            "field selector value should be displayed with two tags: 'Product' and 'Product Name'");
         fieldSelector.destroy();
+
+        function getValueFromDOM($dom) {
+            return _.map($dom.find(".o_field_selector_chain_part"), function (part) {
+                return $(part).text().trim();
+            }).join(" -> ");
+        }
     });
 });
 });

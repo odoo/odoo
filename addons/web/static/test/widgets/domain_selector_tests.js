@@ -77,7 +77,7 @@ QUnit.module('DomainSelector', {
             "there should be a field selector");
 
         // Focusing the field selector input should open a field selector popover
-        $fieldSelector.find("> input").trigger('focusin');
+        $fieldSelector.trigger('focusin');
         var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover:visible");
         assert.strictEqual($fieldSelectorPopover.length, 1,
             "field selector popover should be visible");
@@ -106,7 +106,7 @@ QUnit.module('DomainSelector', {
 
         // There should be a "+" button to add a domain part; clicking on it
         // should add the default "['id', '=', 1]" domain
-        var $plus = domainSelector.$(".fa-plus");
+        var $plus = domainSelector.$(".fa-plus-circle");
         assert.strictEqual($plus.length, 1, "there should be a '+' button");
         $plus.click();
         assert.strictEqual(
@@ -138,10 +138,10 @@ QUnit.module('DomainSelector', {
         // There should be five "-" buttons to remove domain part; clicking on
         // the two last ones, should leave a domain with only the "bar" and
         // "foo" fields, with the initial "&" operator
-        var $minus = domainSelector.$(".fa-minus");
-        assert.strictEqual($minus.length, 5, "there should be five '-' buttons");
+        var $minus = domainSelector.$(".o_domain_delete_node_button");
+        assert.strictEqual($minus.length, 5, "there should be five 'x' buttons");
         $minus.last().click();
-        domainSelector.$(".fa-minus").last().click();
+        domainSelector.$(".o_domain_delete_node_button").last().click();
         assert.strictEqual(
             domainSelector.$(".o_domain_debug_input").val(),
             '["&",["bar","=",True],["foo","=","hello"]]',
