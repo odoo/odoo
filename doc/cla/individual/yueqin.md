@@ -8,4 +8,4 @@ I declare that I am authorized and able to make this agreement and sign this dec
 
 Signed,
 
-Yue Qin yueqin@odooyun.com https://github.com/yueqin
+Yue Qin 602559817@qq.com https://github.com/yueqin
