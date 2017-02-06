@@ -7,9 +7,11 @@ Miscellaneous tools used by OpenERP.
 """
 
 from functools import wraps
+import babel
 import cPickle
 import cProfile
 from contextlib import contextmanager
+import datetime
 import subprocess
 import logging
 import os
@@ -649,6 +651,8 @@ DEFAULT_SERVER_DATETIME_FORMAT = "%s %s" % (
     DEFAULT_SERVER_DATE_FORMAT,
     DEFAULT_SERVER_TIME_FORMAT)
 
+DATE_LENGTH = len(datetime.date.today().strftime(DEFAULT_SERVER_DATE_FORMAT))
+
 # Python's strftime supports only the format directives
 # that are available on the platform's libc, so in order to
 # be cross-platform we map to the directives required by
@@ -1155,6 +1159,36 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
         elif currency_obj and currency_obj.position == 'before':
             res = '%s %s' % (currency_obj.symbol, res)
     return res
+
+def format_date(env, value, lang_code=False, date_format=False):
+    '''
+        Formats the date in a given format.
+
+        :param env: an environment.
+        :param date, datetime or string value: the date to format.
+        :param string lang_code: the lang code, if not specified it is extracted from the
+            environment context.
+        :param string date_format: the format or the date (LDML format), if not specified the
+            default format of the lang.
+        :return: date formatted in the specified format.
+        :rtype: string
+    '''
+    if not value:
+        return ''
+    if isinstance(value, datetime.datetime):
+        value = value.date()
+    elif isinstance(value, basestring):
+        if len(value) < DATE_LENGTH:
+            return ''
+        value = value[:DATE_LENGTH]
+        value = datetime.datetime.strptime(value, DEFAULT_SERVER_DATE_FORMAT).date()
+
+    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+    locale = babel.Locale.parse(lang.code)
+    if not date_format:
+        date_format = posix_to_ldml(lang.date_format, locale=locale)
+
+    return babel.dates.format_date(value, format=date_format, locale=locale)
 
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
