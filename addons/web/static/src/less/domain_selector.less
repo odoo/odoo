@@ -1,44 +1,98 @@
 
 .o_domain_node {
-    @o-domain-selector-vspace: 8px;
     @o-domain-selector-indent: 32px;
-    @o-domain-selector-panel-space: 128px;
+    @o-domain-selector-panel-space: 60px;
+    @o-domain-selector-row-height: 35px; // should be greater than a "normal" row so that "header" parts are the same size of rows
+    @o-domain-animation-bar-height: 15px;
 
-    .o_domain_node_control_panel {
-        .o-position-absolute(@right: 0);
+    position: relative;
+
+    // Rows in a domain node (selector) have a minimum height and holds the control panel
+    .o_domain_selector_row {
+        .o-flex-display();
+        .o-align-items(center);
+        min-height: @o-domain-selector-row-height;
+
+        > * {
+            .o-flex(0, 0, auto);
+        }
+
+        > .o_domain_node_control_panel {
+            .o-position-absolute(@top: 0, @bottom: 0, @right: -@o-domain-selector-panel-space);
+
+            > button {
+                float: left;
+                width: @o-domain-selector-panel-space/2;
+                height: 100%;
+                padding: 0;
+                background-color: transparent;
+                font-size: 16px;
+                opacity: 0.2;
+                cursor: pointer;
+
+                &.o_domain_delete_node_button {
+                    font-size: 12px;
+                    padding-left: 5px;
+
+                    &:hover {
+                        color: @brand-danger;
+                    }
+                }
+            }
+        }
     }
 
+    // Rules specific to domain parts which contain sub-domain parts
     &.o_domain_tree {
-        .o_domain_tree_operator_caret::after {
-            .o-caret-down();
+        > .o_domain_tree_header {
+            position: relative;
+
+            .o_domain_tree_operator_caret::after {
+                .o-caret-down();
+            }
         }
 
         > .o_domain_node_children_container {
             padding-left: @o-domain-selector-indent;
-
-            > div {
-                margin-top: @o-domain-selector-vspace;
-            }
         }
 
+        // Rules specific to domain root
         &.o_domain_selector {
-            &.o_edit_mode {
-                position: relative;
-
-                > .o_domain_node_children_container {
-                    padding-right: @o-domain-selector-panel-space;
-                }
+            > .o_domain_tree_header {
+                min-height: 22px; // prevents "records button" to overflow 1-row domain
             }
 
             > .o_domain_node_children_container {
                 padding-left: 0;
             }
+
+            &.o_edit_mode > .o_domain_node_children_container {
+                padding-right: @o-domain-selector-panel-space; // delete button is over the row
+            }
+
+            > .o_domain_debug_container {
+                display: block;
+                margin-top: 16px;
+                padding: 8px 10px 12px;
+                background: @gray-dark;
+                color: fade(white, 50%);
+                font-family: monospace;
+                font-weight: normal;
+
+                > input {
+                    border: none;
+                    padding-top: 8px;
+                    background: transparent;
+                    color: white;
+                }
+            }
         }
     }
 
+    // Rules specific to domain parts which do not contain sub-domain parts
     &.o_domain_leaf {
         &.o_read_mode {
-            display: inline-block;
+            .o-inline-flex-display();
             margin-right: 4px;
         }
 
@@ -47,23 +101,47 @@
             border: 1px solid darken(@odoo-brand-lightsecondary, 10%);
             padding: 2px 4px;
 
-            .o_domain_leaf_chain, .o_domain_leaf_value {
-                font-weight: 700;
+            > .o_field_selector {
+                float: left;
+                margin-right: 4px;
+
+                > .o_field_selector_value > .o_field_selector_chain_part {
+                    border: none;
+                    font-weight: 700;
+                }
             }
             .o_domain_leaf_operator {
                 font-style: italic;
+            }
+            .o_domain_leaf_value {
+                font-weight: 700;
             }
         }
 
         > .o_domain_leaf_edition {
             .o-flex-display();
-            .o-align-items(flex-end);
+            width: 100%;
+            padding: 4px (@o-domain-selector-panel-space/2) 4px 0;
 
             > * {
-                width: percentage(1/3);
+                .o-flex(1, 1, 15%); // operator select
+                width: auto;
+                background-color: white;
+
+                &:first-child { // field selector
+                    .o-flex(0, 1, 55%);
+                }
+
+                &:last-child { // field value
+                    .o-flex(1, 1, 25%);
+                }
 
                 + * {
                     margin-left: 4px;
+                }
+
+                input, select, .o_datepicker, .o_datepicker_input {
+                    height: 100%;
                 }
             }
 
@@ -82,6 +160,45 @@
                     cursor: pointer;
                 }
             }
+        }
+    }
+
+    // Animation effects
+    .o-transition(margin-bottom, .05s, ease, .05s);
+
+    &::after {
+        content: "";
+        .o-position-absolute(@left: 0, @right: 0, @top: 100%);
+        display: block;
+        height: @o-domain-animation-bar-height;
+        max-height: 0;
+        .o-linear-gradient(45deg, fade(@odoo-brand-optional, 40%), fade(@odoo-brand-optional, 10%));
+        .o-transition(max-height, .05s, ease, .05s);
+    }
+
+    &.o_hover_btns, &.o_hover_add_node {
+        .o_domain_node_control_panel > button {
+            opacity: 0.5;
+            &:hover {
+                opacity: 1.0;
+            }
+        }
+    }
+
+    &.o_hover_btns {
+        background: darken(white, 3%);
+    }
+
+    &.o_hover_add_node {
+        margin-bottom: @o-domain-animation-bar-height;
+        .o-transition(margin, .15s, ease, .5s);
+
+        &::after {
+            max-height: @o-domain-animation-bar-height;
+            .o-transition(max-height, .15s, ease, .5s);
+        }
+        &.o_hover_add_inset_node::after {
+            left: @o-domain-selector-indent;
         }
     }
 }
