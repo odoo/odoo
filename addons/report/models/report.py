@@ -512,6 +512,8 @@ class Report(models.Model):
                 if report.attachment:
                     record = self.env[report.model].browse(docid)
                     attachment_name = safe_eval(report.attachment, {'object': record, 'time': time})
+                    if not attachment_name:
+                        continue
                     existing_report = self.env['ir.attachment'].search([
                         ('datas_fname', '=', attachment_name),
                         ('res_model', '=', report.model),
