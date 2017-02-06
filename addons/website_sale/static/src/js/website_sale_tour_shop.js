@@ -33,14 +33,9 @@ odoo.define("website_sale.tour_shop", function (require) {
         content: _t("Click here to set an image describing your product."),
         position: "top",
     }, {
-        trigger: ".o_select_media_dialog img:first",
-        content: _t("Choose an image from the library."),
+        trigger: ".o_select_media_dialog .btn.filepicker",
+        content: _t("Upload an image from your local library."),
         position: "bottom",
-    }, {
-        trigger: ".o_select_media_dialog .btn.o_save_button",
-        extra_trigger: ".o_existing_attachment_cell.o_selected",
-        content: _t("Click on <b>Save</b> to add the image to the product description."),
-        position: "right",
     }, {
         trigger: "#snippet_structure .oe_snippet:eq(8) .oe_snippet_thumbnail",
         extra_trigger: "body:not(.modal-open)",
