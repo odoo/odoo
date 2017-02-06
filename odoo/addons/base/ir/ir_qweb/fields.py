@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 from PIL import Image
 from cStringIO import StringIO
 import babel
-from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils
+from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date
 from .qweb import unicodifier
 
 import logging
@@ -167,21 +167,7 @@ class DateConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        if not value or len(value) < 10:
-            return ''
-        lang = self.user_lang()
-        locale = babel.Locale.parse(lang.code)
-
-        if isinstance(value, basestring):
-            value = fields.Datetime.from_string(value[:10])
-
-        if options and 'format' in options:
-            pattern = options['format']
-        else:
-            strftime_pattern = lang.date_format
-            pattern = posix_to_ldml(strftime_pattern, locale=locale)
-
-        return babel.dates.format_date(value, format=pattern, locale=locale)
+        return format_date(self.env, value, date_format=(options or {}).get('format'))
 
 
 class DateTimeConverter(models.AbstractModel):

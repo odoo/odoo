@@ -20,17 +20,10 @@ _logger = logging.getLogger(__name__)
 
 
 def format_date(env, date, pattern=False):
-    date = datetime.datetime.strptime(date[:10], tools.DEFAULT_SERVER_DATE_FORMAT)
-    lang_code = env.context.get('lang') or 'en_US'
-    if not pattern:
-        lang = env['res.lang']._lang_get(lang_code)
-        pattern = lang.date_format
     try:
-        locale = babel.Locale.parse(lang_code)
-        pattern = tools.posix_to_ldml(pattern, locale=locale)
-        return babel.dates.format_date(date, format=pattern, locale=locale)
+        return tools.format_date(env, date, date_format=pattern)
     except babel.core.UnknownLocaleError:
-        return date.strftime(pattern)
+        return date
 
 
 def format_tz(env, dt, tz=False, format=False):
