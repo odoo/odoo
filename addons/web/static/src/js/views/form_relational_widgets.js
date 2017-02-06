@@ -26,7 +26,7 @@ var M2ODialog = Dialog.extend({
             title: _.str.sprintf(_t("Create a %s"), parent.string),
             size: 'medium',
             buttons: [
-                {text: _t('Create'), classes: 'btn-primary', click: function() {
+                {text: _t('Create'), classes: 'btn-primary', click: function(e) {
                     if (this.$("input").val() !== ''){
                         this.getParent()._quick_create(this.$("input").val());
                         this.close();
