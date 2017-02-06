@@ -429,6 +429,7 @@ class Partner(models.Model, FormatAddress):
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
             child._commercial_sync_to_children()
+        sync_children._compute_commercial_partner()
         return sync_children.write(sync_vals)
 
     @api.multi
@@ -452,6 +453,10 @@ class Partner(models.Model, FormatAddress):
                 commercial_fields = self._commercial_fields()
                 if any(field in values for field in commercial_fields):
                     self._commercial_sync_to_children()
+            for child in self.child_ids.filtered(lambda c: not c.is_company):
+                if child.commercial_partner_id != self.commercial_partner_id :
+                    self._commercial_sync_to_children()
+                    break
             # 2b. Address fields: sync if address changed
             address_fields = self._address_fields()
             if any(field in values for field in address_fields):
