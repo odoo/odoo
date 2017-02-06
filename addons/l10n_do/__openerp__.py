@@ -99,7 +99,7 @@ en Odoo):
         # Adds fiscal position
         'data/fiscal_position_template.xml',
         # configuration wizard, views, reports...
-        'data/account_chart_template.yml',
+        'data/account_chart_template_data.yml',
         ],
     'installable': True,
     'auto_install': False,
