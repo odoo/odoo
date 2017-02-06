@@ -720,7 +720,7 @@ class AccountInvoice(models.Model):
         will be grouped together if the journal has the 'group line' option. Of course a module
         can add fields to invoice lines that would need to be tested too before merging lines
         or not."""
-        return "%s-%s-%s-%s-%s-%s" % (
+        return "%s-%s-%s-%s-%s-%s-%s" % (
             invoice_line['account_id'],
             invoice_line.get('tax_ids', 'False'),
             invoice_line.get('tax_line_id', 'False'),
