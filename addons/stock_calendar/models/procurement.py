@@ -28,10 +28,10 @@ class ProcurementOrder(models.Model):
                         'next_delivery_date': delivery_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                         'next_purchase_date': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
-    def _get_purchase_order_date(self, schedule_date):
+    def _get_purchase_order_date(self, partner, schedule_date):
         if self.next_purchase_date:
             return fields.Datetime.from_string(self.next_purchase_date)
-        return super(ProcurementOrder, self)._get_purchase_order_date(schedule_date)
+        return super(ProcurementOrder, self)._get_purchase_order_date(partner, schedule_date)
 
     def _get_purchase_schedule_date(self):
         if self.next_delivery_date:
