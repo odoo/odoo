@@ -136,6 +136,8 @@ class Inventory(models.Model):
             self.category_id = False
         if self.filter == 'product':
             self.exhausted = True
+            if self.product_id:
+                return {'domain': {'product_id': [('product_tmpl_id', '=', self.product_id.product_tmpl_id.id)]}}
 
     @api.onchange('location_id')
     def onchange_location_id(self):

@@ -346,6 +346,9 @@ class Product(models.Model):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
 
+    def action_update_quantity_on_hand(self):
+        return self.product_tmpl_id.with_context({'default_product_id': self.id}).action_update_quantity_on_hand()
+
     def action_view_routes(self):
         return self.mapped('product_tmpl_id').action_view_routes()
 
@@ -526,6 +529,30 @@ class ProductTemplate(models.Model):
         action = self.env.ref('stock.action_routes_form').read()[0]
         action['domain'] = [('id', 'in', routes.ids)]
         return action
+
+    def action_update_quantity_on_hand(self):
+        default_product_id = self.env.context.get('default_product_id', self.product_variant_id.id)
+        if self.env.user.user_has_groups('stock.group_stock_multi_locations') or (self.env.user.user_has_groups('stock.group_production_lot') and self.tracking != 'none'):
+            product_ref_name = self.name + ' - ' + datetime.today().strftime('%m/%d/%y')
+            ctx = {'default_filter': 'product', 'default_product_id': default_product_id, 'default_name': product_ref_name}
+            return {
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'stock.inventory',
+                'context': ctx,
+            }
+        else:
+            wiz = self.env['stock.change.product.qty'].create({'product_id': default_product_id})
+            return {
+                    'name': _('Update quantity on hand'),
+                    'type': 'ir.actions.act_window',
+                    'view_mode': 'form',
+                    'res_model': 'stock.change.product.qty',
+                    'target': 'new',
+                    'res_id': wiz.id,
+                    'context': {'default_product_id': self.env.context.get('default_product_id')}
+                }
 
     def action_open_quants(self):
         products = self.mapped('product_variant_ids')
