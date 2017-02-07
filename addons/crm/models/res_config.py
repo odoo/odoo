@@ -30,7 +30,7 @@ class CRMSettings(models.TransientModel):
     @api.model
     def get_default_generate_sales_team_alias(self, fields):
         return {
-            'generate_sales_team_alias': self.env['ir.values'].get_default('sales.config.settings', 'generate_sales_team_alias')
+            'generate_sales_team_alias': self.env['ir.values'].get_default('sale.config.settings', 'generate_sales_team_alias')
         }
 
     @api.multi
@@ -38,7 +38,7 @@ class CRMSettings(models.TransientModel):
         IrValues = self.env['ir.values']
         if self.env['res.users'].has_group('base.group_erp_manager'):
             IrValues = IrValues.sudo()
-        IrValues.set_default('sales.config.settings', 'generate_sales_team_alias', self.generate_sales_team_alias)
+        IrValues.set_default('sale.config.settings', 'generate_sales_team_alias', self.generate_sales_team_alias)
 
     @api.model
     def get_default_alias_prefix(self, fields):

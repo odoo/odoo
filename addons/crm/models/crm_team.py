@@ -85,7 +85,7 @@ class Team(models.Model):
 
     @api.model
     def create(self, vals):
-        generate_alias_name = self.env['ir.values'].get_default('sales.config.settings', 'generate_sales_team_alias')
+        generate_alias_name = self.env['ir.values'].get_default('sale.config.settings', 'generate_sales_team_alias')
         if generate_alias_name and not vals.get('alias_name'):
             vals['alias_name'] = vals.get('name')
         return super(Team, self).create(vals)

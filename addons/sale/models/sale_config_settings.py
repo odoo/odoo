@@ -85,7 +85,7 @@ class SaleConfiguration(models.TransientModel):
 
     @api.model
     def get_default_sale_pricelist_setting(self, fields):
-        sale_pricelist_setting = self.env['ir.values'].get_default('sales.config.settings', 'sale_pricelist_setting')
+        sale_pricelist_setting = self.env['ir.values'].get_default('sale.config.settings', 'sale_pricelist_setting')
         multi_sales_price = sale_pricelist_setting in ['percentage', 'formula']
         return {
             'sale_pricelist_setting': sale_pricelist_setting,
@@ -116,7 +116,7 @@ class SaleConfiguration(models.TransientModel):
             })
 
     def set_default_sale_pricelist_setting(self):
-        return self.env['ir.values'].sudo().set_default('sales.config.settings', 'sale_pricelist_setting', self.sale_pricelist_setting)
+        return self.env['ir.values'].sudo().set_default('sale.config.settings', 'sale_pricelist_setting', self.sale_pricelist_setting)
 
     def set_deposit_product_id_defaults(self):
         return self.env['ir.values'].sudo().set_default('sale.config.settings', 'deposit_product_id_setting', self.deposit_product_id_setting.id)
