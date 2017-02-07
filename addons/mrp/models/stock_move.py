@@ -88,7 +88,7 @@ class StockMove(models.Model):
             if move.state == 'assigned':
                 move.quantity_available = move.product_uom_qty
             else:
-                move.quantity_available = move.reserved_availability
+                move.quantity_available = move.product_id.uom_id._compute_quantity(move.reserved_availability, move.product_uom)
 
     @api.multi
     @api.depends('move_lot_ids', 'move_lot_ids.quantity_done', 'quantity_done_store')
