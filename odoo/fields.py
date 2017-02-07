@@ -16,11 +16,11 @@ import psycopg2
 
 from odoo.sql_db import LazyCursor
 from odoo.tools import float_precision, float_repr, float_round, frozendict, \
-                       html_sanitize, human_size, pg_varchar, table_exists, \
-                       table_kind, ustr, OrderedSet
+                       html_sanitize, human_size, pg_varchar, ustr, OrderedSet
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.translate import html_translate, _
+import odoo.tools.sql as sql
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -285,6 +285,7 @@ class Field(object):
 
     column_type = None                  # database column type (ident, spec)
     column_format = '%s'                # placeholder for value in queries
+    column_cast_from = ()               # column types that may be cast to this
 
     _slots = {
         'args': EMPTY_DICT,             # the parameters given to __init__()
@@ -793,14 +794,91 @@ class Field(object):
 
     ############################################################################
     #
-    # Read from/write to database
+    # Update database schema
     #
 
-    def check_schema(self, model):
-        """ Make sure the database contains everything for this field. Return
-        ``True`` if the schema was altered and the field must be recomputed.
+    def update_db(self, model, columns):
+        """ Update the database schema to implement this field.
+
+            :param model: an instance of the field's model
+            :param columns: a dict mapping column names to their configuration in database
+            :return: ``True`` if the field must be recomputed on existing rows
         """
-        pass
+        if not self.column_type:
+            return
+
+        column = columns.get(self.name)
+        if not column and hasattr(self, 'oldname'):
+            # column not found; check whether it exists under its old name
+            column = columns.get(self.oldname)
+            if column:
+                sql.rename_column(model._cr, model._table, self.oldname, self.name)
+
+        # create/update the column, not null constraint, indexes
+        self.update_db_column(model, column)
+        self.update_db_notnull(model, column)
+        self.update_db_index(model, column)
+
+        return not column
+
+    def update_db_column(self, model, column):
+        """ Create/update the column corresponding to ``self``.
+
+            :param model: an instance of the field's model
+            :param column: the column's configuration (dict) if it exists, or ``None``
+        """
+        if not column:
+            # the column does not exist, create it
+            sql.create_column(model._cr, model._table, self.name, self.column_type[1], self.string)
+            return
+        if column['typname'] == self.column_type[0]:
+            return
+        if column['typname'] in self.column_cast_from:
+            sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
+        else:
+            newname = (self.name + '_moved{}').format
+            i = 0
+            while sql.column_exists(model._cr, model._table, newname(i)):
+                i += 1
+            if column['attnotnull']:
+                sql.drop_not_null(model._cr, model._table, self.name)
+            sql.rename_column(model._cr, model._table, self.name, newname(i))
+            sql.create_column(model._cr, model._table, self.name, self.column_type[1], self.string)
+
+    def update_db_notnull(self, model, column):
+        """ Add or remove the NOT NULL constraint on ``self``.
+
+            :param model: an instance of the field's model
+            :param column: the column's configuration (dict) if it exists, or ``None``
+        """
+        has_notnull = column and column['attnotnull']
+
+        if not column or (self.required and not has_notnull):
+            # the column is new or it becomes required; initialize its values
+            if model._table_has_rows():
+                model._init_column(self.name)
+
+        if self.required and not has_notnull:
+            sql.set_not_null(model._cr, model._table, self.name)
+        elif not self.required and has_notnull:
+            sql.drop_not_null(model._cr, model._table, self.name)
+
+    def update_db_index(self, model, column):
+        """ Add or remove the index corresponding to ``self``.
+
+            :param model: an instance of the field's model
+            :param column: the column's configuration (dict) if it exists, or ``None``
+        """
+        indexname = '%s_%s_index' % (model._table, self.name)
+        if self.index:
+            sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+        else:
+            sql.drop_index(model._cr, indexname, model._table)
+
+    ############################################################################
+    #
+    # Read from/write to database
+    #
 
     def read(self, records):
         """ Read the value of ``self`` on ``records``, and store it in cache. """
@@ -1111,6 +1189,7 @@ class Float(Field):
                    cursor and returning a pair (total, decimal)
     """
     type = 'float'
+    column_cast_from = ('int4', 'numeric', 'float8')
     _slots = {
         '_digits': None,                # digits argument passed to class initializer
         'group_operator': 'sum',
@@ -1171,6 +1250,7 @@ class Monetary(Field):
     """
     type = 'monetary'
     column_type = ('numeric', 'numeric')
+    column_cast_from = ('float8',)
     _slots = {
         'currency_field': None,
         'group_operator': 'sum',
@@ -1286,6 +1366,7 @@ class Char(_String):
         translation of terms.
     """
     type = 'char'
+    column_cast_from = ('text',)
     _slots = {
         'size': None,                   # maximum size of values (deprecated)
     }
@@ -1293,6 +1374,15 @@ class Char(_String):
     @property
     def column_type(self):
         return ('varchar', pg_varchar(self.size))
+
+    def update_db_column(self, model, column):
+        if (
+            column and column['typname'] == 'varchar' and column['size'] and
+            (self.size is None or column['size'] < self.size)
+        ):
+            # the column's varchar size does not match self.size; convert it
+            sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
+        super(Char, self).update_db_column(model, column)
 
     _related_size = property(attrgetter('size'))
     _description_size = property(attrgetter('size'))
@@ -1331,6 +1421,7 @@ class Text(_String):
     """
     type = 'text'
     column_type = ('text', 'text')
+    column_cast_from = ('varchar',)
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
@@ -1400,6 +1491,7 @@ class Html(_String):
 class Date(Field):
     type = 'date'
     column_type = ('date', 'date')
+    column_cast_from = ('timestamp',)
 
     @staticmethod
     def today(*args):
@@ -1463,6 +1555,7 @@ class Date(Field):
 class Datetime(Field):
     type = 'datetime'
     column_type = ('timestamp', 'timestamp')
+    column_cast_from = ('date',)
 
     @staticmethod
     def now(*args):
@@ -1842,6 +1935,21 @@ class Many2one(_Relational):
         if not self.delegate:
             self.delegate = name in model._inherits.values()
 
+    def update_db(self, model, columns):
+        if self.comodel_name not in model.env:
+            raise ValueError(_('There is no reference available for %s') % (self.comodel_name,))
+        return super(Many2one, self).update_db(model, columns)
+
+    def update_db_column(self, model, column):
+        super(Many2one, self).update_db_column(model, column)
+        comodel = model.env[self.comodel_name]
+        # Note: ir_actions is inherited, so foreign key doesn't work on it
+        if comodel._auto and comodel._table != 'ir_actions':
+            if not column:
+                model.pool.post_init(model._m2o_add_foreign_key_checked, self.name, comodel, self.ondelete)
+            else:
+                model.pool.post_init(model._m2o_fix_foreign_key, model._table, self.name, comodel, self.ondelete)
+
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``.
         This is used to reflect the assignment ``value[name] = records``, where
@@ -2100,7 +2208,7 @@ class One2many(_RelationalMulti):
         fnames.discard(self.inverse_name)
         return super(One2many, self).convert_to_onchange(value, record, fnames)
 
-    def check_schema(self, model):
+    def update_db(self, model, columns):
         if self.comodel_name in model.env:
             comodel = model.env[self.comodel_name]
             if self.inverse_name not in comodel._fields:
@@ -2255,7 +2363,7 @@ class Many2many(_RelationalMulti):
                 # add self in m2m, so that its inverse field can find it
                 m2m[(self.relation, self.column1, self.column2)] = self
 
-    def check_schema(self, model):
+    def update_db(self, model, columns):
         cr = model._cr
         rel, id1, id2 = self.relation, self.column1, self.column2
         # do not create relations for custom fields as they do not belong to a module
@@ -2264,15 +2372,15 @@ class Many2many(_RelationalMulti):
         if not rel.startswith('x_'):
             IMR = model.env['ir.model.relation']
             model.pool.post_init(IMR._reflect_relation, model, rel, self._module)
-        if not table_exists(cr, rel):
+        if not sql.table_exists(cr, rel):
             if self.comodel_name not in model.env:
                 raise UserError(_('Many2many comodel does not exist: %r') % (self.comodel_name,))
             comodel = model.env[self.comodel_name]
             cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s"))' % (rel, id1, id2, id1, id2))
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
-            if table_kind(cr, comodel._table) != 'v':
+            if sql.table_kind(cr, comodel._table) != 'v':
                 model.pool.post_init(model._m2o_add_foreign_key_unchecked, rel, id2, comodel, 'cascade', self._module)
-            if table_kind(cr, model._table) != 'v':
+            if sql.table_kind(cr, model._table) != 'v':
                 model.pool.post_init(model._m2o_add_foreign_key_unchecked, rel, id1, model, 'cascade', self._module)
 
             cr.execute('CREATE INDEX ON "%s" ("%s")' % (rel, id1))
@@ -2370,6 +2478,9 @@ class Id(Field):
         'store': True,
         'readonly': True,
     }
+
+    def update_db(self, model, columns):
+        pass                            # this column is created with the table
 
     def __get__(self, record, owner):
         if record is None:
