@@ -311,7 +311,7 @@
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Country</span>
-                        <select class='detail client-address-country' name='country_id'>
+                        <select class='detail client-address-country needsclick' name='country_id'>
                             <option value=''>None</option>
                             <t t-foreach='widget.pos.countries' t-as='country'>
                                 <option t-att-value='country.id' t-att-selected="partner.country_id ? ((country.id === partner.country_id[0]) ? true : undefined) : undefined"> 
