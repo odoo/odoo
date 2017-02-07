@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.float_utils import float_is_zero, float_compare
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.misc import formatLang
@@ -863,12 +863,18 @@ class ProcurementOrder(models.Model):
         schedule_date = (procurement_date_planned - relativedelta(days=self.company_id.po_lead))
         return schedule_date
 
-    def _get_purchase_order_date(self, schedule_date):
+    def _get_purchase_order_date(self, partner, schedule_date):
         """Return the datetime value to use as Order Date (``date_order``) for the
            Purchase Order created to satisfy the given procurement. """
         self.ensure_one()
-        seller_delay = int(self.product_id._select_seller(quantity=self.product_qty, uom_id=self.product_uom).delay)
-        return schedule_date - relativedelta(days=seller_delay)
+
+        seller = self.product_id._select_seller(
+            partner_id=partner,
+            quantity=self.product_qty,
+            date=schedule_date.strftime(DEFAULT_SERVER_DATE_FORMAT),
+            uom_id=self.product_uom)
+
+        return schedule_date - relativedelta(days=int(seller.delay))
 
     @api.multi
     def _prepare_purchase_order_line(self, po, supplier):
@@ -917,7 +923,7 @@ class ProcurementOrder(models.Model):
     def _prepare_purchase_order(self, partner):
         self.ensure_one()
         schedule_date = self._get_purchase_schedule_date()
-        purchase_date = self._get_purchase_order_date(schedule_date)
+        purchase_date = self._get_purchase_order_date(partner, schedule_date)
         fpos = self.env['account.fiscal.position'].with_context(company_id=self.company_id.id).get_fiscal_position(partner.id)
 
         gpo = self.rule_id.group_propagation_option
