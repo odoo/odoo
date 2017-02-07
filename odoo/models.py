@@ -2073,9 +2073,14 @@ class BaseModel(object):
 
     # unchecked version: for custom cases, such as m2m relationships
     def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete, module):
-        fk_def = (source_table, source_field, dest_model._table, ondelete or 'set null', module)
-        self._foreign_keys.add(fk_def)
-        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def[:-1])
+        cr = self._cr
+        query = 'ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s'
+        cr.execute(query % (source_table, source_field, dest_model._table, ondelete or 'set null'))
+        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
+                      source_table, source_field, dest_model._table, ondelete or 'set null')
+        conname = "%s_%s_fkey" % (source_table, source_field)
+        self.env['ir.model.constraint']._reflect_constraint(self, conname, 'f', None, module)
+        cr.commit()
 
     @api.model_cr
     def _m2o_fix_foreign_key(self, source_table, source_field, dest_model, ondelete):
@@ -2167,7 +2172,6 @@ class BaseModel(object):
             the model's database schema by overriding method :meth:`~.init`,
             which is called right after this one.
         """
-        type(self)._foreign_keys = set()
         raise_on_invalid_object_name(self._name)
 
         # This prevents anything called by this method (in particular default
@@ -2350,7 +2354,7 @@ class BaseModel(object):
                             if field.type == 'many2one':
                                 comodel = self.env[field.comodel_name]
                                 if comodel._auto and comodel._table != 'ir_actions':
-                                    self._m2o_fix_foreign_key(self._table, name, comodel, field.ondelete)
+                                    self.pool.post_init(self._m2o_fix_foreign_key, self._table, name, comodel, field.ondelete)
 
                     else:
                         # the column doesn't exist in database, create it
@@ -2374,7 +2378,7 @@ class BaseModel(object):
                             comodel = self.env[field.comodel_name]
                             # ir_actions is inherited so foreign key doesn't work on it
                             if comodel._auto and comodel._table != 'ir_actions':
-                                self._m2o_add_foreign_key_checked(name, comodel, field.ondelete)
+                                self.pool.post_init(self._m2o_add_foreign_key_checked, name, comodel, field.ondelete)
                         if field.index:
                             cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, name, self._table, name))
                         if field.required:
@@ -2406,18 +2410,6 @@ class BaseModel(object):
         if parent_store_compute:
             self._parent_store_compute()
             cr.commit()
-
-    @api.model_cr_context
-    def _auto_end(self):
-        """ Create the foreign keys recorded by _auto_init. """
-        cr = self._cr
-        query = 'ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s'
-        for table1, column, table2, ondelete, module in self._foreign_keys:
-            cr.execute(query % (table1, column, table2, ondelete))
-            conname = "%s_%s_fkey" % (table1, column)
-            self.env['ir.model.constraint']._reflect_constraint(self, conname, 'f', False, module)
-        cr.commit()
-        del type(self)._foreign_keys
 
     @api.model_cr
     def init(self):
@@ -2484,6 +2476,7 @@ class BaseModel(object):
 
         """
         cr = self._cr
+        foreign_key_re = re.compile(r'\s*foreign\s+key\b.*', re.I)
 
         def cons_text(txt):
             return txt.lower().replace(', ',',').replace(' (','(')
@@ -2511,7 +2504,7 @@ class BaseModel(object):
                                 self._table, definition, query)
                 cr.rollback()
 
-        for (key, definition, _) in self._sql_constraints:
+        def process(key, definition):
             conname = '%s_%s' % (self._table, key)
             cr.execute("SELECT pg_get_constraintdef(oid) FROM pg_constraint WHERE conname=%s", (conname,))
             if not cr.rowcount:
@@ -2521,6 +2514,12 @@ class BaseModel(object):
                 # constraint exists but its definition may have changed
                 drop(conname, definition)
                 add(conname, definition)
+
+        for (key, definition, _) in self._sql_constraints:
+            if foreign_key_re.match(definition):
+                self.pool.post_init(process, key, definition)
+            else:
+                process(key, definition)
 
     @api.model_cr
     def _execute_sql(self):
