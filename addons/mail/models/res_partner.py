@@ -19,14 +19,6 @@ class Partner(models.Model):
     _mail_mass_mailing = _('Customers')
 
     message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact")
-    notify_email = fields.Selection([
-        ('none', 'Never'),
-        ('always', 'All Messages')],
-        'Email Messages and Notifications', required=True,
-        oldname='notification_email_send', default='always',
-        help="Policy to receive emails for new messages pushed to your personal Inbox:\n"
-             "- Never: no emails are sent\n"
-             "- All Messages: for every notification you receive in your Inbox")
     opt_out = fields.Boolean(
         'Opt-Out', help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                         "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing.")
@@ -140,6 +132,7 @@ class Partner(models.Model):
                 ('res_partner_id', 'in', email.recipient_ids.ids)])
             notifications.write({
                 'is_email': True,
+                'is_read': True,  # handle by email discards Inbox notification
                 'email_status': 'ready',
             })
 
@@ -148,12 +141,18 @@ class Partner(models.Model):
         # TDE TODO: model-dependant ? (like customer -> always email ?)
         message_sudo = message.sudo()
         email_channels = message.channel_ids.filtered(lambda channel: channel.email_send)
+        # make a dedicated search on res.users to avoid user_ids.notification_type that will be user_ids.id in [ARRAY]
+        notif_users = self.env['res.users'].sudo().search([
+            ('partner_id', 'in', self.ids),
+            ('notification_type', '=', 'inbox')
+        ])
         self.sudo().search([
             '|',
             ('id', 'in', self.ids),
             ('channel_ids', 'in', email_channels.ids),
             ('email', '!=', message_sudo.author_id and message_sudo.author_id.email or message.email_from),
-            ('notify_email', '!=', 'none')])._notify_by_email(message, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
+            ('user_ids', 'not in', notif_users.ids)
+        ])._notify_by_email(message, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
         self._notify_by_chat(message)
         return True
 

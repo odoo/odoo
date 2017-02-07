@@ -8,7 +8,6 @@
             <field name="email">demo.portal@yourcompany.example.com</field>
             <field name="supplier" eval="False"/>
             <field name="customer" eval="True"/>
-            <field name="notify_email">none</field>
             <field name="city">Vivegnis</field>
             <field name="zip">4683</field>
             <field name="country_id" ref="base.be"/>
@@ -19,6 +18,7 @@
             <field name="partner_id" ref="partner_demo_portal"/>
             <field name="login">portal</field>
             <field name="password">portal</field>
+            <field name="notification_type">inbox</field>
             <field name="signature"><![CDATA[<span>-- <br/>
 Mr Demo Portal</span>]]></field>
             <!-- Avoid auto-including this user in any default group -->
