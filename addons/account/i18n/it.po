@@ -13,6 +13,7 @@
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2016
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
 # Monica Parvanova <monicaparvanova@gmail.com>, 2016
+# Davide Corio <enlightx@gmail.com>, 2016
 # Liliana Stronciu <liliana.stronciu@aeromnia.aero>, 2016
 # tom becca <tombecc@hotmail.com>, 2016
 # Tiziano Zambelli <zstiziano@gmail.com>, 2016
@@ -29,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-11 13:04+0000\n"
-"PO-Revision-Date: 2017-01-11 13:04+0000\n"
+"POT-Creation-Date: 2017-02-03 14:29+0000\n"
+"PO-Revision-Date: 2017-02-03 14:29+0000\n"
 "Last-Translator: Giuliano Lotta <giuliano.lotta@gmail.com>, 2016\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -79,6 +80,42 @@ msgid ""
 "    ${object.user_id.signature | safe}\n"
 "% endif\n"
 msgstr ""
+"\n"
+"<p>Spett.le ${object.partner_id.name}\n"
+"% set access_action = object.get_access_action()\n"
+"% set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>Di seguito potete trovare la vostra fattura <strong>${object.number}</strong>\n"
+"% if object.origin:\n"
+"(with reference: ${object.origin} )\n"
+"% endif\n"
+"di importo pari a <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"da ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">View Invoice</a>\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>La fattura risulta già pagata.</p>\n"
+"% else:\n"
+"    <p>Siete pregati di procedere con il pagamento il prima possibile.</p>\n"
+"% endif\n"
+"\n"
+"<p>Grazie,</p>\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -685,7 +722,7 @@ msgstr "<strong>Visualizza conto</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong>"
-msgstr "<strong>Data di consegna:</strong>"
+msgstr "<strong>Data di scadenza:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -6148,6 +6185,8 @@ msgid "Managing bank fees"
 msgstr "Gestisci spese bancarie"
 
 #. module: account
+#: model:account.payment.method,name:account.account_payment_method_manual_in
+#: model:account.payment.method,name:account.account_payment_method_manual_out
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_manual
 msgid "Manual"
 msgstr "Manuale"
