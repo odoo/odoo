@@ -489,13 +489,17 @@ class AccountInvoice(models.Model):
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term_id.id
             fiscal_position = p.property_account_position_id.id
-            bank_id = p.bank_ids and p.bank_ids.ids[0] or False
+
         self.account_id = account_id
         self.payment_term_id = payment_term_id
         self.fiscal_position_id = fiscal_position
 
-        if type in ('in_invoice', 'in_refund'):
+        if type in ('in_invoice', 'out_refund'):
+            bank_ids = p.commercial_partner_id.bank_ids
+            bank_id = bank_ids[0].id if bank_ids else False
             self.partner_bank_id = bank_id
+            return {'domain': {'partner_bank_id': [('id', 'in', bank_ids.ids)]}}
+        return {}
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
