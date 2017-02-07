@@ -36,6 +36,7 @@ except ImportError:
     setproctitle = lambda x: None
 
 import odoo
+from odoo.modules.module import run_unit_tests, runs_post_install
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 import odoo.tools.config as config
@@ -888,22 +889,36 @@ def load_test_file_py(registry, test_file):
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
     # TODO: move all config checks to args dont check tools.config here
-    config = odoo.tools.config
-    test_file = config['test_file']
     dbnames = dbnames or []
     rc = 0
     for dbname in dbnames:
         try:
             update_module = config['init'] or config['update']
             registry = Registry.new(dbname, update_module=update_module)
+
             # run test_file if provided
-            if test_file:
+            if config['test_file']:
+                test_file = config['test_file']
                 _logger.info('loading test file %s', test_file)
                 with odoo.api.Environment.manage():
                     if test_file.endswith('yml'):
                         load_test_file_yml(registry, test_file)
                     elif test_file.endswith('py'):
                         load_test_file_py(registry, test_file)
+
+            # run post-install tests
+            if config['test_enable']:
+                t0 = time.time()
+                t0_sql = odoo.sql_db.sql_counter
+                module_names = (registry.updated_modules if update_module else
+                                registry._init_modules)
+                with odoo.api.Environment.manage():
+                    for module_name in module_names:
+                        result = run_unit_tests(module_name, registry.db_name,
+                                                position=runs_post_install)
+                        registry._assertion_report.record_result(result)
+                _logger.info("All post-tested in %.2fs, %s queries",
+                             time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
 
             if registry._assertion_report.failures:
                 rc += 1
