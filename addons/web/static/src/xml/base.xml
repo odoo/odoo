@@ -831,17 +831,13 @@
 
 <t t-name="web.datepicker">
     <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
-    <div>
-        <div class="o_bootstrap_datepicker_parent"></div>
-        <div class="o_datepicker">
-            <input type="text"
-                class="o_datepicker_input"
-                t-att-name="widget.name"
-                t-att-placeholder="placeholder"/>
-            <span class="o_datepicker_button"/>
-        </div>
+    <div class="o_datepicker">
+        <input type="text"
+            class="o_datepicker_input"
+            t-att-name="widget.name"
+            t-att-placeholder="placeholder"/>
+        <span class="o_datepicker_button"/>
     </div>
-
 </t>
 <t t-name="FieldSelection">
     <span t-if="widget.get('effective_readonly')"/>
