@@ -81,7 +81,7 @@ class StockMove(models.Model):
         store=True,
         help='Technical Field to order moves')  # TDE: what ?
 
-    @api.multi
+    @api.depends('state', 'product_uom_qty', 'reserved_availability')
     def _qty_available(self):
         for move in self:
             # For consumables, state is available so availability = qty to do
