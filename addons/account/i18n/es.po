@@ -5,7 +5,7 @@
 # Translators:
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
-# Glen Sojo <glen.sojo@clearcorp.co.cr>, 2016
+# Glen Sojo <inactive+glen.sojo@transifex.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
@@ -47,13 +47,14 @@
 # Luis Miguel Limache leon <luislimache@gmail.com>, 2016
 # Gelo Joga Landoo <gj@landoo.es>, 2016
 # Cristian Salamea <ovnicraft@gmail.com>, 2017
+# David de León <leceda09@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-11 13:04+0000\n"
-"PO-Revision-Date: 2017-01-11 13:04+0000\n"
-"Last-Translator: Cristian Salamea <ovnicraft@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-02-03 14:29+0000\n"
+"PO-Revision-Date: 2017-02-03 14:29+0000\n"
+"Last-Translator: David de León <leceda09@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1617,6 +1618,11 @@ msgid ""
 "you request an interval of 30 days Odoo generates an analysis of creditors "
 "for the past month, past two months, and so on."
 msgstr ""
+"Saldos vencidos de empresa es un informe más detallado de sus cuentas por "
+"cobrar por intervalos. Odoo calcula una tabla de saldo acreedor por fecha de"
+" inicio. Así, si usted solicita un intervalo de 30 días, Odoo genera un "
+"análisis de los acreedores durante el último mes, los últimos dos meses, y "
+"así sucesivamente."
 
 #. module: account
 #. openerp-web
@@ -5732,7 +5738,7 @@ msgstr "Facturas del diario con periodo en el año actual"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr ""
+msgstr "Apuntes contables donde el asiento de conciliación no está informado"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -6218,6 +6224,8 @@ msgid "Managing bank fees"
 msgstr "Administrar comisiones bancarias"
 
 #. module: account
+#: model:account.payment.method,name:account.account_payment_method_manual_in
+#: model:account.payment.method,name:account.account_payment_method_manual_out
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_manual
 msgid "Manual"
 msgstr "Manual"
@@ -7003,7 +7011,7 @@ msgstr "Mensaje pagos vencidos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_overdue_msg
 msgid "Overdue Payments Message *"
-msgstr ""
+msgstr "Mensaje de pagos atrasados *"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9760,7 +9768,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:21
 #, python-format
 msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
-msgstr ""
+msgstr "Consejo: Presione CTRL-Enter para conciliar todos los elementos."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0

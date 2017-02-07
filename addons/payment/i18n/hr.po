@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-02-03 14:29+0000\n"
+"PO-Revision-Date: 2017-02-03 14:29+0000\n"
 "Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -99,6 +99,9 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Pogreška,</i> Imajte na umu da je došlo do pogreške tijekom "
+"transakcije. Nalog je potvrđen, ali nije plaćen. Ne ustručavajte se "
+"kontaktirati nas ako imate bilo kakvih pitanja o statusu narudžbe.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -377,6 +380,11 @@ msgid "E-mail"
 msgstr "E-pošta"
 
 #. module: payment
+#: model:account.payment.method,name:payment.account_payment_method_electronic_in
+msgid "Electronic"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
 msgid "Email"
 msgstr "E-pošta"
@@ -515,7 +523,7 @@ msgstr "Vrijeme promjene"
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Let the customer decide"
-msgstr ""
+msgstr "Neka kupac odluči"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
@@ -923,6 +931,8 @@ msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
 msgstr ""
+"Bit ćete preusmjereni na web stranicu Adyen nakon što kliknete na gumb za "
+"plaćanje."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_authorize
@@ -939,6 +949,8 @@ msgid ""
 "You will be redirected to the Buckaroo website after clicking on the payment"
 " button."
 msgstr ""
+"Bit ćete preusmjereni na web stranicu Buckaroo nakon što kliknete na gumb za"
+" plaćanje."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
@@ -946,6 +958,8 @@ msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
 msgstr ""
+"Bit ćete preusmjereni na web stranicu Ingenico nakon što kliknete na gumb za"
+" plaćanje."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_payu
@@ -953,6 +967,8 @@ msgid ""
 "You will be redirected to the PayUmoney website after clicking on the "
 "payment button."
 msgstr ""
+"Bit ćete preusmjereni na web stranicu PayUmoney nakon što kliknete na gumb "
+"za plaćanje."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_paypal
@@ -967,6 +983,8 @@ msgstr ""
 msgid ""
 "You will be redirected to the Sips website after clicking on payment button."
 msgstr ""
+"Bit ćete preusmjereni na web stranicu Sips nakon što kliknete na gumb za "
+"plaćanje."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form

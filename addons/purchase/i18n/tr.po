@@ -10,14 +10,13 @@
 # Ediz Duman <neps1192@gmail.com>, 2016
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
 # Cem Uygur <cemuygur.beb@gmail.com>, 2016
-# tanerhasret <tanerhasret@gmail.com>, 2016
 # Esin Kandemir <esaykandemir@gmail.com>, 2016
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2016
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
 # Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2016
-# selim kartal <kartalselim37@gmail.com>, 2016
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
+# selim kartal <kartalselim37@gmail.com>, 2016
 # Mehmet Öztürk <mozturk357@gmail.com>, 2016
 # cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2016
@@ -180,7 +179,7 @@ msgstr "<strong>Miktar</strong>"
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>Kargo adresi:</strong>"
+msgstr "<strong>Sevkiyat adresi:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -235,7 +234,7 @@ msgstr "Satınalma siparişlerini düzenlemeye izin ver"
 #. module: purchase
 #: selection:purchase.config.settings,group_manage_vendor_price:0
 msgid "Allow using and importing vendor pricelists"
-msgstr "Satıcı fiyat listelerini kullanmaya ve içe aktarmaya izin ver"
+msgstr "Tedarikci fiyat listelerini kullanmaya ve içe aktarmaya izin ver"
 
 #. module: purchase
 #: selection:purchase.config.settings,module_purchase_requisition:0
@@ -515,12 +514,12 @@ msgstr "Siparişi Onayla"
 #. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Confirm purchase orders in one step"
-msgstr ""
+msgstr "Satınalma siparişlerini bir adımda onayla"
 
 #. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Confirmed purchase orders are not editable"
-msgstr ""
+msgstr "Onaylanan satınalma siparişleri düzenlenemez"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_control
@@ -643,7 +642,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_dest_address_id
 msgid "Drop Ship Address"
-msgstr ""
+msgstr "Transit Satış Adresi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_module_stock_dropshipping
@@ -752,7 +751,7 @@ msgstr "Fatura"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Fatura Kalemi"
+msgstr "Fatura Satırı"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1166,12 +1165,12 @@ msgstr "Satınalma Siparişi"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order Confirmation #"
-msgstr ""
+msgstr "Satınalma Siparişi Onayı #"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Order Fiscal Position"
-msgstr ""
+msgstr "Satınalma Siparişi Mali Durum"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
@@ -1189,7 +1188,7 @@ msgstr "Satınalma Sipariş Satırı"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 msgid "Purchase Order Lines"
-msgstr "Satınalma Siparişi Kalemleri"
+msgstr "Satınalma Sipariş Satırları"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lock
@@ -1229,7 +1228,7 @@ msgstr "Satınalma Siparişi İstatistikleri"
 #: code:addons/purchase/models/purchase.py:664
 #, python-format
 msgid "Purchase order line deleted."
-msgstr ""
+msgstr "Satınalma sipariş satırı silindi."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1387,7 +1386,7 @@ msgstr "Teklif İsteği"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Request for Quotation #"
-msgstr ""
+msgstr "Teklif İsteği #"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -1440,7 +1439,7 @@ msgstr "SS Epostayla Gönder"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr "Teklif İsteğini E-postayla Gönder"
+msgstr "E-postayla Gönder"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_sequence
@@ -1450,7 +1449,7 @@ msgstr "Sıra"
 #. module: purchase
 #: selection:purchase.config.settings,group_costing_method:0
 msgid "Set a fixed cost price on each product"
-msgstr ""
+msgstr "Her bir üründe sabit bir maliyet fiyatı belirleme"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1460,7 +1459,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Set to Draft"
-msgstr "Taslak olarak ayarla"
+msgstr "Taslağa  Ayarla"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_general_settings
@@ -1476,7 +1475,7 @@ msgstr "Sevkiyat"
 #: selection:purchase.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/puchased in different units of measure (advanced)"
-msgstr ""
+msgstr "Bazı ürünlerde farklı ölçü birimleri satış / satınalma (gelişmiş)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
