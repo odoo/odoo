@@ -51,5 +51,18 @@
             <field name="default" eval="False"/>
         </record>
 
+        <record id="mt_track_blocked" model="mail.message.subtype">
+            <field name="name">Track Blocked</field>
+            <field name="res_model">event.track</field>
+            <field name="default" eval="False"/>
+            <field name="description">Track blocked</field>
+        </record>
+        <record id="mt_track_ready" model="mail.message.subtype">
+            <field name="name">Track Ready</field>
+            <field name="res_model">event.track</field>
+            <field name="default" eval="False"/>
+            <field name="description">Track ready for Next Stage</field>
+        </record>
+
     </data>
 </odoo>

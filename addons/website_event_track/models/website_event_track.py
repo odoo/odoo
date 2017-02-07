@@ -56,6 +56,15 @@ class Track(models.Model):
                                domain="[('event_ids', '=', event_id)]", copy=False,
                                group_expand='_read_group_stage_ids',
                                default=_get_default_stage_id)
+    kanban_state = fields.Selection([
+        ('normal', 'Grey'),
+        ('done', 'Green'),
+        ('blocked', 'Red')], string='Kanban State',
+        copy=False, default='normal', required=True, track_visibility='onchange',
+        help="A track's kanban state indicates special situations affecting it:\n"
+             " * Grey is the default situation\n"
+             " * Red indicates something is preventing the progress of this track\n"
+             " * Green indicates the track is ready to be pulled to the next stage")
     description = fields.Html('Track Description', translate=html_translate, sanitize_attributes=False)
     date = fields.Datetime('Track Date')
     duration = fields.Float('Duration', default=1.5)
@@ -106,6 +115,9 @@ class Track(models.Model):
     def write(self, vals):
         if vals.get('speaker_id'):
             self.message_subscribe([vals['speaker_id']])
+        if 'stage_id' in vals:
+            if 'kanban_state' not in vals:
+                vals['kanban_state'] = 'normal'
         return super(Track, self).write(vals)
 
     @api.multi
@@ -145,6 +157,15 @@ class Track(models.Model):
         if 'stage_id' in changes and test_track.stage_id.mail_template_id:
             res['stage_id'] = (test_track.stage_id.mail_template_id, {'composition_mode': 'mass_mail'})
         return res
+
+    @api.multi
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'kanban_state' in init_values and self.kanban_state == 'blocked':
+            return 'website_event_track.mt_track_blocked'
+        elif 'kanban_state' in init_values and self.kanban_state == 'done':
+            return 'website_event_track.mt_track_ready'
+        return super(Track, self)._track_subtype(init_values)
 
     @api.multi
     def message_get_suggested_recipients(self):

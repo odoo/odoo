@@ -123,35 +123,27 @@
                                 <field name="address_id" context="{'show_address': 1}" options='{"always_reload": True}'/>
                                 <field name="organizer_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
-                            </group>
-                            <group>
                                 <field name="user_id"/>
-                                <field name="event_type_id" options="{'no_create':True}"/>
                                 <field name="date_begin"/>
                                 <field name="date_end"/>
                                 <field name="date_tz" />
                             </group>
+                            <group>
+                                <field name="event_type_id" options="{'no_create':True}"/>
+                                <field name="seats_min"/>
+                                <label for="seats_availability" name="seatsavailability"/>
+                                <div name="seatsmax">
+                                    <field name="seats_availability" widget='radio'/>
+                                    <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
+                                        to 
+                                    </span>
+                                    <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
+                                </div>
+                                <field name="auto_confirm" groups="base.group_no_one"/>
+                            </group>
                         </group>
                         <notebook>
-                            <page name="registrations" string="Registrations">
-                                <group>
-                                    <group>
-                                        <field name="seats_min"/>
-                                        <label for="seats_availability"/>
-                                        <div>
-                                            <field name="seats_availability" widget='radio'/>
-                                            <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
-                                                to 
-                                            </span>
-                                            <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
-                                        </div>
-                                    </group>
-                                    <group>
-                                        <field name="auto_confirm" groups="base.group_no_one"/>
-                                    </group>
-                                </group>
-                            </page>
-                            <page string="Email Schedule">
+                            <page  name="emailschedule" string="Email Schedule">
                                 <group>
                                     <div class="oe_inline" name="edit_alias" style="display: inline;" >
                                         <label for="alias_id" string="Email Alias  " style="font-weight: bold;"/>

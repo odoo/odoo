@@ -46,31 +46,35 @@
             <field name="model">event.event</field>
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
-                    <xpath expr="//page[@name='registrations']" position="replace">
-                        <page string="Tickets">
-                            <group>
-                                <group>
-                                    <field name="auto_confirm" invisible="1"/>
-                                    <field name="seats_min"/>
-                                    <field name="seats_availability" widget='radio'/>
-                                    <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}" string="Maximum Tickets"/>
-                                </group>
-                            </group>
-                            <separator string="Ticket Types"/>
-                            <field name="event_ticket_ids" context="{'default_name': name}">
-                                <tree string="Tickets" editable="bottom">
-                                    <field name="name"/>
-                                    <field name="product_id" context="{'default_event_ok':1}"/>
-                                    <field name="price"/>
-                                    <field name="start_date"/>
-                                    <field name="deadline"/>
-                                    <field name="seats_max" string="Maximum Tickets"/>
-                                    <field name="seats_reserved" string="Confirmed Tickets" readonly="1"/>
-                                    <field name="seats_unconfirmed" string="Unconfirmed Tickets" readonly="1"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </xpath>
+                <field name="seats_min" position="replace">
+                    <field name="seats_min"/>
+                </field>
+                <label name="seatsavailability" position="replace">
+                    <field name="seats_availability" widget='radio'/>
+                </label>
+                <div name="seatsmax" position="replace">
+                    <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}" string="Maximum Tickets"/>
+                </div>
+                <field name="auto_confirm" position="replace">
+                    <field name="auto_confirm" invisible="1"/>
+                </field>
+                <xpath expr="//page[@name='emailschedule']" position="before">
+                    <page string="Tickets">
+                        <separator string="Ticket Types"/>
+                        <field name="event_ticket_ids" context="{'default_name': name}">
+                            <tree string="Tickets" editable="bottom">
+                                <field name="name"/>
+                                <field name="product_id" context="{'default_event_ok':1}"/>
+                                <field name="price"/>
+                                <field name="start_date"/>
+                                <field name="deadline"/>
+                                <field name="seats_max" string="Maximum Tickets"/>
+                                <field name="seats_reserved" string="Confirmed Tickets" readonly="1"/>
+                                <field name="seats_unconfirmed" string="Unconfirmed Tickets" readonly="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
             </field>
         </record>
 

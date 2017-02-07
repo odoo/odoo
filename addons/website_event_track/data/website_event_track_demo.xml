@@ -43,6 +43,7 @@
         <field name="speaker_id" ref="base.res_partner_2"/>
         <field name="color">3</field>
         <field name="stage_id" ref="event_track_stage0"/>
+        <field name="kanban_state">blocked</field>
 
     </record>
     <record id="event_track2" model="event.track">
@@ -54,6 +55,7 @@
         <field name="duration" eval="0.25"/>
         <field name="speaker_id" ref="base.res_partner_3"/>
         <field name="stage_id" ref="event_track_stage1"/>
+        <field name="kanban_state">done</field>
     </record>
     <record id="event_track3" model="event.track">
         <field name="name">How to develop real time apps, the website live chat module explained.</field>
@@ -115,6 +117,7 @@
         <field name="color">2</field>
         <field name="speaker_id" ref="base.res_partner_4"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="kanban_state">done</field>
     </record>
     <record id="event_track9" model="event.track">
         <field name="name">How to use Odoo for your HR process: recruitment, leaves management, appraisals, expenses, etc.</field>
