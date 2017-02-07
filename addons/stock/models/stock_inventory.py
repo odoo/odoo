@@ -54,9 +54,11 @@ class Inventory(models.Model):
         readonly=True, required=True,
         states={'draft': [('readonly', False)]},
         default=_default_location_id)
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template')
     product_id = fields.Many2one(
         'product.product', 'Inventoried Product',
         readonly=True,
+        domain=[('type', '=', 'product')],
         states={'draft': [('readonly', False)]},
         help="Specify Product to focus your inventory on a particular Product.")
     package_id = fields.Many2one(
@@ -129,6 +131,9 @@ class Inventory(models.Model):
             self.category_id = False
         if self.filter == 'product':
             self.exhausted = True
+            if self.product_id:
+                return {'domain': {'product_id': [('product_tmpl_id', '=', self.product_id.product_tmpl_id.id)]}}
+            return {'domain': {'product_id': [('type', '=', 'product')]}}
 
     @api.onchange('location_id')
     def onchange_location_id(self):
@@ -435,7 +440,7 @@ class InventoryLine(models.Model):
         }
 
     def _generate_moves(self):
-        moves = self.env['stock.move']
+        moves = self.env['stock.move'].with_context({'default_product_id': False})
         for line in self:
             if float_utils.float_compare(line.theoretical_qty, line.product_qty, precision_rounding=line.product_id.uom_id.rounding) == 0:
                 continue
