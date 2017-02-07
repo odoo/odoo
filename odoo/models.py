@@ -2137,6 +2137,14 @@ class BaseModel(object):
                 self._table, column_name, field.column_format, column_name)
             self._cr.execute(query, (value,))
 
+    @ormcache()
+    def _table_has_rows(self):
+        """ Return whether the model's table has rows. This method should only
+            be used when updating the database schema (:meth:`~._auto_init`).
+        """
+        self.env.cr.execute('SELECT 1 FROM "%s" LIMIT 1' % self._table)
+        return self.env.cr.rowcount
+
     @api.model_cr_context
     def _auto_init(self):
         """ Initialize the database schema of ``self``:
@@ -2162,11 +2170,6 @@ class BaseModel(object):
         # has not been added in database yet!
         self = self.with_context(prefetch_fields=False)
 
-        def recompute(field):
-            _logger.info("Storing computed values of %s", field)
-            recs = self.with_context(active_test=False).search([])
-            recs._recompute_todo(field)
-
         self.pool.post_init(self._reflect)
 
         cr = self._cr
@@ -2175,13 +2178,8 @@ class BaseModel(object):
         must_create_table = not tools.table_exists(cr, self._table)
 
         if self._auto:
-
             if must_create_table:
                 tools.create_model_table(cr, self._table, self._description)
-                has_rows = False
-            else:
-                cr.execute('SELECT 1 FROM "%s" LIMIT 1' % self._table)
-                has_rows = cr.rowcount
 
             if self._parent_store:
                 if not tools.column_exists(cr, self._table, 'parent_left'):
@@ -2190,130 +2188,24 @@ class BaseModel(object):
 
             self._check_removed_columns(log=False)
 
-            # retrieve existing database columns
-            column_data = tools.table_columns(cr, self._table)
+            # update the database schema for fields
+            columns = tools.table_columns(cr, self._table)
 
-            for name, field in self._fields.iteritems():
-                if name == 'id':
-                    continue
+            def recompute(field):
+                _logger.info("Storing computed values of %s", field)
+                recs = self.with_context(active_test=False).search([])
+                recs._recompute_todo(field)
 
+            for field in self._fields.itervalues():
                 if not field.store:
                     continue
 
                 if field.manual and not update_custom_fields:
-                    # Don't update custom (also called manual) fields
-                    continue
+                    continue            # don't update custom fields
 
-                if not field.column_type:
-                    # the field is not stored as a column
-                    if field.check_schema(self) and field.compute:
-                        self.pool.post_init(recompute, field)
-
-                else:
-                    res = column_data.get(name)
-
-                    # The column is not found as-is in database. Check whether
-                    # it exists with an old name, and rename it.
-                    if not res and hasattr(field, 'oldname'):
-                        res = column_data.get(field.oldname)
-                        if res:
-                            tools.rename_column(cr, self._table, field.oldname, name)
-
-                    # The column already exists in database. Possibly change its
-                    # type, rename it, drop it or change its constraints.
-                    if res:
-                        f_pg_type = res['typname']
-                        f_pg_size = res['size']
-                        f_pg_notnull = res['attnotnull']
-                        column_type = field.column_type
-
-                        if column_type:
-                            converted = False
-                            casts = [
-                                ('text', 'char', column_type[1], '::' + column_type[1]),
-                                ('varchar', 'text', 'TEXT', ''),
-                                ('int4', 'float', column_type[1], '::' + column_type[1]),
-                                ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
-                                ('timestamp', 'date', 'date', '::date'),
-                                ('numeric', 'float', column_type[1], '::' + column_type[1]),
-                                ('float8', 'float', column_type[1], '::' + column_type[1]),
-                                ('float8', 'monetary', column_type[1], '::' + column_type[1]),
-                            ]
-                            if f_pg_type == 'varchar' and field.type == 'char' and f_pg_size and (field.size is None or f_pg_size < field.size):
-                                tools.convert_column(cr, self._table, name, column_type[1])
-                            for c in casts:
-                                if (f_pg_type == c[0]) and (field.type == c[1]):
-                                    if f_pg_type != column_type[0]:
-                                        converted = True
-                                        tools.convert_column(cr, self._table, name, column_type[1])
-                                    break
-
-                            if f_pg_type != column_type[0]:
-                                if not converted:
-                                    i = 0
-                                    while True:
-                                        newname = name + '_moved' + str(i)
-                                        if not tools.column_exists(cr, self._table, newname):
-                                            break
-                                        i += 1
-                                    if f_pg_notnull:
-                                        tools.drop_not_null(cr, self._table, name)
-                                    tools.rename_column(cr, self._table, name, newname)
-                                    tools.create_column(cr, self._table, name, column_type[1], field.string)
-
-                            # if the field is required and hasn't got a NOT NULL constraint
-                            if field.required and f_pg_notnull == 0:
-                                if has_rows:
-                                    self._init_column(name)
-                                # add the NOT NULL constraint
-                                tools.set_not_null(cr, self._table, name)
-                            elif not field.required and f_pg_notnull == 1:
-                                tools.drop_not_null(cr, self._table, name)
-                            # Verify index
-                            indexname = '%s_%s_index' % (self._table, name)
-                            has_index = tools.index_exists(cr, indexname)
-                            if not has_index and field.index:
-                                tools.create_index(cr, indexname, self._table, [name])
-                                if field.type == 'text':
-                                    # FIXME: for fields.text columns we should try creating GIN indexes instead (seems most suitable for an ERP context)
-                                    msg = "Table '%s': Adding (b-tree) index for %s column '%s'."\
-                                        "This is probably useless (does not work for fulltext search) and prevents INSERTs of long texts"\
-                                        " because there is a length limit for indexable btree values!\n"\
-                                        "Use a search view instead if you simply want to make the field searchable."
-                                    _schema.warning(msg, self._table, field.type, name)
-                            if has_index and not field.index:
-                                tools.drop_index(cr, indexname, self._table)
-
-                            if field.type == 'many2one':
-                                comodel = self.env[field.comodel_name]
-                                if comodel._auto and comodel._table != 'ir_actions':
-                                    self.pool.post_init(self._m2o_fix_foreign_key, self._table, name, comodel, field.ondelete)
-
-                    else:
-                        # the column doesn't exist in database, create it
-                        tools.create_column(cr, self._table, name, field.column_type[1], field.string)
-
-                        # initialize it
-                        if has_rows:
-                            self._init_column(name)
-
-                        # remember new-style stored fields with compute method
-                        if field.compute:
-                            self.pool.post_init(recompute, field)
-
-                        # and add constraints if needed
-                        if field.type == 'many2one' and field.store:
-                            if field.comodel_name not in self.env:
-                                raise ValueError(_('There is no reference available for %s') % (field.comodel_name,))
-                            comodel = self.env[field.comodel_name]
-                            # ir_actions is inherited so foreign key doesn't work on it
-                            if comodel._auto and comodel._table != 'ir_actions':
-                                self.pool.post_init(self._m2o_add_foreign_key_checked, name, comodel, field.ondelete)
-                        if field.index:
-                            indexname = '%s_%s_index' % (self._table, name)
-                            tools.create_index(cr, indexname, self._table, [name])
-                        if field.required:
-                            tools.set_not_null(cr, self._table, name)
+                new = field.update_db(self, columns)
+                if new and field.compute:
+                    self.pool.post_init(recompute, field)
 
         if self._auto:
             self._add_sql_constraints()
