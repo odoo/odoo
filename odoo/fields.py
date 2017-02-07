@@ -2272,10 +2272,10 @@ class Many2many(_RelationalMulti):
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (comodel._table,))
             if not cr.fetchall():
-                model._m2o_add_foreign_key_unchecked(rel, id2, comodel, 'cascade', self._module)
+                model.pool.post_init(model._m2o_add_foreign_key_unchecked, rel, id2, comodel, 'cascade', self._module)
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (model._table,))
             if not cr.fetchall():
-                model._m2o_add_foreign_key_unchecked(rel, id1, model, 'cascade', self._module)
+                model.pool.post_init(model._m2o_add_foreign_key_unchecked, rel, id1, model, 'cascade', self._module)
 
             cr.execute('CREATE INDEX ON "%s" ("%s")' % (rel, id1))
             cr.execute('CREATE INDEX ON "%s" ("%s")' % (rel, id2))

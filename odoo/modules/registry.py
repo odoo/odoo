@@ -304,8 +304,8 @@ class Registry(Mapping):
 
     def init_models(self, cr, model_names, context):
         """ Initialize a list of models (given by their name). Call methods
-            ``_auto_init``, ``init``, and ``_auto_end`` on each model to create
-            or update the database tables supporting the models.
+            ``_auto_init`` and ``init`` on each model to create or update the
+            database tables supporting the models.
 
             The ``context`` may contain the following items:
              - ``module``: the name of the module being installed/updated, if any;
@@ -320,10 +320,6 @@ class Registry(Mapping):
         for model in models:
             model._auto_init()
             model.init()
-            cr.commit()
-
-        for model in models:
-            model._auto_end()
             cr.commit()
 
         while self._post_init_queue:
