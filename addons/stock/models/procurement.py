@@ -173,6 +173,7 @@ class ProcurementGroup(models.Model):
         ('direct', 'Partial'),
         ('one', 'All at once')], string='Delivery Type', default='direct',
         required=True)
+    picking_ids = fields.One2many('stock.picking', 'group_id', string='Pickings')
 
     @api.model
     def run(self, product_id, product_qty, product_uom, location_id, name, origin, values):

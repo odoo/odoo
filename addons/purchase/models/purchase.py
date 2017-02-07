@@ -75,24 +75,17 @@ class PurchaseOrder(models.Model):
             types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
         return types[:1]
 
-    @api.depends('order_line.move_ids.returned_move_ids',
-                 'order_line.move_ids.state',
-                 'order_line.move_ids.picking_id')
     def _compute_picking(self):
         for order in self:
-            pickings = self.env['stock.picking']
-            for line in order.order_line:
-                # We keep a limited scope on purpose. Ideally, we should also use move_orig_ids and
-                # do some recursive search, but that could be prohibitive if not done correctly.
-                moves = line.move_ids | line.move_ids.mapped('returned_move_ids')
-                pickings |= moves.mapped('picking_id')
-            order.picking_ids = pickings
-            order.picking_count = len(pickings)
+            order.picking_ids = order.group_id.picking_ids
+            order.picking_count = len(order.group_id.picking_ids)
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_is_shipped(self):
         for order in self:
-            if order.picking_ids and all([x.state == 'done' for x in order.picking_ids]):
+            if order.picking_ids and any([x.state not in ('done', 'cancel') and x.location_id.usage == 'supplier' for x in order.picking_ids]):
+                order.is_shipped = False
+            else:
                 order.is_shipped = True
 
     READONLY_STATES = {
@@ -425,7 +418,7 @@ class PurchaseOrder(models.Model):
         StockPicking = self.env['stock.picking']
         for order in self:
             if any([ptype in ['product', 'consu'] for ptype in order.order_line.mapped('product_id.type')]):
-                pickings = order.picking_ids.filtered(lambda x: x.state not in ('done','cancel'))
+                pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_id.usage == 'supplier')
                 if not pickings:
                     res = order._prepare_picking()
                     picking = StockPicking.create(res)
@@ -655,7 +648,7 @@ class PurchaseOrderLine(models.Model):
                     activity._onchange_activity_type_id()
 
                 # If the user increased quantity of existing line or created a new line
-                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit'))
+                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_id.usage == 'supplier' and x.location_dest_id.usage in ('internal', 'transit'))
                 picking = pickings and pickings[0] or False
                 if not picking:
                     res = line.order_id._prepare_picking()
