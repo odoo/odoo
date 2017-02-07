@@ -19,8 +19,7 @@ import odoo.modules.registry
 import odoo.tools as tools
 
 from odoo import api, SUPERUSER_ID
-from odoo.modules.module import adapt_version, initialize_sys_path, \
-                                load_openerp_module, runs_post_install
+from odoo.modules.module import adapt_version, initialize_sys_path, load_openerp_module
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -416,18 +415,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         for model in env.values():
             model._register_hook()
 
-        # STEP 9: Run the post-install tests
+        # STEP 9: save installed/updated modules for post-install tests
+        registry.updated_modules += processed_modules
         cr.commit()
 
-        t0 = time.time()
-        t0_sql = odoo.sql_db.sql_counter
-        if odoo.tools.config['test_enable']:
-            if update_module:
-                cr.execute("SELECT name FROM ir_module_module WHERE state='installed' and name = ANY(%s)", (processed_modules,))
-            else:
-                cr.execute("SELECT name FROM ir_module_module WHERE state='installed'")
-            for module_name in cr.fetchall():
-                report.record_result(odoo.modules.module.run_unit_tests(module_name[0], cr.dbname, position=runs_post_install))
-            _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
     finally:
         cr.close()

@@ -232,6 +232,7 @@ class RedirectHandler(urllib2.HTTPRedirectHandler):
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and phantomjs helpers.
     """
+    registry_test_mode = True
 
     def __init__(self, methodName='runTest'):
         super(HttpCase, self).__init__(methodName)
@@ -243,7 +244,9 @@ class HttpCase(TransactionCase):
 
     def setUp(self):
         super(HttpCase, self).setUp()
-        self.registry.enter_test_mode()
+        if self.registry_test_mode:
+            self.registry.enter_test_mode()
+            self.addCleanup(self.registry.leave_test_mode)
         # setup a magic session_id that will be rollbacked
         self.session = odoo.http.root.session_store.new()
         self.session_id = self.session.sid
@@ -257,10 +260,6 @@ class HttpCase(TransactionCase):
         self.opener.add_handler(urllib2.HTTPCookieProcessor())
         self.opener.add_handler(RedirectHandler())
         self.opener.addheaders.append(('Cookie', 'session_id=%s' % self.session_id))
-
-    def tearDown(self):
-        self.registry.leave_test_mode()
-        super(HttpCase, self).tearDown()
 
     def url_open(self, url, data=None, timeout=10):
         if url.startswith('/'):

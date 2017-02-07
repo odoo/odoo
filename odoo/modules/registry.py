@@ -109,6 +109,7 @@ class Registry(Mapping):
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
+        self.updated_modules = []       # installed/updated modules
 
         self.db_name = db_name
         self._db = odoo.sql_db.db_connect(db_name)
