@@ -269,6 +269,8 @@ class Partner(models.Model, FormatAddress):
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
+            for child in partner.child_ids:
+                child.commercial_partner_id = partner.commercial_partner_id
 
     @api.depends('company_name', 'parent_id.is_company', 'commercial_partner_id.name')
     def _compute_commercial_company_name(self):
