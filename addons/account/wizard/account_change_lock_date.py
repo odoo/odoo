@@ -9,11 +9,11 @@ class AccountChangeLockDate(models.TransientModel):
     _description = 'Change lock date'
 
     period_lock_date = fields.Date(
-        string='New lock date for non-advisers',
+        string='Date for Non-Advisers',
         default=lambda self: self.env.user.company_id.period_lock_date,
         required=True)
     fiscalyear_lock_date = fields.Date(
-        string='New lock date',
+        string='Date for Fiscal Year',
         default=lambda self: self.env.user.company_id.fiscalyear_lock_date,
         required=True)
 
