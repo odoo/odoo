@@ -11,7 +11,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     # link with the sales order
-    sale_order_id = fields.Many2one('sale.order', string='Sales Order')
+    sale_order_id = fields.Many2one('sale.order', string='Sales Order', auto_join=True)
 
     def _generate_and_pay_invoice(self, tx, acquirer_name):
         tx.sale_order_id._force_lines_to_invoice_policy_order()
