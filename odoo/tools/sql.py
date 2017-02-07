@@ -6,6 +6,14 @@ import psycopg2
 
 _schema = logging.getLogger('odoo.schema')
 
+_CONFDELTYPES = {
+    'RESTRICT': 'r',
+    'NO ACTION': 'a',
+    'CASCADE': 'c',
+    'SET NULL': 'n',
+    'SET DEFAULT': 'd',
+}
+
 def table_exists(cr, tablename):
     """ Return whether the given table exists. """
     query = "SELECT 1 FROM pg_class WHERE relkind IN ('r','v') AND relname=%s"
@@ -120,6 +128,37 @@ def drop_constraint(cr, tablename, constraintname):
             _schema.debug("Table %r: dropped constraint %r", tablename, constraintname)
     except Exception:
         _schema.warning("Table %r: unable to drop constraint %r!", tablename, constraintname)
+
+def add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
+    """ Create the given foreign key, and return ``True``. """
+    query = 'ALTER TABLE "{}" ADD FOREIGN KEY ("{}") REFERENCES "{}"("{}") ON DELETE {}'
+    cr.execute(query.format(tablename1, columnname1, tablename2, columnname2, ondelete))
+    _schema.debug("Table %r: added foreign key %r references %r(%r) ON DELETE %s",
+                  tablename1, columnname1, tablename2, columnname2, ondelete)
+    return True
+
+def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
+    """ Update the foreign keys between tables to match the given one, and
+        return ``True`` if the given foreign key has been recreated.
+    """
+    deltype = _CONFDELTYPES.get(ondelete.upper(), 'a')
+    query = """ SELECT con.conname, c2.relname, a2.attnum, con.confdeltype as deltype
+                  FROM pg_constraint as con, pg_class as c1, pg_class as c2,
+                       pg_attribute as a1, pg_attribute as a2
+                 WHERE con.contype='f' AND con.conrelid=c1.oid AND con.confrelid=c2.oid
+                   AND array_lower(con.conkey, 1)=1 AND con.conkey[1]=a1.attnum
+                   AND array_lower(con.confkey, 1)=1 AND con.confkey[1]=a2.attnum
+                   AND a1.attrelid=c1.oid AND a2.attrelid=c2.oid
+                   AND c1.relname=%s AND a1.attname=%s """
+    cr.execute(query, (tablename1, columnname1))
+    found = False
+    for fk in cr.fetchall():
+        if not found and fk[1:] == (tablename2, columnname2, deltype):
+            found = True
+        else:
+            drop_constraint(cr, tablename1, fk[0])
+    if not found:
+        return add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete)
 
 def index_exists(cr, indexname):
     """ Return whether the given index exists. """

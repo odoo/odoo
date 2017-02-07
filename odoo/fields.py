@@ -1936,19 +1936,31 @@ class Many2one(_Relational):
             self.delegate = name in model._inherits.values()
 
     def update_db(self, model, columns):
-        if self.comodel_name not in model.env:
-            raise ValueError(_('There is no reference available for %s') % (self.comodel_name,))
+        comodel = model.env[self.comodel_name]
+        if not model.is_transient() and comodel.is_transient():
+            raise ValueError('Many2one %s from Model to TransientModel is forbidden' % self)
+        if model.is_transient() and not comodel.is_transient():
+            # Many2one relations from TransientModel Model are annoying because
+            # they can block deletion due to foreign keys. So unless stated
+            # otherwise, we default them to ondelete='cascade'.
+            self.ondelete = self.ondelete or 'cascade'
         return super(Many2one, self).update_db(model, columns)
 
     def update_db_column(self, model, column):
         super(Many2one, self).update_db_column(model, column)
+        model.pool.post_init(self.update_db_foreign_key, model, column)
+
+    def update_db_foreign_key(self, model, column):
         comodel = model.env[self.comodel_name]
-        # Note: ir_actions is inherited, so foreign key doesn't work on it
-        if comodel._auto and comodel._table != 'ir_actions':
-            if not column:
-                model.pool.post_init(model._m2o_add_foreign_key_checked, self.name, comodel, self.ondelete)
-            else:
-                model.pool.post_init(model._m2o_fix_foreign_key, model._table, self.name, comodel, self.ondelete)
+        # ir_actions is inherited, so foreign key doesn't work on it
+        if not comodel._auto or comodel._table == 'ir_actions':
+            return
+        # create/update the foreign key, and reflect it in 'ir.model.constraint'
+        process = sql.fix_foreign_key if column else sql.add_foreign_key
+        new = process(model._cr, model._table, self.name, comodel._table, 'id', self.ondelete or 'set null')
+        if new:
+            conname = '%s_%s_fkey' % (model._table, self.name)
+            model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, self._module)
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``.
@@ -2365,29 +2377,39 @@ class Many2many(_RelationalMulti):
 
     def update_db(self, model, columns):
         cr = model._cr
-        rel, id1, id2 = self.relation, self.column1, self.column2
-        # do not create relations for custom fields as they do not belong to a module
-        # they will be automatically removed when dropping the corresponding ir.model.field
-        # table name for custom relation all starts with x_, see __init__
-        if not rel.startswith('x_'):
-            IMR = model.env['ir.model.relation']
-            model.pool.post_init(IMR._reflect_relation, model, rel, self._module)
-        if not sql.table_exists(cr, rel):
-            if self.comodel_name not in model.env:
-                raise UserError(_('Many2many comodel does not exist: %r') % (self.comodel_name,))
+        # Do not reflect relations for custom fields, as they do not belong to a
+        # module. They are automatically removed when dropping the corresponding
+        # 'ir.model.field'.
+        if not self.manual:
+            model.pool.post_init(model.env['ir.model.relation']._reflect_relation,
+                                 model, self.relation, self._module)
+        if not sql.table_exists(cr, self.relation):
             comodel = model.env[self.comodel_name]
-            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s"))' % (rel, id1, id2, id1, id2))
-            # create foreign key references with ondelete=cascade, unless the targets are SQL views
-            if sql.table_kind(cr, comodel._table) != 'v':
-                model.pool.post_init(model._m2o_add_foreign_key_unchecked, rel, id2, comodel, 'cascade', self._module)
-            if sql.table_kind(cr, model._table) != 'v':
-                model.pool.post_init(model._m2o_add_foreign_key_unchecked, rel, id1, model, 'cascade', self._module)
-
-            cr.execute('CREATE INDEX ON "%s" ("%s")' % (rel, id1))
-            cr.execute('CREATE INDEX ON "%s" ("%s")' % (rel, id2))
-            cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (rel, model._table, comodel._table))
-            _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", rel, model._table, comodel._table)
+            query = """
+                CREATE TABLE "{rel}" ("{id1}" INTEGER NOT NULL,
+                                      "{id2}" INTEGER NOT NULL,
+                                      UNIQUE("{id1}","{id2}"));
+                COMMENT ON TABLE "{rel}" IS %s;
+                CREATE INDEX ON "{rel}" ("{id1}");
+                CREATE INDEX ON "{rel}" ("{id2}")
+            """.format(rel=self.relation, id1=self.column1, id2=self.column2)
+            cr.execute(query, ['RELATION BETWEEN %s AND %s' % (model._table, comodel._table)])
+            _schema.debug("Create table %r: m2m relation between %r and %r", self.relation, model._table, comodel._table)
+            model.pool.post_init(self.update_db_foreign_keys, model)
             return True
+
+    def update_db_foreign_keys(self, model):
+        """ Add the foreign keys corresponding to the field's relation table. """
+        cr = model._cr
+        comodel = model.env[self.comodel_name]
+        reflect = model.env['ir.model.constraint']._reflect_constraint
+        # create foreign key references with ondelete=cascade, unless the targets are SQL views
+        if sql.table_kind(cr, model._table) != 'v':
+            sql.add_foreign_key(cr, self.relation, self.column1, model._table, 'id', 'cascade')
+            reflect(model, '%s_%s_fkey' % (self.relation, self.column1), 'f', None, self._module)
+        if sql.table_kind(cr, comodel._table) != 'v':
+            sql.add_foreign_key(cr, self.relation, self.column2, comodel._table, 'id', 'cascade')
+            reflect(model, '%s_%s_fkey' % (self.relation, self.column2), 'f', None, self._module)
 
     def read(self, records):
         comodel = records.env[self.comodel_name]

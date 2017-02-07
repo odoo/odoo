@@ -106,14 +106,6 @@ def check_method_name(name):
     if regex_private.match(name):
         raise AccessError(_('Private methods (such as %s) cannot be called remotely.') % (name,))
 
-POSTGRES_CONFDELTYPES = {
-    'RESTRICT': 'r',
-    'NO ACTION': 'a',
-    'CASCADE': 'c',
-    'SET NULL': 'n',
-    'SET DEFAULT': 'd',
-}
-
 def intersect(la, lb):
     return filter(lambda x: x in lb, la)
 
@@ -2049,69 +2041,6 @@ class BaseModel(object):
                               row['attname'], self._table, self._name)
             if row['attnotnull']:
                 tools.drop_not_null(self._table, row['attname'])
-
-    # checked version: for direct m2o starting from ``self``
-    def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
-        assert self.is_transient() or not dest_model.is_transient(), \
-            'Many2One relationships from non-transient Model to TransientModel are forbidden'
-        if self.is_transient() and not dest_model.is_transient():
-            # TransientModel relationships to regular Models are annoying
-            # usually because they could block deletion due to the FKs.
-            # So unless stated otherwise we default them to ondelete=cascade.
-            ondelete = ondelete or 'cascade'
-        field = self._fields[source_field]
-        self._m2o_add_foreign_key_unchecked(self._table, source_field, dest_model, ondelete, field._module)
-
-    # unchecked version: for custom cases, such as m2m relationships
-    def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete, module):
-        cr = self._cr
-        query = 'ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s'
-        cr.execute(query % (source_table, source_field, dest_model._table, ondelete or 'set null'))
-        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
-                      source_table, source_field, dest_model._table, ondelete or 'set null')
-        conname = "%s_%s_fkey" % (source_table, source_field)
-        self.env['ir.model.constraint']._reflect_constraint(self, conname, 'f', None, module)
-
-    @api.model_cr
-    def _m2o_fix_foreign_key(self, source_table, source_field, dest_model, ondelete):
-        # Find FK constraint(s) currently established for the m2o field,
-        # and see whether they are stale or not
-        query = """ SELECT confdeltype as ondelete_rule, conname as constraint_name,
-                           cl2.relname as foreign_table
-                      FROM pg_constraint as con, pg_class as cl1, pg_class as cl2,
-                           pg_attribute as att1, pg_attribute as att2
-                     WHERE con.conrelid = cl1.oid
-                       AND cl1.relname = %s
-                       AND con.confrelid = cl2.oid
-                       AND array_lower(con.conkey, 1) = 1
-                       AND con.conkey[1] = att1.attnum
-                       AND att1.attrelid = cl1.oid
-                       AND att1.attname = %s
-                       AND array_lower(con.confkey, 1) = 1
-                       AND con.confkey[1] = att2.attnum
-                       AND att2.attrelid = cl2.oid
-                       AND att2.attname = %s
-                       AND con.contype = 'f' """
-        self._cr.execute(query, (source_table, source_field, 'id'))
-        constraints = self._cr.dictfetchall()
-        if constraints:
-            if len(constraints) == 1:
-                # Is it the right constraint?
-                cons, = constraints
-                if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
-                    or cons['foreign_table'] != dest_model._table:
-                    # Wrong FK: drop it and recreate
-                    tools.drop_constraint(self._cr, source_table, cons['constraint_name'])
-                else:
-                    # it's all good, nothing to do!
-                    return
-            else:
-                # Multiple FKs found for the same field, drop them all, and re-create
-                for cons in constraints:
-                    tools.drop_constraint(self._cr, source_table, cons['constraint_name'])
-
-        # (re-)create the FK
-        self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
 
     @api.model_cr_context
     def _init_column(self, column_name):
