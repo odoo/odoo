@@ -218,7 +218,7 @@
                                     <field name="mobile"/>
                                     <field name="fax"/>
                                     <field name="state_id"/>
-                                    <field name="image"/>
+                                    <field name="image_small"/>
                                     <field name="lang"/>
                                     <templates>
                                         <t t-name="kanban-box">
@@ -226,8 +226,8 @@
                                             <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
                                                 <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
                                                 <div class="o_kanban_image">
-                                                    <img t-if="record.image.raw_value" t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
-                                                    <t t-if="!record.image.raw_value">
+                                                    <img t-if="record.image_small.raw_value" t-att-src="'data:image/png;base64,'+record.image_small.raw_value"/>
+                                                    <t t-if="!record.image_small.raw_value">
                                                         <img t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/src/img/truck.png"'/>
                                                         <img t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/src/img/money.png"'/>
                                                         <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
