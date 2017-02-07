@@ -324,7 +324,7 @@ class produce_price_history(osv.osv):
         'company_id': fields.many2one('res.company', required=True),
         'product_template_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
         'datetime': fields.datetime('Historization Time'),
-        'cost': fields.float('Historized Cost'),
+        'cost': fields.float('Historized Cost', digits_compute=dp.get_precision('Product Price')),
     }
 
     def _get_default_company(self, cr, uid, context=None):
@@ -628,7 +628,7 @@ class product_template(osv.osv):
             else:
                 company_id = context.get('force_company') or product.env.user.company_id.id
                 product = product.with_context(force_company=company_id)
-                res[product.id] = res[product.id] = product.sudo()[ptype]
+                res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
                 res[product.id] += product._name == "product.product" and product.price_extra or 0.0
             if 'uom' in context:
@@ -1173,7 +1173,7 @@ class product_product(osv.osv):
             # if we copy a variant or create one, we keep the same template
             default['product_tmpl_id'] = product.product_tmpl_id.id
         elif 'name' not in default:
-            default['name'] = _("%s (copy)") % (product.name,)
+            default['name'] = product.name
 
         return super(product_product, self).copy(cr, uid, id, default=default, context=context)
 

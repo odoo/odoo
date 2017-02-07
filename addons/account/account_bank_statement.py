@@ -556,6 +556,13 @@ class account_bank_statement_line(osv.osv):
                     self.write(cr, uid, st_line.id, {'partner_id': mv_line['partner_id']}, context=context)
                     mv_line['has_no_partner'] = False
                 return [mv_line]
+            elif len(match_id) == 0:
+                move = self.pool['account.move'].search(cr, uid, [('name', '=', st_line.ref)], limit=1, context=context)
+                if move:
+                    domain = [('move_id', '=', move[0])]
+                    match_recs = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=domain)
+                    if match_recs and len(match_recs) == 1:
+                        return match_recs
 
         # How to compare statement line amount and move lines amount
         precision_digits = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
@@ -913,7 +920,8 @@ class account_bank_statement_line(osv.osv):
                 move_line_pairs_to_reconcile.append([new_aml_id, counterpart_move_line_id])
         # Reconcile
         for pair in move_line_pairs_to_reconcile:
-            aml_obj.reconcile_partial(cr, uid, pair, context=context)
+            # DO NOT FORWARD PORT
+            aml_obj.reconcile_partial(cr, uid, pair, context=dict(context, bs_move_id=move_id))
         # Mark the statement line as reconciled
         self.write(cr, uid, id, {'journal_entry_id': move_id}, context=context)
 

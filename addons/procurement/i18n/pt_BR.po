@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-04-14 22:23+0000\n"
+"PO-Revision-Date: 2016-08-03 23:12+0000\n"
 "Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgid ""
 "                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\nClique para criar uma aquisição.\n</p>\n<p>\n<b>Ordens de Aquisição</b> representam a necessidade de uma certa quantidade de produtos, num determinado momento, em um dado local.\n</p>\n<p>\n<b>Ordens de Vendas</b> são uma fonte típica de Ordens de Compras (mas estes são documentos distintos). \n<br/>Dependendo dos parâmetros de aquisição e configuração do produto, o motor de aquisição tentará satisfazer a necessidade, reservando produtos do estoque, encomendar produtos de um fornecedor, ou passar uma ordem de produção, etc ...\n</p>\n<p>\nUma <b>Exceção sobre Contratos</b> ocorre quando o sistema não pode encontrar uma maneira de cumprir um contrato. Algumas exceções se resolverão automaticamente, mas outros exigem intervenção manual (aqueles são identificados por uma mensagem de erro específica na conversa).\n</p>"
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para criar uma Aquisição.\n</p>\n<p>\n<b>Ordens de Aquisição</b> representam a necessidade de uma certa quantidade de produtos, num determinado momento, em um dado local.\n</p>\n<p>\n<b>Ordens de Vendas</b> são uma fonte típica de Ordens de Compras (mas estas são documentos distintos). \n<br/>Dependendo dos parâmetros de aquisição e configuração do produto, o processo de aquisição tentará satisfazer a necessidade, reservando produtos do estoque, encomendando produtos de um fornecedor, ou passando uma ordem de produção, etc ...\n</p>\n<p>\nUma <b>Exceção sobre Contratos</b> ocorre quando o sistema não pode encontrar uma maneira de cumprir um contrato. Algumas exceções se resolverão automaticamente, mas outras exigirão intervenção manual (aquelas identificados por uma mensagem de erro específica na conversa).\n</p>"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -58,7 +58,7 @@ msgid ""
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                 Clique para criar uma ordem de compra\n              </p>\n              <p>\n                Uma <b>ordem de compra</b> é utilizado para gravar uma necessidade para um específico\n                 produto a um local específico. Ordens de compra de contratos são geralmente\n                 criado automaticamente a partir do <i> ordens de venda, regras logísticas ou\n                 regras mínimas de ações.</i>\n              </p>\n              <p>\n                Quando a ordem de aquisição for confirmada, automaticamente\n                 cria as operações necessárias a cumprir a necessidade: proposição\n de pedido de compra, ordem de produção, etc.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para criar uma ordem de compra.\n</p>\n<p>\nUma <b>ordem de compra</b> é utilizada para registrar uma necessidade de um produto\nespecífico para um local específico. Ordens de compra de contratos são geralmente\ncriadas automaticamente a partir do <i>ordens de venda, regras logísticas ou\nregras mínimas de estoque.</i>\n</p>\n<p>\nQuando a ordem de aquisição for confirmada, automaticamente\ncria as operações necessárias a cumprir a necessidade: proposição\n da ordem de compra, ordem de produção, etc.\n</p>\n            "
 
 #. module: procurement
 #: field:procurement.rule,action:0
@@ -122,7 +122,7 @@ msgstr "Calcular todas as Aquisições em segundo plano"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
 msgid "Compute all schedulers"
-msgstr "Processar todos os agendamentos"
+msgstr "Computar todos os agendamentos"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -230,7 +230,7 @@ msgstr "ID"
 #. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Se marcado novas mensagens solicitarão sua atenção."
+msgstr "Se marcado, novas mensagens solicitarão sua atenção."
 
 #. module: procurement
 #: help:procurement.rule,active:0
@@ -516,7 +516,7 @@ msgstr "Resumo"
 #. module: procurement
 #: help:procurement.rule,name:0
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr "Este campo irá preencher a Origem da embalagem e o nome da movimentação"
+msgstr "Este campo irá preencher a origem da embalagem e o nome do movimento"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view

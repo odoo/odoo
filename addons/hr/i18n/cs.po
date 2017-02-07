@@ -4,13 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2016
+# Ladislav Tomm <tomm@helemik.cz>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-06-08 11:28+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-11-24 08:32+0000\n"
+"Last-Translator: Jaroslav Helemik Nemec <nemec@helemik.cz>\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-8/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +37,7 @@ msgid ""
 "                contact data, job position, availability, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikněte na přidat nového zaměstnance.\n</p><p>\nPouhým rychlým pohledem můžete na zaměstnanecké obrazovce\nsystému Odoo zjistit veškeré potřebné informace o každém zaměstnanci;\nkontakty, pracovní pozici, dostupnost, atd.\n</p>"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -48,7 +50,7 @@ msgid ""
 "                leaves and holidays, recruitments, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKliknutím vytvořte oddělení\n</p><p>\nČlenění dle oddělení systému Odoo umožňuje práci se všemi dokumenty, souvisejícími se zaměstnanci, na základě oddělení\npro která jsou určeny: výdaje, časové rozvrhy, odchody a dovolené,\nnábory, atd.\n</p>"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -61,7 +63,7 @@ msgid ""
 "                leaves and holidays, recruitments, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKliknutím definujte oddělení\n</p><p>\nVaše členění na různá oddělení umožňuje práci se všemi dokumenty, souvisejícími se zaměstnanci, na základě oddělení\npro která jsou určeny: výdaje, časové rozvrhy, odchody a dovolené,\nnábory, atd.\n</p>"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -79,7 +81,7 @@ msgid ""
 "                position.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKliknutím definujte novou pracovní pozici.\n</p><p>\nPracovní pozice se používají k definici určité práce a nároků na ni.\nMůžete sledovat počet zaměstnanců na každou pracovní pozici\na sledovat vývoj s ohledem na vaše plány do budoucna.\n</p><p>\nKe každé pracovní pozici můžete přiložit plán, který bude použit\nběhem náboru pro určení potřebného množství uchazečů na danou\npracovní pozici.\n</p>"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -89,18 +91,18 @@ msgstr "Aktivní"
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
 msgid "Additional Features"
-msgstr ""
+msgstr "Další funkce"
 
 #. module: hr
 #: field:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
 "Allow invoicing based on timesheets (the sale application will be installed)"
-msgstr ""
+msgstr "Povolit fakturaci na základě časového rozvrhu (nainstaluje se aplikace pro prodej)"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "Allow timesheets validation by managers"
-msgstr ""
+msgstr "Povol kontrolu časových rozvrhů vedoucími."
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
@@ -127,7 +129,7 @@ msgstr "Narození"
 msgid ""
 "By default 'Closed', set it to 'In Recruitment' if recruitment process is "
 "going on for this job position."
-msgstr ""
+msgstr "Standardně nastaveno \"Zavřeno\", pokud na tuto pozici probíhá nábor, nastavte \"Nábor\"."
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
@@ -147,7 +149,7 @@ msgstr "Dětské oddělení"
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
 msgid "Citizenship & Other Info"
-msgstr ""
+msgstr "Občanství a další informace"
 
 #. module: hr
 #: field:hr.employee,city:0
@@ -184,7 +186,7 @@ msgstr "Nastavení"
 #: view:hr.config.settings:hr.view_human_resources_configuration
 #: model:ir.actions.act_window,name:hr.action_human_resources_configuration
 msgid "Configure Human Resources"
-msgstr ""
+msgstr "Nastav lidské zdroje"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -218,7 +220,7 @@ msgstr "Vytvořeno"
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "Current Number of Employees"
-msgstr ""
+msgstr "Současný počet zaměstnanců"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -252,7 +254,7 @@ msgstr "Oddělení"
 #. module: hr
 #: field:res.users,display_employees_suggestions:0
 msgid "Display Employees Suggestions"
-msgstr ""
+msgstr "Ukaž návrh zaměstnanců"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -262,7 +264,7 @@ msgstr "Rozvedený"
 #. module: hr
 #: field:hr.config.settings,module_hr_gamification:0
 msgid "Drive engagement with challenges and badges"
-msgstr ""
+msgstr "Zvyšovat aktivitu výzvami a odznaky"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -279,13 +281,13 @@ msgstr "Kategorie zaměstnanců"
 #. module: hr
 #: field:hr.employee.category,name:0
 msgid "Employee Tag"
-msgstr ""
+msgstr "Štítek zaměstnance"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 msgid "Employee Tags"
-msgstr ""
+msgstr "Štítky zaměstnanců"
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
@@ -318,28 +320,28 @@ msgstr "Struktura zaměstnanců"
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error! You cannot create recursive Categories."
-msgstr ""
+msgstr "Chyba ! Nemůžete vytvořit rekurzivní Kategorie."
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
-msgstr ""
+msgstr "Chyba! Nemůžete vytvářet rekurzivní oddělení."
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
+msgstr "Chyba! Nemůžete vytvářet rekurzivní strom zaměstnanců."
 
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected New Employees"
-msgstr ""
+msgstr "Očekávaní nový zaměstnanci."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid ""
 "Expected number of employees for this job position after new recruitment."
-msgstr ""
+msgstr "Očekávaný počet zaměstnanců pro tuto pracovní pozici po novém příjímání."
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -378,12 +380,12 @@ msgstr "Seskupit podle"
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
 msgid "HR Settings"
-msgstr ""
+msgstr "Nastavení personalistiky"
 
 #. module: hr
 #: field:hr.job,no_of_hired_employee:0
 msgid "Hired Employees"
-msgstr ""
+msgstr "Najatí zaměstnanci"
 
 #. module: hr
 #: help:hr.employee,message_summary:0 help:hr.job,message_summary:0
@@ -408,7 +410,7 @@ msgstr "Lidské zdroje"
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
 msgid "Human Resources Management"
-msgstr ""
+msgstr "Správa personalistiky"
 
 #. module: hr
 #: field:hr.config.settings,id:0 field:hr.department,id:0
@@ -439,12 +441,12 @@ msgstr "V náboru"
 #. module: hr
 #: field:hr.config.settings,module_hr_attendance:0
 msgid "Install attendances feature"
-msgstr ""
+msgstr "Nainstaluj docházky"
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
 msgid "Install your country's payroll"
-msgstr ""
+msgstr "Nainstaluje mzdy pro vaši zemi"
 
 #. module: hr
 #: field:hr.employee,message_is_follower:0 field:hr.job,message_is_follower:0
@@ -509,12 +511,12 @@ msgstr "Naposled upraveno"
 #. module: hr
 #: field:hr.employee,last_login:0
 msgid "Latest Connection"
-msgstr ""
+msgstr "Poslední připojení"
 
 #. module: hr
 #: view:hr.job:hr.view_hr_job_form
 msgid "Launch Recruitment"
-msgstr ""
+msgstr "Spusť nábor"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
@@ -534,27 +536,27 @@ msgstr "Můž"
 #. module: hr
 #: field:hr.config.settings,module_hr_expense:0
 msgid "Manage employees expenses"
-msgstr ""
+msgstr "Správa výdajů na zaměstnance"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_holidays:0
 msgid "Manage holidays, leaves and allocation requests"
-msgstr ""
+msgstr "Správa dovolených, podanné žádosti a terminy"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_payroll:0
 msgid "Manage payroll"
-msgstr ""
+msgstr "Správa výplat"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_recruitment:0
 msgid "Manage the recruitment process"
-msgstr ""
+msgstr "Správa náboru zaměstnanců"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet:0
 msgid "Manage timesheets"
-msgstr ""
+msgstr "Správa časových rozvrhů"
 
 #. module: hr
 #: field:hr.department,manager_id:0 view:hr.employee:hr.view_employee_filter
@@ -583,7 +585,7 @@ msgid ""
 "Medium-sized photo of the employee. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
+msgstr "Středně velká fotografie zaměstnance. Velikost se automaticky změní na 128x128px se zachováním poměru stran. Použijte toto pole v zobrazeních 'formulář' nebo 'kanban'."
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -624,25 +626,25 @@ msgstr "Poznámky"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees currently occupying this job position."
-msgstr ""
+msgstr "Současný počet zaměstnanců na této pracovní pozici."
 
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid ""
 "Number of hired employee must be less than expected number of employee in "
 "recruitment."
-msgstr ""
+msgstr "Počet přijatých zaměstnanců musí být menší než očekávaný počet zaměstnanců v náboru."
 
 #. module: hr
 #: help:hr.job,no_of_hired_employee:0
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
-msgstr ""
+msgstr "Počet najatých zaměstnanců na tuto pracovní pozici za dobu náboru."
 
 #. module: hr
 #: help:hr.job,no_of_recruitment:0
 msgid "Number of new employees you expect to recruit."
-msgstr ""
+msgstr "Předpokládaný počet nových zaměstnanců"
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -652,12 +654,12 @@ msgstr "Umístění kanceláře"
 #. module: hr
 #: model:ir.actions.client,name:hr.action_client_hr_menu
 msgid "Open HR Menu"
-msgstr ""
+msgstr "Otevřít menu HR"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_evaluation:0
 msgid "Organize employees periodic evaluation"
-msgstr ""
+msgstr "Sestavit pravidelné hodnocení zaměstnanců"
 
 #. module: hr
 #: field:hr.employee,otherid:0
@@ -667,7 +669,7 @@ msgstr "Jiné Id"
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
 msgid "Other Information ..."
-msgstr ""
+msgstr "Jiné informace"
 
 #. module: hr
 #: field:hr.department,parent_id:0
@@ -677,7 +679,7 @@ msgstr "Nadřazené oddělení"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Employee Tag"
-msgstr ""
+msgstr "Nadřazený štítek zaměstnance"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -707,32 +709,32 @@ msgstr "Pozice"
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
 msgid "Public Information"
-msgstr ""
+msgstr "Veřejné informace"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_contract:0
 msgid "Record contracts per employee"
-msgstr ""
+msgstr "Nahrané smlouvy po zaměstnancích"
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment Closed"
-msgstr ""
+msgstr "Ukončené nábory"
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment in Progress"
-msgstr ""
+msgstr "Probíhající nábor"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
 msgid "Related User"
-msgstr ""
+msgstr "Příslušný uživatel"
 
 #. module: hr
 #: field:res.users,employee_ids:0
 msgid "Related employees"
-msgstr ""
+msgstr "Příslušní zaměstnanci"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
@@ -775,7 +777,7 @@ msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "Malý obrázek zaměstnance. Je automaticky zmenšen na rozměr 64x64 bodů se zachováním poměru stran. Použijte toto pole kdekoli je požadován malý obrázek."
 
 #. module: hr
 #: help:hr.employee,sinid:0
@@ -796,12 +798,12 @@ msgstr "STav"
 #. module: hr
 #: view:hr.job:hr.view_hr_job_form
 msgid "Stop Recruitment"
-msgstr ""
+msgstr "Ukonči nábor"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Subordinate Hierarchy"
-msgstr ""
+msgstr "Podřízená hierarchie"
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -813,7 +815,7 @@ msgstr "Podřízení"
 #: code:addons/hr/static/src/xml/suggestions.xml:15
 #, python-format
 msgid "Suggested Employees"
-msgstr ""
+msgstr "Navrhovaní zaměstnanci"
 
 #. module: hr
 #: field:hr.employee,message_summary:0 field:hr.job,message_summary:0
@@ -828,76 +830,76 @@ msgstr "Značky"
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
 msgid "Talent Management"
-msgstr ""
+msgstr "Talent Management"
 
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
-msgstr ""
+msgstr "Název pracovní pozice musí být jedinečný v každém oddělení společnosti!"
 
 #. module: hr
 #: help:hr.employee,image:0
 msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
-msgstr ""
+msgstr "Pole obsahuje obrázek používaný jako fotografii zaměstnance, maximálně 1024x1024 bodů."
 
 #. module: hr
 #: help:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
 "This installs the module account_analytic_analysis, which will install sales"
 " management too."
-msgstr ""
+msgstr "Nainstaluje moduly account_analytic_analysis, taktéž nainstaluje správu prodeje."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_attendance:0
 msgid "This installs the module hr_attendance."
-msgstr ""
+msgstr "Nainstaluje modul hr_attendance."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_contract:0
 msgid "This installs the module hr_contract."
-msgstr ""
+msgstr "Nainstaluje modul hr_contract."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_evaluation:0
 msgid "This installs the module hr_evaluation."
-msgstr ""
+msgstr "Nainstaluje modul hr_evaluation."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_expense:0
 msgid "This installs the module hr_expense."
-msgstr ""
+msgstr "Nainstaluje modul hr_expense."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_gamification:0
 msgid "This installs the module hr_gamification."
-msgstr ""
+msgstr "Nainstaluje modul hr_gamification."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
 msgid "This installs the module hr_holidays."
-msgstr ""
+msgstr "Nainstaluje modul hr_holidays."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_payroll:0
 msgid "This installs the module hr_payroll."
-msgstr ""
+msgstr "Nainstaluje modul hr_payroll."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_recruitment:0
 msgid "This installs the module hr_recruitment."
-msgstr ""
+msgstr "Nainstaluje modul hr_recruitment."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
 msgid "This installs the module hr_timesheet."
-msgstr ""
+msgstr "Nainstaluje modul hr_timesheet."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "This installs the module hr_timesheet_sheet."
-msgstr ""
+msgstr "Nainstaluje modul hr_timesheet_sheet."
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
@@ -907,7 +909,7 @@ msgstr "Časové sledování"
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Total Forecasted Employees"
-msgstr ""
+msgstr "Celkem očekávaných zaměstnanců"
 
 #. module: hr
 #: view:hr.employee:hr.hr_kanban_view_employees
@@ -933,7 +935,7 @@ msgstr "Uživatelé"
 #: code:addons/hr/hr.py:273
 #, python-format
 msgid "Welcome to %s! Please help him/her take the first steps with Odoo!"
-msgstr ""
+msgstr "Přivítejte %s! Prosím, pomozte mu / jí učinit první kroky s Odoo!"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -943,7 +945,7 @@ msgstr "Vdovec"
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work Email"
-msgstr ""
+msgstr "Pracovní email"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
@@ -968,12 +970,12 @@ msgstr "oddělení"
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
 msgid "e.g. Part Time"
-msgstr ""
+msgstr "např. částečný úvazek"
 
 #. module: hr
 #: view:hr.job:hr.view_hr_job_form
 msgid "new employee(s) expected"
-msgstr ""
+msgstr "očekávaní nový zaměstnanci"
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration

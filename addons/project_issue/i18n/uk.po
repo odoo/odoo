@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-04-28 13:46+0000\n"
+"PO-Revision-Date: 2016-08-28 12:31+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-8/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -25,12 +25,12 @@ msgstr "К-сть листів"
 #. module: project_issue
 #: field:res.partner,issue_count:0
 msgid "# Issues"
-msgstr ""
+msgstr "Скарг"
 
 #. module: project_issue
 #: field:project.issue.report,nbr:0
 msgid "# of Issues"
-msgstr ""
+msgstr "Скарг"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:299
@@ -80,7 +80,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
 " * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr ""
+msgstr "Стан карточки канбан вказує на певні ситуації:\n* Звичайний - це нормальний стан під час виконання\n* Заблоковано - означає, що щось заважає прогресу виконання\n* Готово до наступної стадії - означає, що проблема готова до переміщення у наступну стадію"
 
 #. module: project_issue
 #: field:project.issue,active:0 field:project.issue.version,active:0
@@ -120,22 +120,22 @@ msgstr "Призначено"
 #. module: project_issue
 #: field:project.issue.report,delay_close:0
 msgid "Avg. Delay to Close"
-msgstr ""
+msgstr "Сер. затримка для закриття"
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
 msgid "Avg. Delay to Open"
-msgstr ""
+msgstr "Сер. затримка для відкриття"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_close:0
 msgid "Avg. Working Hours to Close"
-msgstr ""
+msgstr "Сер. к-сть годин для закриття"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_open:0
 msgid "Avg. Working Hours to Open"
-msgstr ""
+msgstr "Сер. к-сть годин для відкриття"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
@@ -175,12 +175,12 @@ msgstr "Індекс кольору"
 #. module: project_issue
 #: help:project.issue.report,channel:0
 msgid "Communication Channel."
-msgstr ""
+msgstr "Канал комунікації."
 
 #. module: project_issue
 #: help:project.issue,channel:0
 msgid "Communication channel."
-msgstr ""
+msgstr "Канал комунікації."
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -193,7 +193,7 @@ msgstr "Компанія"
 #. module: project_issue
 #: help:project.issue,progress:0
 msgid "Computed as: Time Spent / Total Time."
-msgstr ""
+msgstr "Рахується так: Витрачений час / Загальний час."
 
 #. module: project_issue
 #: view:project.config.settings:project_issue.view_config_settings
@@ -216,7 +216,7 @@ msgstr "Дата створення"
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "Create Day"
-msgstr ""
+msgstr "День створення"
 
 #. module: project_issue
 #: field:project.config.settings,fetchmail_issue:0
@@ -258,12 +258,12 @@ msgstr "Дата"
 #. module: project_issue
 #: field:project.issue.report,date_closed:0
 msgid "Date of Closing"
-msgstr ""
+msgstr "Дата закриття"
 
 #. module: project_issue
 #: field:project.issue.report,opening_date:0
 msgid "Date of Opening"
-msgstr ""
+msgstr "Дата відкриття"
 
 #. module: project_issue
 #: help:project.issue,message_last_post:0
@@ -273,12 +273,12 @@ msgstr "Дата останнього повідомлення опубліко�
 #. module: project_issue
 #: field:project.issue,days_since_creation:0
 msgid "Days since creation date"
-msgstr ""
+msgstr "Днів з дати відкриття"
 
 #. module: project_issue
 #: field:project.issue,inactivity_days:0
 msgid "Days since last action"
-msgstr ""
+msgstr "Днів з останньої дії"
 
 #. module: project_issue
 #: field:project.issue,day_open:0
@@ -318,12 +318,12 @@ msgstr "Опис"
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
 msgid "Difference in days between creation date and current date"
-msgstr ""
+msgstr "Різниця в днях між датою створення та поточною датою"
 
 #. module: project_issue
 #: help:project.issue,inactivity_days:0
 msgid "Difference in days between last action and current date"
-msgstr ""
+msgstr "Різниця в днях між датою останньої дії та поточною датою"
 
 #. module: project_issue
 #: field:project.issue,duration:0
@@ -353,12 +353,12 @@ msgstr "Додаткова інформація"
 #. module: project_issue
 #: view:project.issue:project_issue.project_feature_tree_view
 msgid "Feature Tracker Tree"
-msgstr ""
+msgstr "Дерево властивостей"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_feature_tree_view
 msgid "Feature description"
-msgstr ""
+msgstr "Опис властивості"
 
 #. module: project_issue
 #: field:project.issue,message_follower_ids:0
@@ -412,7 +412,7 @@ msgstr "Стежить"
 #: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,name:0
 msgid "Issue"
-msgstr ""
+msgstr "Скарга"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_assigned
@@ -424,7 +424,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr ""
+msgstr "Проблема заблокована"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
@@ -441,17 +441,17 @@ msgstr ""
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr ""
+msgstr "Змінено стан проблеми"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
 msgid "Issue Tracker Search"
-msgstr ""
+msgstr "Пошук проблем"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_tree_view
 msgid "Issue Tracker Tree"
-msgstr ""
+msgstr "Дерево проблем"
 
 #. module: project_issue
 #: view:project.issue.version:project_issue.project_issue_version_form_view
@@ -467,7 +467,7 @@ msgstr ""
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "Проблему заблоковано"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
@@ -493,7 +493,7 @@ msgstr "Issues"
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_report
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 msgid "Issues Analysis"
-msgstr ""
+msgstr "Аналіз проблем"
 
 #. module: project_issue
 #: field:project.issue,kanban_state:0
@@ -556,7 +556,7 @@ msgstr "Повідомлення та історія бесіди"
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "My Issues"
-msgstr ""
+msgstr "Мої проблеми"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -589,12 +589,12 @@ msgstr "Нормальний"
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
 msgid "Number of Days to close the project issue"
-msgstr ""
+msgstr "К-сть днів до закриття проблеми"
 
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "К-сть днів для відкриття проблеми."
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
@@ -619,12 +619,12 @@ msgstr "Пріоритет"
 #. module: project_issue
 #: field:project.issue,description:0
 msgid "Private Note"
-msgstr ""
+msgstr "Власна примітка"
 
 #. module: project_issue
 #: field:project.issue,progress:0
 msgid "Progress (%)"
-msgstr ""
+msgstr "Прогрес (%)"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
@@ -644,12 +644,12 @@ msgstr ""
 #: model:ir.model,name:project_issue.model_project_issue
 #: view:project.issue.report:project_issue.view_project_issue_report_graph
 msgid "Project Issue"
-msgstr ""
+msgstr "Скарга проекту"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_graph_view
 msgid "Project Issues"
-msgstr ""
+msgstr "Проблеми проекту"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
@@ -669,7 +669,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue.report,section_id:0
 msgid "Sale Team"
-msgstr ""
+msgstr "Команда продажу"
 
 #. module: project_issue
 #: field:project.issue,section_id:0
@@ -681,7 +681,7 @@ msgstr "Відділ продажу"
 msgid ""
 "Sales team to which Case belongs to.                             Define "
 "Responsible user and Email account for mail gateway."
-msgstr ""
+msgstr "Команда продажу, якій належить дана справа. Вкажіть відповідальну особу та ел. адресу для листування."
 
 #. module: project_issue
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
@@ -741,12 +741,12 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr ""
+msgstr "Ці адреси будуть додані до поля СС для всіх вхідних та вихідних листів для цього запису перед відправкою. Можна вказати декілька адрес, розділяючи їх комою."
 
 #. module: project_issue
 #: help:project.issue,email_from:0
 msgid "These people will receive email."
-msgstr ""
+msgstr "Ці люди будуть отримували ел. листи."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -755,7 +755,7 @@ msgid ""
 "support or after-sales services. You can track the issues per age. You can "
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
-msgstr ""
+msgstr "Цей звіт по проблемам проекту дозволить вам проаналізувати якість вашої підтримки або післяпродажного обслуговування. Ви можете відслідковувати проблеми по даті. Ви можете аналізувати скільки часу було необхідно для відкриття чи вирішення проблеми, кількість надісланих ел. листів та середній час на одну проблему."
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -803,17 +803,17 @@ msgstr "Попередження!"
 #. module: project_issue
 #: field:project.issue,email_cc:0
 msgid "Watchers Emails"
-msgstr ""
+msgstr "Ел. пошта підписників"
 
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
 msgid "Working Hours to assign the Issue"
-msgstr ""
+msgstr "К-сть годин для призначення проблеми"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
 msgid "Working Hours to close the Issue"
-msgstr ""
+msgstr "К-сть годин для закриття проблеми"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:397
@@ -827,7 +827,7 @@ msgstr ""
 #: code:addons/project_issue/project_issue.py:348
 #, python-format
 msgid "issues"
-msgstr ""
+msgstr "проблеми"
 
 #. module: project_issue
 #: field:project.project,issue_ids:0

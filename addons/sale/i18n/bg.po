@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-01-27 19:14+0000\n"
+"PO-Revision-Date: 2016-09-21 15:10+0000\n"
 "Last-Translator: Radina <radis.choice@gmail.com>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-8/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -123,7 +123,7 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
@@ -135,7 +135,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "(update)"
-msgstr ""
+msgstr "(обнови)"
 
 #. module: sale
 #: help:sale.order.line,state:0
@@ -228,7 +228,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "Адрес в Поръчките за Продажба"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -388,12 +388,12 @@ msgstr "Аналитична сметка"
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "Аналитично Счетоводство за Продажби"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "Аналитично счетоводство за продажби"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -653,7 +653,7 @@ msgstr "Дата на поръчка:"
 #. module: sale
 #: help:sale.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Дата на последното съобщение, публикувано на записа."
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -725,7 +725,7 @@ msgstr "Отстъпка (%)"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Отстъпка на редове"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
@@ -902,7 +902,7 @@ msgstr "ID"
 #. module: sale
 #: help:sale.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
 
 #. module: sale
 #: code:addons/sale/sale.py:305
@@ -997,12 +997,12 @@ msgstr "Адрес за фактурата за настоящото нареж�
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice address:"
-msgstr ""
+msgstr "Адрес за фактура"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "Адрес за фактуриране и доставка:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1117,7 +1117,7 @@ msgstr "Съобщения"
 #. module: sale
 #: help:sale.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "История на събщенията и комуникациите"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -1218,12 +1218,12 @@ msgstr ""
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Order Month"
-msgstr ""
+msgstr "Месец на Поръчка"
 
 #. module: sale
 #: view:sale.order:sale.view_order_tree
 msgid "Order Number"
-msgstr ""
+msgstr "Номер на Поръчка"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1243,7 +1243,7 @@ msgstr ""
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "Статус на Поръчка"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2001,7 +2001,7 @@ msgstr "Мерна единица"
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Мерна единица"
 
 #. module: sale
 #: field:sale.order,message_unread:0
@@ -2140,7 +2140,7 @@ msgstr ""
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Your Reference:"
-msgstr ""
+msgstr "Ваша референция:"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv

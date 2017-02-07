@@ -554,11 +554,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 self.records.remove(record);
                 return;
             }
-            _.each(values, function (value, key) {
+            // _.each is broken if a field "length" is present
+            for (var key in values) {
                 if (fields[key] && fields[key].type === 'many2many')
                     record.set(key + '__display', false, {silent: true});
-                record.set(key, value, {silent: true});            
-            });
+                record.set(key, values[key], {silent: true});
+            }
             record.trigger('change', record);
         });
     },
@@ -1125,8 +1126,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                                    _(names).pluck(1).join(', '));
                         record.set(column.id, ids);
                     });
-                // temp empty value
-                record.set(column.id, false);
+                // temporary empty display name
+                record.set(column.id + '__display', false);
             }
         }
         return column.format(record.toForm().data, {
@@ -2182,7 +2183,6 @@ instance.web.list.Column = instance.web.Class.extend({
             id: id,
             tag: tag
         });
-
         this.modifiers = attrs.modifiers ? JSON.parse(attrs.modifiers) : {};
         delete attrs.modifiers;
         _.extend(this, attrs);
@@ -2209,10 +2209,14 @@ instance.web.list.Column = instance.web.Class.extend({
         if (this.type !== 'integer' && this.type !== 'float') {
             return {};
         }
-        var aggregation_func = this['group_operator'] || 'sum';
-        if (!(aggregation_func in this)) {
+
+        var aggregation_func = (this.sum && 'sum') || (this.avg && 'avg') ||
+                               (this.max && 'max') || (this.min && 'min');
+
+        if (!aggregation_func) {
             return {};
         }
+
         var C = function (fn, label) {
             this['function'] = fn;
             this.label = label;

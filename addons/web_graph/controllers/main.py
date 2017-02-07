@@ -1,5 +1,6 @@
 from openerp import http
 import simplejson
+from openerp.tools import ustr
 from openerp.http import request, serialize_exception as _serialize_exception
 from cStringIO import StringIO
 from collections import deque
@@ -70,7 +71,7 @@ class TableExporter(http.Controller):
         # Step 3: writing data
         x = 0
         for row in jdata['rows']:
-            worksheet.write(y, x, row['indent'] * '     ' + row['title'], header_plain)
+            worksheet.write(y, x, row['indent'] * '     ' + ustr(row['title']), header_plain)
             for cell in row['cells']:
                 x = x + 1
                 if cell.get('is_bold', False):

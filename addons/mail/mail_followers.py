@@ -22,7 +22,7 @@
 import threading
 
 from openerp.osv import osv, fields
-from openerp import tools, SUPERUSER_ID
+from openerp import api, tools, SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools.mail import plaintext2html
 
@@ -55,20 +55,31 @@ class mail_followers(osv.Model):
     # Modifying followers change access rights to individual documents. As the
     # cache may contain accessible/inaccessible data, one has to refresh it.
     #
-    def create(self, cr, uid, vals, context=None):
-        res = super(mail_followers, self).create(cr, uid, vals, context=context)
-        self.invalidate_cache(cr, uid, context=context)
+    @api.multi
+    def _invalidate_documents(self):
+        """ Invalidate the cache of the documents followed by ``self``. """
+        for record in self:
+            if record.res_id:
+                self.env[record.res_model].invalidate_cache(ids=[record.res_id])
+
+    @api.model
+    def create(self, vals):
+        record = super(mail_followers, self).create(vals)
+        record._invalidate_documents()
+        return record
+
+    @api.multi
+    def write(self, vals):
+        if 'res_model' in vals or 'res_id' in vals:
+            self._invalidate_documents()
+        res = super(mail_followers, self).write(vals)
+        self._invalidate_documents()
         return res
 
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(mail_followers, self).write(cr, uid, ids, vals, context=context)
-        self.invalidate_cache(cr, uid, context=context)
-        return res
-
-    def unlink(self, cr, uid, ids, context=None):
-        res = super(mail_followers, self).unlink(cr, uid, ids, context=context)
-        self.invalidate_cache(cr, uid, context=context)
-        return res
+    @api.multi
+    def unlink(self):
+        self._invalidate_documents()
+        return super(mail_followers, self).unlink()
 
     _sql_constraints = [('mail_followers_res_partner_res_model_id_uniq','unique(res_model,res_id,partner_id)','Error, a partner cannot follow twice the same object.')]
 

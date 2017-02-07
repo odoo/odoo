@@ -4337,6 +4337,9 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     commit_value: function() {
         return this.save_any_view();
     },
+    is_false: function () {
+        return _(this.dataset.ids).isEmpty();
+    },
     save_any_view: function() {
         var view = this.get_active_view();
         if (view) {
@@ -5567,6 +5570,7 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         this.m2o = new instance.web.form.FieldMany2One(fm, { attrs: {
             name: 'Referenced Document',
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
+            context: this.build_context().eval(),
         }});
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.appendTo(this.$(".oe_form_view_reference_m2o"));
@@ -6142,10 +6146,14 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             return fields;
         });
     },
-    on_click_stage: function (ev) {
+    on_click_stage: _.debounce(function (ev) {
         var self = this;
         var $li = $(ev.currentTarget);
+        var ul = $li.closest('.oe_form_field_status');
         var val;
+        if (ul.attr('disabled')) {
+            return;
+        }
         if (this.field.type == "many2one") {
             val = parseInt($li.data("id"), 10);
         }
@@ -6162,13 +6170,16 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                 this.view.recursive_save().done(function() {
                     var change = {};
                     change[self.name] = val;
+                    ul.attr('disabled', true);
                     self.view.dataset.write(self.view.datarecord.id, change).done(function() {
                         self.view.reload();
+                    }).always(function() {
+                        ul.removeAttr('disabled');
                     });
                 });
             }
         }
-    },
+    }, 300, true),
 });
 
 instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({

@@ -20,6 +20,7 @@
 ##############################################################################
 
 import itertools
+import math
 from lxml import etree
 
 from openerp import models, fields, api, _
@@ -394,7 +395,7 @@ class account_invoice(models.Model):
             default_model='account.invoice',
             default_res_id=self.id,
             default_use_template=bool(template),
-            default_template_id=template.id,
+            default_template_id=template and template.id or False,
             default_composition_mode='comment',
             mark_invoice_as_sent=True,
         )
@@ -431,8 +432,8 @@ class account_invoice(models.Model):
         fiscal_position = False
         bank_id = False
 
+        p = self.env['res.partner'].browse(partner_id or False)
         if partner_id:
-            p = self.env['res.partner'].browse(partner_id)
             rec_account = p.property_account_receivable
             pay_account = p.property_account_payable
             if company_id:
@@ -460,7 +461,6 @@ class account_invoice(models.Model):
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term.id
             fiscal_position = p.property_account_position.id
-            bank_id = p.bank_ids and p.bank_ids[0].id or False
 
         result = {'value': {
             'account_id': account_id,
@@ -468,8 +468,11 @@ class account_invoice(models.Model):
             'fiscal_position': fiscal_position,
         }}
 
-        if type in ('in_invoice', 'in_refund'):
+        if type in ('in_invoice', 'out_refund'):
+            bank_ids = p.commercial_partner_id.bank_ids
+            bank_id = bank_ids[0].id if bank_ids else False
             result['value']['partner_bank_id'] = bank_id
+            result['domain'] = {'partner_bank_id':  [('id', 'in', bank_ids.ids)]}
 
         if payment_term != payment_term_id:
             if payment_term_id:
@@ -807,11 +810,20 @@ class account_invoice(models.Model):
 
             ctx = dict(self._context, lang=inv.partner_id.lang)
 
+            company_currency = inv.company_id.currency_id
             if not inv.date_invoice:
+                # FORWARD-PORT UP TO SAAS-6
+                if inv.currency_id != company_currency and inv.tax_line:
+                    raise except_orm(
+                        _('Warning!'),
+                        _('No invoice date!'
+                            '\nThe invoice currency is not the same than the company currency.'
+                            ' An invoice date is required to determine the exchange rate to apply. Do not forget to update the taxes!'
+                        )
+                    )
                 inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
             date_invoice = inv.date_invoice
 
-            company_currency = inv.company_id.currency_id
             # create the analytical lines, one move line per invoice line
             iml = inv._get_analytic_lines()
             # check if taxes are all computed
@@ -834,6 +846,9 @@ class account_invoice(models.Model):
                 if (total_fixed + total_percent) > 100:
                     raise except_orm(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
 
+            # Force recomputation of tax_amount, since the rate potentially changed between creation
+            # and validation of the invoice
+            inv._recompute_tax_amount()
             # one move line per tax line
             iml += account_invoice_tax.move_line_get(inv.id)
 
@@ -1216,6 +1231,18 @@ class account_invoice(models.Model):
         return account_invoice.pay_and_reconcile(recs, pay_amount, pay_account_id, period_id, pay_journal_id,
                     writeoff_acc_id, writeoff_period_id, writeoff_journal_id, name=name)
 
+    @api.multi
+    def _recompute_tax_amount(self):
+        for invoice in self:
+            if invoice.currency_id != invoice.company_id.currency_id:
+                for line in invoice.tax_line:
+                    tax_amount = line.amount_change(
+                        line.amount, currency_id=invoice.currency_id.id, company_id=invoice.company_id.id,
+                        date_invoice=invoice.date_invoice
+                    )['value']['tax_amount']
+                    line.write({'tax_amount': tax_amount})
+
+
 class account_invoice_line(models.Model):
     _name = "account.invoice.line"
     _description = "Invoice Line"
@@ -1302,7 +1329,10 @@ class account_invoice_line(models.Model):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='product_id']"):
                 if self._context['type'] in ('in_invoice', 'in_refund'):
-                    node.set('domain', "[('purchase_ok', '=', True)]")
+                    # Hack to fix the stable version 8.0 -> saas-12
+                    # purchase_ok will be moved from purchase to product in master #13271
+                    if 'purchase_ok' in  self.env['product.template']._fields:
+                        node.set('domain', "[('purchase_ok', '=', True)]")
                 else:
                     node.set('domain', "[('sale_ok', '=', True)]")
             res['arch'] = etree.tostring(doc)
@@ -1539,7 +1569,7 @@ class account_invoice_tax(models.Model):
             currency = self.env['res.currency'].browse(currency_id)
             currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
             amount = currency.compute(amount, company.currency_id, round=False)
-        tax_sign = (self.tax_amount / self.amount) if self.amount else 1
+        tax_sign = math.copysign(1, (self.tax_amount * self.amount))
         return {'value': {'tax_amount': amount * tax_sign}}
 
     @api.v8

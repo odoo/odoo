@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-04-30 20:15+0000\n"
+"PO-Revision-Date: 2016-10-17 19:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -1625,7 +1625,7 @@ msgid ""
 "work center on manufacturing orders). This module manages a resource calendar\n"
 "associated to every resource. It also manages the leaves of every resource.\n"
 "    "
-msgstr ""
+msgstr "\nМодуль для управления ресурсами.\n=================================\n\nРесурсы — то, что может быть запланировано (разработчики в задачах или\nпроизводственные участки в заказах на производство). Этот модуль управляет\nкалендарём связанным со всеми ресурсами. Также управляет наличием ресурсов."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -1840,7 +1840,7 @@ msgid ""
 "- agenda\n"
 "- call for proposals\n"
 "        "
-msgstr ""
+msgstr "\nРасширенные онлайн-события\n=============================\n\nДобавлена поддерка:\n— спонсоров\n— специальное меню события\n— новости события\n— отслеживание\n— программа события\n— звонки для предложений"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_sale
@@ -2187,7 +2187,7 @@ msgid ""
 "Product extension. This module adds:\n"
 "  * Computes standard price from the BoM of the product with a button on the product variant based\n"
 "    on the materials in the BoM and the work centers.  It can create the necessary accounting entries when necessary.\n"
-msgstr ""
+msgstr "\nРасширения продукта. В этом модуле:\n  — Подсчёт стандартной себестоимости на основе ВМ продукта и с кнопкой вариантов продукта в зависимости от материалов ВМ и технологических операций. Может вынужденно создавать записи по счетам при необходимости.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_edi
@@ -2374,7 +2374,7 @@ msgid ""
 "Survey - CRM (bridge module)\n"
 "=================================================================================\n"
 "This module adds a Survey mass mailing button inside the more option of lead/customers views\n"
-msgstr ""
+msgstr "\nОпросы - CRM (соединяющий модуль)\n=================================================================================\nЭтот модуль добавляет кнопку создания массового почтового опроса в большинство опций инициатив и возможностей\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -2786,7 +2786,7 @@ msgid ""
 "\n"
 "Procurements in exception should be checked manually and can be re-run.\n"
 "    "
-msgstr ""
+msgstr "\nЭтот модуль необходим для расчёта поставок.\n==============================================\n\nДанный модуль работает совместно с производственным и не имеет \nбез него никакого смысла. Поставки отслеживают ситуации с \nпотребностями требующие решения с помощью правил. При создании\nпоставки она сразу подтверждается. Сразу после этого проверяется\nкакие потребности могут быть перекрыты с помощью правил. После\nполной проверки поставка отмечается закрытой. Бывают исключительные\nситуации, например отсутствующее правило позволяет отменить поставку.\n\nМеханизм будет расширен несколькими модулями. Правило поставок \nдля склада создаёт перемещения, которые закрывают поставку после \nисполнения. \nПравило поставок в продажах создаёт задачу. Закупщик или производственник\nсмогут создать по ней заявку на закупку или на производство.\n\nПланировщик будет проверять наличие правила поставки и по возможности\nпроводить поставку до конца.\n\nИсключения поставок\nProcurements in exception should be checked manually and can be re-run.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -3231,7 +3231,7 @@ msgid ""
 "sales team, or an opportunity which still has status pending after 14 days might\n"
 "trigger an automatic reminder email.\n"
 "    "
-msgstr ""
+msgstr "\nМодуль позволяет реализовать правила действий для объекта.\n============================================================\n\nИспользуйте автоматизированные события для запуска мероприятий для различных экранов.\n\n**Пример:** Созданная неким пользователем инициатива может автоматически\nбыть назначенной команде, «возможность» по истечении 14 дней автоматически\nA lead created by a specific user may be automatically set to a specific\nsales team, or an opportunity which still has status pending after 14 days might\ntrigger an automatic reminder email.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_plans
@@ -3394,7 +3394,7 @@ msgid ""
 "-----------------\n"
 "    A + B + C -> D + E\n"
 "    "
-msgstr ""
+msgstr "\nЭтот модуль позволяет производить несколько продуктов по одному \nпроизводственному заказу.\n=================================================================\n\nВы можете настроить побочные продукты в ведомости материалов.\n\nБез этого модуля:\n--------------------\n    A + Б + В → Г\n\nWith this module:\n-----------------\n    A + Б + В → Г + Д\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_contacts
@@ -6097,7 +6097,7 @@ msgstr "Банковские счета организации"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_17
 msgid "Company Contact"
-msgstr ""
+msgstr "Контакт компании"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_inventory_form
@@ -7527,7 +7527,7 @@ msgstr "Ошибка контекста:\nПросмотр `%(view_name)s`"
 #: code:addons/models.py:1266
 #, python-format
 msgid "Error details:"
-msgstr ""
+msgstr "Детали ошибки:"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:419 code:addons/base/ir/ir_model.py:421
@@ -9821,7 +9821,7 @@ msgstr "Launchpad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_project_issue
 msgid "Lead to Issue"
-msgstr ""
+msgstr "Инициативу в заявку"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
@@ -12013,7 +12013,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_product
 msgid "Products"
-msgstr ""
+msgstr "Продукты"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
@@ -13110,7 +13110,7 @@ msgstr "Действие сервера"
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
 msgid "Server Action value mapping"
-msgstr ""
+msgstr "Отображение значения действия сервера"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
@@ -15750,7 +15750,7 @@ msgstr "Невозможно зарегистрировать два шрифт�
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
 "created by Odoo (updates, module installation, ...)"
-msgstr ""
+msgstr "Вы не можете удалить пользователя с правами администратора, поскольку он используется для внутренних ресурсов, созданных Odoo (обновление, установка модулей, ...)"
 
 #. module: base
 #: help:res.country,address_format:0
@@ -15821,7 +15821,7 @@ msgstr "Вы пробуете обновить модуль, зависящий 
 msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
-msgstr ""
+msgstr "Вы сможете определить дополнительные права доступа путём редактирования вновь созданного пользователя в меню «Настройки / Пользователи»."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:234
@@ -16228,12 +16228,12 @@ msgstr "пользователь сможет управлять своим ра
 msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
-msgstr ""
+msgstr "пользователь будет иметь доступ ко любым записям в модуле продаж."
 
 #. module: base
 #: model:res.groups,comment:base.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr ""
+msgstr "пользователь будет иметь доступ к своим данным в модуле продаж."
 
 #. module: base
 #: model:res.groups,comment:base.group_hr_manager
@@ -16247,7 +16247,7 @@ msgstr ""
 msgid ""
 "the user will have an access to the sales configuration as well as statistic"
 " reports."
-msgstr ""
+msgstr "пользователь будет иметь доступ к настройке продаж, а также к статистическим отчётам."
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form

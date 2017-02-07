@@ -3,21 +3,36 @@
 # * payment_transfer
 # 
 # Translators:
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# Jeffery CHEN <jeffery9@gmail.com>, 2015
+# Jeffery CHEN <jeffery9@gmail.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2016-2017
 # mrshelly <mrshelly@hotmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-05 12:00+0000\n"
-"PO-Revision-Date: 2015-11-21 06:47+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"POT-Creation-Date: 2016-12-14 14:52+0000\n"
+"PO-Revision-Date: 2017-01-21 08:24+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:32
+#, python-format
+msgid ""
+"<div>\n"
+"<h3>Please use the following transfer details</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Communication</h4>\n"
+"<p>Please use the order name as communication reference.</p>\n"
+"</div>"
+msgstr "<div>\n<h3>详情请参考</h3>\n<h4>%(bank_title)s</h4>\n%(bank_accounts)s\n<h4>通信</h4>\n<p>请使用订单名称作为通讯参考。</p>\n</div>"
 
 #. module: payment_transfer
 #: model:payment.acquirer,pre_msg:payment_transfer.payment_acquirer_transfer
@@ -41,7 +56,7 @@ msgstr "银行帐户"
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "收单方"
+msgstr "付款方式"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
@@ -50,6 +65,7 @@ msgstr "支付交易"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:19
+#: model:payment.acquirer,name:payment_transfer.payment_acquirer_transfer
 #, python-format
 msgid "Wire Transfer"
 msgstr "电汇"

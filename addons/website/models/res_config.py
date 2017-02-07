@@ -10,7 +10,7 @@ class website_config_settings(osv.osv_memory):
         'website_name': fields.related('website_id', 'name', type="char", string="Website Name"),
 
         'language_ids': fields.related('website_id', 'language_ids', type='many2many', relation='res.lang', string='Languages'),
-        'default_lang_id': fields.related('website_id', 'default_lang_id', type='many2one', relation='res.lang', string='Default language'),
+        'default_lang_id': fields.related('website_id', 'default_lang_id', type='many2one', relation='res.lang', string='Default language', required=True),
         'default_lang_code': fields.related('website_id', 'default_lang_code', type="char", string="Default language code"),
         'google_analytics_key': fields.related('website_id', 'google_analytics_key', type="char", string='Google Analytics Key'),
         

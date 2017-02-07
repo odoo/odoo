@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-05 12:00+0000\n"
-"PO-Revision-Date: 2015-10-01 08:46+0000\n"
+"POT-Creation-Date: 2016-12-14 14:52+0000\n"
+"PO-Revision-Date: 2016-12-15 09:35+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-8/language/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,19 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: bs\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:32
+#, python-format
+msgid ""
+"<div>\n"
+"<h3>Please use the following transfer details</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Communication</h4>\n"
+"<p>Please use the order name as communication reference.</p>\n"
+"</div>"
+msgstr ""
 
 #. module: payment_transfer
 #: model:payment.acquirer,pre_msg:payment_transfer.payment_acquirer_transfer
@@ -39,15 +52,16 @@ msgstr "Računi banke"
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Posrednik plaćanja"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Transakcija plaćanja"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:19
+#: model:payment.acquirer,name:payment_transfer.payment_acquirer_transfer
 #, python-format
 msgid "Wire Transfer"
-msgstr ""
+msgstr "Žičani prenos"

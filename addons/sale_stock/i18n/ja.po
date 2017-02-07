@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-06-22 04:24+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
+"PO-Revision-Date: 2016-11-30 04:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,7 +120,7 @@ msgstr "請求配送を有効化"
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "受注明細でルート選択可"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
@@ -147,7 +147,7 @@ msgstr "国際取引条件は国際間の取り引きで使用する、事前に
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "在庫ルート"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -216,7 +216,7 @@ msgstr "ピッキングリスト"
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
 msgid "Picking associated to this sale"
-msgstr ""
+msgstr "この販売に関連付けられたピッキング"
 
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
@@ -299,7 +299,7 @@ msgstr "安全日数"
 #. module: sale_stock
 #: field:stock.location.route,sale_selectable:0
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "販売オーダ行で選択可"
 
 #. module: sale_stock
 #: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
@@ -367,11 +367,11 @@ msgstr "受注の計画量は %.2f %s。しかし %.2f %s のみ利用可能で�
 #: code:addons/sale_stock/sale_stock.py:270
 #, python-format
 msgid ""
-"You selected a quantity of %d Units.\n"
+"You selected a quantity of %s %s.\n"
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr "あなたの選択した数量は %d です。\nしかし、それは選択した梱包と互換性がありません。\nこれは、梱包による数量の提案です：\nEAN：%s　数量：%s　単位のタイプ：%s"
+msgstr ""
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit

@@ -3,13 +3,14 @@
 # * website_forum
 # 
 # Translators:
+# krnkris, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-11-07 16:06+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-06-30 10:01+0000\n"
+"Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-8/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,7 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr "\n<p>\n    Hello ${object.name},\n</p>\n<p>\n    Kérjük érvényesítse ezzel az emailló-el a hozzáférését a \"${object.company_id.name}\" Kérdések/Válaszok fórumokhoz.\n</p>\n<p>\n    Az email érvényesítéshez, kérem kattintson a következő elérési útra:\n</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">Érvényesítem a fiókom a \"${object.company_id.name}\" K/V fórumokhoz</a></li>\n</ul>\n<p>\n    Köszönjük,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
+msgstr "\n<p>\n    Hello ${object.name},\n</p>\n<p>\n    Kérjük érvényesítse ezzel az email-el a hozzáférését a \"${object.company_id.name}\" Kérdések/Válaszok fórumokhoz.\n</p>\n<p>\n    Az email érvényesítéshez, kérem kattintson a következő elérési útra:\n</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">Érvényesítem a fiókom a \"${object.company_id.name}\" K/V fórumokhoz</a></li>\n</ul>\n<p>\n     Köszönjük,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
@@ -72,7 +73,7 @@ msgstr ""
 #. module: website_forum
 #: selection:forum.post.vote,vote:0
 msgid "-1"
-msgstr ""
+msgstr "-1"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:374
@@ -108,12 +109,12 @@ msgstr "A címke egy cédula mely a kérdéseket kategorizálja másik,\n       
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "About This Forum"
-msgstr ""
+msgstr "Részletek erről a fórumról"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_own:0
 msgid "Accept an answer on its own questions"
-msgstr ""
+msgstr "Saját kérdésekre egy választ elfogad"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_all:0
@@ -156,7 +157,7 @@ msgstr "Válasz szerkesztve"
 #. module: website_forum
 #: field:forum.forum,karma_answer:0
 msgid "Answer a question"
-msgstr ""
+msgstr "Megválaszol egy kérdést"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accepted:0
@@ -181,7 +182,7 @@ msgstr "Válasz előrébb szavazott"
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Answered on"
-msgstr ""
+msgstr "Ekkor megválaszolt"
 
 #. module: website_forum
 #: field:forum.post,child_count:0 field:forum.post,child_ids:0
@@ -198,7 +199,7 @@ msgstr "Kérdezzen egyet"
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Ask your Question"
-msgstr ""
+msgstr "Kérdezzen"
 
 #. module: website_forum
 #: field:forum.post,create_date:0
@@ -337,7 +338,7 @@ msgstr "Kattintson ide egy visszaigazoló email küldéséhez a fórumhoz való 
 #. module: website_forum
 #: field:forum.forum,karma_editor_clickable_link:0
 msgid "Clickable links (Editor)"
-msgstr ""
+msgstr "Kattintható link (Szerkesztő)"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -352,12 +353,12 @@ msgstr "Zárja le az összes bejegyzés közzétételt"
 #. module: website_forum
 #: field:forum.forum,karma_close_own:0
 msgid "Close its own posts"
-msgstr ""
+msgstr "Zárja le a saját bejegyzéseit"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Close question"
-msgstr ""
+msgstr "Kérdés lezárása"
 
 #. module: website_forum
 #: field:forum.post,closed_uid:0
@@ -383,7 +384,7 @@ msgstr "Összes közzététel megjegyzései"
 #. module: website_forum
 #: field:forum.forum,karma_comment_own:0
 msgid "Comment its own posts"
-msgstr ""
+msgstr "Saját bejegyzéseit kommentálja"
 
 #. module: website_forum
 #: view:website:website_forum.post_comment
@@ -541,7 +542,7 @@ msgstr "Összes közzététel szerkesztése"
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit answer"
-msgstr ""
+msgstr "Válasz szerkesztése"
 
 #. module: website_forum
 #: field:forum.forum,karma_edit_own:0

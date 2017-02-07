@@ -36,9 +36,9 @@ class AcquirerAdyen(osv.Model):
         return providers
 
     _columns = {
-        'adyen_merchant_account': fields.char('Merchant Account', required_if_provider='adyen'),
-        'adyen_skin_code': fields.char('Skin Code', required_if_provider='adyen'),
-        'adyen_skin_hmac_key': fields.char('Skin HMAC Key', required_if_provider='adyen'),
+        'adyen_merchant_account': fields.char('Merchant Account', required_if_provider='adyen', groups='base.group_user'),
+        'adyen_skin_code': fields.char('Skin Code', required_if_provider='adyen', groups='base.group_user'),
+        'adyen_skin_hmac_key': fields.char('Skin HMAC Key', required_if_provider='adyen', groups='base.group_user'),
     }
 
     def _adyen_generate_merchant_sig(self, acquirer, inout, values):

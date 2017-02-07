@@ -5,12 +5,13 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2016
+# Ladislav Tomm <tomm@helemik.cz>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-05-14 17:01+0000\n"
+"PO-Revision-Date: 2016-08-10 14:57+0000\n"
 "Last-Translator: Jaroslav Helemik Nemec <nemec@helemik.cz>\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-8/language/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -23,12 +24,12 @@ msgstr ""
 #: code:addons/mrp/stock.py:262
 #, python-format
 msgid " Manufacture"
-msgstr ""
+msgstr "Vyrobit"
 
 #. module: mrp
 #: field:product.template,bom_count:0
 msgid "# Bill of Material"
-msgstr ""
+msgstr "#Kusovník"
 
 #. module: mrp
 #: field:product.product,mo_count:0 field:product.template,mo_count:0
@@ -45,7 +46,7 @@ msgstr "%s (kopie)"
 #: code:addons/mrp/mrp.py:977
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "%s vyrobeno"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -305,7 +306,7 @@ msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
 "raw material %s to proceed further in your production. Please use the "
 "'Produce' button to do so."
-msgstr ""
+msgstr "Protože to produkt %s vyžaduje, musíte přidělit sériové číslo surovému materiálu %s pre postoupení ve vaší výrobě. Prosím použijte na to tlačítko 'Vyrobit'."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -359,7 +360,7 @@ msgstr "Kusovník"
 #: code:addons/mrp/mrp.py:289
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
-msgstr ""
+msgstr "Kusovník \"%s\" obsahuje řádek kusovníku s rekurzí produktu: \"%s\"."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:315
@@ -388,7 +389,7 @@ msgstr "Druh kusovníku"
 #: code:addons/mrp/stock.py:259
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "Nelze najít žádný obecný výrobní postup."
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
@@ -539,7 +540,7 @@ msgstr "Spotřebovat & Vyrobit"
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Řádky spotřeby"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
@@ -568,7 +569,7 @@ msgstr "Spotřebované výrobky"
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr ""
+msgstr "Spotřebováno na"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -782,7 +783,7 @@ msgstr "Udává pořadí při zobrazení seznamu pracovních příkazů."
 #. module: mrp
 #: help:mrp.bom.line,sequence:0
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "Udává pořadí příkazů při zobrazení."
 
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
@@ -835,7 +836,7 @@ msgstr "ID"
 #: help:mrp.bom,product_id:0
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
+msgstr "Pokud jsou definována varianta produktu, kusovník je dostupný pouze pro tento produkt."
 
 #. module: mrp
 #: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
@@ -986,7 +987,7 @@ msgstr "Vyrobit"
 #. module: mrp
 #: field:stock.warehouse,manufacture_pull_id:0
 msgid "Manufacture Rule"
-msgstr ""
+msgstr "Pravidlo výroby"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_to_resupply:0
@@ -1123,7 +1124,7 @@ msgstr "Nový"
 #: code:addons/mrp/procurement.py:127
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr ""
+msgstr "Tento výrobek nemá definován kusovník!"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1241,7 +1242,7 @@ msgstr "Za týden"
 #. module: mrp
 #: selection:mrp.bom.line,type:0
 msgid "Phantom"
-msgstr ""
+msgstr "Fiktivní"
 
 #. module: mrp
 #: help:mrp.bom.line,type:0
@@ -1249,7 +1250,7 @@ msgid ""
 "Phantom: this product line will not appear in the raw materials of "
 "manufacturing orders,it will be directly replaced by the raw materials of "
 "its own BoM, without triggeringan extra manufacturing order."
-msgstr ""
+msgstr "Fiktivní: tato produktová řada se neprojeví na surovinách stávajícího výrobního příkazu, namísto toho se nahradí surovinami dle svého kusovníku, aniž by vytvořila nový výrobní příkaz."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
@@ -1277,7 +1278,7 @@ msgstr "Tisknout strukturu ceny výrobku"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Printing date:"
-msgstr ""
+msgstr "Datum tisku:"
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1292,7 +1293,7 @@ msgstr "Zásobování"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Pravidlo zásobování"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1421,7 +1422,7 @@ msgstr "Varianta výrobku"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Product:"
-msgstr ""
+msgstr "Výrobek:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1448,12 +1449,12 @@ msgstr "Výrobní příkaz N° :"
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Výrobní příkaz pro vyráběné výrobky"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "Výrobní příkaz pro suroviny"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1473,7 +1474,7 @@ msgstr "Výrobní střediska"
 #. module: mrp
 #: field:mrp.production,progress:0
 msgid "Production progress"
-msgstr ""
+msgstr "Plnění výroby"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1496,7 +1497,7 @@ msgstr "Výrobky"
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
 msgid "Products Consumed"
-msgstr ""
+msgstr "Výrobků spotřebováno"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1567,12 +1568,12 @@ msgstr "Množství"
 #. module: mrp
 #: field:mrp.product.produce.line,product_qty:0
 msgid "Quantity (in default UoM)"
-msgstr ""
+msgstr "Množství (zákl. MJ)"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Quantity:"
-msgstr ""
+msgstr "Množství:"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
@@ -1676,12 +1677,12 @@ msgid ""
 "should be followed within your work centers in order to produce a product. "
 "They are attached to bills of materials that will define the required raw "
 "materials."
-msgstr ""
+msgstr "Pracovní postupy vám umožňují vytvořit a spravovat výrobní úkony které mají výrobní střediska\n                následovat pro vytvoření výrobku. Jsou připojeny ke kusovníkům, které určují\n                požadované suroviny."
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "SO Number:"
-msgstr ""
+msgstr "Číslo SO:"
 
 #. module: mrp
 #: field:mrp.production,date_planned:0
@@ -1696,7 +1697,7 @@ msgstr "Naplánované datum podle měsíců"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Scheduled Date:"
-msgstr ""
+msgstr "Plánované datum:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1733,7 +1734,7 @@ msgstr "Vyhledat kusovník"
 #. module: mrp
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "Vyhledat v kusovníku dílů"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1770,14 +1771,14 @@ msgstr "Pořadí"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Set"
-msgstr ""
+msgstr "Nastavit"
 
 #. module: mrp
 #: help:mrp.bom,type:0
 msgid ""
 "Set: When processing a sales order for this product, the delivery order will"
 " contain the raw materials, instead of the finished product."
-msgstr ""
+msgstr "Při zpracování tohoto potvrzení objednávky bude dodávka\n                                obsahovat suroviny místo dokončené výroby."
 
 #. module: mrp
 #: field:mrp.production,origin:0
@@ -1787,7 +1788,7 @@ msgstr "Zdrojový dokument"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Source Document:"
-msgstr ""
+msgstr "Zdrojový dokument:"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1855,7 +1856,7 @@ msgstr "Cena dodavatele za měrnou jednotku"
 #. module: mrp
 #: help:stock.move,consumed_for:0
 msgid "Technical field used to make the traceability of produced products"
-msgstr ""
+msgstr "Způsob zajištění sledovatelnosti výrobků"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
@@ -1981,7 +1982,7 @@ msgstr "Sledovat výrobní dávky"
 #. module: mrp
 #: field:mrp.product.produce,track_production:0
 msgid "Track production"
-msgstr ""
+msgstr "Sledovat výrobu"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -2138,7 +2139,7 @@ msgstr "Při zpracování tohoto potvrzení objednávky bude dodávka\n         
 #: help:stock.warehouse,manufacture_to_resupply:0
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr ""
+msgstr "K výrobě zboží lze použít tento sklad."
 
 #. module: mrp
 #: help:mrp.production,state:0

@@ -1195,7 +1195,7 @@ class ir_actions_act_client(osv.osv):
     def _get_params(self, cr, uid, ids, field_name, arg, context):
         result = {}
         # Need to remove bin_size from context, to obtains the binary and not the length.
-        context = dict(context, bin_size_params_store=False)
+        context = dict(context, bin_size_params_store=False, bin_size=False)
         for record in self.browse(cr, uid, ids, context=context):
             result[record.id] = record.params_store and eval(record.params_store, {'uid': uid}) or False
         return result

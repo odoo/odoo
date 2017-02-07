@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-06-09 06:37+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-07-28 09:12+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +50,7 @@ msgid ""
 "                you can work on issues.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per afegir una nova versió.\n</p><p>\nDefineixi aquí la diferència entre versions dels seus productes en les que pot treballar amb incidències.\n</p>\n            "
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
@@ -61,7 +62,7 @@ msgid ""
 "                    complaints, project troubles, material breakdowns, etc.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nEl gestor d'incidències d'Odoo li permet gestionar eficientment qüestions com les peticions internes, errors de desenvolupament de software, queixes dels clients, problemes al projecte, trencament de material, etc.\n</p>\n            "
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
@@ -72,7 +73,7 @@ msgid ""
 "                complaints, project troubles, material breakdowns, etc.\n"
 "            </p>\n"
 "        "
-msgstr ""
+msgstr "<p>\nEl gestor d'incidències d'Odoo li permet gestionar eficientment qüestions com les peticions internes, errors de desenvolupament de software, queixes dels clients, problemes al projecte, trencament de material, etc.\n</p>\n            "
 
 #. module: project_issue
 #: help:project.issue,kanban_state:0
@@ -81,7 +82,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
 " * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr ""
+msgstr "Un estat de kanban de les incidències indica situacions especials que les afecten:\n* 'Normal' és la situació per defecte.\n* 'Bloquejada' indica que alguna cosa impedeix el progrés de la incidència.\n* 'Llesta per la següent etapa' indica que la incidència està llesta per ser portada a la següent etapa."
 
 #. module: project_issue
 #: field:project.issue,active:0 field:project.issue.version,active:0
@@ -98,7 +99,7 @@ msgstr "Afegir una nota interna..."
 msgid ""
 "Allows you to configure your incoming mail server, and create issues from "
 "incoming emails."
-msgstr ""
+msgstr "Permet configurar el seu servidor de correu entrant, i crear incidències des dels correus entrants."
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -151,7 +152,7 @@ msgstr "Per Responsable"
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
 msgid "Category:"
-msgstr ""
+msgstr "Categoria:"
 
 #. module: project_issue
 #: field:project.issue,channel:0 field:project.issue.report,channel:0
@@ -161,7 +162,7 @@ msgstr "Canal"
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
 msgid "Check this field if this project manages issues"
-msgstr ""
+msgstr "Marcar aquest camp si el projecte administra incidències."
 
 #. module: project_issue
 #: field:project.issue,date_closed:0
@@ -176,7 +177,7 @@ msgstr "Índex de color"
 #. module: project_issue
 #: help:project.issue.report,channel:0
 msgid "Communication Channel."
-msgstr ""
+msgstr "Canal de comunicació."
 
 #. module: project_issue
 #: help:project.issue,channel:0
@@ -217,12 +218,12 @@ msgstr "Data creació"
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "Create Day"
-msgstr ""
+msgstr "Crear dia"
 
 #. module: project_issue
 #: field:project.config.settings,fetchmail_issue:0
 msgid "Create issues from an incoming email account "
-msgstr ""
+msgstr "Crear incidències des d'un compte de correu electrònic"
 
 #. module: project_issue
 #: field:project.issue,create_uid:0 field:project.issue.version,create_uid:0
@@ -274,12 +275,12 @@ msgstr "Data de l'últim missatge enviat al registre."
 #. module: project_issue
 #: field:project.issue,days_since_creation:0
 msgid "Days since creation date"
-msgstr ""
+msgstr "Dies des de la data de creació"
 
 #. module: project_issue
 #: field:project.issue,inactivity_days:0
 msgid "Days since last action"
-msgstr ""
+msgstr "Dies des de l'última acció"
 
 #. module: project_issue
 #: field:project.issue,day_open:0
@@ -299,7 +300,7 @@ msgstr "Data límit"
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
 msgid "Deadly bug"
-msgstr ""
+msgstr "Error greu"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_delay
@@ -319,12 +320,12 @@ msgstr "Descripció"
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
 msgid "Difference in days between creation date and current date"
-msgstr ""
+msgstr "Diferencia en dies des de la data de creació a la data actual"
 
 #. module: project_issue
 #: help:project.issue,inactivity_days:0
 msgid "Difference in days between last action and current date"
-msgstr ""
+msgstr "Diferencia en dies des de l'última acció a la data actual"
 
 #. module: project_issue
 #: field:project.issue,duration:0
@@ -419,30 +420,30 @@ msgstr "Incidència"
 #: model:mail.message.subtype,name:project_issue.mt_issue_assigned
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_assigned
 msgid "Issue Assigned"
-msgstr ""
+msgstr "Incidència assignada"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr ""
+msgstr "Incidència bloquejada"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Created"
-msgstr ""
+msgstr "Incidència creada"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 msgid "Issue Ready for Next Stage"
-msgstr ""
+msgstr "Incidència llesta per la següent etapa"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr ""
+msgstr "Etapa d'incidència canviada"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -463,17 +464,17 @@ msgstr "Versió incidència"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_assigned
 msgid "Issue assigned"
-msgstr ""
+msgstr "Incidència assignada"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "Incidència bloquejada"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue created"
-msgstr ""
+msgstr "Incidència creada"
 
 #. module: project_issue
 #: field:account.analytic.account,use_issues:0
@@ -535,7 +536,7 @@ msgstr "Actualitzat per última vegada el dia"
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_01
 msgid "Little problem"
-msgstr ""
+msgstr "Petit problema"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -595,12 +596,12 @@ msgstr "Número de dies per tancar la incidència de projecte"
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "Nombre de dies per obrir les incidències de projecte."
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
 msgid "PBCK"
-msgstr ""
+msgstr "PBCK"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
@@ -620,7 +621,7 @@ msgstr "Prioritat"
 #. module: project_issue
 #: field:project.issue,description:0
 msgid "Private Note"
-msgstr ""
+msgstr "Nota privada"
 
 #. module: project_issue
 #: field:project.issue,progress:0
@@ -650,12 +651,12 @@ msgstr "Incidència projecte"
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_graph_view
 msgid "Project Issues"
-msgstr ""
+msgstr "Incidències del projecte"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
 msgid "Project:"
-msgstr ""
+msgstr "Projecte:"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
@@ -809,12 +810,12 @@ msgstr "Observadors d'Emails (CC)"
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
 msgid "Working Hours to assign the Issue"
-msgstr ""
+msgstr "Hores laborals per assignar l'incidència"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
 msgid "Working Hours to close the Issue"
-msgstr ""
+msgstr "Hores laborals per tancar l'incidència"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:397
@@ -828,7 +829,7 @@ msgstr "No podeu escalar aquesta incidència.\nEl projecte rellevant no té conf
 #: code:addons/project_issue/project_issue.py:348
 #, python-format
 msgid "issues"
-msgstr ""
+msgstr "incidències"
 
 #. module: project_issue
 #: field:project.project,issue_ids:0
@@ -838,14 +839,14 @@ msgstr "desconegut"
 #. module: project_issue
 #: view:project.project:project_issue.view_project_form_inherited
 msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
-msgstr ""
+msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
 
 #. module: project_issue
 #: view:project.project:project_issue.view_project_form_inherited
 msgid "{'on_change': 'on_change_use_tasks_or_issues(use_tasks, use_issues)'}"
-msgstr ""
+msgstr "{'on_change': 'on_change_use_tasks_or_issues(use_tasks, use_issues)'}"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
 msgid "⇒ Escalate"
-msgstr ""
+msgstr "⇒ Escalat"

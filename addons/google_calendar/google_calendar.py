@@ -205,8 +205,8 @@ class google_calendar(osv.AbstractModel):
         if not context:
             context = {}
         if event.allday:
-            start_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.start, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context).isoformat('T').split('T')[0]
-            final_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.stop, tools.DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(days=1), context=context).isoformat('T').split('T')[0]
+            start_date = event.start_date
+            final_date = (datetime.strptime(event.stop_date, tools.DEFAULT_SERVER_DATE_FORMAT) + timedelta(days=1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
             type = 'date'
             vstype = 'dateTime'
         else:
@@ -361,9 +361,10 @@ class google_calendar(osv.AbstractModel):
         url = "/calendar/v3/calendars/%s/events/%s" % ('primary', google_id)
         try:
             status, content, ask_time = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
-        except:
+        except Exception, e:
             _logger.info("Calendar Synchro - In except of get_one_event_synchro")
-            pass
+            _logger.info(exception_to_unicode(e))
+            return False
 
         return status_response(status) and content or False
 

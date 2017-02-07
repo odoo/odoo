@@ -6,8 +6,9 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Florian Hatat, 2015
 # Henri Cornuau <hcornuau@gmail.com>, 2015
+# Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2015-2016
-# Martin Trigaux, 2015
+# Martin Trigaux, 2015-2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2015
 # Saad Thaifa <saad.thaifa@gmail.com>, 2015
 msgid ""
@@ -15,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-01-30 09:47+0000\n"
+"PO-Revision-Date: 2016-07-20 08:39+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -70,7 +71,7 @@ msgid ""
 "same product(%s), same location(%s), same package, same owner and same lot. "
 "Please first validate the first inventory adjustement with this product "
 "before creating another one."
-msgstr ""
+msgstr "Vous ne pouvez pas avoir deux ajustements de stocks dans l'état \"en cours\" avec le même article(%s), même emplacement(%s), même emballage, même propriétaire et même lot. Validez d'abord le premier ajustement de stock sur cet article avant d'en créer un autre."
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -3251,7 +3252,7 @@ msgstr "Veuillez utiliser la vue \"variante d'article\" pour mettre à jour la q
 #: code:addons/stock/wizard/make_procurement_product.py:117
 #, python-format
 msgid "Please use the Product Variant vue to request a procurement."
-msgstr "Veuillez utiliser la vue \"variante d'article\" pour demander un approvisionnement"
+msgstr "Veuillez utiliser la vue \"variante d'article\" pour demander un approvisionnement."
 
 #. module: stock
 #: field:stock.move,product_packaging:0

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 15:14+0000\n"
-"PO-Revision-Date: 2016-04-19 06:09+0000\n"
+"PO-Revision-Date: 2016-07-19 14:38+0000\n"
 "Last-Translator: Paolo Valier\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\nENTER\nENTER\n<p>Salve,</p>ENTER\nENTER\nENTER\n<p>Ci siamo messi in contatto con le offerte nella sua regione. Così, le seguenti sono state assegnate a ${ctx['partner_id'].name}:</p>ENTER\nENTER\n<ol>ENTER\n% for lead in ctx['partner_leads']:ENTER\n<li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>ENTER\n% endforENTER\n</ol>ENTER\nENTER\n% if ctx.get('partner_in_portal'):ENTER\n<p>Per favore, connettiti al tuo <a href=\"${object.get_portal_url()}\">Portale Partner</a> per saper i dettagli. In ciascun comando ci sono due bottoni nell'angolo in alto a sinistra che dovreste premere dopo aver contattato l'iniziativa:\"Sono interessato\" e \"Non sono interessato\".</p>ENTER\n% else:ENTER\n<p>ENTER\nSe non hai ancora accesso al tuo database per favore contatta ENTER\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.ENTER\n</p>ENTER\n% endifENTER\n<p>L'iniziativa sarà mandata ad un altro partner se non lo contatti prima di 20 giorni.</p>ENTER\nENTER\n<p>Grazie,</p>ENTER\nENTER\n<pre>ENTER\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}ENTER\n</pre>ENTER\n% if not ctx['partner_id'].user_id:ENTER\nPS: Sembra che non esista un account assegnato a te. Per favore, contattaci.ENTER\n% endifENTER"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0

@@ -5,9 +5,10 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # inddroy inddroy <joe@joe-chow.com>, 2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2017
 # 智源软件 <likaiyuan2006@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 # Talway <9010446@qq.com>, 2015
@@ -24,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-06-22 02:43+0000\n"
+"PO-Revision-Date: 2017-02-03 04:11+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -195,7 +196,7 @@ msgid ""
 "                    routes can be assigned to a product, a product category or be fixed\n"
 "                    on procurement or sales order. </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    单击 创建路线。\n              </p>\n                <p>您可以在这里定义主要路径，在你的仓库运行，它\n                    定义产品的流向。 这些\n                    路线可以指派给产品、产品类别，或者固定于\n                    需求单或销售订单上。 </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    单击 创建路线。\n              </p>\n                <p>您可以在这里定义主要路线，在你的仓库运行，它\n                    定义产品的流向。 这些\n                    路线可以指派给产品、产品类别，或者固定于\n                    需求单或销售订单上。 </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_deliver_move
@@ -434,7 +435,7 @@ msgstr "高级：应用补货规则"
 #: model:ir.ui.menu,name:stock.menu_action_picking_type_form
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "All Operations"
-msgstr "所有作业"
+msgstr "作业看板"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -466,7 +467,7 @@ msgstr "允许对交货索赔"
 #. module: stock
 #: field:stock.config.settings,group_stock_packaging:0
 msgid "Allow to define several packaging methods on products"
-msgstr "允许为产品定义多种包装形式"
+msgstr "允许为产品定义多种包装方式"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_packaging:0
@@ -648,7 +649,7 @@ msgid ""
 "directly create a procurement on the source location (and thus ignore its "
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
-msgstr "默认情况下，系统从源位置的库存中取货，并等待产品可用。另外一个可能是允许您在源位置上直接产生一个需求单(从而忽略它的当前库存)来获取产品。如果我们想把库存移动连接起来，并让库存移动等待上一个移动，您应该选择第二个选项。"
+msgstr "默认情况下，系统从源位置的库存中取货，并等待产品可用。另外一个可能是允许您在源位置上直接产生一个补货单(从而忽略它的当前库存)来获取产品。如果我们想把库存移动连接起来，并让库存移动等待上一个移动，您应该选择第二个选项。"
 
 #. module: stock
 #: help:stock.location,active:0
@@ -696,7 +697,7 @@ msgstr "取消可用性"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Cancel Inventory"
-msgstr "取消盘存"
+msgstr "取消盘点"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
@@ -766,7 +767,7 @@ msgstr "检查可用"
 #: help:stock.location,scrap_location:0
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
-msgstr "这选项允许这位置能不能放置损耗/毁坏的物资"
+msgstr "这选项允许这位置能不能放置报废/毁坏的物资"
 
 #. module: stock
 #: field:stock.inventory.line,product_qty:0
@@ -1118,12 +1119,12 @@ msgstr "调拨日期"
 #. module: stock
 #: field:report.stock.lines.date,date:0
 msgid "Date of latest Inventory"
-msgstr "最近盘存日期"
+msgstr "最近盘点时间"
 
 #. module: stock
 #: field:report.stock.lines.date,move_date:0
 msgid "Date of latest Stock Move"
-msgstr "最近库存移动日期"
+msgstr "最近库存调拨时间"
 
 #. module: stock
 #: help:stock.picking,message_last_post:0
@@ -1134,18 +1135,18 @@ msgstr "发布到记录上的最后信息的日期"
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_tree
 msgid "Dates of Inventories"
-msgstr "盘存日期"
+msgstr "盘点日期"
 
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_form
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "Dates of Inventories & Moves"
-msgstr "盘存与移动日期"
+msgstr "盘点和调拨时间"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_lines_date
 msgid "Dates of Inventories and latest Moves"
-msgstr "盘存及最近移动日期"
+msgstr "盘点和最近的调拨时间"
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_1
@@ -1750,7 +1751,7 @@ msgid ""
 "If checked, when the previous move of the move (which was generated by a "
 "next procurement) is cancelled or split, the move generated by this move "
 "will too"
-msgstr "如果选中这里。当(从下一个需求单生成的)移动的前一个移动被取消或分割，此移动产生的相关移动也会被取消或分割"
+msgstr "如果选中这里。当(从下一个补货单生成的)移动的前一个移动被取消或分割，此移动产生的相关移动也会被取消或分割"
 
 #. module: stock
 #: help:stock.move,propagate:0
@@ -1961,37 +1962,37 @@ msgstr "内部参考它不同与制造商的序列号"
 #. module: stock
 #: field:stock.inventory,location_id:0
 msgid "Inventoried Location"
-msgstr "已盘存位置"
+msgstr "盘点库位"
 
 #. module: stock
 #: field:stock.inventory,lot_id:0
 msgid "Inventoried Lot/Serial Number"
-msgstr "已盘存批次/序列号"
+msgstr "已盘点批次/序列号"
 
 #. module: stock
 #: field:stock.inventory,partner_id:0
 msgid "Inventoried Owner"
-msgstr "已盘存所有者"
+msgstr "已盘点所有者"
 
 #. module: stock
 #: field:stock.inventory,package_id:0
 msgid "Inventoried Pack"
-msgstr "已盘存包裹"
+msgstr "已盘点包装"
 
 #. module: stock
 #: field:stock.inventory,product_id:0
 msgid "Inventoried Product"
-msgstr "已盘存产品"
+msgstr "已盘点产品"
 
 #. module: stock
 #: field:stock.inventory,line_ids:0
 msgid "Inventories"
-msgstr "盘存"
+msgstr "盘点"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_filter
 msgid "Inventories Month"
-msgstr "盘存月份"
+msgstr "盘点月份"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_inventory
@@ -1999,7 +2000,7 @@ msgstr "盘存月份"
 #: field:stock.inventory.line,inventory_id:0 selection:stock.location,usage:0
 #: field:stock.move,inventory_id:0 view:website:stock.report_inventory
 msgid "Inventory"
-msgstr "盘点"
+msgstr "盘点单"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -2021,49 +2022,49 @@ msgstr "库存管理"
 #. module: stock
 #: field:stock.inventory,date:0
 msgid "Inventory Date"
-msgstr "盘存时间"
+msgstr "盘点时间"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Inventory Details"
-msgstr "盘存详情"
+msgstr "盘点单明细"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
-msgstr "盘存行"
+msgstr "盘点单明细行"
 
 #. module: stock
 #: help:stock.inventory,line_ids:0
 msgid "Inventory Lines."
-msgstr "盘存明细行。"
+msgstr "盘点单明细行。"
 
 #. module: stock
 #: field:product.template,property_stock_inventory:0
 msgid "Inventory Location"
-msgstr "盘存位置"
+msgstr "盘点单库位"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "盘存位置"
+msgstr "盘点单库位"
 
 #. module: stock
 #: help:stock.inventory,move_ids:0
 msgid "Inventory Moves."
-msgstr "盘存移动"
+msgstr "盘点单调拨"
 
 #. module: stock
 #: help:stock.inventory,name:0
 msgid "Inventory Name."
-msgstr "盘存名称"
+msgstr "盘点单名称"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_filter
 #: field:stock.inventory,name:0
 msgid "Inventory Reference"
-msgstr "盘存参考"
+msgstr "盘点单号"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -2085,12 +2086,12 @@ msgstr "库存调整是通过比较产品在odoo系统中的数量和实际复�
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
 msgid "Inventory loss"
-msgstr "盘存盘亏"
+msgstr "盘点单盈亏"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Inventory of"
-msgstr "盘存"
+msgstr "盘点单"
 
 #. module: stock
 #: field:stock.config.settings,group_uos:0
@@ -2212,7 +2213,7 @@ msgstr "延迟调拨"
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Latest Inventories & Moves"
-msgstr "最近的盘点及移动"
+msgstr "最近盘点调拨"
 
 #. module: stock
 #: field:stock.location,parent_left:0 field:stock.quant.package,parent_left:0
@@ -2358,7 +2359,7 @@ msgstr "批次条码"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_tree
 msgid "Lot Inventory"
-msgstr "盘存批号"
+msgstr "盘点批次"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -2439,7 +2440,7 @@ msgstr "管理产品的不同计量单位"
 #. module: stock
 #: field:stock.config.settings,module_stock_dropshipping:0
 msgid "Manage dropshipping"
-msgstr "管理供应商直接送货"
+msgstr "管理Dropshipping（外贸术语类似阿里巴巴的工厂直销1件代发）"
 
 #. module: stock
 #: field:stock.config.settings,group_stock_multiple_locations:0
@@ -2518,7 +2519,7 @@ msgstr "关联移库的日期变化时传递的最小值。"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "最小存货规则"
+msgstr "最小库存规则"
 
 #. module: stock
 #: field:stock.warehouse.orderpoint,product_min_qty:0
@@ -3038,7 +3039,7 @@ msgstr "待移动的包裹"
 #: view:stock.quant.package:stock.quant_package_search_view
 #: field:stock.quant.package,packaging_id:0
 msgid "Packaging"
-msgstr "包装形式"
+msgstr "包装"
 
 #. module: stock
 #: field:stock.warehouse,wh_pack_stock_loc_id:0
@@ -3265,7 +3266,7 @@ msgstr "请使用产品变型来请求一个补货。"
 #. module: stock
 #: field:stock.move,product_packaging:0
 msgid "Prefered Packaging"
-msgstr "首选的包装形式"
+msgstr "首选包装"
 
 #. module: stock
 #: field:procurement.order,route_ids:0
@@ -3307,7 +3308,7 @@ msgstr "打印包裹标签"
 #: field:stock.fixed.putaway.strat,sequence:0 field:stock.move,priority:0
 #: field:stock.picking,priority:0
 msgid "Priority"
-msgstr "优先级(0=紧急)"
+msgstr "优先级"
 
 #. module: stock
 #: help:stock.picking,priority:0
@@ -3364,7 +3365,7 @@ msgstr "补货请求"
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "补货申请"
+msgstr "补货请求"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule field:stock.move,rule_id:0
@@ -3512,7 +3513,7 @@ msgstr "待移动产品"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
 msgid "Products by Category"
-msgstr "产品按类别"
+msgstr "产品类别"
 
 #. module: stock
 #: code:addons/stock/product.py:60
@@ -3756,7 +3757,7 @@ msgstr "货架"
 #: view:stock.picking:stock.view_picking_internal_search
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Ready"
-msgstr "准备好"
+msgstr "就绪"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -3766,7 +3767,7 @@ msgstr "已就绪调拨"
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Ready to Transfer"
-msgstr "准备好调拨"
+msgstr "准备调拨"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -4159,7 +4160,7 @@ msgstr "报废移动"
 #: view:stock.move:stock.view_move_tree_receipt_picking
 #: view:stock.move.scrap:stock.view_stock_move_scrap_wizard
 msgid "Scrap Products"
-msgstr "损耗产品"
+msgstr "报废产品"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_scrapped
@@ -4246,7 +4247,7 @@ msgstr "设为可用"
 msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
-msgstr "设置一个特殊的移除策略，它将被使用，而不考虑此产品类别的源位置。"
+msgstr "设置一个特定的下架策略，它将被使用，而不考虑此产品分类的源位置。"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -4377,7 +4378,7 @@ msgstr "拆分"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr "开始盘存"
+msgstr "开始盘点"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -4941,7 +4942,7 @@ msgstr "该位置将被使用以替换默认的，同样的，库存移动的源
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr "该位置将被使用以替换默认的，同样当您做盘存时，库存移动的源位置将被生成。"
+msgstr "该库位将被使用以替换默认的，同样当你做盘点时，库存调拨的源库位将被生成。"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_tracking_owner:0
@@ -5018,7 +5019,7 @@ msgid ""
 "    - removal date\n"
 "    - alert date.\n"
 "This installs the module product_expiry."
-msgstr "对产品和序列号跟踪不同的日期。\n下列日期可被跟踪：\n       -寿命终止\n       -最佳使用日期\n       -搬运日期 \n       -提醒日期\n\n这需要安装模块 product_expiry."
+msgstr "对产品和序列号跟踪不同的日期。\n下列日期可被跟踪：\n       -寿命终止\n       -最佳使用日期\n       -下架日期 \n       -警报日期\n\n这需要安装模块 product_expiry."
 
 #. module: stock
 #: field:stock.config.settings,group_stock_production_lot:0
@@ -5194,7 +5195,7 @@ msgid ""
 "                        product. According to the product configuration, this may\n"
 "                        trigger a draft purchase order, a manufacturing order or\n"
 "                        a new task."
-msgstr "填充这里来运行该产品的需求申请。根据产品的配置，这个方法触发一个采购单草稿、生产订单或者新的任务。"
+msgstr "填充这里来运行该产品的补货申请。根据产品的配置，这个方法触发一个采购单草稿、生产订单或者新的任务。"
 
 #. module: stock
 #: help:stock.return.picking.line,lot_id:0
@@ -5225,7 +5226,7 @@ msgstr "VAT:"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Validate Inventory"
-msgstr "验证盘存"
+msgstr "盘点单审核"
 
 #. module: stock
 #. openerp-web
@@ -5421,7 +5422,7 @@ msgstr "向导"
 #: view:procurement.orderpoint.compute:stock.view_procurement_compute_wizard
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
-msgstr "向导检测所有的库存最小规则，并生成补货订单"
+msgstr "检测向导：将检测所有的库存最小规则计算库存并生成补货订单。"
 
 #. module: stock
 #: selection:stock.pack.operation,processed:0
