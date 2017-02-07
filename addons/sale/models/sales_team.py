@@ -37,34 +37,36 @@ class CrmTeam(models.Model):
     ])
 
     def _compute_quotations_to_invoice(self):
-        amounts = self.env['sale.report'].read_group([
-            ('team_id', 'in', self.filtered(lambda team: team.team_type != 'website').ids),
-            ('state', 'in', ['draft', 'sent']),
-        ], ['price_total', 'team_id', 'name'], ['team_id', 'name'], lazy=False)
-        for rec in amounts:
-            self.browse(rec['team_id'][0]).quotations_amount += rec['price_total']
-            self.browse(rec['team_id'][0]).quotations_count += 1
+        non_website_teams = self.filtered(lambda team: team.team_type != 'website')
+        if non_website_teams:
+            quotation_data = self.env['sale.report'].read_group([
+                ('team_id', 'in', non_website_teams.ids),
+                ('state', 'in', ['draft', 'sent']),
+            ], ['price_total', 'team_id', 'name'], ['team_id', 'name'], lazy=False)
+            for datum in quotation_data:
+                self.browse(datum['team_id'][0]).quotations_amount += datum['price_total']
+                self.browse(datum['team_id'][0]).quotations_count += 1
 
     @api.multi
     def _compute_sales_to_invoice(self):
-        amounts = self.env['sale.report'].read_group([
+        sale_order_data = self.env['sale.order'].read_group([
             ('team_id', 'in', self.ids),
-            ('qty_to_invoice', '>', 0),
-        ], ['team_id', 'name'], ['team_id', 'name'], lazy=False)
-        for rec in amounts:
-            self.browse(rec['team_id'][0]).sales_to_invoice_count += 1
+            ('order_line.qty_to_invoice', '>', 0),
+        ], ['team_id'], ['team_id'])
+        for datum in sale_order_data:
+            self.browse(datum['team_id'][0]).invoiced = datum['team_id_count']
 
     @api.multi
     def _compute_invoiced(self):
-        for team in self:
-            invoices = self.env['account.invoice'].search([
-                ('state', 'in', ['open', 'paid']),
-                ('team_id', '=', team.id),
-                ('date', '<=', date.today()),
-                ('date', '>=', date.today().replace(day=1)),
-                ('type', 'in', ['out_invoice', 'out_refund']),
-            ])
-            team.invoiced = sum(invoices.mapped('amount_untaxed_signed'))
+        invoice_data = self.env['account.invoice'].read_group([
+            ('state', 'in', ['open', 'paid']),
+            ('team_id', 'in', self.ids),
+            ('date', '<=', date.today()),
+            ('date', '>=', date.today().replace(day=1)),
+            ('type', 'in', ['out_invoice', 'out_refund']),
+        ], ['amount_untaxed_signed', 'team_id'], ['team_id'])
+        for datum in invoice_data:
+            self.browse(datum['team_id'][0]).invoiced = datum['amount_untaxed_signed']
 
     def _graph_date_column(self):
         if self.dashboard_graph_model in ['sales', 'invoices']:
