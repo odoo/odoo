@@ -171,7 +171,7 @@ class procurement_order(osv.osv):
         att_obj = self.pool.get("resource.calendar.attendance")
         group = False
         context = context or {}
-        context['no_round_hours'] = True
+        context = dict(context, no_round_hours=True)
         date = False
         now_date = datetime.utcnow()
         res_intervals = []
