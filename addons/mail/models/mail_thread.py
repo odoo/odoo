@@ -2134,10 +2134,9 @@ class MailThread(models.AbstractModel):
                         new_channels.setdefault(header_follower.channel_id.id, set()).add(new_subtype.id)
 
         # add followers coming from res.users relational fields that are tracked
-        user_ids = [values[name] for name in user_field_lst if values.get(name)]
-        user_pids = [user.partner_id.id for user in self.env['res.users'].sudo().browse(user_ids)]
-        for partner_id in user_pids:
-            new_partners.setdefault(partner_id, None)
+        to_add_users = self.env['res.users'].sudo().browse([values[name] for name in user_field_lst if values.get(name)])
+        for partner in to_add_users.mapped('partner_id'):
+            new_partners.setdefault(partner.id, None)
 
         for pid, subtypes in new_partners.items():
             subtypes = list(subtypes) if subtypes is not None else None
@@ -2147,7 +2146,7 @@ class MailThread(models.AbstractModel):
             self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes, force=(subtypes != None))
 
         # remove the current user from the needaction partner to avoid to notify the author of the message
-        user_pids = [user_pid for user_pid in user_pids if user_pid != self.env.user.partner_id.id]
+        user_pids = [user.partner_id.id for user in to_add_users if user != self.env.user and user.notification_type == 'email']
         self._message_auto_subscribe_notify(user_pids)
 
         return True
