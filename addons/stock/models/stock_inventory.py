@@ -11,6 +11,15 @@ class Inventory(models.Model):
     _name = "stock.inventory"
     _description = "Inventory"
 
+    @api.model
+    def _default_location_id(self):
+        company_user = self.env.user.company_id
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
+        if warehouse:
+            return warehouse.lot_stock_id.id
+        else:
+            raise UserError(_('You must define a warehouse for the company: %s.') % (company_user.name,))
+
     name = fields.Char(
         'Inventory Reference',
         readonly=True, required=True,
@@ -43,7 +52,7 @@ class Inventory(models.Model):
         'stock.location', 'Inventoried Location',
         readonly=True, required=True,
         states={'draft': [('readonly', False)]},
-        default=lambda self: getattr(self.env.ref('stock.warehouse0', raise_if_not_found=False) or self.env['stock.warehouse'], 'lot_stock_id').id)
+        default=_default_location_id)
     product_id = fields.Many2one(
         'product.product', 'Inventoried Product',
         readonly=True,
