@@ -654,7 +654,8 @@ class PosOrder(models.Model):
                         stock_production_lot = StockProductionLot.search([('name', '=', lot_name), ('product_id', '=', pack_operation.product_id.id)])
                         if stock_production_lot:
                             if stock_production_lot.product_id.tracking == 'lot':
-                                qty = pack_lot_names.count(lot_name)
+                                # if a lot nr is set through the frontend it will refer to the full quantity
+                                qty = pack_operation.product_qty
                             else:
                                 qty = 1.0
                             qty_done += qty
