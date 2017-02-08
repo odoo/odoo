@@ -34,6 +34,7 @@ var DateWidget = Widget.extend({
                 previous: 'fa fa-chevron-left',
                 up: 'fa fa-chevron-up',
                 down: 'fa fa-chevron-down',
+                close: 'fa fa-times',
             },
             locale : moment.locale(),
             allowInputToggle: true,
@@ -96,15 +97,10 @@ var DateWidget = Widget.extend({
 
         this.picker.date(value);
     },
-    change_datetime: function(e) {
+    change_datetime: function() {
         if(this.is_valid()) {
             this.set_value_from_ui();
             this.trigger("datetime_changed");
-        }
-        //Close the datetimepicker when a date is selected
-        //We check only if the date has changed.
-        if(!e.date.isSame(e.oldDate, 'day')){
-            this.picker.hide();
         }
     },
     commit_value: function() {
@@ -117,7 +113,13 @@ var DateWidget = Widget.extend({
 });
 
 var DateTimeWidget = DateWidget.extend({
-    type_of_date: "datetime"
+    type_of_date: "datetime",
+    init: function() {
+        this._super.apply(this, arguments);
+        this.options = _.defaults(this.options, {
+            showClose: true,
+        });
+    },
 });
 
 return {
