@@ -1,28 +1,34 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
         <record id="account_fiscal_position_personasmoralesdelrgimengeneral0" model="account.fiscal.position.template">
             <field name="name">Personas morales del régimen general</field>
+            <field name="chart_template_id" ref="mx_coa"/>
         </record>
 
         <record id="account_fiscal_position_personasmoralesconfinesnolucrativos0" model="account.fiscal.position.template">
             <field name="name">Personas morales con fines no lucrativos</field>
+            <field name="chart_template_id" ref="mx_coa"/>
         </record>
 
         <record id="account_fiscal_position_asociacionesreligiosas0" model="account.fiscal.position.template">
             <field name="name">Asociaciones Religiosas</field>
+            <field name="chart_template_id" ref="mx_coa"/>
         </record>
 
         <record id="account_fiscal_position_personasmoralesdelrgimensimplificado0" model="account.fiscal.position.template">
             <field name="name">Personas morales del régimen simplificado</field>
+            <field name="chart_template_id" ref="mx_coa"/>
         </record>
 
         <record id="account_fiscal_position_personafisicaconactividadempresarial0" model="account.fiscal.position.template">
             <field name="name">Persona física con actividad empresarial</field>
+            <field name="chart_template_id" ref="mx_coa"/>
         </record>
 
         <record id="account_fiscal_position_foreign" model="account.fiscal.position.template">
             <field name="name">Foreign Customer</field>
+            <field name="chart_template_id" ref="mx_coa"/>
         </record>
 
         <record id="account_fiscal_position0_purchase" model="account.fiscal.position.tax.template">
