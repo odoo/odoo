@@ -39,8 +39,8 @@ With this module you will have:
         "data/l10n_mx_chart_data.xml",
         "data/account_data.xml",
         "data/account_tax_data.xml",
-        "data/account_chart_template_data.yml",
         "data/fiscal_position_data.xml",
+        "data/account_chart_template_data.yml",
         "views/res_config_view.xml",
     ],
 }
