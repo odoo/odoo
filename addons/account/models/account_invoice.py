@@ -617,7 +617,7 @@ class AccountInvoice(models.Model):
         # propagate the analytic account from the invoice line to the tax line.
         # This is necessary in situations were (part of) the taxes cannot be reclaimed,
         # to ensure the tax move is allocated to the proper analytic account.
-        if not vals.get('account_analytic_id') and line.account_analytic_id and vals['account_id'] == line.account_id.id:
+        if not vals.get('account_analytic_id') and line.account_analytic_id and vals['account_id'] == line.account_id.id and vals['amount'] > 0.0:
             vals['account_analytic_id'] = line.account_analytic_id.id
 
         return vals
