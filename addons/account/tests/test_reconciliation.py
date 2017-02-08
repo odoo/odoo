@@ -406,3 +406,56 @@ class TestReconciliation(AccountingTestCase):
             self.assertTrue(aml.reconciled, 'The journal item should be totally reconciled')
             self.assertEquals(aml.amount_residual, 0, 'The journal item should be totally reconciled')
             self.assertEquals(aml.amount_residual_currency, 0, 'The journal item should be totally reconciled')
+
+    def test_reconcile_bank_statement_with_payment_and_writeoff(self):
+        # Use case:
+        # Create a bank journal in currency != than company (use self.bank_journal_usd here)
+        # create a bill for 80 USD on company purchase journal and register payment on it.
+        # create a bank statement in USD bank journal with a bank statement line of 85 USD
+        # Reconcile bank statement with payment and put the remaining 5 USD in bank fees or another account.
+
+        invoice = self.create_invoice(type='out_invoice', invoice_amount=80, currency_id=self.currency_usd_id)
+        # register payment on invoice
+        payment = self.env['account.payment'].create({'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait_id,
+            'amount': 80,
+            'currency_id': self.currency_usd_id,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_usd.id,
+            })
+        payment.post()
+        payment_move_line = False
+        for l in payment.move_line_ids:
+            if l.account_id.id == self.account_rcv.id:
+                payment_move_line = l
+                break
+        invoice.register_payment(payment_move_line)
+
+        # create bank statement
+        bank_stmt = self.acc_bank_stmt_model.create({
+            'journal_id': self.bank_journal_usd.id,
+            'date': time.strftime('%Y') + '-07-15',
+        })
+
+        bank_stmt_line = self.acc_bank_stmt_line_model.create({'name': 'payment',
+            'statement_id': bank_stmt.id,
+            'partner_id': self.partner_agrolait_id,
+            'amount': 85,
+            'date': time.strftime('%Y') + '-07-15',})
+
+        #reconcile the statement with invoice and put remaining in another account
+        bank_stmt_line.process_reconciliation(payment_aml_rec= payment_move_line, new_aml_dicts=[{
+            'account_id': self.diff_income_account.id,
+            'debit': 0,
+            'credit': 5,
+            'name': 'bank fees',
+            }])
+
+        # Check that move lines associated to bank_statement are correct
+        self.check_results(bank_stmt.move_line_ids, {
+            self.account_usd.id: {'debit': 3.27, 'credit': 0.0, 'amount_currency': 5, 'currency_id': self.currency_usd_id},
+            self.diff_income_account.id: {'debit': 0.0, 'credit': 3.27, 'amount_currency': -5, 'currency_id': self.currency_usd_id},
+            self.account_rcv.id: {'debit': 0.0, 'credit': 52.33, 'amount_currency': -80, 'currency_id': self.currency_usd_id},
+        })
