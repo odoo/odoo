@@ -145,20 +145,6 @@ class Partner(models.Model):
 
     @api.multi
     def _notify(self, message, force_send=False, send_after_commit=True, user_signature=True):
-        # TDE TODO: model-dependant ? (like customer -> always email ?)
-        message_sudo = message.sudo()
-        email_channels = message.channel_ids.filtered(lambda channel: channel.email_send)
-        self.sudo().search([
-            '|',
-            ('id', 'in', self.ids),
-            ('channel_ids', 'in', email_channels.ids),
-            ('email', '!=', message_sudo.author_id and message_sudo.author_id.email or message.email_from),
-            ('notify_email', '!=', 'none')])._notify_by_email(message, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
-        self._notify_by_chat(message)
-        return True
-
-    @api.multi
-    def _notify_by_email(self, message, force_send=False, send_after_commit=True, user_signature=True):
         """ Method to send email linked to notified messages. The recipients are
         the recordset on which this method is called.
 

@@ -183,6 +183,18 @@ class TestMessagePost(TestMail):
         self.assertEqual(new_msg.parent_id.id, parent_msg.id, 'message_post: flatten error')
         self.assertFalse(new_msg.partner_ids)
 
+    def test_post_portal(self):
+        self.test_pigs.message_subscribe((self.partner_1 | self.user_employee.partner_id).ids)
+        new_msg = self.test_pigs.sudo(self.user_portal).message_post(
+            body='<p>Test</p>', subject='Subject',
+            message_type='comment', subtype='mt_comment')
+        self.assertEqual(new_msg.sudo().needaction_partner_ids, (self.partner_1 | self.user_employee.partner_id))
+
+        self.assertEqual(
+            set(m['email_to'][0] for m in self._mails),
+            set(['%s <%s>' % (self.partner_1.name, self.partner_1.email),
+                 '%s <%s>' % (self.user_employee.name, self.user_employee.email)]))
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_internal(self):
         self.test_pigs.message_subscribe_users([self.user_admin.id])
