@@ -10,25 +10,24 @@
                     <button name="%(action_event_track_from_event)d"
                             type="action"
                             class="oe_stat_button"
-                            icon="fa-inbox"
-                            attrs="{'invisible': [('show_tracks', '=', False), ('show_track_proposal', '=', False)]}">
-                        <field name="count_tracks" widget="statinfo"/>
+                            icon="fa-inbox">
+                        <field name="track_count" widget="statinfo"/>
                     </button>
                     <button name="%(action_event_sponsor_from_event)d"
                             type="action"
                             class="oe_stat_button"
                             icon="fa-users">
-                        <field name="count_sponsor" widget="statinfo" string="Sponsors"/>
+                        <field name="sponsor_count" widget="statinfo"/>
                     </button>
                 </button>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <div name="event_checkboxes">
-                        <field name="show_menu"/>
-                        <label for="show_menu"/>
-                        <field name="show_tracks" attrs="{'invisible': [('show_menu', '=', False)]}"/>
-                        <label for="show_tracks" attrs="{'invisible': [('show_menu', '=', False)]}"/>
-                        <field name="show_track_proposal" attrs="{'invisible': [('show_menu', '=', False)]}"/>
-                        <label for="show_track_proposal" attrs="{'invisible': [('show_menu', '=', False)]}"/>
+                        <field name="website_menu"/>
+                        <label for="website_menu"/>
+                        <field name="website_track" attrs="{'invisible': [('website_menu', '=', False)]}"/>
+                        <label for="website_track" attrs="{'invisible': [('website_menu', '=', False)]}"/>
+                        <field name="website_track_proposal" attrs="{'invisible': [('website_menu', '=', False)]}"/>
+                        <label for="website_track_proposal" attrs="{'invisible': [('website_menu', '=', False)]}"/>
                     </div>
                 </xpath>
             </field>
