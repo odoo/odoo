@@ -19,6 +19,7 @@ import odoo.modules.registry
 import odoo.tools as tools
 
 from odoo import api, SUPERUSER_ID
+from odoo.exceptions import ValidationError
 from odoo.modules.module import adapt_version, initialize_sys_path, \
                                 load_openerp_module, runs_post_install
 
@@ -126,7 +127,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             py_module = sys.modules['odoo.addons.%s' % (module_name,)]
             pre_init = package.info.get('pre_init_hook')
             if pre_init:
-                getattr(py_module, pre_init)(cr)
+                try:
+                    getattr(py_module, pre_init)(cr)
+                except ValidationError as e:
+                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    env['ir.module.module'].search([('name', '=', module_name)]).write({'state': 'uninstalled'})
+                    cr.commit()
+                    raise e
 
         model_names = registry.load(cr, package)
 

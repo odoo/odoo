@@ -18,4 +18,5 @@ If set to true it allows user to cancel entries & invoices.
     'demo': [],
     'installable': True,
     'auto_install': False,
+    'pre_init_hook': '_pre_install_account_cancel',
 }
