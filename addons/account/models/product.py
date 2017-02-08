@@ -71,3 +71,10 @@ class ProductTemplate(models.Model):
         if not fiscal_pos:
             fiscal_pos = self.env['account.fiscal.position']
         return fiscal_pos.map_accounts(accounts)
+
+    @api.onchange('categ_id')
+    def _onchange_product_category(self):
+        if not self.property_account_income_id:
+            self.property_account_income_id = self.categ_id.property_account_income_categ_id
+        if not self.property_account_expense_id:
+            self.property_account_expense_id = self.categ_id.property_account_expense_categ_id
