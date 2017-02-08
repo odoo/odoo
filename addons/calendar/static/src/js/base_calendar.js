@@ -130,7 +130,7 @@ widgets.SidebarFilter.include({
                 type: "many2one",
                 options: '{"no_open": True}',
                 placeholder: _t("Add Favorite Calendar"),
-		domain: "[('type', '=', 'contact')]",
+		        domain: "[('type', '=', 'contact')]",
             },
         });
         this.ir_model_m2o.appendTo(this.$el);
