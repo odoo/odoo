@@ -265,6 +265,25 @@ class Project(models.Model):
         return res
 
     @api.multi
+    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
+        """ Subscribe to all existing active tasks when subscribing to a project """
+        res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids, force=force)
+        if not subtype_ids or any(subtype.parent_id.model == 'project.task' for subtype in self.env['mail.message.subtype'].browse(subtype_ids)):
+            for partner_id in partner_ids or []:
+                self.mapped('tasks').filtered(lambda task: not task.stage_id.fold and partner_id not in task.message_partner_ids.ids).message_subscribe(
+                    partner_ids=[partner_id], channel_ids=None, subtype_ids=None, force=False)
+            for channel_id in channel_ids or []:
+                self.mapped('tasks').filtered(lambda task: not task.stage_id.fold and channel_id not in task.message_channel_ids.ids).message_subscribe(
+                    partner_ids=None, channel_ids=[channel_id], subtype_ids=None, force=False)
+        return res
+
+    @api.multi
+    def message_unsubscribe(self, partner_ids=None, channel_ids=None):
+        """ Unsubscribe from all tasks when unsubscribing from a project """
+        self.mapped('tasks').message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
+        return super(Project, self).message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
+
+    @api.multi
     def toggle_favorite(self):
         favorite_projects = not_fav_projects = self.env['project.project'].sudo()
         for project in self:
