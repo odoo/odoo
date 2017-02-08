@@ -79,7 +79,6 @@ class SurveyMailComposeMessage(models.TransientModel):
         SurveyUserInput = self.env['survey.user_input']
         Partner = self.env['res.partner']
         Mail = self.env['mail.mail']
-        anonymous_group = self.env.ref('portal.group_anonymous', raise_if_not_found=False)
 
         def create_response_and_send_mail(wizard, token, partner_id, email):
             """ Create one mail by recipients and replace __URL__ by link with identification token """
@@ -155,8 +154,7 @@ class SurveyMailComposeMessage(models.TransientModel):
             # remove public anonymous access
             partner_list = []
             for partner in wizard.partner_ids:
-                if not anonymous_group or not partner.user_ids or anonymous_group not in partner.user_ids[0].groups_id:
-                    partner_list.append({'id': partner.id, 'email': partner.email})
+                partner_list.append({'id': partner.id, 'email': partner.email})
 
             if not len(emails_list) and not len(partner_list):
                 if wizard.model == 'res.partner' and wizard.res_id:
