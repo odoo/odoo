@@ -9,5 +9,3 @@ class PortalGroup(models.Model):
     """
 
     _inherit = 'res.groups'
-
-    is_portal = fields.Boolean('Portal', help="If checked, this group is usable as a portal.")
