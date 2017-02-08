@@ -154,9 +154,11 @@
                         type="action" context="{'default_advance_payment_method': 'percentage'}"
                         attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
+                    <button name="action_quotation_send" type="object" string="Send PRO-FORMA" groups="sale.group_proforma_sales" class="btn-primary" attrs="{'invisible': ['|', ('state', 'in', ['sent', 'sale']), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
                     <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary"/>
                     <button name="action_confirm" states="sent" string="Confirm Sale" class="btn-primary o_sale_confirm" type="object" />
                     <button name="action_confirm" states="draft" string="Confirm Sale" class="o_sale_confirm" type="object" />
+                    <button name="action_quotation_send" type="object" string="Send PRO-FORMA" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
                     <button name="print_quotation" string="Print" type="object" states="sent,sale"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
                     <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>

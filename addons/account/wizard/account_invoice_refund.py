@@ -50,8 +50,8 @@ class AccountInvoiceRefund(models.TransientModel):
             date = False
             description = False
             for inv in inv_obj.browse(context.get('active_ids')):
-                if inv.state in ['draft', 'proforma2', 'cancel']:
-                    raise UserError(_('Cannot refund draft/proforma/cancelled invoice.'))
+                if inv.state in ['draft', 'cancel']:
+                    raise UserError(_('Cannot refund draft/cancelled invoice.'))
                 if inv.reconciled and mode in ('cancel', 'modify'):
                     raise UserError(_('Cannot refund invoice which is already reconciled, invoice should be unreconciled first. You can only refund this invoice.'))
 

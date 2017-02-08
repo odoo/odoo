@@ -72,8 +72,7 @@
                 <filter string="This Year" name="thisyear" domain="['|', ('date', '=', False), '&amp;',('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="Journal invoices with period in current year"/>
                 <separator/>
                 <filter string="To Invoice" domain="[('state','=','draft')]" help = "Draft Invoices"/>
-                <filter string="Pro-forma" domain="['|', ('state','=','proforma'),('state','=','proforma2')]"/>
-                <filter string="Invoiced" name="current" domain="[('state','not in', ('draft','cancel','proforma','proforma2'))]"/>
+                <filter string="Invoiced" name="current" domain="[('state','not in', ('draft','cancel'))]"/>
                 <separator/>
                 <filter string="This Month" name="this_month" domain="[('date', '&gt;=', context_today().strftime('%%Y-%%m-01'))]"/>
                 <filter string="Last Month" name="last_month" domain="['&amp;', ('date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%%Y-%%m-01')), ('date', '&lt;', context_today().strftime('%%Y-%%m-01'))]"/>

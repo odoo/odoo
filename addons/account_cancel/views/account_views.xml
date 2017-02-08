@@ -17,7 +17,7 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_invoice_cancel']" position="replace">
-                    <button name="action_invoice_cancel" type="object" states="draft,proforma2,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
+                    <button name="action_invoice_cancel" type="object" states="draft,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
                 </xpath>
             </field>
         </record>
@@ -28,7 +28,7 @@
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_invoice_cancel']" position="replace">
-                    <button name="action_invoice_cancel" type="object" states="draft,proforma2,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
+                    <button name="action_invoice_cancel" type="object" states="draft,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
                 </xpath>
             </field>
         </record>

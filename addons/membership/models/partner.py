@@ -122,7 +122,7 @@ class Partner(models.Model):
                                 s = 1
                             elif mstate == 'cancel' and s != 0 and s != 1:
                                 s = 2
-                            elif  (mstate == 'draft' or mstate == 'proforma') and s != 0 and s != 1:
+                            elif mstate == 'draft' and s != 0 and s != 1:
                                 s = 3
                 if s == 4:
                     for mline in partner.member_lines:
