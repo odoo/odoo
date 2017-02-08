@@ -24,7 +24,6 @@ very handy when used in combination with the module 'share'.
     'data': [
         'data/portal_data.xml',
         'views/portal_views.xml',
-        'wizard/portal_wizard_views.xml',
         'security/ir.model.access.csv',
     ],
     'demo': ['data/portal_demo.xml'],
