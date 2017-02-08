@@ -10,7 +10,7 @@
 Allows your customers to manage their account from a beautiful web interface.
         """,
     'depends': [
-        'website', 'portal'
+        'website', 'auth_signup'
     ],
     'data': [
         'views/website_portal_templates.xml',

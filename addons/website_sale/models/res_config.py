@@ -40,7 +40,6 @@ class WebsiteConfigSettings(models.TransientModel):
     module_website_sale_comparison = fields.Boolean("Product Comparator", help='Installs *e-Commerce Comparator*')
 
     module_sale_stock = fields.Boolean("Delivery Orders")
-    module_portal = fields.Boolean("Activate the customer portal", help="""Give your customers access to their documents.""")
 
     # the next 2 fields represent sale_pricelist_setting from sale.config.settings, they are split here for the form view, to improve usability
     sale_pricelist_setting_split_1 = fields.Boolean(default=0, string="Multiple Prices per Product")
@@ -58,7 +57,7 @@ class WebsiteConfigSettings(models.TransientModel):
         implied_group='product.group_product_pricelist')
 
     order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email',
-        default=_default_order_mail_template, domain="[('model', '=', 'sale.order')]", 
+        default=_default_order_mail_template, domain="[('model', '=', 'sale.order')]",
         help="Email sent to customer at the end of the checkout process")
     group_show_price_subtotal = fields.Boolean("Show subtotal", implied_group='sale.group_show_price_subtotal')
     group_show_price_total = fields.Boolean("Show total", implied_group='sale.group_show_price_total')

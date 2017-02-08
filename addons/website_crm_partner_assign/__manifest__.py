@@ -11,7 +11,7 @@
 Publish and Assign Partner
 ==========================
         """,
-    'depends': ['base_geolocalize', 'crm', 'account', 'portal',
+    'depends': ['base_geolocalize', 'crm', 'account',
                 'website_partner', 'website_google_map', 'website_portal'],
     'data': [
         'security/ir.model.access.csv',
