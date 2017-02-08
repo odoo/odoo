@@ -70,22 +70,6 @@ options.registry.company_data = options.Class.extend({
             });
         }
     },
-
-    on_focus: function () {
-        this._super.apply(this, arguments);
-
-        var proto = options.registry.company_data.prototype;
-
-        Dialog.confirm(null, _t("Do you want to edit the company data ?"), {
-            confirm_callback: function () {
-                editor.editor_bar.save_without_reload().then(function () {
-                    proto.__link_deferred.then(function (link) {
-                        window.location.href = link;
-                    });
-                });
-            },
-        });
-    },
 });
 
 options.registry.slider = options.Class.extend({
