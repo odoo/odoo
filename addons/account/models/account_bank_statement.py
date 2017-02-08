@@ -758,21 +758,28 @@ class AccountBankStatementLine(models.Model):
         statement_currency = self.journal_id.currency_id or company_currency
         st_line_currency = self.currency_id or statement_currency
         amount_currency = False
-        total_amount = 0
-        # to prevent currency rounding error, we perform the following:
-        # we convert amount (which is in company_currency) in statement currency (or journal currency) and multiply it by a ratio that is computed
-        # by iterating over each account_move_line and converting their amount_currency to company_currency.
-        if st_line_currency != company_currency or statement_currency != company_currency:
-            for aml in move.line_ids:
-                if aml.currency_id and aml.currency_id != company_currency:
-                    total_amount += aml.currency_id.with_context({'date': self.date}).compute(-aml.amount_currency, company_currency, round=False)
-            if total_amount:
-                if float_compare(total_amount, amount, precision_digits=company_currency.rounding) == 0:
-                    ratio = 1.0
-                else:
-                    ratio = total_amount / amount
-                convert_currency = statement_currency != company_currency and statement_currency or st_line_currency
-                amount_currency = company_currency.with_context({'date': self.date}).compute(amount, convert_currency, round=False) * ratio
+        st_line_currency_rate = self.currency_id and (self.amount_currency / self.amount) or False
+        # We have several use case here to compure the currency and amount currency of counterpart line to balance the move:
+        if st_line_currency != company_currency and st_line_currency == statement_currency:
+            # company in currency A, statement in currency B and transaction in currency B
+            # counterpart line must have currency B and correct amount is inverse of already existing lines
+            amount_currency = -sum([x.amount_currency for x in move.line_ids])
+        elif st_line_currency != company_currency and statement_currency == company_currency:
+            # company in currency A, statement in currency A and transaction in currency B
+            # counterpart line must have currency B and correct amount is inverse of already existing lines
+            amount_currency = -sum([x.amount_currency for x in move.line_ids])
+        elif st_line_currency != company_currency and st_line_currency != statement_currency:
+            # company in currency A, statement in currency B and transaction in currency C
+            # counterpart line must have currency B and use rate between B and C to compute correct amount
+            amount_currency = -sum([x.amount_currency for x in move.line_ids])/st_line_currency_rate
+        elif st_line_currency == company_currency and statement_currency != company_currency:
+            # company in currency A, statement in currency B and transaction in currency A
+            # counterpart line must have currency B and amount is computed using the rate between A and B
+            amount_currency = amount/st_line_currency_rate
+        
+        # last case is company in currency A, statement in currency A and transaction in currency A
+        # and in this case counterpart line does not need any second currency nor amount_currency
+
         return {
             'name': self.name,
             'date': self.date,
