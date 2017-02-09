@@ -44,6 +44,17 @@ class TestStockCommon(common.TestProductCommon):
         # TDE FIXME: shouldn't location come from picking ??
         return self._create_move(product, self.env.ref('stock.stock_location_suppliers'), warehouse.lot_stock_id, **values)
 
+    def _create_inventory(self, location_id, product_id=False):
+        inventory = self.env['stock.inventory'].create({
+            'name': 'INV',
+            'filter': 'product',
+            'location_id': location_id,
+            'exhausted': True,
+            'product_id': product_id,
+        })
+        inventory.action_start()
+        return inventory
+
     @classmethod
     def setUpClass(cls):
         super(TestStockCommon, cls).setUpClass()
@@ -52,6 +63,7 @@ class TestStockCommon(common.TestProductCommon):
         user_group_employee = cls.env.ref('base.group_user')
         user_group_stock_user = cls.env.ref('stock.group_stock_user')
         user_group_stock_manager = cls.env.ref('stock.group_stock_manager')
+        cls.stock_location_id = cls.env.ref('stock.stock_location_14').id
 
         # User Data: stock user and stock manager
         Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
@@ -85,3 +97,16 @@ class TestStockCommon(common.TestProductCommon):
         # Existing data
         cls.existing_inventories = cls.env['stock.inventory'].search([])
         cls.existing_quants = cls.env['stock.quant'].search([])
+
+        # Inventory
+        cls.product_1.type = 'product'
+        inventory = cls.env['stock.inventory'].create({
+            'name': 'INV: Courage',
+            'filter': 'product',
+            'location_id': cls.warehouse_1.lot_stock_id.id,
+            'exhausted': True,
+            'product_id': cls.product_1.id,
+        })
+        inventory.action_start()
+        inventory.line_ids.write({'product_qty': 50.0})
+        inventory.action_done()
