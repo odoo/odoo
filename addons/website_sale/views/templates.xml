@@ -879,6 +879,20 @@
                     </div>
                     <div class="row">
                         <div class="col-md-8 col-sm-9 oe_cart">
+                            <div t-if="abandoned_proceed or access_token" class="mt8 mb8 alert alert-info"> <!-- abandoned cart choices -->
+                                <t t-if="abandoned_proceed">
+                                    <p>Your previous cart has already been completed.</p>
+                                    <p t-if="website_sale_order">Please proceed your current cart.</p>
+                                </t>
+                                <t t-if="access_token">
+                                    <p>This is your current cart.</p>
+                                    <p>
+                                        <strong><a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=squash">Click here</a></strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart.</p>
+                                    <p>
+                                        <strong><a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=merge">Click here</a></strong> if you want to merge your previous cart into current cart.
+                                    </p>
+                                </t>
+                            </div>
                             <t t-call="website_sale.cart_lines" />
                             <div class="clearfix" />
                             <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32" href="/shop/checkout">
@@ -1648,4 +1662,5 @@
           </div>
         </t>
     </template>
+
 </odoo>
