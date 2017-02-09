@@ -9,6 +9,16 @@ from odoo.tools.translate import _
 from odoo.fields import Date
 
 
+def get_records_pager(ids, current):
+    if current.id in ids:
+        idx = ids.index(current.id)
+        return {
+            'prev_record': idx != 0 and current.browse(ids[idx - 1]).website_url,
+            'next_record': idx < len(ids) - 1 and current.browse(ids[idx + 1]).website_url
+        }
+    return {}
+
+
 class website_account(http.Controller):
 
     MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id"]

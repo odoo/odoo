@@ -1,12 +1,28 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, exceptions, models, _
+from odoo import api, fields, exceptions, models
 
 
 class Issue(models.Model):
     _name = "project.issue"
     _inherit = ['project.issue']
+
+    main_attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
+                                          help="Attachment that don't come from message.")
+    website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
+
+    def _compute_website_url(self):
+        for issue in self:
+            issue.website_url = '/my/issues/%s' % issue.id
+
+    def _compute_attachment_ids(self):
+        for issue in self:
+            all_attach = self.env['ir.attachment'].search([('res_id', '=', issue.id), ('res_model', '=', 'project.issue')]).ids
+            message_attach_ids = []
+            for m in self.mapped('message_ids'):
+                message_attach_ids += m.attachment_ids.ids
+            issue.main_attachment_ids = list(set(all_attach) - set(message_attach_ids))
 
     @api.multi
     def get_access_action(self):
