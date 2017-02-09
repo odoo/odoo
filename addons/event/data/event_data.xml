@@ -8,9 +8,6 @@
             <value>Module Events has been installed</value>
         </function>
 
-        <!-- Automatic confirmation of events by default -->
-        <function id="default_auto_confirmation" model="ir.values" name="set_default" eval="('event.config.settings', 'default_auto_confirmation', True)"/>
-
         <!-- Event Mail Scheduler-->
         <record model="ir.cron" forcecreate="True" id="event_mail_scheduler">
             <field name="name">Event: Mail Scheduler</field>

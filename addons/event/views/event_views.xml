@@ -12,13 +12,134 @@
             <field name="model">event.type</field>
             <field name="arch" type="xml">
                 <form string="Event Category">
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                            <field name="default_reply_to"/>
-                            <field name="default_registration_min"/>
-                            <field name="default_registration_max"/>
-                        </group>
+                   <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <h2>Location</h2>
+                        <div class="row mt16 o_settings_container" name="event_type_location">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="is_online"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="is_online"/>
+                                    <div class="row">
+                                        <div class="col-md-8 mt16 text-muted">
+                                            Online events like webinars do not require a specific location
+                                            and are hosted online.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="use_timezone"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="use_timezone"/>
+                                    <div class="row">
+                                        <div class="col-md-8 mt16" attrs="{'invisible': [('use_timezone', '=', False)]}">
+                                            <label for="default_timezone"/>
+                                            <field name="default_timezone"
+                                                attrs="{'required': [('use_timezone', '=', True)]}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Communication</h2>
+                        <div class="row mt16 o_settings_container" name="event_type_communication">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="use_reply_to"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="use_reply_to"/>
+                                    <div class="row">
+                                        <div class="col-md-8 mt16" attrs="{'invisible': [('use_reply_to', '=', False)]}">
+                                            <label for="default_reply_to"/>
+                                            <field name="default_reply_to"
+                                                attrs="{'required': [('use_reply_to', '=', True)]}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="use_hashtag"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="use_hashtag"/>
+                                    <div class="row">
+                                        <div class="col-md-8 mt16" attrs="{'invisible': [('use_hashtag', '=', False)]}">
+                                            <label for="default_hashtag"/>
+                                            <field name="default_hashtag"
+                                                attrs="{'required': [('use_hashtag', '=', True)]}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-12 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="use_mail_schedule"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="use_mail_schedule"/>
+                                    <div class="row mt16" attrs="{'invisible': [('use_mail_schedule', '=', False)]}">
+                                        <div class="col-md-9">
+                                            <field name="event_type_mail_ids">
+                                                <tree string="Email Schedule" editable="bottom">
+                                                    <field name="template_id"/>
+                                                    <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/>
+                                                    <field name="interval_unit"/>
+                                                    <field name="interval_type"/>
+                                                </tree>
+                                            </field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Visibility</h2>
+                        <div class="row mt16 o_settings_container" name="event_type_visibility">
+                            <div class="col-xs-12 col-md-6 o_setting_box" name="event_type_visibility_seats">
+                                <div class="o_setting_left_pane">
+                                    <field name="has_seats_limitation"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="has_seats_limitation"/>
+                                    <div class="row">
+                                        <div class="col-md-8 mt16" attrs="{'invisible': [('has_seats_limitation', '=', False)]}">
+                                            <div>
+                                                <label for="default_registration_min"/> <field name="default_registration_min"/>
+                                            </div>
+                                            <div>
+                                                <label for="default_registration_max"/> <field name="default_registration_max"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Attendees</h2>
+                        <div class="row mt16 o_settings_container" name="event_type_attendees">
+                            <div class="col-xs-12 col-md-6 o_setting_box" name="event_type_attendees_auto_confirm">
+                                <div class="o_setting_left_pane">
+                                    <field name="auto_confirm"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="auto_confirm"/>
+                                    <div class="row">
+                                        <div class="col-md-8 mt16 text-muted">
+                                            Events and registrations will automatically be confirmed
+                                            upon creation, easing the flow for simple events.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </sheet>
                 </form>
             </field>
@@ -93,17 +214,23 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="Event Name"/></h1>
+                            <field name="is_online" groups="base.group_no_one"/>
+                            <label for="is_online" string="Online" groups="base.group_no_one"/>
                         </div>
                         <group>
                             <group>
-                                <field name="address_id" context="{'show_address': 1}" options='{"always_reload": True}'/>
                                 <field name="organizer_id"/>
+                                <field name="address_id"
+                                    attrs="{'invisible': [('is_online', '=', True)]}"
+                                    context="{'show_address': 1}"
+                                    options='{"always_reload": True}'/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="user_id"/>
                             </group>
                             <group>
                                 <field name="event_type_id" options="{'no_create':True}"/>
                                 <field name="reply_to" string="Contact Email"/>
+                                <field name="twitter_hashtag"/>
                                 <field name="auto_confirm" groups="base.group_no_one"/>
                             </group>
                             <group>

@@ -6,14 +6,18 @@ from odoo import api, fields, models, _
 from odoo.addons.website.models.website import slug
 
 
+class EventType(models.Model):
+    _name = 'event.type'
+    _inherit = ['event.type']
+
+    website_menu = fields.Boolean(
+        'Display a dedicated menu on Website')
+
+
 class Event(models.Model):
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.mixin']
 
-    def _default_hashtag(self):
-        return re.sub("[- \\.\\(\\)\\@\\#\\&]+", "", self.env.user.company_id.name).lower()
-
-    twitter_hashtag = fields.Char('Twitter Hashtag', default=_default_hashtag)
     website_published = fields.Boolean(track_visibility='onchange')
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
@@ -46,6 +50,12 @@ class Event(models.Model):
         for event in self:
             if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 event.website_url = '/event/%s' % slug(event)
+
+    @api.onchange('event_type_id')
+    def _onchange_type(self):
+        super(Event, self)._onchange_type()
+        if self.event_type_id:
+            self.website_menu = self.event_type_id.website_menu
 
     def _get_menu_entries(self):
         self.ensure_one()

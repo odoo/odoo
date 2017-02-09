@@ -14,25 +14,8 @@ class EventType(models.Model):
     _name = 'event.type'
     _description = 'Event Category'
 
-    name = fields.Char('Event Category', required=True, translate=True)
-    default_reply_to = fields.Char('Reply To')
-    default_registration_min = fields.Integer(
-        'Default Minimum Registration', default=0,
-        help="It will select this default minimum value when you choose this event")
-    default_registration_max = fields.Integer(
-        'Default Maximum Registration', default=0,
-        help="It will select this default maximum value when you choose this event")
-
-
-class EventEvent(models.Model):
-    """Event"""
-    _name = 'event.event'
-    _description = 'Event'
-    _inherit = ['mail.thread']
-    _order = 'date_begin'
-
     @api.model
-    def _default_event_mail_ids(self):
+    def _get_default_event_type_mail_ids(self):
         return [(0, 0, {
             'interval_unit': 'now',
             'interval_type': 'after_sub',
@@ -48,6 +31,57 @@ class EventEvent(models.Model):
             'interval_type': 'before_event',
             'template_id': self.env.ref('event.event_reminder')
         })]
+
+    name = fields.Char('Event Category', required=True, translate=True)
+    # registration
+    has_seats_limitation = fields.Boolean(
+        'Limited Seats', default=False)
+    default_registration_min = fields.Integer(
+        'Minimum Registrations', default=0,
+        help="It will select this default minimum value when you choose this event")
+    default_registration_max = fields.Integer(
+        'Maximum Registrations', default=0,
+        help="It will select this default maximum value when you choose this event")
+    auto_confirm = fields.Boolean(
+        'Automatically Confirm Registrations', default=True,
+        help="Events and registrations will automatically be confirmed"
+             "upon creation, easing the flow for simple events.")
+    # location
+    is_online = fields.Boolean(
+        'Online Event', help='Online events like webinars do not require a specific location and are hosted online.')
+    use_timezone = fields.Boolean('Use Default Timezone')
+    default_timezone = fields.Selection(
+        '_tz_get', string='Timezone',
+        default=lambda self: self.env.user.tz)
+    # communication
+    use_reply_to = fields.Boolean('Use Default Reply-To')
+    default_reply_to = fields.Char('Reply To')
+    use_hashtag = fields.Boolean('Use Default Hashtag')
+    default_hashtag = fields.Char('Twitter Hashtag')
+    use_mail_schedule = fields.Boolean(
+        'Automatically Send Emails', default=True)
+    event_type_mail_ids = fields.One2many(
+        'event.type.mail', 'event_type_id', string='Mail Schedule',
+        copy=False,
+        default=_get_default_event_type_mail_ids)
+
+    @api.onchange('has_seats_limitation')
+    def _onchange_has_seats_limitation(self):
+        if not self.has_seats_limitation:
+            self.default_registration_min = 0
+            self.default_registration_max = 0
+
+    @api.model
+    def _tz_get(self):
+        return [(x, x) for x in pytz.all_timezones]
+
+
+class EventEvent(models.Model):
+    """Event"""
+    _name = 'event.event'
+    _description = 'Event'
+    _inherit = ['mail.thread']
+    _order = 'date_begin'
 
     name = fields.Char(
         string='Event Name', translate=True, required=True,
@@ -71,7 +105,7 @@ class EventEvent(models.Model):
         readonly=False, states={'done': [('readonly', True)]},
         oldname='type')
     color = fields.Integer('Kanban Color Index')
-    event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', default=_default_event_mail_ids, copy=True)
+    event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', copy=True)
 
     # Seats and computation
     seats_max = fields.Integer(
@@ -120,16 +154,18 @@ class EventEvent(models.Model):
         ('confirm', 'Confirmed'), ('done', 'Done')],
         string='Status', default='draft', readonly=True, required=True, copy=False,
         help="If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'.")
-    auto_confirm = fields.Boolean(string='Autoconfirm Registrations', compute='_compute_auto_confirm')
+    auto_confirm = fields.Boolean(string='Autoconfirm Registrations')
     reply_to = fields.Char(
         'Reply-To Email', readonly=False, states={'done': [('readonly', True)]},
         help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one.")
+    is_online = fields.Boolean('Online Event')
     address_id = fields.Many2one(
         'res.partner', string='Location',
         default=lambda self: self.env.user.company_id.partner_id,
         readonly=False, states={'done': [('readonly', True)]},
         track_visibility="onchange")
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True)
+    twitter_hashtag = fields.Char('Twitter Hashtag')
     description = fields.Html(
         string='Description', oldname='note', translate=html_translate, sanitize_attributes=False,
         readonly=False, states={'done': [('readonly', True)]})
@@ -189,10 +225,6 @@ class EventEvent(models.Model):
         else:
             self.date_end_located = False
 
-    @api.one
-    def _compute_auto_confirm(self):
-        self.auto_confirm = self.env['ir.values'].get_default('event.config.settings', 'default_auto_confirmation')
-
     @api.onchange('event_type_id')
     def _onchange_type(self):
         if self.event_type_id:
@@ -200,7 +232,28 @@ class EventEvent(models.Model):
             self.seats_max = self.event_type_id.default_registration_max
             if self.event_type_id.default_registration_max:
                 self.seats_availability = 'limited'
-            self.reply_to = self.event_type_id.default_reply_to
+
+            if self.event_type_id.auto_confirm:
+                self.auto_confirm = self.event_type_id.auto_confirm
+
+            if self.event_type_id.use_reply_to:
+                self.reply_to = self.event_type_id.default_reply_to
+
+            if self.event_type_id.use_reply_to:
+                self.twitter_hashtag = self.event_type_id.default_hashtag
+
+            if self.event_type_id.use_timezone:
+                self.date_tz = self.event_type_id.default_timezone
+
+            self.is_online = self.event_type_id.is_online
+
+            if self.event_type_id.event_type_mail_ids:
+                self.event_mail_ids = [(5, 0, 0)] + [{
+                    'template_id': line.template_id,
+                    'interval_nbr': line.interval_nbr,
+                    'interval_unit': line.interval_unit,
+                    'interval_type': line.interval_type}
+                    for line in self.event_type_id.event_type_mail_ids]
 
     @api.constrains('seats_min', 'seats_max', 'seats_availability')
     def _check_seats_min_max(self):

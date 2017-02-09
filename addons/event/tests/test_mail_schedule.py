@@ -13,13 +13,13 @@ class TestMailSchedule(TestEventCommon):
     @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_00_event_mail_schedule(self):
         """ Test mail scheduling for events """
-        self.env['ir.values'].set_default('event.config.settings', 'default_auto_confirmation', True)
         now = fields.datetime.now()
         event_date_begin = now + relativedelta(days=1)
         event_date_end = now + relativedelta(days=3)
 
         test_event = self.Event.sudo(self.user_eventmanager).create({
             'name': 'TestEventMail',
+            'auto_confirm': True,
             'date_begin': event_date_begin,
             'date_end': event_date_end,
             'seats_max': 10,

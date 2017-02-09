@@ -5,6 +5,13 @@ from odoo import api, fields, models, _
 from odoo.addons.website.models.website import slug
 
 
+class EventType(models.Model):
+    _inherit = 'event.type'
+
+    website_track = fields.Boolean('Tracks on Website')
+    website_track_proposal = fields.Boolean('Tracks Proposals on Website')
+
+
 class Event(models.Model):
     _inherit = "event.event"
 
@@ -53,6 +60,13 @@ class Event(models.Model):
     def _compute_tracks_tag_ids(self):
         for event in self:
             event.tracks_tag_ids = event.track_ids.mapped('tag_ids').ids
+
+    @api.onchange('event_type_id')
+    def _onchange_type(self):
+        super(Event, self)._onchange_type()
+        if self.event_type_id:
+            self.website_track = self.event_type_id.website_track
+            self.website_track_proposal = self.event_type_id.website_track_proposal
 
     def _get_menu_entries(self):
         self.ensure_one()
