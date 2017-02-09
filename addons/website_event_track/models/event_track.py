@@ -7,7 +7,6 @@ from odoo.addons.website.models.website import slug
 
 
 class TrackTag(models.Model):
-
     _name = "event.track.tag"
     _description = 'Track Tag'
     _order = 'name'
@@ -22,7 +21,6 @@ class TrackTag(models.Model):
 
 
 class TrackLocation(models.Model):
-
     _name = "event.track.location"
     _description = 'Track Location'
 
@@ -30,7 +28,6 @@ class TrackLocation(models.Model):
 
 
 class Track(models.Model):
-
     _name = "event.track"
     _description = 'Event Track'
     _order = 'priority, date'
@@ -61,6 +58,14 @@ class Track(models.Model):
         'Priority', required=True, default='1')
     image = fields.Binary('Image', related='speaker_ids.image_medium', store=True, attachment=True)
 
+    @api.multi
+    @api.depends('name')
+    def _compute_website_url(self):
+        super(Track, self)._compute_website_url()
+        for track in self:
+            if not isinstance(track.id, models.NewId):
+                track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
+
     @api.model
     def create(self, vals):
         res = super(Track, self).create(vals)
@@ -79,14 +84,6 @@ class Track(models.Model):
         if vals.get('speaker_ids'):
             self.message_subscribe([speaker['id'] for speaker in self.resolve_2many_commands('speaker_ids', vals['speaker_ids'], ['id'])])
         return res
-
-    @api.multi
-    @api.depends('name')
-    def _compute_website_url(self):
-        super(Track, self)._compute_website_url()
-        for track in self:
-            if not isinstance(track.id, models.NewId):
-                track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -131,7 +128,6 @@ class Track(models.Model):
 
 
 class SponsorType(models.Model):
-
     _name = "event.sponsor.type"
     _order = "sequence"
 
@@ -140,7 +136,6 @@ class SponsorType(models.Model):
 
 
 class Sponsor(models.Model):
-
     _name = "event.sponsor"
     _order = "sequence"
 
