@@ -53,7 +53,7 @@ class SaleOrder(models.Model):
                 so.website_url = '/quote/%s' % (so.id)
 
     def _get_default_template_id(self):
-        return self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
+        return self.env['ir.values'].get_default('sale.config.settings', 'default_template_id')
 
     access_token = fields.Char(
         'Security Token', copy=False, default=lambda self: str(uuid.uuid4()),
