@@ -344,6 +344,27 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" id="abandoned_carts_setting" title="Send a recovery email to authentified shoppers">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label string="Email for Abandonned carts"/>
+                            <div class="text-muted">
+                                Default recovery email to send when a cart is abandoned
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="cart_recovery_mail_template" string="Email Template" class="col-md-3 o_light_label"/>
+                                    <field name="cart_recovery_mail_template" class="oe_inline"/>
+                                </div>
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                  <label for="cart_abandoned_delay" string="Cart are considered abandoned after" class="col-md-6 o_light_label"/>
+                                  <span class="col-md-3"><field name="cart_abandoned_delay"/>hours</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-xs-12 col-md-6 o_setting_box" id="checkout_assignation_setting" groups="base.group_no_one">
                         <div class="o_setting_right_pane">
                             <label string="Assignation"/>
