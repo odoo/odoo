@@ -423,28 +423,35 @@
             <field name="model">event.mail</field>
             <field name="arch" type="xml">
                 <form string="Event Mail Scheduler">
-                    <group>
-                        <field name="event_id"/>
-                        <field name="template_id"/>
-                        <field name="mail_sent"/>
-                    </group>
-                    <group>
-                        <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/>
-                        <field name="interval_unit"/>
-                        <field name="interval_type"/>
-                        <field name="scheduled_date"/>
-                    </group>
-                    <notebook>
-                        <page string="Registration Mails">
-                            <field name="mail_registration_ids">
-                                <tree string="Registration mail" editable="bottom">
-                                    <field name="registration_id"/>
-                                    <field name="scheduled_date"/>
-                                    <field name="mail_sent"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="event_id"/>
+                                <field name="template_id"/>
+                                <field name="mail_sent"/>
+                            </group>
+                            <group>
+                                <label for="interval_nbr"/>
+                                <div class="o_row">
+                                    <field name="interval_nbr" attrs="{'invisible': [('interval_unit', '=', 'now')], 'readonly': [('interval_unit', '=', 'now')]}"/>
+                                    <field name="interval_unit"/>
+                                </div>
+                                <field name="interval_type"/>
+                                <field name="scheduled_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Registration Mails">
+                                <field name="mail_registration_ids">
+                                    <tree string="Registration mail" editable="bottom">
+                                        <field name="registration_id"/>
+                                        <field name="scheduled_date"/>
+                                        <field name="mail_sent"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
