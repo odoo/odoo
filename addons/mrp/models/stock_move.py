@@ -66,7 +66,7 @@ class StockMove(models.Model):
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')  # TDE FIXME: naming ...
     # Quantities to process, in normalized UoMs
     quantity_available = fields.Float(
-        'Quantity Available', compute="_qty_available", store=True,
+        'Quantity Available', compute="_qty_available",
         digits=dp.get_precision('Product Unit of Measure'))
     quantity_done_store = fields.Float('Quantity', digits=0)
     quantity_done = fields.Float(
