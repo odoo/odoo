@@ -409,8 +409,7 @@ class TestReconciliation(AccountingTestCase):
 
     def test_reconcile_bank_statement_with_payment_and_writeoff(self):
         # Use case:
-        # Create a bank journal in currency != than company (use self.bank_journal_usd here)
-        # create a bill for 80 USD on company purchase journal and register payment on it.
+        # Company is in EUR, create a bill for 80 USD and register payment of 80 USD.
         # create a bank statement in USD bank journal with a bank statement line of 85 USD
         # Reconcile bank statement with payment and put the remaining 5 USD in bank fees or another account.
 
@@ -427,10 +426,12 @@ class TestReconciliation(AccountingTestCase):
             })
         payment.post()
         payment_move_line = False
+        bank_move_line = False
         for l in payment.move_line_ids:
             if l.account_id.id == self.account_rcv.id:
                 payment_move_line = l
-                break
+            else:
+                bank_move_line = l
         invoice.register_payment(payment_move_line)
 
         # create bank statement
@@ -446,7 +447,7 @@ class TestReconciliation(AccountingTestCase):
             'date': time.strftime('%Y') + '-07-15',})
 
         #reconcile the statement with invoice and put remaining in another account
-        bank_stmt_line.process_reconciliation(payment_aml_rec= payment_move_line, new_aml_dicts=[{
+        bank_stmt_line.process_reconciliation(payment_aml_rec= bank_move_line, new_aml_dicts=[{
             'account_id': self.diff_income_account.id,
             'debit': 0,
             'credit': 5,
@@ -454,8 +455,26 @@ class TestReconciliation(AccountingTestCase):
             }])
 
         # Check that move lines associated to bank_statement are correct
-        self.check_results(bank_stmt.move_line_ids, {
-            self.account_usd.id: {'debit': 3.27, 'credit': 0.0, 'amount_currency': 5, 'currency_id': self.currency_usd_id},
+        bank_stmt_aml = self.env['account.move.line'].search([('statement_id', '=', bank_stmt.id)])
+        bank_stmt_aml |= bank_stmt_aml.mapped('move_id').mapped('line_ids')
+        self.assertEquals(len(bank_stmt_aml), 4, "The bank statement should have 4 moves lines")
+        lines = {
+            self.account_usd.id: [
+                {'debit': 3.27, 'credit': 0.0, 'amount_currency': 5, 'currency_id': self.currency_usd_id},
+                {'debit': 52.33, 'credit': 0, 'amount_currency': 80, 'currency_id': self.currency_usd_id}
+                ],
             self.diff_income_account.id: {'debit': 0.0, 'credit': 3.27, 'amount_currency': -5, 'currency_id': self.currency_usd_id},
             self.account_rcv.id: {'debit': 0.0, 'credit': 52.33, 'amount_currency': -80, 'currency_id': self.currency_usd_id},
-        })
+        }
+        for aml in bank_stmt_aml:
+            line = lines[aml.account_id.id]
+            if type(line) == list:
+                # find correct line inside the list
+                if line[0]['debit'] == round(aml.debit, 2):
+                    line = line[0]
+                else:
+                    line = line[1]
+            self.assertEquals(round(aml.debit, 2), line['debit'])
+            self.assertEquals(round(aml.credit, 2), line['credit'])
+            self.assertEquals(round(aml.amount_currency, 2), line['amount_currency'])
+            self.assertEquals(aml.currency_id.id, line['currency_id'])
