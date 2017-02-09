@@ -11,7 +11,7 @@
             <field name="name">event.type.form</field>
             <field name="model">event.type</field>
             <field name="arch" type="xml">
-                <form string="Event Type">
+                <form string="Event Category">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -28,14 +28,14 @@
             <field name="name">event.type.tree</field>
             <field name="model">event.type</field>
             <field name="arch" type="xml">
-                <tree string="Event Type">
+                <tree string="Event Category">
                     <field name="name"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_event_type">
-            <field name="name">Event Types</field>
+            <field name="name">Event Categories</field>
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
@@ -54,6 +54,13 @@
         </record>
 
         <!-- EVENT.EVENT VIEWS -->
+        <record id="event_event_action_pivot" model="ir.actions.act_window" >
+            <field name="name">Events Analysis</field>
+            <field name="res_model">event.event</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot,graph</field>
+        </record>
+
         <record model="ir.ui.view" id="view_event_form">
             <field name="name">event.event.form</field>
             <field name="model">event.event</field>
@@ -69,14 +76,16 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
                             <button name="%(event.act_event_registration_from_event)d"
-                                type="action"
-                                class="oe_stat_button oe_event_attendee_button"
-                                icon="fa-users"
-                                help="Register with this event">
+                                    type="action"
+                                    class="oe_stat_button"
+                                    icon="fa-users"
+                                    help="Register with this event">
                                 <field name="seats_expected" widget="statinfo" string="Attendees"/>
                             </button>
-                            <button name="toggle_active" type="object"
-                                    class="oe_stat_button" icon="fa-archive">
+                            <button name="toggle_active"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-archive">
                                 <field name="active" widget="boolean_button"
                                     options='{"terminology": "archive"}'/>
                             </button>
@@ -85,43 +94,37 @@
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="Event Name"/></h1>
                         </div>
-                        <group name="main_field_group">
+                        <group>
                             <group>
                                 <field name="address_id" context="{'show_address': 1}" options='{"always_reload": True}'/>
                                 <field name="organizer_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="user_id"/>
                             </group>
                             <group>
-                                <field name="user_id"/>
                                 <field name="event_type_id" options="{'no_create':True}"/>
+                                <field name="reply_to" string="Contact Email"/>
+                                <field name="auto_confirm" groups="base.group_no_one"/>
+                            </group>
+                            <group>
                                 <field name="date_begin"/>
                                 <field name="date_end"/>
-                                <field name="date_tz" />
+                                <field name="date_tz"/>
+                            </group>
+                            <group>
+                                <field name="seats_min"/>
+                                <label for="seats_availability"/>
+                                <div>
+                                    <field name="seats_availability" widget='radio'/>
+                                    <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
+                                        to 
+                                    </span>
+                                    <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
+                                </div>
                             </group>
                         </group>
                         <notebook>
-                            <page name="registrations" string="Registrations">
-                                <group>
-                                    <group>
-                                        <field name="seats_min"/>
-                                        <label for="seats_availability"/>
-                                        <div>
-                                            <field name="seats_availability" widget='radio'/>
-                                            <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
-                                                to 
-                                            </span>
-                                            <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
-                                        </div>
-                                    </group>
-                                    <group>
-                                        <field name="auto_confirm" groups="base.group_no_one"/>
-                                    </group>
-                                </group>
-                            </page>
-                            <page string="Email Schedule">
-                                <group>
-                                    <field name="reply_to"/>
-                                </group>
+                            <page string="Email Schedule" name="event_mail_schedule">
                                 <field name="event_mail_ids">
                                     <tree string="Email Schedule" editable="bottom">
                                         <field name="sequence" widget="handle"/>
@@ -211,8 +214,9 @@
                                             <t t-esc="record.seats_expected.raw_value"> Expected attendees </t>
                                         </a>
                                         <t t-if="(record.seats_reserved.raw_value + record.seats_used.raw_value) > 0 "><br/>
-                                             <t t-esc="record.seats_reserved.raw_value + record.seats_used.raw_value"/> Confirmed attendees
-                                        <a name="action_event_registration_report" type="object" >&#40;stats&#41;</a>
+                                            <a name="%(event_event_action_pivot)d" type="action">
+                                                <t t-esc="record.seats_reserved.raw_value + record.seats_used.raw_value"/> Confirmed attendees
+                                            </a>
                                         </t>
                                     </h4>
                                 </div>
@@ -264,12 +268,23 @@
             </field>
         </record>
 
+        <record id="event_event_view_pivot" model="ir.ui.view" >
+            <field name="name">event.event.view.pivot</field>
+            <field name="model">event.event</field>
+            <field name="arch" type="xml">
+                <pivot string="Event" disable_linking="True">
+                    <field name="name" type="row"/>
+                    <field name="seats_reserved" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_event_view">
            <field name="name">Events</field>
            <field name="type">ir.actions.act_window</field>
            <field name="res_model">event.event</field>
            <field name="view_type">form</field>
-           <field name="view_mode">kanban,calendar,tree,form</field>
+           <field name="view_mode">kanban,calendar,tree,form,pivot</field>
            <field name="context">{"search_default_upcoming":1}</field>
            <field name="search_view_id" ref="view_event_search"/>
            <field name="help" type="html"><p class="oe_view_nocontent_create">
@@ -291,6 +306,12 @@
             view_type="form"/>
 
         <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="event.event_main_menu" />
+        <menuitem name="Events"
+            id="event_event_menu_pivot_report"
+            action="event_event_action_pivot"
+            sequence="3"
+            parent="event.menu_reporting_events"
+            groups="event.group_event_manager"/>
 
         <!-- EVENT.REGISTRATION VIEWS -->
         <record model="ir.ui.view" id="view_event_registration_tree">
@@ -328,10 +349,10 @@
                     <sheet string="Registration">
                         <group>
                             <group string="Attendee" name="attendee">
+                                <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                                 <field name="name"/>
                                 <field name="phone"/>
                                 <field name="email"/>
-                                <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                             </group>
                             <group string="Event Information" name="event">
                                 <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

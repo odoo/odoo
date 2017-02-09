@@ -11,11 +11,10 @@ from dateutil.relativedelta import relativedelta
 
 
 class EventType(models.Model):
-    """ Event Type """
     _name = 'event.type'
-    _description = 'Event Type'
+    _description = 'Event Category'
 
-    name = fields.Char('Event Type', required=True, translate=True)
+    name = fields.Char('Event Category', required=True, translate=True)
     default_reply_to = fields.Char('Reply To')
     default_registration_min = fields.Integer(
         'Default Minimum Registration', default=0,
@@ -53,10 +52,11 @@ class EventEvent(models.Model):
     name = fields.Char(
         string='Event Name', translate=True, required=True,
         readonly=False, states={'done': [('readonly', True)]})
-    active = fields.Boolean(default=True, track_visibility="onchange")
+    active = fields.Boolean(default=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible',
         default=lambda self: self.env.user,
+        track_visibility="onchange",
         readonly=False, states={'done': [('readonly', True)]})
     company_id = fields.Many2one(
         'res.company', string='Company', change_default=True,
@@ -64,6 +64,7 @@ class EventEvent(models.Model):
         required=False, readonly=False, states={'done': [('readonly', True)]})
     organizer_id = fields.Many2one(
         'res.partner', string='Organizer',
+        track_visibility="onchange",
         default=lambda self: self.env.user.company_id.partner_id)
     event_type_id = fields.Many2one(
         'event.type', string='Category',
@@ -119,13 +120,15 @@ class EventEvent(models.Model):
         ('confirm', 'Confirmed'), ('done', 'Done')],
         string='Status', default='draft', readonly=True, required=True, copy=False,
         help="If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'.")
-    auto_confirm = fields.Boolean(string='Confirmation not required', compute='_compute_auto_confirm')
+    auto_confirm = fields.Boolean(string='Autoconfirm Registrations', compute='_compute_auto_confirm')
     reply_to = fields.Char(
         'Reply-To Email', readonly=False, states={'done': [('readonly', True)]},
         help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one.")
     address_id = fields.Many2one(
-        'res.partner', string='Location', default=lambda self: self.env.user.company_id.partner_id,
-        readonly=False, states={'done': [('readonly', True)]})
+        'res.partner', string='Location',
+        default=lambda self: self.env.user.company_id.partner_id,
+        readonly=False, states={'done': [('readonly', True)]},
+        track_visibility="onchange")
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True)
     description = fields.Html(
         string='Description', oldname='note', translate=html_translate, sanitize_attributes=False,
@@ -195,12 +198,18 @@ class EventEvent(models.Model):
         if self.event_type_id:
             self.seats_min = self.event_type_id.default_registration_min
             self.seats_max = self.event_type_id.default_registration_max
+            if self.event_type_id.default_registration_max:
+                self.seats_availability = 'limited'
             self.reply_to = self.event_type_id.default_reply_to
 
-    @api.one
+    @api.constrains('seats_min', 'seats_max', 'seats_availability')
+    def _check_seats_min_max(self):
+        if any(event.seats_availability == 'limited' and event.seats_min > event.seats_max for event in self):
+            raise ValidationError(_('Maximum attendees number should be greater than minimum attendees number.'))
+
     @api.constrains('seats_max', 'seats_available')
     def _check_seats_limit(self):
-        if self.seats_availability == 'limited' and self.seats_max and self.seats_available < 0:
+        if any(event.seats_availability == 'limited' and event.seats_max and event.seats_available < 0 for event in self):
             raise ValidationError(_('No more available seats.'))
 
     @api.one
@@ -256,15 +265,6 @@ class EventEvent(models.Model):
     @api.one
     def button_confirm(self):
         self.state = 'confirm'
-
-    @api.multi
-    def action_event_registration_report(self):
-        res = self.env['ir.actions.act_window'].for_xml_id('event', 'action_report_event_registration')
-        res['context'] = {
-            "search_default_event_id": self.id,
-            "group_by": ['create_date:day'],
-        }
-        return res
 
     @api.one
     def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: True):
@@ -361,10 +361,12 @@ class EventRegistration(models.Model):
     def button_reg_close(self):
         """ Close Registration """
         today = fields.Datetime.now()
-        if self.event_id.date_begin <= today:
+        if self.event_id.date_begin <= today and self.event_id.state == 'confirm':
             self.write({'state': 'done', 'date_closed': today})
+        elif self.event_id.state == 'draft':
+            raise UserError(_("You must wait the event confirmation before doing this action."))
         else:
-            raise UserError(_("You must wait for the starting day of the event to do this action."))
+            raise UserError(_("You must wait the event starting day before doing this action."))
 
     @api.one
     def button_reg_cancel(self):

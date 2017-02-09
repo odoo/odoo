@@ -6,11 +6,12 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
-            <!-- add state field in header -->
             <button name="toggle_active" position="before">
                 <field name="website_url" invisible="1"/>
-                <button class="oe_stat_button" name="website_publish_button"
-                    type="object" icon="fa-globe">
+                <button name="website_publish_button"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-globe">
                     <field name="website_published" widget="website_button"/>
                 </button>
             </button>

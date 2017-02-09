@@ -20,6 +20,8 @@ class EventMailScheduler(models.Model):
     configuration allowing to send emails on events since Odoo 9. A cron exists
     that periodically checks for mailing to run. """
     _name = 'event.mail'
+    _rec_name = 'event_id'
+    _description = 'Event Automated Mailing'
 
     event_id = fields.Many2one('event.event', string='Event', required=True, ondelete='cascade')
     sequence = fields.Integer('Display order')
