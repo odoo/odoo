@@ -55,9 +55,22 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         var offset = this.recordData.tz_offset.match(/([+-])([0-9]{2})([0-9]{2})/);
         offset = (offset[1] === '-' ? -1 : 1) * (parseInt(offset[2])*60 + parseInt(offset[3]));
         var datetime = field_utils.format.datetime(moment.utc().add(offset, 'minutes'), {timezone: false});
-        var content = this.$option.html().split(' ')[0];
-        content += '    ('+ datetime + ')';
-        this.$option.html(content);
+        var content = this.$option.html()
+        if (content) {
+            content = content.split(' ')[0];
+            content += '    ('+ datetime + ')';
+            this.$option.html(content);
+        }
+    },
+    get_browser_tz: function(){
+        var tz = jstz.determine();
+        return tz.name();
+    },
+    _setValue: function(value){
+        if (value === 'get_browser_tz'){
+            value = this.get_browser_tz();
+        }
+        this._super(value);
     },
     /**
      * Display the timezone alert
@@ -72,6 +85,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         this.$el.last().filter('.o_tz_warning').remove();
         this.$el = this.$el.first();
         var value = this.$el.val();
+        var self = this;
 
         if (this.$option) {
             this.$option.html(this.$option.html().split(' ')[0]);
@@ -90,7 +104,15 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         if (this.mismatch){
             var $span = $('<span class="fa fa-exclamation-triangle o_tz_warning"/>');
             $span.insertAfter(this.$el);
-            $span.attr('title', _t("Timezone Mismatch : The timezone of your browser doesn't match the selected one. The time in Odoo is displayed according to your field timezone."));
+            $span.tooltip({title: _.str.sprintf('<div>%s</div><b>%s</b>', _t("Timezone Mismatch : The timezone of your browser doesn't match the selected one.</br> The time in Odoo is displayed according to your field timezone."),
+                 _t("Click icon to set your browser timezone")), html: true, placement: "bottom"});
+            if (this.mode === 'edit') {
+                $span.on('click', function(){
+                    self._setValue('get_browser_tz');
+                });
+            }else{
+                $span.hide();
+            }
             this.$el = this.$el.add($span);
 
             this.$option = this.$('option').filter(function () {
