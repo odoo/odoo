@@ -46,29 +46,21 @@
             <field name="model">event.event</field>
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
-                    <xpath expr="//page[@name='registrations']" position="replace">
-                        <page string="Tickets">
-                            <group>
-                                <group>
-                                    <field name="auto_confirm" invisible="1"/>
-                                    <field name="seats_min"/>
-                                    <field name="seats_availability" widget='radio'/>
-                                    <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
-                                </group>
-                            </group>
-                            <field name="event_ticket_ids" context="{'default_name': name}">
-                                <tree string="Tickets" editable="bottom">
-                                    <field name="name"/>
-                                    <field name="product_id" context="{'default_event_ok':1}"/>
-                                    <field name="deadline"/>
-                                    <field name="price"/>
-                                    <field name="seats_max"/>
-                                    <field name="seats_reserved" readonly="1"/>
-                                    <field name="seats_unconfirmed" readonly="1"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </xpath>
+                <page name="event_mail_schedule" position="before">
+                    <page string="Tickets">
+                        <field name="event_ticket_ids" context="{'default_name': name}">
+                            <tree string="Tickets" editable="bottom">
+                                <field name="name"/>
+                                <field name="product_id" context="{'default_event_ok':1}"/>
+                                <field name="deadline"/>
+                                <field name="price"/>
+                                <field name="seats_max"/>
+                                <field name="seats_reserved" readonly="1"/>
+                                <field name="seats_unconfirmed" readonly="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
             </field>
         </record>
 
