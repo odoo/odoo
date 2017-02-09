@@ -87,7 +87,7 @@ class StockMove(models.Model):
             # For consumables, state is available so availability = qty to do
             if move.state == 'assigned':
                 move.quantity_available = move.product_uom_qty
-            else:
+            elif move.product_id.uom_id and move.product_uom:
                 move.quantity_available = move.product_id.uom_id._compute_quantity(move.reserved_availability, move.product_uom)
 
     @api.multi
