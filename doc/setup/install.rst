@@ -207,9 +207,9 @@ RPM
 
 .. warning::
 
-    with RHEL-based distributions (RHEL, CenOS, Scientific Linux), EPEL_ must
+    with RHEL-based distributions (RHEL, CentOS, Scientific Linux), EPEL_ must
     be added to the distribution's repositories for all of Odoo's
-    dependencies to be available. For CenOS:
+    dependencies to be available. For CentOS:
 
     .. code-block:: console
 
