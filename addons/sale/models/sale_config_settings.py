@@ -79,7 +79,7 @@ class SaleConfiguration(models.TransientModel):
     module_timesheet_grid_sale = fields.Boolean("Timesheets")
     module_sale_ebay = fields.Boolean("eBay")
     module_print_docsaway = fields.Boolean("Docsaway")
-    module_web_clearbit = fields.Boolean("Clearbit")
+    module_web_clearbit = fields.Boolean("Company Research")
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Manage coupons and promotional offers")
 
