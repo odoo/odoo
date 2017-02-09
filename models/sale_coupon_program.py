@@ -64,6 +64,11 @@ class SaleCouponProgram(models.Model):
         for program in self:
             program.coupon_count = mapped_data.get(program.id, 0)
 
+    @api.onchange('promo_code_usage')
+    def _onchange_promo_code_usage(self):
+        if self.promo_code_usage == 'no_code_needed':
+            self.promo_code = False
+
     @api.model
     def create(self, vals):
         program = super(SaleCouponProgram, self).create(vals)

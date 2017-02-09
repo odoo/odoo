@@ -36,6 +36,8 @@ class SaleCoupon(models.Model):
     program_id = fields.Many2one('sale.coupon.program', "Program")
     order_id = fields.Many2one('sale.order', 'Order Reference', readonly=True,
         help="The sales order from which coupon is generated")
+    sales_order_id = fields.Many2one('sale.order', 'Applied on order', readonly=True,
+        help="The sales order on which the coupon is applied")
     discount_line_product_id = fields.Many2one('product.product', related='program_id.discount_line_product_id',
         help='Product used in the sales order to apply the discount.')
 
@@ -53,7 +55,7 @@ class SaleCoupon(models.Model):
         amount_total = order.amount_untaxed + order.reward_amount
         if self.program_id.rule_minimum_amount_tax_inclusion == 'tax_included':
             amount_total += order.amount_tax
-        elif self.state in ('used', 'expired') or \
+        if self.state in ('used', 'expired') or \
            (self.expiration_date and self.expiration_date < order.date_order):
             message = {'error': _('This coupon %s has been used or is expired.') % (self.code)}
         elif self.state == 'reserved':

@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    applied_coupon_ids = fields.One2many('sale.coupon', 'order_id', string="Applied Coupons", copy=False)
+    applied_coupon_ids = fields.One2many('sale.coupon', 'sales_order_id', string="Applied Coupons", copy=False)
     generated_coupon_ids = fields.One2many('sale.coupon', 'order_id', string="Offered Coupons", copy=False)
     reward_amount = fields.Float(compute='_compute_reward_total')
     no_code_promo_program_ids = fields.Many2many('sale.coupon.program', string="Applied Immediate Promo Programs",
@@ -21,28 +21,33 @@ class SaleOrder(models.Model):
         for order in self:
             order.reward_amount = sum([line.price_subtotal for line in order.order_line.filtered(lambda line: line.is_reward_line)])
 
+    @api.multi
+    def _recompute_coupon_lines(self):
+        if self.env.context.get('coupon_recompute', False):
+            return
+        for order in self.with_context(coupon_recompute=True):
+            order._remove_invalid_reward_lines()
+            order._create_new_no_code_promo_reward_lines()
+            order._update_existing_reward_lines()
+
     def copy(self, default=None):
         order = super(SaleOrder, self).copy(dict(default or {}, order_line=False))
         for line in self.order_line.filtered(lambda line: not line.is_reward_line):
             line.copy({'order_id': order.id})
+        order.with_context(sale_coupon_no_loop=False)._create_new_no_code_promo_reward_lines()
         return order
 
     @api.model
     def create(self, vals):
-        res = super(SaleOrder, self).create(vals)
-        res._create_new_no_code_promo_reward_lines()
-        res._update_existing_reward_lines()
+        res = super(SaleOrder, self.with_context(coupon_recompute=True)).create(vals)
+        res = res.with_context(coupon_recompute=False)
+        res._recompute_coupon_lines()
         return res
 
     def write(self, vals):
-        res = super(SaleOrder, self).write(vals)
-        if 'order_line' in vals and self.env.context.get('sale_coupon_no_loop', True):
-            for order in self.with_context(sale_coupon_no_loop=False):
-                order._remove_invalid_reward_lines()
-                order._create_new_no_code_promo_reward_lines()
-                order._update_existing_reward_lines()
+        res = super(SaleOrder, self.with_context(coupon_recompute=True)).write(vals)
+        self._recompute_coupon_lines()
         return res
-
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
@@ -77,12 +82,11 @@ class SaleOrder(models.Model):
 
         order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: x.product_id in program.rule_product_ids)
         max_product_qty = sum(order_lines.mapped('product_uom_qty')) or 1
-        line = self.order_line.filtered(lambda line: line.product_id == program.reward_product_id)[0]
         # Remove needed quantity from reward quantity if same reward and rule product
         if program.reward_product_id in program.rule_product_ids:
-            reward_product_qty = line.product_uom_qty // (program.rule_min_quantity + program.reward_product_quantity)
+            reward_product_qty = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
         else:
-            reward_product_qty = line.product_uom_qty
+            reward_product_qty = max_product_qty
 
         reward_qty = min(int(int(max_product_qty / program.rule_min_quantity) * program.reward_product_quantity), reward_product_qty)
 
@@ -165,6 +169,7 @@ class SaleOrder(models.Model):
         coupon = self.env['sale.coupon'].create({
             'program_id': program.id,
             'state': 'reserved',
+            'partner_id': self.partner_id.id,
             'order_id': self.id,
             'discount_line_product_id': program.discount_line_product_id.id
         })
@@ -222,12 +227,12 @@ class SaleOrder(models.Model):
                            order.code_promo_program_id
         for program in applied_programs:
             values = order._get_reward_line_values(program)
-            line_id = order.order_line.filtered(lambda line: line.product_id == program.discount_line_product_id).id
+            lines = order.order_line.filtered(lambda line: line.product_id == program.discount_line_product_id)
             # Remove reward line if price or qty equal to 0
             if values['product_uom_qty'] and values['price_unit']:
-                order.write({'order_line': [(1, line_id, values)]})
+                order.write({'order_line': [(1, line.id, values) for line in lines]})
             else:
-                order.write({'order_line': [(2, line_id, False)]})
+                order.write({'order_line': [(2, line.id, False) for line in lines]})
 
     def _remove_invalid_reward_lines(self):
         '''Unlink reward order lines that are not applicable anymore'''
@@ -251,25 +256,14 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def create(self, vals):
-        """
-        Override the sale order line creation to transform the line creation into a ORM request
-        This horrible hack is due to the fact that with the coupons mechanism, a line creation may
-        lead to the creation, the modification or the deletion of another line. If we override the
-        create, write and unlink methods on the sale.order.line model, we may have issues like
-        cache mismatch on computed fields and so on. Due to this reason, we override the write
-        method on the sale.order and do the actions according to the situation. A write is done on
-        the sales order if we create, write or unlink a sales order line with an ORM command. To avoid
-        having places where creating a sales order doens't activate the coupon mechanism, (It is the
-        case in website_sale or website_quote for example) we do this hack here where we create the line
-        on the order with an ORM command and return the newly created order line. I hope that you'll
-        find in your heart enough faith to forgive me.
-        PS: RCO told me it was ok
-        """
-        order = self.env['sale.order'].browse(vals['order_id'])
-        if self.env.context.get('sale_coupon_no_loop', False):
-            order.with_context(sale_coupon_no_loop=True).write({'order_line': [(0, False, vals)]})
-            return order.order_line.sorted('creation_date', reverse=True)[0]
-        return super(SaleOrderLine, self).create(vals)
+        res = super(SaleOrderLine, self).create(vals)
+        self.order_id._recompute_coupon_lines()
+        return res
+
+    def write(self, vals):
+        res = super(SaleOrderLine, self).write(vals)
+        self.mapped('order_id')._recompute_coupon_lines()
+        return res
 
     def unlink(self):
         # Reactivate coupons related to unlinked reward line
@@ -284,5 +278,7 @@ class SaleOrderLine(models.Model):
         if related_program:
             self.order_id.no_code_promo_program_ids -= related_program
             self.order_id.code_promo_program_id -= related_program
-        res = super(SaleOrderLine, self.with_context(sale_coupon_no_loop=False)).unlink()
+        orders = self.mapped('order_id')
+        res = super(SaleOrderLine, self).unlink()
+        orders._recompute_coupon_lines()
         return res
