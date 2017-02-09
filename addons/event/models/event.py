@@ -277,6 +277,7 @@ class EventRegistration(models.Model):
     _description = 'Attendee'
     _inherit = ['mail.thread']
     _order = 'name, create_date desc'
+    _mail_mass_mailing = _('Event Attendees')
 
     origin = fields.Char(
         string='Source Document', readonly=True,

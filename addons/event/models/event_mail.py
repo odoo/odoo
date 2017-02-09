@@ -33,7 +33,7 @@ class EventMailScheduler(models.Model):
         ('after_sub', 'After each registration'),
         ('before_event', 'Before the event'),
         ('after_event', 'After the event')],
-        string='When to Run ', default="before_event", required=True)
+        string='Trigger ', default="before_event", required=True)
     template_id = fields.Many2one(
         'mail.template', string='Email to Send',
         domain=[('model', '=', 'event.registration')], required=True, ondelete='restrict',

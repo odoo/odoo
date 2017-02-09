@@ -32,6 +32,7 @@ class Track(models.Model):
     _description = 'Event Track'
     _order = 'priority, date'
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
+    _mail_mass_mailing = _('Track Speakers')
 
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
