@@ -8,7 +8,6 @@ import odoo.addons.decimal_precision as dp
 
 
 class Event(models.Model):
-
     _inherit = 'event.event'
 
     def _default_tickets(self):
@@ -26,7 +25,6 @@ class Event(models.Model):
 
 
 class EventTicket(models.Model):
-
     _name = 'event.event.ticket'
     _description = 'Event Ticket'
 
