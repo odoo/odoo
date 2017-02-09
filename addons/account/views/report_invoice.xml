@@ -52,6 +52,8 @@
 
             <!-- Is there a discount on at least one line? -->
             <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
+            <!-- if Rounding Method is round per line -->
+            <t t-set="display_taxamount" t-value="o.company_id.tax_calculation_rounding_method == 'round_per_line'"/>
 
             <table class="table table-condensed">
                 <thead>
@@ -62,6 +64,7 @@
                         <th class="text-right">Unit Price</th>
                         <th t-if="display_discount" class="text-right">Disc.(%)</th>
                         <th class="text-right">Taxes</th>
+                        <th t-if="display_taxamount" class="text-right">Taxes Amount</th>
                         <th class="text-right">Amount</th>
                     </tr>
                 </thead>
@@ -82,6 +85,14 @@
                         <td class="text-right">
                             <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
                         </td>
+                        <td t-if="display_taxamount" class="text-right">
+                            <t t-set="taxes" t-value="l.invoice_line_tax_ids.compute_all(l.price_unit, l.currency_id, l.quantity)['taxes']"/>
+                            <t t-set="tax_amount" t-value="0.0"/>
+                            <t t-foreach="taxes" t-as="tax">
+                                <t t-set="tax_amount" t-value="tax_amount + tax['amount']"/>
+                            </t>
+                            <span t-esc="tax_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                        </td>
                         <td class="text-right">
                             <span t-field="l.price_subtotal" 
                                 t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
@@ -94,6 +105,7 @@
                         <td></td>
                         <td t-if="display_discount" groups="sale.group_discount_per_so_line"></td>
                         <td></td>
+                        <td t-if="display_taxamount"></td>
                         <td></td>
                     </tr>
                 </tbody>
