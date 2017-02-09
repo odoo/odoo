@@ -104,6 +104,10 @@ class TestSaleOrder(TestSale):
 
     def test_cost_invoicing(self):
         """ Test confirming a vendor invoice to reinvoice cost on the so """
+        # Ensure the computation are done with the USD currency
+        base_company = self.env.ref('base.main_company')
+        base_company.currency_id = self.env.ref('base.USD')
+
         serv_cost = self.env.ref('product.service_cost_01')
         prod_gap = self.env.ref('product.product_product_1')
         so = self.env['sale.order'].create({
