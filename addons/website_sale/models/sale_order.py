@@ -2,9 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import random
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, models, fields, _
 from odoo.http import request
+from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -24,6 +27,8 @@ class SaleOrder(models.Model):
         string="Can be directly marked as paid", store=True,
         help="""Checked if the sales order can directly be marked as paid, i.e. if the quotation
                 is sent or confirmed and if the payment acquire is of the type transfer or manual""")
+    is_abandoned_cart = fields.Boolean('Abandoned Cart', compute='_compute_abandoned_cart', search='_search_abandoned_cart')
+    cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
 
     @api.depends('state', 'payment_tx_id', 'payment_tx_id.state',
                  'payment_acquirer_id', 'payment_acquirer_id.provider')
@@ -37,6 +42,30 @@ class SaleOrder(models.Model):
         for order in self:
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
             order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
+
+    @api.multi
+    @api.depends('team_id.team_type', 'date_order', 'order_line', 'state', 'partner_id')
+    def _compute_abandoned_cart(self):
+        abandoned_delay = float(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_abandoned_delay', '1.0'))
+        abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
+        for order in self:
+            domain = order.date_order <= abandoned_datetime and order.team_id.team_type == 'website' and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
+            order.is_abandoned_cart = bool(domain)
+
+    def _search_abandoned_cart(self, operator, value):
+        abandoned_delay = float(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_abandoned_delay', '1.0'))
+        abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
+        abandoned_domain = expression.normalize_domain([
+            ('date_order', '<=', abandoned_datetime),
+            ('team_id.team_type', '=', 'website'),
+            ('state', '=', 'draft'),
+            ('partner_id.id', '!=', self.env.ref('base.public_partner').id),
+            ('order_line', '!=', False)
+        ])
+        # is_abandoned domain possibilities
+        if (operator not in expression.NEGATIVE_TERM_OPERATORS and value) or (operator in expression.NEGATIVE_TERM_OPERATORS and not value):
+            return abandoned_domain
+        return expression.distribute_not(abandoned_domain)  # negative domain
 
     @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
@@ -172,6 +201,32 @@ class SaleOrder(models.Model):
             accessory_products = order.website_order_line.mapped('product_id.accessory_product_ids').filtered(lambda product: product.website_published)
             accessory_products -= order.website_order_line.mapped('product_id')
             return random.sample(accessory_products, len(accessory_products))
+
+    @api.multi
+    def action_recovery_email_send(self):
+        composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
+        try:
+            default_template = self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
+            default_template_id = default_template.id if default_template else False
+            template_id = int(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_recovery_mail_template_id', default_template_id))
+        except:
+            template_id = False
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'view_id': composer_form_view_id,
+            'target': 'new',
+            'context': {
+                'default_composition_mode': 'mass_mail' if len(self) > 1 else 'comment',
+                'default_res_id': self.ids[0],
+                'default_model': 'sale.order',
+                'default_use_template': bool(template_id),
+                'default_template_id': template_id,
+                'active_ids': self.ids,
+            },
+        }
 
     def action_mark_as_paid(self):
         """ Mark directly a sales order as paid if:
