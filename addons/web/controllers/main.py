@@ -639,10 +639,12 @@ class Database(http.Controller):
 
     @http.route('/web/database/selector', type='http', auth="none")
     def selector(self, **kw):
+        request._cr = None
         return self._render_template(manage=False)
 
     @http.route('/web/database/manager', type='http', auth="none")
     def manager(self, **kw):
+        request._cr = None
         return self._render_template()
 
     @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
