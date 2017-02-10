@@ -121,11 +121,21 @@ class View(models.Model):
         translatable = editable and self._context.get('lang') != request.website.default_lang_code
         editable = not translatable and editable
 
+        def unslug_url(s):
+            parts = s.split('/')
+            if parts:
+                unslug_val = website.unslug(parts[-1])
+                if unslug_val[1]:
+                    parts[-1] = str(unslug_val[1])
+                    return '/'.join(parts)
+            return s
+
         qcontext = dict(
             self._context.copy(),
             website=request.website,
             url_for=website.url_for,
             slug=website.slug,
+            unslug_url=unslug_url,
             res_company=company,
             user_id=self.env["res.users"].browse(self.env.user.id),
             default_lang_code=request.website.default_lang_code,
