@@ -1508,7 +1508,7 @@ ListView.Groups = Class.extend({
         // drag and drop enabled if list is not sorted (unless it is sorted by
         // its sequence field (ASC)), and there is a visible column with
         // @widget=handle or "sequence" column in the view.
-        if ((dataset.sort && [seqname, seqname + 'ASC', ''].indexOf(dataset.sort()) === -1)
+        if ((dataset.sort && [seqname, seqname + ' ASC', ''].indexOf(dataset.sort()) === -1)
             || !_(this.columns).findWhere({'name': seqname})) {
             return;
         }

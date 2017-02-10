@@ -72,9 +72,6 @@
                                 <div class="mt16">
                                     <button name="%(base.action_currency_form)d" icon="fa-arrow-right" type="action" string="Currencies" class="btn-link"/>
                                 </div>
-                                <div>
-                                    <button name="%(account.action_account_config)d" icon="fa-arrow-right" type="action" string="Apply Automatic Rates Update" class="btn-link"/>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -188,7 +185,7 @@
                             </div>
                             <div class="content-group" attrs="{'invisible': [('default_use_sale_note','=',False)]}">
                                 <div class="mt16">
-                                    <field name="sale_note"/>
+                                    <field name="sale_note" placeholder="Insert your terms &amp; conditions here..."/>
                                 </div>
                             </div>
                         </div>

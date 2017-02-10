@@ -5,6 +5,7 @@ import datetime
 import werkzeug
 
 from collections import OrderedDict
+from werkzeug.exceptions import NotFound
 
 from odoo import fields
 from odoo import http
@@ -93,13 +94,13 @@ class WebsiteAccount(website_account):
         this_week_end_date = fields.Date.to_string(fields.Date.from_string(today) + datetime.timedelta(days=7))
 
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
+            'all': {'label': _('Active'), 'domain': []},
             'today': {'label': _('Today Activities'), 'domain': [('activity_date_deadline', '=', today)]},
             'week': {'label': _('This Week Activities'),
                      'domain': [('activity_date_deadline', '>=', today), ('activity_date_deadline', '<=', this_week_end_date)]},
             'overdue': {'label': _('Overdue Activities'), 'domain': [('activity_date_deadline', '<', today)]},
-            'won': {'label': _('Won'), 'domain': [('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]},
-            'lost': {'label': _('Lost'), 'domain': [('active', '=', False)]},
+            'won': {'label': _('Won'), 'domain': [('stage_id.probability', '=', 100), ('stage_id.on_change', '=', True)]},
+            'lost': {'label': _('Lost'), 'domain': [('active', '=', False), ('probability', '=', 0)]},
         }
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
@@ -118,6 +119,8 @@ class WebsiteAccount(website_account):
         if not filterby:
             filterby = 'all'
         domain += searchbar_filters[filterby]['domain']
+        if filterby == 'lost':
+            CrmLead = CrmLead.with_context(active_test=False)
 
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('crm.lead', domain)
@@ -149,16 +152,21 @@ class WebsiteAccount(website_account):
         })
         return request.render("website_crm_partner_assign.portal_my_opportunities", values)
 
-    @http.route(['/my/lead/<model("crm.lead"):lead>'], type='http', auth="user", website=True)
-    def portal_my_lead(self, lead=None, **kw):
+    @http.route(['''/my/lead/<model('crm.lead', "[('type','=', 'lead')]"):lead>'''], type='http', auth="user", website=True)
+    def portal_my_lead(self, lead, **kw):
+        if lead.type != 'lead':
+            raise NotFound()
         return request.render("website_crm_partner_assign.portal_my_lead", {'lead': lead})
 
-    @http.route(['/my/opportunity/<model("crm.lead"):lead>'], type='http', auth="user", website=True)
-    def portal_my_opportunity(self, lead=None, **kw):
+    @http.route(['''/my/opportunity/<model('crm.lead', "[('type','=', 'opportunity')]"):opp>'''], type='http', auth="user", website=True)
+    def portal_my_opportunity(self, opp, **kw):
+        if opp.type != 'opportunity':
+            raise NotFound()
+
         return request.render(
             "website_crm_partner_assign.portal_my_opportunity", {
-                'opportunity': lead,
-                'user_activity': lead.activity_ids.filtered(lambda activity: activity.user_id == request.env.user)[:1],
+                'opportunity': opp,
+                'user_activity': opp.activity_ids.filtered(lambda activity: activity.user_id == request.env.user)[:1],
                 'stages': request.env['crm.stage'].search([('probability', '!=', '100')], order='sequence desc'),
                 'activity_types': request.env['mail.activity.type'].sudo().search([]),
                 'states': request.env['res.country.state'].sudo().search([]),

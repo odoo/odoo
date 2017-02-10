@@ -66,6 +66,7 @@ var Activity = form_common.AbstractField.extend({
         this._super.apply(this, arguments);
 
         this.context = this.options.context || {};
+        this.model = this.view.dataset.model;
         this.activities = [];
         this.Activity = new Model('mail.activity');
     },
@@ -98,7 +99,7 @@ var Activity = form_common.AbstractField.extend({
     fetch_and_render_value: function () {
         var self = this;
 
-        return new Model(this.view.dataset.model)
+        return new Model(this.model)
             .call("read", [[this.get_res_id()], ['activity_ids']])
             .then(function (results) {
                 self.value = results[0]['activity_ids'];
@@ -133,7 +134,7 @@ var Activity = form_common.AbstractField.extend({
             target: 'new',
             context: _.extend({
                 default_res_id: this.get_res_id(),
-                default_res_model: this.view.dataset.model,
+                default_res_model: this.model,
             }, {'mark_done': true}, this.context),
             res_id: false,
         };
@@ -141,7 +142,7 @@ var Activity = form_common.AbstractField.extend({
             on_close: function() {
                 self.fetch_and_render_value();
                 self.chatter.refresh_followers();
-                ChatManager.get_messages({model: self.res_model, res_id: self.get_res_id()});
+                ChatManager.get_messages({model: self.model, res_id: self.get_res_id()});
             },
         });
     },
@@ -169,7 +170,7 @@ var Activity = form_common.AbstractField.extend({
             on_close: function () {
                 self.fetch_and_render_value();
                 self.chatter.refresh_followers();
-                ChatManager.get_messages({model: self.res_model, res_id: self.get_res_id()});
+                ChatManager.get_messages({model: self.model, res_id: self.get_res_id()});
             },
         });
     },

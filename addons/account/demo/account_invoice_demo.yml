@@ -52,6 +52,27 @@
   !python {model: account.invoice, id: demo_invoice_3}:
     self.action_invoice_open()
 -
+   Create an invoice that will generate a followup
+-
+  !record {model: account.invoice, id: demo_invoice_followup}:
+    company_id: base.main_company
+    partner_id: base.res_partner_2
+    user_id: base.user_demo
+    reference_type: none
+    payment_term_id: account.account_payment_term_immediate
+    type: 'out_invoice'
+    date_invoice: !eval (datetime.today() + timedelta(days=-15)).strftime('%Y-%m-%d')
+    invoice_line_ids:
+      - product_id: product.consu_delivery_02
+        price_unit: 642.0
+        quantity: 5
+      - product_id: product.consu_delivery_03
+        price_unit: 280.0
+        quantity: 5.0
+-
+  !python {model: account.invoice, id: demo_invoice_followup}:
+    self.action_invoice_open()
+-
    Set the context for supplier bills because the 'type' field is readonly in invoice form views, so it value won't be considered by the yaml import
 -
   !context

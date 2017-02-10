@@ -120,7 +120,10 @@ class HolidaysType(models.Model):
         for record in self:
             name = record.name
             if not record.limit:
-                name = name + ('  (%g remaining out of %g)' % (record.virtual_remaining_leaves or 0.0, record.max_leaves or 0.0))
+                name = "%(name)s (%(count)s)" % {
+                    'name': name,
+                    'count': _('%g remaining out of %g') % (record.virtual_remaining_leaves or 0.0, record.max_leaves or 0.0)
+                }
             res.append((record.id, name))
         return res
 

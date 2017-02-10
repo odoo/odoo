@@ -9,7 +9,7 @@
     <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="website_portal.portal_layout" priority="25">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
             <li t-att-class="page_name == 'quote' and 'active'">
-                <a href="/my/quotes">Quotes</a>
+                <a href="/my/quotes">Quotations</a>
             </li>
             <li t-att-class="page_name == 'order' and 'active'">
                 <a href="/my/orders">Orders</a>
@@ -23,13 +23,13 @@
     <template id="portal_my_home_sale" name="Portal My Home : sales entries" inherit_id="website_portal.portal_my_home" priority="25">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
             <h3 class="page-header">
-                <a href="/my/quotes">Your Quotes
+                <a href="/my/quotes">Your Quotations
                     <small class="ml8">
                         <t t-if="quotation_count">
                             <span class='badge'><t t-esc="quotation_count"/></span>
                         </t>
                         <t t-if="not quotation_count">
-                            There are currently no quotes for your account.
+                            There are currently no quotations.
                         </t>
                     </small>
                 </a>
@@ -41,7 +41,7 @@
                             <span class='badge'><t t-esc="order_count"/></span>
                         </t>
                         <t t-if="not order_count">
-                            There are currently no orders for your account.
+                            There are currently no orders.
                         </t>
                     </small>
                 </a>
@@ -53,7 +53,7 @@
                             <span class='badge'><t t-esc="invoice_count"/></span>
                         </t>
                         <t t-if="not invoice_count">
-                            There are currently no invoices for your account.
+                            There are currently no invoices and payments.
                         </t>
                     </small>
                 </a>
@@ -64,11 +64,11 @@
     <template id="portal_my_quotations" name="My Quotations">
       <t t-call="website_portal.portal_layout">
         <div class="page-header">
-            <span class="h3">Your Quotes</span>
+            <span class="h3">Your Quotations</span>
             <t t-call="website_portal.portal_searchbar"/>
         </div>
         <t t-if="not quotations">
-            <p>There are currently no quotes for your account.</p>
+            <p>There are currently no quotations for your account.</p>
         </t>
         <t t-if="quotations">
             <div class="table-responsive"><table class="table table-hover o_my_status_table">
@@ -162,7 +162,7 @@
             <t t-call="website_portal.portal_searchbar"/>
         </div>
         <t t-if="not invoices">
-            <p>There are currently no invoices for your account.</p>
+            <p>There are currently no invoices and payments for your account.</p>
         </t>
         <t t-if="invoices">
             <div class="table-responsive"><table class="table table-hover o_my_status_table">
@@ -220,7 +220,7 @@
                             <li>
                               <a t-attf-href="/my/#{'quotes' if order.state == 'sent' else 'orders'}?{{ keep_query()}}">
                                 <t t-if="order.state == 'sent'">
-                                    My Quotes
+                                    My Quotations
                                 </t>
                                 <t t-if="order.state != 'sent'">
                                     My Orders
@@ -311,28 +311,28 @@
                         <div class="col-md-6">
                           <strong>Product</strong>
                         </div>
-                        <div class="col-md-2 text-right">
+                        <div class="hidden-sm hidden-xs col-md-2 text-right">
                           <strong>Unit Price</strong>
                         </div>
-                        <div class="col-md-2 text-right">
+                        <div class="hidden-sm hidden-xs col-md-2 text-right">
                           <strong>Quantity</strong>
                         </div>
-                        <div class="col-md-2 text-right">
+                        <div class="hidden-sm hidden-xs col-md-2 text-right">
                           <strong>Subtotal</strong>
                         </div>
                       </div>
                       <t t-foreach="order.order_line" t-as="ol">
                         <div class="row orders_vertical_align">
-                            <div class="col-md-1 text-center">
-                                <img t-att-src="'/web/image/sale.order.line/%s/product_image/48x48' % ol.id"/>
+                            <div class="visible-lg col-lg-1 text-center">
+                              <span t-field="ol.product_image" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}" />
                             </div>
-                            <div id='product_name' class="col-md-5">
+                            <div id='product_name' class="col-lg-4 col-sm-6 col-xs-4">
                               <span t-esc="ol.product_id.name"/>
                             </div>
-                          <div class="col-md-2 text-right">
+                          <div class="col-xs-3 text-right">
                             <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                           </div>
-                          <div class="col-md-2 text-right">
+                          <div class="col-xs-2 text-right">
                             <t t-if="ol._name == 'sale.order.line'">
                               <span t-esc="ol.product_uom_qty"/>
                             </t>
@@ -340,7 +340,7 @@
                               <span t-esc="ol.quantity"/>
                             </t>
                           </div>
-                          <div class="col-md-2 text-right">
+                          <div class="col-sm-2 col-xs-3 text-right">
                             <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                           </div>
                         </div>
@@ -354,29 +354,30 @@
                             <strong>Contact</strong>
                           </div>
                           <div t-field="order.user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
+                          <br/>
                         </div>
                         <div class="col-md-6">
                           <div class="row">
-                            <div class="col-md-10 text-right">
+                            <div class="col-md-10 col-xs-8 text-right">
                               Untaxed Amount:
                             </div>
-                            <div class="col-md-2 text-right">
+                            <div class="col-md-2 col-xs-4 text-right">
                               <span t-field="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                             </div>
                           </div>
                           <div class="row">
-                            <div class="col-md-10 text-right">
+                            <div class="col-md-10 col-xs-8 text-right">
                               Taxes:
                             </div>
-                            <div class="col-md-2 text-right">
+                            <div class="col-md-2 col-xs-4 text-right">
                               <span t-field="order.amount_tax" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                             </div>
                           </div>
                           <div class="row">
-                            <div class="col-md-10 text-right">
+                            <div class="col-md-10 col-xs-8 text-right">
                               <strong>Total:</strong>
                             </div>
-                            <div class="col-md-2 text-right">
+                            <div class="col-md-2 col-xs-4 text-right">
                               <strong><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></strong>
                             </div>
                           </div>
