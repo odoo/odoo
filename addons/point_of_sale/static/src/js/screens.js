@@ -393,7 +393,7 @@ var NumpadWidget = PosBaseWidget.extend({
         $(_.str.sprintf('.mode-button[data-mode="%s"]', mode), this.$el).addClass('selected-mode');
     },
     check_rights: function () {
-        var has_rights = this.pos.get_cashier().price_dis_rights;
+        var has_rights = this.pos.get_cashier().price_discount_rights;
         this.$el.find('.mode-button[data-mode="price"],.mode-button[data-mode="discount"]').toggleClass('disabled-mode', !has_rights).prop('disabled', !has_rights);
     },
 });

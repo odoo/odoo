@@ -256,7 +256,7 @@ exports.PosModel = Backbone.Model.extend({
             var pos_users = [];
             for (var i = 0; i < users.length; i++) {
                 var user = users[i];
-                user.price_dis_rights = false
+                user.price_discount_rights = false
                 for (var j = 0; j < user.groups_id.length; j++) {
                     var group_id = user.groups_id[j];
                     if (group_id === self.config.group_pos_manager_id[0]) {
@@ -265,8 +265,8 @@ exports.PosModel = Backbone.Model.extend({
                     } else if (group_id === self.config.group_pos_user_id[0]) {
                         user.role = 'cashier';
                     }
-                    if (group_id === self.config.group_price_dis_id[0]) {
-                        user.price_dis_rights = true;
+                    if (group_id === self.config.group_price_discount_id[0]) {
+                        user.price_discount_rights = true;
                     }
                 }
                 if (user.role) {
@@ -1116,7 +1116,7 @@ exports.Orderline = Backbone.Model.extend({
     },
     // sets a discount [0,100]%
     set_discount: function(discount){
-        if (!this.pos.get_cashier().price_dis_rights) {
+        if (!this.pos.get_cashier().price_discount_rights) {
             return;
         }
         var disc = Math.min(Math.max(parseFloat(discount) || 0, 0),100);
@@ -1313,7 +1313,7 @@ exports.Orderline = Backbone.Model.extend({
     },
     // changes the base price of the product for this orderline
     set_unit_price: function(price){
-        if (!this.pos.get_cashier().price_dis_rights) {
+        if (!this.pos.get_cashier().price_discount_rights) {
             return;
         }
         this.order.assert_editable();
