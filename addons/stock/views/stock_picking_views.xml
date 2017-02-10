@@ -40,21 +40,21 @@
                             <group>
                                 <field name="name"/>
                                 <field name="sequence_id"/>
-                                <field name="warehouse_id"/>
+                                <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                             </group>
                             <group>
                                 <field name="code"/>
-                                <field name="return_picking_type_id"/>
-                                <field name="barcode_nomenclature_id" groups="base.group_no_one"/>
+                                <field attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' name="return_picking_type_id"/>
+                                <field attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' name="barcode_nomenclature_id" groups="base.group_no_one"/>
                             </group>
                         </group>
                         <group>
-                            <group string="Packs and Lots" groups="stock.group_tracking_lot,stock.group_production_lot">
+                            <group attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' string="Packs and Lots" groups="stock.group_tracking_lot,stock.group_production_lot">
                                 <field name="show_entire_packs" groups="stock.group_tracking_lot"/>
                                 <field name="use_create_lots" groups="stock.group_production_lot"/>
                                 <field name="use_existing_lots" groups="stock.group_production_lot"/>
                             </group>
-                            <group string="Locations">
+                            <group string="Locations" groups="stock.group_stock_multi_locations">
                                 <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}"/>
                                 <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
                             </group>
