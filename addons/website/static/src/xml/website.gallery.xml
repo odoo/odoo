@@ -52,7 +52,7 @@
             <div class="carousel-inner container" style="padding: 0;">
                  <t t-foreach="srcs" t-as="src">
                     <div t-attf-class="item #{src_index == index and 'active' or ''}">
-                        <img class="img" t-att-src="src"/>
+                        <img t-attf-class="img #{userStyle}" t-att-src="src"/>
                     </div>
                  </t>
             </div>
