@@ -244,6 +244,7 @@ class AccountVoucher(models.Model):
                 'date': self.date,
                 'tax_ids': [(4,t.id) for t in line.tax_ids],
                 'amount_currency': line.price_subtotal if current_currency != company_currency else 0.0,
+                'currency_id': company_currency != current_currency and current_currency or False,
             }
 
             self.env['account.move.line'].create(move_line)
