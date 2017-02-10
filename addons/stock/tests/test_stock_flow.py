@@ -1366,7 +1366,8 @@ class TestStockFlow(TestStockCommon):
 
         # set the pack in pack operation to 'done'
         for pack in picking_pack.pack_operation_pack_ids:
-            pack.qty_done = 1.0
+            pack.is_done = True
+            pack.on_change_is_done()
 
         # Put in a pack
         picking_pack.put_in_pack()
@@ -1384,7 +1385,8 @@ class TestStockFlow(TestStockCommon):
 
         # set the pack in pack operation to 'done'
         for pack in picking_out.pack_operation_pack_ids:
-            pack.qty_done = 1.0
+            pack.is_done = True
+            pack.on_change_is_done()
 
         # Validate picking
         picking_out.do_new_transfer()

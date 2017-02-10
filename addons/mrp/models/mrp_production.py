@@ -323,6 +323,7 @@ class MrpProduction(models.Model):
         data = {
             'name': self.name,
             'date': self.date_planned_start,
+            'date_expected': self.date_planned_start,
             'bom_line_id': bom_line.id,
             'product_id': bom_line.product_id.id,
             'product_uom_qty': quantity,

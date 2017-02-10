@@ -21,7 +21,7 @@ class account_payment_method(models.Model):
     _name = "account.payment.method"
     _description = "Payment Methods"
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True)  # For internal identification
     payment_type = fields.Selection([('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True)
 
@@ -400,7 +400,7 @@ class account_payment(models.Model):
             # the writeoff debit and credit must be computed from the invoice residual in company currency
             # minus the payment amount in company currency, and not from the payment difference in the payment currency
             # to avoid loss of precision during the currency rate computations. See revision 20935462a0cabeb45480ce70114ff2f4e91eaf79 for a detailed example.
-            total_residual_company_signed = self._compute_total_invoices_amount()
+            total_residual_company_signed = sum(invoice.residual_company_signed for invoice in self.invoice_ids)
             total_payment_company_signed = self.currency_id.with_context(date=self.payment_date).compute(self.amount, self.company_id.currency_id)
             if self.invoice_ids[0].type in ['in_invoice', 'out_refund']:
                 amount_wo = total_payment_company_signed - total_residual_company_signed
