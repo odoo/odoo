@@ -13,12 +13,45 @@
             <field name="arch" type="xml">
                 <form string="Event Type">
                     <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Event Type" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
                         <group>
-                            <field name="name"/>
-                            <field name="default_reply_to"/>
-                            <field name="default_registration_min"/>
-                            <field name="default_registration_max"/>
+                            <group>
+                                <field name="default_registration_min" string="Minimum Registration"/>
+                            </group>
+                            <group>
+                                <field name="default_registration_max" string="Maximum Registration"/>
+                            </group>
                         </group>
+                        <notebook>
+                        <page string="Email Schedule">
+                            <field name="event_type_mail_ids">
+                                <form string="Event Email Schedule Lines">
+                                    <group>
+                                        <group>
+                                            <field name="template_id"/>
+                                            <label for="interval_nbr"/>
+                                            <div class="o_row">
+                                                <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/><field name="interval_unit"/>
+                                            </div>
+                                            <field name="interval_type" string="Trigger"/>
+                                            <field name="sent"/>
+                                        </group>
+                                    </group>
+                                </form>
+                                <tree string="Email Schedule">
+                                    <field name="template_id"/>
+                                    <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}" invisible="1"/>
+                                        <field name="interval_unit" invisible="1"/>
+                                    <field name="interval"/>
+                                    <field name="interval_type" string="Trigger"/>
+                                    <field name="sent" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                     </sheet>
                 </form>
             </field>
@@ -42,7 +75,7 @@
 
         <menuitem id="menu_event_configuration" name="Configuration" parent="event_main_menu"
             sequence="100"/>
-        <menuitem name="Event Categories" id="menu_event_type" action="action_event_type" parent="menu_event_configuration"/>
+        <menuitem name="Event Categories" id="menu_event_type" action="action_event_type" parent="menu_event_configuration" groups="base.group_no_one"/>
 
         <!-- EVENT.REGISTRATION ACTIONS -->
         <record id="act_event_registration_from_event" model="ir.actions.act_window">
@@ -90,46 +123,42 @@
                                 <field name="address_id" context="{'show_address': 1}" options='{"always_reload": True}'/>
                                 <field name="organizer_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
-                            </group>
-                            <group>
                                 <field name="user_id"/>
-                                <field name="event_type_id" options="{'no_create':True}"/>
                                 <field name="date_begin"/>
                                 <field name="date_end"/>
                                 <field name="date_tz" />
                             </group>
+                            <group>
+                                <field name="event_type_id" options="{'no_create':True}"/>
+                                <field name="seats_min"/>
+                                <label for="seats_availability" name="seatsavailability"/>
+                                <div name="seatsmax">
+                                    <field name="seats_availability" widget='radio'/>
+                                    <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
+                                        to 
+                                    </span>
+                                    <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
+                                </div>
+                                <field name="auto_confirm" groups="base.group_no_one"/>
+                            </group>
                         </group>
                         <notebook>
-                            <page name="registrations" string="Registrations">
+                            <page  name="emailschedule" string="Email Schedule">
                                 <group>
-                                    <group>
-                                        <field name="seats_min"/>
-                                        <label for="seats_availability"/>
-                                        <div>
-                                            <field name="seats_availability" widget='radio'/>
-                                            <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
-                                                to 
-                                            </span>
-                                            <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
-                                        </div>
-                                    </group>
-                                    <group>
-                                        <field name="auto_confirm" groups="base.group_no_one"/>
-                                    </group>
-                                </group>
-                            </page>
-                            <page string="Email Schedule">
-                                <group>
-                                    <field name="reply_to"/>
+                                    <div class="oe_inline" name="edit_alias" style="display: inline;" >
+                                        <label for="alias_id" string="Email Alias  " style="font-weight: bold;"/>
+                                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                    </div>
                                 </group>
                                 <field name="event_mail_ids">
-                                    <tree string="Email Schedule" editable="bottom">
+                                    <tree string="Email Schedule">
                                         <field name="sequence" widget="handle"/>
                                         <field name="template_id" />
-                                        <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
-                                        <field name="interval_unit"/>
-                                        <field name="interval_type"/>
-                                        <field name="done"/>
+                                        <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}" invisible="1"/>
+                                        <field name="interval_unit" invisible="1"/>
+                                        <field name="interval"/>
+                                        <field name="interval_type" string="Trigger"/>
+                                        <field name="done" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -269,7 +298,7 @@
            <field name="type">ir.actions.act_window</field>
            <field name="res_model">event.event</field>
            <field name="view_type">form</field>
-           <field name="view_mode">kanban,calendar,tree,form</field>
+           <field name="view_mode">kanban,calendar,tree,form,pivot</field>
            <field name="context">{"search_default_upcoming":1}</field>
            <field name="search_view_id" ref="view_event_search"/>
            <field name="help" type="html"><p class="oe_view_nocontent_create">
@@ -291,6 +320,29 @@
             view_type="form"/>
 
         <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="event.event_main_menu" />
+
+
+        <!-- Event Report menu -->
+        <record id="event_event_view_pivot" model="ir.ui.view" >
+            <field name="name">event.event.pivot</field>
+            <field name="model">event.event</field>
+            <field name="arch" type="xml">
+                <pivot string="Event" disable_linking="True">
+                    <field name="name" type="row"/>
+                    <field name="seats_reserved" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="event_event_action_pivot" model="ir.actions.act_window" >
+            <field name="name">Events Analysis</field>
+            <field name="res_model">event.event</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="search_view_id" ref="event_event_view_pivot"/>
+        </record>
+
+        <menuitem name="Events" parent="event.menu_reporting_events" action="event_event_action_pivot" id="event_event_menu_pivot_report" sequence="3" groups="event.group_event_manager"/>
 
         <!-- EVENT.REGISTRATION VIEWS -->
         <record model="ir.ui.view" id="view_event_registration_tree">
@@ -328,10 +380,10 @@
                     <sheet string="Registration">
                         <group>
                             <group string="Attendee" name="attendee">
+                                <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                                 <field name="name"/>
                                 <field name="phone"/>
                                 <field name="email"/>
-                                <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                             </group>
                             <group string="Event Information" name="event">
                                 <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -423,28 +475,32 @@
             <field name="model">event.mail</field>
             <field name="arch" type="xml">
                 <form string="Event Mail Scheduler">
-                    <group>
-                        <field name="event_id"/>
-                        <field name="template_id"/>
-                        <field name="mail_sent"/>
-                    </group>
-                    <group>
-                        <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/>
-                        <field name="interval_unit"/>
-                        <field name="interval_type"/>
-                        <field name="scheduled_date"/>
-                    </group>
-                    <notebook>
-                        <page string="Registration Mails">
-                            <field name="mail_registration_ids">
-                                <tree string="Registration mail" editable="bottom">
-                                    <field name="registration_id"/>
-                                    <field name="scheduled_date"/>
-                                    <field name="mail_sent"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
+                    <sheet>
+                        <group>
+                            <field name="event_id"/>
+                            <field name="template_id"/>
+                            <field name="mail_sent"/>
+                        </group>
+                        <group>
+                            <label for="interval_nbr"/>
+                            <div class="o_row">
+                                <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/><field name="interval_unit"/>
+                            </div>
+                            <field name="interval_type" string="Trigger"/>
+                            <field name="scheduled_date"/>
+                        </group>
+                        <notebook>
+                            <page string="Registration Mails">
+                                <field name="mail_registration_ids">
+                                    <tree string="Registration mail" editable="bottom">
+                                        <field name="registration_id"/>
+                                        <field name="scheduled_date"/>
+                                        <field name="mail_sent"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -471,5 +527,22 @@
 
         <menuitem name="Mail Schedulers" id="menu_event_mail_schedulers" action="action_event_mail" parent="menu_event_configuration" groups="base.group_no_one"/>
 
+        <record id="event_event_action_send_mail_attendees" model="ir.actions.server">
+            <field name="name">Send mail to Participants</field>
+            <field name="model_id" ref="event.model_event_event"/>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.action_mail_send_attendees()
+            </field>
+        </record>
+        <record id="event_event_action_run_send_mail_attendees" model="ir.values">
+            <field name="model_id" ref="event.model_event_event"/>
+            <field name="name">Send mail to Participants</field>
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">event.event</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('event_event_action_send_mail_attendees'))"/>
+        </record>
     </data>
 </odoo>

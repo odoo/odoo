@@ -86,8 +86,7 @@ class WebsiteEventController(http.Controller):
 
         # count by domains without self search
         for date in dates:
-            if date[0] != 'old':
-                date[3] = Event.search_count(dom_without('date') + date[2])
+            date[3] = Event.search_count(dom_without('date') + date[2])
 
         domain = dom_without('type')
         types = Event.read_group(domain, ["id", "event_type_id"], groupby=["event_type_id"], orderby="event_type_id")

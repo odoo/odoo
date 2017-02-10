@@ -35,13 +35,14 @@ class EventMailScheduler(models.Model):
         ('after_event', 'After the event')],
         string='When to Run ', default="before_event", required=True)
     template_id = fields.Many2one(
-        'mail.template', string='Email to Send',
+        'mail.template', string='Email',
         domain=[('model', '=', 'event.registration')], required=True, ondelete='restrict',
         help='This field contains the template of the mail that will be automatically sent')
     scheduled_date = fields.Datetime('Scheduled Sent Mail', compute='_compute_scheduled_date', store=True)
     mail_registration_ids = fields.One2many('event.mail.registration', 'scheduler_id')
     mail_sent = fields.Boolean('Mail Sent on Event')
     done = fields.Boolean('Sent', compute='_compute_done', store=True)
+    interval = fields.Char(compute='_compute_interval', store=True)
 
     @api.one
     @api.depends('mail_sent', 'interval_type', 'event_id.registration_ids', 'mail_registration_ids')
@@ -50,6 +51,11 @@ class EventMailScheduler(models.Model):
             self.done = self.mail_sent
         else:
             self.done = len(self.mail_registration_ids) == len(self.event_id.registration_ids) and all(filter(lambda line: line.mail_sent, self.mail_registration_ids))
+
+    @api.depends('interval_nbr', 'interval_unit')
+    def _compute_interval(self):
+        for event in self:
+            event.interval = str(event.interval_nbr)+' '+event.interval_unit
 
     @api.one
     @api.depends('event_id.state', 'event_id.date_begin', 'interval_type', 'interval_unit', 'interval_nbr')
@@ -92,6 +98,34 @@ class EventMailScheduler(models.Model):
             if autocommit:
                 self.env.cr.commit()
         return True
+
+class EventCategoryMailScheduler(models.Model):
+
+    _name = 'event.type.mail'
+
+    event_type_id = fields.Many2one('event.type', string='Event type', ondelete='cascade')
+    interval_nbr = fields.Integer('Interval', default=1)
+    interval_unit = fields.Selection([
+        ('now', 'Immediately'),
+        ('hours', 'Hour(s)'), ('days', 'Day(s)'),
+        ('weeks', 'Week(s)'), ('months', 'Month(s)')],
+        string='Unit', default='hours', required=True)
+    interval_type = fields.Selection([
+        ('after_sub', 'After each registration'),
+        ('before_event', 'Before the event'),
+        ('after_event', 'After the event')],
+        string='When to Run ', default="before_event", required=True)
+    template_id = fields.Many2one(
+        'mail.template', string='Email',
+        domain=[('model', '=', 'event.registration')], required=True, ondelete='restrict',
+        help='This field contains the template of the mail that will be automatically sent')
+    sent = fields.Boolean('Sent')
+    interval = fields.Char(compute='_compute_interval', store=True)
+
+    @api.depends('interval_nbr', 'interval_unit')
+    def _compute_interval(self):
+        for event in self:
+            event.interval = str(event.interval_nbr)+' '+event.interval_unit
 
 
 class EventMailRegistration(models.Model):

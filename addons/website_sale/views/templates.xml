@@ -872,7 +872,7 @@
                         </td>
                         <td t-if="line.product_id.product_tmpl_id" class='td-product_name'>
                             <div>
-                                <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+                                <a id="shop_product" t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
                                     <strong t-esc="line.product_id.with_context(display_default_code=False).display_name" />
                                 </a>
                             </div>

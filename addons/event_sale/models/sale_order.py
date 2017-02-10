@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -26,6 +27,12 @@ class SaleOrderLine(models.Model):
         "an event ticket and it will automatically create a registration for this event ticket.")
     event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
 
+    @api.constrains('event_id')
+    def _check_seats_limit(self):
+        if self.event_id.seats_availability == 'limited' and self.event_id.seats_max and self.event_id.seats_available < self.product_uom_qty:
+            raise ValidationError(_('You plan to sell %s tickets but you only have %s available tickets!\nThe maximum %s tickets available.') % \
+                                 (self.product_uom_qty, self.event_id.seats_max - self.event_id.seats_reserved, self.event_id.seats_max))
+
     @api.multi
     def _prepare_invoice_line(self, qty):
         self.ensure_one()
@@ -36,7 +43,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _update_registrations(self, confirm=True, registration_data=None):
-        """ Create or update registrations linked to a sales order line. A sale
+        """ Create or update registrations linked to a sale order line. A sale
         order line has a product_uom_qty attribute that will be the number of
         registrations linked to this line. This method update existing registrations
         and create new one for missing one. """

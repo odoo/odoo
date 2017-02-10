@@ -65,8 +65,8 @@ class WebsiteEventTrackController(http.Controller):
             'dates': dates
         }
 
-    @http.route(['''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/agenda'''], type='http', auth="public", website=True)
-    def event_agenda(self, event, tag=None, **post):
+    @http.route(['''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/schedule'''], type='http', auth="public", website=True)
+    def event_schedule(self, event, tag=None, **post):
         days_tracks = collections.defaultdict(lambda: [])
         for track in event.track_ids.sorted(lambda track: (track.date, bool(track.location_id))):
             if not track.date:
@@ -81,10 +81,9 @@ class WebsiteEventTrackController(http.Controller):
 
         speakers = {}
         for track in event.sudo().track_ids:
-            speakers_name = u" – ".join(track.speaker_ids.mapped('name'))
-            speakers[track.id] = speakers_name
+            speakers[track.id] = track.speaker_id.name
 
-        return request.render("website_event_track.agenda", {
+        return request.render("website_event_track.schedule", {
             'event': event,
             'days': days,
             'tracks_by_days': tracks_by_days,
@@ -120,26 +119,30 @@ class WebsiteEventTrackController(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/track_proposal/post'], type='http', auth="public", methods=['POST'], website=True)
     def event_track_proposal_post(self, event, **post):
+        Partner = request.env['res.partner']
         tags = []
         for tag in event.allowed_track_tag_ids:
             if post.get('tag_' + str(tag.id)):
                 tags.append(tag.id)
 
+        partner = Partner.sudo().search([('email', '=', post['email_from'])])
+        # if not partner:
+        #     partner = Partner.sudo().create({
+        #         'name': post['speaker_name'],
+        #         'phone': post['phone'],
+        #         'email': post['email_from']
+        #         })
         track = request.env['event.track'].sudo().create({
             'name': post['track_name'],
-            'partner_name': post['partner_name'],
-            'partner_email': post['email_from'],
-            'partner_phone': post['phone'],
-            'partner_biography': escape(post['biography']),
+            'speaker_name': post['speaker_name'],
+            'speaker_email': post['email_from'],
+            'speaker_phone': post['phone'],
+            'speaker_id': partner.id,
+            'speaker_biography': escape(post['biography']),
             'event_id': event.id,
             'tag_ids': [(6, 0, tags)],
-            'user_id': False,
             'description': escape(post['description'])
         })
-        if request.env.user != request.website.user_id:
-            track.sudo().message_subscribe_users(user_ids=request.env.user.ids)
-        else:
-            partner = request.env['res.partner'].sudo().search([('email', '=', post['email_from'])])
-            if partner:
-                track.sudo().message_subscribe(partner_ids=partner.ids)
+        if partner:
+            track.sudo().write({'speaker_id': partner.id})
         return request.render("website_event_track.event_track_proposal_success", {'track': track, 'event': event})
