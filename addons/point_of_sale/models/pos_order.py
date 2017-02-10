@@ -371,7 +371,7 @@ class PosOrder(models.Model):
     invoice_id = fields.Many2one('account.invoice', string='Invoice', copy=False)
     account_move = fields.Many2one('account.move', string='Journal Entry', readonly=True, copy=False)
     picking_id = fields.Many2one('stock.picking', string='Picking', readonly=True, copy=False)
-    picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Picking Type")
+    picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type")
     location_id = fields.Many2one('stock.location', related='session_id.config_id.stock_location_id', string="Location", store=True)
     note = fields.Text(string='Internal Notes')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)

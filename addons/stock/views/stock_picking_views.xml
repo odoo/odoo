@@ -4,7 +4,7 @@
             <field name="name">stock.picking.type.filter</field>
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
-                <search string="Picking Type">
+                <search string="Operation Type">
                     <field name="name"/>
                     <field name="sequence_id"/>
                     <field name="warehouse_id"/>
@@ -13,7 +13,7 @@
             </field>
         </record>
         <record model="ir.ui.view" id="view_picking_type_tree">
-            <field name="name">Picking types</field>
+            <field name="name">Operation types</field>
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
                 <tree string="Operation Types">
@@ -72,11 +72,11 @@
             <field name="view_mode">kanban,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new picking type.
+                Click to create a new operation type.
               </p><p>
-                The picking type system allows you to assign each stock
+                The operation type system allows you to assign each stock
                 operation a specific type which will alter its views accordingly.
-                On the picking type you could e.g. specify if packing is needed by default,
+                On the operation type you could e.g. specify if packing is needed by default,
                 if it should show the customer.
               </p>
             </field>
@@ -425,7 +425,7 @@
                         <filter string="Order Date" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" domain="[]"  context="{'group_by':'min_date'}"/>
                         <filter string="Origin" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter name="picking_type" string="Picking Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
+                        <filter name="picking_type" string="Operation Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
                         <filter string="Procurement Group" domain="[]" context="{'group_by':'group_id'}"/>
                     </group>
                 </search>

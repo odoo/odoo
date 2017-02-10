@@ -282,7 +282,7 @@ class StockMove(models.Model):
         self.ensure_one()
         view = self.env.ref('mrp.view_stock_move_lots')
         serial = (self.has_tracking == 'serial')
-        only_create = False  # Check picking type in theory
+        only_create = False  # Check operation type in theory
         show_reserved = any([x for x in self.move_lot_ids if x.quantity > 0.0])
         ctx.update({
             'serial': serial,

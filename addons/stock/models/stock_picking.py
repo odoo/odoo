@@ -14,21 +14,21 @@ from odoo.exceptions import UserError
 
 class PickingType(models.Model):
     _name = "stock.picking.type"
-    _description = "The picking type determines the picking view"
+    _description = "The operation type determines the picking view"
     _order = 'sequence, id'
 
-    name = fields.Char('Picking Type Name', required=True, translate=True)
+    name = fields.Char('Operation Types Name', required=True, translate=True)
     color = fields.Integer('Color')
     sequence = fields.Integer('Sequence', help="Used to order the 'All Operations' kanban view")
     sequence_id = fields.Many2one('ir.sequence', 'Reference Sequence', required=True)
     default_location_src_id = fields.Many2one(
         'stock.location', 'Default Source Location',
-        help="This is the default source location when you create a picking manually with this picking type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the supplier location on the partner. ")
+        help="This is the default source location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the supplier location on the partner. ")
     default_location_dest_id = fields.Many2one(
         'stock.location', 'Default Destination Location',
-        help="This is the default destination location when you create a picking manually with this picking type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the customer location on the partner. ")
+        help="This is the default destination location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the customer location on the partner. ")
     code = fields.Selection([('incoming', 'Vendors'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Type of Operation', required=True)
-    return_picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type for Returns')
+    return_picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type for Returns')
     show_entire_packs = fields.Boolean('Allow moving packs', help="If checked, this shows the packs to be moved as a whole in the Operations tab all the time, even if there was no entire pack reserved.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse', ondelete='cascade',
@@ -39,7 +39,7 @@ class PickingType(models.Model):
         help="If this is checked only, it will suppose you want to create new Lots/Serial Numbers, so you can provide them in a text field. ")
     use_existing_lots = fields.Boolean(
         'Use Existing Lots/Serial Numbers', default=True,
-        help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this picking type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
+        help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
 
     # Statistics for the kanban view
     last_done_picking = fields.Char('Last 10 Done Pickings', compute='_compute_last_done_picking')
@@ -239,7 +239,7 @@ class Picking(models.Model):
     has_scrap_move = fields.Boolean(
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Picking Type',
+        'stock.picking.type', 'Operation Type',
         required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     picking_type_code = fields.Selection([

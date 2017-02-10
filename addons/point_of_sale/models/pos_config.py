@@ -58,7 +58,7 @@ class PosConfig(models.Model):
         'account.journal', 'pos_config_journal_rel',
         'pos_config_id', 'journal_id', string='Available Payment Methods',
         domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",)
-    picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type')
+    picking_type_id = fields.Many2one('stock.picking.type', string='Operation Type')
     stock_location_id = fields.Many2one(
         'stock.location', string='Stock Location',
         domain=[('usage', '=', 'internal')], required=True, default=_get_default_location)
