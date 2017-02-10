@@ -1150,7 +1150,7 @@ var LinkDialog = Dialog.extend({
     },
     onkeyup: function (e) {
         var $e = $(e.target);
-        var is_link = ($e.val()||'').length && $e.val().indexOf("@") === -1;
+        var is_link = $e.val().indexOf("@") === -1;
         this.$('input.window-new').closest("div").toggle(is_link);
         this.preview();
     },
