@@ -10,7 +10,7 @@
 Manage drop shipping orders
 ===========================
 
-This module adds a pre-configured Drop Shipping picking type
+This module adds a pre-configured Drop Shipping operation type
 as well as a procurement route that allow configuring Drop
 Shipping products and orders.
 

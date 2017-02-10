@@ -13,7 +13,7 @@ class StockWarehouse(models.Model):
     manufacture_pull_id = fields.Many2one(
         'procurement.rule', 'Manufacture Rule')
     manu_type_id = fields.Many2one(
-        'stock.picking.type', 'Manufacturing Picking Type',
+        'stock.picking.type', 'Manufacturing Operation Type',
         domain=[('code', '=', 'mrp_operation')])
 
     def create_sequences_and_picking_types(self):

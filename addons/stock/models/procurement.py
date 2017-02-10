@@ -34,9 +34,9 @@ class ProcurementRule(models.Model):
         help="""Determines the procurement method of the stock move that will be generated: whether it will need to 'take from the available stock' in its source location or needs to ignore its stock and create a procurement over there.""")
     route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True)
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Picking Type',
+        'stock.picking.type', 'Operation Type',
         required=True,
-        help="Picking Type determines the way the picking should be shown in the view, reports, ...")
+        help="Operation Type determines the way the picking should be shown in the view, reports, ...")
     delay = fields.Integer('Number of Days', default=0)
     partner_address_id = fields.Many2one('res.partner', 'Partner Address')
     propagate = fields.Boolean(

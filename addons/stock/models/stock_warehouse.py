@@ -107,7 +107,7 @@ class Warehouse(models.Model):
 
         # actually create WH
         warehouse = super(Warehouse, self).create(vals)
-        # create sequences and picking types
+        # create sequences and operation types
         new_vals = warehouse.create_sequences_and_picking_types()
         warehouse.write(new_vals)  # TDE FIXME: use super ?
         # create routes and push/procurement rules
@@ -186,7 +186,7 @@ class Warehouse(models.Model):
 
         input_loc, output_loc = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
 
-        # choose the next available color for the picking types of this warehouse
+        # choose the next available color for the operation types of this warehouse
         all_used_colors = [res['color'] for res in PickingType.search_read([('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')]
         available_colors = [zef for zef in [0, 3, 4, 5, 6, 7, 8, 1, 2] if zef not in all_used_colors]
         color = available_colors and available_colors[0] or 0
@@ -553,7 +553,7 @@ class Warehouse(models.Model):
     @api.multi
     def _update_routes(self):
         routes_data = self.get_routes_dict()
-        # change the default source and destination location and (de)activate picking types
+        # change the default source and destination location and (de)activate operation types
         self._update_picking_type()
         # update delivery route and rules: unlink the existing rules of the warehouse delivery route and recreate it
         self._create_or_update_delivery_route(routes_data)
