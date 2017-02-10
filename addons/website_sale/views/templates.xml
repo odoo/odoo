@@ -480,7 +480,7 @@
                                 <span t-field="product.availability_warning" />
                             </div>
                             <hr t-if="product.description_sale" />
-                            <div>
+                            <div class="o_not_editable">
                                 <p t-field="product.description_sale" class="text-muted" />
                             </div>
                             <hr />
@@ -731,29 +731,22 @@
     <template id="wizard_checkout" name="Wizard Checkout">
         <ul class="wizard pull-right hidden-xs">
             <li t-att-class="step==10 and 'text-primary' or 'text-muted'" id="step10">
-                <t t-if="step&gt;10 and step&lt;50">
-                    <a href="/shop/cart" class="text-success">
-                        Review Order<span class="chevron"></span>
-                    </a>
-                </t>
-                <t t-if="not (step&gt;10 and step&lt;50)">
-                    Review Order<span class="chevron"></span>
-                </t>
+                <t t-set="step_review_order" t-value="step&gt;10 and step&lt;50"/>
+                <a t-att-href="step_review_order and '/shop/cart' or '#'" t-att-class="step_review_order and 'text-success' or 'o_link_disable'">
+                    <span>Review Order</span>
+                </a>
+                <span class="chevron"/>
             </li>
             <li t-att-class="(step==20 and 'text-primary') or 'text-muted'" id="step20">
-                <t t-if="step&gt;20 and step&lt;50">
-                    <a href="/shop/checkout" class="text-success">
-                        <!-- billing if not loggedin - TODO -->
-                        <t>Billing</t>
-                        <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services" groups="sale.group_delivery_invoice_address"> &amp; Shipping</t>
-                        <span class="chevron"/>
-                    </a>
-                </t>
-                <t t-if="not (step&gt;20 and step&lt;50)">
-                    <t>Billing</t>
-                    <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services" groups="sale.group_delivery_invoice_address"> &amp; Shipping</t>
+                <!-- why website_sale_order is not set here ? -->
+                <t t-set="step_billing" t-value="step&gt;20 and step&lt;50"/>
+                <a t-att-href="step_billing and '/shop/checkout' or '#'" t-att-class="step_billing and 'text-success' or ('o_link_disable' + ('' if step == 20 else ' text-muted'))">
+                    <!-- billing if not loggedin - TODO -->
+                    <t t-set="website_sale_order" t-value="website.sale_get_order()" />
+                    <span>Billing</span>
+                    <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services"><span> &amp; Shipping</span></t>
                     <span class="chevron"/>
-                </t>
+                </a>
             </li>
             <li t-att-class="(step==40 and 'text-primary') or 'text-muted'" id="step40">
                 Payment<span class="chevron"></span>
@@ -1480,7 +1473,7 @@
                 <div class="container oe_website_sale">
                     <div class="row">
                         <div class="col-md-9">
-                            <h1 class="mb32">Order <em t-field="order.name" /> <t t-if="order.state == 'sale'">Confirmed</t></h1>
+                            <h1 class="mb32"><span>Order</span> <em t-field="order.name" /> <t t-if="order.state == 'sale'"><span>Confirmed</span></t></h1>
                             <div class="thanks_msg">
                                 <h2>Thank you for your order.
                                     <a class="btn btn-primary pull-right hidden-xs" href="/shop/print" target="_blank"><i class="fa fa-print"></i> Print</a>
