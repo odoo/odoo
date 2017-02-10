@@ -53,6 +53,7 @@ var LivechatButton = Widget.extend({
         this.channel = null;
         this.chat_window = null;
         this.messages = [];
+        this.server_url = server_url;
     },
 
     willStart: function () {
@@ -115,16 +116,15 @@ var LivechatButton = Widget.extend({
         }
     },
     load_qweb_template: function(){
-        return $.when(
-            $.get('/mail/static/src/xml/chat_window.xml'),
-            $.get('/mail/static/src/xml/thread.xml'),
-            $.get('/im_livechat/static/src/xml/im_livechat.xml')
-        ).then(function (chat_window, mail_thread, livechat) {
-            // results are triplets of [dom: XMLDocument, status: String, xhr: jqXHR]
-            QWeb.add_template(chat_window[0]);
-            QWeb.add_template(mail_thread[0]);
-            QWeb.add_template(livechat[0]);
+        var xml_files = ['/mail/static/src/xml/chat_window.xml',
+                         '/mail/static/src/xml/thread.xml',
+                         '/im_livechat/static/src/xml/im_livechat.xml'];
+        var defs = _.map(xml_files, function (tmpl) {
+            return session.rpc('/web/proxy/load', {path: tmpl}).then(function (xml) {
+                QWeb.add_template(xml);
+            });
         });
+        return $.when.apply($, defs);
     },
 
     open_chat: _.debounce(function () {
@@ -237,10 +237,11 @@ var LivechatButton = Widget.extend({
                                this.options.default_username;
 
         // Compute the avatar_url
+        msg.avatar_src = this.server_url;
         if (msg.author_id && msg.author_id[0]) {
-            msg.avatar_src = "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
+            msg.avatar_src += "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
         } else {
-            msg.avatar_src = "/mail/static/src/img/smiley/avatar.jpg";
+            msg.avatar_src += "/mail/static/src/img/smiley/avatar.jpg";
         }
 
         if (options && options.prepend) {

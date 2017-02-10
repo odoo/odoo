@@ -49,7 +49,7 @@ class WebsiteConfigSettings(models.TransientModel):
     group_sale_pricelist = fields.Boolean("Use pricelists to adapt your price per customers",
         implied_group='product.group_sale_pricelist')
 
-    group_product_variant = fields.Boolean("Attributes and Variants", implied_group='product.group_sale_pricelist')
+    group_product_variant = fields.Boolean("Attributes and Variants", implied_group='product.group_product_variant')
     group_pricelist_item = fields.Boolean("Show pricelists to customers",
         implied_group='product.group_pricelist_item')
     group_product_pricelist = fields.Boolean("Show pricelists On Products",

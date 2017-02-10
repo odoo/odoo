@@ -26,7 +26,7 @@ var M2ODialog = Dialog.extend({
             title: _.str.sprintf(_t("Create a %s"), parent.string),
             size: 'medium',
             buttons: [
-                {text: _t('Create'), classes: 'btn-primary', click: function() {
+                {text: _t('Create'), classes: 'btn-primary', click: function(e) {
                     if (this.$("input").val() !== ''){
                         this.getParent()._quick_create(this.$("input").val());
                         this.close();
@@ -997,7 +997,9 @@ var X2ManyListView = ListView.extend({
  */
 var X2ManyList = ListView.List.extend({
     pad_table_to: function (count) {
-        if (!this.view.is_action_enabled('create') || this.view.x2m.get('effective_readonly')) {
+        var ftype = this.view.x2m.field.type;
+        var is_readonly = this.view.x2m.get('effective_readonly');
+        if (is_readonly || (ftype === 'one2many' && !this.view.is_action_enabled('create'))) {
             this._super(count);
             return;
         }
@@ -1304,7 +1306,7 @@ var Many2ManyListView = X2ManyListView.extend({
             context: this.x2m.build_context(),
             title: _t("Add: ") + this.x2m.string,
             alternative_form_view: this.x2m.field.views ? this.x2m.field.views.form : undefined,
-            no_create: this.x2m.options.no_create,
+            no_create: this.x2m.options.no_create || !this.is_action_enabled('create'),
             on_selected: function(element_ids) {
                 return self.x2m.data_link_multi(element_ids).then(function() {
                     self.x2m.reload_current_view();

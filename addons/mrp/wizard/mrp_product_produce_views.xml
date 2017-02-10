@@ -17,7 +17,7 @@
                                 <field name="product_uom_id" readonly="1"/>
                             </div>
                             <field name="product_tracking" invisible="1"/>
-                            <field name="lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')]}" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}"/>
+                            <field name="lot_id" required="1" attrs="{'invisible': [('product_tracking', '=', 'none')]}" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}"/>
                         </group>
                     </group>
                     <group>

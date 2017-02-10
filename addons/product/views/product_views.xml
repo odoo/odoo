@@ -44,6 +44,7 @@
                             <group>
                                 <group name="group_general">
                                     <field name="type"/>
+                                    <field name="categ_id" string="Internal Category"/>
                                 </group>
                                 <group name="group_standard_price">
                                     <field name="list_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -310,6 +311,7 @@
                 <field name="item_ids" position="replace">
                     <field name="pricelist_item_ids" widget="many2many">
                         <tree string="Pricelist Items">
+                            <field name="pricelist_id"/>
                             <field name="name" string="Applicable On"/>
                             <field name="min_quantity"/>
                             <field name="date_start"/>

@@ -57,6 +57,7 @@ var PivotView = View.extend({
         this.headers = {};
         this.cells = {};
         this.has_data = false;
+        this.$buttons = $();
 
         this.last_header_selected = null;
         this.sorted_column = {};
@@ -199,7 +200,7 @@ var PivotView = View.extend({
             this.initial_row_groupby = context.pivot_row_groupby || this.initial_row_groupby;
             this.initial_col_groupby = context.pivot_col_groupby || this.initial_col_groupby;
         }
-        this.main_row.groupbys = group_by.length ? group_by : this.initial_row_groupby.slice(0);
+        this.main_row.groupbys = group_by.length ? group_by : (context.pivot_row_groupby || this.initial_row_groupby.slice(0));
         this.main_col.groupbys = context.pivot_column_groupby || this.initial_col_groupby.slice(0);
         this.active_measures = context.pivot_measures || this.active_measures;
 
@@ -219,6 +220,10 @@ var PivotView = View.extend({
         this.do_push_state({});
         return this.data_loaded.done(function () {
             self.display_table(); 
+            self.$buttons.find('.o_pivot_measures_list li').removeClass('selected');
+            self.active_measures.forEach(function (measure) {
+                self.$buttons.find('li[data-field="' + measure + '"]').addClass('selected');
+            });
             _super();
         });
     },

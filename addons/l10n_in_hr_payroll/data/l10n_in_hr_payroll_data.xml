@@ -70,7 +70,7 @@
             <field name="code">HRAMN</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and 
-((contract.wage + DA) * contract.house_rent_allowance_metro_nonmetro / 100)
+((contract.wage + categories.DA) * contract.house_rent_allowance_metro_nonmetro / 100)
 or (contract.wage * contract.house_rent_allowance_metro_nonmetro / 100))</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">House Rent Allowance</field>
@@ -130,7 +130,7 @@ or (contract.wage * contract.house_rent_allowance_metro_nonmetro / 100))</field>
             <field name="condition_select">none</field>
             <field name="sequence" eval="21"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.10) 
+            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and ((contract.wage + categories.DA) * 0.10) 
 or (contract.wage * 0.10))</field>
             <field name="note">This allowance is paid to Employees who are posted in big cities. The purpose is to compensate the high cost of living in cities like Mumbai, Delhi, etc. However it is Fully Taxable.</field>
         </record>
@@ -365,7 +365,7 @@ else -0)</field>
             <field name="name">Employee's PF Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.12) 
+            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and - ((contract.wage + categories.DA) * 0.12) 
 or - (contract.wage * 0.12))</field>
             <field name= "note">Employer contribution does not become part of employee’s income and hence income tax is not payable on this part.</field>
             <field name="register_id" ref="hr_register_provident_fund"/>
@@ -377,7 +377,7 @@ or - (contract.wage * 0.12))</field>
             <field name="name">Employee's NPS Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.10) 
+            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and - ((contract.wage + categories.DA) * 0.10) 
 or - (contract.wage * 0.10))</field>
             <field name="sequence" eval="155"/>
             <field name="register_id" ref="hr_nps_contribution_register"/>
@@ -392,7 +392,7 @@ or - (contract.wage * 0.10))</field>
             <field name="condition_python">result = bool(contract.voluntary_provident_fund)</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and 
-- ((contract.wage + DA) * contract.voluntary_provident_fund / 100) 
+- ((contract.wage + categories.DA) * contract.voluntary_provident_fund / 100) 
 or - (contract.wage * contract.voluntary_provident_fund / 100))</field>
             <field name="sequence" eval="160"/>
             <field name="register_id" ref="hr_vpf_contribution_register"/>
@@ -498,7 +498,7 @@ or - (contract.wage * contract.voluntary_provident_fund / 100))</field>
             <field name="name">Employer's NPS Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.10) 
+            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and - ((contract.wage + categories.DA) * 0.10) 
 or - (contract.wage * 0.10))</field>
             <field name="sequence" eval="190"/>
             <field name="register_id" ref="hr_nps_contribution_register"/>
@@ -511,7 +511,7 @@ or - (contract.wage * 0.10))</field>
             <field name="name">Employer's PF Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.12) 
+            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and - ((contract.wage + categories.DA) * 0.12) 
 or - (contract.wage * 0.12))</field>
             <field name="sequence" eval="195"/>
             <field name="register_id" ref="hr_register_provident_fund"/>

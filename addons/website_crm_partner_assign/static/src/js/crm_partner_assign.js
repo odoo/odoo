@@ -101,6 +101,8 @@ $('.edit_contact_confirm').on('click',function(){
 });
 
 $('.new_opp_confirm').on('click',function(e){
+    var $btn = $(this);
+    $btn.prop('disabled', true);
     new Model('crm.lead')
         .call("create_opp_portal", [{
             contact_name: $('.new_opp_form .contact_name').val(),
@@ -111,10 +113,15 @@ $('.new_opp_confirm').on('click',function(e){
             if (response.errors) {
                 $('#new-opp-dialog .alert').remove();
                 $('#new-opp-dialog div:first').prepend("<div class='alert alert-danger'>" + response.errors + "</div>");
+                $btn.prop('disabled', false);
+
             }
             else {
                 window.location = '/my/opportunity/' + response.id;
             }
+        })
+        .fail(function() {
+            $btn.prop('disabled', false);
         });
     return false;
 });
@@ -124,6 +131,7 @@ $('.edit_opp_confirm').on('click',function(){
     $btn.prop('disabled', true);
     new Model('crm.lead')
         .call("update_lead_portal", [[parseInt($('.edit_opp_form .opportunity_id').val())],{
+            date_deadline: $('.edit_opp_form .date_deadline').val(),
             planned_revenue: parseFloat($('.edit_opp_form .planned_revenue').val()),
             probability: parseFloat($('.edit_opp_form .probability').val()),
             activity_type_id: parseInt($('.edit_opp_form .next_activity').find(":selected").attr('data')),

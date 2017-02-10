@@ -34,7 +34,7 @@
                             <field name="transient" attrs="{'readonly': [('id', '!=', False)]}" groups="base.group_no_one"/>
                         </group>
                         <group>
-                            <field name="state" attrs="{'readonly': [('id', '!=', False)]}" groups="base.group_no_one"/>
+                            <field name="state" readonly="1" groups="base.group_no_one"/>
                             <field name="modules" groups="base.group_no_one"/>
                         </group>
                     </group>

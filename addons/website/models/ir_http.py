@@ -24,6 +24,10 @@ from odoo.addons.website.models.website import slug, url_for, _UNSLUG_RE
 
 logger = logging.getLogger(__name__)
 
+# global resolver (GeoIP API is thread-safe, for multithreaded workers)
+# This avoids blowing up open files limit
+odoo._geoip_resolver = None
+
 
 class RequestUID(object):
     def __init__(self, **kw):
@@ -34,7 +38,7 @@ class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
     rerouting_limit = 10
-    _geoip_resolver = None
+    _geoip_resolver = None  # backwards-compatibility
 
     @classmethod
     def _get_converters(cls):
@@ -90,26 +94,31 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _geoip_setup_resolver(cls):
-        if cls._geoip_resolver is None:
-            try:
-                import GeoIP
-                # updated database can be downloaded on MaxMind website
-                # http://dev.maxmind.com/geoip/legacy/install/city/
-                geofile = config.get('geoip_database')
-                if os.path.exists(geofile):
-                    cls._geoip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
-                else:
-                    cls._geoip_resolver = False
-                    logger.warning('GeoIP database file %r does not exists, apt-get install geoip-database-contrib or download it from http://dev.maxmind.com/geoip/legacy/install/city/', geofile)
-            except ImportError:
-                cls._geoip_resolver = False
+        # Lazy init of GeoIP resolver
+        if cls._geoip_resolver is not None:
+            return
+        if odoo._geoip_resolver is not None:
+            cls._geoip_resolver = odoo._geoip_resolver
+            return
+        try:
+            import GeoIP
+            # updated database can be downloaded on MaxMind website
+            # http://dev.maxmind.com/geoip/legacy/install/city/
+            geofile = config.get('geoip_database')
+            if os.path.exists(geofile):
+                odoo._geoip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
+            else:
+                odoo._geoip_resolver = False
+                logger.warning('GeoIP database file %r does not exists, apt-get install geoip-database-contrib or download it from http://dev.maxmind.com/geoip/legacy/install/city/', geofile)
+        except ImportError:
+            odoo._geoip_resolver = False
 
     @classmethod
     def _geoip_resolve(cls):
         if 'geoip' not in request.session:
             record = {}
-            if cls._geoip_resolver and request.httprequest.remote_addr:
-                record = cls._geoip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
+            if odoo._geoip_resolver and request.httprequest.remote_addr:
+                record = odoo._geoip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
 
     @classmethod

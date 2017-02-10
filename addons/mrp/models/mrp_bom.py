@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_round
 
 
 class MrpBom(models.Model):
@@ -138,6 +139,10 @@ class MrpBom(models.Model):
                 templates_done |= current_line.product_id.product_tmpl_id
                 boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line}))
             else:
+                # We round up here because the user expects that if he has to consume a little more, the whole UOM unit
+                # should be consumed.
+                rounding = current_line.product_uom_id.rounding
+                line_quantity = float_round(line_quantity, precision_rounding=rounding, rounding_method='UP')
                 lines_done.append((current_line, {'qty': line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': parent_line}))
 
         return boms_done, lines_done

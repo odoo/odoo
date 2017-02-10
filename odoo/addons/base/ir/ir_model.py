@@ -232,7 +232,7 @@ class IrModel(models.Model):
             query_insert(cr, self._table, params)
 
         record = self.browse(cr.fetchone())
-        self._context['todo'].append((10, record.modified, [list(params)]))
+        self._context['todo'].append((10, record.modified, [['name', 'info', 'transient']]))
 
         if model._module == self._context.get('module'):
             # self._module is the name of the module that last extended self
@@ -1451,7 +1451,7 @@ class IrModelData(models.Model):
 class WizardModelMenu(models.TransientModel):
     _name = 'wizard.ir.model.menu.create'
 
-    menu_id = fields.Many2one('ir.ui.menu', string='Parent Menu', required=True)
+    menu_id = fields.Many2one('ir.ui.menu', string='Parent Menu', required=True, ondelete='cascade')
     name = fields.Char(string='Menu Name', required=True)
 
     @api.multi
