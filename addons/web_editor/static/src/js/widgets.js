@@ -107,8 +107,7 @@ var MediaDialog = Dialog.extend({
     },
     start: function () {
         var self = this;
-
-        this.only_images = this.options.only_images || this.options.select_images || (this.media && $(this.media).parent().data("oe-field") === "image");
+        this.only_images = this.options.only_images || this.options.select_images || (this.media && ($(this.media).parent().data("oe-field") === "image" || $(this.media).parent().data("oe-type") === "image"));
         if (this.only_images) {
             this.$('[href="#editor-media-document"], [href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
         }
