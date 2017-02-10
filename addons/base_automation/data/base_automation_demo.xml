@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="test_filter_draft" model="ir.filters">
-            <field name="name">Test lead in state 'draft'</field>
-            <field name="model_id">base.automation.lead.test</field>
-            <field name="domain">[('state', '=', 'draft')]</field>
-        </record>
-
-        <record id="test_filter_open" model="ir.filters">
-            <field name="name">Test lead in state 'open'</field>
-            <field name="model_id">base.automation.lead.test</field>
-            <field name="domain">[('state', '=', 'open')]</field>
-        </record>
-
-        <record id="test_filter_done" model="ir.filters">
-            <field name="name">Test lead in state 'done'</field>
-            <field name="model_id">base.automation.lead.test</field>
-            <field name="domain">[('state', '=', 'done')]</field>
-        </record>
 
         <record id="test_rule_on_create" model="base.automation">
             <field name="name">Base Automation: test rule on create</field>
@@ -26,7 +9,7 @@
             <field name="trigger">on_create</field>
             <field name="active" eval="True"/>
             <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
-            <field name="filter_id" ref="test_filter_draft"/>
+            <field name="filter_domain">[('state', '=', 'draft')]</field>
         </record>
 
         <record id="test_rule_on_write" model="base.automation">
@@ -37,8 +20,8 @@
             <field name="trigger">on_write</field>
             <field name="active" eval="True"/>
             <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
-            <field name="filter_pre_id" ref="test_filter_open"/>
-            <field name="filter_id" ref="test_filter_done"/>
+            <field name="filter_domain">[('state', '=', 'done')]</field>
+            <field name="filter_pre_domain">[('state', '=', 'open')]</field>
         </record>
 
         <record id="test_rule_on_recompute" model="base.automation">
