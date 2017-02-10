@@ -266,7 +266,7 @@
                         <group>
                             <field name="warehouse_selectable" string="Warehouses"/>
                             <field name="warehouse_ids"  widget="many2many_tags" nolabel="1"
-                                   attrs="{'readonly': [('warehouse_selectable', '=', False)]}"/>
+                                   attrs="{'invisible': [('warehouse_selectable', '=', False)]}"/>
                         </group>
                     </group>
                     <group string="Push Rules" colspan="4" >
