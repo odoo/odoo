@@ -20,7 +20,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='scheduling']" position="before">
                     <group>
-                        <field name="warehouse_id"/>
+                        <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                         <field name="location_id" domain="[('usage', '=', 'internal')]"/>
                         <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
                     </group>
