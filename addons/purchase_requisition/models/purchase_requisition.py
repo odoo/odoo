@@ -59,7 +59,7 @@ class PurchaseRequisition(models.Model):
                               'Status', track_visibility='onchange', required=True,
                               copy=False, default='draft')
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
-    picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type', required=True, default=_get_picking_in)
+    picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
 
     @api.multi
     @api.depends('purchase_ids')

@@ -158,7 +158,7 @@ class PurchaseOrder(models.Model):
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
 
     picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=READONLY_STATES, required=True, default=_default_picking_type,\
-        help="This will determine picking type of incoming shipment")
+        help="This will determine operation type of incoming shipment")
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',\
         help="Technical field used to display the Drop Ship Address", readonly=True)
     group_id = fields.Many2one('procurement.group', string="Procurement Group", copy=False)
@@ -449,7 +449,7 @@ class PurchaseOrder(models.Model):
         action = self.env.ref('stock.action_picking_tree')
         result = action.read()[0]
 
-        #override the context to get rid of the default filtering on picking type
+        #override the context to get rid of the default filtering on operation type
         result.pop('id', None)
         result['context'] = {}
         pick_ids = sum([order.picking_ids.ids for order in self], [])

@@ -64,7 +64,7 @@ class MrpProduction(models.Model):
         oldname='product_uom', readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Picking Type',
+        'stock.picking.type', 'Operation Type',
         default=_get_default_picking_type, required=True)
     location_src_id = fields.Many2one(
         'stock.location', 'Raw Materials Location',
