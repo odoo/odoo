@@ -486,7 +486,6 @@ class AccountInvoice(models.Model):
             addr = self.partner_id.address_get(['delivery'])
             fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, delivery_id=addr['delivery'])
 
-            bank_id = p.bank_ids and p.bank_ids.ids[0] or False
 
             # If partner has no warning, check its company
             if p.invoice_warn == 'no-message' and p.parent_id:
@@ -507,8 +506,12 @@ class AccountInvoice(models.Model):
         self.payment_term_id = payment_term_id
         self.fiscal_position_id = fiscal_position
 
-        if type in ('in_invoice', 'in_refund'):
+        if type in ('in_invoice', 'out_refund'):
+            bank_ids = p.commercial_partner_id.bank_ids
+            bank_id = bank_ids[0].id if bank_ids else False
             self.partner_bank_id = bank_id
+            return {'domain': {'partner_bank_id': [('id', 'in', bank_ids.ids)]}}
+        return {}
 
 
     @api.onchange('journal_id')

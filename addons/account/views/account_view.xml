@@ -1106,7 +1106,6 @@
                                 <field name="move_id" required="False"/>
                                 <newline/>
                                 <field name="date_maturity"/>
-                                <field name="date"/>
                                 <field name="blocked"/>
                                 <newline/>
                                 <field name="tax_ids" readonly="1"/>
@@ -1195,7 +1194,7 @@
                     <filter string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
                     <filter name="posted" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
                     <separator/>
-                    <filter string="Unreconciled" domain="[('full_reconcile_id','=',False), ('account_id.reconcile','=',True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
+                    <filter string="Unreconciled" domain="[('full_reconcile_id', '=', False), ('reconciled','=', False), ('account_id.reconcile','=',True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
                     <separator/>
                     <filter string="Payable" domain="[('account_id.internal_type', '=', 'payable')]" help="From Payable accounts" name="payable"/>
                     <filter string="Receivable" domain="[('account_id.internal_type', '=', 'receivable')]" help="From Receivable accounts" name="receivable"/>

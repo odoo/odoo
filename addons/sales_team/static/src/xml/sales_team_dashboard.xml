@@ -84,7 +84,7 @@
                             </a>
                         </td>
                         <td  t-if="show_demo or (values and values['closing']['overdue'] != 0)" class="o_warning" title="To Opportunities">
-                            <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline" data-context="{'search_default_activities_overdue':'1'}">
+                            <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline" data-context="{'search_default_overdue_opp':'1'}">
                                 <t t-if="!show_demo">
                                     <t t-esc="values['closing']['overdue']"/> exp. closing
                                 </t>

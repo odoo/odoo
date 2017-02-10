@@ -583,6 +583,9 @@
                     <filter string="Overdue Activities" name="activities_overdue"
                             domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all opportunities for which the next action date is before today"/>
+                    <filter string="Overdue Opportunities" name="overdue_opp"
+                            domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            help="Show all opportunities with a deadline for which the next action date is before today"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Lost" domain="[('active', '=', False)]"/>
