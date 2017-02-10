@@ -69,23 +69,24 @@
                 opacity: 0;
             }
         }
-
-
-        i.o_thread_message_star, i.o_thread_message_needaction, i.o_thread_message_reply, i.o_thread_message_email  {
+        .o_thread_icons {
             cursor: pointer;
-            opacity: 0;
-            &.fa-star {
+            .fa-star {
                 opacity: @mail-thread-icon-opacity;
                 color: gold;
             }
+            :not(.fa-star) {
+                opacity: 0;
+            }
+            &.touch_screen > * {
+                opacity: @mail-thread-icon-opacity;
+            }
         }
-
         &:hover, &.o_thread_selected_message {
             .o_thread_message_side_date {
                 opacity: @mail-thread-side-date-opacity;
             }
-
-            i.o_thread_message_star, i.o_thread_message_needaction, i.o_thread_message_reply, i.o_thread_message_email {
+            .o_thread_icons * {
                 opacity: @mail-thread-icon-opacity;
                 &:hover {
                     opacity: 1;

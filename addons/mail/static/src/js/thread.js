@@ -3,6 +3,7 @@ odoo.define('mail.ChatThread', function (require) {
 
 var core = require('web.core');
 var Widget = require('web.Widget');
+var config = require('web.config');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -74,6 +75,7 @@ var Thread = Widget.extend({
             squash_close_messages: true,
             display_email_icon: true,
             display_reply_icon: false,
+            is_touch_screen: config.device.touch
         });
         this.expanded_msg_ids = [];
         this.selected_id = null;
