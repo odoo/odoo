@@ -70,10 +70,18 @@ class MrpProductProduce(models.TransientModel):
     lot_id = fields.Many2one('stock.production.lot', string='Lot')
     consume_line_ids = fields.Many2many('stock.move.lots', 'mrp_produce_stock_move_lots', string='Product to Track')
     product_tracking = fields.Selection(related="product_id.tracking")
+    is_qty_done_zero = fields.Boolean(compute="_compute_is_qty_done_zero")
+
+    @api.depends('consume_line_ids.quantity_done')
+    def _compute_is_qty_done_zero(self):
+        for mrp_prod_produce in self:
+            self.is_qty_done_zero = mrp_prod_produce.consume_line_ids and not any(line.quantity_done != 0 for line in mrp_prod_produce.consume_line_ids)
 
     @api.multi
     def do_produce(self):
         # Nothing to do for lots since values are created using default data (stock.move.lots)
+        for line in self.filtered('is_qty_done_zero').consume_line_ids:
+            line.quantity_done = line.quantity
         moves = self.production_id.move_raw_ids
         quantity = self.product_qty
         if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:

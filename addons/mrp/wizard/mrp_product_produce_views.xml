@@ -20,6 +20,7 @@
                             <field name="lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none')]}" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}"/>
                         </group>
                     </group>
+                    <field name="is_qty_done_zero" invisible="1"/>
                     <group>
                         <field name="consume_line_ids" attrs="{'invisible': [('consume_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_lot_id': lot_id}">
                             <tree editable="top" delete="0" create="0">
@@ -35,7 +36,8 @@
                         </field>
                     </group>
                     <footer>
-                        <button name="do_produce" type="object" string="Record Production" class="btn-primary"/>
+                        <button name="do_produce" type="object" string="Record Production" attrs="{'invisible': [('is_qty_done_zero', '=', False)]}" confirm="You haven't set processed (done) quantities. Click ok and Odoo will process all quantities to do." class="btn-primary"/>
+                        <button name="do_produce" type="object" string="Record Production" attrs="{'invisible': [('is_qty_done_zero', '=', True)]}" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
