@@ -166,11 +166,11 @@ odoo.define('web_editor.tour', function (require) {
         extra_trigger: '#editable_area > section .row > div:first span.fa.pull-right',
     }, {
         content: "click on color style",
-        trigger: '.dropdown:has(.link-style) a[data-toggle="dropdown"]',
+        trigger: 'div.link-style',
         extra_trigger: 'a#link-preview:containsRegex(/^<span [^>]+><\\/span>$/) > span.fa.fa-3x.pull-right',
     }, {
         content: "choose success style",
-        trigger: '.dropdown ul label.btn-success',
+        trigger: '.link-style div div.btn-success',
     }, {
         content: "insert a link url",
         trigger: '#link-external',
@@ -194,16 +194,16 @@ odoo.define('web_editor.tour', function (require) {
         extra_trigger: '#editable_area > section .row > div:first span.fa.pull-right',
     }, {
         content: "click on color style again",
-        trigger: '.dropdown:has(label.btn-success) a[data-toggle="dropdown"]',
+        trigger: '.link-style:has(div.btn-success)',
         extra_trigger: 'a#link-preview:containsRegex(/^<img [^>]+>$/) img',
     }, {
         content: "choose success style",
-        trigger: '.dropdown ul label.btn-success',
+        trigger: '.link-style div div.btn-success',
     }, {
         content: "insert an email",
         trigger: '#link-external',
         extra_trigger: 'a#link-preview.btn',
-        run: "text test@test.test",
+        run: "text mailto:test@test.test",
     }, {
         content: "save link",
         trigger: 'button.o_save_button',

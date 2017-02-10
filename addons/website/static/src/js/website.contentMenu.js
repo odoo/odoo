@@ -324,7 +324,7 @@ var MenuEntryDialog = widget.LinkDialog.extend({
         var self = this;
 
         this.$(".link-style").remove();
-        this.$("label[for=link-new]").text("Menu Label");
+        this.$("label[for=link-text]").text("Menu Label");
 
         return $.when(this._super.apply(this, arguments)).then(function () {
             var $link_text = self.$('#link-text').focus();
