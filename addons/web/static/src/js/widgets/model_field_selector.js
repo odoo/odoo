@@ -2,10 +2,19 @@ odoo.define("web.ModelFieldSelector", function (require) {
 "use strict";
 
 var core = require("web.core");
-var Model = require("web.DataModel");
 var Widget = require("web.Widget");
 
 var _t = core._t;
+
+/**
+ * Field Selector Cache - TODO Should be improved to use external cache ?
+ * - Stores fields per model used in field selector
+ * @see ModelFieldSelector._getModelFieldsFromCache
+ */
+var modelFieldsCache = {
+    cache: {},
+    cacheDefs: {},
+};
 
 /// The ModelFieldSelector widget can be used to select a particular field chain from a given model.
 var ModelFieldSelector = Widget.extend({
@@ -32,7 +41,7 @@ var ModelFieldSelector = Widget.extend({
         },
 
         // Handle a direct change in the debug input
-        "change input": function() {
+        "change input": function () {
             var userChain = this.$input.val();
             if (!this.options.followRelations) {
                 var fields = userChain.split(".");
@@ -208,7 +217,7 @@ var ModelFieldSelector = Widget.extend({
     /// @return a deferred which is resolved once the last page is shown
     _prefill: function () {
         this.pages = [];
-        return this._pushPageData(this.model).then((function() {
+        return this._pushPageData(this.model).then((function () {
             return (this.chain ? processChain.call(this, this.chain.split(".").reverse()) : $.when());
         }).bind(this));
 
@@ -234,7 +243,7 @@ var ModelFieldSelector = Widget.extend({
         if (this.model === model && this.options.fields) {
             def = $.when(sortFields(this.options.fields));
         } else {
-            def = fieldsCache.getFields(model, this.options.filters);
+            def = this._getModelFieldsFromCache(model, this.options.filters);
         }
         return def.then((function (fields) {
             this.pages.push(fields);
@@ -294,35 +303,34 @@ var ModelFieldSelector = Widget.extend({
             name: name,
         });
     },
+    /**
+     * The _getFieldsFromCache method searches the cache for the given model
+     * fields, according to the given filter. If the cache does not know about
+     * the model, the cache is updated.
+     *
+     * @param {string} model
+     * @param {Object} filters @see ModelFieldSelector.init.options.filters
+     *
+     * @returns {Object[]} a list of the model fields info, sorted by field
+     *                     non-technical name
+     */
+    _getModelFieldsFromCache: function (model, filters) {
+        var def = modelFieldsCache.cacheDefs[model];
+        if (!def) {
+            def = modelFieldsCache.cacheDefs[model] = this.performModelRPC(model, "fields_get", [
+                false,
+                ["store", "searchable", "type", "string", "relation", "selection", "related"],
+            ]).then((function (fields) {
+                modelFieldsCache.cache[model] = sortFields(fields);
+            }).bind(this));
+        }
+        return def.then((function () {
+            return _.filter(modelFieldsCache.cache[model], function (f) {
+                return !filters.searchable || f.searchable;
+            });
+        }).bind(this));
+    },
 });
-
-/// Field Selector Cache
-///
-/// * Stores fields per model used in field selector
-/// * Apply filters on the fly
-var fieldsCache = {
-    cache: {},
-    cacheDefs: {},
-    getFields: function (model, filters) {
-        return (this.cacheDefs[model] ? this.cacheDefs[model] : this.updateCache(model)).then((function () {
-            return this.filter(model, filters);
-        }).bind(this));
-    },
-    updateCache: function (model) {
-        this.cacheDefs[model] = new Model(model).call("fields_get", [
-            false,
-            ["store", "searchable", "type", "string", "relation", "selection", "related"],
-        ]).then((function (fields) {
-            this.cache[model] = sortFields(fields);
-        }).bind(this));
-        return this.cacheDefs[model];
-    },
-    filter: function (model, filters) {
-        return _.filter(this.cache[model], function (f) {
-            return !filters.searchable || f.searchable;
-        });
-    },
-};
 
 function sortFields(fields) {
     return _.chain(fields)

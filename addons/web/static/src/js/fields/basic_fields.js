@@ -14,10 +14,14 @@ var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var datepicker = require('web.datepicker');
 var dom = require('web.dom');
+var Domain = require('web.Domain');
+var DomainSelector = require('web.DomainSelector');
+var DomainSelectorDialog = require('web.DomainSelectorDialog');
 var field_utils = require('web.field_utils');
 var framework = require('web.framework');
 var session = require('web.session');
 var utils = require('web.utils');
+var view_dialogs = require('web.view_dialogs');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -1189,6 +1193,225 @@ var JournalDashboardGraph = AbstractField.extend({
 });
 
 /**
+ * The "Domain" field allows the user to construct a technical-prefix domain
+ * thanks to a tree-like interface and see the selected records in real time.
+ * In debug mode, an input is also there to be able to enter the prefix char
+ * domain directly (or to build advanced domains the tree-like interface does
+ * not allow to).
+ */
+var FieldDomain = AbstractField.extend({
+    /**
+     * The model this field widget works with could be dependant on another
+     * field value. This field widget must then be reset when a field is changed
+     * in the view.
+     */
+    resetOnAnyFieldChange: true,
+
+    events: _.extend({}, AbstractField.prototype.events, {
+        "click .o_domain_show_selection_button": "_onShowSelectionButtonClick",
+        "click .o_form_field_domain_dialog_button": "_onDialogEditButtonClick",
+    }),
+    custom_events: {
+        "domain_changed": "_onDomainSelectorValueChange",
+        "domain_selected": "_onDomainSelectorDialogValueChange",
+    },
+    /**
+     * @constructor
+     * @override init from AbstractField
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        this.inDialog = !!this.nodeOptions.in_dialog;
+        this.modelOption = this.nodeOptions.model;
+        this.fsFilters = this.nodeOptions.fs_filters || {};
+
+        this.className = "o_form_field_domain";
+        if (this.mode === "edit") {
+            this.className += " o_edit_mode";
+        }
+        if (!this.inDialog) {
+            this.className += " o_inline_mode";
+        }
+
+        this._initModel();
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override isValid from AbstractField.isValid
+     * Parsing the char value is not enough for this field. It is considered
+     * valid if the internal domain selector was built correctly and that the
+     * query to the model to test the domain did not fail.
+     *
+     * @returns {boolean}
+     */
+    isValid: function () {
+        return (
+            this._super.apply(this, arguments)
+            && this._isValidForModel
+        );
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @override _render from AbstractField
+     * @returns {Deferred}
+     */
+    _render: function () {
+        // If there is no model, only change the non-domain-selector content
+        if (!this.domainModel) {
+            this._replaceContent();
+            return $.when();
+        }
+
+        // Convert char value to array value
+        var value = this.value || "[]";
+        var domain = Domain.prototype.stringToArray(value);
+
+        // Create the domain selector or change the value of the current one...
+        var def;
+        if (!this.domainSelector) {
+            this.domainSelector = new DomainSelector(this, this.domainModel, domain, {
+                readonly: this.mode === "readonly" || this.inDialog,
+                filters: this.fsFilters,
+                debugMode: session.debug,
+            });
+            def = this.domainSelector.prependTo(this.$el);
+        } else {
+            def = this.domainSelector.setDomain(domain);
+        }
+        // ... then query the model to get the number of matched record if valid
+        var self = this;
+        return def.then(function () {
+            var context = {}; // FIXME ?
+            return self.performModelRPC(self.domainModel, "search_count", [
+                domain,
+                context
+            ]).then(
+                function (data) {
+                    self._isValidForModel = true;
+                    return data;
+                },
+                function (error, e) {
+                    e.preventDefault();
+                    self._isValidForModel = false;
+                }
+            ).always(self._replaceContent.bind(self));
+        });
+    },
+    /**
+     * Render the field DOM except for the domain selector part. The full field
+     * DOM is composed of a DIV which contains the domain selector widget,
+     * followed by other content. This other content is handled by this method.
+     *
+     * @private
+     * @param {integer} [nbRecords=0] - The number of records the domain matches
+     */
+    _replaceContent(nbRecords) {
+        if (this._$content) {
+            this._$content.remove();
+        }
+        this._$content = $(qweb.render("FieldDomain.content", {
+            hasModel: !!this.domainModel,
+            isValid: !!this._isValidForModel,
+            nbRecords: nbRecords || 0,
+            inDialogEdit: this.inDialog && this.mode === "edit",
+        }));
+        this._$content.appendTo(this.$el);
+    },
+    /**
+     * @override _reset from AbstractField
+     * Check if the model the field works with has (to be) changed.
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        var oldDomainModel = this.domainModel;
+        this._initModel();
+        if (this.domainSelector && this.domainModel !== oldDomainModel) {
+            // If the model has changed, destroy the current domain selector
+            this.domainSelector.destroy();
+            this.domainSelector = null;
+        }
+    },
+    /**
+     * Checks the model the field must work with. It is either directly given
+     * in the field option or it is the value of another field in the view.
+     *
+     * @private
+     */
+    _initModel: function () {
+        this.domainModel = this.modelOption;
+        if (this.recordData.hasOwnProperty(this.domainModel)) {
+            this.domainModel = this.recordData[this.domainModel];
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the "Show selection" button is clicked
+     * -> Open a modal to see the matched records
+     *
+     * @param {Event} e
+     */
+    _onShowSelectionButtonClick: function (e) {
+        e.preventDefault();
+        new view_dialogs.SelectCreateDialog(this, {
+            title: _t("Selected records"),
+            res_model: this.domainModel,
+            domain: this.value || "[]",
+            no_create: true,
+            readonly: true,
+            disable_multiple_selection: true,
+        }).open();
+    },
+    /**
+     * Called when the "Edit domain" button is clicked (when using the in_dialog
+     * option) -> Open a DomainSelectorDialog to edit the value
+     *
+     * @param {Event} e
+     */
+    _onDialogEditButtonClick: function (e) {
+        e.preventDefault();
+        new DomainSelectorDialog(this, this.domainModel, this.value || "[]", {
+            readonly: this.mode === "readonly",
+            filters: this.fsFilters,
+            debugMode: session.debug,
+        }).open();
+    },
+    /**
+     * Called when the domain selector value is changed (do nothing if it is the
+     * one which is in a dialog (@see _onDomainSelectorDialogValueChange))
+     * -> Adapt the internal value state
+     *
+     * @param {OdooEvent} e
+     */
+    _onDomainSelectorValueChange: function (e) {
+        if (this.inDialog) return;
+        this._setValue(Domain.prototype.arrayToString(this.domainSelector.getDomain()));
+    },
+    /**
+     * Called when the in-dialog domain selector value is confirmed
+     * -> Adapt the internal value state
+     *
+     * @param {OdooEvent} e
+     */
+    _onDomainSelectorDialogValueChange: function (e) {
+        this._setValue(Domain.prototype.arrayToString(e.data.domain));
+    },
+});
+
+/**
  * This widget is intended to be used on Text fields. It will provide Ace Editor
  * for editing XML and Python.
  */
@@ -1275,6 +1498,7 @@ return {
     FieldChar: FieldChar,
     FieldDate: FieldDate,
     FieldDateTime: FieldDateTime,
+    FieldDomain: FieldDomain,
     FieldFloat: FieldFloat,
     FieldFloatTime: FieldFloatTime,
     FieldHtml: FieldHtml,
