@@ -16,17 +16,17 @@ QUnit.module('basic_fields', {
         this.data = {
             partner: {
                 fields: {
-                    date: {string: "A date", type: "date"},
-                    display_name: { string: "Displayed name", type: "char" },
-                    foo: {string: "Foo", type: "char", default: "My little Foo Value"},
-                    bar: {string: "Bar", type: "boolean", default: true},
-                    int_field: {string: "int_field", type: "integer", sortable: true},
-                    qux: {string: "Qux", type: "float", digits: [16,1] },
-                    p: {string: "one2many field", type: "one2many", relation: 'partner'},
-                    trululu: {string: "Trululu", type: "many2one", relation: 'partner'},
-                    timmy: { string: "pokemon", type: "many2many", relation: 'partner_type'},
-                    product_id: {string: "Product", type: "many2one", relation: 'product'},
-                    sequence: {type: "integer", string: "Sequence"},
+                    date: {string: "A date", type: "date", searchable: true},
+                    display_name: {string: "Displayed name", type: "char", searchable: true},
+                    foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true},
+                    bar: {string: "Bar", type: "boolean", default: true, searchable: true},
+                    int_field: {string: "int_field", type: "integer", sortable: true, searchable: true},
+                    qux: {string: "Qux", type: "float", digits: [16,1], searchable: true},
+                    p: {string: "one2many field", type: "one2many", relation: 'partner', searchable: true},
+                    trululu: {string: "Trululu", type: "many2one", relation: 'partner', searchable: true},
+                    timmy: {string: "pokemon", type: "many2many", relation: 'partner_type', searchable: true},
+                    product_id: {string: "Product", type: "many2one", relation: 'product', searchable: true},
+                    sequence: {type: "integer", string: "Sequence", searchable: true},
                 },
                 records: [{
                     id: 1,
@@ -62,7 +62,7 @@ QUnit.module('basic_fields', {
             },
             product: {
                 fields: {
-                    name: {string: "Product Name", type: "char"}
+                    name: {string: "Product Name", type: "char", searchable: true}
                 },
                 records: [{
                     id: 37,
@@ -74,8 +74,8 @@ QUnit.module('basic_fields', {
             },
             partner_type: {
                 fields: {
-                    name: {string: "Partner Type", type: "char"},
-                    color: {string: "Color index", type: "int"},
+                    name: {string: "Partner Type", type: "char", searchable: true},
+                    color: {string: "Color index", type: "integer", searchable: true},
                 },
                 records: [
                     {id: 12, display_name: "gold", color: 2},
@@ -539,6 +539,154 @@ QUnit.module('basic_fields', {
             "date input should have the focus (make sure the test window had the focus)");
     });
 
+    QUnit.module('FieldDomain');
+
+    QUnit.test('basic domain field usage is ok', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.records[0].foo = "[]";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" widget="domain" options="{\'model\': \'partner_type\'}"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // As the domain is empty, there should be a button to add the first
+        // domain part
+        var $domain = form.$(".o_form_field_domain");
+        var $domainAddFirstNodeButton = $domain.find(".o_domain_add_first_node_button");
+        assert.equal($domainAddFirstNodeButton.length, 1,
+            "there should be a button to create first domain element");
+
+        // Clicking on the button should add the [["id", "=", "1"]] domain, so
+        // there should be a field selector in the DOM
+        $domainAddFirstNodeButton.click();
+        var $fieldSelector = $domain.find(".o_field_selector");
+        assert.equal($fieldSelector.length, 1,
+            "there should be a field selector");
+
+        // Focusing the field selector input should open the field selector
+        // popover
+        $fieldSelector.find("> input").focus();
+        var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
+        assert.ok($fieldSelectorPopover.is(":visible"),
+            "field selector popover should be visible");
+
+        // The popover should contain the list of partner_type fields and so
+        // there should be the "Color index" field
+        var $lis = $fieldSelectorPopover.find("li");
+        var $colorIndex = $();
+        $lis.each(function () {
+            var $li = $(this);
+            if ($li.html().indexOf("Color index") >= 0) {
+                $colorIndex = $li;
+            }
+        });
+        assert.equal($colorIndex.length, 1,
+            "field selector popover should contain 'Color index' field");
+
+        // Clicking on this field should close the popover, then changing the
+        // associated value should reveal one matched record
+        $colorIndex.click();
+        $domain.find(".o_domain_leaf_value_input").val(2).change();
+        assert.equal($domain.find(".o_domain_show_selection_button").text().trim().substr(0, 2), "1 ",
+            "changing color value to 2 should reveal only one record");
+
+        // Saving the form view should show a readonly domain containing the
+        // "color" field
+        form.$buttons.find('.o_form_button_save').click();
+        $domain = form.$(".o_form_field_domain");
+        assert.ok($domain.html().indexOf("color") >= 0,
+            "field selector readonly value should now contain 'color'");
+    });
+
+    QUnit.test('domain field is correctly reset on every view change', function (assert) {
+        assert.expect(7);
+
+        this.data.partner.records[0].foo = '[["id","=",1]]';
+        this.data.partner.fields.bar.type = "char";
+        this.data.partner.records[0].bar = "product";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="bar"/>' +
+                            '<field name="foo" widget="domain" options="{\'model\': \'bar\'}"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // As the domain is equal to [["id", "=", 1]] there should be a field
+        // selector to change this
+        var $domain = form.$(".o_form_field_domain");
+        var $fieldSelector = $domain.find(".o_field_selector");
+        assert.equal($fieldSelector.length, 1,
+            "there should be a field selector");
+
+        // Focusing its input should open the field selector popover
+        $fieldSelector.find("> input").focus();
+        var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
+        assert.ok($fieldSelectorPopover.is(":visible"),
+            "field selector popover should be visible");
+
+        // As the value of the "bar" field is "product", the field selector
+        // popover should contain the list of "product" fields
+        var $lis = $fieldSelectorPopover.find("li");
+        var $sampleLi = $();
+        $lis.each(function () {
+            var $li = $(this);
+            if ($li.html().indexOf("Product Name") >= 0) {
+                $sampleLi = $li;
+            }
+        });
+        assert.strictEqual($lis.length, 1,
+            "field selector popover should contain only one field");
+        assert.strictEqual($sampleLi.length, 1,
+            "field selector popover should contain 'Product Name' field");
+
+        // Now change the value of the "bar" field to "partner_type"
+        form.$(".o_field_widget.o_form_input").click().val("partner_type").trigger("input");
+
+        // Refocusing the field selector input should open the popover again
+        $fieldSelector = form.$(".o_field_selector");
+        $fieldSelector.find("> input").focus();
+        $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
+        assert.ok($fieldSelectorPopover.is(":visible"),
+            "field selector popover should be visible");
+
+        // Now the list of fields should be the ones of the "partner_type" model
+        $lis = $fieldSelectorPopover.find("li");
+        $sampleLi = $();
+        $lis.each(function () {
+            var $li = $(this);
+            if ($li.html().indexOf("Color index") >= 0) {
+                $sampleLi = $li;
+            }
+        });
+        assert.strictEqual($lis.length, 2,
+            "field selector popover should contain two fields");
+        assert.strictEqual($sampleLi.length, 1,
+            "field selector popover should contain 'Color index' field");
+    });
 });
 });
 });

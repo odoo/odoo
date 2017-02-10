@@ -301,6 +301,12 @@ var DomainSelector = DomainTree.extend({
         }
         return this._super(domain);
     },
+    setDomain: function (domain) {
+        if (Domain.prototype.arrayToString(domain) === Domain.prototype.arrayToString(this.getDomain())) {
+            return $.when();
+        }
+        return this._redraw(domain);
+    },
     _postRender: function () {
         this._super.apply(this, arguments);
 
