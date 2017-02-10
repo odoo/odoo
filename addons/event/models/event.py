@@ -172,7 +172,7 @@ class EventEvent(models.Model):
 
     @api.one
     def _compute_auto_confirm(self):
-        self.auto_confirm = self.env['ir.values'].get_default('event.config.settings', 'auto_confirmation')
+        self.auto_confirm = self.env['ir.values'].get_default('event.config.settings', 'default_auto_confirmation')
 
     reply_to = fields.Char(
         'Reply-To Email', readonly=False, states={'done': [('readonly', True)]},
