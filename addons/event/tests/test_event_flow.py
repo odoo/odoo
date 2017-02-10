@@ -71,7 +71,7 @@ class TestEventFlow(TestEventCommon):
     def test_10_advanced_event_flow(self):
         """ Avanced event flow: no auto confirmation, manage minimum / maximum
         seats, ... """
-        self.env['ir.values'].set_default('event.config.settings', 'auto_confirmation', False)
+        self.env['ir.values'].set_default('event.config.settings', 'default_auto_confirmation', False)
 
         # EventUser creates a new event: ok
         test_event = self.Event.sudo(self.user_eventmanager).create({
