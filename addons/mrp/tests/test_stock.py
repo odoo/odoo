@@ -54,21 +54,12 @@ class TestWarehouse(common.TestMrpCommon):
             'product_id': self.product_2.id,
         })
 
-        stock_inv_product_4 = self.env['stock.inventory'].create({
-            'name': 'Stock Inventory for Stick',
-            'filter': 'product',
-            'product_id': self.product_4.id,
-            'line_ids': [
-                (0, 0, {'product_id': self.product_4.id, 'product_uom_id': self.product_4.uom_id.id, 'product_qty': 8, 'prod_lot_id': lot_product_4.id, 'location_id': self.ref('stock.stock_location_14')}),
-            ]})
+        stock_inv_product_4 = self._create_inventory(location_id=self.stock_location_id, product_id=self.product_4.id)
+        stock_inv_product_4.line_ids.write({'product_qty': 8})
 
-        stock_inv_product_2 = self.env['stock.inventory'].create({
-            'name': 'Stock Inventory for Stone Tools',
-            'filter': 'product',
-            'product_id': self.product_2.id,
-            'line_ids': [
-                (0, 0, {'product_id': self.product_2.id, 'product_uom_id': self.product_2.uom_id.id, 'product_qty': 12, 'prod_lot_id': lot_product_2.id, 'location_id': self.ref('stock.stock_location_14')})
-            ]})
+        stock_inv_product_2 = self._create_inventory(location_id=self.stock_location_id, product_id=self.product_2.id)
+        stock_inv_product_2.line_ids.write({'product_qty': 12, 'prod_lot_id': lot_product_2.id})
+
         (stock_inv_product_4 | stock_inv_product_2).action_start()
         (stock_inv_product_4 | stock_inv_product_2).action_done()
 
