@@ -849,6 +849,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
             if ($(e.target).closest(".note-toolbar").length) return; // prevent icon edition of top bar for default summernote
             show_tooltip = false;
             callback();
+            e.stopImmediatePropagation();
         });
 
         oLayoutInfo.editor().on("click", selector, function (e) {
