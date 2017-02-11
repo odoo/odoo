@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Eneldo Serrata <eneldoserrata@gmail.com>, 2015-2016
-# Gustavo Valverde, 2016
+# Gustavo Valverde, 2016-2017
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2015
 # Mario Calvar <ventas.bbca@gmail.com>, 2015
 msgid ""
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-07-24 19:59+0000\n"
+"PO-Revision-Date: 2017-02-06 03:23+0000\n"
 "Last-Translator: Gustavo Valverde\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
@@ -63,19 +63,19 @@ msgstr " (reservado)"
 #: code:addons/stock/stock.py:3482
 #, python-format
 msgid " MTO"
-msgstr " Desde existencias (MTO)"
+msgstr "Bajo Pedido"
 
 #. module: stock
 #: code:addons/stock/product.py:209 code:addons/stock/product.py:382
 #, python-format
 msgid " On Hand"
-msgstr " Disponible"
+msgstr "A Mano"
 
 #. module: stock
 #: code:addons/stock/stock.py:3619 code:addons/stock/stock.py:3912
 #, python-format
 msgid " Sequence in"
-msgstr " Secuencia recepciones"
+msgstr "Secuencia Entradas"
 
 #. module: stock
 #: code:addons/stock/stock.py:3623 code:addons/stock/stock.py:3920
@@ -87,13 +87,13 @@ msgstr " Secuencia interna"
 #: code:addons/stock/stock.py:3620 code:addons/stock/stock.py:3914
 #, python-format
 msgid " Sequence out"
-msgstr " Secuencia entregas"
+msgstr " Secuencia Salida"
 
 #. module: stock
 #: code:addons/stock/stock.py:3621 code:addons/stock/stock.py:3916
 #, python-format
 msgid " Sequence packing"
-msgstr " Secuencia de empaquetado"
+msgstr " Secuencia de empaque"
 
 #. module: stock
 #: code:addons/stock/stock.py:3622 code:addons/stock/stock.py:3918
@@ -104,25 +104,25 @@ msgstr " Secuencia de conduce"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
 msgid "#Products"
-msgstr "Productos"
+msgstr "#Productos"
 
 #. module: stock
 #: code:addons/stock/stock.py:2739
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
-msgstr "%s %s %s ha sido <b>desechado</b>."
+msgstr "%s %s %s ha sido <b>movilizado a </b>desecho."
 
 #. module: stock
 #: code:addons/stock/stock.py:3299
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr "%s: proveer producto de %s"
+msgstr "%s: Suministrar Producto desde %s"
 
 #. module: stock
 #: code:addons/stock/res_config.py:25
 #, python-format
 msgid "%s: Transit Location"
-msgstr "%s: ubicación de tránsito"
+msgstr "%s: Ubicación de Tránsito"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
@@ -132,7 +132,7 @@ msgid ""
 "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
-msgstr "* Nuevo: Cuando se crea el stock de movimiento y aún no confirmado.\n* Esperando Otra Mover: Este estado se puede ver cuando un movimiento está esperando otro, por ejemplo, en un flujo de cadena.\n* Esperando Disponibilidad: se alcanza este estado cuando la resolución de la contratación no es sencillo. Es posible que el planificador de correr, un componente que me fabriqué ...\n* Disponible: Cuando los productos están reservados, se establece en 'Disponible'.\n* Hecho: Cuando se procesa el envío, el estado es 'Hecho'."
+msgstr "* Nuevo: Cuando se crea un movimiento de existencia y aún no confirmado.\n* Esperando Otro Movimiento: Este estado se puede ver cuando un movimiento está esperando otro, por ejemplo, en un flujo encadenado.\n* Esperando Disponibilidad: Este esyadp se alcanza cuando la resolución de un abstecimiento no es sencilla. Es posible que se necesite ejecutar planificador, un componente a ser fabricado...\n* Disponible: Cuando los productos están reservados, se establece en 'Disponible'.\n* Realizado: Cuando el envío es procesado, el estado es 'Realizado'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -153,7 +153,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr "* Ubicación de proveedor: Ubicación virtual representando la fuente para los productos que vengan de sus proveedores\n* Vista: Ubicación virtual usada para crear una estructura jerárquica para su almacén, agregando sus ubicaciones hijas. No puede contener directamente productos\n* Ubicaciones internas: Ubicaciones físicas dentro de sus almacenes\n* Ubicación de cliente: Ubicación virtual representando la ubicación destino para los productos enviados a sus clientes\n* Inventario: Ubicación virtual que sirve de contrapartida para las operaciones de inventario usadas para corregir los niveles de existencias (inventarios físicos)\n* Abastecimiento: Ubicación virtual que sirve como contrapartida virtual para las operaciones de abastecimiento cuando la fuente (proveedor o producción) no se conoce aún. Esta ubicación debería ser vacía cuando el planificador de abastecimiento termina\n* Producción: Ubicación virtual de contrapartida para las operaciones de producción: esta ubicación consume las materias primas y produce los productos finales\n* Ubicación de tránsito: Ubicación de contrapartida que debe usarse en operaciones inter-compañía o inter-almacén\n                      "
+msgstr "* Ubicación del Proveedor: Ubicación virtual representando la ubicación de origen de los productos que vengan de sus proveedores\n\n* Vista: Ubicación virtual usada para crear estructuras jerárquicas para su almacén, agregando sus ubicaciones hijas. no puede contener priductos directamente\n\n* Ubicaciones internas: Ubicaciones físicas dentro de sus propios almacenes\n\n* Ubicación de cliente: Ubicación virtual representando la ubicación destino para los productos enviados a sus clientes\n\n* Pérdida de Inventario: Ubicación virtual que sirve de contrapartida para las operaciones de inventario usadas para corregir los niveles de existencias (inventarios físicos)\n\n* Abastecimiento: Ubicación virtual que sirve como contrapartida virtual para las operaciones de abastecimiento cuando el origen (proveedor o producción) no se conoce aún. Esta ubicación debería estar vacía cuando el planificador de abastecimiento termina\n\n* Producción: Ubicación virtual de contrapartida para las operaciones de producción: esta ubicación consume las materias primas y produce los productos finales\n\n* Ubicación de tránsito: Ubicación de contrapartida que debe usarse en operaciones inter-compañía o inter-almacenes\n                      "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -198,14 +198,14 @@ msgstr "<span class=\"label label-default text-center odoo_purple\">Confirmar or
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Confirm "
 "Sale</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">Confirme Venta</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">Confirmar Venta</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Find Incoming "
 "Shipments</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">Encontrar envíos entrantes</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">Encontrar Envíos Entrantes</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -219,14 +219,14 @@ msgstr "<span class=\"label label-default text-center odoo_purple\">Procesar los
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Delivery</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">Validar la entrega</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">Validar la Entrega</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Receipt Order</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">Validar la Orden Recibo</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">Validar la Orden de Recibo</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -256,7 +256,7 @@ msgid ""
 "                                        <strong>Import a file</strong><br/>\n"
 "                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n<span class=\"fa\" data-icon=\"&#57408;\"/>\n<strong>Import a file</strong><br/>\n<span class=\"small\">Recomendado si &gt;100 productos</span>\n</span>"
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n                                        <strong>Import a file</strong><br/>\n                                        <span class=\"small\">Recomendado si &gt;100 productos</span>\n                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -315,13 +315,13 @@ msgstr "<span class=\"panel-title\">\n<strong>Desde la aplicación de ventas</st
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span><strong>Contact Address:</strong></span>"
-msgstr "<span><strong>Dirección de contacto:</strong></span>"
+msgstr "<span><strong>Dirección de Contacto:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Customer Address:</strong></span>"
-msgstr "<span><strong>Dirección del cliente:</strong></span>"
+msgstr "<span><strong>Dirección del Cliente:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -336,7 +336,7 @@ msgstr "<span><strong>Dirección de Proveedor:</strong></span>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Warehouse Address:</strong></span>"
-msgstr "<span><strong>Dirección del almacen:</strong></span>"
+msgstr "<span><strong>Dirección del Almacén:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -408,14 +408,14 @@ msgstr "<strong>Comprar:</strong> realiza la compra de un vendedor a través de 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Commitment Date</strong>"
-msgstr "<strong>Fecha factura:</strong>"
+msgstr "<strong>Fecha de Compromiso:</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<strong>Consumable products</strong> are always assumed to be in sufficient "
 "quantity in your stock, therefore their available quantities are not tracked"
-msgstr "<strong>Productos de consumo</strong> siempre se supone que para ser en cantidad suficiente en su stock, por lo tanto no se realiza el seguimiento de las cantidades disponibles"
+msgstr "Los <strong>Productos Consumibles</strong> siempre se asumen que tienen suficiente cantidad en su existencia, por lo tanto no se da seguimiento a sus cantidades disponibles"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -455,7 +455,7 @@ msgid ""
 "requires, each time a Sales Order is confirmed. This does not modify stock "
 "in the medium term because you restock with the exact amount that was "
 "ordered"
-msgstr "<strong>Hacen a pedido:</strong> producto se adquiere sólo según la demanda, se confirma cada vez que un pedido de ventas. No se modifique valores en el mediano plazo porque reponer con la cantidad exacta que se ordenó"
+msgstr "<strong>Hacer Bajo Pedido:</strong> el producto se adquiere sólo según la demanda, cada vez que un Pedido de Ventas se confirma. Esto no modifica la existencia a mediano plazo porque se repone con la cantidad exacta que se ordenó"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -464,42 +464,42 @@ msgid ""
 "stock. If the quantities in stock are too low to fulfill the order, a "
 "Purchase Order is generated according the minimum stock rules in order to "
 "get the products required"
-msgstr "<strong>Realizar en Stock:</strong> sus clientes vienen de stock disponible. Si las cantidades en stock son demasiado bajas para cumplir la orden, se genera una orden de compra según las reglas de stock mínimas para obtener los productos requeridos"
+msgstr "<strong>Hacer para Almancenar:</strong> sus clientes son suministrados de la existencia disponible. Si las cantidades en existencia son muy bajas para cumplir la orden, se genera una Orden de Compra según las reglas de existencias mínimas para obtener los productos requeridos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<strong>Manufacture:</strong> the product is manufactured internally or the "
 "service is supplied from internal resources"
-msgstr "<strong>De la fabricación:</strong> internamente se fabrica el producto o el servicio se provee de recursos internos"
+msgstr "<strong>Fabricar</strong> el producto se manufactura internamente o el servicio se provee de recursos internos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<strong>No address defined on the supplier partner:</strong> you have to "
 "complete an address for the default supplier for the product concerned."
-msgstr "<strong>Sin dirección definida en el proveedor socio:</strong> usted tiene que completar una dirección para el proveedor predeterminado para el producto en cuestión."
+msgstr "<strong>No hay dirección definida en el proveedor:</strong> usted tiene que suministrar una dirección para el proveedor predeterminado para el producto en cuestión."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<strong>No bill of materials defined for production:</strong> you need to "
 "create a BoM or indicate that the product can be purchased instead."
-msgstr "<strong>No lista de materiales para producción:</strong> necesita para crear una LDM o indicar que el producto puede adquirirse en su lugar."
+msgstr "<strong>Lista de Materiales no definida para producción:</strong> necesita  crear una LdM o en su lugar indicar que el producto puede comprarse."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<strong>No quantity available in stock:</strong> you have to create a "
 "reordering rule and put it in the order, or manually procure it."
-msgstr "<strong>Ninguna cantidad en stock:</strong> tienes que crear una regla de reaprovisionamiento y ponerlo en el orden o manualmente lo procuran."
+msgstr "<strong>No hay cantidad en existencia:</strong> tienes que crear una regla de reaprovisionamiento y ponerla en la orden o procurarla manualmente."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<strong>No supplier available for a purchase:</strong> you have to define a "
 "supplier in the Procurements tab of the product form."
-msgstr "<strong>No disponible para la compra del proveedor:</strong> tienes que definir un proveedor en la ficha de contrataciones de la forma del producto."
+msgstr "<strong>No hay proveedor disponible para comprar:</strong> tienes que definir un proveedor en el tab de Abastecimiento del formulario del producto."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -507,7 +507,7 @@ msgid ""
 "<strong>On Hand products</strong> are physically located in the warehouse "
 "location at the current time. This includes items that are already allocated"
 " to fulfilling production needs or sales orders"
-msgstr "<strong>Productos de la mano</strong> son físicamente situado en la ubicación del almacén en el momento actual. Esto incluye artículos que ya se destinan a satisfacer las necesidades de producción o pedidos"
+msgstr "Los <strong>Productos a Mano</strong> son localizados físicamente en la ubicación del almacén en el momento actual. Esto incluye artículos que ya se destinan a satisfacer las necesidades de producción o pedidos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -530,7 +530,7 @@ msgstr "<strong>Producto</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Production Lot</strong>"
-msgstr "<strong>Lote de producción</strong>"
+msgstr "<strong>Lote de Producción</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -543,19 +543,19 @@ msgstr "<strong>Cantidad</strong>"
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date</strong>"
-msgstr "<strong>Fecha prevista</strong>"
+msgstr "<strong>Fecha Prevista</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Serial Number</strong>"
-msgstr "<strong>número de serie</strong>"
+msgstr "<strong>Número de Serie</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<strong>Service products</strong> are non-material products provided by a "
 "company or an individual"
-msgstr "<strong>Productos de servicio</strong> son productos de material no suministrados por una empresa o un individuo"
+msgstr "Los <strong>Servicios</strong> son productos no materiales suministrados por una empresa o un individuo"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -570,24 +570,24 @@ msgstr "<strong>Estado</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Status</strong>"
-msgstr "<strong>Estado</strong>"
+msgstr "<strong>Estatus</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<strong>Stockable products</strong> are subject to the full inventory "
 "management system: minimum stock rules, automatic procurement, etc."
-msgstr "<strong>Productos almacenajes</strong> están sujetos al sistema de gestión de inventario completo: reglas de stock mínimas, aprovisionamiento automático, etc.."
+msgstr "<strong>Productos Almacenables</strong> están sujetos al sistema de gestión de inventario completo: reglas de existencias mínimas, abastecimiento automático, etc."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Total Quantity</strong>"
-msgstr "<strong>Cantidad total</strong>"
+msgstr "<strong>Cantidad Total</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Warehouse Locations</strong>"
-msgstr "<strong>Localizaciones de almacén</strong>"
+msgstr "<strong>Ubicaciones del Almacen</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -624,7 +624,7 @@ msgid ""
 "A good inventory management aims to optimize stock levels: not too low (or\n"
 "                        you may find yourself out of stock) and not too high (your products occupy\n"
 "                        space and may loose value)."
-msgstr "Una gestión de inventario buena pretende optimizar los niveles de acción: no demasiado baja (o puede estar fuera de stock) y no demasiado alta (sus productos ocupan espacio y pueden perder valor)."
+msgstr "Una buena gestión de inventario pretende optimizar los niveles de inventario: no demasiado baja (o\n puede quedarse sin disponibiidad) y no demasiado alta (sus productos ocuparán\n espacio y pueden perder valor)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -634,13 +634,13 @@ msgstr "Documentación de la API"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Accurate visibility on all your operations"
-msgstr "Visibilidad correcta en todas sus operaciones"
+msgstr "Visibilidad precisa en todas sus operaciones"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_message_needaction
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_message_needaction
 msgid "Action Needed"
-msgstr "Necesaria acción"
+msgstr "Acción Necesitada"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_lines_date_active
@@ -666,13 +666,13 @@ msgstr "Añadir una nota interna..."
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Additional Info"
-msgstr "Información adicional"
+msgstr "Info Adicional"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_comment
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Additional Information"
-msgstr "Información adicional"
+msgstr "Información Adicional"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_partner_id
@@ -694,12 +694,12 @@ msgstr "Avanzado"
 #. module: stock
 #: selection:stock.config.settings,group_stock_adv_location:0
 msgid "Advanced routing of products using rules"
-msgstr "Avanzadas de ruteo de productos utilizando las reglas de"
+msgstr "Ruteo avanzado de productos usando reglas"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Advanced: Apply Procurement Rules"
-msgstr "Avanzado: aplicar reglas de aprovisionamiento"
+msgstr "Avanzado: Aplicar Reglas de Abastecimiento"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -742,22 +742,22 @@ msgstr "Todas las devoluciones"
 #: code:addons/stock/procurement.py:360
 #, python-format
 msgid "All stock moves have been cancelled for this procurement."
-msgstr "Todos los movimientos que han sido cancelados en este aprovisionamiento"
+msgstr "Todos los movimientos de existencias han sido cancelados para este abastecimiento"
 
 #. module: stock
 #: selection:stock.config.settings,module_claim_from_delivery:0
 msgid "Allow claims on deliveries"
-msgstr "Permitir que los reclamos en las entregas"
+msgstr "Permitir reclamos en las entregas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_entire_packs
 msgid "Allow moving packs"
-msgstr "Permiten mover paquetes"
+msgstr "Permitir mover paquetes"
 
 #. module: stock
 #: selection:stock.config.settings,module_stock_dropshipping:0
 msgid "Allow suppliers to deliver directly to your customers"
-msgstr "Permitir a los proveedores para entregar directamente a sus clientes"
+msgstr "Permitir a los proveedores entregar directamente a tus clientes"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_procurement_jit
@@ -765,7 +765,7 @@ msgid ""
 "Allows you to automatically reserve the available\n"
 "            products when confirming a sale order.\n"
 "                This installs the module procurement_jit."
-msgstr "Le permite reservar automáticamente los productos disponibles al confirmar una orden de venta.\n                Esto instala el módulo procurement_jit."
+msgstr "Le permite reservar automáticamente los productos\ndisponibles al confirmar una orden de venta.\nEsto instala el módulo procurement_jit."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_stock_packaging
@@ -846,7 +846,7 @@ msgstr "Automático sin añadir paso"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
 msgid "Automatic Procurements"
-msgstr "Abastecimientos automáticos"
+msgstr "Abastecimientos Automáticos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_string_availability_info
@@ -1072,12 +1072,12 @@ msgstr "Cambiar cantidad producto"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_pack_operation_exist
 msgid "Check the existance of pack operation on the picking"
-msgstr "Compruebe la existencia de la operación de paquete en la cosecha"
+msgstr "Compruebe la existencia una operación de paquete en el conduce"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_quant_reserved_exist
 msgid "Check the existance of quants linked to this picking"
-msgstr "Compruebe la existencia de quanta vinculados a esta selección"
+msgstr "Compruebe la existencia de cant vinculadas a este conduce"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_move_ids_exist
@@ -1103,7 +1103,7 @@ msgstr "Cantidad comprobada"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_partially_available
 msgid "Checks if the move has some stock reserved"
-msgstr "Comprobar si el movimiento tiene stock reservado"
+msgstr "Comprobar si el movimiento tiene existencia reservada"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_claim_from_delivery
@@ -1156,12 +1156,12 @@ msgstr "Haga clic para crear un nuevo tipo de conduce."
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_move_form2
 msgid "Click to create a stock movement."
-msgstr "Haga clic para crear un movimiento de acciones."
+msgstr "Clic para crear un movimiento de existencia."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree
 msgid "Click to create a stock operation."
-msgstr "Haga clic para crear una operación de almacén."
+msgstr "Clic para crear una operación de existencia."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
@@ -1229,12 +1229,12 @@ msgstr "Fecha de finalización de la transferencia"
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_orderpoint_compute
 msgid "Compute Minimum Stock Rules"
-msgstr "Calcular reglas de stock mínimo"
+msgstr "Calcular Reglas de Existencia Mínima"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 msgid "Compute Stock"
-msgstr "Calcular stock"
+msgstr "Calcular Existencia"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -1320,7 +1320,7 @@ msgstr "Crear lotes nuevos"
 #. module: stock
 #: selection:procurement.rule,procure_method:0
 msgid "Create Procurement"
-msgstr "Crear abastecimiento"
+msgstr "Crear Abastecimiento"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1363,7 +1363,7 @@ msgstr "Movimientos creados"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_procurement_ids
 msgid "Created Procurements"
-msgstr "Abastecimientos creados"
+msgstr "Abastecimientos Creados"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_create_uid
@@ -1471,7 +1471,7 @@ msgstr "Cantidad acumulativa"
 #: model:ir.actions.act_window,name:stock.location_open_quants
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Current Stock"
-msgstr "Stock actual"
+msgstr "Existencia Actual"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_qty_available
@@ -1481,7 +1481,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr "Cantidad actual de los productos.\nEn un contexto de una sola ubicación de existencias, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de existencias de ese almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de existencias de tipo 'Interna'."
+msgstr "Cantidad actual de productos.\nEn un contexto de una sola Ubicación de Existencias, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo Almacén, esto incluye los bienes almacenados en la Ubicación de Existencias de este Almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes almacenados en cualquier Ubicación de Existencias de tipo 'Interna'."
 
 #. module: stock
 #: code:addons/stock/stock.py:4828
@@ -1561,7 +1561,7 @@ msgstr "Fecha del último inventario"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_lines_date_move_date
 msgid "Date of latest Stock Move"
-msgstr "Fecha del último movimiento de stock"
+msgstr "Fecha del último Movimiento de Existencia"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_message_last_post
@@ -1646,7 +1646,7 @@ msgstr "Ruta de salida a seguir por defecto"
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Default: Take From Stock"
-msgstr "Por defecto: Obtenido desde las existencias"
+msgstr "Por defecto: Tomar de Existencia"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_route_ids
@@ -1674,7 +1674,7 @@ msgid ""
 "                vendors) and virtual locations which are the counterpart of\n"
 "                the stock operations like the manufacturing orders\n"
 "                consumptions, inventories, etc."
-msgstr "Define tus ubicaciones para reflejar  tu organización y  estructura\n de inventario. Odoo puede gestionar ubicaciones físicas\n(almacenes, estantes, cajones, etc), ubicaciones de empresas (clientes,\nproveedores) y ubicaciones virtuales que son la contraparte de\noperaciones de existencias como órdenes de manufactura\nconsumos, inventarios, etc."
+msgstr "Define tus ubicaciones para reflejar  tu organización y \nestructura de almacenes. Odoo puede gestionar ubicaciones físicas (almacenes, estantes, cajones, etc), ubicaciones de \ncontactos (clientes, proveedores) y ubicaciones virtuales que son la contraparte de operaciones de existencias como \nórdenes de manufactura consumos, inventarios, etc."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_putaway_strategy_id
@@ -1767,18 +1767,18 @@ msgstr "Descripción"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Pickings"
-msgstr "Descripción de conduces"
+msgstr "Descripción de Conduces"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Pickings (Rack, Row and Case Information)"
-msgstr "Descripción de hallazgos (estante, fila y de la información del caso)"
+msgstr "Descripción para Conduces (Estante,Fila E información del Caso)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template_description_picking
 msgid "Description on Picking"
-msgstr "Descripción de conduces"
+msgstr "Descripción en el Conduce"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_form
@@ -1831,7 +1831,7 @@ msgid ""
 "Determines the procurement method of the stock move that will be generated: "
 "whether it will need to 'take from the available stock' in its source "
 "location or needs to ignore its stock and create a procurement over there."
-msgstr "Determina el método de abastecimiento que se generará del movimiento de existencias: si será necesario 'coger de las existencias disponibles' en su ubicación origen o necesita ignorar las existencias y crea un abastecimiento a partir de él."
+msgstr "Determina el método de abastecimiento del movimiento de existencia que se generará: si será necesario 'tomar de las existencias disponibles' en su ubicación origen o necesita ignorar las existencias y crear una adquisición desde ahí."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
@@ -1989,7 +1989,7 @@ msgid ""
 "                from a vendor, Odoo will move products from the Vendor\n"
 "                location to the Stock location. Each report can be performed on\n"
 "                physical, partner or virtual locations."
-msgstr "Cada operación de almacén en Odoo mueve  los productos de una ubicación a otra. Por ejemplo, si recibes productos de un proveedor, Odoo va a mover los productos de la ubicación del proveedor a la ubicación de Existencias. Cada informe se puede realizar en ubicaciones físicas, de clientes/proveedores o virtuales."
+msgstr "Cada operación de existencia en Odoo mueve  los productos de una ubicación a otra. Por ejemplo, si recibes productos de un proveedor, Odoo va a mover los productos de la ubicación del proveedor a la ubicación de Existencias. Cada informe se puede realizar en ubicaciones físicas, de clientes/proveedores o virtuales."
 
 #. module: stock
 #: code:addons/stock/stock.py:4186
@@ -2005,7 +2005,7 @@ msgstr "Plantilla Excel"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 msgid "Exhausted Stock"
-msgstr "Existencias agotadas"
+msgstr "Existencias Agotadas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_date_expected
@@ -2101,7 +2101,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr "Cantidad prevista (calculada como cantidad a mano - saliente + entrante)\nEn un contexto de una sola ubicación de existencias, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de existencias de ese almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de existencias de tipo 'Interna'."
+msgstr "Cantidad prevista (calculada como Cantidad a Mano - Saliente + Entrante) \nEn un contexto de una sola Ubicación de Existencias, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo Almacén, esto incluye los bienes almacenados en la Ubicación de Existencias de ese almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de existencias de tipo 'Interna'."
 
 #. module: stock
 #: code:addons/stock/product.py:299
@@ -2186,7 +2186,7 @@ msgstr "Global"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_procurement_rules
 msgid "Global Procurement Rules"
-msgstr "Normas de contratación global"
+msgstr "Reglas Globales de Abastecimiento"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_location_path
@@ -2222,7 +2222,7 @@ msgstr "Agrupar por..."
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_form_stock_inherit
 msgid "Group's Pickings"
-msgstr "Grupos de conduces"
+msgstr "Grupos de Conduces"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_exist
@@ -2232,7 +2232,7 @@ msgstr "Tiene operaciones de paquete"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_move_ids_exist
 msgid "Has Stock Moves"
-msgstr "Tiene movimientos de Stock"
+msgstr "Tiene Moviemientos de Existencia"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_quant_reserved_exist
@@ -2265,7 +2265,7 @@ msgid ""
 "                an order, you can filter based on the name of the vendor or\n"
 "                the purchase order reference. Then you can confirm all products\n"
 "                received using the buttons on the right of each line."
-msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para registrar una recepción de producto.\n</p><p>\nAquí puede recibir productos individuales, no importa de qué pedido de compra o de \nqué conduce provengan. Encontrará la lista de todos los productos que están es espera. \nUna vez reciba el pedido, puede realizar un filtro basado en el nombre del proveedor \no la referencia del pedido de venta. Puede confirmar entonces todos los productos \nrecibidos usando los botones a la derecha de cada línea.\n</p>\n            "
+msgstr "Aquí puede recibir productos individuales, sin importar de que\n                orden de compra or conduce vinieron. Encontrarás\n                la lista de todos los productos que estás esperando. Una ves recibas\n                una orde,  puedes filtrar basado en el nombre del proveedor o\n                por la referencia de la orden de compra. Entonces podrás confirmar todos los productos \n                recibididos usando los botones a la derecha de cada línea."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_deliver_move
@@ -2462,7 +2462,7 @@ msgid ""
 "If this is checked, you will be able to choose the Serial Number / Lots. You"
 " can also decide to not put lots in this picking type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
-msgstr "Si esta casilla está seleccionada, podrás elegir el número de serie / lotes. También puede decidir no poner mucho en este tipo de cosecha.  Esto significa crear acciones con no mucho o no poner una restricción en la porción tomada."
+msgstr "Si esta casilla está seleccionada, podrás elegir el Número de Serie / Lotes. También puede decidir no poner lotes en este tipo de conduce.  Esto significa crear existencias sin lotes o no poner una restricción en el lote tomado."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_backorder_id
@@ -2486,7 +2486,7 @@ msgid ""
 "                        Procurements Orders. You usually don't need to worry about them, but\n"
 "                        sometimes the system can remain blocked without generating a\n"
 "                        corresponding document, usually due to a configuration problem."
-msgstr "Si ha configurado automático adquisición, Odoo genera automáticamente órdenes de compras. Generalmente no necesita preocuparse de ellos, pero a veces el sistema puede permanecer bloqueado sin generar un documento correspondiente, generalmente debido a un problema de configuración."
+msgstr "Si ha configurado abastecimiento automático, Odoo genera automáticamente órdenes de compras. Generalmente no necesita preocuparse de ellos, pero a veces el sistema puede permanecer bloqueado sin generar un documento correspondiente, generalmente debido a un problema de configuración."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_filter
@@ -2496,7 +2496,7 @@ msgid ""
 "  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and "
 "the system won't propose anything.  You can also let the system propose for "
 "a single product / lot /... "
-msgstr "Si hace un inventario completo, puede elegir \"Todos los productos\" y se rellenará inicialmente el inventario con el stock actual. Si sólo hace inventario de algunos productos (p.ej. recuento cíclico) puede elegir 'Selección manual de productos' y el sistema no le propondrá nada inicialmente. También puede dejar que el sistema le proponga un único producto / lote / ..."
+msgstr "Si hace un inventario completo, puede elegir \"Todos los Productos\" y se rellenará el inventario con la existencia actual. Si hará de algunos productos (p.ej. Recuento Cíclico) puede elegir 'Selección Manual de Productos' y el sistema no le propondrá nada. También puede dejar que el sistema le proponga para un único producto / lote / ..."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2537,7 +2537,7 @@ msgid ""
 "In Odoo, <strong>Reordering Rules</strong> are used to replenish your products.\n"
 "                        Odoo will automatically propose a procurement to buy new products if you are\n"
 "                        running out of stock."
-msgstr "En Odoo, <strong>Reordenar reglas</strong> se utilizan para reponer sus productos.\n                        Odoo automáticamente propondrá una contratación para comprar nuevos productos si se está ejecutando fuera de stock."
+msgstr "En Odoo, las <strong>Reglas de Reabastecimiento</strong> se utilizan para reponer sus productos.\n                        Odoo automáticamente propondrá un requisición para comprar nuevos productos si se está\nquedando sin existencia."
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -2888,7 +2888,7 @@ msgid ""
 "It is therefore a good idea to check and try to resolve those procurement\n"
 "                        exceptions. These are accessible from the Schedulers menu (you need the Stock\n"
 "                        Manager role to see it)."
-msgstr "Por lo tanto es una buena idea para comprobar y tratar de resolver las excepciones de contratación. Estos son accesibles desde el menú de programadores (que tenga el rol de administrador de Stock para verlo)."
+msgstr "Por lo tanto es una buena idea para comprobar y tratar de resolver las excepciones de abastecimiento. Estas son accesibles desde el menú de Planificadores (necesita tener el rol de Gestor de Existencias para verlo)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2909,7 +2909,7 @@ msgstr "Especifica si los bienes se entregan parcialmente o de una"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_last_done_picking
 msgid "Last 10 Done Pickings"
-msgstr "Últimos 10 conduces realizados"
+msgstr "Últimos 10 Conduces Realizados"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_message_last_post
@@ -3144,7 +3144,7 @@ msgstr "Rutas de ubicaciones"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_lot_stock_id
 msgid "Location Stock"
-msgstr "Ubicación de existencias"
+msgstr "Ubicación de Existencias"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_usage
@@ -3250,7 +3250,7 @@ msgid ""
 "                        outgoing deliveries according to the settings in the picking type.\n"
 "                        The tracking can be configured on every product: not any tracing at\n"
 "                        all, tracking by lot, or tracking by unique serial number."
-msgstr "Muchos pueden ser codificados en los envíos entrantes, traslados internos y salientes entregas según los ajustes en el tipo de cosecha.\n                        Puede configurar el seguimiento en todos los productos: no cualquier rastreo, rastreo por lote, o de seguimiento por número de serie único."
+msgstr "Muchos pueden ser codificados en los envíos entrantes, traslados internos y salientes entregas según los ajustes en el tipo de conduce.\n                        Puede configurar el seguimiento en todos los productos: no cualquier rastreo, rastreo por lote, o de seguimiento por número de serie único."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_mto_pull_id
@@ -3260,7 +3260,7 @@ msgstr "Regla obtener desde existencias"
 #. module: stock
 #: model:ir.model,name:stock.model_make_procurement
 msgid "Make Procurements"
-msgstr "Realizar abastecimientos"
+msgstr "Realizar Abastecimientos"
 
 #. module: stock
 #: code:addons/stock/stock.py:3463
@@ -3279,7 +3279,7 @@ msgstr "Empaquetar en una ubicación dedicada, y llevarlo entonces a la ubicaci�
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
 msgid "Manage Different Stock Owners"
-msgstr "Gestionar diferentes propietarios de existencias"
+msgstr "Gestionar Diferentes Propietarios de Existencias"
 
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
@@ -3309,7 +3309,7 @@ msgstr "Administrar opciones de empaquetado disponible por productos"
 #. module: stock
 #: selection:stock.config.settings,group_stock_tracking_owner:0
 msgid "Manage consignee stocks (advanced)"
-msgstr "Administrar las reservas del destinatario (avanzadas)"
+msgstr "Gestionar Existencias de Consignatarios (avanzadas)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3319,12 +3319,12 @@ msgstr "Gestionar ubicaciones predeterminadas por producto"
 #. module: stock
 #: selection:stock.config.settings,module_stock_picking_wave:0
 msgid "Manage picking in batch per worker"
-msgstr "Gestión de conduce en lote por trabajador"
+msgstr "Gestión de Conduce en lote por trabajador"
 
 #. module: stock
 #: selection:stock.config.settings,module_stock_picking_wave:0
 msgid "Manage pickings one at a time"
-msgstr "Gestionar conduces uno a la vez"
+msgstr "Gestionar Conduces uno a la vez"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3392,13 +3392,13 @@ msgstr "Cantidad mínima"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_order_orderpoint_id
 msgid "Minimum Stock Rule"
-msgstr "Regla de existencias mínimas"
+msgstr "Regla de Existencias Mínimas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_orderpoint_ids
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_calendar
 msgid "Minimum Stock Rules"
-msgstr "Reglas de stock mínimo"
+msgstr "Reglas de Existencia Mínima"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_propagation_minimum_delta
@@ -3427,7 +3427,7 @@ msgid ""
 "Most operations are prepared automatically by Odoo according\n"
 "                to your preconfigured logistics rules, but you can also record\n"
 "                manual stock movements."
-msgstr "Mayoría de las operaciones se prepara automáticamente Odoo según las reglas preconfiguradas de la logística, pero también puede registrar movimientos de stock manual."
+msgstr "La mayoría de las operaciones son preparadas automáticamente por Odoo según las reglas preconfiguradas de la logística, pero también puede registrar movimientos manuales de existencias."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_move_id
@@ -3544,7 +3544,7 @@ msgstr "Ubicación de destino negativo"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 msgid "Negative Stock"
-msgstr "Existencias negativas"
+msgstr "Existencia Negativa"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -3579,7 +3579,7 @@ msgstr "Sin inventario aún"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
 msgid "No Stock Move yet"
-msgstr "No hay movimiento de existencias aún"
+msgstr "Sin Movimiento de Existencia"
 
 #. module: stock
 #: selection:product.template,tracking:0
@@ -3844,7 +3844,7 @@ msgstr "Opcional: Siguiente movimiento de existencias, cuando se encadenan."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_move_orig_ids
 msgid "Optional: previous stock move when chaining them"
-msgstr "Opcional: movimiento previo cuando se encadenan"
+msgstr "Opcional: anterior movimiento de existencias, cuando se encadenan."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4165,17 +4165,17 @@ msgstr "Conduce"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking List"
-msgstr "Conduce"
+msgstr "Lista de Conduce"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr "Conduces"
+msgstr "Listas de Conduces"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr "Conduces concodigos de barra"
+msgstr "Operaciones con Conduces"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_picking_type_id
@@ -4185,24 +4185,24 @@ msgstr "Conduces concodigos de barra"
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr "Tipo de conduce"
+msgstr "Tipo de Conduce"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_name
 msgid "Picking Type Name"
-msgstr "Nombre del tipo de conduce"
+msgstr "Nombre del Tipo de Conduce"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_picking_type_id
 msgid ""
 "Picking Type determines the way the picking should be shown in the view, "
 "reports, ..."
-msgstr "El tipo de conduce determinar la forma en la que conduce debe ser mostrado en las vistas, informes, ..."
+msgstr "El Tipo de Conduce determina la forma en la que el conduce debe ser mostrado en las vistas, informes, ..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
 msgid "Picking Type for Returns"
-msgstr "Tipo de conduce para las devoluciones"
+msgstr "Tipo de Conduce para las Devoluciones"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.stock_picking_type_config
@@ -4211,7 +4211,7 @@ msgstr "Tipo de conduce para las devoluciones"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Picking Types"
-msgstr "Tipos de conduce"
+msgstr "Tipos de Conduce"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_picking_wave
@@ -4236,7 +4236,7 @@ msgstr "Conduces ya procesados"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
 msgid "Pickings for Groups"
-msgstr "Conduces para grupos"
+msgstr "Conduces para Grupos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4342,7 +4342,7 @@ msgstr "Abastecimiento"
 #: model:ir.ui.menu,name:stock.menu_stock_procurement_action
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Procurement Exceptions"
-msgstr "Excepciones abastecimiento"
+msgstr "Excepciones Abastecimiento"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_group_id
@@ -4350,7 +4350,7 @@ msgstr "Excepciones abastecimiento"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_group_id
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Procurement Group"
-msgstr "Grupo de abastecimiento"
+msgstr "Grupo de Abastecimiento"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_order_location_id
@@ -4358,7 +4358,7 @@ msgstr "Grupo de abastecimiento"
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_procurement
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_procurement
 msgid "Procurement Location"
-msgstr "Ubicación de abastecimiento"
+msgstr "Ubicación de Abastecimiento"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_make_procurement
@@ -4367,25 +4367,25 @@ msgstr "Ubicación de abastecimiento"
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
 msgid "Procurement Request"
-msgstr "Solicitud de abastecimiento"
+msgstr "Solicitud de Abastecimiento"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "Petición de abastecimiento"
+msgstr "Requisición de Abastecimiento"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule
 #: model:ir.model.fields,field_description:stock.field_stock_move_rule_id
 msgid "Procurement Rule"
-msgstr "Regla de abastecimiento"
+msgstr "Regla de Abastecimiento"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.procrules
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_pull_ids
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Procurement Rules"
-msgstr "Reglas de abastecimiento"
+msgstr "Reglas de Abastecimiento"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_procurement_op
@@ -4611,7 +4611,7 @@ msgstr "Ubicación del control de calidad"
 msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
 "stock moves that have already been processed (except by the Administrator)."
-msgstr "Las cantidades, las unidades de medida, los productos y las ubicaciones no pueden ser modificadas en movimientos de existencias que ya han sido procesados (excepto por un administrador)."
+msgstr "Cantidades, Unidades de Medida, Productos y Ubicaciones no pueden ser modificados en movimientos de existencias que ya han sido procesados (excepto por un Administrador)."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_qty
@@ -4651,7 +4651,7 @@ msgstr "La cantidad no puede ser negativa"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_availability
 msgid "Quantity in stock that can still be reserved for this move"
-msgstr "Cantidad en existencias que puede ser reservada aún para este movimiento"
+msgstr "Cantidad en existencias que aún puede ser reservada para este movimiento"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_qty
@@ -4677,7 +4677,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr "Cantidad de los productos que está planificado que llegue.\nEn un contexto de una sola ubicación de existencias, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de existencias de ese almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de existencias de tipo 'Interna'."
+msgstr "Cantidad de productos que están planificados a llegar.\nEn un contexto de una sola Ubicación de Existencias, esto incluye los bienes llegando a esta Ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo almacén, esto incluye los bienes llegando a la Ubicación de Existencias de este Almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes llegando a cualquier Ubicación de Existencias de tipo 'Interna'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_outgoing_qty
@@ -4686,7 +4686,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr "Cantidad de los productos que está planificado que salga.\nEn un contexto de una sola ubicación de existencias, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de existencias de ese almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de existencias de tipo 'Interna'."
+msgstr "Cantidad de productos que están planificados a salir.\nEn un contexto de una sola Ubicación de Existencias, esto incluye los bienes saliendo de esta Ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo almacén, esto incluye los bienes saliendo de la Ubicación de Existencias de este Almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes saliendo de cualquier Ubicación de Existencias de tipo 'Interna'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_operation_link_qty
@@ -4767,7 +4767,7 @@ msgstr "Recepciones"
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods directly in stock (1 step)"
-msgstr "Recibir bienes directamente en las existencias (1 paso)"
+msgstr "Recibir bienes directamente en inventario (1 paso)"
 
 #. module: stock
 #: code:addons/stock/product.py:295
@@ -4942,7 +4942,7 @@ msgstr "Restablecer Operaciones"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Resolve Procurement Exceptions"
-msgstr "Resolver Excepciones Adquisiciones"
+msgstr "Resolver Excepciones Abastecimientos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_resupply_from_wh
@@ -4978,7 +4978,7 @@ msgstr "Devolver conduce"
 #: code:addons/stock/wizard/stock_return_picking.py:178
 #, python-format
 msgid "Returned Picking"
-msgstr "Conduce devuelto"
+msgstr "Conduce Devuelto"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5142,7 +5142,7 @@ msgstr "Buscar inventario"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
 msgid "Search Stock Location Paths"
-msgstr "Buscar Stock Ubicación Caminos"
+msgstr "Buscar Caminos de Ubicación de Existencias"
 
 #. module: stock
 #: code:addons/stock/stock.py:2867
@@ -5262,7 +5262,7 @@ msgstr "Sólo enviar"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Ship directly from stock (Ship only)"
-msgstr "Enviar directamente desde la existencias (Sólo enviar)"
+msgstr "Enviar directamente desde existencias (Solo Enviar)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
@@ -5390,23 +5390,23 @@ msgstr "Estado"
 #: model:stock.location,name:stock.stock_location_stock
 #, python-format
 msgid "Stock"
-msgstr "Existencias"
+msgstr "Existencia"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "Stock Inventory"
-msgstr "Inventario de existencias"
+msgstr "Inventario de Existencias"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_tree
 msgid "Stock Inventory Lines"
-msgstr "Líneas de regularización de inventario"
+msgstr "Líneas de Inventario de Existencias"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_level_forecast_report_product
 #: model:ir.actions.act_window,name:stock.action_stock_level_forecast_report_template
 msgid "Stock Level Forecast"
-msgstr "Previsión niveles de existencias"
+msgstr "Previsión de Nivel de Existencias"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
@@ -5419,17 +5419,17 @@ msgstr "Previsión del Nivel de existencias"
 #: model:ir.ui.view,arch_db:stock.view_location_form
 #: model:ir.ui.view,arch_db:stock.view_location_tree2
 msgid "Stock Location"
-msgstr "Ubicación de existencias"
+msgstr "Ubicación de Existencia"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
 msgid "Stock Locations"
-msgstr "Ubicaciones de existencias"
+msgstr "Ubicaciones de Existencia"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento de existencias"
+msgstr "Movimiento de Existencia"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_move_form2
@@ -5442,39 +5442,39 @@ msgstr "Movimiento de existencias"
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Stock Moves"
-msgstr "Movimientos de existencias"
+msgstr "Movimientos de Existencias"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_graph
 #: model:ir.ui.view,arch_db:stock.view_move_pivot
 msgid "Stock Moves Analysis"
-msgstr "Análisis de los movimientos de existencias"
+msgstr "Análisis de Movimientos de Existencia"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.product_open_quants
 #: model:ir.actions.act_window,name:stock.product_template_open_quants
 msgid "Stock On Hand"
-msgstr "Cantidad a mano"
+msgstr "Existencia a Mano"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
 msgid "Stock Operations"
-msgstr "Operaciones de existencias"
+msgstr "Operaciones de Existencia"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_picking_id
 msgid "Stock Picking"
-msgstr "Conduce de almacen"
+msgstr "Conduce de Existencia"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that are Available (Ready to process)"
-msgstr "Movimientos de existencias que están disponibles (preparados para ser procesados)"
+msgstr "Movimientos de existencia que están Disponibles (Listos para Procesar)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that are Confirmed, Available or Waiting"
-msgstr "Los movimientos de existencias que están confirmados, disponibles o en espera."
+msgstr "Movimientos de existencias que están Confirmados, Disponibles o Esperando."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -5490,7 +5490,7 @@ msgstr "Almacenable"
 #: code:addons/stock/product.py:400
 #, python-format
 msgid "Stockable Product"
-msgstr "Productos almacenables"
+msgstr "Producto Almacenable"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplied_wh_id
@@ -5526,7 +5526,7 @@ msgstr "Almacén de suministro"
 #. module: stock
 #: selection:procurement.rule,procure_method:0
 msgid "Take From Stock"
-msgstr "Obtener de las existencias"
+msgstr "Tomar desde Existencia"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse
@@ -5539,7 +5539,7 @@ msgid ""
 "Technical field containing the quant that created this link between an "
 "operation and a stock move. Used at the stock_move_obj.action_done() time to"
 " avoid seeking a matching quant again"
-msgstr "Campo técnico que contiene el quant  que creó el enlace entre una operación y su movimiento de existencias. Usado en stock_move_obj.action_done() para evitar buscar el quant correspondiente otra vez"
+msgstr "Campo técnico que contiene el quant que creó el enlace entre una operación y su movimiento de existencias. Usado en stock_move_obj.action_done() para evitar buscar el quant correspondiente otra vez"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_warehouse_id
@@ -5608,7 +5608,7 @@ msgid ""
 "The 'Automatic Move' / 'Manual Operation' value will create a stock move "
 "after the current one.  With 'Automatic No Step Added', the location is "
 "replaced in the original move."
-msgstr "El movimiento automático / Manual funcionamiento valor crea un movimiento común después de la actual.  Con ‘automático No paso añadido, la ubicación es reemplazada en el movimiento original."
+msgstr "El valor de  'Movimiento Automático' / 'Operación Manual' creará un movimiento de existencia después del actual.  Con ‘No Añadir Paso Automático\", la ubicación es reemplazada en el movimiento original."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5723,7 +5723,7 @@ msgid ""
 "                operation a specific type which will alter its views accordingly.\n"
 "                On the picking type you could e.g. specify if packing is needed by default,\n"
 "                if it should show the customer."
-msgstr "El sistema de tipo de selección permite asignar cada operación común un tipo específico que se altera en consecuencia sus puntos de vista.\n                En el tipo de cosecha puede especificar por ejemplo, si el embalaje es necesario de forma predeterminada, si debe mostrar al cliente."
+msgstr "El sistema de tipo de conduce te permite asignarle a cada operación de existencia un tipo específico que alterará sus vistas correspondientes.\n                En el tipo de conduce puede, por ejemplo, especificar si necesita embalaje por defecto, si debe mostrar al cliente."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_qty_multiple
@@ -5735,12 +5735,12 @@ msgstr "La cantidad del abastecimiento será redondeada a este múltiplo. Si es 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_rule_id
 msgid "The procurement rule that created this stock move"
-msgstr "La regla de compras que creó este movimiento de stock"
+msgstr "La regla de abastecimiento que creó este movimiento de existencia"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_push_rule_id
 msgid "The push rule that created this stock move"
-msgstr "La regla push que creó este movimiento"
+msgstr "La regla de empluje que creó este movimiento"
 
 #. module: stock
 #: code:addons/stock/stock.py:4421
@@ -5787,7 +5787,7 @@ msgstr "Las opciones de inventario seleccionadas no son coherentes"
 #: code:addons/stock/stock.py:573
 #, python-format
 msgid "The serial number %s is already in stock"
-msgstr "El número de serie de %s ya está en stock"
+msgstr "El número de serie de %s ya está en existencia"
 
 #. module: stock
 #: code:addons/stock/stock.py:1195
@@ -5839,14 +5839,14 @@ msgstr "Esto permite asignar un lote (o nº de serie) a los conduces y movimient
 msgid ""
 "This allows you to handle minimum stock rules differently by the possibility to take into account the purchase and delivery calendars \n"
 "-This installs the module stock_calendar."
-msgstr "Esto le permite manejar reglas de stock mínimas diferentemente por la posibilidad de tener en cuenta la compra y entrega calendarios - esto instala el módulo stock_calenda."
+msgstr "Esto le permite manejar reglas de existencias mínimas diferentemente por la posibilidad de tener en cuenta los calendarios de compra y entrega - esto instala el módulo stock_calendar."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.quantsact
 msgid ""
 "This analysis gives you a fast overview on the current stock level of your "
 "products and their current inventory value."
-msgstr "Este análisis le da una visión rápida sobre el nivel de stock actual de sus productos y su valor actual del inventario."
+msgstr "Este análisis le da una visión rápida sobre el nivel actual de existencias de sus productos y su valor actual de inventario."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_packaging_id
@@ -5937,7 +5937,7 @@ msgid ""
 "receive the goods you are returning now, make sure to <b>reverse</b> the "
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
-msgstr "Esta selección parece encadenarse con otra operación. Más adelante, si usted recibe las mercancías que están volviendo ahora, asegúrese de que a <b>inversa</b> la cosecha devuelto para evitar reglas logísticas a aplicarse otra vez (que serían crear duplicadas operaciones)"
+msgstr "Este conduce parece estar amarrado con otra operación. Más adelante, si usted recibe las mercancías que están devolviendo ahora, asegúrese de <b>reversar</b> el conduce devuelto para evitar reglas logísticas a aplicarse otra vez (que sería crear operaciones duplicadas)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty_new_quantity
@@ -5964,7 +5964,7 @@ msgstr "Se utilizará esta ubicación de existencias, en lugar de la ubicación 
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr "Esta ubicación de existencias será utilizada, en lugar de la ubicación por defecto, como la ubicación de origen para recibir mercancías desde esta empresa"
+msgstr "Se utilizará esta ubicación de existencias, en lugar de la por defecto, como la ubicación de origen para mercancías que recibes del actual contacto."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_property_stock_production
@@ -5972,7 +5972,7 @@ msgstr "Esta ubicación de existencias será utilizada, en lugar de la ubicació
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
-msgstr "Se usará esta ubicación de existencias, en lugar de la de por defecto, como la ubicación origen para los movimientos de existencias generados por las órdenes de fabricación."
+msgstr "Se utilizará esta ubicación de existencias, en lugar de la por defecto, como la ubicación de origen para los movimientos de existencias generados por órdenes de fabricación."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_property_stock_procurement
@@ -5980,7 +5980,7 @@ msgstr "Se usará esta ubicación de existencias, en lugar de la de por defecto,
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
-msgstr "Se usará esta ubicación de existencias, en lugar de la de por defecto, como la ubicación origen para los movimientos de existencias generados por los abastecimientos."
+msgstr "Se utilizará esta ubicación de existencias, en lugar de la por defecto, como la ubicación de origen para los movimientos de existencias generados por abastatecimientos."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_property_stock_inventory
@@ -5988,7 +5988,7 @@ msgstr "Se usará esta ubicación de existencias, en lugar de la de por defecto,
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr "Se usará esta ubicación de existencias, en lugar de la de por defecto, como la ubicación origen para los movimientos de existencias generados cuando se realizan inventarios."
+msgstr "Se utilizará esta ubicación de existencias, en lugar de la por defecto, como la ubicación de origen para los movimientos de existencias generados cuando se realizan inventarios."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_stock_tracking_owner
@@ -6028,7 +6028,7 @@ msgid ""
 "                            subdivisions of your Warehouse called <strong>Locations</strong> (ex:\n"
 "                            Shipping area, Merchandise return, Shelf 34 etc).\n"
 "                            Do not use Locations if you do not manage inventory per zone."
-msgstr "Para organizar mejor su acción, puede crear subdivisiones de su almacén llamado <strong>ubicaciones</strong> (ex: zona de envío, retorno de mercancía, estante 34 etc.).\n                            No utilice lugares si no manejas inventario por zona."
+msgstr "Para organizar mejor sus existencias, puede crear subdivisiones de su Almacén llamadas <strong>Ubicaciones</strong> (ej: Zona de envío, Retorno de mercancía, Estante 34 etc.).\n                            No utilice Ubicaciones si no manejas inventario por zona."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6314,7 +6314,7 @@ msgid ""
 "                        product. According to the product configuration, this may\n"
 "                        trigger a draft purchase order, a manufacturing order or\n"
 "                        a new task."
-msgstr "Rellene esto para lanzar una petición de abastecimiento para este producto. De acuerdo a la configuración de su producto, esto puede crear un pedido de compra en borrador, una orden de fabricación o una nueva tareas."
+msgstr "Rellene esto para lanzar una petición de abastecimiento para este producto. De acuerdo a la configuración de su producto, esto puede crear una orden de compra en borrador, una orden de fabricación o una nueva tarea."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
@@ -6558,7 +6558,7 @@ msgid ""
 "the default route when products pass through this warehouse.  This behaviour"
 " can be overridden by the routes on the Product/Product Categories or by the"
 " Preferred Routes on the Procurement"
-msgstr "Cuando se selecciona un almacén para esta ruta, esta ruta puede considerarse como la ruta por defecto cuando los productos pasan a través de este almacén.  Este comportamiento puede cambiarse por las rutas en las categorías de producto/producto o por las rutas preferidas en la consecución"
+msgstr "Cuando se selecciona un almacén para esta ruta, esta ruta puede considerarse como la ruta por defecto cuando los productos pasen a través de este almacén.  Este comportamiento puede cambiarse por las rutas en las categorías de producto/producto o por las Rutas Preferidas en el Abastecimiento"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_product_selectable
@@ -6591,7 +6591,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field,"
 " Odoo generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
-msgstr "Cuando las existencias virtuales estén por debajo de la cantidad mínima especificada en este campo, Odoo generará un abastecimiento para llevar la cantidad prevista a la cantidad máxima."
+msgstr "Cuando las existencias virtuales estén por debajo de la Cantidad Min. especificada en este campo, Odoo generará un abastecimiento para llevar la cantidad prevista a la Cantidad Max."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_max_qty
@@ -6599,7 +6599,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity, Odoo generates a "
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
-msgstr "Cuando las existencias virtuales estén por debajo de la cantidad, Odoo generará un abastecimiento para llevar la cantidad prevista a la cantidad especificada como aquí como máxima."
+msgstr "Cuando las existencias virtuales estén por debajo de la Cantidad Min., Odoo generará un abastecimiento para llevar la cantidad prevista a la Cantidad especificada como Cantidad Max."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -6617,7 +6617,7 @@ msgstr "Asistente"
 #: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
-msgstr "El asistente comprobará todas las reglas de stock mínimo y generará orden de abastecimiento."
+msgstr "El Asistente comprobará todas las reglas de existencia mínima y generará una orden de abastecimiento."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_product_variant
@@ -6633,7 +6633,7 @@ msgid ""
 "                    your warehouses and that define the flows of your products. These\n"
 "                    routes can be assigned to a product, a product category or be fixed\n"
 "                    on procurement or sales order."
-msgstr "Puede definir aquí las principales rutas que discurren por\n                     sus almacenes y que definen los flujos de sus productos. Estas\n                     rutas se pueden asignar a un producto, una categoría de producto o fijarse\n                     en el orden de adquisición o de venta."
+msgstr "Puede definir aquí las principales rutas que discurren por\n                     sus almacenes y que definen los flujos de sus productos. Estas\n                     rutas se pueden asignar a un producto, una categoría de producto o fijarse\n                     en el orden de abastecimiento o de venta."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -6644,7 +6644,7 @@ msgid ""
 " confirmed orders and reservations) is below the minimum quantity, Odoo will"
 " generate a procurement request to increase the stock up to the maximum "
 "quantity."
-msgstr "Puede definir sus reglas de valores mínimos, de manera que Odoo creará automáticamente los proyectos de órdenes de fabricación o solicitud de cotizaciones de acuerdo con el nivel de existencias. Una vez que la acción virtual de un producto (= existencias disponibles menos todos los pedidos y reservas confirmadas) está por debajo de la cantidad mínima, Odoo generará una solicitud de adquisición para aumentar el capital hasta la cantidad máxima."
+msgstr "Puede definir sus reglas de existencias mínimas, para que Odoo autimáticamente cree órdenes de fabricación en borrador o solicitudes de cotización de acuerdo con el nivel de existencias. Una vez que la existencia virtual de un producto (= existencia a mano menos todos los pedidos y reservas confirmadas) está por debajo de la cantidad mínima, Odoo generará una solicitud de abastecimiento para aumentar la existencia hasta la cantidad máxima."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -6685,7 +6685,7 @@ msgstr "No puede cambiar la unidad de medida de un producto que ya ha sido usado
 #: code:addons/stock/stock.py:4432
 #, python-format
 msgid "You can not delete pack operations of a done picking"
-msgstr "No es posible eliminar las operaciones de carga de un hecho recogiendo"
+msgstr "No es posible eliminar las operaciones de paquetes de un conduce realizado"
 
 #. module: stock
 #: code:addons/stock/stock.py:384
@@ -6867,7 +6867,7 @@ msgstr "_Cancelar"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "a stockable Product"
-msgstr "Productos almacenables"
+msgstr "un Producto almacenable"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6990,7 +6990,7 @@ msgstr "report.stock.forecast"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_config_settings
 msgid "stock.config.settings"
-msgstr "Parámetros de configuración de existencias"
+msgstr "stock.config.settings"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_fixed_putaway_strat
@@ -7015,7 +7015,7 @@ msgstr "la lista de proveedores"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "to mark the products as transferred to your stock location"
-msgstr "para marcar los productos como trasladado a su ubicación social"
+msgstr "para marcar los productos como transferidos a su ubicación de existencia"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_max_qty
