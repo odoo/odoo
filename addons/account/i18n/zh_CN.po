@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 # Yuan Xulei <hi@yxl.name>, 2016
 # Talway <9010446@qq.com>, 2016
 # 老窦 北京 <2662059195@qq.com>, 2016
@@ -63,6 +64,42 @@ msgid ""
 "    ${object.user_id.signature | safe}\n"
 "% endif\n"
 msgstr ""
+"\n"
+"<p>尊敬的 ${object.partner_id.name}\n"
+"% set access_action = object.get_access_action()\n"
+"% set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>请查收您的发票 <strong>${object.number}</strong>\n"
+"% if object.origin:\n"
+"(with reference: ${object.origin} )\n"
+"% endif\n"
+"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">查看发票</a>\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>此发票已经付款完成。</p>\n"
+"% else:\n"
+"    <p>请您尽早结清账款。</p>\n"
+"% endif\n"
+"\n"
+"<p>致谢,</p>\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -268,6 +305,76 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
+"<html>\n"
+"                <head></head>\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- HEADER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      发票 ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENT -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- FOOTER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${user.company_id.name}<br/>\n"
+"                                ${user.company_id.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if user.company_id.email:\n"
+"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if user.company_id.website:\n"
+"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${user.company_id.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            由 <a href=\"https://www.odoo.com\">Odoo</a>版权所有.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1688,7 +1795,7 @@ msgstr "金额"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
 msgid "Amount Currency"
-msgstr ""
+msgstr "总额外币"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -1946,7 +2053,7 @@ msgstr "至少有一个入站"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_outbound
 msgid "At least one outbound"
-msgstr "至少有一个出去的"
+msgstr "至少有一个出站"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -1996,7 +2103,7 @@ msgstr "等待付款"
 #: code:addons/account/models/chart_template.py:183
 #, python-format
 msgid "BILL"
-msgstr "BILL"
+msgstr "账单"
 
 #. module: account
 #: selection:res.partner,trust:0
@@ -2200,7 +2307,7 @@ msgstr "在继续之前，你必须安装你所在国家的科目表（或者如
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr "属于用户的当前公司"
+msgstr "当前用户属于公司"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2489,7 +2596,7 @@ msgstr "在计算(%s)的期间发现的现金差异"
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
 msgid "CashBox Line"
-msgstr "钱箱行"
+msgstr "钱箱明细行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_cashbox_id
@@ -2499,7 +2606,7 @@ msgstr "钱箱"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_cashbox_lines_ids
 msgid "Cashbox Lines"
-msgstr "钱箱行"
+msgstr "钱箱明细行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_categ_id
@@ -2578,7 +2685,7 @@ msgstr "检查关张余额"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_is_difference_zero
 msgid "Check if difference is zero."
-msgstr "检查差额是否是零"
+msgstr "检查差额是否为零"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_reconcile
@@ -2650,17 +2757,17 @@ msgstr "点击添加银行账户"
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Click to add a journal."
-msgstr "点击去创建一个日记账"
+msgstr "点击创建一个日记账"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.account_tag_action
 msgid "Click to add a new tag."
-msgstr "点击来创建一个新标签"
+msgstr "点击创建一个新标签"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
 msgid "Click to add an account."
-msgstr "点击去添加一个账户"
+msgstr "点击添加一个账户"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2670,43 +2777,43 @@ msgstr "点击从收藏夹添加/删除"
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
 msgid "Click to create a customer invoice."
-msgstr "点击去创建一个客户发票"
+msgstr "点击创建一个客户发票"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Click to create a journal entry."
-msgstr "点击去创建一个日记账分录"
+msgstr "点击创建一个日记账分录"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
 msgid "Click to create a new cash log."
-msgstr "点击去创建一个新现金记录"
+msgstr "点击创建一个新现金记录"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Click to create a reconciliation model."
-msgstr "点击去创建一个调节模型"
+msgstr "点击创建一个调节模型"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
 msgid "Click to define a new account type."
-msgstr "点击去创建一个新的科目类型"
+msgstr "点击创建一个新的科目类型"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
 msgid "Click to record a new vendor bill."
-msgstr "点击去记录一张新供应商账单"
+msgstr "点击记录一张新供应商账单"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
 msgid "Click to register a bank statement."
-msgstr "点击去登记银行对账单"
+msgstr "点击登记银行对账单"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_payments
 #: model:ir.actions.act_window,help:account.action_account_payments_payable
 msgid "Click to register a payment"
-msgstr "点击去创建一个付款"
+msgstr "点击创建一个付款"
 
 #. module: account
 #. openerp-web
@@ -2742,7 +2849,7 @@ msgstr "代码"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_coin_value
 msgid "Coin/Bill Value"
-msgstr "硬币／账单　价值"
+msgstr "账目/零钱数（指钱箱中）"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_color
@@ -3089,7 +3196,7 @@ msgstr "创建现金流量表"
 #: code:addons/account/models/account_journal_dashboard.py:234
 #, python-format
 msgid "Create invoice/bill"
-msgstr "创建发票／账单"
+msgstr "创建发票/账单"
 
 #. module: account
 #. openerp-web
@@ -3244,7 +3351,7 @@ msgstr "创建时间"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Credit"
-msgstr "Credit"
+msgstr "贷方"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_credit_card
@@ -3323,7 +3430,7 @@ msgstr "货币比率"
 #. module: account
 #: model:ir.model.fields,help:account.field_wizard_multi_charts_accounts_currency_id
 msgid "Currency as per company's country."
-msgstr "币按公司所在的国家。"
+msgstr "以公司所在的国家或地区货币币种为准。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1329
@@ -3477,7 +3584,7 @@ msgstr "开票日之后的天数"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Debit"
-msgstr "Debit"
+msgstr "借方"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_inbound_payment_method_ids
@@ -4151,7 +4258,7 @@ msgstr "如果把钱放进出纳机，填写这张表："
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_filter_cmp
 msgid "Filter by"
-msgstr "筛选按"
+msgstr "筛选"
 
 #. module: account
 #. openerp-web
@@ -4814,12 +4921,12 @@ msgstr "导入.qif 文件"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_csv
 msgid "Import in .csv format"
-msgstr "通过 CSV 文件导入"
+msgstr "导入 .csv 格式文件"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_ofx
 msgid "Import in .ofx format"
-msgstr "导入.ofx格式"
+msgstr "导入 .ofx 格式"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5102,19 +5209,19 @@ msgstr "发票确认前必须是草稿或形式发票状态。"
 #, python-format
 msgid ""
 "Invoice must be in draft, Pro-forma or open state in order to be cancelled."
-msgstr ""
+msgstr "发票必须处于草稿，形式或开放状态才能取消。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
 #, python-format
 msgid "Invoice must be paid in order to set it to register payment."
-msgstr ""
+msgstr "必须支付发票才能将其设置为注册付款。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
 msgid "Invoice must be validated in order to set it to register payment."
-msgstr ""
+msgstr "登记付款前必须先确认发票。"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -5215,7 +5322,7 @@ msgstr "开票和付款"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
 msgid "Is zero"
-msgstr "是0"
+msgstr "为零0"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
@@ -5347,7 +5454,7 @@ msgstr "日记账"
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
 msgid "Journal & Partner"
-msgstr "日记账 & 业务伙伴"
+msgstr "业务伙伴 & 日记账"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:253
@@ -5490,7 +5597,7 @@ msgstr "理由"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
 msgid "Kanban dashboard"
-msgstr "看板仪表板"
+msgstr "看板视图"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard_graph
@@ -6375,7 +6482,7 @@ msgstr "科目代码的中的数字位数"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:193
 #, python-format
 msgid "OK"
-msgstr "Ok"
+msgstr "OK"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6717,7 +6824,7 @@ msgstr "已付于"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reconciled
 msgid "Paid/Reconciled"
-msgstr "已付／已调节"
+msgstr "已付/已调节"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_parent_id
@@ -7115,7 +7222,7 @@ msgstr "请创建发票明细行。"
 #: code:addons/account/models/account_move.py:140
 #, python-format
 msgid "Please define a sequence for the refunds"
-msgstr ""
+msgstr "请为退款定义一个序列"
 
 #. module: account
 #: code:addons/account/models/account_move.py:141
@@ -7327,9 +7434,7 @@ msgstr "形式"
 msgid ""
 "Programmation error: the expected model for this action is "
 "'account.invoice'. The provided one is '%d'."
-msgstr ""
-"编程错误：the expected model for this action is　account.invoice'. The provided "
-"one is '%d'"
+msgstr "编程错误：这个动作的预期模型是 'account.invoice' 。 而您提供的，是 '%d'"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:121
@@ -7337,8 +7442,7 @@ msgstr ""
 msgid ""
 "Programmation error: wizard action executed without active_model or "
 "active_ids in context."
-msgstr ""
-"编程错误：wizard action executed without active_model or　active_ids in context"
+msgstr "编程错误：动作执行向导不包含 active_model 或　active_ids 在上下文"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_form
@@ -8138,7 +8242,7 @@ msgstr "简码"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_tax_tree
 msgid "Short Name"
-msgstr "简名"
+msgstr "缩写"
 
 #. module: account
 #. openerp-web
