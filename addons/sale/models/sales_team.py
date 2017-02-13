@@ -91,7 +91,7 @@ class CrmTeam(models.Model):
         if self.dashboard_graph_model == 'sales':
             return "AND state in ('sale', 'done')"
         elif self.dashboard_graph_model == 'invoices':
-            return "AND state = 'paid'"
+            return "AND state in ('open', 'paid')"
         return super(CrmTeam, self)._extra_sql_conditions()
 
     def _graph_title_and_key(self):
