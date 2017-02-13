@@ -15,7 +15,7 @@
             <field name="company_name">YourCompany</field>
             <field name="street">Rue Cesar de Paepe, 43</field>
         </record>
-        <record id="demo_user0" model="res.users" context="{'no_reset_password': True}">
+        <record id="user_demo_portal" model="res.users" context="{'no_reset_password': True}">
             <field name="partner_id" ref="partner_demo_portal"/>
             <field name="login">portal</field>
             <field name="password">portal</field>
@@ -27,7 +27,7 @@ Mr Demo Portal</span>]]></field>
 
         <!-- Add the demo user to the portal (and therefore to the portal member group) -->
         <record id="base.group_portal" model="res.groups">
-            <field name="users" eval="[(4,ref('demo_user0'))]"/>
+            <field name="users" eval="[(4, ref('user_demo_portal'))]"/>
         </record>
 
     </data>

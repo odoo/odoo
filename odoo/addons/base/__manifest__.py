@@ -65,6 +65,7 @@ The kernel of Odoo, needed for all installation.
     ],
     'demo': [
         'base_demo.xml',
+        'portal_demo.xml',
         'res/res_currency_demo.xml',
         'res/res_bank_demo.xml',
         'res/res_partner_demo.xml',
