@@ -7,6 +7,7 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta, MO
 
 from odoo import api, models, fields, _, exceptions
+from odoo.tools import ustr
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -158,7 +159,7 @@ class Challenge(models.Model):
         """Overwrite the create method to add the user of groups"""
 
         if vals.get('user_domain'):
-            users = self._get_challenger_users(vals.get('user_domain'))
+            users = self._get_challenger_users(ustr(vals.get('user_domain')))
 
             if not vals.get('user_ids'):
                 vals['user_ids'] = []
@@ -169,7 +170,7 @@ class Challenge(models.Model):
     @api.multi
     def write(self, vals):
         if vals.get('user_domain'):
-            users = self._get_challenger_users(vals.get('user_domain'))
+            users = self._get_challenger_users(ustr(vals.get('user_domain')))
 
             if not vals.get('user_ids'):
                 vals['user_ids'] = []
