@@ -81,7 +81,7 @@ class account_abstract_payment(models.AbstractModel):
 
     def _compute_total_invoices_amount(self):
         """ Compute the sum of the residual of invoices, expressed in the payment currency """
-        payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
+        payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or self.env.user.company_id.currency_id
         invoices = self._get_invoices()
 
         if all(inv.currency_id == payment_currency for inv in invoices):
