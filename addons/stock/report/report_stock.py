@@ -52,7 +52,7 @@ class report_stock_lines_date(osv.osv):
                         inner join stock_inventory s on (l.inventory_id=s.id and s.state = 'done')
                     ) on (p.id=l.product_id)
                     left join stock_move m on (m.product_id=p.id and m.state = 'done')
-                group by p.id
+                group by p.id, p.active
             )""")
 
 
