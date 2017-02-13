@@ -94,6 +94,7 @@
                             <page name='advanced' string="Advanced Properties">
                                 <group>
                                     <field name="multi"/>
+                                    <field name="post_process_report" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
                                     <field name="attachment" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
                                 </group>
                             </page>
@@ -112,6 +113,7 @@
                     <field name="type"/>
                     <field name="report_name"/>
                     <field name="report_type"/>
+                    <field name="post_process_report"/>
                     <field name="attachment"/>
                 </tree>
             </field>

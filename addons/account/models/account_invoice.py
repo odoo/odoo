@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import base64
 from lxml import etree
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -384,13 +385,28 @@ class AccountInvoice(models.Model):
                     view_id = get_view_id('invoice_form', 'account.invoice.form').id
         return super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
+    @api.model
+    def invoice_report_post(self, report):
+        if len(self) > 1:
+            return report
+        if not self.sent and self.state in ('open', 'paid'):
+            attachment_name = 'INV%s.pdf' % self.number.replace('/', '')
+            self.env['ir.attachment'].create({
+                'name': attachment_name,
+                'datas': base64.encodestring(report),
+                'datas_fname': attachment_name,
+                'res_model': 'account.invoice',
+                'res_id': self.id,
+            })
+            self.sent = True
+        return report
+
     @api.multi
     def invoice_print(self):
         """ Print the invoice and mark it as sent, so that we can see more
             easily the next step of the workflow
         """
         self.ensure_one()
-        self.sent = True
         return self.env['report'].get_action(self, 'account.report_invoice')
 
     @api.multi

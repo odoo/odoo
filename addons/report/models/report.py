@@ -366,24 +366,6 @@ class Report(models.Model):
 
         return headerhtml, contenthtml, footerhtml, sorted_docids, specific_paperformat_args
 
-    @api.model
-    def create_attachment(self, attachment_vals):
-        """Hook that can be used to modify the attachment before or directly after its creation.
-        For example, for e-invoicing in some countries, the attachment must contains additional
-        things like embedded files, signature of the company, etc.
-
-        :param attachment_vals: The attachment values.
-        :return: The attachment_id created or None in case of AccessError.
-        """
-        try:
-            attachment_id = self.env['ir.attachment'].create(attachment_vals)
-        except AccessError:
-            _logger.info("Cannot save PDF report %r as attachment", attachment_vals['name'])
-            return None
-        else:
-            _logger.info('The PDF document %s is now saved in the database', attachment_vals['name'])
-        return attachment_id
-
     #--------------------------------------------------------------------------
     # Main report methods
     #--------------------------------------------------------------------------
@@ -425,14 +407,17 @@ class Report(models.Model):
             return self.render(report.report_name, docargs)
 
     @api.model
-    def get_pdf(self, docids, report_name, html=None, data=None, attachment_name=None):
+    def get_pdf(self, docids, report_name, html=None, data=None, post_process_report=None):
         """This method generates and returns pdf version of a report.
 
         :param docids: The record ids.
         :param report_name: The report name.
         :param html: The optional html content.
         :param data: The data to use for get_html.
-        :param attachment_name: The attachment filename.
+        :param post_process_report:Record method name to post_process_report the generation of the pdf.
+                            This method must take the generated report as string as parameter
+                            and returns the report string.
+
         :return: The content of the generated pdf as string.
         """
 
@@ -496,52 +481,45 @@ class Report(models.Model):
             context.get('set_viewport_size'),
         )
 
-        # Look for attachment_name both in the context and parameter
-        attachment_name = attachment_name or context.get('attachment_name')
+        # Look for a post_process_report function
+        if not post_process_report:
+            post_process_report = context.get('post_process_report') or report.post_process_report
 
-        # Save in attachment
-        if attachment_name or report.attachment:
-            model = report.model
+        # Iterate through documents to post_process_report the generated reports
+        # in case of the record inherits report.mixin
+        report_content = None
+        if post_process_report:
+            records = None
             for it, docid in enumerate(sorted_docids):
+                # Skip if no docid found
                 if not docid:
                     continue
                 with open(documents_paths[it], 'rb') as pdfdocument:
-                    datas = base64.encodestring(pdfdocument.read())
-
-                # Generate attachment based on 'attachment' field
-                if report.attachment:
-                    record = self.env[report.model].browse(docid)
-                    attachment_name = safe_eval(report.attachment, {'object': record, 'time': time})
-                    if not attachment_name:
-                        continue
-                    existing_report = self.env['ir.attachment'].search([
-                        ('datas_fname', '=', attachment_name),
-                        ('res_model', '=', report.model),
-                        ('res_id', '=', record.id)
-                    ], limit=1)
-                    if existing_report:
-                        continue
-
-                attachment_vals = {
-                    'name': attachment_name,
-                    'datas': datas,
-                    'datas_fname': attachment_name,
-                    'res_model': model,
-                    'res_id': docid,
-                }
-                self.create_attachment(attachment_vals)
+                    report_content = pdfdocument.read()
+                record = self.env[report.model].browse(docid)
+                report_content = getattr(record, post_process_report)(report_content)
+                # Rebuild a recordset to post_process_report if multiple documents
+                if not records:
+                    records = record
+                else:
+                    records += record
 
         temporary_file = []
         if len(documents_paths) > 1:
             documents_paths = [self._merge_pdf(documents_paths)]
             temporary_file.append(documents_paths[0])
-
-        with open(documents_paths[0], 'rb') as pdfdocument:
-            content = pdfdocument.read()
+            with open(documents_paths[0], 'rb') as pdfdocument:
+                report_content = pdfdocument.read()
+            # Post process after merge
+            if post_process_report and records:
+                report_content = getattr(records, post_process_report)(report_content)
+        elif not report_content: # Avoid to read the file a second time
+            with open(documents_paths[0], 'rb') as pdfdocument:
+                report_content = pdfdocument.read()
 
         drop_temporary_files(temporary_file)
 
-        return content
+        return report_content
 
     @api.noguess
     def get_action(self, docids, report_name, data=None, config=True):
