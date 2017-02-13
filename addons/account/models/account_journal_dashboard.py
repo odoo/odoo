@@ -244,7 +244,7 @@ class account_journal(models.Model):
                   WHERE journal_id = %(journal_id)s AND state = 'open';""", {'journal_id':self.id})
 
 
-    def _get_drafts_and_proformas_bills_query(self):
+    def _get_draft_bills_query(self):
         """
         Returns a tuple containing as its first element the SQL query used to
         gather the bills in draft state data, and the arguments
