@@ -2,15 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.exceptions import AccessError
 from odoo.sql_db import TestCursor
 from odoo.tools import config
 from odoo.tools.misc import find_in_path
 from odoo.http import request
-from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
 
-import base64
 import logging
 import lxml.html
 import os
@@ -151,7 +148,7 @@ def run_wkhtmltopdf(headers, footers, bodies, landscape, paperformat, spec_paper
         if request:
             command_args.extend(['--cookie', 'session_id', request.session.sid])
     except AttributeError:
-        pass
+        _logger.info('Fail to pass the cookie to wkhtmltopdf')
 
     # Wkhtmltopdf arguments
     command_args.extend(['--quiet'])  # Less verbose error messages
@@ -209,8 +206,8 @@ def run_wkhtmltopdf(headers, footers, bodies, landscape, paperformat, spec_paper
                                   'Message: %s') % (str(process.returncode), err))
 
             documents_paths.append(pdfreport_path)
-        except:
-            raise
+        except Exception as e:
+            raise UserError(_('Wkhtmltopdf failed with message: %s') % e.message)
 
     drop_temporary_files(temporary_files)
 
