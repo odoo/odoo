@@ -7,19 +7,8 @@
             <field name="inherit_id" ref="stock.view_stock_config_settings"/>
             <field name="arch" type="xml">
                 <div id="production_lot_info" position="after">
-                    <h2>Costing &amp; Valuation </h2>
+                    <h2>Costing</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="Perpetual valuation allows to get an up-to-date stock valuation in your accounting whenever products are transferred. It is only tailored for big companies where such a need matters. It requires extra configuration and testing to make sure accounting is impacted the right way for every kind of stock move. This must be set on product categories. The Periodic mode is applied by default (i.e. manual accounting entries at the end of the fiscal year). This last mode is recommended for starters and small/medium-size companies.">
-                            <div class="o_setting_left_pane">
-                                <field name="group_stock_inventory_valuation"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="group_stock_inventory_valuation"/>
-                                <div class="text-muted">
-                                    Allow perpetual stock valuation in accounting
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-xs-12 col-md-6 o_setting_box" title="Affect landed costs on receipt operations and split them among products to update their cost price.">
                             <div class="o_setting_left_pane">
                                 <field name="module_stock_landed_costs"/>
