@@ -375,7 +375,7 @@ class PosOrder(models.Model):
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True)
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True, states={'draft': [('readonly', False)]},
                                          default=lambda self: self._default_session().config_id.default_fiscal_position_id)
-    fiscal_position_ids = fields.Many2many("account.fiscal.position", related="session_id.config_id.fiscal_position_ids", string="Fiscal Positions")
+    allowed_fiscal_position_ids = fields.Many2many("account.fiscal.position", related="session_id.config_id.fiscal_position_ids", string="Fiscal Positions")
 
     @api.depends('statement_ids', 'lines.price_subtotal_incl', 'lines.discount')
     def _compute_amount_all(self):
@@ -404,7 +404,7 @@ class PosOrder(models.Model):
             self.pricelist = self.partner_id.property_product_pricelist.id
             fiscal_pos = self.partner_id.property_account_position_id
             if self.state == 'draft':
-                self.fiscal_position_id = fiscal_pos in self.fiscal_position_ids and fiscal_pos
+                self.fiscal_position_id = fiscal_pos in self.allowed_fiscal_position_ids and fiscal_pos
 
     @api.multi
     def write(self, vals):
