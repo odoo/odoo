@@ -17,7 +17,7 @@ _logger = logging.getLogger(__name__)
 
 class PosOrder(models.Model):
     _name = "pos.order"
-    _description = "Point of Sale"
+    _description = "Point of Sale Orders"
     _order = "id desc"
 
     @api.model
