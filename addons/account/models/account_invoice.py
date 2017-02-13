@@ -405,7 +405,7 @@ class AccountInvoice(models.Model):
             return report
         if not self.sent and self.state in ('open', 'paid'):
             attachment_name = 'INV%s.pdf' % self.number.replace('/', '')
-            self.env['ir.attachment'].create({
+            attachment_id = self.env['ir.attachment'].create({
                 'name': attachment_name,
                 'datas': base64.encodestring(report),
                 'datas_fname': attachment_name,
@@ -413,6 +413,8 @@ class AccountInvoice(models.Model):
                 'res_id': self.id,
             })
             self.sent = True
+            # Print on the chatter
+            self.message_post(body=_('Invoire report generated'), attachment_ids=[attachment_id.id], subtype='account.mt_invoice_validated')
             # Special case when the invoice already has payments
             if self.payment_ids:
                 ctx = dict(self._context, post_process_report=False)
