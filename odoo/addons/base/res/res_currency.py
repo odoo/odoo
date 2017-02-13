@@ -31,6 +31,7 @@ class Currency(models.Model):
 
     _sql_constraints = [
         ('unique_name', 'unique (name)', 'The currency code must be unique!'),
+        ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding factor must be greater than 0!')
     ]
 
     @api.multi
