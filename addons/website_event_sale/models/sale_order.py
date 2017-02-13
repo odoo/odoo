@@ -92,7 +92,7 @@ class SaleOrder(models.Model):
         # adding attendees
         elif ticket and new_qty > old_qty:
             line = OrderLine.browse(values['line_id'])
-            line._update_registrations(confirm=False, registration_data=kwargs.get('registration_data', []))
+            line._update_registrations(confirm=False, cancel_to_draft=True, registration_data=kwargs.get('registration_data', []))
             # add in return values the registrations, to display them on website (or not)
             values['attendee_ids'] = self.env['event.registration'].search([('sale_order_line_id', '=', line.id), ('state', '!=', 'cancel')]).ids
         return values
