@@ -3,7 +3,7 @@
 {
     'name': "Online Event's Tickets",
     'category': 'Marketing',
-    'summary': "Sell Your Event's Tickets",
+    'summary': "Manage Events and Sell Tickets Online",
     'website': 'https://www.odoo.com/page/events',
     'description': """
 Online Event's Tickets

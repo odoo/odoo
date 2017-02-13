@@ -25,6 +25,7 @@
     </xpath>
     <xpath expr="//tbody" position="replace">
         <tbody>
+            <t t-set="ticket_count" t-value="len([ticket for ticket in event.event_ticket_ids if not ticket.is_expired])"/>
             <t t-foreach="event.event_ticket_ids" t-as="ticket">
                 <tr itemscope="itemscope" itemtype="http://data-vocabulary.org/Offer" t-if="not ticket.is_expired">
                     <td itemscope="itemscope" itemtype="http://data-vocabulary.org/Product">
@@ -74,7 +75,12 @@
                             <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available > 9) and 10 or event.seats_available + 1"/>
                             <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
                             <t t-foreach="range(0, seats_max)" t-as="nb">
-                                <option t-esc="nb"/>
+                                <t t-if="ticket_count == 1 and nb == 1">
+                                    <option t-esc="nb" selected="selected"/>
+                                </t>
+                                <t t-if="ticket_count != 1 or nb != 1">
+                                    <option t-esc="nb"/>
+                                </t>
                             </t>
                         </select>
                         <span t-if="(not event.seats_available and event.seats_availability == 'limited') or (ticket.seats_availability == 'limited' and not ticket.seats_available)">Sold Out</span>
@@ -84,8 +90,16 @@
         </tbody>
     </xpath>
     <xpath expr="//button[@type='submit']" position="replace">
+        <t t-set="ticket_buy" t-value="any(ticket for ticket in event.event_ticket_ids if not ticket.is_expired and ticket.price)"/>
         <button type="submit" t-if="event.state == 'confirm' and (event.seats_available or event.seats_availability == 'unlimited')"
-            class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Order Now</button>
+                class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">
+            <t t-if="ticket_buy">
+                Order Now
+            </t>
+            <t t-if="not ticket_buy">
+                Register Now
+            </t>
+        </button>
     </xpath>
     <xpath expr="//form[@id='registration_form']" position="attributes">
         <attribute name="t-if">event.event_ticket_ids</attribute>
@@ -93,6 +107,12 @@
 </template>
 
 <template id="cart" inherit_id="website_sale.cart_lines" name="Hide product reduction for event tickets">
+    <xpath expr="//td[@class='td-product_name']/div/a" position="attributes">
+        <attribute name="t-attf-href"/>
+        <attribute name="t-att-href">
+            line.event_id and ('/event/%s/register' % slug(line.event_id)) or ('/shop/product/%s' % slug(line.product_id.product_tmpl_id))
+        </attribute>
+    </xpath>
     <xpath expr="//del" position="attributes">
         <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'hidden' or ''}"/>
     </xpath>

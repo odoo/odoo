@@ -26,13 +26,21 @@ var EventRegistrationForm = Widget.extend({
         $("#registration_form select").each(function() {
             post[$(this).attr('name')] = $(this).val();
         });
-        return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
-            var $modal = $(modal);
-            $modal.appendTo($form).modal();
-            $modal.on('click', '.js_goto_event', function () {
-                $modal.modal('hide');
+        var tickets_ordered = _.some(_.map(post, function(value, key) { return parseInt(value) }));
+        if (! tickets_ordered) {
+            return $('#registration_form table').after(
+                '<div class="alert alert-info">Please select at least one ticket.</div>'
+            );
+        }
+        else {
+            return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
+                var $modal = $(modal);
+                $modal.appendTo($form).modal();
+                $modal.on('click', '.js_goto_event', function () {
+                    $modal.modal('hide');
+                });
             });
-        });
+        }
     },
 });
 

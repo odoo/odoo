@@ -4,7 +4,7 @@
     'name': 'Online Events',
     'category': 'Marketing',
     'sequence': 135,
-    'summary': 'Schedule, Promote and Sell Events',
+    'summary': 'Publish Events and Manage Online Registrations on your Website',
     'website': 'https://www.odoo.com/page/website-builder',
     'description': """
 Online Events
