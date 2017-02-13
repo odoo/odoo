@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_catalog_settings_view_form" model="ir.ui.view">
+        <field name="name">product.catalog.settings.form</field>
+        <field name="model">product.catalog.settings</field>
+        <field name="arch" type="xml">
+            <form string="Configuration" class="oe_form_configuration">
+                <header>
+                    <button string="Apply" type="object" name="execute" class="btn-primary"/>
+                    <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                </header>
+                <group string="Products">
+                   <field name="group_product_variant" widget="radio"/>
+                   <field name="group_uom" widget="radio"/>
+                </group>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="product_catalog_settings_action" model="ir.actions.act_window">
+       <field name="name">Configure Products</field>
+       <field name="type">ir.actions.act_window</field>
+       <field name="res_model">product.catalog.settings</field>
+       <field name="view_id" ref="product_catalog_settings_view_form"/>
+       <field name="view_mode">form</field>
+       <field name="target">inline</field>
+    </record>
+
+
+    <record id="product_product_action_catalog" model="ir.actions.act_window">
+        <field name="name">Product Variants</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.product</field>
+        <field name="search_view_id" ref="product.product_search_form_view"/>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                      (0, 0, {'view_mode': 'tree'}),
+                      (0, 0, {'view_mode': 'form', 'view_id': ref('product.product_variant_easy_edit_view')}), 
+                      (0, 0, {'view_mode': 'kanban'})]"/>
+         <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to define a new product.
+          </p><p>
+            You must define a product for everything you sell or purchase, whether it's
+            a physical product, a consumable or a services.
+          </p>
+        </field>
+    </record>
+
+
+    <record id="product_template_action_catalog" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to define a new product.
+          </p><p>
+            You must define a product for everything you sell or purchase, whether
+            it's a physical product, a consumable or services.
+          </p>
+        </field>
+    </record>
+
+    <menuitem id="product_catalog_menu" name="Products" web_icon="product_catalog,static/description/icon.png"/>
+
+    <menuitem id="product_template_menu_catalog"
+        action="product_template_action_catalog" name="Products"
+        parent="product_catalog_menu" sequence="1"/>
+
+    <menuitem id="product_product_menu_catalog"
+        action="product_product_action_catalog" name="Product Variants"
+        parent="product_catalog_menu" sequence="2" groups="product.group_product_variant"/>
+
+    <menuitem id="product_catalog_menu_config" name="Configuration" parent="product_catalog_menu" sequence="3"/>
+    <menuitem id="product_catalog_settings_menu" action="product_catalog_settings_action" name="Settings"
+        parent="product_catalog_menu_config" sequence="1"/>
+
+    <menuitem id="product_parameters_menu" name="Products" parent="product_catalog_menu_config"/>  
+    <menuitem id="product_categories_menu_catalog" action="product.product_category_action_form"
+        name="Product Categories" parent="product_parameters_menu"/>
+    <menuitem id="product_uom_menu_catalog" action="product.product_uom_form_action"
+        name="Unit of Measures" parent="product_parameters_menu" groups="product.group_uom"/>
+    <menuitem id="product_uom_categ_menu_catalog" action="product.product_uom_categ_form_action"
+        name="Unit of Measures Categories" parent="product_parameters_menu" groups="base.group_no_one"/>
+    <menuitem id="product_attribute_menu_catalog" action="product.attribute_action"
+        name="Attributes" parent="product_parameters_menu" groups="product.group_product_variant"/>
+    <menuitem id="product_attribute_values_menu_catalog" action="product.variants_action"
+        name="Attributes Values" parent="product_parameters_menu" groups="product.group_product_variant"/>
+
+
+    <!-- After installation of the module, open the related menu -->
+    <record id="product_catalog_action_open_catalog" model="ir.actions.client">
+        <field name="name">Open Product Catalog Menu</field>
+        <field name="tag">reload</field>
+        <field name="params" eval="{'menu_id': ref('product_catalog_settings_menu')}"/>
+    </record>
+    <record id="base.open_menu" model="ir.actions.todo">
+        <field name="action_id" ref="product_catalog_action_open_catalog"/>
+        <field name="state">open</field>
+    </record>
+
+</odoo>
