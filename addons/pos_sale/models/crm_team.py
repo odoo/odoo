@@ -74,7 +74,9 @@ class CrmTeam(models.Model):
                     result.append({'x_value': data_point.get('user_id')[0], 'y_value': data_point.get('price_total')})
 
             else:
-                order_data = self.env['report.pos.order'].read_group(
+                # locale en_GB is used to be able to obtain the datetime from the string returned by read_group
+                # /!\ do not use en_US as it's not ISO-standard and does not match datetime's library
+                order_data = self.env['report.pos.order'].with_context(lang='en_GB').read_group(
                     domain=[
                         ('date', '>=', fields.Date.to_string(start_date)),
                         ('date', '<=', fields.Datetime.to_string(datetime.combine(end_date, datetime.max.time()))),
@@ -88,9 +90,6 @@ class CrmTeam(models.Model):
                         result.append({'x_value': fields.Date.to_string((fields.datetime.strptime(data_point.get('date:day'), "%d %b %Y"))), 'y_value': data_point.get('price_total')})
                 elif self.dashboard_graph_group_pos == 'week':
                     for data_point in order_data:
-                        # non-standard groupby formatting requires garbage formatting here, hope this'll hold ...
-                        # also this week result is non-standard, so week numbers might be wrong here...
-                        # for example 2016-12-31 -> week number 53 from read_group, while both isocalendar() and strftime('%W') return 52.
                         result.append({'x_value': int(data_point.get('date:week')[1:3]), 'y_value': data_point.get('price_total')})
                 elif self.dashboard_graph_group_pos == 'month':
                     for data_point in order_data:
