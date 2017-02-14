@@ -70,6 +70,13 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         # I check that Initially customer invoice is in the "Draft" state
         self.assertEquals(self.account_invoice_customer0.state, 'draft')
 
+        # Check amount is inverted when type is changed
+        previous = self.account_invoice_customer0.amount_untaxed_signed
+        self.account_invoice_customer0.type = "out_refund"
+        self.assertEqual(-previous,
+                         self.account_invoice_customer0.amount_untaxed_signed)
+        self.account_invoice_customer0.type = "out_invoice"  # Restore it
+
         # I change the state of invoice to "Proforma2" by clicking PRO-FORMA button
         self.account_invoice_customer0.signal_workflow('invoice_proforma2')
 
