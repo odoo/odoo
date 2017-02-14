@@ -69,7 +69,9 @@ class CrmTeam(models.Model):
             self.browse(datum['team_id'][0]).invoiced = datum['amount_untaxed_signed']
 
     def _graph_date_column(self):
-        if self.dashboard_graph_model in ['sales', 'invoices']:
+        if self.dashboard_graph_model == 'sales':
+            return 'confirmation_date'
+        elif self.dashboard_graph_model == 'invoices':
             return 'date'
         return super(CrmTeam, self)._graph_date_column()
 
