@@ -613,7 +613,7 @@ class AccountTax(models.Model):
         """ Returns a string that will be used to group account.invoice.tax sharing the same properties"""
         self.ensure_one()
         return str(invoice_tax_val['tax_id']) + '-' + str(invoice_tax_val['account_id']) + '-' + str(invoice_tax_val['account_analytic_id'] or 0) \
-            + '-' + str(invoice_tax_val['parent_tax_id'] or 0)
+            + '-' + str(invoice_tax_val['included_tax_ids'])
 
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
@@ -692,10 +692,15 @@ class AccountTax(models.Model):
             prec += 5
 
         base_values = self.env.context.get('base_values')
+        # We keep track of the compute sequence here, as we do not keep track of
+        # the topological sorting order concerning tax group in later steps of tax handling
+        tax_compute_sequence = self.env.context.get('tax_compute_sequence') or 0
         if not base_values:
             total_excluded = total_included = base = round(price_unit * quantity, prec)
+            taxes_include_in_subsequent = []
         else:
-            total_excluded, total_included, base = base_values
+            total_excluded, total_included, base, taxes_include_in_subsequent = base_values
+
 
         # Sorting key is mandatory in this case. When no key is provided, sorted() will perform a
         # search. However, the search method is overridden in account.tax in order to add a domain
@@ -703,13 +708,17 @@ class AccountTax(models.Model):
         # case of group taxes.
         for tax in self.sorted(key=lambda r: r.sequence):
             if tax.amount_type == 'group':
-                children = tax.children_tax_ids.with_context(base_values=(total_excluded, total_included, base))
+                taxes_include_in_subsequent2 = list(taxes_include_in_subsequent)
+                children = tax.children_tax_ids.with_context(base_values=(
+                    total_excluded, total_included, base, taxes_include_in_subsequent), tax_compute_sequence=tax_compute_sequence)
                 ret = children.compute_all(price_unit, currency, quantity, product, partner)
                 total_excluded = ret['total_excluded']
                 base = ret['base'] if tax.include_base_amount else base
+                tax_compute_sequence = ret['taxes'][-1]['sequence']
+                if not tax.include_base_amount:
+                    taxes_include_in_subsequent = taxes_include_in_subsequent2
                 total_included = ret['total_included']
                 tax_amount = total_included - total_excluded
-                [t.update(parent_tax_id=tax) for t in ret['taxes']]
                 taxes += ret['taxes']
                 continue
 
@@ -730,21 +739,24 @@ class AccountTax(models.Model):
 
             if tax.include_base_amount:
                 base += tax_amount
-
+            tax_compute_sequence += 1
             taxes.append({
                 'id': tax.id,
                 'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
                 'amount': tax_amount,
-                'parent_tax_id': False,
+                'included_tax_ids': [x for x in taxes_include_in_subsequent],
                 'base': tax_base,
-                'sequence': tax.sequence,
+                'sequence': tax_compute_sequence,
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
                 'analytic': tax.analytic,
             })
 
+            if tax.include_base_amount:
+                taxes_include_in_subsequent += [tax.id]
+
         return {
-            'taxes': sorted(taxes, key=lambda k: (k['parent_tax_id'] and k['parent_tax_id']['sequence'] or k['sequence'], k['sequence'])),
+            'taxes': taxes,
             'total_excluded': currency.round(total_excluded) if round_total else total_excluded,
             'total_included': currency.round(total_included) if round_total else total_included,
             'base': base,
