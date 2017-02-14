@@ -1620,9 +1620,13 @@ class AccountPaymentTerm(models.Model):
                 next_date = fields.Date.from_string(date_ref)
                 if line.option == 'day_after_invoice_date':
                     next_date += relativedelta(days=line.days)
+                    if line.day_of_the_month > 0:
+                        next_date += relativedelta(day=line.day_of_the_month)
                 elif line.option == 'fix_day_following_month':
                     next_first_date = next_date + relativedelta(day=1, months=1)  # Getting 1st of next month
                     next_date = next_first_date + relativedelta(days=line.days - 1)
+                    if line.day_of_the_month > 0:
+                        next_date += relativedelta(day=line.day_of_the_month)
                 elif line.option == 'last_day_following_month':
                     next_date += relativedelta(day=31, months=1)  # Getting last day of next month
                 elif line.option == 'last_day_current_month':
@@ -1656,6 +1660,7 @@ class AccountPaymentTermLine(models.Model):
         help="Select here the kind of valuation related to this payment terms line.")
     value_amount = fields.Float(string='Value', digits=dp.get_precision('Payment Terms'), help="For percent enter a ratio between 0-100.")
     days = fields.Integer(string='Number of Days', required=True, default=0)
+    day_of_the_month = fields.Integer(string='Day of the month', help="Day of the month on wich the invoice must come to its term. If zero or negative, this value will be ignored, and no specific day will be set. If greater than the last day of a month, this number will instead select the last day of this month.")
     option = fields.Selection([
             ('day_after_invoice_date', 'Day(s) after the invoice date'),
             ('fix_day_following_month', 'Day(s) after the end of the invoice month (Net EOM)'),

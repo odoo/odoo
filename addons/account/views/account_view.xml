@@ -1514,6 +1514,7 @@
                     <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
                     <field name="days"/>
                     <field name="option" string=""/>
+                    <field name="day_of_the_month" string="Day of the month"/>
                 </tree>
             </field>
         </record>
@@ -1536,9 +1537,16 @@
                             <label for="days"/>
                             <div>
                                 <field name="option" widget="radio"/>
-                                <div class="o_row" attrs="{'invisible': [('option', 'in', ['last_day_following_month', 'last_day_current_month'])]}">
-                                    <field name="days"/>
-                                    days
+                                <div attrs="{'invisible': [('option', 'in', ['last_day_following_month', 'last_day_current_month'])]}">
+                                    <div class="o_row">
+                                        <field name="days"/>
+                                        days
+                                    </div>
+
+                                    <div class="o_row">
+                                        <label for="day_of_the_month"/>
+                                        <field name="day_of_the_month"/>
+                                    </div>
                                 </div>
                             </div>
                         </group>
