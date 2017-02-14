@@ -230,7 +230,7 @@ class CrmTeam(models.Model):
 
         elif self.dashboard_graph_group == 'user':
             for data_item in graph_data:
-                values.append({x_field: self.env['res.users'].browse(data_item.get('x_value')).name, y_field: data_item.get('y_value')})
+                values.append({x_field: self.env['res.users'].browse(data_item.get('x_value')).name or _('Not Defined'), y_field: data_item.get('y_value')})
 
         else:
             for data_item in graph_data:
