@@ -74,7 +74,7 @@ class AccountInvoice(models.Model):
     @api.model
     def _default_currency(self):
         journal = self._default_journal()
-        return journal.currency_id or journal.company_id.currency_id
+        return journal.currency_id or journal.company_id.currency_id or self.env.user.company_id.currency_id
 
     @api.model
     def _get_reference_type(self):
