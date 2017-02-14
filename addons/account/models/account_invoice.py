@@ -555,6 +555,7 @@ class AccountInvoice(models.Model):
         """
         vals = {
             'invoice_id': self.id,
+            'parent_tax_id': tax['parent_tax_id'] and tax['parent_tax_id'].id or False,
             'name': tax['name'],
             'tax_id': tax['id'],
             'amount': tax['amount'],
@@ -688,14 +689,16 @@ class AccountInvoice(models.Model):
     def tax_line_move_line_get(self):
         res = []
         # keep track of taxes already processed
-        done_taxes = []
+        done_taxes = {'toplevel': []}
         # loop the invoice.tax.line in reversal sequence
-        for tax_line in sorted(self.tax_line_ids, key=lambda x: -x.sequence):
+        for tax_line in sorted(self.tax_line_ids, key=lambda k: (k['parent_tax_id'] and -k['parent_tax_id']['sequence'] or -k['sequence'], -k['sequence'])):
             if tax_line.amount:
                 tax = tax_line.tax_id
-                if tax.amount_type == "group":
-                    for child_tax in tax.children_tax_ids:
-                        done_taxes.append(child_tax.id)
+                parent_tax = tax_line.parent_tax_id
+                done_taxes2 = []
+                if not parent_tax or parent_tax.include_base_amount:
+                    done_taxes2 += done_taxes['toplevel']
+                done_taxes2 += done_taxes.get(parent_tax, [])
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
@@ -707,9 +710,12 @@ class AccountInvoice(models.Model):
                     'account_id': tax_line.account_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'invoice_id': self.id,
-                    'tax_ids': [(6, 0, done_taxes)] if tax_line.tax_id.include_base_amount else []
+                    'tax_ids': [(6, 0, done_taxes2)] if tax_line.tax_id.include_base_amount else []
                 })
-                done_taxes.append(tax.id)
+                if not parent_tax:
+                    done_taxes['toplevel'].append(tax.id)
+                else:
+                    done_taxes.setdefault(parent_tax, []).append(tax.id)
         return res
 
     def inv_line_characteristic_hashcode(self, invoice_line):
@@ -1314,6 +1320,7 @@ class AccountInvoiceTax(models.Model):
                     'tax_id': tax.tax_id.id,
                     'account_id': tax.account_id.id,
                     'account_analytic_id': tax.account_analytic_id.id,
+                    'parent_tax_id': tax.parent_tax_id.id,
                 })
                 if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
                     tax.base = tax_grouped[tax.invoice_id.id][key]['base']
@@ -1323,6 +1330,7 @@ class AccountInvoiceTax(models.Model):
     invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
     name = fields.Char(string='Tax Description', required=True)
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
+    parent_tax_id = fields.Many2one('account.tax', string='Parent Tax', ondelete='restrict')
     account_id = fields.Many2one('account.account', string='Tax Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
     amount = fields.Monetary()

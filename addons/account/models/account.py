@@ -100,7 +100,7 @@ class AccountAccount(models.Model):
         help="Forces all moves for this account to have this account currency.")
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
-    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type", 
+    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type",
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', store=True, readonly=True)
     #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
@@ -612,7 +612,8 @@ class AccountTax(models.Model):
     def get_grouping_key(self, invoice_tax_val):
         """ Returns a string that will be used to group account.invoice.tax sharing the same properties"""
         self.ensure_one()
-        return str(invoice_tax_val['tax_id']) + '-' + str(invoice_tax_val['account_id']) + '-' + str(invoice_tax_val['account_analytic_id'])
+        return str(invoice_tax_val['tax_id']) + '-' + str(invoice_tax_val['account_id']) + '-' + str(invoice_tax_val['account_analytic_id'] or 0) \
+            + '-' + str(invoice_tax_val['parent_tax_id'] or 0)
 
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
@@ -708,6 +709,7 @@ class AccountTax(models.Model):
                 base = ret['base'] if tax.include_base_amount else base
                 total_included = ret['total_included']
                 tax_amount = total_included - total_excluded
+                [t.update(parent_tax_id=tax) for t in ret['taxes']]
                 taxes += ret['taxes']
                 continue
 
@@ -733,6 +735,7 @@ class AccountTax(models.Model):
                 'id': tax.id,
                 'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
                 'amount': tax_amount,
+                'parent_tax_id': False,
                 'base': tax_base,
                 'sequence': tax.sequence,
                 'account_id': tax.account_id.id,
@@ -741,7 +744,7 @@ class AccountTax(models.Model):
             })
 
         return {
-            'taxes': sorted(taxes, key=lambda k: k['sequence']),
+            'taxes': sorted(taxes, key=lambda k: (k['parent_tax_id'] and k['parent_tax_id']['sequence'] or k['sequence'], k['sequence'])),
             'total_excluded': currency.round(total_excluded) if round_total else total_excluded,
             'total_included': currency.round(total_included) if round_total else total_included,
             'base': base,
