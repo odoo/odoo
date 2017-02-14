@@ -5,19 +5,21 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
 # glovebx <ruinning@163.com>, 2015
-# jeffery chen fan <jeffery9@gmail.com>, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2016-2017
 # liyes <bodetools@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 # THL <wt39181819@gmail.com>, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-25 08:27+0000\n"
-"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"PO-Revision-Date: 2017-02-03 04:03+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +30,7 @@ msgstr ""
 #. module: product
 #: field:product.template,product_variant_count:0
 msgid "# of Product Variants"
-msgstr "个产品变型"
+msgstr "# 产品变型"
 
 #. module: product
 #: code:addons/product/product.py:757 code:addons/product/product.py:1111
@@ -106,7 +108,7 @@ msgid ""
 ": adding or deleting attributes\n"
 "                            will delete and recreate existing variants and lead\n"
 "                            to the loss of their possible customizations."
-msgstr ":增加或删除规格\n                            将导致删除和重建已存在的规格，并导致\n                            以前的定制丢失。"
+msgstr ":增加或删除变型\n                            将导致删除和重建已存在的变型，并导致\n                            以前的定制丢失。"
 
 #. module: product
 #: model:product.template,website_description:product.product_product_9_product_template
@@ -201,7 +203,7 @@ msgid ""
 "                promotions.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                创建一个价格表。\n              </p><p>\n                价格表包括了计算订单采购价格的规则。\n                默认的价格表有一个规则：使用产品表单里定义的成 \n                本价。如果你有非常简单的需求，这样你就不必担心\n                供应商的价目表，。\n              </p><p>\n                但是你也能从供应商那里导入复杂的价格表，可能依\n                赖于订购的数量，或者当前的促销活动。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                创建一个价格表。\n              </p><p>\n                价格表包括了计算订单采购价格的规则。\n                默认价格表有一个规则：使用产品表单里定义的成 \n                本价。如果你有非常简单的需求，这样你就不必担心\n                供应商的价格表，。\n              </p><p>\n                但是你也能从供应商那里导入复杂的价格表，可能依\n                赖于订购的数量，或者当前的促销活动。\n              </p>\n            "
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -218,7 +220,7 @@ msgid ""
 "                the supplier price multiplied by 1.80).\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个价格列表。\n              </p><p>\n                价格列表包括待评审的规则来计算产品价格。\n              </p><p>\n                价格列表可能有不同版本（2010, 2011, 2010年2月促销等等） ，每个版本可能有几个不同的规则。\n                （例如：给顾客的产品价格按照供应商价格的1.8倍提交。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个价格表。\n              </p><p>\n                价格表包括待审核的自动计算产品价格的规则。\n              </p><p>\n                价格表可能有不同版本（2010, 2011, 2010年2月促销等等） ，每个版本可能有几个不同的规则。\n                （例如：给顾客的产品价格按照供应商价格的1.8倍提交。即零售价与批发价是两套价格表，可以理解了吧？）\n              </p>\n            "
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -259,7 +261,7 @@ msgid ""
 "                this category or to a child of this category.\n"
 "              </p>\n"
 "            "
-msgstr "<p>\n                这是你所有产品根据类别进行的分类列表。你能单击分类 获得关联到这个类别极其子类的所有产品列表。\n              </p>\n            "
+msgstr "<p>\n                这是你所有产品根据类别进行的分类列表。你能单击分类 获得关联到这个类别极其下级类的所有产品列表。\n              </p>\n            "
 
 #. module: product
 #: model:product.template,website_description:product.product_product_11_product_template
@@ -531,7 +533,7 @@ msgid ""
 "                    </div>\n"
 "                </section>\n"
 "            "
-msgstr "<section data-snippet-id=\"text-image\" class=\"mb16 oe_dark\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1 mt64\">\n                                <h2>The full iPad experience.</h2>\n                                <h3 class=\"text-muted\">There's less of it, but no less to it.</h3>\n                                <p>\n                                        Everything you love about iPad — the beautiful screen,\n                                        fast and fluid performance, FaceTime and iSight cameras, \n                                        thousands of amazing apps, 10-hour battery life* — is everything\n                                        you’ll love about iPad mini, too. And you can hold it in one hand.\n                                </p>\n                            </div>\n                            <div class=\"col-md-5 mt16 mb16\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/design.png\">\n                            </div>\n                        </div>\n                    </div>\n                </section>\n                <section data-snippet-id=\"image-text\" class=\"mt16\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/mighty.png\">\n                            </div>\n                            <div class=\"col-md-6 mt32\">\n                                <h3>Beautiful 7.9‑inch display.</h3>\n                                <h4 class=\"small text-muted\"> A screen worthy of iPad.</h4>\n                                <p>\n                                    Everything you love about iPad — the beautiful\n                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n                                    But what really makes it stand out is its size. At 7.9 inches,\n                                    it’s perfectly sized to deliver an experience every bit as big as iPad.\n                                </p>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n                <section data-snippet-id=\"text-image\" class=\"mb16 oe_dark\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1 mt32\">\n                                <h2>Over 375,000 apps.</h2>\n                                <h3 class=\"text-muted\">If it's made for iPad, it's made for iPad mini.</h3>\n                                <p>\n                                    Right from the start, apps made for iPad also work with iPad mini.\n                                    They’re immersive, full-screen apps that let you do almost anything\n                                    you can imagine. And with automatic updates,\n                                    you're always getting the best experience possible.\n                                </p>\n                            </div>\n                            <div class=\"col-md-5 mt16\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/apps.png\">\n                            </div>\n                        </div>\n                    </div>\n                </section>\n                <section data-snippet-id=\"image-text\" class=\"mt16 mb16\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/ipad_why.png\">\n                            </div>\n                            <div class=\"col-md-6 mt64\">\n                                <h3>Why you'll love an iPad.</h3>\n                                <p>\n                                   Right from the start, there’s a lot to love about iPad.\n                                   It’s simple yet powerful. Thin and light yet full-\n                                   featured. It can do just about everything and be just\n                                   about anything.And because it’s so easy to use, it’s\n                                   easy to love.\n                                </p>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n                <section data-snippet-id=\"text-image\" class=\"mt16 mb16 oe_dark\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1 mt64\">\n                                <h2>Ultrafast wireless.</h2>\n                                <h3 class=\"text-muted\">Fast connections.The world over.</h3>\n                                <p>\n                                   With advanced Wi‑Fi that’s up to twice as fast as\n                                   any previous-generation iPad and access to fast\n                                   cellular data networks around the world, iPad mini\n                                   lets you download content, stream video,\n                                   and browse the web at amazing speeds.\n                                </p>\n                            </div>\n                            <div class=\"col-md-5 mt16 mb16\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/wireless.png\">\n                            </div>\n                        </div>\n                    </div>\n                </section>\n            "
+msgstr "<section data-snippet-id=\"text-image\" class=\"mb16 oe_dark\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1 mt64\">\n                                <h2>完整体验 iPad .</h2>\n                                <h3 class=\"text-muted\">它能更小，但它不能少！</h3>\n                                <p>\n                                        Everything you love about iPad — the beautiful screen,\n                                        fast and fluid performance, FaceTime and iSight cameras, \n                                        thousands of amazing apps, 10-hour battery life* — is everything\n                                        you’ll love about iPad mini, too. And you can hold it in one hand.\n                                </p>\n                            </div>\n                            <div class=\"col-md-5 mt16 mb16\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/design.png\">\n                            </div>\n                        </div>\n                    </div>\n                </section>\n                <section data-snippet-id=\"image-text\" class=\"mt16\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/mighty.png\">\n                            </div>\n                            <div class=\"col-md-6 mt32\">\n                                <h3>Beautiful 7.9‑inch display.</h3>\n                                <h4 class=\"small text-muted\"> A screen worthy of iPad.</h4>\n                                <p>\n                                    Everything you love about iPad — the beautiful\n                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n                                    But what really makes it stand out is its size. At 7.9 inches,\n                                    it’s perfectly sized to deliver an experience every bit as big as iPad.\n                                </p>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n                <section data-snippet-id=\"text-image\" class=\"mb16 oe_dark\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1 mt32\">\n                                <h2>Over 375,000 apps.</h2>\n                                <h3 class=\"text-muted\">If it's made for iPad, it's made for iPad mini.</h3>\n                                <p>\n                                    Right from the start, apps made for iPad also work with iPad mini.\n                                    They’re immersive, full-screen apps that let you do almost anything\n                                    you can imagine. And with automatic updates,\n                                    you're always getting the best experience possible.\n                                </p>\n                            </div>\n                            <div class=\"col-md-5 mt16\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/apps.png\">\n                            </div>\n                        </div>\n                    </div>\n                </section>\n                <section data-snippet-id=\"image-text\" class=\"mt16 mb16\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/ipad_why.png\">\n                            </div>\n                            <div class=\"col-md-6 mt64\">\n                                <h3>Why you'll love an iPad.</h3>\n                                <p>\n                                   Right from the start, there’s a lot to love about iPad.\n                                   It’s simple yet powerful. Thin and light yet full-\n                                   featured. It can do just about everything and be just\n                                   about anything.And because it’s so easy to use, it’s\n                                   easy to love.\n                                </p>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n                <section data-snippet-id=\"text-image\" class=\"mt16 mb16 oe_dark\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1 mt64\">\n                                <h2>Ultrafast wireless.</h2>\n                                <h3 class=\"text-muted\">Fast connections.The world over.</h3>\n                                <p>\n                                   With advanced Wi‑Fi that’s up to twice as fast as\n                                   any previous-generation iPad and access to fast\n                                   cellular data networks around the world, iPad mini\n                                   lets you download content, stream video,\n                                   and browse the web at amazing speeds.\n                                </p>\n                            </div>\n                            <div class=\"col-md-5 mt16 mb16\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/wireless.png\">\n                            </div>\n                        </div>\n                    </div>\n                </section>\n            "
 
 #. module: product
 #: model:product.template,website_description:product.product_product_4_product_template
@@ -684,7 +686,7 @@ msgid ""
 "                    </div>\n"
 "                </section>\n"
 "            "
-msgstr "<section data-snippet-id=\"text-image\" class=\"mt16 mb16\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1 mt32\">\n                                <h3>Bose Mini Bluetooth Speaker.</h3>\n                                <p>\n                                    The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its ultra-compact size fits in the \n                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n                                    full-featured. It can do just about everything and\n                                    experience music just about anywhere.\n                                </p>\n\n                                <div class=\"panel panel-default mt48\" data-snippet-id=\"panel\">\n                                    <div class=\"panel-heading\">\n                                        <h3 class=\"panel-title\">Characteristics</h3>\n                                    </div>\n                                    <div class=\"panel-body\">\n                                        <ul>\n                                            <li>Sleek, compact design</li>\n                                            <li>Efficient, high-quality audio</li>\n                                            <li>Remote control for power, volume, track seek</li>\n                                            <li>Auxiliary input for portable devices</li>\n                                            <li>Universal iPod docking station fits most iPod/iPhone models</li>\n                                            <li>Charges iPod/iPhone</li>\n                                            <li>Volume control on main system</li>\n                                        </ul>\n                                    </div>\n                                </div>\n\n                            </div>\n                            <div class=\"col-md-4 mt16 mb16 col-md-offset1\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/play_where_you_play.jpg\">\n                            </div>\n                        </div>\n                    </div>\n                </section>\n                <section data-snippet-id=\"text-image\" class=\"mt16 mb16 oe_dark\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1 mt16\">\n                                <h2>Plays where you play</h2>\n                                <p>\n                                        The SoundLink® Mini speaker is small and light enough\n                                        to tuck into your bag. It weighs in at just 1.5 pounds.\n                                        Its low profile lets you place it almost anywhere and\n                                        provides a low center of gravity that makes it nearly\n                                        impossible to tip over.\n                                </p>\n                                <p>\n                                    The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n                                    And at home, you can listen even longer—the charging cradle lets\n                                    you listen while it charges.\n                                </p>\n                            </div>\n                            <div class=\"col-md-5 col-md-offset-1 mt32\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/more_features.png\">\n                            </div>\n                            <div class=\"col-md-5 col-md-offset-4 text-center mb16 mt16\">\n                                <h3>Bluetooth connectivity</h3>\n                                <p>\n                                    The speaker has a range of about 30 feet, so you can enjoy\n                                    the sound you want without wires. It pairs easily with your\n                                    smartphone, iPad® or other Bluetooth device.\n                                    And it remembers the most recent six devices you've used,\n                                    so reconnecting is even simpler.\n                                </p>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n                <section data-snippet-id=\"text-image\" class=\"mt16 mb16\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1 mt32 mb16\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/bluetooth.jpg\">\n                            </div>\n                            <div class=\"col-md-5 mt16\">\n                                <h2>More features.</h2>\n                                <p>\n                                    Charging cradle recharges the battery and serves as a convenient\n                                    home base for your speaker, and it lets you play while it charges.\n                                </p>\n                                <p>\n                                    Wall charger can be plugged into the cradle or directly into the speaker\n                                </p>\n                                <p>\n                                    Auxiliary port lets you connect other audio sources, like an MP3 player\n                                </p>\n                                <p>\n                                    USB port allows for software update to ensure ongoing Bluetooth device compatibility\n                                </p>\n                                <p>\n                                    Soft covers are available separately in blue, green or orange. Pick a color to match your style.\n                                </p>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n            "
+msgstr "<section data-snippet-id=\"text-image\" class=\"mt16 mb16\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1 mt32\">\n                                <h3>迷你蓝牙音箱。</h3>\n                                <p>\n                                    The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its ultra-compact size fits in the \n                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n                                    full-featured. It can do just about everything and\n                                    experience music just about anywhere.\n                                </p>\n\n                                <div class=\"panel panel-default mt48\" data-snippet-id=\"panel\">\n                                    <div class=\"panel-heading\">\n                                        <h3 class=\"panel-title\">Characteristics</h3>\n                                    </div>\n                                    <div class=\"panel-body\">\n                                        <ul>\n                                            <li>Sleek, compact design</li>\n                                            <li>Efficient, high-quality audio</li>\n                                            <li>Remote control for power, volume, track seek</li>\n                                            <li>Auxiliary input for portable devices</li>\n                                            <li>Universal iPod docking station fits most iPod/iPhone models</li>\n                                            <li>Charges iPod/iPhone</li>\n                                            <li>Volume control on main system</li>\n                                        </ul>\n                                    </div>\n                                </div>\n\n                            </div>\n                            <div class=\"col-md-4 mt16 mb16 col-md-offset1\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/play_where_you_play.jpg\">\n                            </div>\n                        </div>\n                    </div>\n                </section>\n                <section data-snippet-id=\"text-image\" class=\"mt16 mb16 oe_dark\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1 mt16\">\n                                <h2>想唱就唱要唱得响亮</h2>\n                                <p>\n                                        The SoundLink® Mini speaker is small and light enough\n                                        to tuck into your bag. It weighs in at just 1.5 pounds.\n                                        Its low profile lets you place it almost anywhere and\n                                        provides a low center of gravity that makes it nearly\n                                        impossible to tip over.\n                                </p>\n                                <p>\n                                    The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n                                    And at home, you can listen even longer—the charging cradle lets\n                                    you listen while it charges.\n                                </p>\n                            </div>\n                            <div class=\"col-md-5 col-md-offset-1 mt32\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/more_features.png\">\n                            </div>\n                            <div class=\"col-md-5 col-md-offset-4 text-center mb16 mt16\">\n                                <h3>蓝牙连接</h3>\n                                <p>\n                                    The speaker has a range of about 30 feet, so you can enjoy\n                                    the sound you want without wires. It pairs easily with your\n                                    smartphone, iPad® or other Bluetooth device.\n                                    And it remembers the most recent six devices you've used,\n                                    so reconnecting is even simpler.\n                                </p>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n                <section data-snippet-id=\"text-image\" class=\"mt16 mb16\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-5 col-md-offset-1 mt32 mb16\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/bluetooth.jpg\">\n                            </div>\n                            <div class=\"col-md-5 mt16\">\n                                <h2>更多功能</h2>\n                                <p>\n                                    Charging cradle recharges the battery and serves as a convenient\n                                    home base for your speaker, and it lets you play while it charges.\n                                </p>\n                                <p>\n                                    Wall charger can be plugged into the cradle or directly into the speaker\n                                </p>\n                                <p>\n                                    Auxiliary port lets you connect other audio sources, like an MP3 player\n                                </p>\n                                <p>\n                                    USB port allows for software update to ensure ongoing Bluetooth device compatibility\n                                </p>\n                                <p>\n                                    Soft covers are available separately in blue, green or orange. Pick a color to match your style.\n                                </p>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n            "
 
 #. module: product
 #: model:product.template,website_description:product.product_product_7_product_template
@@ -734,14 +736,14 @@ msgid ""
 "                    </div>\n"
 "                </section>\n"
 "            "
-msgstr "<section data-snippet-id=\"text-image\" class=\"mt32\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-8 col-md-offset-2 text-center\">\n                                <h3>Two is better than one.</h3>\n                                <p>\n                                    Unlike many small headphones, each earpiece of the Apple In-Ear Headphones\n                                    contains two separate high-performance drivers — a woofer to handle bass and\n                                    mid-range sounds and a tweeter for high-frequency audio. These dedicated\n                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n                                    The result: you’re immersed in the music and hear details you never knew existed.\n                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time.\n                                </p>\n                            </div>\n                        </div><div class=\"row mt16\">\n                            <div class=\"col-md-2 mt16\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/promo_headphones.png\">\n                            </div>\n                            <div class=\"col-md-6\">\n                                <h3 class=\"mt16\">Hear, hear.</h3>\n                                <p>\n                                    The Apple In-Ear Headphones deliver a truly immersive sound experience by drastically\n                                    reducing unwanted outside noises. The soft, silicone ear tips fit snugly and comfortably\n                                    in your ear, creating a seal that isolates your music from your surroundings.\n                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n                                    for the headphones themselves.\n                                </p>\n                            </div>\n                            <div class=\"col-md-4\">\n                                <h3 class=\"mt16\">Keep it clean.</h3>\n                                <p>\n                                    Inside each earpiece is a stainless steel mesh cap that protects the precision acoustic\n                                    components from dust and debris. You can remove the caps for cleaning or replace\n                                    them with an extra set that’s included in the box.\n                                </p>\n                            </div>\n                        </div><div class=\"row\">\n                            <div class=\"col-md-2 col-md-offset-5 mt16\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/buds_closeup.png\">\n                            </div>\n                        </div>\n                    </div>\n                </section>\n            "
+msgstr "<section data-snippet-id=\"text-image\" class=\"mt32\">\n                    <div class=\"container\">\n                        <div class=\"row\">\n                            <div class=\"col-md-8 col-md-offset-2 text-center\">\n                                <h3>俗话说，两个脑袋总比一个强。</h3>\n                                <p>\n                                    Unlike many small headphones, each earpiece of the Apple In-Ear Headphones\n                                    contains two separate high-performance drivers — a woofer to handle bass and\n                                    mid-range sounds and a tweeter for high-frequency audio. These dedicated\n                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n                                    The result: you’re immersed in the music and hear details you never knew existed.\n                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time.\n                                </p>\n                            </div>\n                        </div><div class=\"row mt16\">\n                            <div class=\"col-md-2 mt16\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/promo_headphones.png\">\n                            </div>\n                            <div class=\"col-md-6\">\n                                <h3 class=\"mt16\">听，海哭的声音。</h3>\n                                <p>\n                                    The Apple In-Ear Headphones deliver a truly immersive sound experience by drastically\n                                    reducing unwanted outside noises. The soft, silicone ear tips fit snugly and comfortably\n                                    in your ear, creating a seal that isolates your music from your surroundings.\n                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n                                    for the headphones themselves.\n                                </p>\n                            </div>\n                            <div class=\"col-md-4\">\n                                <h3 class=\"mt16\">保持纯净</h3>\n                                <p>\n                                    Inside each earpiece is a stainless steel mesh cap that protects the precision acoustic\n                                    components from dust and debris. You can remove the caps for cleaning or replace\n                                    them with an extra set that’s included in the box.\n                                </p>\n                            </div>\n                        </div><div class=\"row\">\n                            <div class=\"col-md-2 col-md-offset-5 mt16\">\n                                <img class=\"img img-responsive\" src=\"/website_sale/static/src/img/buds_closeup.png\">\n                            </div>\n                        </div>\n                    </div>\n                </section>\n            "
 
 #. module: product
 #: help:product.category,type:0
 msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
-msgstr "视图类型的分类是一个可视分类，用来做其它分类的上级，以此建立一个分层结构。"
+msgstr "视图类型的类别是一个可视类别，用来做其它类别的上级，以此建立一个分层结构。"
 
 #. module: product
 #: help:product.template,description_sale:0
@@ -749,7 +751,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr "一个传达给客户的、关于该产品的描述。这个描述将会拷贝到每一个销售单，交货单和客户发票/退款单。"
+msgstr "一个传达给客户的、关于该产品的说明。这个描述将会拷贝到每一个销售单，交货单和客户发票/退款单。"
 
 #. module: product
 #: help:product.template,description_purchase:0
@@ -757,14 +759,14 @@ msgid ""
 "A description of the Product that you want to communicate to your suppliers."
 " This description will be copied to every Purchase Order, Receipt and "
 "Supplier Invoice/Refund."
-msgstr "一个传达给供应商的、关于该产品的描述。这个描述将会拷贝到每一个采购单，收货单和供应商发票/退款单。"
+msgstr "一个传达给供应商的、关于该产品的说明。这个描述将会拷贝到每一个采购单，收货单和供应商发票/退款单。"
 
 #. module: product
 #: help:product.template,description:0
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr "精确的产品描述，仅用于内部备注。"
+msgstr "产品的详细说明，仅用于内部备注。"
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -868,14 +870,14 @@ msgstr "基本价格"
 #. module: product
 #: help:product.pricelist.item,base:0
 msgid "Base price for computation."
-msgstr "计算的基准价格"
+msgstr "用于计算的基准价格"
 
 #. module: product
 #: help:product.template,list_price:0
 msgid ""
 "Base price to compute the customer price. Sometimes called the catalog "
 "price."
-msgstr "计算客户报价的基准价格。也叫目录价格"
+msgstr "计算客户报价的基准价格。也叫目录价格（外贸较常见客户Email要求目录和价格表）。"
 
 #. module: product
 #: field:product.pricelist.item,base:0
@@ -952,13 +954,13 @@ msgstr "基于价格表版本计算产品单位价格"
 #. module: product
 #: field:product.template,rental:0
 msgid "Can be Rent"
-msgstr "可出租"
+msgstr "出租"
 
 #. module: product
 #: view:product.template:product.product_template_search_view
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr "可销售"
+msgstr "销售"
 
 #. module: product
 #: view:product.price_list:product.view_product_price_list
@@ -989,7 +991,7 @@ msgstr "类别类型"
 #. module: product
 #: field:product.category,child_id:0
 msgid "Child Categories"
-msgstr "子类别"
+msgstr "下级类别"
 
 #. module: product
 #: field:product.packaging,code:0
@@ -1001,7 +1003,7 @@ msgstr "代码"
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale\n"
 " uos = uom * coeff"
-msgstr "从默认计量单位转换（UoM）到销售单位（UoS）的系数。\nUoS = UoM * 系数"
+msgstr "转换默认计量单位（UoM）到销售单位（UoS）的系数。\nUoS = UoM * 系数"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_2
@@ -1038,7 +1040,7 @@ msgstr "公司"
 #: model:product.category,name:product.product_category_8
 #: model:product.public.category,name:product.Components
 msgid "Components"
-msgstr "组件"
+msgstr "部件"
 
 #. module: product
 #: model:product.template,name:product.product_product_16_product_template
@@ -1191,7 +1193,7 @@ msgstr "天"
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
 msgid "Default Public Pricelist Version"
-msgstr "默认的公共价格表版本"
+msgstr "默认公共价格表版本"
 
 #. module: product
 #: view:product.template:product.product_template_search_view
@@ -1224,7 +1226,7 @@ msgstr "说明"
 #. module: product
 #: view:product.template:product.product_template_form_view
 msgid "Description for Quotations"
-msgstr "报价单说明"
+msgstr "报价说明"
 
 #. module: product
 #: view:product.template:product.product_template_form_view
@@ -1249,7 +1251,7 @@ msgstr "打"
 #. module: product
 #: field:product.packaging,ean:0
 msgid "EAN"
-msgstr "条码"
+msgstr "EAN"
 
 #. module: product
 #: field:product.product,ean13:0 field:product.template,ean13:0
@@ -1259,7 +1261,7 @@ msgstr "EAN13 条码"
 #. module: product
 #: field:product.ul,weight:0
 msgid "Empty Package Weight"
-msgstr "空包装重量"
+msgstr "空包裹重量"
 
 #. module: product
 #: field:product.pricelist.version,date_end:0
@@ -1306,7 +1308,7 @@ msgstr "错误！公司本位币的舍入系数不能定义得小于”科目“
 msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
-msgstr "错误！你不能定义 科目的小数位数大于 公司本位币的舍入系统。"
+msgstr "错误！你不能定义'科目'的精度大于 公司本位币的舍入系数。"
 
 #. module: product
 #: constraint:product.packaging:0
@@ -1318,7 +1320,7 @@ msgstr "错误：无效的(EAN)条码"
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
-msgstr "错误：默认的计量单位和采购计量单位必须是相同的类别"
+msgstr "错误：默认计量单位和采购计量单位必须是相同的类别"
 
 #. module: product
 #: help:product.pricelist.item,name:0
@@ -1361,7 +1363,7 @@ msgstr "关注者"
 msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default UoM of the product."
-msgstr "为了应用这个规则，购买/销售 数量必须大于或等于这个字段内指定的最小数量。\n这个字段在产品的默认计量单位中指定。"
+msgstr "为了应用这个规则，购买/销售 数量必须大于或等于这个字段内指定的最小数量。\n以产品的默认计量单位表示。"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
@@ -1398,7 +1400,7 @@ msgstr "价格表检测的顺序。越小的序号将有越高的优先级进行
 #. module: product
 #: help:product.packaging,sequence:0
 msgid "Gives the sequence order when displaying a list of packaging."
-msgstr "显示包装信息的顺序号"
+msgstr "显示包装清单时给出序列顺序。"
 
 #. module: product
 #: help:product.category,sequence:0
@@ -1424,7 +1426,7 @@ msgstr "毛重"
 #. module: product
 #: view:product.template:product.product_template_search_view
 msgid "Group by..."
-msgstr "分组 于"
+msgstr "分组于..."
 
 #. module: product
 #: model:product.template,name:product.product_product_17_product_template
@@ -1495,7 +1497,7 @@ msgstr "历史时间"
 #. module: product
 #: field:product.price.history,cost:0
 msgid "Historized Cost"
-msgstr "成本价"
+msgstr "历史成本"
 
 #. module: product
 #: help:product.product,message_summary:0
@@ -1572,21 +1574,21 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "产品图片规格(如果为False,采用大尺寸图片模板）. 它保持图片的宽高比,并自动调整图片大小为1024 x 1024px."
+msgstr "产品变型的图片(如果为False,采用大尺寸图片模板）. 它保持图片的宽高比,并自动调整图片大小为1024 x 1024px."
 
 #. module: product
 #: help:product.product,image_medium:0
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "产品图片规格(如果为Flase,采用普通尺寸图片模板)"
+msgstr "产品变型的图片(如果为Flase,采用普通尺寸图片模板)"
 
 #. module: product
 #: help:product.product,image_small:0
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr "产品图片规格(如果为Flase,采用小尺寸图片模板)"
+msgstr "产品变型图片(如果为Flase,采用小尺寸图片模板)"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1617,18 +1619,18 @@ msgstr "完整性错误！"
 #. module: product
 #: model:product.category,name:product.product_category_2
 msgid "Internal"
-msgstr "内置"
+msgstr "内部"
 
 #. module: product
 #: field:product.template,categ_id:0
 msgid "Internal Category"
-msgstr "内部分类"
+msgstr "内部类别"
 
 #. module: product
 #: field:product.product,code:0 field:product.product,default_code:0
 #: field:product.template,default_code:0
 msgid "Internal Reference"
-msgstr "内部单号"
+msgstr "内部货号"
 
 #. module: product
 #: help:product.product,ean13:0
@@ -1660,7 +1662,7 @@ msgstr "是一个关注者"
 #: field:product.product,is_product_variant:0
 #: field:product.template,is_product_variant:0
 msgid "Is product variant"
-msgstr "是多规格产品"
+msgstr "是产品变型"
 
 #. module: product
 #: view:product.pricelist.version:product.product_pricelist_version_form_view
@@ -1675,7 +1677,7 @@ msgstr "关键字"
 #. module: product
 #: model:product.public.category,name:product.Keyboard_Mouse
 msgid "Keyboard / Mouse"
-msgstr "键盘、鼠标"
+msgstr "键盘/鼠标"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1751,7 +1753,7 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr "提前期是订单确认到仓库收到货物天数,使用于采购单自动计算规划调度"
+msgstr "提前时间是订单确认到仓库收到货物天数,使用于采购单自动计算规划调度"
 
 #. module: product
 #: field:product.category,parent_left:0
@@ -1771,7 +1773,7 @@ msgstr "长度或距离"
 #. module: product
 #: view:product.template:product.product_template_only_form_view
 msgid "List of Variants"
-msgstr "变体列表"
+msgstr "变型列表"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -1829,7 +1831,7 @@ msgstr "管理第二个计量单位"
 #. module: product
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
 msgid "Max. Margin"
-msgstr "最大利润"
+msgstr "最大毛利"
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
@@ -1873,7 +1875,7 @@ msgstr "消息和通信历史"
 #. module: product
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
 msgid "Min. Margin"
-msgstr "最小上浮金额"
+msgstr "最小毛利"
 
 #. module: product
 #: field:product.pricelist.item,price_min_margin:0
@@ -1893,7 +1895,7 @@ msgstr "最少数量"
 #. module: product
 #: model:product.public.category,name:product.Modem_Router
 msgid "Modem & Router"
-msgstr "调制解调器与路由器"
+msgstr "调制解调器&路由器"
 
 #. module: product
 #: model:product.public.category,name:product.motherboard
@@ -1923,7 +1925,7 @@ msgstr "无线鼠标"
 #. module: product
 #: model:product.template,name:product.product_product_31_product_template
 msgid "Multimedia Speakers"
-msgstr "多媒体喇叭"
+msgstr "多媒体音箱"
 
 #. module: product
 #: field:product.attribute,name:0 field:product.category,complete_name:0
@@ -2026,7 +2028,7 @@ msgstr "其他商品"
 #. module: product
 #: model:product.template,name:product.product_product_5_product_template
 msgid "PC Assemble + Custom (PC on Demand) "
-msgstr "PC组装 自定义（PC点播）"
+msgstr "pc组装和定制（PC按需）"
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -2036,17 +2038,17 @@ msgstr "PC 组装 SC234"
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pack"
-msgstr "包装"
+msgstr "打包"
 
 #. module: product
 #: field:product.packaging,ul:0
 msgid "Package Logistic Unit"
-msgstr "物流单元包装"
+msgstr "包裹物流单元"
 
 #. module: product
 #: field:product.packaging,ul_qty:0
 msgid "Package by layer"
-msgstr "包装层"
+msgstr "每层的包裹"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
@@ -2061,18 +2063,18 @@ msgstr "包装"
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pallet"
-msgstr "垫板"
+msgstr "托盘"
 
 #. module: product
 #: field:product.packaging,ul_container:0
 msgid "Pallet Logistic Unit"
-msgstr "物流单元托盘"
+msgstr "托盘物流单元"
 
 #. module: product
 #: view:product.packaging:product.product_packaging_form_view
 #: view:product.packaging:product.product_packaging_form_view_without_product
 msgid "Palletization"
-msgstr "垫垫板"
+msgstr "托盘化"
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -2092,7 +2094,7 @@ msgstr "业务伙伴信息"
 #. module: product
 #: model:product.public.category,name:product.Pen_Drive
 msgid "Pen Drive"
-msgstr "更改笔"
+msgstr "随身存储器"
 
 #. module: product
 #: model:product.template,name:product.product_product_29_product_template
@@ -2129,7 +2131,7 @@ msgstr "额外价格"
 msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr "价格附加:销售价格随着附加价格进行变化,如:原销售价格是1000,额外收费是200,当前售价是1200 = 1000 + 200."
+msgstr "价格附加:变型的销售价格随着附加价格进行变化,如:原销售价格是1000,额外收费是200,当前售价是1200 = 1000 + 200."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -2168,7 +2170,7 @@ msgstr "价格舍入"
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
-msgstr "价格额外费用"
+msgstr "价格附加费用"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_type
@@ -2325,7 +2327,7 @@ msgstr "产品类别"
 #. module: product
 #: model:ir.ui.menu,name:product.prod_config_main
 msgid "Product Categories & Attributes"
-msgstr "产品分类和属性"
+msgstr "产品类别和属性"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -2336,12 +2338,12 @@ msgstr "产品类别"
 #. module: product
 #: field:product.price.type,field:0
 msgid "Product Field"
-msgstr "字段值"
+msgstr "产品字段"
 
 #. module: product
 #: field:product.template,product_manager:0
 msgid "Product Manager"
-msgstr "产品经理"
+msgstr "产品管理者"
 
 #. module: product
 #: view:product.template:product.product_template_form_view
@@ -2375,7 +2377,7 @@ msgstr "产品计量单位"
 #: view:product.product:product.product_normal_form_view
 #: view:product.template:product.product_template_search_view
 msgid "Product Variant"
-msgstr "产品系列"
+msgstr "产品变型"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -2385,7 +2387,7 @@ msgstr "产品系列"
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:product.product_product_tree_view
 msgid "Product Variants"
-msgstr "产品规格"
+msgstr "产品变型"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -2482,7 +2484,7 @@ msgstr "数量"
 #. module: product
 #: field:product.packaging,qty:0
 msgid "Quantity by Package"
-msgstr "包装数量"
+msgstr "每包裹的数量"
 
 #. module: product
 #: field:product.price_list,qty1:0
@@ -2577,7 +2579,7 @@ msgstr "销售说明"
 #. module: product
 #: field:product.template,list_price:0
 msgid "Sale Price"
-msgstr "标价"
+msgstr "售价"
 
 #. module: product
 #: model:product.pricelist.type,name:product.pricelist_type_sale
@@ -2598,7 +2600,7 @@ msgstr "销售"
 #. module: product
 #: view:res.partner:product.view_partner_property_form
 msgid "Sales & Purchases"
-msgstr "销售&采购"
+msgstr "销售与采购"
 
 #. module: product
 #: model:res.groups,name:product.group_sale_pricelist
@@ -2608,7 +2610,7 @@ msgstr "销售价格表"
 #. module: product
 #: model:product.public.category,name:product.Screen
 msgid "Screen"
-msgstr "画面"
+msgstr "屏幕"
 
 #. module: product
 #: help:product.template,categ_id:0
@@ -2620,7 +2622,7 @@ msgstr "为当前产品选择一个类别"
 #: field:product.packaging,sequence:0 field:product.pricelist.item,sequence:0
 #: field:product.supplierinfo,sequence:0
 msgid "Sequence"
-msgstr "序列"
+msgstr "序号"
 
 #. module: product
 #: model:product.public.category,name:product.server
@@ -2646,7 +2648,7 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr "设定价格,因为它是一个多元价格, 四舍五入后打折或加入附加费. \n以价格9.99为例四舍五入为10附加费为-0.001."
+msgstr "设定价格，这样它是此数值的整数倍。\n舍入应用在打折后，附加费用之前。 \n要将价格设置为9.99结尾，设置舍入为10，附加费用为-0.001。"
 
 #. module: product
 #: field:product.product,image_small:0 field:product.template,image_small:0
@@ -2675,14 +2677,14 @@ msgstr "软件"
 #. module: product
 #: model:product.public.category,name:product.Speakers
 msgid "Speakers"
-msgstr "关注者"
+msgstr "音箱"
 
 #. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr "指定一个产品分类 ，规则只被应用在与这个分类以及它的子类一致的产品上。其它情况留空"
+msgstr "指定一个产品类别 ，规则只被应用在与这个类别以及它的下级类一致的产品上。其它情况留空"
 
 #. module: product
 #: help:product.pricelist.item,product_id:0
@@ -2741,7 +2743,7 @@ msgstr "状态"
 #. module: product
 #: selection:product.template,type:0
 msgid "Stockable Product"
-msgstr "库存商品"
+msgstr "可库存产品"
 
 #. module: product
 #: field:product.product,message_summary:0
@@ -2763,7 +2765,7 @@ msgstr "供应商信息"
 #. module: product
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
-msgstr "供应商交货提前期"
+msgstr "供应商提前时间"
 
 #. module: product
 #: field:product.supplierinfo,pricelist_ids:0
@@ -2809,7 +2811,7 @@ msgstr "供应商"
 #. module: product
 #: model:product.public.category,name:product.Switch
 msgid "Switch"
-msgstr "开关"
+msgstr "交换机"
 
 #. module: product
 #: model:product.template,name:product.product_product_47_product_template
@@ -2836,7 +2838,7 @@ msgstr "运输单位代码"
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr "计算的价格基于产品默认的计量单位。"
+msgstr "计算的价格基于产品默认计量单位。"
 
 #. module: product
 #: help:product.uom,rounding:0
@@ -2853,7 +2855,7 @@ msgstr "计量单位的转换比率不能为 0！"
 #. module: product
 #: help:product.price.type,currency_id:0
 msgid "The currency the field is expressed in."
-msgstr "货币字段的表达式"
+msgstr "货币，字段以此表示"
 
 #. module: product
 #: help:product.template,weight:0
@@ -2863,12 +2865,12 @@ msgstr "毛重使用公斤"
 #. module: product
 #: help:product.ul,height:0
 msgid "The height of the package"
-msgstr "包装的高度"
+msgstr "包裹的高度"
 
 #. module: product
 #: help:product.ul,length:0
 msgid "The length of the package"
-msgstr "包装的长度"
+msgstr "包裹的长度"
 
 #. module: product
 #: help:product.supplierinfo,min_qty:0
@@ -2876,7 +2878,7 @@ msgid ""
 "The minimal quantity to purchase to this supplier, expressed in the supplier"
 " Product Unit of Measure if not empty, in the default unit of measure of the"
 " product otherwise."
-msgstr "从供应商采购的最小数量，如果不是空的，就按明示的供应商单位。否则就是默认的计量单位。"
+msgstr "从供应商采购的最小数量，如果不是空的，就按明示的供应商单位。否则就是默认计量单位。"
 
 #. module: product
 #: help:pricelist.partnerinfo,min_quantity:0
@@ -2893,12 +2895,12 @@ msgstr "净重使用公斤"
 #. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layers on a pallet or box"
-msgstr "层板或箱子的层数"
+msgstr "托盘或箱子的层数"
 
 #. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
-msgstr "每层包装件数"
+msgstr "每层的包裹数量"
 
 #. module: product
 #: code:addons/product/product.py:397
@@ -2906,7 +2908,7 @@ msgstr "每层包装件数"
 msgid ""
 "The operation cannot be completed:\n"
 "You trying to delete an attribute value with a reference on a product variant."
-msgstr "这个操作不能被完成：\n你不能删除在一个产品属性上已有参考的属性值。"
+msgstr "这个操作不能完成：\n你不能删除在一个产品变型上已有参考的属性值。"
 
 #. module: product
 #: view:product.supplierinfo:product.product_supplierinfo_form_view
@@ -2925,7 +2927,7 @@ msgstr "iPad 也可以支援 Apple Wireless Keyboard。"
 #. module: product
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by pallet or box."
-msgstr "您可以放入货板或箱子的产品数量。"
+msgstr "您可以放入托盘或箱子的产品数量。"
 
 #. module: product
 #: help:product.template,volume:0
@@ -2935,12 +2937,12 @@ msgstr "这体积是m3"
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full package, pallet or box."
-msgstr "完整包装的重量，指货板或者包装箱"
+msgstr "完整包裹，托盘或者箱子的重量"
 
 #. module: product
 #: help:product.ul,width:0
 msgid "The width of the package"
-msgstr "包装宽度"
+msgstr "包裹宽度"
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
@@ -2957,7 +2959,7 @@ msgstr "此处源自该产品表单。"
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr "该字段保存产品的图片，限制图片大小须小于 1024x1024px."
+msgstr "该字段保存产品变型的图片，限制图片大小须小于 1024x1024px."
 
 #. module: product
 #: help:product.template,image:0
@@ -3048,7 +3050,7 @@ msgstr "碳粉匣"
 #. module: product
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
-msgstr "包装总重量"
+msgstr "包裹总重量"
 
 #. module: product
 #: view:product.template:product.product_template_search_view
@@ -3150,17 +3152,17 @@ msgstr "可变的"
 #. module: product
 #: field:product.product,price_extra:0
 msgid "Variant Extra Price"
-msgstr "规格附加价格"
+msgstr "变型附加价格"
 
 #. module: product
 #: field:product.product,image_variant:0
 msgid "Variant Image"
-msgstr "系列图片"
+msgstr "变型图片"
 
 #. module: product
 #: view:product.template:product.product_template_only_form_view
 msgid "Variant Prices"
-msgstr "系列价格"
+msgstr "变型价格"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_template_action
@@ -3168,14 +3170,14 @@ msgstr "系列价格"
 #: view:product.attribute.value:product.variants_template_tree_view
 #: view:product.attribute.value:product.variants_tree_view
 msgid "Variant Values"
-msgstr "系列值"
+msgstr "变型值"
 
 #. module: product
 #: field:product.attribute.value,product_ids:0
 #: view:product.template:product.product_template_kanban_view
 #: view:product.template:product.product_template_only_form_view
 msgid "Variants"
-msgstr "系列型号"
+msgstr "变型"
 
 #. module: product
 #: model:product.public.category,name:product.video_acquisition
@@ -3391,7 +3393,7 @@ msgstr "夸脱"
 #. module: product
 #: view:res.partner:product.view_partner_property_form
 msgid "the parent company"
-msgstr "父公司"
+msgstr "上级公司"
 
 #. module: product
 #: field:product.price.history,company_id:0

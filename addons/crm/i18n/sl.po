@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014-2015
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014-2016
+# Vida Potočnik <vida.potocnik@mentis.si>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:58+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-04-20 05:13+0000\n"
+"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -573,7 +574,7 @@ msgstr "Kliknite za podrobno analizo priložnosti."
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
 msgid "Close"
-msgstr "Zaključi"
+msgstr "Zapri"
 
 #. module: crm
 #: field:crm.lead.report,date_closed:0
@@ -1099,7 +1100,7 @@ msgstr "Dokončano"
 #. module: crm
 #: field:crm.case.stage,fold:0
 msgid "Folded in Kanban View"
-msgstr "Prepognjeno v pogledu Kanban"
+msgstr "V kanban prikazu zloženo"
 
 #. module: crm
 #: field:crm.lead,message_follower_ids:0
@@ -1195,7 +1196,7 @@ msgstr "Visoka"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v html formatu, da se lahko vstavlja v poglede kanban."
+msgstr "Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v html formatu, da se lahko vstavlja v kanban prikaze."
 
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,id:0
@@ -1437,7 +1438,7 @@ msgstr "Ustvarjanje indicev"
 #. module: crm
 #: field:res.partner,opportunity_ids:0
 msgid "Leads and Opportunities"
-msgstr "Indici/Priložnosti"
+msgstr "Indici in priložnosti"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_usa_lead
@@ -2018,7 +2019,7 @@ msgstr "Priložnost dobljena"
 #. module: crm
 #: field:crm.lead,opt_out:0
 msgid "Opt-Out"
-msgstr "Opt-Out"
+msgstr "Odjava"
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -2879,7 +2880,7 @@ msgstr "Ta odstotek predstavlja privzeto/povprečno verjetnost uspeha pri primer
 msgid ""
 "This stage is folded in the kanban view whenthere are no records in that "
 "stage to display."
-msgstr "Ta stopnja bo prepognjena v pogledu kanban, kadar ne bo vnosov za prikaz v tisti stopnji."
+msgstr "Ta stopnja bo prepognjena v kanban prikazu, kadar ne bo vnosov za prikaz v tisti stopnji."
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_form_view_leads
@@ -3064,6 +3065,12 @@ msgid ""
 "You are already at the top level of your sales-team category.\n"
 "Therefore you cannot escalate furthermore."
 msgstr "Nahajate se na najvišjem nivoju kategorije prodajne ekipe.\nNadaljnje stopnjevanje ni več mogoče."
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:310
+#, python-format
+msgid "You cannot merge a contact with one of his parent."
+msgstr "Ne morete združiti stika z enim izmed njemu nadrejenih."
 
 #. module: crm
 #: code:addons/crm/base_partner_merge.py:446

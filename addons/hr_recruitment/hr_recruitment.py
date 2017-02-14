@@ -459,6 +459,7 @@ class hr_applicant(osv.Model):
             if stage.template_id:
                 # TDENOTE: probably factorize me in a message_post_with_template generic method FIXME
                 compose_ctx = dict(context,
+                                   active_id=False,
                                    active_ids=ids)
                 compose_id = self.pool['mail.compose.message'].create(
                     cr, uid, {

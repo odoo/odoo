@@ -54,6 +54,11 @@ class stock_picking(osv.osv):
                         if oa:
                             fpos = ol.invoice_id.fiscal_position or False
                             a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
+                            tax_line = ol.invoice_line_tax_id.filtered(lambda l: not l.account_collected_id) if ol.invoice_line_tax_id else False
+                            if tax_line:
+                                for tax in tax_line:
+                                    tax_id = self.pool['account.invoice.tax'].search(cr, uid, [('invoice_id', '=', ol.invoice_id.id), ('name', '=', tax.name), ('account_id', '=', ol.account_id.id)], limit=1)
+                                    self.pool['account.invoice.tax'].write(cr, uid, tax_id, {'account_id': a})
                             self.pool.get('account.invoice.line').write(cr, uid, [ol.id], {'account_id': a})
         return res
 

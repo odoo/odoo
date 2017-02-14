@@ -30,9 +30,11 @@ import time
 
 class account_bank_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
+        if not context:
+            context = {}
         if vals.get('name', '/') == '/':
             journal_id = vals.get('journal_id', self._default_journal_id(cr, uid, context=context))
-            vals['name'] = self._compute_default_statement_name(cr, uid, journal_id, context=context)
+            vals['name'] = self._compute_default_statement_name(cr, uid, journal_id, context=dict(context, period_id=vals.get('period_id')))
         if 'line_ids' in vals:
             for idx, line in enumerate(vals['line_ids']):
                 line[2]['sequence'] = idx + 1
@@ -75,7 +77,7 @@ class account_bank_statement(osv.osv):
     def _compute_default_statement_name(self, cr, uid, journal_id, context=None):
         context = dict(context or {})
         obj_seq = self.pool.get('ir.sequence')
-        period = self.pool.get('account.period').browse(cr, uid, self._get_period(cr, uid, context=context), context=context)
+        period = self.pool.get('account.period').browse(cr, uid, context.get('period_id') or self._get_period(cr, uid, context=context), context=context)
         context['fiscalyear_id'] = period.fiscalyear_id.id
         journal = self.pool.get('account.journal').browse(cr, uid, journal_id, None)
         return obj_seq.next_by_id(cr, uid, journal.sequence_id.id, context=context)
@@ -531,8 +533,9 @@ class account_bank_statement_line(osv.osv):
                   ('reconcile_id', '=', False),
                   ('state', '=', 'valid'),
                   ('account_id.reconcile', '=', True),
-                  ('id', 'not in', excluded_ids),
-                  ('partner_id', 'in', (False, st_line.partner_id.id))]
+                  ('id', 'not in', excluded_ids),]
+        if st_line.partner_id:
+            domain.append(('partner_id', '=', st_line.partner_id.id))
         return domain
 
     def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
@@ -553,6 +556,13 @@ class account_bank_statement_line(osv.osv):
                     self.write(cr, uid, st_line.id, {'partner_id': mv_line['partner_id']}, context=context)
                     mv_line['has_no_partner'] = False
                 return [mv_line]
+            elif len(match_id) == 0:
+                move = self.pool['account.move'].search(cr, uid, [('name', '=', st_line.ref)], limit=1, context=context)
+                if move:
+                    domain = [('move_id', '=', move[0])]
+                    match_recs = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=domain)
+                    if match_recs and len(match_recs) == 1:
+                        return match_recs
 
         # How to compare statement line amount and move lines amount
         precision_digits = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
@@ -910,7 +920,8 @@ class account_bank_statement_line(osv.osv):
                 move_line_pairs_to_reconcile.append([new_aml_id, counterpart_move_line_id])
         # Reconcile
         for pair in move_line_pairs_to_reconcile:
-            aml_obj.reconcile_partial(cr, uid, pair, context=context)
+            # DO NOT FORWARD PORT
+            aml_obj.reconcile_partial(cr, uid, pair, context=dict(context, bs_move_id=move_id))
         # Mark the statement line as reconciled
         self.write(cr, uid, id, {'journal_entry_id': move_id}, context=context)
 
@@ -921,7 +932,7 @@ class account_bank_statement_line(osv.osv):
         user = self.pool.get("res.users").browse(cr, uid, uid)
         return ['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]), ('journal_entry_id', '=', False), ('account_id', '=', False)]
 
-    _order = "statement_id desc, sequence"
+    _order = "statement_id desc, sequence, id"
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
     _inherit = ['ir.needaction_mixin']
@@ -946,6 +957,7 @@ class account_bank_statement_line(osv.osv):
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line', context=context),
         'date': lambda self,cr,uid,context={}: context.get('date', fields.date.context_today(self,cr,uid,context=context)),
+        'sequence': 1,
     }
 
 class account_statement_operation_template(osv.osv):

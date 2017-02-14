@@ -80,9 +80,9 @@ def report_configuration():
                         ('database user', config['db_user'])]:
         _logger.info("%s: %s", name, value)
 
-def rm_pid_file():
+def rm_pid_file(main_pid):
     config = openerp.tools.config
-    if not openerp.evented and config['pidfile']:
+    if config['pidfile'] and main_pid == os.getpid():
         try:
             os.unlink(config['pidfile'])
         except OSError:
@@ -95,10 +95,10 @@ def setup_pid_file():
     """
     config = openerp.tools.config
     if not openerp.evented and config['pidfile']:
+        pid = os.getpid()
         with open(config['pidfile'], 'w') as fd:
-            pidtext = "%d" % (os.getpid())
-            fd.write(pidtext)
-        atexit.register(rm_pid_file)
+            fd.write(str(pid))
+        atexit.register(rm_pid_file, pid)
 
 
 def export_translation():

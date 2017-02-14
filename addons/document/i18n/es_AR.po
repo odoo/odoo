@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-27 05:01+0000\n"
+"PO-Revision-Date: 2015-11-01 02:53+0000\n"
 "Last-Translator: Leonardo Germán Chianea <noamixcontenidos@gmail.com>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-8/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
@@ -22,14 +22,14 @@ msgstr ""
 #. module: document
 #: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
-msgstr ""
+msgstr "Núm. de archivos"
 
 #. module: document
 #. openerp-web
 #: code:addons/document/static/src/js/document.js:19
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: document
 #: code:addons/document/document.py:117 code:addons/document/document.py:307
@@ -47,14 +47,14 @@ msgid ""
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear un nuevo documento.\n</p><p>\nEl repositorio de documentos le da acceso a todos los adjuntos, tales como correos electrónicos, documentos de proyectos, facturas, etc.\n</p>"
 
 #. module: document
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
-msgstr ""
+msgstr "Expresión Python utilizada para evaluar el campo.\nPuede utilizar 'dir_id' para el directorio actual, 'res_id', 'res_model' como referencia al registro actual en directorios dinámicos."
 
 #. module: document
 #: field:document.directory.content.type,active:0
@@ -64,19 +64,19 @@ msgstr "Activo"
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
 msgid "All Users files"
-msgstr ""
+msgstr "Archivos de todos los usuarios"
 
 #. module: document
 #: view:report.document.user:document.view_report_document_user_search
 msgid "All users files"
-msgstr ""
+msgstr "Archivos de todos los usuarios"
 
 #. module: document
 #: help:document.directory,ressource_id:0
 msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
-msgstr ""
+msgstr "Junto con el modelo padre, este ID adjunta este directorio a un registro específico del modelo padre."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -105,7 +105,7 @@ msgstr "Agosto"
 msgid ""
 "Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
-msgstr ""
+msgstr "Marque este campo si desea que el nombre del archivo contenga el nombre del registro.\nSi está marcado, el directorio tiene que ser un recurso."
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -149,7 +149,7 @@ msgstr "Índice"
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr ""
+msgstr "Campos de contexto"
 
 #. module: document
 #: field:document.configuration,create_uid:0
@@ -243,7 +243,7 @@ msgstr "Tipo de contenido del directorio"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr ""
+msgstr "Contexto dinámico de directorio"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -306,7 +306,7 @@ msgid ""
 "directory that can contain a set of files. The directories linked to systems"
 " resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
-msgstr ""
+msgstr "Cada directorio puede ser de tipo estático o ser asociado a otro recurso. Un directorio estático, como en los sistemas operativos, es el clásico directorio que puede contener un conjunto de archivos. Los directorios asociados a recursos del sistema automáticamente poseen subdirectorios para cada recurso definido en el directorio padre."
 
 #. module: document
 #: code:addons/document/document.py:573
@@ -457,7 +457,7 @@ msgid ""
 " these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
-msgstr ""
+msgstr "Si introduce aquí un objeto, esta plantilla de directorio aparecerá en todos estos objetos. Dichos directorios son \"adjuntados\" al modelo o registro, como adjuntos. No ponga un directorio padre si selecciona un modelo padre."
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -488,7 +488,7 @@ msgstr "Junio"
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
 msgid "Knowledge Application Configuration"
-msgstr ""
+msgstr "Configuración de la aplicación del conocimiento"
 
 #. module: document
 #: field:document.directory,write_uid:0
@@ -580,7 +580,7 @@ msgid ""
 "documents. The virtual folder of a document can be used to manage the files "
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
-msgstr ""
+msgstr "El sistema gestor documental de Odoo soporta el mapeo  de carpetas virtuales con documentos. La carpeta virtual de un documento puede ser usada para administrar los archivos adjuntados a un documento, o para imprimir y descargar cualquier informe. Esta herramienta creará los directorios automáticamente de acuerdo con los módulos instalados."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -664,7 +664,7 @@ msgstr "Seguridad"
 msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
-msgstr ""
+msgstr "Seleccione aquí un objeto y habrá un directorio por cada registro de ese recurso."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -743,7 +743,7 @@ msgstr "Use un dominio si desea aplicar un filtro automático en recursos visibl
 #. module: document
 #: view:report.document.user:document.view_report_document_user_search
 msgid "Users File"
-msgstr ""
+msgstr "Archivo usuarios"
 
 #. module: document
 #: code:addons/document/document.py:337 code:addons/document/document.py:342

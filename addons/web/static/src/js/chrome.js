@@ -1292,6 +1292,14 @@ instance.web.WebClient = instance.web.Client.extend({
             self.action_manager.do_action(self.client_options.action_post_login);
             delete(self.client_options.action_post_login);
         }
+
+        /* Do not forward port! */
+        if ($.browser.chrome) {
+            var chrome_version = $.browser.version.split('.')[0];
+            if (parseInt(chrome_version, 10) >= 50) {
+                openerp.loadCSS('/web/static/src/css/chrome50.css');
+            }
+        }
     },
     update_logo: function() {
         var company = this.session.company_id;

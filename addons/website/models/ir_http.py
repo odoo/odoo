@@ -55,14 +55,14 @@ class ir_http(orm.AbstractModel):
 
     def get_nearest_lang(self, lang):
         # Try to find a similar lang. Eg: fr_BE and fr_FR
-        if lang in request.website.get_languages():
-            return lang
-
-        short = lang.split('_')[0]
+        short = lang.partition('_')[0]
+        short_match = False
         for code, name in request.website.get_languages():
-            if code.startswith(short):
-                return code
-        return False
+            if code == lang:
+                return lang
+            if not short_match and code.startswith(short):
+                short_match = code
+        return short_match
 
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')
@@ -228,7 +228,8 @@ class ir_http(orm.AbstractModel):
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
                 if 'qweb_exception' in values:
                     view = request.registry.get("ir.ui.view")
-                    views = view._views_get(request.cr, request.uid, exception.qweb['template'], request.context)
+                    views = view._views_get(request.cr, request.uid, exception.qweb['template'],
+                                            context=request.context)
                     to_reset = [v for v in views if v.model_data_id.noupdate is True and not v.page]
                     values['views'] = to_reset
             elif code == 403:

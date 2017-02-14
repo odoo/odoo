@@ -324,7 +324,7 @@ class produce_price_history(osv.osv):
         'company_id': fields.many2one('res.company', required=True),
         'product_template_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
         'datetime': fields.datetime('Historization Time'),
-        'cost': fields.float('Historized Cost'),
+        'cost': fields.float('Historized Cost', digits_compute=dp.get_precision('Product Price')),
     }
 
     def _get_default_company(self, cr, uid, context=None):
@@ -347,6 +347,7 @@ class produce_price_history(osv.osv):
 class product_attribute(osv.osv):
     _name = "product.attribute"
     _description = "Product Attribute"
+    _order = 'name'
     _columns = {
         'name': fields.char('Name', translate=True, required=True),
         'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values', copy=True),
@@ -431,6 +432,14 @@ class product_attribute_line(osv.osv):
         'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True, ondelete='restrict'),
         'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Product Attribute Value'),
     }
+
+    def _check_valid_attribute(self, cr, uid, ids, context=None):
+        obj_pal = self.browse(cr, uid, ids[0], context=context)
+        return obj_pal.value_ids <= obj_pal.attribute_id.value_ids
+
+    _constraints = [
+        (_check_valid_attribute, 'Error ! You cannot use this attribute with the following value.', ['attribute_id'])
+    ]
 
 
 #----------------------------------------------------------
@@ -617,9 +626,9 @@ class product_template(osv.osv):
             if ptype != 'standard_price':
                 res[product.id] = product[ptype] or 0.0
             else:
-                company_id = product.env.user.company_id.id
+                company_id = context.get('force_company') or product.env.user.company_id.id
                 product = product.with_context(force_company=company_id)
-                res[product.id] = res[product.id] = product.sudo()[ptype]
+                res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
                 res[product.id] += product._name == "product.product" and product.price_extra or 0.0
             if 'uom' in context:
@@ -768,15 +777,16 @@ class product_template(osv.osv):
             ctx.update(active_test=False)
             product_ids = []
             for product in self.browse(cr, uid, ids, context=ctx):
-                product_ids = map(int,product.product_variant_ids)
+                product_ids += map(int, product.product_variant_ids)
             self.pool.get("product.product").write(cr, uid, product_ids, {'active': vals.get('active')}, context=ctx)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        template = self.browse(cr, uid, id, context=context)
-        default['name'] = _("%s (copy)") % (template['name'])
+        if 'name' not in default:
+            template = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % (template['name'])
         return super(product_template, self).copy(cr, uid, id, default=default, context=context)
 
     _defaults = {
@@ -951,7 +961,12 @@ class product_product(osv.osv):
     def _get_image_variant(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = obj.image_variant or getattr(obj.product_tmpl_id, name)
+            if context.get('bin_size'):
+                result[obj.id] = obj.image_variant
+            else:
+                result[obj.id] = tools.image_get_resized_images(obj.image_variant, return_big=True, avoid_resize_medium=True)[name]
+            if not result[obj.id]:
+                result[obj.id] = getattr(obj.product_tmpl_id, name)
         return result
 
     def _set_image_variant(self, cr, uid, id, name, value, args, context=None):
@@ -1158,7 +1173,7 @@ class product_product(osv.osv):
             # if we copy a variant or create one, we keep the same template
             default['product_tmpl_id'] = product.product_tmpl_id.id
         elif 'name' not in default:
-            default['name'] = _("%s (copy)") % (product.name,)
+            default['name'] = product.name
 
         return super(product_product, self).copy(cr, uid, id, default=default, context=context)
 

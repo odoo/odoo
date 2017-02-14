@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-20 07:17+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-17 03:30+0000\n"
+"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-8/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,17 +25,17 @@ msgid ""
 "* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have an voucher number.                         \n"
 "* The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account                         \n"
 "* The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
+msgstr "* Status 'Draft' digunakan ketika pengguna pengkodean Voucher baru dan belum dikonfirmasi.                         \n* 'Pro-forma' ketika voucher Pro-forma status, voucher tidak memiliki nomor voucher.                         \n* Status 'Posted' digunakan ketika pengguna membuat voucher, nomor voucher yang dihasilkan dan voucher entri yang dibuat dalam rekening * status 'Dibatalkan' digunakan ketika pengguna membatalkan voucher."
 
 #. module: account_voucher
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr ""
+msgstr "# baris Voucher"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "(Update)"
-msgstr ""
+msgstr "(perbaharui)"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -52,7 +52,7 @@ msgid ""
 "                Odoo helps you easily track payments you make and the remaining balances you need to pay your suppliers.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class = \"oe_view_nocontent_create\">\n                Klik untuk membuat pembayaran pemasok baru.\n              </p><p>\n                Odoo membantu Anda dengan mudah melacak pembayaran Anda membuat dan sisa saldo Anda perlu membayar pemasok Anda.\n              </p>\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -64,7 +64,7 @@ msgid ""
 "                payment related to this sales receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class = \"oe_view_nocontent_create\">\n                Klik untuk membuat tanda terima penjualan.\n              </ p> <p>\n                Ketika penerimaan penjualan dikonfirmasi, Anda dapat merekam pelanggan\n                pembayaran terkait dengan penerimaan penjualan ini.\n              </ p>\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
@@ -78,7 +78,7 @@ msgid ""
 "                invoices or sales receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class = \"oe_view_nocontent_create\">\n                Klik untuk mendaftarkan pembayaran baru.\n              </ p> <p>\n                Masukkan pelanggan dan metode pembayaran dan kemudian, baik\n                membuat manual catatan pembayaran atau Odoo akan mengusulkan kepada Anda\n                otomatis rekonsiliasi pembayaran ini dengan terbuka\n                faktur atau tanda terima penjualan.\n              </ p>\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -90,7 +90,7 @@ msgid ""
 "                supplier payment related to this purchase receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class = \"oe_view_nocontent_create\">\n                Klik untuk mendaftarkan kwitansi pembelian.\n              </ p> <p>\n                Ketika kwitansi pembelian dikonfirmasi, Anda dapat merekam\n                pembayaran pemasok terkait dengan kwitansi pembelian ini.\n              </ p>\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt_report_all
@@ -102,7 +102,7 @@ msgid ""
 "            this analysis to your needs.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p>\n            Dari laporan ini, Anda dapat memiliki gambaran tentang jumlah tagihan\n            untuk pelanggan Anda serta penundaan pembayaran. Alat pencarian dapat\n            juga dapat digunakan untuk personalisasi laporan Faktur Anda dan begitu, pertandingan\n            analisis ini dengan kebutuhan Anda.\n          </ p>\n        "
 
 #. module: account_voucher
 #: field:account.voucher,account_id:0 field:account.voucher.line,account_id:0
@@ -119,13 +119,13 @@ msgstr "Ayat Akun"
 #: view:account.voucher:account_voucher.view_voucher_form
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr ""
+msgstr "# baris Voucher"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Allocation"
-msgstr ""
+msgstr "Alokasi"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount:0
@@ -141,18 +141,18 @@ msgstr "Akun Analisis"
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Are you sure to unreconcile and cancel this record ?"
-msgstr ""
+msgstr "Apakah Anda yakin untuk unreconcile dan membatalkan Catatan ini?"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "Are you sure you want to cancel this receipt?"
-msgstr ""
+msgstr "Apakah Anda yakin mau membatalkan penerimaan ini?"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Are you sure you want to unreconcile this record?"
-msgstr ""
+msgstr "Apakah Anda yakin ingin unreconcile Catatan ini?"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:276
@@ -160,33 +160,33 @@ msgstr ""
 msgid ""
 "At the operation date, the exchange rate was\n"
 "%s = %s"
-msgstr ""
+msgstr "Pada tanggal operasi, nilai tukar adalah %s = %s"
 
 #. module: account_voucher
 #: field:sale.receipt.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
-msgstr ""
+msgstr "Rata-rata keterlambatan untuk membayar"
 
 #. module: account_voucher
 #: field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
-msgstr ""
+msgstr "Rata-rata karena penundaan"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Bill Date"
-msgstr ""
+msgstr "Tanggal tagihan"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Bill Information"
-msgstr ""
+msgstr "Informasi tagihan"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
 #: model:ir.actions.act_window,name:account_voucher.act_pay_bills
 msgid "Bill Payment"
-msgstr ""
+msgstr "Pembayaran tagihan"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
@@ -197,14 +197,14 @@ msgstr "Batalkan"
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Cancel Receipt"
-msgstr ""
+msgstr "Membatalkan penerimaan"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Cancel Voucher"
-msgstr ""
+msgstr "Membatalkan Voucher"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0 selection:sale.receipt.report,state:0
@@ -215,7 +215,7 @@ msgstr "Dibatalkan"
 #: code:addons/account_voucher/account_voucher.py:959
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr ""
+msgstr "Tidak dapat menghapus voucher(s) yang sudah dibuka atau dibayar."
 
 #. module: account_voucher
 #: help:account.voucher,audit:0
@@ -236,23 +236,23 @@ msgstr "Perusahaan:"
 msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
-msgstr ""
+msgstr "Dihitung sebagai perbedaan antara jumlah yang dinyatakan dalam voucher dan jumlah alokasi di garis voucher."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1057
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "Konfigurasi Error!"
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_acc_id:0
 msgid "Counterpart Account"
-msgstr ""
+msgstr "Akun mitra"
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
 msgid "Counterpart Comment"
-msgstr ""
+msgstr "Mitra komentar"
 
 #. module: account_voucher
 #: field:account.voucher,create_uid:0 field:account.voucher.line,create_uid:0
@@ -276,7 +276,7 @@ msgstr "Kredit"
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 #: field:account.voucher,line_cr_ids:0
 msgid "Credits"
-msgstr ""
+msgstr "Kredit"
 
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
@@ -289,7 +289,7 @@ msgstr "Mata Uang"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 msgid "Currency Options"
-msgstr ""
+msgstr "Pilihan mata uang"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
@@ -305,7 +305,7 @@ msgstr "Pelanggan"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
-msgstr ""
+msgstr "Pembayaran"
 
 #. module: account_voucher
 #: field:account.voucher,date:0 field:account.voucher.line,date_original:0
@@ -316,7 +316,7 @@ msgstr "Tanggal"
 #. module: account_voucher
 #: help:account.voucher,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Tanggal pesan terakhir diposting pada catatan."
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -326,12 +326,12 @@ msgstr "Debit"
 #. module: account_voucher
 #: field:account.voucher,line_dr_ids:0
 msgid "Debits"
-msgstr ""
+msgstr "Debit"
 
 #. module: account_voucher
 #: field:account.voucher,type:0
 msgid "Default Type"
-msgstr ""
+msgstr "Jenis default"
 
 #. module: account_voucher
 #: field:account.voucher.line,name:0
@@ -341,12 +341,12 @@ msgstr "Keterangan"
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
 msgid "Difference Amount"
-msgstr ""
+msgstr "Perbedaan jumlah yang diizinkan"
 
 #. module: account_voucher
 #: field:account.voucher.line,type:0
 msgid "Dr/Cr"
-msgstr ""
+msgstr "Dr/Cr"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -368,7 +368,7 @@ msgstr "Draft"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Draft Vouchers"
-msgstr ""
+msgstr "Rancangan voucher"
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0 field:account.voucher.line,date_due:0
@@ -379,12 +379,12 @@ msgstr "Jatuh Tempo"
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Due Month"
-msgstr ""
+msgstr "Jatuh Tempo bulan"
 
 #. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
-msgstr ""
+msgstr "Efektif tanggal untuk entri akuntansi"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:518
@@ -396,12 +396,12 @@ msgstr "Gagal!"
 #. module: account_voucher
 #: field:account.voucher,payment_rate:0
 msgid "Exchange Rate"
-msgstr ""
+msgstr "Nilai tukar"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Expense Lines"
-msgstr ""
+msgstr "# Baris"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
@@ -413,7 +413,7 @@ msgstr "Filter Tambahan..."
 msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
 "currency one or not"
-msgstr ""
+msgstr "Bidang dengan tujuan internal hanya yang menggambarkan Apakah voucher multi mata uang satu atau tidak"
 
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
@@ -423,7 +423,7 @@ msgstr "Pengikut"
 #. module: account_voucher
 #: field:account.voucher.line,reconcile:0
 msgid "Full Reconcile"
-msgstr ""
+msgstr "Penuh mendamaikan"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1098
@@ -445,14 +445,14 @@ msgstr "Dikelompokan berdasarkan .."
 #. module: account_voucher
 #: field:account.voucher,currency_help_label:0
 msgid "Helping Sentence"
-msgstr ""
+msgstr "Membantu kalimat"
 
 #. module: account_voucher
 #: help:account.voucher,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Gelar ringkasan menyimpang (jumlah pesan, ...). Ringkasan ini langsung dalam format html untuk dimasukkan dalam pandangan kanban."
 
 #. module: account_voucher
 #: field:account.voucher,id:0 field:account.voucher.line,id:0
@@ -463,7 +463,7 @@ msgstr "ID"
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -478,7 +478,7 @@ msgstr "Catatan internal"
 #: code:addons/account_voucher/account_voucher.py:959
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Invalid Action!"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_invoice
@@ -489,12 +489,12 @@ msgstr "Faktur"
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Invoices and outstanding transactions"
-msgstr ""
+msgstr "Faktur dan transaksi yang beredar"
 
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ini Pengikut"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -511,7 +511,7 @@ msgstr "Jurnal"
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
 msgid "Journal Item"
-msgstr ""
+msgstr "Jurnal"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -527,12 +527,12 @@ msgstr "Item Jurnal"
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_encode_entries_by_voucher
 msgid "Journal Vouchers"
-msgstr ""
+msgstr "Jurnal"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Keep Open"
-msgstr ""
+msgstr "Menjaga terbuka"
 
 #. module: account_voucher
 #: field:account.voucher,message_last_post:0
@@ -552,7 +552,7 @@ msgstr "Diperbaharui pada"
 #. module: account_voucher
 #: field:account.voucher,name:0
 msgid "Memo"
-msgstr ""
+msgstr "Memo"
 
 #. module: account_voucher
 #: field:account.voucher,message_ids:0
@@ -562,18 +562,18 @@ msgstr "Pesan"
 #. module: account_voucher
 #: help:account.voucher,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Pesan dan riwayat komunikasi"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
 msgid "Multi Currency Voucher"
-msgstr ""
+msgstr "Multi mata uang Voucher"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1243
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
-msgstr ""
+msgstr "No rekening basis kode dan kode pajak Account!"
 
 #. module: account_voucher
 #: field:account.voucher,narration:0
@@ -588,32 +588,32 @@ msgstr "Nomor"
 #. module: account_voucher
 #: help:account.voucher,tax_id:0
 msgid "Only for tax excluded from price"
-msgstr ""
+msgstr "Hanya untuk pajak dikecualikan dari harga"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
-msgstr ""
+msgstr "Saldo Akhir"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
 msgid "Open Customer Journal Entries"
-msgstr ""
+msgstr "Entri jurnal terbuka pelanggan"
 
 #. module: account_voucher
 #: model:ir.actions.client,name:account_voucher.action_client_invoice_menu
 msgid "Open Invoicing Menu"
-msgstr ""
+msgstr "invoicing"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
 msgid "Open Supplier Journal Entries"
-msgstr ""
+msgstr "Entri jurnal terbuka pemasok"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_original:0
 msgid "Original Amount"
-msgstr ""
+msgstr "Jumlah"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -629,12 +629,12 @@ msgstr "Terbayar"
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Paid Amount"
-msgstr ""
+msgstr "Jumlah"
 
 #. module: account_voucher
 #: field:account.voucher,paid_amount_in_company_currency:0
 msgid "Paid Amount in Company Currency"
-msgstr ""
+msgstr "Jumlah yang dibayar dalam mata uang perusahaan"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -647,28 +647,28 @@ msgstr "Rekanan"
 #. module: account_voucher
 #: view:account.invoice:account_voucher.view_invoice_supplier
 msgid "Pay"
-msgstr ""
+msgstr "Bayar"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Pay Bill"
-msgstr ""
+msgstr "Membayar tagihan"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
-msgstr ""
+msgstr "Membayar Order"
 
 #. module: account_voucher
 #: code:addons/account_voucher/invoice.py:34
 #, python-format
 msgid "Pay Invoice"
-msgstr ""
+msgstr "Membayar Order"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
-msgstr ""
+msgstr "Membayar dana kemudian atau kelompok"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
@@ -680,7 +680,7 @@ msgstr "Pembayaran"
 #. module: account_voucher
 #: field:account.voucher,payment_option:0
 msgid "Payment Difference"
-msgstr ""
+msgstr "Perbedaan pembayaran"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -688,7 +688,7 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Payment Information"
-msgstr ""
+msgstr "Informasi Pembayaran"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -696,17 +696,17 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Payment Method"
-msgstr ""
+msgstr "Metode pembayaran"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 msgid "Payment Options"
-msgstr ""
+msgstr "Opsi Pembayaran"
 
 #. module: account_voucher
 #: field:account.voucher,payment_rate_currency_id:0
 msgid "Payment Rate Currency"
-msgstr ""
+msgstr "Pembayaran suku mata uang"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -714,7 +714,7 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Payment Ref"
-msgstr ""
+msgstr "Penerimaan"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -730,24 +730,24 @@ msgstr "Periode"
 #: code:addons/account_voucher/account_voucher.py:1058
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr ""
+msgstr "Silakan aktifkan urutan Journal dipilih!"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1064
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Harap define urutan dalam hal jurnal."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:518
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
-msgstr ""
+msgstr "Harap define default kredit/debit rekening pada jurnal \"%s\"."
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Post"
-msgstr ""
+msgstr "Kirim"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -768,12 +768,12 @@ msgstr "Posted"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 msgid "Posted Vouchers"
-msgstr ""
+msgstr "Posted"
 
 #. module: account_voucher
 #: field:account.voucher,pre_line:0
 msgid "Previous Payments ?"
-msgstr ""
+msgstr "Pembayaran sebelumnya?"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -785,7 +785,7 @@ msgstr "Pro-forma"
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Pro-forma Vouchers"
-msgstr ""
+msgstr "Pro-forma voucher"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
@@ -795,18 +795,18 @@ msgstr "Pembelian"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Purchase Receipt"
-msgstr ""
+msgstr "Kuitansi pembelian"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr ""
+msgstr "Pembelian penerimaan"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr ""
+msgstr "Pembelian Voucher"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
@@ -817,18 +817,18 @@ msgstr "Penerimaan"
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile Payment Balance"
-msgstr ""
+msgstr "Mendamaikan neraca pembayaran"
 
 #. module: account_voucher
 #: field:account.voucher,reference:0
 msgid "Ref #"
-msgstr ""
+msgstr "REF #"
 
 #. module: account_voucher
 #: view:account.invoice:account_voucher.view_invoice_customer
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 msgid "Register Payment"
-msgstr ""
+msgstr "Mendaftar pembayaran"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
@@ -838,28 +838,28 @@ msgstr "Penjualan"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "Sales Information"
-msgstr ""
+msgstr "Informasi penjualan"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "Sales Lines"
-msgstr ""
+msgstr "Semua baris Penjualan"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "Sales Receipt"
-msgstr ""
+msgstr "Struk"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_sale_receipt_report
 msgid "Sales Receipt Statistics"
-msgstr ""
+msgstr "Struk Statistik"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "Tanda terima penjualan"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
@@ -867,7 +867,7 @@ msgstr ""
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_graph
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "Tanda terima penjualan analisis"
 
 #. module: account_voucher
 #: field:sale.receipt.report,user_id:0
@@ -881,7 +881,7 @@ msgstr "Pramuniaga"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 msgid "Search Vouchers"
-msgstr ""
+msgstr "Cari voucher"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -906,12 +906,12 @@ msgstr "Status"
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
-msgstr ""
+msgstr "Perubahan status"
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status changed"
-msgstr ""
+msgstr "Status berubah"
 
 #. module: account_voucher
 #: field:account.voucher,message_summary:0
@@ -932,18 +932,18 @@ msgstr "Pemasok"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 msgid "Supplier Invoices and Outstanding transactions"
-msgstr ""
+msgstr "Pemasok faktur dan transaksi yang beredar"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Supplier Payments"
-msgstr ""
+msgstr "Pembayaran supplier"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Supplier Voucher"
-msgstr ""
+msgstr "# baris Voucher"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -955,25 +955,25 @@ msgstr "PPN"
 #. module: account_voucher
 #: field:account.voucher,tax_amount:0
 msgid "Tax Amount"
-msgstr ""
+msgstr "Jumlah pajak"
 
 #. module: account_voucher
 #: help:account.voucher,paid:0
 msgid "The Voucher has been totally paid."
-msgstr ""
+msgstr "Voucher telah benar-benar dibayar."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1202
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
-msgstr ""
+msgstr "Faktur bersedia membayar Anda ini tidak berlaku lagi."
 
 #. module: account_voucher
 #: help:account.voucher,payment_rate:0
 msgid ""
 "The specific rate that will be used, in this voucher, between the selected "
 "currency (in 'Payment Rate Currency' field)  and the voucher currency."
-msgstr ""
+msgstr "Tingkat tertentu yang akan digunakan, dalam voucher ini, antara mata uang yang dipilih (dalam bidang 'Pembayaran tingkat mata uang') dan mata uang voucher."
 
 #. module: account_voucher
 #: help:account.voucher,payment_option:0
@@ -982,20 +982,20 @@ msgid ""
 "difference between the paid amount and the sum of allocated amounts. You can"
 " either choose to keep open this difference on the partner's account, or "
 "reconcile it with the payment(s)"
-msgstr ""
+msgstr "Bidang ini membantu Anda untuk memilih apa yang ingin Anda lakukan dengan akhirnya perbedaan jumlah yang dibayar dan jumlah jumlah yang dialokasikan. Anda dapat memilih untuk tetap terbuka perbedaan ini pada akun partner, atau mendamaikan itu dengan pembayaran"
 
 #. module: account_voucher
 #: help:account.voucher,currency_help_label:0
 msgid ""
 "This sentence helps you to know how to specify the payment rate by giving "
 "you the direct effect it has"
-msgstr ""
+msgstr "Kalimat ini membantu Anda untuk mengetahui bagaimana untuk menentukan tingkat pembayaran dengan memberi Anda langsung efeknya"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
 #: field:account.voucher,audit:0
 msgid "To Review"
-msgstr ""
+msgstr "Untuk meninjau"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
@@ -1009,7 +1009,7 @@ msgstr "Total"
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Total Allocation"
-msgstr ""
+msgstr "Total alokasi"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
@@ -1021,7 +1021,7 @@ msgstr "Jumlah Keseluruhan"
 #. module: account_voucher
 #: field:sale.receipt.report,price_total_tax:0
 msgid "Total With Tax"
-msgstr ""
+msgstr "Total dengan pajak"
 
 #. module: account_voucher
 #: field:sale.receipt.report,price_total:0
@@ -1031,7 +1031,7 @@ msgstr "Jumlah Tanpa Pajak"
 #. module: account_voucher
 #: help:account.voucher,reference:0
 msgid "Transaction reference number."
-msgstr ""
+msgstr "Angka transaksi"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
@@ -1048,12 +1048,12 @@ msgstr "Pesan Belum Dibaca"
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Unreconcile"
-msgstr ""
+msgstr "Unreconcile"
 
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
 msgid "Untax Amount"
-msgstr ""
+msgstr "Untax jumlah"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -1066,12 +1066,12 @@ msgstr "Validasi"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "Validate Payment"
-msgstr ""
+msgstr "Validasi"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Validated Vouchers"
-msgstr ""
+msgstr "Divalidasi voucher"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -1084,41 +1084,41 @@ msgstr ""
 #: model:res.request.link,name:account_voucher.req_link_voucher
 #, python-format
 msgid "Voucher"
-msgstr ""
+msgstr "Status"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_tree
 #: view:account.voucher:account_voucher.view_voucher_tree_nocreate
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 msgid "Voucher Entries"
-msgstr ""
+msgstr "Voucher entri"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Voucher Entry"
-msgstr ""
+msgstr "Voucher entri"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Voucher Items"
-msgstr ""
+msgstr "Voucher item"
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
 #: view:account.voucher.line:account_voucher.view_voucher_line_form
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
-msgstr ""
+msgstr "Voucher baris"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 msgid "Voucher Payment"
-msgstr ""
+msgstr "Voucher pembayaran"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.account_cash_statement_graph
 msgid "Voucher Statistics"
-msgstr ""
+msgstr "# baris Voucher"
 
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
@@ -1128,17 +1128,17 @@ msgstr "Status"
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr ""
+msgstr "Transaksi"
 
 #. module: account_voucher
 #: field:account.voucher,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Pesan situs"
 
 #. module: account_voucher
 #: help:account.voucher,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Sejarah komunikasi situs"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:377
@@ -1149,13 +1149,13 @@ msgstr "Menghapus"
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
 msgid "Write-Off Analytic Account"
-msgstr ""
+msgstr "Menghapus"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1202
 #, python-format
 msgid "Wrong voucher line"
-msgstr ""
+msgstr "Voucher salah baris"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1243
@@ -1163,7 +1163,7 @@ msgstr ""
 msgid ""
 "You have to configure account base code and account tax code on the '%s' "
 "tax!"
-msgstr ""
+msgstr "Anda harus mengkonfigurasi account basis kode dan kode pajak account pajak '%s'!"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1103
@@ -1172,7 +1172,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' to manage "
 "automatically the booking of accounting entries related to differences "
 "between exchange rates."
-msgstr ""
+msgstr "Anda harus mengkonfigurasi 'mendapatkan nilai tukar Account' untuk mengelola secara otomatis terakhir akuntansi entri terkait dengan perbedaan antara nilai tukar."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1097
@@ -1181,7 +1181,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' to manage "
 "automatically the booking of accounting entries related to differences "
 "between exchange rates."
-msgstr ""
+msgstr "Anda harus mengkonfigurasi 'Penurunan nilai tukar Account' untuk mengelola secara otomatis terakhir akuntansi entri terkait dengan perbedaan antara nilai tukar."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1114
@@ -1196,14 +1196,14 @@ msgstr "ubah"
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "e.g. 003/10"
-msgstr ""
+msgstr "misalnya 003/10"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "e.g. Invoice SAJ/0042"
-msgstr ""
+msgstr "misalnya faktur SAJ/0042"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form

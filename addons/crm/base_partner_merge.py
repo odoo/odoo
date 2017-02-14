@@ -300,6 +300,12 @@ class MergePartnerAutomatic(osv.TransientModel):
         if len(partner_ids) > 3:
             raise osv.except_osv(_('Error'), _("For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."))
 
+        child_ids = set()
+        for partner_id in partner_ids:
+            child_ids = child_ids.union(set(proxy.search(cr, uid, [('id', 'child_of', [partner_id])])) - set([partner_id]))
+        if set(partner_ids).intersection(child_ids):
+            raise osv.except_osv(_('Error'), _("You cannot merge a contact with one of his parent."))
+
         if openerp.SUPERUSER_ID != uid and len(set(partner.email for partner in proxy.browse(cr, uid, partner_ids, context=context))) > 1:
             raise osv.except_osv(_('Error'), _("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
 
@@ -765,9 +771,9 @@ class MergePartnerAutomatic(osv.TransientModel):
             # don't update the partners if they are more of one who have invoice
             cr.execute("""  SELECT *
                             FROM res_partner as p
-                            WHERE p.id != %s AND p.email LIKE '%%%s' AND
+                            WHERE p.id != %s AND p.email LIKE %s AND
                                 EXISTS (SELECT * FROM account_invoice as a WHERE p.id = a.partner_id AND a.state in ('open','paid'))
-                    """ % (id, email))
+                    """, (id, '%' + email))
 
             if len(cr.fetchall()) > 1:
                 _logger.info("%s MORE OF ONE COMPANY", email)
@@ -776,13 +782,13 @@ class MergePartnerAutomatic(osv.TransientModel):
             # to display changed values
             cr.execute("""  SELECT id,email
                             FROM res_partner
-                            WHERE parent_id != %s AND id != %s AND email LIKE '%%%s'
-                    """ % (id, id, email))
+                            WHERE parent_id != %s AND id != %s AND email LIKE %s
+                    """, (id, id, '%' + email))
             _logger.info("%r", cr.fetchall())
 
             # upgrade
             cr.execute("""  UPDATE res_partner
                             SET parent_id = %s
-                            WHERE id != %s AND email LIKE '%%%s'
-                    """ % (id, id, email))
+                            WHERE id != %s AND email LIKE %s
+                    """, (id, id, '%' + email))
         return False

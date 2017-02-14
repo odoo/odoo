@@ -273,7 +273,7 @@
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
-                    <filter string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
+                    <filter name="confirm" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                     <separator/>
                     <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <separator/>
@@ -369,13 +369,7 @@
                                 <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                                 <field name="name"/>
                                 <field name="phone"/>
-                                <label for="email"/>
-                                <div>
-                                    <field name="email" class="oe_inline"/>
-                                    <button class="oe_inline oe_right" string="Send Email"
-                                        name="%(mail.action_email_compose_message_wizard)d"
-                                        icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
-                                </div>
+                                <field name="email"/>
                             </group>
                             <group>
                                 <field name="nb_register"/>
@@ -430,7 +424,7 @@
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
-                    <filter string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
+                    <filter name="open" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
                     <separator/>
                     <filter string="My Registrations" help="My Registrations" domain="[('user_id','=',uid)]"/>
                     <field name="event_id"/>

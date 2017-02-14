@@ -42,8 +42,17 @@ def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
     if tz:
         context['tz'] = tz or pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz'] or "UTC"
     timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-
     ts = fields.datetime.context_timestamp(cr, uid, timestamp, context)
+
+    # Babel allows to format datetime in a specific language without change locale
+    # So month 1 = January in English, and janvier in French
+    # Be aware that the default value for format is 'medium', instead of 'short'
+    #     medium:  Jan 5, 2016, 10:20:31 PM |   5 janv. 2016 22:20:31
+    #     short:   1/5/16, 10:20 PM         |   5/01/16 22:20
+    if context.get('use_babel'):
+        # Formatting available here : http://babel.pocoo.org/en/latest/dates.html#date-fields
+        from babel.dates import format_datetime
+        return format_datetime(ts, format or 'medium', locale=context.get("lang") or 'en_US')
 
     if format:
         return ts.strftime(format)
@@ -58,8 +67,8 @@ def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
         format_date = lang_params.get("date_format", '%B-%d-%Y')
         format_time = lang_params.get("time_format", '%I-%M %p')
 
-        fdate = ts.strftime(format_date)
-        ftime = ts.strftime(format_time)
+        fdate = ts.strftime(format_date).decode('utf-8')
+        ftime = ts.strftime(format_time).decode('utf-8')
         return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
 
 try:
@@ -583,6 +592,6 @@ class email_template(osv.osv):
         return self.get_email_template_batch(cr, uid, template_id, [record_id], context)[record_id]
 
     def generate_email(self, cr, uid, template_id, res_id, context=None):
-        return self.generate_email_batch(cr, uid, template_id, [res_id], context)[res_id]
+        return self.generate_email_batch(cr, uid, template_id, [res_id], context=context)[res_id]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -67,6 +67,15 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(list(partners1), list(partners2))
 
     @mute_logger('openerp.models')
+    def test_04_query_count(self):
+        """ Test the search method with count=True. """
+        count1 = self.registry('res.partner').search(self.cr, self.uid, [], count=True)
+        count2 = self.env['res.partner'].search([], count=True)
+        self.assertIsInstance(count1, (int, long))
+        self.assertIsInstance(count2, (int, long))
+        self.assertEqual(count1, count2)
+
+    @mute_logger('openerp.models')
     def test_05_immutable(self):
         """ Check that a recordset remains the same, even after updates. """
         domain = [('name', 'ilike', 'j')]

@@ -822,7 +822,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 return p || _t('Undefined');
             }).join('/');
             if (dim_x === 0) {
-                title = self.measure_label;
+                title = self.measure_label || _t('Undefined');
             }
             return {x: title, y: self.pivot.get_total(row)[0]};
         });
@@ -850,10 +850,15 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // ----------------------------------------------------------------------
     export_xls: function() {
         var c = openerp.webclient.crashmanager;
+        var table = this.build_table(true);
+        if(table.measure_row.length + 1 > 256) {
+            c.show_message(_t("For Excel compatibility, data cannot be exported if there is more than 256 columns.\n\nTip: try to flip axis, filter further or reduce the number of measures."))
+            return;
+        }
         openerp.web.blockUI();
         this.session.get_file({
             url: '/web_graph/export_xls',
-            data: {data: JSON.stringify(this.build_table(true))},
+            data: {data: JSON.stringify(table)},
             complete: openerp.web.unblockUI,
             error: c.rpc_error.bind(c)
         });

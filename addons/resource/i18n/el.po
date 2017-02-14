@@ -3,13 +3,14 @@
 # * resource
 # 
 # Translators:
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-22 01:17+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-12-09 09:18+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr "%s (αντίγραφο)"
 #: code:addons/resource/faces/resource.py:340
 #, python-format
 msgid "(vacation)"
-msgstr ""
+msgstr "(διακοπές)"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -36,7 +37,7 @@ msgid ""
 "                Define working hours and time table that could be scheduled to your project members\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚαθορισμός των ωρών εργασίας και χρονοδιάγραμμα που θα μπορούσε να προγραμματιστεί για τα μέλη του έργου σας\n</p>"
 
 #. module: resource
 #: field:resource.resource,active:0
@@ -46,7 +47,7 @@ msgstr "Ενεργό"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
 msgid "Closing Days"
-msgstr ""
+msgstr "Οι ημέρες αργίας"
 
 #. module: resource
 #: field:resource.resource,code:0
@@ -87,12 +88,12 @@ msgstr "Δημιουργήθηκε στις"
 #. module: resource
 #: field:resource.calendar.attendance,dayofweek:0
 msgid "Day of Week"
-msgstr ""
+msgstr "Ημέρα της εβδομάδας"
 
 #. module: resource
 #: help:resource.resource,calendar_id:0
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "Ορίστε το χρονοδιάγραμμα των πόρων"
 
 #. module: resource
 #: view:resource.calendar.leaves:resource.resource_calendar_leave_form
@@ -112,7 +113,7 @@ msgstr "Ημερομηνία Λήξης"
 #. module: resource
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr ""
+msgstr "Λάθος: Η ημερομηνία έναρξης της άδειας θα πρέπει να είναι μικρότερη από την ημερομηνία λήξης"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -133,7 +134,7 @@ msgstr "Ώρες"
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Human"
-msgstr ""
+msgstr "Άνθρωπος"
 
 #. module: resource
 #: field:resource.calendar,id:0 field:resource.calendar.attendance,id:0
@@ -146,14 +147,14 @@ msgstr "Κωδικός"
 msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
-msgstr ""
+msgstr "Αν είναι κενό, αυτό είναι μια γενική αργία για την εταιρεία. Αν έχει οριστεί ένας πόρος, η γιορτή/άδεια είναι μόνο για αυτόν τον πόρο"
 
 #. module: resource
 #: help:resource.resource,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
+msgstr "Αν το ενεργό πεδίο έχει οριστεί σε Ψευδές, θα σας επιτρέψει να αποκρύψετε την εγγραφή πόρου χωρίς να την καταργήσετε."
 
 #. module: resource
 #: view:resource.resource:resource.view_resource_resource_search
@@ -166,7 +167,7 @@ msgstr "Ανενεργός"
 #: field:resource.calendar.leaves,write_uid:0
 #: field:resource.resource,write_uid:0
 msgid "Last Updated by"
-msgstr "Τελευταία Αναβαθμίστηκε από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: resource
 #: field:resource.calendar,write_date:0
@@ -174,35 +175,35 @@ msgstr "Τελευταία Αναβαθμίστηκε από"
 #: field:resource.calendar.leaves,write_date:0
 #: field:resource.resource,write_date:0
 msgid "Last Updated on"
-msgstr "Τελευταία Αναβαθμίστηκε στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
 #: view:resource.calendar.leaves:resource.resource_calendar_leave_form
 #: view:resource.calendar.leaves:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
-msgstr ""
+msgstr "Λεπτομέρεια Άδειας"
 
 #. module: resource
 #: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr ""
+msgstr "Μήνας Άδειας"
 
 #. module: resource
 #: field:resource.calendar,leave_ids:0
 msgid "Leaves"
-msgstr ""
+msgstr "Άδειες"
 
 #. module: resource
 #: code:addons/resource/resource.py:773
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
-msgstr ""
+msgstr "Βεβαιωθείτε ότι ο Χρόνος Εργασίας έχει ρυθμιστεί με τις κατάλληλες ημέρες της εβδομάδας!"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Material"
-msgstr ""
+msgstr "Υλικό"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -225,7 +226,7 @@ msgstr "Αιτιολογία"
 #. module: resource
 #: help:resource.resource,user_id:0
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "Σχετιζόμενο όνομα χρήστη του πόρου για τη διαχείριση της πρόσβασης."
 
 #. module: resource
 #: model:ir.ui.menu,name:resource.menu_resource_config
@@ -235,33 +236,33 @@ msgstr ""
 #: view:resource.resource:resource.resource_resource_form
 #: view:resource.resource:resource.view_resource_resource_search
 msgid "Resource"
-msgstr "Πηγή"
+msgstr "Πόρος"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
-msgstr ""
+msgstr "Προέλευση Ημερολογίου"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
 msgid "Resource Detail"
-msgstr ""
+msgstr "Λεπτομέρεια Πόρου"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Πόρος Αδειών"
 
 #. module: resource
 #: field:resource.resource,resource_type:0
 msgid "Resource Type"
-msgstr ""
+msgstr "Τύπος Πόρου"
 
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
 msgid "Resource's Calendar"
-msgstr ""
+msgstr "Ημερολόγιο Πόρων"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
@@ -273,7 +274,7 @@ msgstr "Πόροι"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr ""
+msgstr "Πόροι Αδειών"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -281,7 +282,7 @@ msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
-msgstr ""
+msgstr "Οι 'Πόροι' σας επιτρέπουν να δημιουργήσετε και να διαχειρίζεται τους πόρους που θα πρέπει να συμμετέχουν σε μια συγκεκριμένη φάση έργου. Μπορείτε επίσης να ρυθμίσετε το επίπεδο της αποτελεσματικότητας τους και του φόρτου εργασίας που βασίζονται σε εβδομαδιαίες ώρες εργασίας."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -291,17 +292,17 @@ msgstr "Σάββατο"
 #. module: resource
 #: view:resource.resource:resource.view_resource_resource_search
 msgid "Search Resource"
-msgstr ""
+msgstr "Αναζήτηση Πόρων"
 
 #. module: resource
 #: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Leaves"
-msgstr ""
+msgstr "Αναζήτηση Περιόδων Αδειών Εργασίας"
 
 #. module: resource
 #: view:resource.calendar:resource.view_resource_calendar_search
 msgid "Search Working Time"
-msgstr ""
+msgstr "Αναζήτηση Χρόνου Εργασίας"
 
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
@@ -311,7 +312,7 @@ msgstr "Ημερομηνία Έναρξης"
 #. module: resource
 #: help:resource.calendar.attendance,hour_from:0
 msgid "Start and End time of working."
-msgstr ""
+msgstr "Ώρα έναρξης και λήξης εργασίας."
 
 #. module: resource
 #: field:resource.calendar.attendance,date_from:0
@@ -321,7 +322,7 @@ msgstr "Ημερομηνία Εκκίνησης"
 #. module: resource
 #: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave by Month"
-msgstr ""
+msgstr "Ημερομηνία έναρξης της Άδειας του Μήνα"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -335,7 +336,7 @@ msgid ""
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
 "show a load of 100% for this phase by default, but if we put a efficiency of"
 " 200%, then his load will only be 50%."
-msgstr ""
+msgstr "Αυτό το πεδίο απεικονίζει την αποδοτικότητα των πόρων για την ολοκλήρωση των εργασιών. π.χ. ένας μόνο πόρος που ορισθεί σε μια φάση 5 ημερών με 5 εργασίες, θα παρουσιάσει ένα φορτίο 100% για τη φάση αυτή από προεπιλογή, αλλά αν βάλουμε μια απόδοση 200%, τότε το φορτίο του θα είναι μόνο 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -366,28 +367,28 @@ msgstr "Τετάρτη"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr ""
+msgstr "Λεπτομέρειες Eργασίας"
 
 #. module: resource
 #: field:resource.calendar.attendance,hour_from:0
 msgid "Work from"
-msgstr ""
+msgstr "Eργασία από"
 
 #. module: resource
 #: field:resource.calendar.attendance,hour_to:0
 msgid "Work to"
-msgstr ""
+msgstr "Eργασία έως"
 
 #. module: resource
 #: field:resource.calendar,manager:0
 msgid "Workgroup Manager"
-msgstr ""
+msgstr "Διευθυντής Ομάδας Εργασίας"
 
 #. module: resource
 #: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
 #: view:resource.resource:resource.view_resource_resource_search
 msgid "Working Period"
-msgstr ""
+msgstr "Περίοδος Λειτουργίας"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form

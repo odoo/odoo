@@ -1,0 +1,1957 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Plantilla común de impuestos para España.
+
+        Jordi Esteve (Zikzakmedia) - jesteve@zikzakmedia.com (2009-11-28)
+          Impuestos IRPF se les ha asignado el grupo others (Otros) en lugar del grupo vat (IVA) por defecto
+
+        Jordi Esteve (Zikzakmedia) - jesteve@zikzakmedia.com (2010-02-18)
+          Añadido IRPF 2% (act. agrícolas, ganaderas, forestales), 19% y 21% (antiguo 18%)
+          Novedad 2010: Los rendimientos derivados de rentas de capital mobiliario o inmobiliario, el tipo base de retención pasa del 18% al 19% para los primeros 6000 EUR y al 21% a partir de los 6000 EUR.
+
+        Ignacio Ibeas (Acysos) - ignacio@acysos.com (2011-02-22)
+          Modificado type_tax_use de los recargos de equivalencia a "all"
+
+        Jordi Esteve (Zikzakmedia) - jesteve@zikzakmedia.com (2011-08-29)
+          Cambiado Recargos de equivalencia de "all" a "venta" (ya existen los de compra). Ahora quedan definidos de la misma forma que en taxes_data_pymes.xml
+
+        Pedro M. Baeza (Serv. Tecnol. Avanzados) - pedro.baeza@serviciosbaeza.com (2013-01-29)
+          Limpieza de subcuentas de impuestos y corrección de inversión de sujeto pasivo
+
+        Pedro M. Baeza (Serv. Tecnol. Avanzados) - pedro.baeza@serviciosbaeza.com (2013-05-19)
+          Refactorización general
+
+        Pedro M. Baeza (Serv. Tecnol. Avanzados) - pedro.baeza@serviciosbaeza.com (2014-02-23)
+          Eliminación IVAs obsoletos 7%, 8%, 16% y 18%
+          Eliminación IRPFs obsoletos 18% y 19%
+          Eliminación recargos de equivalencia obsoletos 1% y 4%
+
+        Pablo Cayuela (Aserti Global Solutions) - soporte@aserti.com (2014-04-01)
+          Añadido 12% IVA Soportado régimen agricultura
+          Añadidos impuestos de importación intracomunitaria de servicios
+          Aumentada la secuencia del IRPF 2% para que en caso de acompañar al
+          IVA agrario se compute incluyendo en la base el IVA
+
+        Angel Moya (Domatix) - angel.moya@domatix.com (2014-12-26)
+          Cambio de name por description para usar con name_get modificado
+
+        Pedro M. Baeza (Serv. Tecnol. Avanzados) - pedro.baeza@serviciosbaeza.com (2015-03-06)
+        Carlos Liébana (FactorLibre) - carlos.liebana@factorlibre.com
+        Hugo Santos (FactorLibre) - hugo.santos@factorlibre.com
+        Albert Cabedo (GAFIC consultores) - albert@gafic.com
+          Desdoblamiento de IVA para bienes y servicios en todas sus variantes
+          Nuevo impuesto IRPF 19%
+          Nuevo impuestos para acomodar los nuevos códigos de impuestos
+
+        Vicent Cubells <vicent@vcubells.net> (2015-09-01)
+          Nuevo impuesto 19,5% para arrendamientos
+
+        Albert Cabedo (GAFIC consultores) <albert@gafic.com> (2015-11-13)
+          IVA Soportado no sujeto
+        -->
+
+        <record id="account_tax_template_s_iva21b" model="account.tax.template">
+          <field name="sequence" eval="0"/> <!-- Para que sea el impuesto por defecto de ventas -->
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA21B</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_RGIDBI21"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 21% (Bienes)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_RGIDC21"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_iva21s" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA21S</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_RGIDBI21"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 21% (Servicios)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_RGIDC21"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_iva21isp" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA21ISP</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_RGIDBI21"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 21% (ISP)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_RGIDC21"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_bc" model="account.tax.template">
+          <field name="sequence" eval="0"/> <!-- Para que sea el impuesto por defecto de compras -->
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_BC</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_OICBI21"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">21% IVA soportado (bienes corrientes)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOICC21"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_sc" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_SC</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_OICBI21"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">21% IVA soportado (servicios corrientes)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOICC21"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_sp_in" model="account.tax.template">
+          <field name="name">IVA 21% Adquisición de servicios intracomunitarios</field>
+          <field name="description">P_IVA21_SP_IN</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="type">percent</field>
+          <field name="amount" eval="1.0"/>
+          <field name="child_depend" eval="True"/>
+        </record>
+        <record id="account_tax_template_p_iva21_sp_in_1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_SP_IN_1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="10"/>
+          <field name="base_code_id" ref="account_tax_code_template_AISBI"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 21% Inversión del sujeto pasivo intracomunitario (1)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AISC"/>
+          <field name="parent_id" ref="account_tax_template_p_iva21_sp_in"/>
+          <field name="amount" eval="-0.21"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_sp_in_2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_SP_IN_2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="20"/>
+          <field name="base_code_id" ref="account_tax_code_template_AISCBI21"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 21% Inversión del sujeto pasivo intracomunitario (2)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AISCC21"/>
+          <field name="parent_id" ref="account_tax_template_p_iva21_sp_in"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_ic_bc" model="account.tax.template">
+          <field name="base_sign" eval="1.0"/>
+          <field name="description">P_IVA21_IC_BC</field>
+          <field name="type">percent</field>
+          <field name="amount" eval="1.0"/>
+          <field name="child_depend" eval="True"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="name">IVA 21% Adquisición Intracomunitaria. Bienes corrientes</field>
+        </record>
+        <record id="account_tax_template_p_iva21_ic_bc_1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_IC_BC_1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_AIBCBI21"/>
+          <field name="sequence" eval="10"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 21% Intracomunitario. Bienes corrientes (1)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AIBCC21"/>
+          <field name="parent_id" ref="account_tax_template_p_iva21_ic_bc"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_ic_bc_2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_IC_BC_2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="20"/>
+          <field name="base_code_id" ref="account_tax_code_template_AIBBI"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 21% Intracomunitario. Bienes corrientes (2)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AIBC"/>
+          <field name="parent_id" ref="account_tax_template_p_iva21_ic_bc"/>
+          <field name="amount" eval="-0.21"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_ic_bi" model="account.tax.template">
+          <field name="name">IVA 21% Adquisición Intracomunitaria. Bienes de inversión</field>
+          <field name="description">P_IVA21_IC_BI</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="type">percent</field>
+          <field name="amount" eval="1.0"/>
+          <field name="child_depend" eval="True"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+        <record id="account_tax_template_p_iva21_ic_bi_1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_IC_BI_1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="10"/>
+          <field name="base_code_id" ref="account_tax_code_template_AIBIBI21"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 21% Intracomunitario. Bienes de inversión (1)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AIBIC21"/>
+          <field name="parent_id" ref="account_tax_template_p_iva21_ic_bi"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_ic_bi_2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_IC_BI_2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="20"/>
+          <field name="base_code_id" ref="account_tax_code_template_AIBIBIA"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 21% Intracomunitario. Bienes de inversión (2)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AIBICA"/>
+          <field name="parent_id" ref="account_tax_template_p_iva21_ic_bi"/>
+          <field name="amount" eval="-0.21"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_ibc" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_IBC</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IBYSCBI21"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 21% Importaciones bienes corrientes</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_DIBYSCC21"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_ibi" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_IBI</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IBIBI21"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 21% Importaciones bienes de inversión</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_DIBIC21"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf21td" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPATBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IRPFTD</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPATC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPATBI"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">Retenciones IRPF (Trabajadores) dinerarios</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPATC"/>
+          <field name="amount" eval="-0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_sp_ex" model="account.tax.template">
+          <field name="amount" eval="1.0"/>
+          <field name="description">P_IVA4_SP_EX</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="type">percent</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="child_depend" eval="True"/>
+          <field name="name">IVA 4% Adquisición de servicios extracomunitarios</field>
+        </record>
+        <record id="account_tax_template_p_iva4_sp_ex_1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_SP_EX_1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="10"/>
+          <field name="base_code_id" ref="account_tax_code_template_OCIDSPEAIBI"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 4% Inversión del sujeto pasivo extracomunitario (1)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_OOCIDSPEAIC"/>
+          <field name="parent_id" ref="account_tax_template_p_iva4_sp_ex"/>
+          <field name="amount" eval="-0.04"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_sp_ex_2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_SP_EX_2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="20"/>
+          <field name="base_code_id" ref="account_tax_code_template_OICBI4"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 4% Inversión del sujeto pasivo extracomunitario (2)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOICC4"/>
+          <field name="parent_id" ref="account_tax_template_p_iva4_sp_ex"/>
+          <field name="amount" eval="0.04"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_sp_ex" model="account.tax.template">
+          <field name="amount" eval="1.0"/>
+          <field name="description">P_IVA10_SP_EX</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="type">percent</field>
+          <field name="child_depend" eval="True"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="name">IVA 10% Adquisición de servicios extracomunitarios</field>
+        </record>
+        <record id="account_tax_template_p_iva10_sp_ex_1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_SP_EX_1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="10"/>
+          <field name="base_code_id" ref="account_tax_code_template_OCIDSPEAIBI"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 10% Inversión del sujeto pasivo extracomunitario (1)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_OOCIDSPEAIC"/>
+          <field name="parent_id" ref="account_tax_template_p_iva10_sp_ex"/>
+          <field name="amount" eval="-0.1"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_sp_ex_2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_SP_EX_2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="20"/>
+          <field name="base_code_id" ref="account_tax_code_template_OICBI10"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 10% Inversión del sujeto pasivo extracomunitario (3)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOICC10"/>
+          <field name="parent_id" ref="account_tax_template_p_iva10_sp_ex"/>
+          <field name="amount" eval="0.1"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_sp_ex" model="account.tax.template">
+          <field name="name">IVA 21% Adquisición de servicios extracomunitarios</field>
+          <field name="description">P_IVA21_SP_EX</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="amount" eval="1.0"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="type">percent</field>
+          <field name="child_depend" eval="True"/>
+        </record>
+        <record id="account_tax_template_p_iva21_sp_ex_1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_SP_EX_1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="10"/>
+          <field name="base_code_id" ref="account_tax_code_template_OCIDSPEAIBI"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 21% Inversión del sujeto pasivo extracomunitario (1)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_OOCIDSPEAIC"/>
+          <field name="parent_id" ref="account_tax_template_p_iva21_sp_ex"/>
+          <field name="amount" eval="-0.21"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_sp_ex_2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_SP_EX_2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="20"/>
+          <field name="base_code_id" ref="account_tax_code_template_OICBI21"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 21% Inversión del sujeto pasivo extracomunitario (2)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOICC21"/>
+          <field name="parent_id" ref="account_tax_template_p_iva21_sp_ex"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_ic_bc" model="account.tax.template">
+          <field name="amount" eval="1.0"/>
+          <field name="description">P_IVA4_IC_BC</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="type">percent</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="name">IVA 4% Adquisición Intracomunitario. Bienes corrientes</field>
+          <field name="child_depend" eval="True"/>
+        </record>
+        <record id="account_tax_template_p_iva4_ic_bc_1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_IC_BC_1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="10"/>
+          <field name="base_code_id" ref="account_tax_code_template_AIBCBI4"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 4% Intracomunitario. Bienes corrientes (1)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AIBCC4"/>
+          <field name="parent_id" ref="account_tax_template_p_iva4_ic_bc"/>
+          <field name="amount" eval="0.04"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_ic_bc_2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_IC_BC_2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="20"/>
+          <field name="base_code_id" ref="account_tax_code_template_AIBBI"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 4% Intracomunitario. Bienes corrientes (2)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AIBC"/>
+          <field name="parent_id" ref="account_tax_template_p_iva4_ic_bc"/>
+          <field name="amount" eval="-0.04"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_ic_bi" model="account.tax.template">
+          <field name="amount" eval="1.0"/>
+          <field name="description">P_IVA4_IC_BI</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="type">percent</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="name">IVA 4% Adquisición Intracomunitario. Bienes de inversión</field>
+          <field name="child_depend" eval="True"/>
+        </record>
+        <record id="account_tax_template_p_iva4_ic_bi_1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_IC_BI_1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="10"/>
+          <field name="base_code_id" ref="account_tax_code_template_AIBIBI"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 4% Intracomunitario. Bienes de inversión (1)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AIBIC"/>
+          <field name="parent_id" ref="account_tax_template_p_iva4_ic_bi"/>
+          <field name="amount" eval="0.04"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_ic_bi_2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_IC_BI_2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="20"/>
+          <field name="base_code_id" ref="account_tax_code_template_AIBIBIA"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 4% Intracomunitario. Bienes de inversión (2)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AIBICA"/>
+          <field name="parent_id" ref="account_tax_template_p_iva4_ic_bi"/>
+          <field name="amount" eval="-0.04"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_ic_bc" model="account.tax.template">
+          <field name="amount" eval="1.0"/>
+          <field name="description">P_IVA10_IC_BC</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="type">percent</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="name">IVA 10% Adquisición Intracomunitario. Bienes corrientes</field>
+          <field name="child_depend" eval="True"/>
+        </record>
+        <record id="account_tax_template_p_iva10_ic_bc_1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_IC_BC_1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="10"/>
+          <field name="base_code_id" ref="account_tax_code_template_AIBYSCBI10"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 10% Intracomunitario. Bienes corrientes (1)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AIBYSCC10"/>
+          <field name="parent_id" ref="account_tax_template_p_iva10_ic_bc"/>
+          <field name="amount" eval="0.1"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_ic_bc_2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_IC_BC_2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="20"/>
+          <field name="base_code_id" ref="account_tax_code_template_AIBBI"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 10% Intracomunitario. Bienes corrientes (2)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AIBC"/>
+          <field name="parent_id" ref="account_tax_template_p_iva10_ic_bc"/>
+          <field name="amount" eval="-0.1"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_ic_bi" model="account.tax.template">
+          <field name="amount" eval="1.0"/>
+          <field name="description">P_IVA10_IC_BI</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="type">percent</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="name">IVA 10% Adquisición Intracomunitario. Bienes de inversión</field>
+          <field name="child_depend" eval="True"/>
+        </record>
+        <record id="account_tax_template_p_iva10_ic_bi_1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_IC_BI_1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="10"/>
+          <field name="base_code_id" ref="account_tax_code_template_AIBIBI10"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 10% Intracomunitario. Bienes de inversión (1)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AIBIC10"/>
+          <field name="parent_id" ref="account_tax_template_p_iva10_ic_bi"/>
+          <field name="amount" eval="0.1"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_ic_bi_2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_IC_BI_2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="20"/>
+          <field name="base_code_id" ref="account_tax_code_template_AIBIBIA"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 10% Intracomunitario. Bienes de inversión (2)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AIBICA"/>
+          <field name="parent_id" ref="account_tax_template_p_iva10_ic_bi"/>
+          <field name="amount" eval="-0.1"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_iva0_sp_i" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_PDSI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA0_SP_I</field>
+          <field name="type_tax_use">sale</field>
+          <field name="base_code_id" ref="account_tax_code_template_PDSI"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 0% Prestación de servicios intracomunitario</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="0.0"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_iva_ns" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_ONSOCIDSPQOEDAD"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA_NS</field>
+          <field name="type_tax_use">sale</field>
+          <field name="base_code_id" ref="account_tax_code_template_ONSOCIDSPQOEDAD"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">No sujeto Repercutido</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="0.0"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_iva_e" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_ONSOCIDSPQOEDAD"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA_SP_E</field>
+          <field name="type_tax_use">sale</field>
+          <field name="base_code_id" ref="account_tax_code_template_ONSOCIDSPQOEDAD"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 0% Prestación de servicios extracomunitaria</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="0.0"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_ibc" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_IBC</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IBYSCBI4"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 4% Importaciones bienes corrientes</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_DIBYSCC4"/>
+          <field name="amount" eval="0.04"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_ibi" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_IBI</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IBIBI4"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 4% Importaciones bienes de inversión</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_DIBIC4"/>
+          <field name="amount" eval="0.04"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_ibc" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_IBC</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IBYSCBI10"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 10% Importaciones bienes corrientes</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_DIBYSCC10"/>
+          <field name="amount" eval="0.1"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_ibi" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_IBI</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IBIBI10"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 10% Importaciones bienes de inversión</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_DIBIC10"/>
+          <field name="amount" eval="0.1"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_bi" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_BI</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_OIBIBI4"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">4% IVA Soportado (bienes de inversión)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOIBIC4"/>
+          <field name="amount" eval="0.04"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_sc" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_SC</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_OICBI4"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">4% IVA soportado (servicios corrientes)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOICC4"/>
+          <field name="amount" eval="0.04"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_bi" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_BI</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_OIBIBI10"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">10% IVA Soportado (bienes de inversión)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOIBIC10"/>
+          <field name="amount" eval="0.1"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva21_bi" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA21_BI</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_OIBIBI21"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">21% IVA Soportado (bienes de inversión)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOIBIC21"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_bc" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_BC</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_OICBI10"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">10% IVA soportado (bienes corrientes)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOICC10"/>
+          <field name="amount" eval="0.1"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_bc" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_BC</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_OICBI4"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">4% IVA soportado (bienes corrientes)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOICC4"/>
+          <field name="amount" eval="0.04"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_sc" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_SC</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_OICBI10"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">10% IVA soportado (servicios corrientes)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOICC10"/>
+          <field name="amount" eval="0.1"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_iva0" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_OESDAD"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA0</field>
+          <field name="type_tax_use">sale</field>
+          <field name="base_code_id" ref="account_tax_code_template_OESDAD"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA Exento Repercutido</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="0.0"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_req05" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCDRDERBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_REQ05</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCDRDERC"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_REBI05"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">0.50% Recargo Equivalencia Ventas</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_REC05"/>
+          <field name="amount" eval="0.005"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_iva4b" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA4B</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_RGIDBI4"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 4% (Bienes)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_RGIDC4"/>
+          <field name="amount" eval="0.04"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_iva10b" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA10B</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_RGIDBI10"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 10% (Bienes)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_RGIDC10"/>
+          <field name="amount" eval="0.1"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva0_nd" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_SNDBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA0_ND</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_SNDC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="base_code_id" ref="account_tax_code_template_SNDBI"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA Soportado no deducible</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SNDC"/>
+          <field name="amount" eval="0.21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_iva4s" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA4S</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_RGIDBI4"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 4% (Servicios)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_RGIDC4"/>
+          <field name="amount" eval="0.04"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_iva10s" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA10S</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_RGIDBI10"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 10% (Servicios)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_RGIDC10"/>
+          <field name="amount" eval="0.1"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_req014" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCDRDERBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_REQ014</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCDRDERC"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_REBI014"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">1.4% Recargo Equivalencia Ventas</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_REC014"/>
+          <field name="amount" eval="0.014"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_req52" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCDRDERBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_REQ52</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCDRDERC"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_REBI52"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">5.2% Recargo Equivalencia Ventas</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_REC52"/>
+          <field name="amount" eval="0.052"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva0_bc" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_AEBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA0_BC</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="base_code_id" ref="account_tax_code_template_AEBI"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA Soportado exento (operaciones corrientes)</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="0.0"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva0_ns" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_SNJBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA0_NS</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="base_code_id" ref="account_tax_code_template_SNJBI"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA Soportado no sujeto</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="0.0"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_irpf9" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRACBI9"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IRPF9</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRACC9"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRACBI9"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones a cuenta IRPF 9%</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRACC9"/>
+          <field name="amount" eval="-0.09"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_irpf18" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRACBI18"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IRPF18</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRACC18"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRACBI18"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones a cuenta IRPF 18%</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRACC18"/>
+          <field name="amount" eval="-0.18"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_irpf19" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRACBI19"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IRPF19</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRACC19"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRACBI19"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones a cuenta IRPF 19%</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRACC19"/>
+          <field name="amount" eval="-0.19"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <!-- No lleva códigos de impuestos porque sólo se declara mediante
+             saldo de la cuenta 473 en el modelo 200 -->
+        <record id="account_tax_template_s_irpf19a" model="account.tax.template">
+          <field name="description">S_RAC19A</field>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="name">Retenciones a cuenta 19% (Arrendamientos)</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="-0.19"/>
+          <field name="type">percent</field>
+        </record>
+        <!-- No lleva códigos de impuestos porque sólo se declara mediante
+             saldo de la cuenta 473 en el modelo 200 -->
+        <record id="account_tax_template_s_irpf195a" model="account.tax.template">
+          <field name="description">S_RAC195A</field>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="name">Retenciones a cuenta 19,5% (Arrendamientos)</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="-0.195"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf19" model="account.tax.template">
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IRPF19</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPBI19"/>
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPBI19"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones IRPF 19%</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPC19"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPC19"/>
+          <field name="amount" eval="-0.19"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf20a" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPAABI20"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_RAC20A</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPAAC20"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPAABI20"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones 20% (Arrendamientos)</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPAAC20"/>
+          <field name="amount" eval="-0.2"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf18" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPBI18"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IRPF18</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPBI18"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPC18"/>
+          <field name="name">Retenciones IRPF 18%</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPC18"/>
+          <field name="amount" eval="-0.18"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf19a" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPAABI19"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_RAC19A</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPAAC19"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPAABI19"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones 19% (Arrendamientos)</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPAAC19"/>
+          <field name="amount" eval="-0.19"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf195a" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPAABI195"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_RAC195A</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPAAC195"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPAABI195"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones 19,5% (Arrendamientos)</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPAAC195"/>
+          <field name="amount" eval="-0.195"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf7" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPBI7"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IRPF7</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPBI7"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPC7"/>
+          <field name="name">Retenciones IRPF 7%</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPC7"/>
+          <field name="amount" eval="-0.07"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf9" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPBI9"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IRPF9</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPBI9"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPC9"/>
+          <field name="name">Retenciones IRPF 9%</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPC9"/>
+          <field name="amount" eval="-0.09"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_irpf20" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRACBI20"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IRPF20</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRACC20"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRACBI20"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones a cuenta IRPF 20%</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRACC20"/>
+          <field name="amount" eval="-0.2"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <!-- No lleva códigos de impuestos porque sólo se declara mediante
+             saldo de la cuenta 473 en el modelo 200 -->
+        <record id="account_tax_template_s_irpf20a" model="account.tax.template">
+          <field name="description">S_RAC20A</field>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="name">Retenciones a cuenta 20% (Arrendamientos)</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="-0.2"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva12_agr" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_CREAGYPBI12"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA12_AGR</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_CREAGYP12"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_CREAGYPBI12"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">12% IVA Soportado régimen agricultura</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_CREAGYP12"/>
+          <field name="amount" eval="0.12"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+          <field name="include_base_amount" eval="1"/>
+        </record>
+        <record id="account_tax_template_s_iva0_e" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_EYOA"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA0_E</field>
+          <field name="type_tax_use">sale</field>
+          <field name="base_code_id" ref="account_tax_code_template_EYOA"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 0% Exportaciones</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="0.0"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_iva0_ic" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_EIDB"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IVA0_IC</field>
+          <field name="type_tax_use">sale</field>
+          <field name="base_code_id" ref="account_tax_code_template_EIDB"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 0% Entregas Intracomunitarias exentas</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="0.0"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_req014" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_REQ014</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_REDBI014"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">1.4% Recargo Equivalencia Compras</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_REDC014"/>
+          <field name="amount" eval="0.014"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_req05" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_REQ05</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_REDBI05"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">0.50% Recargo Equivalencia Compras</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_REDC05"/>
+          <field name="amount" eval="0.005"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_req52" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_REQ5.2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_REDBI52"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">5.2% Recargo Equivalencia Compras</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_REDC52"/>
+          <field name="amount" eval="0.052"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_irpf1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRACBI1"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IRPF1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRACC1"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRACBI1"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones a cuenta IRPF 1%</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRACC1"/>
+          <field name="amount" eval="-0.01"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_irpf2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRACBI2"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IRPF2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRACC2"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRACBI2"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones a cuenta IRPF 2%</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRACC2"/>
+          <field name="amount" eval="-0.02"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_irpf21" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRACBI21"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IRPF21</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRACC21"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRACBI21"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones a cuenta IRPF 21%</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRACC21"/>
+          <field name="amount" eval="-0.21"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <!-- No lleva códigos de impuestos porque sólo se declara mediante
+             saldo de la cuenta 473 en el modelo 200 -->
+        <record id="account_tax_template_s_irpf21a" model="account.tax.template">
+          <field name="description">S_RAC21A</field>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="name">Retenciones a cuenta 21% (Arrendamientos)</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="-0.21"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_irpf7" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRACBI7"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IRPF7</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRACC7"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRACBI7"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones a cuenta IRPF 7%</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRACC7"/>
+          <field name="amount" eval="-0.07"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_irpf15" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRACBI15"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">S_IRPF15</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRACC15"/>
+          <field name="type_tax_use">sale</field>
+          <field name="account_paid_id" ref="pgc_473_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRACBI15"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones a cuenta IRPF 15%</field>
+          <field name="account_collected_id" ref="pgc_473_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRACC15"/>
+          <field name="amount" eval="-0.15"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPBI1"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IRPF1</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPBI1"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPC1"/>
+          <field name="name">Retenciones IRPF 1%</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPC1"/>
+          <field name="amount" eval="-0.01"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf15" model="account.tax.template">
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IRPF15</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPBI15"/>
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPBI15"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPC15"/>
+          <field name="name">Retenciones IRPF 15%</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPC15"/>
+          <field name="amount" eval="-0.15"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf21t" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPATBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IRPFT</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPATBI"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPATC"/>
+          <field name="name">Retenciones IRPF 21% (Trabajadores)</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="-0.21"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPATC"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_sp_in" model="account.tax.template">
+          <field name="amount" eval="1.0"/>
+          <field name="description">P_IVA10_SP_IN</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="type">percent</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="name">IVA 10% Adquisición de servicios intracomunitarios</field>
+          <field name="child_depend" eval="True"/>
+        </record>
+        <record id="account_tax_template_p_iva10_sp_in_1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_SP_IN_1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="10"/>
+          <field name="base_code_id" ref="account_tax_code_template_AISBI"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 10% Inversión del sujeto pasivo intracomunitario (1)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AISC"/>
+          <field name="parent_id" ref="account_tax_template_p_iva10_sp_in"/>
+          <field name="amount" eval="-0.1"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva10_sp_in_2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA10_SP_IN_2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="20"/>
+          <field name="base_code_id" ref="account_tax_code_template_AISCBI10"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 10% Inversión del sujeto pasivo intracomunitario (2)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AISCC10"/>
+          <field name="parent_id" ref="account_tax_template_p_iva10_sp_in"/>
+          <field name="amount" eval="0.1"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_sp_in" model="account.tax.template">
+          <field name="amount" eval="1.0"/>
+          <field name="description">P_IVA4_SP_IN</field>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="type">percent</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="name">IVA 4% Adquisición de servicios intracomunitarios</field>
+          <field name="child_depend" eval="True"/>
+        </record>
+        <record id="account_tax_template_p_iva4_sp_in_1" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_SP_IN_1</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="10"/>
+          <field name="base_code_id" ref="account_tax_code_template_AISBI"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">IVA 4% Inversión del sujeto pasivo intracomunitario (1)</field>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AISC"/>
+          <field name="parent_id" ref="account_tax_template_p_iva4_sp_in"/>
+          <field name="amount" eval="-0.04"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_iva4_sp_in_2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IVA4_SP_IN_2</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="sequence" eval="20"/>
+          <field name="base_code_id" ref="account_tax_code_template_AISCBI4"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="name">IVA 4% Inversión del sujeto pasivo intracomunitario (2)</field>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_AISCC4"/>
+          <field name="parent_id" ref="account_tax_template_p_iva4_sp_in"/>
+          <field name="amount" eval="0.04"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf21te" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPF_RET_PRA_TRA_21_BI_E"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IRPFTE</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPATCE"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPF_RET_PRA_TRA_21_BI_E"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones IRPF (Trabajadores) en especie</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPATCE"/>
+          <field name="amount" eval="-0.21"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf20" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPBI20"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IRPF20</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPBI20"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPC20"/>
+          <field name="name">Retenciones IRPF 20%</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="-0.2"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPC20"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf21a" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPAABI21"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_RAC21A</field>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPAAC21"/>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPAABI21"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="name">Retenciones 21% (Arrendamientos)</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPAAC21"/>
+          <field name="amount" eval="-0.21"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf21p" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPBI21"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IRPF21P</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPBI21"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPC21"/>
+          <field name="name">Retenciones IRPF 21%</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="-0.21"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPC21"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_p_irpf2" model="account.tax.template">
+          <field name="ref_base_code_id" ref="account_tax_code_template_IRPBI2"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="description">P_IRPF2</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="account_paid_id" ref="pgc_4751_child"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_IRPBI2"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_IRPC2"/>
+          <field name="name">Retenciones IRPF 2%</field>
+          <field name="account_collected_id" ref="pgc_4751_child"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+          <field name="amount" eval="-0.02"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="tax_code_id" ref="account_tax_code_template_IRPC2"/>
+          <field name="type">percent</field>
+        </record>
+        <record id="account_tax_template_s_iva0_isp" model="account.tax.template">
+          <field name="description">S_IVA0_ISP</field>
+          <field name="name">IVA 0% Venta con Inversión del Sujeto Pasivo</field>
+          <field name="type_tax_use">sale</field>
+          <field name="type">percent</field>
+          <field name="amount" eval="0.0"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="base_code_id" ref="account_tax_code_template_VISP"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="ref_base_code_id" ref="account_tax_code_template_VISP"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+        <record id="account_tax_template_p_iva4_isp" model="account.tax.template">
+          <field name="description">P_IVA4_ISP</field>
+          <field name="name">IVA 4% Compra con Inversión del Sujeto Pasivo Nacional</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="type">percent</field>
+          <field name="amount" eval="1.0"/>
+          <field name="child_depend" eval="True"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+        <record id="account_tax_template_p_iva4_isp_1" model="account.tax.template">
+          <field name="name">IVA 4% Compra con Inversión del Sujeto Pasivo Nacional (1)</field>
+          <field name="description">P_IVA4_ISP_1</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="parent_id" ref="account_tax_template_p_iva4_isp"/>
+          <field name="type">percent</field>
+          <field name="amount" eval="0.04"/>
+          <field name="sequence" eval="10"/>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="base_code_id" ref="account_tax_code_template_OICBI4"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOICC4"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+        <record id="account_tax_template_p_iva4_isp_2" model="account.tax.template">
+          <field name="name">IVA 4% Compra con Inversión del Sujeto Pasivo Nacional (2)</field>
+          <field name="description">P_IVA4_ISP_2</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="parent_id" ref="account_tax_template_p_iva4_isp"/>
+          <field name="type">percent</field>
+          <field name="amount" eval="-0.04"/>
+          <field name="sequence" eval="20"/>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="base_code_id" ref="account_tax_code_template_OCIDSPEAIBI"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="tax_code_id" ref="account_tax_code_template_OOCIDSPEAIC"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+        <record id="account_tax_template_p_iva10_isp" model="account.tax.template">
+          <field name="description">P_IVA10_ISP</field>
+          <field name="name">IVA 10% Compra con Inversión del Sujeto Pasivo Nacional</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="type">percent</field>
+          <field name="amount" eval="1.0"/>
+          <field name="child_depend" eval="True"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+        <record id="account_tax_template_p_iva10_isp_1" model="account.tax.template">
+          <field name="name">IVA 10% Compra con Inversión del Sujeto Pasivo Nacional (1)</field>
+          <field name="description">P_IVA10_ISP_1</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="parent_id" ref="account_tax_template_p_iva10_isp"/>
+          <field name="type">percent</field>
+          <field name="amount" eval="0.10"/>
+          <field name="sequence" eval="10"/>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="base_code_id" ref="account_tax_code_template_OICBI10"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOICC10"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+        <record id="account_tax_template_p_iva10_isp_2" model="account.tax.template">
+          <field name="name">IVA 10% Compra con Inversión del Sujeto Pasivo Nacional (2)</field>
+          <field name="description">P_IVA10_ISP_2</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="parent_id" ref="account_tax_template_p_iva10_isp"/>
+          <field name="type">percent</field>
+          <field name="amount" eval="-0.10"/>
+          <field name="sequence" eval="20"/>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="base_code_id" ref="account_tax_code_template_OCIDSPEAIBI"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="tax_code_id" ref="account_tax_code_template_OOCIDSPEAIC"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+        <record id="account_tax_template_p_iva21_isp" model="account.tax.template">
+          <field name="description">P_IVA21_ISP</field>
+          <field name="name">IVA 21% Compra con Inversión del Sujeto Pasivo Nacional</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="type">percent</field>
+          <field name="amount" eval="1.0"/>
+          <field name="child_depend" eval="True"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+        <record id="account_tax_template_p_iva21_isp_1" model="account.tax.template">
+          <field name="name">IVA 21% Compra con Inversión del Sujeto Pasivo Nacional (1)</field>
+          <field name="description">P_IVA21_ISP_1</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="parent_id" ref="account_tax_template_p_iva21_isp"/>
+          <field name="type">percent</field>
+          <field name="amount" eval="0.21"/>
+          <field name="sequence" eval="10"/>
+          <field name="account_collected_id" ref="pgc_472_child"/>
+          <field name="base_code_id" ref="account_tax_code_template_OICBI21"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="tax_code_id" ref="account_tax_code_template_SOICC21"/>
+          <field name="tax_sign" eval="1.0"/>
+          <field name="account_paid_id" ref="pgc_472_child"/>
+          <field name="ref_base_code_id" ref="account_tax_code_template_RDDSBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_RDDSC"/>
+          <field name="ref_tax_sign" eval="-1.0"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+        <record id="account_tax_template_p_iva21_isp_2" model="account.tax.template">
+          <field name="name">IVA 21% Compra con Inversión del Sujeto Pasivo Nacional (2)</field>
+          <field name="description">P_IVA21_ISP_2</field>
+          <field name="type_tax_use">purchase</field>
+          <field name="parent_id" ref="account_tax_template_p_iva21_isp"/>
+          <field name="type">percent</field>
+          <field name="amount" eval="-0.21"/>
+          <field name="sequence" eval="20"/>
+          <field name="account_collected_id" ref="pgc_477_child"/>
+          <field name="base_code_id" ref="account_tax_code_template_OCIDSPEAIBI"/>
+          <field name="base_sign" eval="1.0"/>
+          <field name="tax_code_id" ref="account_tax_code_template_OOCIDSPEAIC"/>
+          <field name="tax_sign" eval="-1.0"/>
+          <field name="account_paid_id" ref="pgc_477_child"/>
+          <field name="ref_base_code_id" ref="account_tax_code_template_MBYCRBI"/>
+          <field name="ref_base_sign" eval="-1.0"/>
+          <field name="ref_tax_code_id" ref="account_tax_code_template_MBYCRC"/>
+          <field name="ref_tax_sign" eval="1.0"/>
+          <field name="chart_template_id" ref="account_chart_template_common"/>
+        </record>
+    </data>
+</openerp>

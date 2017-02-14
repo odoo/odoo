@@ -4,15 +4,17 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 # 开阖—gilbert <gilbert@osbzr.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-20 10:58+0000\n"
-"Last-Translator: leangjia <liangjia@qq.com>\n"
+"PO-Revision-Date: 2016-09-03 18:18+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,7 +104,7 @@ msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, san
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
-msgstr "笔销售单"
+msgstr "销售订单#"
 
 #. module: sale
 #: field:sale.report,nbr:0
@@ -159,7 +161,7 @@ msgid ""
 "                    quotation, sales order, delivery, invoicing and payment.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                   单击此处创建报价单，并能在之后转换成为销售订单。\n                </p><p>系统将帮助你高效地处理完整销售流程：报价、销售、发运、开票及付款。</p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                   单击此处创建报价单，创建之后自动转换成为销售订单。\n                </p><p>此功能非常管用：odoo系统将帮助你高效地跑完整个销售流程：报价单、销售、交货、开票及付款等。</p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -234,35 +236,35 @@ msgstr "在销售订单中的地址"
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance"
-msgstr "预付款"
+msgstr "预收"
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr "预付款总额"
+msgstr "预收总额"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:207
 #, python-format
 msgid "Advance Invoice"
-msgstr "预付款发票"
+msgstr "预收发票"
 
 #. module: sale
 #: field:sale.advance.payment.inv,product_id:0
 msgid "Advance Product"
-msgstr "预付款产品"
+msgstr "预收产品"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:62
 #, python-format
 msgid "Advance of %s %%"
-msgstr "%s%% 的预付款"
+msgstr "%s%% 的预收"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:62
 #, python-format
 msgid "Advance of %s %s"
-msgstr "预付款：%s %s"
+msgstr "预收：%s %s"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -276,7 +278,7 @@ msgstr "点击“显示要开票的行”"
 msgid ""
 "All items in these order lines will be invoiced. You can also invoice a percentage of the sales order\n"
 "                    or a fixed price (for advances) directly from the sales order form if you prefer."
-msgstr "这些订单行的所有项目将被开票。你也能按订单的比例开票，如果你喜欢，也能直接从订单表单的以固定价格（预付款）开票。"
+msgstr "这些订单行的所有项目将被开票。你也能按订单的比例开票，如果你喜欢，也能直接从订单表单的以固定价格（预收）开票。"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -327,7 +329,7 @@ msgid ""
 "Allows to define your customer contracts conditions: invoicing method (fixed price, on timesheet, advance invoice), the exact pricing (650€/day for a developer), the duration (one year support contract).\n"
 "You will be able to follow the progress of the contract and invoice automatically.\n"
 "-It installs the account_analytic_analysis module."
-msgstr "允许定义你的客户合同条款：开票方法(固定价格，根据计工单，预付款发票),准确价格（每天每个开发人员650欧元），期间（一年的支援合同）。\n你讲能够自动跟踪合同和开票进程。\n - 安装account_analytic_analysis模块。"
+msgstr "允许定义你的客户合同条款：开票方法(固定价格，根据计工单，预收发票),准确价格（每天每个开发人员650欧元），期间（一年的支援合同）。\n你讲能够自动跟踪合同和开票进程。\n - 安装account_analytic_analysis模块。"
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -372,7 +374,7 @@ msgstr "允许你选择和维护产品的不同计量单位"
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr "允许你在销售订单指定一个辅助核算项"
+msgstr "允许你在销售订单指定一个分析账户"
 
 #. module: sale
 #: help:sale.config.settings,group_sale_delivery_address:0
@@ -384,17 +386,17 @@ msgstr "允许你在销售单给运输和开票指定不同的地址"
 #. module: sale
 #: field:sale.report,analytic_account_id:0
 msgid "Analytic Account"
-msgstr "辅助核算项"
+msgstr "分析账户"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr "销售辅助核算"
+msgstr "销售的分析会计"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr "销售辅助核算项"
+msgstr "销售的分析会计"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -422,7 +424,7 @@ msgstr "销售员"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr "按销售团队"
+msgstr "销售团队"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -444,7 +446,7 @@ msgstr "取消订单"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Cancel Quotation"
-msgstr "取消报价"
+msgstr "取消报价单"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.order.line,state:0
@@ -526,7 +528,7 @@ msgstr "公司"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:99
 #, python-format
 msgid "Configuration Error!"
-msgstr "设置错误!"
+msgstr "配置错误!"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -546,17 +548,17 @@ msgstr "已确认"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr "已经确认但是还没有发运的订单行"
+msgstr "已经确认但还没有交货的订单行"
 
 #. module: sale
 #: field:sale.order,project_id:0
 msgid "Contract / Analytic"
-msgstr "合同/辅助核算"
+msgstr "合同/分析"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Contract Features"
-msgstr "合同特性"
+msgstr "合同功能"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -566,7 +568,7 @@ msgstr "合同管理"
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid "Create & View Invoice"
-msgstr "生成并查看发票"
+msgstr "创建并查看发票"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
@@ -574,7 +576,7 @@ msgstr "生成并查看发票"
 #: view:sale.order:sale.view_order_form field:sale.order,order_policy:0
 #: view:sale.order.line:sale.view_order_line_form2
 msgid "Create Invoice"
-msgstr "生成发票"
+msgstr "创建发票"
 
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
@@ -599,14 +601,14 @@ msgstr "创建发票"
 #: field:sale.order.line,create_uid:0
 #: field:sale.order.line.make.invoice,create_uid:0
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_date:0
 #: field:sale.make.invoice,create_date:0 field:sale.order.line,create_date:0
 #: field:sale.order.line.make.invoice,create_date:0
 msgid "Created on"
-msgstr "创建"
+msgstr "创建时间"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -616,7 +618,7 @@ msgstr "创建日期"
 #. module: sale
 #: field:sale.order,currency_id:0
 msgid "Currency"
-msgstr "币种"
+msgstr "货币"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter field:sale.order,partner_id:0
@@ -674,17 +676,17 @@ msgstr "默认选项"
 #. module: sale
 #: field:res.company,sale_note:0
 msgid "Default Terms and Conditions"
-msgstr "默认条款"
+msgstr "默认条款和条件"
 
 #. module: sale
 #: view:res.company:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr "默认条款..."
+msgstr "默认条款和条件..."
 
 #. module: sale
 #: help:res.company,sale_note:0
 msgid "Default terms and conditions for quotations."
-msgstr "默认条款报价单"
+msgstr "报价单默认条款和条件..."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -696,17 +698,17 @@ msgstr "在销售团队设置中定义开票目标，以便看到阶段性的成
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr "送货地址"
+msgstr "交货地址"
 
 #. module: sale
 #: field:sale.order.line,delay:0
 msgid "Delivery Lead Time"
-msgstr "送货提前期"
+msgstr "交货提前时间"
 
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Delivery address for current sales order."
-msgstr "当前销售订单的发运地址"
+msgstr "当前销售订单的交货地址"
 
 #. module: sale
 #: field:sale.order.line,name:0 view:website:sale.report_saleorder_document
@@ -731,12 +733,12 @@ msgstr "订单行折扣"
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
 msgid "Display margins on sales orders"
-msgstr "显示利润在销售订单"
+msgstr "在销售订单显示利润"
 
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "你真的要生成发票吗 ？"
+msgstr "你真的要创建发票吗 ？"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter selection:sale.order,state:0
@@ -754,7 +756,7 @@ msgstr "草稿"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr "草稿报价"
+msgstr "草稿报价单"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:140
@@ -775,7 +777,7 @@ msgstr "Email撰写向导"
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
 msgid "Enable Invoicing Sales order lines"
-msgstr "允许逐行开票"
+msgstr "开启订单行开票"
 
 #. module: sale
 #: code:addons/sale/sale.py:154 code:addons/sale/sale.py:390
@@ -793,7 +795,7 @@ msgstr "异常"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr "扩展过滤器"
+msgstr "扩展的筛选器"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
@@ -809,12 +811,12 @@ msgstr "首先取消所有关联这个销售订单的发票。"
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr "财务结构"
+msgstr "财政状况"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Fixed price (deposit)"
-msgstr "固定价格（押金）"
+msgstr "固定价格（预存）"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -873,7 +875,7 @@ msgstr "产生报价单或者销售订单的状态。\n当发票核准时（开�
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Group By"
-msgstr "分组"
+msgstr "分组于"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -940,7 +942,7 @@ msgstr "错误的数据"
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Invalid Action!"
-msgstr "非法的动作"
+msgstr "无效的动作！"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:127
@@ -978,7 +980,7 @@ msgstr "发票明细"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Invoice Order"
-msgstr "开票订单"
+msgstr "订单开票"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -1003,7 +1005,7 @@ msgstr "发票寄送地址:"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr "发票和收货地址:"
+msgstr "发票和送货地址:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1024,7 +1026,7 @@ msgstr "开票日期。"
 #: code:addons/sale/sale.py:1224
 #, python-format
 msgid "Invoice paid"
-msgstr "发票已付清"
+msgstr "发票已支付"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1062,7 +1064,7 @@ msgstr "发票统计"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Invoicing Process"
-msgstr "开发票过程"
+msgstr "开票过程"
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
@@ -1090,7 +1092,7 @@ msgstr "最后信息日期"
 #: field:sale.order.line,write_uid:0
 #: field:sale.order.line.make.invoice,write_uid:0
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新人"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_date:0
@@ -1098,7 +1100,7 @@ msgstr "最后更新"
 #: field:sale.order.line,write_date:0
 #: field:sale.order.line.make.invoice,write_date:0
 msgid "Last Updated on"
-msgstr "最后一次更新"
+msgstr "最后更新时间"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1174,12 +1176,12 @@ msgstr "旧报价"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Delivery Order"
-msgstr "根据发运单"
+msgstr "基于交货单"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Demand"
-msgstr "需求"
+msgstr "按需"
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -1234,12 +1236,12 @@ msgstr "单号"
 #. module: sale
 #: field:sale.order,name:0 field:sale.order.line,order_id:0
 msgid "Order Reference"
-msgstr "订单关联"
+msgstr "订单参考"
 
 #. module: sale
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr "订单号必须在一个公司范围内唯一"
+msgstr "订单参考在一个公司范围内必须唯一"
 
 #. module: sale
 #: field:sale.report,state:0
@@ -1249,7 +1251,7 @@ msgstr "订单状态"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Order reference"
-msgstr "订单关联单号"
+msgstr "订单参考"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -1264,7 +1266,7 @@ msgstr "其它信息"
 #. module: sale
 #: field:sale.order,invoiced:0
 msgid "Paid"
-msgstr "支付"
+msgstr "已支付"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner field:sale.report,partner_id:0
@@ -1279,7 +1281,7 @@ msgstr "付款条款"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Payment Term:"
-msgstr "支付条款："
+msgstr "付款条款："
 
 #. module: sale
 #: field:sale.order,paypal_url:0
@@ -1342,7 +1344,7 @@ msgstr "打印"
 #. module: sale
 #: model:ir.model,name:sale.model_procurement_order
 msgid "Procurement"
-msgstr "需求"
+msgstr "补货"
 
 #. module: sale
 #: field:sale.order,procurement_group_id:0
@@ -1352,7 +1354,7 @@ msgstr "补货组"
 #. module: sale
 #: field:sale.order.line,procurement_ids:0
 msgid "Procurements"
-msgstr "需求单"
+msgstr "补货"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -1409,54 +1411,54 @@ msgstr "数量(销售单位)"
 #: view:sale.order:sale.view_order_form
 #: view:sale.order:sale.view_quotation_tree selection:sale.report,state:0
 msgid "Quotation"
-msgstr "报价"
+msgstr "报价单"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr "报价/订单"
+msgstr "报价单/订单"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr "报价日期："
+msgstr "报价单日期："
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr "报价号码"
+msgstr "报价单号码"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation N°"
-msgstr "报价号"
+msgstr "报价单号"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr "报价发送"
+msgstr "报价单发送"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr "报价送出"
+msgstr "报价单送出"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr "报价已确认"
+msgstr "报价单已确认"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
 #, python-format
 msgid "Quotation created"
-msgstr "报价已创建"
+msgstr "报价单已创建"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr "报价已送出"
+msgstr "报价单送出"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1466,22 +1468,22 @@ msgstr "报价已送出"
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Quotations"
-msgstr "报价"
+msgstr "报价单"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr "报价分析"
+msgstr "报价单分析"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr "报价或销售"
+msgstr "报价单和销售"
 
 #. module: sale
 #: field:crm.case.section,monthly_quoted:0
 msgid "Rate of created quotation per duration"
-msgstr "创建报价时间率"
+msgstr "每时间段创建报价单的比率"
 
 #. module: sale
 #: field:crm.case.section,monthly_invoiced:0
@@ -1501,12 +1503,12 @@ msgstr "重新生成发票"
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr "生成此销售订单相关的请求单据"
+msgstr "生成此销售订单请求的单据参考"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Reference/Description"
-msgstr "参考/描述"
+msgstr "参考/说明"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1516,7 +1518,7 @@ msgstr "每月确认的销售订单收入。"
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of created quotations per month."
-msgstr "每月创建报价收入。"
+msgstr "每月创建报价单的收入。"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1552,7 +1554,7 @@ msgstr "销售"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "销售预付款发票"
+msgstr "销售预收付款发票"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
@@ -1561,7 +1563,7 @@ msgstr "销售预付款发票"
 #: view:sale.report:sale.view_order_product_graph
 #: view:sale.report:sale.view_order_product_search
 msgid "Sales Analysis"
-msgstr "销售分析表"
+msgstr "销售分析"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
@@ -1693,7 +1695,7 @@ msgstr "销售订单行完成"
 #: field:sale.order.line,salesman_id:0
 #: view:sale.report:sale.view_order_product_search field:sale.report,user_id:0
 msgid "Salesperson"
-msgstr "业务员"
+msgstr "销售员"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1716,7 +1718,7 @@ msgstr "查找未开票明细"
 msgid ""
 "Select a product of type service which is called 'Advance Product'.\n"
 "                You may have to create it and set it as a default value on this field."
-msgstr "选择一个叫做“预付款产品”的服务类型的产品，。你可以在这个字段创建并且设置默认值。"
+msgstr "选择一个叫做“预收产品”的服务类型的产品，。你可以在这个字段创建并且设置默认值。"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -1734,7 +1736,7 @@ msgstr "以邮件发送"
 #. module: sale
 #: field:sale.order.line,sequence:0
 msgid "Sequence"
-msgstr "序列"
+msgstr "序号"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1749,7 +1751,7 @@ msgstr "送货异常"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Shipping address:"
-msgstr "收货地址:"
+msgstr "送货地址:"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -1796,7 +1798,7 @@ msgstr "当月发票收入目标。这是销售团队本月预计能够开出的
 #: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
 #: view:website:sale.report_saleorder_document
 msgid "Taxes"
-msgstr "税"
+msgstr "税金"
 
 #. module: sale
 #: field:sale.order,note:0
@@ -1811,27 +1813,27 @@ msgstr "条款和条件 ..."
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
 msgid "The amount to be invoiced in advance."
-msgstr "预付款发票金额"
+msgstr "预收发票金额"
 
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax."
-msgstr "除税后总额。"
+msgstr "不含税金的总额。"
 
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr "销售订单相关的辅助核算项。"
+msgstr "销售订单相关的分析账户。"
 
 #. module: sale
 #: field:sale.config.settings,time_unit:0
 msgid "The default working time unit for services is"
-msgstr "默认的服务工作时间单位是"
+msgstr "默认服务工作时间单位是"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
 msgid "The tax amount."
-msgstr "税额。"
+msgstr "税金总额"
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -1842,7 +1844,7 @@ msgstr "总金额。"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:106
 #, python-format
 msgid "The value of Advance Amount must be positive."
-msgstr "定金必须是正的"
+msgstr "预收总额的数值必须是正数。"
 
 #. module: sale
 #: code:addons/sale/sale.py:952
@@ -1856,7 +1858,7 @@ msgstr "产品类别的属性中，没有定义财务结构或者 收益类科�
 #: code:addons/sale/sale.py:154
 #, python-format
 msgid "There is no default company for the current user!"
-msgstr "当前用户没有设置默认的公司！"
+msgstr "当前用户没有设置默认公司！"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
@@ -1886,7 +1888,7 @@ msgstr "在销售订单中增加“利润”。\n通过单价和成本价计算�
 #. module: sale
 #: help:sale.config.settings,module_website_quote:0
 msgid "This adds the online quotation"
-msgstr "增加在线报价"
+msgstr "增加在线报价单"
 
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
@@ -1985,7 +1987,7 @@ msgstr "未开票"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
 msgid "Uninvoiced and Delivered Lines"
-msgstr "未开票已送货明细"
+msgstr "未开票及已交货明细行"
 
 #. module: sale
 #: field:sale.order.line,price_unit:0
@@ -2026,7 +2028,7 @@ msgid ""
 "                Use Percentage to invoice a percentage of the total amount.\n"
 "                Use Fixed Price to invoice a specific amound in advance.\n"
 "                Use Some Order Lines to invoice a selection of the sales order lines."
-msgstr "用销售订单来生成最终的发票。\n    按总额百分比开具发票。\n    按预设固定量开具固定价格发票。\n    按选择的销售订单开具发票。"
+msgstr "使用整个销售订单开票来生成最终的发票。\n    使用百分比来做总额的百分比票开票。\n    使用固定价格来做固定金额预收开票。\n    使用销售订来做订单行选择开票。"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -2044,7 +2046,7 @@ msgstr "使用合同管理"
 #. module: sale
 #: field:account.config.settings,module_sale_analytic_plans:0
 msgid "Use multiple analytic accounts on sales"
-msgstr "在销售订单使用多重辅助核算项"
+msgstr "在销售订单使用多重分析账户"
 
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
@@ -2069,7 +2071,7 @@ msgstr "等待排期"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Warehouse Features"
-msgstr "仓库特性"
+msgstr "仓库功能"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -2097,13 +2099,13 @@ msgstr "重量"
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
 msgid "What do you want to invoice?"
-msgstr "你要开什么发票？"
+msgstr "哪些要开发票？"
 
 #. module: sale
 #: code:addons/sale/sale.py:990
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr "你不能取消已经开票的销售订单行"
+msgstr "不能取消已经开票的销售订单行"
 
 #. module: sale
 #: code:addons/sale/sale.py:605
@@ -2122,7 +2124,7 @@ msgstr "当销售订单未经确认时， 您不能创建发票。"
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr "你不能对有不同货币结算的同一个业务伙伴的销售订单进行分组。"
+msgstr "你不能对同一个业务伙伴的不同币种的销售订单进行分组。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1130
@@ -2141,14 +2143,14 @@ msgstr "您不可以为下列销售订单 %s 手工开票"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Your Reference:"
-msgstr "您的关联单号："
+msgstr "您的参考："
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid "or"
-msgstr "or"
+msgstr "或"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type

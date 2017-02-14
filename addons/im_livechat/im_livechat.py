@@ -231,7 +231,7 @@ class LiveChatController(http.Controller):
         info["dbname"] = dbname
         info["channel"] = channel_id
         info["username"] = kwargs.get("username", "Visitor")
-        return request.render('im_livechat.loader', info)
+        return request.render('im_livechat.loader', info, headers=[('Content-Type', 'application/javascript')])
 
     @http.route('/im_livechat/get_session', type="json", auth="none")
     def get_session(self, channel_id, anonymous_name, **kwargs):

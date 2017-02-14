@@ -369,7 +369,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     logo_loaded.reject();
                 };
                     self.company_logo.crossOrigin = "anonymous";
-                self.company_logo.src = '/web/binary/company_logo' +'?_'+Math.random();
+                self.company_logo.src = '/web/binary/company_logo' +'?dbname=' + self.session.db + '&_'+Math.random();
 
                 return logo_loaded;
             },
@@ -667,8 +667,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.order = options.order;
             this.product = options.product;
             this.price   = options.product.price;
-            this.quantity = 1;
-            this.quantityStr = '1';
+            this.set_quantity(1);
             this.discount = 0;
             this.discountStr = '0';
             this.type = 'unit';
@@ -719,7 +718,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 if(unit){
                     if (unit.rounding) {
                         this.quantity    = round_pr(quant, unit.rounding);
-                        this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                        var decimals = Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10));
+                        this.quantityStr = openerp.instances[this.pos.session.name].web.format_value(this.quantity, { type: 'float', digits: [69, decimals]});
                     } else {
                         this.quantity    = round_pr(quant, 1);
                         this.quantityStr = this.quantity.toFixed(0);
@@ -821,7 +821,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.trigger('change',this);
         },
         get_unit_price: function(){
-            return this.price;
+            return round_di(this.price || 0, this.pos.dp['Product Price'])
         },
         get_base_price:    function(){
             var rounding = this.pos.currency.rounding;
@@ -972,7 +972,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return this.amount;
         },
         get_amount_str: function(){
-            return this.amount.toFixed(this.pos.currency.decimals);
+            return openerp.instances[this.pos.session.name].web.format_value(this.amount, {
+                type: 'float', digits: [69, this.pos.currency.decimals]
+            });
         },
         set_selected: function(selected){
             if(this.selected !== selected){

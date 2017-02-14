@@ -17,6 +17,9 @@ instance.web.form.WidgetWebsiteButton = instance.web.form.AbstractField.extend({
         var self = this;
         this._super.apply(this, arguments);
 
+        this.$('#dopprod-0').on('click', function() {
+            self.render_value();
+        });
         this.$("button:first").on("click", function () {
             console.log("click", !!$(this).hasClass("btn-danger"));
             self.set_value(!!$(this).hasClass("btn-danger"));

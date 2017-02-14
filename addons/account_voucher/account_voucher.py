@@ -400,7 +400,7 @@ class account_voucher(osv.osv):
 
             tax = [tax_pool.browse(cr, uid, voucher.tax_id.id, context=context)]
             partner = partner_pool.browse(cr, uid, voucher.partner_id.id, context=context) or False
-            taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+            taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax, context=context)
             tax = tax_pool.browse(cr, uid, taxes, context=context)
 
             total = voucher_amount
@@ -451,7 +451,7 @@ class account_voucher(osv.osv):
                 tax = [tax_pool.browse(cr, uid, tax_id, context=context)]
                 if partner_id:
                     partner = partner_pool.browse(cr, uid, partner_id, context=context) or False
-                    taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+                    taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax, context=context)
                     tax = tax_pool.browse(cr, uid, taxes, context=context)
 
                 if not tax[0].price_include:
@@ -757,14 +757,15 @@ class account_voucher(osv.osv):
                     move_lines_found.append(line.id)
                     break
                 #otherwise we will split the voucher amount on each line (by most old first)
-                total_credit += line.credit or 0.0
-                total_debit += line.debit or 0.0
+                total_credit += line.credit and line.amount_residual or 0.0
+                total_debit += line.debit and line.amount_residual or 0.0
             elif currency_id == line.currency_id.id:
                 if line.amount_residual_currency == price:
                     move_lines_found.append(line.id)
                     break
-                total_credit += line.credit and line.amount_currency or 0.0
-                total_debit += line.debit and line.amount_currency or 0.0
+                line_residual = currency_pool.compute(cr, uid, company_currency, currency_id, abs(line.amount_residual), context=context_multi_currency)
+                total_credit += line.credit and line_residual or 0.0
+                total_debit += line.debit and line_residual or 0.0
 
         remaining_amount = price
         #voucher line creation
@@ -1294,7 +1295,7 @@ class account_voucher(osv.osv):
                     'move_id': move_id,
                     'partner_id': line.voucher_id.partner_id.id,
                     'currency_id': line.move_line_id.currency_id.id,
-                    'amount_currency': -1 * foreign_currency_diff,
+                    'amount_currency': (-1 if line.type == 'cr' else 1) * foreign_currency_diff,
                     'quantity': 1,
                     'credit': 0.0,
                     'debit': 0.0,
@@ -1498,6 +1499,7 @@ class account_voucher_line(osv.osv):
         'amount_unreconciled': fields.function(_compute_balance, multi='dc', type='float', string='Open Balance', store=True, digits_compute=dp.get_precision('Account')),
         'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True, readonly=True),
         'currency_id': fields.function(_currency_id, string='Currency', type='many2one', relation='res.currency', readonly=True),
+        'state': fields.related('voucher_id', 'state', type='char', string='State', readonly=True),
     }
     _defaults = {
         'name': '',

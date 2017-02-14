@@ -73,30 +73,31 @@ class base_report(report_sxw.rml_parse):
             accounts[p[1]] = [p[0],p[2]]
         sum = 0.0
         if fiscalyear.state != 'done' or not code.startswith('bpcheck'):
-            query_params = []
-            query_cond = "("
-            for account in accounts:
-                query_cond += "aa.code LIKE '" + account + "%%' OR "
-            query_cond = query_cond[:-4]+")"
+            conditions = ['(' + ' OR '.join(
+                'aa.code LIKE %s' for _ in accounts
+            ) + ')']
+            params = [account + '%' for account in accounts]
 
-            if len(definition['except']) > 0:
-                query_cond = query_cond+" and ("
-                for account in definition['except']:
-                    query_cond += "aa.code NOT LIKE '"+account+"%%' AND "
-                query_cond = query_cond[:-5]+")"
+            for account in definition['except']:
+                conditions.append('aa.code NOT LIKE %s')
+                params.append(account + '%')
 
-            closed_cond = ""
             if fiscalyear.state == 'done':
-                closed_cond=" AND (aml.move_id NOT IN (SELECT account_move.id as move_id FROM account_move WHERE period_id = ANY(%s) AND journal_id=(SELECT res_id FROM ir_model_data WHERE name='closing_journal' AND module='l10n_fr')) OR (aa.type != 'income' AND aa.type !='expense'))"
-                query_params.append(list(period_ids))
+                conditions.append("(aml.move_id NOT IN (SELECT account_move.id as move_id FROM account_move WHERE period_id IN %s AND journal_id=(SELECT res_id FROM ir_model_data WHERE name='closing_journal' AND module='l10n_fr')) OR (aa.type != 'income' AND aa.type !='expense'))")
+                params.append(tuple(period_ids))
+
+            conditions.append('aml.state = %s')
+            params.append('valid')
+
+            conditions.append('aml.period_id IN %s')
+            params.append(tuple(period_ids))
 
             query = "SELECT aa.code AS code, SUM(debit) as debit, SUM(credit) as credit " \
                 " FROM account_move_line aml LEFT JOIN account_account aa ON aa.id=aml.account_id "\
-                " WHERE "+query_cond+closed_cond+" AND aml.state='valid' AND aml.period_id = ANY(%s) GROUP BY code"
-            query_params.append(list(period_ids))
-            self.cr.execute(query, query_params)
+                " WHERE "+ ' AND '.join(conditions) + " GROUP BY code"
+            self.cr.execute(query, params)
 
-            lines =self.cr.dictfetchall()
+            lines = self.cr.dictfetchall()
             for line in lines:
                 for account in accounts:
                     if(line["code"].startswith(account)):

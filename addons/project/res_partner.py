@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+from openerp import api
 from openerp.osv import fields,osv
 
 class res_partner(osv.osv):
@@ -36,6 +36,7 @@ class res_partner(osv.osv):
         'task_count': fields.function(_task_count, string='# Tasks', type='integer'),
     }
 
+    @api.cr_uid_id_context
     def copy(self, cr, uid, record_id, default=None, context=None):
         if default is None:
             default = {}

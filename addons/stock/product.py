@@ -418,7 +418,7 @@ class product_template(osv.osv):
         'qty_available': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
             fnct_search=_search_product_quantity, type='float', string='Quantity On Hand'),
         'virtual_available': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
-            fnct_search=_search_product_quantity, type='float', string='Quantity Available'),
+            fnct_search=_search_product_quantity, type='float', string='Forecast Quantity'),
         'incoming_qty': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
             fnct_search=_search_product_quantity, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),

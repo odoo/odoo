@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-02 06:53+0000\n"
+"POT-Creation-Date: 2015-11-25 13:28+0000\n"
+"PO-Revision-Date: 2016-10-23 12:52+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-8/language/th/)\n"
 "MIME-Version: 1.0\n"
@@ -48,11 +48,11 @@ msgid ""
 "                                <table>\n"
 "                                    <tr>\n"
 "                                        <td>\n"
-"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname')}</div>\n"
+"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n"
-"                                                ${object.event_id.get_interval(object.event_id.start,'day')}\n"
+"                                                ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n"
 "                                            </div>\n"
-"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month')}</div>\n"
+"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n"
 "                                        </td>\n"
 "                                        <td>\n"
@@ -167,11 +167,11 @@ msgid ""
 "                                <table>\n"
 "                                    <tr>\n"
 "                                        <td>\n"
-"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname')}</div>\n"
+"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n"
-"                                                ${object.event_id.get_interval(object.event_id.start,'day')}\n"
+"                                                ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n"
 "                                            </div>\n"
-"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month')}</div>\n"
+"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n"
 "                                        </td>\n"
 "                                        <td>\n"
@@ -293,11 +293,11 @@ msgid ""
 "                                <table>\n"
 "                                    <tr>                                        \n"
 "                                        <td>\n"
-"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname')}</div>\n"
+"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n"
-"                                                ${object.event_id.get_interval(object.event_id.start,'day')}\n"
+"                                                ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n"
 "                                            </div>\n"
-"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month')}</div>\n"
+"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n"
 "                                        </td>\n"
 "                                        <td>\n"
@@ -399,7 +399,7 @@ msgstr ""
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name}"
-msgstr ""
+msgstr "${object.event_id.name}"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_changedate
@@ -409,6 +409,20 @@ msgstr ""
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:802
+#, python-format
+msgid ""
+"%s at %s To\n"
+" %s at %s (%s)"
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:800
+#, python-format
+msgid "%s at (%s To %s) (%s)"
 msgstr ""
 
 #. module: calendar
@@ -451,7 +465,7 @@ msgstr "เปิดใช้งาน"
 #: code:addons/calendar/static/src/js/base_calendar.js:100
 #, python-format
 msgid "Add Favorite Calendar"
-msgstr ""
+msgstr "เพิ่มปฏิทินโปรด"
 
 #. module: calendar
 #: field:calendar.event,allday:0
@@ -462,7 +476,7 @@ msgstr "ทั้งวัน"
 #: code:addons/calendar/calendar.py:776
 #, python-format
 msgid "AllDay , %s"
-msgstr ""
+msgstr "ทั้งวัน, %s"
 
 #. module: calendar
 #: field:calendar.alarm,duration:0
@@ -538,6 +552,13 @@ msgid "Calendar"
 msgstr "ปฏิทิน"
 
 #. module: calendar
+#: view:calendar.alarm:calendar.view_calendar_alarm_tree
+#: model:ir.actions.act_window,name:calendar.action_calendar_alarm
+#: model:ir.ui.menu,name:calendar.menu_calendar_alarm
+msgid "Calendar Alarm"
+msgstr ""
+
+#. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:42
 #, python-format
@@ -597,7 +618,7 @@ msgstr "วันที่ของเดือน"
 #. module: calendar
 #: help:calendar.event,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "วันที่ของข้อความสุดท้ายที่ลงบันทึก"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -656,12 +677,17 @@ msgid "Duration"
 msgstr "ระยะเวลา"
 
 #. module: calendar
+#: field:calendar.alarm,duration_minutes:0
+msgid "Duration in minutes"
+msgstr ""
+
+#. module: calendar
 #: selection:calendar.alarm,type:0 field:calendar.attendee,email:0
 msgid "Email"
 msgstr "อีเมล์"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1381
+#: code:addons/calendar/calendar.py:1402
 #, python-format
 msgid "Email addresses not found"
 msgstr ""
@@ -669,7 +695,7 @@ msgstr ""
 #. module: calendar
 #: help:calendar.attendee,email:0
 msgid "Email of Invited Person"
-msgstr ""
+msgstr "อีเมลของผู้ที่ถูกเชิญชวน"
 
 #. module: calendar
 #: field:calendar.contacts,partner_id:0
@@ -689,7 +715,7 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "End date"
-msgstr ""
+msgstr "วันสิ้นสุด"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -727,7 +753,7 @@ msgstr ""
 #: code:addons/calendar/static/src/js/base_calendar.js:30
 #, python-format
 msgid "Everybody's calendars"
-msgstr ""
+msgstr "ปฏิทินของทุกคน"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet5
@@ -795,14 +821,14 @@ msgstr ""
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTP routing"
 
 #. module: calendar
 #: help:calendar.event,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "ยึดติดสรุปตัวแชท (จำนวนของข้อความ., …) สรุปนี้จะถูกจัดในรูปแบบ html โดยตรงเพื่อที่จะถูกใส่ในมุมมองคัมบัง"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -824,7 +850,7 @@ msgstr "ถ้าการตรวจสอบข้อความใหม่
 #. module: calendar
 #: help:calendar.event,active:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the event "
+"If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
 
@@ -851,7 +877,7 @@ msgstr "รายละเอียดในการเชิญ"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Invitations"
-msgstr ""
+msgstr "การเชิญ"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_wizard_invite
@@ -871,7 +897,7 @@ msgstr "ล่าสุด"
 #. module: calendar
 #: field:calendar.event,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "วันที่ของข้อความสุดท้าย"
 
 #. module: calendar
 #: field:calendar.alarm,write_uid:0 field:calendar.attendee,write_uid:0
@@ -925,7 +951,7 @@ msgstr ""
 #. module: calendar
 #: field:calendar.event,name:0
 msgid "Meeting Subject"
-msgstr ""
+msgstr "หัวข้อในการประชุม"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
@@ -993,7 +1019,7 @@ msgstr "จัน"
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Monday"
-msgstr ""
+msgstr "วันจันทร์"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
@@ -1019,7 +1045,7 @@ msgstr "ชื่อ"
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Needs Action"
-msgstr ""
+msgstr "ต้องดำเนินการ"
 
 #. module: calendar
 #. openerp-web
@@ -1043,7 +1069,7 @@ msgstr ""
 #: code:addons/calendar/static/src/xml/base_calendar.xml:20
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "ตกลง"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet3
@@ -1110,7 +1136,7 @@ msgstr ""
 #. module: calendar
 #: field:calendar.event,recurrency:0
 msgid "Recurrent"
-msgstr ""
+msgstr "เกิดซ้ำ"
 
 #. module: calendar
 #: field:calendar.event,recurrent_id:0
@@ -1203,7 +1229,7 @@ msgstr ""
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr ""
+msgstr "ส่งอีเมล"
 
 #. module: calendar
 #: field:calendar.event,show_as:0
@@ -1271,7 +1297,7 @@ msgstr "แท็ก"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "The"
-msgstr ""
+msgstr " "
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1377
@@ -1297,7 +1323,7 @@ msgstr "พฤหัสบดี"
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Thursday"
-msgstr ""
+msgstr "วันพฤหัสบดี"
 
 #. module: calendar
 #: field:calendar.event,tu:0
@@ -1307,7 +1333,7 @@ msgstr "อ."
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Tuesday"
-msgstr ""
+msgstr "วันอังคาร"
 
 #. module: calendar
 #: field:calendar.alarm,type:0
@@ -1340,7 +1366,7 @@ msgstr "ข้อความที่ไม่ได้อ่าน"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Until"
-msgstr ""
+msgstr "ถึง"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1369,24 +1395,24 @@ msgstr "พ."
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Wednesday"
-msgstr ""
+msgstr "วันพุธ"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "สัปดาห์"
 
 #. module: calendar
 #: field:calendar.event,week_list:0
 msgid "Weekday"
-msgstr ""
+msgstr "วันในสัปดาห์"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:54
 #, python-format
 msgid "When"
-msgstr ""
+msgstr "เมื่อ"
 
 #. module: calendar
 #. openerp-web
@@ -1400,7 +1426,7 @@ msgstr ""
 #: code:addons/calendar/static/src/xml/base_calendar.xml:62
 #, python-format
 msgid "Who"
-msgstr ""
+msgstr "ใคร"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
@@ -1434,11 +1460,6 @@ msgstr ""
 #: code:addons/calendar/calendar.py:1247
 #, python-format
 msgid "count cannot be negative or 0."
-msgstr ""
-
-#. module: calendar
-#: field:calendar.alarm,duration_minutes:0
-msgid "Duration in minutes"
 msgstr ""
 
 #. module: calendar

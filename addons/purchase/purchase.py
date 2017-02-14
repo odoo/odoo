@@ -72,7 +72,6 @@ class purchase_order(osv.osv):
                     ('order_id', '=', po.id), '|', ('date_planned', '=', po.minimum_planned_date), ('date_planned', '<', value)
                 ], context=context)
                 pol_obj.write(cr, uid, pol_ids, {'date_planned': value}, context=context)
-        self.invalidate_cache(cr, uid, context=context)
         return True
 
     def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context=None):
@@ -316,7 +315,7 @@ class purchase_order(osv.osv):
         'picking_type_id': fields.many2one('stock.picking.type', 'Deliver To', help="This will determine picking type of incoming shipment", required=True,
                                            states={'confirmed': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}),
         'related_location_id': fields.related('picking_type_id', 'default_location_dest_id', type='many2one', relation='stock.location', string="Related location", store=True),
-        'related_usage': fields.related('location_id', 'usage', type='char'),
+        'related_usage': fields.related('location_id', 'usage', type='char', readonly=True),
         'shipment_count': fields.function(_count_all, type='integer', string='Incoming Shipments', multi=True),
         'invoice_count': fields.function(_count_all, type='integer', string='Invoices', multi=True)
     }
@@ -362,6 +361,19 @@ class purchase_order(osv.osv):
         self.signal_workflow(cr, uid, unlink_ids, 'purchase_cancel')
 
         return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        # FORWARDPORT UP TO SAAS-6
+        new_id = super(purchase_order, self).copy(cr, uid, id, default=default, context=context)
+        for po in self.browse(cr, uid, [new_id], context=context):
+            for line in po.order_line:
+                vals = self.pool.get('purchase.order.line').onchange_product_id(
+                    cr, uid, line.id, po.pricelist_id.id, line.product_id.id, line.product_qty,
+                    line.product_uom.id, po.partner_id.id, date_order=po.date_order, context=context
+                )
+                if vals.get('value', {}).get('date_planned'):
+                    line.write({'date_planned': vals['value']['date_planned']})
+        return new_id
 
     def set_order_line_status(self, cr, uid, ids, status, context=None):
         line = self.pool.get('purchase.order.line')
@@ -409,6 +421,13 @@ class purchase_order(osv.osv):
             value.update({'related_location_id': picktype.default_location_dest_id.id})
         return {'value': value}
 
+    def onchange_location_id(self, cr, uid, ids, location_id, context=None):
+        value = {'related_usage': False}
+        if location_id:
+            value['related_usage'] = self.pool['stock.location'].browse(cr, uid, location_id, context=context).usage
+        return {'value': value}
+
+
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         partner = self.pool.get('res.partner')
         if not partner_id:
@@ -417,7 +436,7 @@ class purchase_order(osv.osv):
                 'payment_term_id': False,
                 }}
 
-        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        company_id = context.get('company_id') or self.pool.get('res.users')._get_company(cr, uid, context=context)
         if not company_id:
             raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
         fp = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, context=context)
@@ -576,7 +595,7 @@ class purchase_order(osv.osv):
                     todo.append(line.id)        
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
-            self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
+            self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid}, context=context)
         return True
 
     def _choose_account_from_po_line(self, cr, uid, po_line, context=None):
@@ -653,6 +672,14 @@ class purchase_order(osv.osv):
             return False
         self.write(cr, uid, ids, {'state':'draft','shipped':0})
         self.set_order_line_status(cr, uid, ids, 'draft', context=context)
+        for po in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            for picking in po.picking_ids:
+                picking.move_lines.write({'purchase_line_id': False})
+            for invoice in po.invoice_ids:
+                po.write({'invoice_ids': [(3, invoice.id, _)]})
+            for po_line in po.order_line:
+                for invoice_line in po_line.invoice_lines:
+                    po_line.write({'invoice_lines': [(3, invoice_line.id, _)]})
         for p_id in ids:
             # Deleting the existing instance of workflow for PO
             self.delete_workflow(cr, uid, [p_id]) # TODO is it necessary to interleave the calls?
@@ -747,6 +774,10 @@ class purchase_order(osv.osv):
         ''' prepare the stock move data from the PO line. This function returns a list of dictionary ready to be used in stock.move's create()'''
         product_uom = self.pool.get('product.uom')
         price_unit = order_line.price_unit
+        if order_line.taxes_id:
+            taxes = self.pool['account.tax'].compute_all(cr, uid, order_line.taxes_id, price_unit, 1.0,
+                                                             order_line.product_id, order.partner_id)
+            price_unit = taxes['total']
         if order_line.product_uom.id != order_line.product_id.uom_id.id:
             price_unit *= order_line.product_uom.factor / order_line.product_id.uom_id.factor
         if order.currency_id.id != order.company_id.currency_id.id:
@@ -754,7 +785,7 @@ class purchase_order(osv.osv):
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
         res = []
         if order.location_id.usage == 'customer':
-            name = order_line.product_id.with_context(dict(context or {}, lang=order.dest_address_id.lang)).name
+            name = order_line.product_id.with_context(dict(context or {}, lang=order.dest_address_id.lang)).display_name
         else:
             name = order_line.name or ''
         move_template = {
@@ -1017,6 +1048,8 @@ class purchase_order(osv.osv):
                             all(move.invoice_state == 'invoiced' for move in po_line.move_ids if move.state == 'done')
                             and po_line.invoice_lines and all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines)):
                         is_invoiced.append(po_line.id)
+                    elif po_line.product_id.type == 'service':
+                        is_invoiced.append(po_line.id)
             else:
                 for po_line in po.order_line:
                     if (po_line.invoice_lines and 
@@ -1072,7 +1105,7 @@ class purchase_order_line(osv.osv):
         'name': fields.text('Description', required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'date_planned': fields.date('Scheduled Date', required=True, select=True),
-        'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
+        'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes', domain=['|', ('active', '=', False), ('active', '=', True)]),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
         'move_ids': fields.one2many('stock.move', 'purchase_line_id', 'Reservation', readonly=True, ondelete='set null'),
@@ -1251,9 +1284,13 @@ class purchase_order_line(osv.osv):
             else:
                 price = product.standard_price
 
-        taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
+        if uid == SUPERUSER_ID:
+            company_id = self.pool['res.users'].browse(cr, uid, [uid]).company_id.id
+            taxes = product.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id)
+        else:
+            taxes = product.supplier_taxes_id
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
-        taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
+        taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes, context=context)
         price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, product.supplier_taxes_id, taxes_ids)
         res['value'].update({'price_unit': price, 'taxes_id': taxes_ids})
 
@@ -1406,19 +1443,20 @@ class procurement_order(osv.osv):
         qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
         if seller_qty:
             qty = max(qty, seller_qty)
-        price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner.id, {'uom': uom_id})[pricelist_id]
+        price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner.id, dict(context, uom=uom_id))[pricelist_id]
 
         #Passing partner_id to context for purchase order line integrity of Line name
         new_context = context.copy()
         new_context.update({'lang': partner.lang, 'partner_id': partner.id})
         product = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context)
         taxes_ids = procurement.product_id.supplier_taxes_id
+        taxes_ids = taxes_ids.filtered(lambda x: x.company_id.id == procurement.company_id.id)
         # It is necessary to have the appropriate fiscal position to get the right tax mapping
         fiscal_position = False
-        fiscal_position_id = po_obj.onchange_partner_id(cr, uid, None, partner.id, context=context)['value']['fiscal_position']
+        fiscal_position_id = po_obj.onchange_partner_id(cr, uid, None, partner.id, context=dict(context, company_id=procurement.company_id.id))['value']['fiscal_position']
         if fiscal_position_id:
             fiscal_position = acc_pos_obj.browse(cr, uid, fiscal_position_id, context=context)
-        taxes = acc_pos_obj.map_tax(cr, uid, fiscal_position, taxes_ids)
+        taxes = acc_pos_obj.map_tax(cr, uid, fiscal_position, taxes_ids, context=context)
         name = product.display_name
         if product.description_purchase:
             name += '\n' + product.description_purchase
@@ -1489,14 +1527,15 @@ class procurement_order(osv.osv):
         linked_po_ids = []
         sum_po_line_ids = []
         for procurement in self.browse(cr, uid, ids, context=context):
-            partner = self._get_product_supplier(cr, uid, procurement, context=context)
+            ctx_company = dict(context or {}, force_company=procurement.company_id.id)
+            partner = self._get_product_supplier(cr, uid, procurement, context=ctx_company)
             if not partner:
                 self.message_post(cr, uid, [procurement.id], _('There is no supplier associated to product %s') % (procurement.product_id.name))
                 res[procurement.id] = False
             else:
                 schedule_date = self._get_purchase_schedule_date(cr, uid, procurement, company, context=context)
                 purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context) 
-                line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=context)
+                line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=ctx_company)
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
                 available_draft_po_ids = po_obj.search(cr, uid, [
                     ('partner_id', '=', partner.id), ('state', '=', 'draft'), ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
@@ -1504,9 +1543,12 @@ class procurement_order(osv.osv):
                 if available_draft_po_ids:
                     po_id = available_draft_po_ids[0]
                     po_rec = po_obj.browse(cr, uid, po_id, context=context)
+
+                    po_to_update = {'origin': ', '.join(filter(None, set([po_rec.origin, procurement.origin])))}
                     #if the product has to be ordered earlier those in the existing PO, we replace the purchase date on the order to avoid ordering it too late
                     if datetime.strptime(po_rec.date_order, DEFAULT_SERVER_DATETIME_FORMAT) > purchase_date:
-                        po_obj.write(cr, uid, [po_id], {'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+                        po_to_update.update({'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+                    po_obj.write(cr, uid, [po_id], po_to_update, context=context)
                     #look for any other PO line in the selected PO with same product and UoM to sum quantities instead of creating a new po line
                     available_po_line_ids = po_line_obj.search(cr, uid, [('order_id', '=', po_id), ('product_id', '=', line_vals['product_id']), ('product_uom', '=', line_vals['product_uom'])], context=context)
                     if available_po_line_ids:
@@ -1534,7 +1576,7 @@ class procurement_order(osv.osv):
                         'currency_id': partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.currency_id.id or procurement.company_id.currency_id.id,
                         'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                         'company_id': procurement.company_id.id,
-                        'fiscal_position': po_obj.onchange_partner_id(cr, uid, None, partner.id, context=context)['value']['fiscal_position'],
+                        'fiscal_position': po_obj.onchange_partner_id(cr, uid, None, partner.id, context=dict(context, company_id=procurement.company_id.id))['value']['fiscal_position'],
                         'payment_term_id': partner.property_supplier_payment_term.id or False,
                         'dest_address_id': procurement.partner_dest_id.id,
                     }

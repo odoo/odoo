@@ -53,7 +53,9 @@ class publisher_warranty_contract(AbstractModel):
             "web_base_url": web_base_url,
             "apps": [app['name'] for app in apps],
         }
-        msg.update(self.pool.get("res.company").read(cr, uid, [1], ["name", "email", "phone"])[0])
+        if user.partner_id.company_id:
+            company_id = user.partner_id.company_id.id
+            msg.update(self.pool.get("res.company").read(cr, uid, [company_id], ["name", "email", "phone"])[0])
         return msg
 
     def _get_sys_logs(self, cr, uid):

@@ -209,6 +209,16 @@ class test_mail(TestMail):
         self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
         self.assertTrue(subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
 
+    def test_10_cache_invalidation(self):
+        """ Test that creating a mail-thread record does not invalidate the whole cache. """
+        # make a new record in cache
+        record = self.env['res.partner'].new({'name': 'Brave New Partner'})
+        self.assertTrue(record.name)
+
+        # creating a mail-thread record should not invalidate the whole cache
+        self.env['res.partner'].create({'name': 'Actual Partner'})
+        self.assertTrue(record.name)
+
     def test_11_notification_url(self):
         """ Tests designed to test the URL added in notification emails. """
         cr, uid, group_pigs = self.cr, self.uid, self.group_pigs

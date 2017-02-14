@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:50+0000\n"
+"POT-Creation-Date: 2015-12-16 13:15+0000\n"
+"PO-Revision-Date: 2016-01-08 20:45+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -95,7 +95,13 @@ msgid ""
 msgstr "Une invitation a été envoyée par courriel. Elle contient le lien suivant pour s'abonner :"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:58
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "Un autre utilisateur est déjà enregistré avec cette adresse courriel."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:130
 #, python-format
 msgid "Authentification Failed."
 msgstr "Échec de l'authentification"
@@ -117,7 +123,13 @@ msgid "Confirm Password"
 msgstr "Confirmez le mot de passe"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:61
+#, python-format
+msgid "Could not create a new account."
+msgstr "Vous ne pouvez pas créer un nouveau compte."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
 msgstr "Impossible de réinitialiser votre mot de passe"
@@ -167,6 +179,12 @@ msgstr "Réinitialiser le mot de passe"
 #: view:website:auth_signup.reset_password
 msgid "Reset password"
 msgstr "Réinitialiser le mot de passe"
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:267
+#, python-format
+msgid "Reset password: invalid username or email"
+msgstr "Veuillez réinitialiser votre mot de passe : nom d'utilisateur ou adresse courriel incorrecte"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view

@@ -3,14 +3,15 @@
 # * auth_signup
 # 
 # Translators:
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:50+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-12-16 13:15+0000\n"
+"PO-Revision-Date: 2015-12-17 12:53+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-8/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,7 +96,13 @@ msgid ""
 msgstr "Een uitnodiging e-mail met de volgende koppeling is verzonden:"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:58
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "Er is al een gebruiker geregistreerd met dit e-mail adres"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:130
 #, python-format
 msgid "Authentification Failed."
 msgstr "Authenticatie mislukt."
@@ -117,7 +124,13 @@ msgid "Confirm Password"
 msgstr "Bevestig wachtwoord"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:61
+#, python-format
+msgid "Could not create a new account."
+msgstr "Het was niet mogelijk een nieuw account aan te maken.."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
 msgstr "Uw wachtwoord kon niet reset worden"
@@ -167,6 +180,12 @@ msgstr "Stel wachtwoord opnieuw in"
 #: view:website:auth_signup.reset_password
 msgid "Reset password"
 msgstr "Reset wachtwoord"
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:267
+#, python-format
+msgid "Reset password: invalid username or email"
+msgstr "Reset wachtwoord: Ongeldige gebruikersnaam en wachtwoord"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view

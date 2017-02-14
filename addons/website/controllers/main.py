@@ -40,9 +40,9 @@ class Website(openerp.addons.web.controllers.main.Home):
         else:
             first_menu = main_menu.child_id and main_menu.child_id[0]
             if first_menu:
-                if not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url=='/')):
+                if first_menu.url and (not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url == '/'))):
                     return request.redirect(first_menu.url)
-                if first_menu.url.startswith('/page/'):
+                if first_menu.url and first_menu.url.startswith('/page/'):
                     return request.registry['ir.http'].reroute(first_menu.url)
         return self.page(page)
 
@@ -122,9 +122,8 @@ class Website(openerp.addons.web.controllers.main.Home):
             first_page = None
             locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
             while True:
-                start = pages * LOC_PER_SITEMAP
                 values = {
-                    'locs': islice(locs, start, start + LOC_PER_SITEMAP),
+                    'locs': islice(locs, 0, LOC_PER_SITEMAP),
                     'url_root': request.httprequest.url_root[:-1],
                 }
                 urls = iuv.render(cr, uid, 'website.sitemap_locs', values, context=context)

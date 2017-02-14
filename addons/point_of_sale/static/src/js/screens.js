@@ -893,7 +893,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 contents.append($(QWeb.render('ClientDetailsEdit',{widget:this,partner:partner})));
                 this.toggle_save_button();
 
-                contents.find('.image-uploader').on('change',function(){
+                contents.find('.image-uploader').on('change',function(event){
                     self.load_image_file(event.target.files[0],function(res){
                         if (res) {
                             contents.find('.client-picture img, .client-picture .fa').remove();
@@ -1179,7 +1179,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     input.value = '';
                 }else{
                     input.value = value;
-                    input.select();
+
+                    // Microsoft Edge >= 12 crashes (code 800a025e) when calling
+                    // select on a non-empty input element not part of document
+                    if (! this.hidden) {
+                        input.select();
+                    }
                 }
             }
         },

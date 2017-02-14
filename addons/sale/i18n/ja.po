@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-22 16:41+0000\n"
+"PO-Revision-Date: 2016-12-14 01:32+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -101,7 +101,7 @@ msgstr ""
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "販売数"
 
 #. module: sale
 #: field:sale.report,nbr:0
@@ -116,7 +116,7 @@ msgstr "数量の数"
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "販売注文数"
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
@@ -411,17 +411,17 @@ msgstr "品目を選択する前に受注フォームで顧客を選択してく
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "製品ごと"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "販売担当者ごと"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "販売チームごと"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -485,7 +485,7 @@ msgstr "同じ顧客のために請求書をグループ化するにはこのボ
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "この販売チームの見積を管理するには、このチェックボックスをオンにします。"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -648,12 +648,12 @@ msgstr "日付順"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "受注日:"
 
 #. module: sale
 #: help:sale.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "記録上の最後のメッセージが投稿された日"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -673,12 +673,12 @@ msgstr "デフォルトオプション"
 #. module: sale
 #: field:res.company,sale_note:0
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "デフォルトの諸条件 *"
 
 #. module: sale
 #: view:res.company:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr ""
+msgstr "デフォルトの諸条件..."
 
 #. module: sale
 #: help:res.company,sale_note:0
@@ -769,7 +769,7 @@ msgstr "Eメールテンプレート"
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Eメール構成ウィザード"
 
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
@@ -792,12 +792,12 @@ msgstr "例外"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "拡張フィルタ"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
 msgid "False"
-msgstr ""
+msgstr "False"
 
 #. module: sale
 #: code:addons/sale/sale.py:589
@@ -902,7 +902,7 @@ msgstr "ID"
 #. module: sale
 #: help:sale.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: sale
 #: code:addons/sale/sale.py:305
@@ -987,7 +987,7 @@ msgstr "受注を請求登録"
 #. module: sale
 #: field:crm.case.section,invoiced_target:0
 msgid "Invoice Target"
-msgstr ""
+msgstr "請求ターゲット"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -997,12 +997,12 @@ msgstr "現在の受注の請求先アドレス"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice address:"
-msgstr ""
+msgstr "請求先住所:"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "請求・出荷先住所:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1081,7 +1081,7 @@ msgstr "受注に紐づく請求が少なくとも1件存在することを示�
 #. module: sale
 #: field:sale.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_uid:0
@@ -1138,7 +1138,7 @@ msgstr "見積新規コピー"
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "新規メール"
 
 #. module: sale
 #: code:addons/sale/sale.py:1048
@@ -1163,7 +1163,7 @@ msgstr "適切な価格リスト行が見つかりません："
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "注文確認と顧客への製品の出荷までの日数"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1218,7 +1218,7 @@ msgstr "請求対象受注明細"
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Order Month"
-msgstr ""
+msgstr "オーダ月"
 
 #. module: sale
 #: view:sale.order:sale.view_order_tree
@@ -1243,7 +1243,7 @@ msgstr "オーダー参照は、会社ごとに固有でなければなりませ
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "発注ステータス"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1315,7 +1315,7 @@ msgstr "価格"
 #. module: sale
 #: field:sale.order.line,price_reduce:0
 msgid "Price Reduce"
-msgstr ""
+msgstr "価格低下"
 
 #. module: sale
 #: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
@@ -1346,7 +1346,7 @@ msgstr "調達"
 #. module: sale
 #: field:sale.order,procurement_group_id:0
 msgid "Procurement group"
-msgstr ""
+msgstr "調達グループ"
 
 #. module: sale
 #: field:sale.order.line,procurement_ids:0
@@ -1418,7 +1418,7 @@ msgstr "見積 / オーダー"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "見積日:"
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
@@ -1443,7 +1443,7 @@ msgstr "提出済見積"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "見積確認"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
@@ -1470,7 +1470,7 @@ msgstr "見積"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "見積分析"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1525,7 +1525,7 @@ msgstr ""
 #. module: sale
 #: field:procurement.order,sale_line_id:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "受注明細"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
@@ -1565,7 +1565,7 @@ msgstr "販売分析"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "販売ファネル"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -1918,7 +1918,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
+msgstr "このレポートはあなたの見積の分析を行います。 分析によって販売収益が確認され、さまざまなグループ基準(セールスマン、取引先、製品など)によってソートされます。このレポートを使用して、請求がまだ行われていない売上を分析します。 売上高を分析する場合は、会計アプリケーションで請求書分析レポートを使用する必要があります。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -1928,7 +1928,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
+msgstr "このレポートは、受注の分析を実行します。 分析によって販売収益が確認され、さまざまなグループ基準（セールスマン、取引先、製品など)によってソートされます。このレポートを使用して、請求がまだ行われていない売上を分析します。 売上高を分析する場合は、会計アプリケーションで請求書分析レポートを使用する必要があります。"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2081,12 +2081,12 @@ msgstr "警告"
 #. module: sale
 #: field:sale.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "ウェブサイトメッセージ"
 
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "ウェブサイトコミュニケーション履歴"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2140,7 +2140,7 @@ msgstr ""
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Your Reference:"
-msgstr ""
+msgstr "参照："
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv

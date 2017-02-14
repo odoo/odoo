@@ -20,6 +20,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -80,6 +81,7 @@ class sale_order_line(osv.osv):
         result=res['value']
         pricelist_obj=self.pool.get('product.pricelist')
         product_obj = self.pool.get('product.product')
+        account_tax_obj = self.pool.get('account.tax')
         if product and pricelist and self.pool.get('res.users').has_group(cr, uid, 'sale.group_discount_per_so_line'):
             if result.get('price_unit',False):
                 price=result['price_unit']
@@ -94,6 +96,16 @@ class sale_order_line(osv.osv):
             so_pricelist = pricelist_obj.browse(cr, uid, pricelist, context=context)
 
             new_list_price, currency_id = get_real_price_curency(list_price, product.id, qty, uom, pricelist)
+
+            # The superuser is used by website_sale in order to create a sale order. We need to make
+            # sure we only select the taxes related to the company of the partner. This should only
+            # apply if the partner is linked to a company.
+            if uid == SUPERUSER_ID and context.get('company_id'):
+                taxes = product.taxes_id.filtered(lambda r: r.company_id.id == context['company_id'])
+            else:
+                taxes = product.taxes_id
+            new_list_price = account_tax_obj._fix_tax_included_price(cr, uid, new_list_price, taxes, result.get('tax_id', []))
+
             if so_pricelist.visible_discount and list_price[pricelist][0] != 0 and new_list_price != 0:
                 if product.company_id and so_pricelist.currency_id.id != product.company_id.currency_id.id:
                     # new_list_price is in company's currency while price in pricelist currency

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-01 22:51+0000\n"
+"POT-Creation-Date: 2015-11-25 13:28+0000\n"
+"PO-Revision-Date: 2016-05-19 05:27+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-8/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
@@ -46,11 +46,11 @@ msgid ""
 "                                <table>\n"
 "                                    <tr>\n"
 "                                        <td>\n"
-"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname')}</div>\n"
+"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n"
-"                                                ${object.event_id.get_interval(object.event_id.start,'day')}\n"
+"                                                ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n"
 "                                            </div>\n"
-"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month')}</div>\n"
+"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n"
 "                                        </td>\n"
 "                                        <td>\n"
@@ -165,11 +165,11 @@ msgid ""
 "                                <table>\n"
 "                                    <tr>\n"
 "                                        <td>\n"
-"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname')}</div>\n"
+"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n"
-"                                                ${object.event_id.get_interval(object.event_id.start,'day')}\n"
+"                                                ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n"
 "                                            </div>\n"
-"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month')}</div>\n"
+"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n"
 "                                        </td>\n"
 "                                        <td>\n"
@@ -291,11 +291,11 @@ msgid ""
 "                                <table>\n"
 "                                    <tr>                                        \n"
 "                                        <td>\n"
-"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname')}</div>\n"
+"                                            <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n"
-"                                                ${object.event_id.get_interval(object.event_id.start,'day')}\n"
+"                                                ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n"
 "                                            </div>\n"
-"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month')}</div>\n"
+"                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n"
 "                                            <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n"
 "                                        </td>\n"
 "                                        <td>\n"
@@ -392,22 +392,36 @@ msgstr ""
 #: code:addons/calendar/static/src/js/base_calendar.js:20
 #, python-format
 msgid " [Me]"
-msgstr ""
+msgstr " [Yo]"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name}"
-msgstr ""
+msgstr "${object.event_id.name}"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name} - Date has been updated"
-msgstr ""
+msgstr "${object.event_id.name} - La Fecha se ha actualizado"
 
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr ""
+msgstr "${object.event_id.name} - Recordatorio"
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:802
+#, python-format
+msgid ""
+"%s at %s To\n"
+" %s at %s (%s)"
+msgstr "%s at %s To\n %s at %s (%s)"
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:800
+#, python-format
+msgid "%s at (%s To %s) (%s)"
+msgstr "%s at (%s To %s) (%s)"
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -426,18 +440,18 @@ msgstr ""
 #: code:addons/calendar/calendar.py:1593
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
-msgstr ""
+msgstr "Un correo electrónico ha sido enviado a especificar que la fecha se ha cambiado!"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Accept"
-msgstr ""
+msgstr "Confirmar"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Accepted"
-msgstr ""
+msgstr "Confirmado"
 
 #. module: calendar
 #: field:calendar.event,active:0
@@ -449,18 +463,18 @@ msgstr "Activo"
 #: code:addons/calendar/static/src/js/base_calendar.js:100
 #, python-format
 msgid "Add Favorite Calendar"
-msgstr ""
+msgstr "Añadir Calendario Favorito"
 
 #. module: calendar
 #: field:calendar.event,allday:0
 msgid "All Day"
-msgstr ""
+msgstr "Todo el Día"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:776
 #, python-format
 msgid "AllDay , %s"
-msgstr ""
+msgstr "Todo el Día, %s"
 
 #. module: calendar
 #: field:calendar.alarm,duration:0
@@ -471,40 +485,40 @@ msgstr "Importar"
 #: code:addons/calendar/calendar.py:1096
 #, python-format
 msgid "An invitation email has been sent to attendee %s"
-msgstr ""
+msgstr "Un correo electrónico de invitación ha sido enviada a los asistentes %s"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1407
 #, python-format
 msgid "An invitation email has been sent to attendee(s)"
-msgstr ""
+msgstr "Un correo electrónico de invitación ha sido enviada a los asistente(s)"
 
 #. module: calendar
 #: field:calendar.event,is_attendee:0
 msgid "Attendee"
-msgstr ""
+msgstr "Asistente"
 
 #. module: calendar
 #: field:calendar.event,attendee_status:0
 msgid "Attendee Status"
-msgstr ""
+msgstr "Estado de los asistentes"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Attendee information"
-msgstr ""
+msgstr "Información de participante"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 #: view:calendar.event:calendar.view_calendar_event_form_popup
 #: field:calendar.event,attendee_ids:0 field:calendar.event,partner_ids:0
 msgid "Attendees"
-msgstr ""
+msgstr "Asistentes"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "Availability"
-msgstr ""
+msgstr "Disponibilidad"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1678
@@ -512,12 +526,12 @@ msgstr ""
 #: selection:calendar.event,show_as:0
 #, python-format
 msgid "Busy"
-msgstr ""
+msgstr "Ocupado"
 
 #. module: calendar
 #: field:calendar.event,byday:0
 msgid "By day"
-msgstr ""
+msgstr "De día"
 
 #. module: calendar
 #: field:calendar.event,start:0
@@ -536,26 +550,33 @@ msgid "Calendar"
 msgstr "Calendario"
 
 #. module: calendar
+#: view:calendar.alarm:calendar.view_calendar_alarm_tree
+#: model:ir.actions.act_window,name:calendar.action_calendar_alarm
+#: model:ir.ui.menu,name:calendar.menu_calendar_alarm
+msgid "Calendar Alarm"
+msgstr "Alarma de Calendario"
+
+#. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:42
 #, python-format
 msgid "Calendar Invitation"
-msgstr ""
+msgstr "Invitación de Calendario"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
-msgstr ""
+msgstr "Haz clic aquí parra actualizar sólo esta instancia y no todas las repeticiones."
 
 #. module: calendar
 #: field:calendar.attendee,cn:0
 msgid "Common name"
-msgstr ""
+msgstr "Nombre común"
 
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Confirmado"
 
 #. module: calendar
 #: field:calendar.attendee,partner_id:0
@@ -567,14 +588,14 @@ msgstr "Contacto"
 #: field:calendar.contacts,create_uid:0 field:calendar.event,create_uid:0
 #: field:calendar.event.type,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: calendar
 #: field:calendar.alarm,create_date:0 field:calendar.attendee,create_date:0
 #: field:calendar.contacts,create_date:0 field:calendar.event,create_date:0
 #: field:calendar.event.type,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creado en"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet1
@@ -590,27 +611,27 @@ msgstr "Fecha"
 #. module: calendar
 #: field:calendar.event,day:0 selection:calendar.event,month_by:0
 msgid "Date of month"
-msgstr ""
+msgstr "Fecha del mes"
 
 #. module: calendar
 #: help:calendar.event,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Fecha del último mensaje publicado en el registro."
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr ""
+msgstr "Día del Mes"
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
 msgid "Day of month"
-msgstr ""
+msgstr "Día del mes"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Día(s)"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -620,13 +641,13 @@ msgstr "Días"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Decline"
-msgstr ""
+msgstr "Rechazar"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Declined"
-msgstr ""
+msgstr "Rechazada"
 
 #. module: calendar
 #: field:calendar.event,description:0
@@ -645,13 +666,18 @@ msgstr "Detalles"
 #: code:addons/calendar/static/src/js/base_calendar.js:124
 #, python-format
 msgid "Do you really want to delete this filter from favorite?"
-msgstr ""
+msgstr "Realmente deseas borrar este filtro de tus favoritos ?"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form_popup
 #: field:calendar.event,duration:0
 msgid "Duration"
-msgstr ""
+msgstr "Duración"
+
+#. module: calendar
+#: field:calendar.alarm,duration_minutes:0
+msgid "Duration in minutes"
+msgstr "Duración en minutos"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0 field:calendar.attendee,email:0
@@ -659,15 +685,15 @@ msgid "Email"
 msgstr "Correo"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1381
+#: code:addons/calendar/calendar.py:1402
 #, python-format
 msgid "Email addresses not found"
-msgstr ""
+msgstr "Correo electrónico no encontrado"
 
 #. module: calendar
 #: help:calendar.attendee,email:0
 msgid "Email of Invited Person"
-msgstr ""
+msgstr "Correo de la Persona Invitada"
 
 #. module: calendar
 #: field:calendar.contacts,partner_id:0
@@ -677,27 +703,27 @@ msgstr "Empleado"
 #. module: calendar
 #: field:calendar.event,stop_date:0
 msgid "End Date"
-msgstr ""
+msgstr "Fecha final"
 
 #. module: calendar
 #: field:calendar.event,stop_datetime:0
 msgid "End Datetime"
-msgstr ""
+msgstr "Fecha y Hora de Finalización"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "End date"
-msgstr ""
+msgstr "Fecha final"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr ""
+msgstr "Termina en"
 
 #. module: calendar
 #: constraint:calendar.event:0
 msgid "Error ! End date cannot be set before start date."
-msgstr ""
+msgstr "Error ! La fecha de finalización no puede establecerse como antes de la fecha de inicio."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1260
@@ -708,24 +734,24 @@ msgstr "¡Error!"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 msgid "Event"
-msgstr ""
+msgstr "Evento"
 
 #. module: calendar
 #: field:calendar.event,display_time:0
 msgid "Event Time"
-msgstr ""
+msgstr "Hora"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event alarm"
-msgstr ""
+msgstr "Alarma"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/js/base_calendar.js:30
 #, python-format
 msgid "Everybody's calendars"
-msgstr ""
+msgstr "Calendario de Todos"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet5
@@ -735,49 +761,49 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Fifth"
-msgstr ""
+msgstr "Quinto"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "First"
-msgstr ""
+msgstr "Primer"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:141
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr ""
+msgstr "Primero debe especificar la fecha de la invitación."
 
 #. module: calendar
 #: field:calendar.event,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Fourth"
-msgstr ""
+msgstr "Cuarto"
 
 #. module: calendar
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 msgid "Free"
-msgstr ""
+msgstr "Libre"
 
 #. module: calendar
 #: field:calendar.attendee,availability:0
 msgid "Free/Busy"
-msgstr ""
+msgstr "Libre/Ocupado"
 
 #. module: calendar
 #: field:calendar.event,fr:0
 msgid "Fri"
-msgstr ""
+msgstr "Vie"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Friday"
-msgstr ""
+msgstr "Viernes"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
@@ -788,19 +814,19 @@ msgstr "Agrupar por"
 #: code:addons/calendar/calendar.py:1616
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
-msgstr ""
+msgstr "El agrupamiento por fecha no esta soportado, use la vista de calendario en su lugar-"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "Enrutado HTTP"
 
 #. module: calendar
 #: help:calendar.event,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Contiene el resumen del chatter (nº de mensajes, ...). Este resumen está directamente en formato html para ser insertado en vistas kanban."
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -817,14 +843,14 @@ msgstr "ID (identificación)"
 #. module: calendar
 #: help:calendar.event,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
 
 #. module: calendar
 #: help:calendar.event,active:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the event "
+"If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr ""
+msgstr "Si la alarma no está activa, su información permanecerá oculta sin ser eliminada."
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet2
@@ -834,113 +860,113 @@ msgstr ""
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation"
-msgstr ""
+msgstr "Invitación"
 
 #. module: calendar
 #: field:calendar.attendee,access_token:0
 msgid "Invitation Token"
-msgstr ""
+msgstr "Token de invitación"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Invitation details"
-msgstr ""
+msgstr "Detalles de la invitación"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Invitations"
-msgstr ""
+msgstr "Invitaciones"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "Asistente de invitación"
 
 #. module: calendar
 #: field:calendar.event,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Es un seguidor"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Last"
-msgstr ""
+msgstr "Último"
 
 #. module: calendar
 #: field:calendar.event,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Fecha del último mensaje"
 
 #. module: calendar
 #: field:calendar.alarm,write_uid:0 field:calendar.attendee,write_uid:0
 #: field:calendar.contacts,write_uid:0 field:calendar.event,write_uid:0
 #: field:calendar.event.type,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualización de"
 
 #. module: calendar
 #: field:calendar.alarm,write_date:0 field:calendar.attendee,write_date:0
 #: field:calendar.contacts,write_date:0 field:calendar.event,write_date:0
 #: field:calendar.event.type,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última actualización en"
 
 #. module: calendar
 #: field:res.partner,calendar_last_notif_ack:0
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "Última notificación marcada como leída desde el calendario base"
 
 #. module: calendar
 #: help:calendar.event,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr ""
+msgstr "Permite que el evento se repita automáticamente en ese intervalo"
 
 #. module: calendar
 #: field:calendar.event,location:0
 msgid "Location"
-msgstr ""
+msgstr "Ubicación"
 
 #. module: calendar
 #: help:calendar.event,location:0
 msgid "Location of Event"
-msgstr ""
+msgstr "Ubicación"
 
 #. module: calendar
 #: field:calendar.contacts,user_id:0
 msgid "Me"
-msgstr ""
+msgstr "Yo"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "Meeting"
-msgstr ""
+msgstr "Reunión"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Meeting Details"
-msgstr ""
+msgstr "Detalles"
 
 #. module: calendar
 #: field:calendar.event,name:0
 msgid "Meeting Subject"
-msgstr ""
+msgstr "Asunto"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Meeting Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: calendar
 #: view:calendar.event.type:calendar.view_calendar_event_type_tree
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 msgid "Meeting Types"
-msgstr ""
+msgstr "Tipos de Reuniones"
 
 #. module: calendar
 #: field:calendar.attendee,event_id:0
 msgid "Meeting linked"
-msgstr ""
+msgstr "Reunión enlazada"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_calendar
@@ -951,7 +977,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_notify
 msgid "Meetings"
-msgstr ""
+msgstr "Reuniones"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_message
@@ -961,12 +987,12 @@ msgstr "Mensaje"
 #. module: calendar
 #: field:calendar.event,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mensajes"
 
 #. module: calendar
 #: help:calendar.event,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Mensajes e historial de comunicación"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -976,7 +1002,7 @@ msgstr "Minutos"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Misc"
-msgstr ""
+msgstr "Misc."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_model
@@ -986,27 +1012,27 @@ msgstr "Modelos"
 #. module: calendar
 #: field:calendar.event,mo:0
 msgid "Mon"
-msgstr ""
+msgstr "Lun"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Monday"
-msgstr ""
+msgstr "Lunes"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Meses"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "My Events"
-msgstr ""
+msgstr "Mis Eventos"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr ""
+msgstr "Mis Reuniones"
 
 #. module: calendar
 #: field:calendar.alarm,name:0 field:calendar.event.type,name:0
@@ -1017,31 +1043,31 @@ msgstr "Nombre"
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Needs Action"
-msgstr ""
+msgstr "Tareas Pendientes"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:46
 #, python-format
 msgid "No I'm not going."
-msgstr ""
+msgstr "No, no asistiré."
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
 msgid "Notification"
-msgstr ""
+msgstr "Notificación"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
-msgstr ""
+msgstr "Número de repeticiones"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:20
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "Aceptar"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet3
@@ -1056,12 +1082,12 @@ msgstr ""
 #. module: calendar
 #: field:calendar.event,month_by:0
 msgid "Option"
-msgstr ""
+msgstr "Opción"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Options"
-msgstr ""
+msgstr "Opciones"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1078,7 +1104,7 @@ msgstr "Socio"
 #: view:calendar.event:calendar.view_calendar_event_tree
 #: field:calendar.event,class:0
 msgid "Privacy"
-msgstr ""
+msgstr "Privacidad"
 
 #. module: calendar
 #: selection:calendar.event,class:0
@@ -1088,7 +1114,7 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,class:0
 msgid "Public"
-msgstr ""
+msgstr "Público"
 
 #. module: calendar
 #: selection:calendar.event,class:0
@@ -1098,100 +1124,100 @@ msgstr ""
 #. module: calendar
 #: field:calendar.event,end_type:0
 msgid "Recurrence Termination"
-msgstr ""
+msgstr "Terminación Recurrencia"
 
 #. module: calendar
 #: field:calendar.event,rrule_type:0
 msgid "Recurrency"
-msgstr ""
+msgstr "Recurrencia"
 
 #. module: calendar
 #: field:calendar.event,recurrency:0
 msgid "Recurrent"
-msgstr ""
+msgstr "Recurrente"
 
 #. module: calendar
 #: field:calendar.event,recurrent_id:0
 msgid "Recurrent ID"
-msgstr ""
+msgstr "ID Recurrente"
 
 #. module: calendar
 #: field:calendar.event,recurrent_id_date:0
 msgid "Recurrent ID date"
-msgstr ""
+msgstr "ID Fecha recurrente"
 
 #. module: calendar
 #: help:calendar.event,recurrency:0
 msgid "Recurrent Meeting"
-msgstr ""
+msgstr "Reunión Recurrente"
 
 #. module: calendar
 #: field:calendar.event,rrule:0
 msgid "Recurrent Rule"
-msgstr ""
+msgstr "Regla Recurrente"
 
 #. module: calendar
 #: field:calendar.event,alarm_ids:0
 msgid "Reminders"
-msgstr ""
+msgstr "Recordatorios"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:80
 #, python-format
 msgid "Remove this favorite from the list"
-msgstr ""
+msgstr "Quitar este favorito de la lista"
 
 #. module: calendar
 #: field:calendar.event,count:0
 msgid "Repeat"
-msgstr ""
+msgstr "Repetir"
 
 #. module: calendar
 #: field:calendar.event,interval:0
 msgid "Repeat Every"
-msgstr ""
+msgstr "Repetir cada"
 
 #. module: calendar
 #: field:calendar.event,final_date:0
 msgid "Repeat Until"
-msgstr ""
+msgstr "Repetir Hasta"
 
 #. module: calendar
 #: help:calendar.event,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Repetir cada (Día/Semana/Mes/Año)"
 
 #. module: calendar
 #: help:calendar.event,count:0
 msgid "Repeat x times"
-msgstr ""
+msgstr "Repetir x veces"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 #: field:calendar.event,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Responsable"
 
 #. module: calendar
 #: field:calendar.event,sa:0
 msgid "Sat"
-msgstr ""
+msgstr "Sáb"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Saturday"
-msgstr ""
+msgstr "Sábado"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr ""
+msgstr "Buscar Reuniones"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Second"
-msgstr ""
+msgstr "Segundo"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1201,35 +1227,35 @@ msgstr ""
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr ""
+msgstr "Enviar"
 
 #. module: calendar
 #: field:calendar.event,show_as:0
 msgid "Show Time as"
-msgstr ""
+msgstr "Mostrar como"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:22
 #, python-format
 msgid "Snooze"
-msgstr ""
+msgstr "Posponer"
 
 #. module: calendar
 #: field:calendar.event,start_date:0
 msgid "Start Date"
-msgstr ""
+msgstr "Fecha inicial"
 
 #. module: calendar
 #: field:calendar.event,start_datetime:0
 msgid "Start DateTime"
-msgstr ""
+msgstr "Fecha y Hora de Inicio"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 #: view:calendar.event:calendar.view_calendar_event_form_popup
 msgid "Starting at"
-msgstr ""
+msgstr "Comienza"
 
 #. module: calendar
 #: field:calendar.attendee,state:0 field:calendar.event,state:0
@@ -1239,7 +1265,7 @@ msgstr "Estado"
 #. module: calendar
 #: help:calendar.attendee,state:0
 msgid "Status of the attendee's participation"
-msgstr ""
+msgstr "Estado de participación de los asistentes"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_tree
@@ -1254,12 +1280,12 @@ msgstr "Resumen"
 #. module: calendar
 #: field:calendar.event,su:0
 msgid "Sun"
-msgstr ""
+msgstr "Dom"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Sunday"
-msgstr ""
+msgstr "Domingo"
 
 #. module: calendar
 #: field:calendar.event,categ_ids:0
@@ -1269,18 +1295,18 @@ msgstr "Etiquetas"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "The"
-msgstr ""
+msgstr "Las"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1377
 #, python-format
 msgid "The following contacts have no email address :"
-msgstr ""
+msgstr "Los siguientes contactos no tienen E-mail"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Third"
-msgstr ""
+msgstr "Tercero"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -1290,22 +1316,22 @@ msgstr ""
 #. module: calendar
 #: field:calendar.event,th:0
 msgid "Thu"
-msgstr ""
+msgstr "Jueves"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Thursday"
-msgstr ""
+msgstr "Jueves"
 
 #. module: calendar
 #: field:calendar.event,tu:0
 msgid "Tue"
-msgstr ""
+msgstr "Mar"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Tuesday"
-msgstr ""
+msgstr "Martes"
 
 #. module: calendar
 #: field:calendar.alarm,type:0
@@ -1317,33 +1343,33 @@ msgstr "Tipo"
 #: view:calendar.event:calendar.view_calendar_event_form
 #: selection:calendar.event,attendee_status:0
 msgid "Uncertain"
-msgstr ""
+msgstr "Incierto"
 
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Unconfirmed"
-msgstr ""
+msgstr "Sin confirmar"
 
 #. module: calendar
 #: field:calendar.alarm,interval:0
 msgid "Unit"
-msgstr ""
+msgstr "Unidad"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 #: field:calendar.event,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensajes sin leer"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Until"
-msgstr ""
+msgstr "Hasta"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "Actualizar únicamente esta instancia"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:104 code:addons/calendar/calendar.py:141
@@ -1357,71 +1383,71 @@ msgstr "Advertencia!"
 msgid ""
 "Warning, a mandatory field has been modified since the creation of this "
 "event"
-msgstr ""
+msgstr "Advertencia, un campo obligatorio se ha modificado después de la creación de este evento"
 
 #. module: calendar
 #: field:calendar.event,we:0
 msgid "Wed"
-msgstr ""
+msgstr "Mie"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Wednesday"
-msgstr ""
+msgstr "Miercoles"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Semanas"
 
 #. module: calendar
 #: field:calendar.event,week_list:0
 msgid "Weekday"
-msgstr ""
+msgstr "Día hábil"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:54
 #, python-format
 msgid "When"
-msgstr ""
+msgstr "¿Cuándo?"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:58
 #, python-format
 msgid "Where"
-msgstr ""
+msgstr "¿Dónde?"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:62
 #, python-format
 msgid "Who"
-msgstr ""
+msgstr "¿Quién?"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Años"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:45
 #, python-format
 msgid "Yes I'm going."
-msgstr ""
+msgstr "Si, asistiré."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:104
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr ""
+msgstr "No puede duplicar un calendario de asistencia"
 
 #. module: calendar
 #: field:calendar.contacts,active:0
 msgid "active"
-msgstr ""
+msgstr "activo"
 
 #. module: calendar
 #: field:calendar.event,color_partner_id:0
@@ -1435,15 +1461,10 @@ msgid "count cannot be negative or 0."
 msgstr ""
 
 #. module: calendar
-#: field:calendar.alarm,duration_minutes:0
-msgid "Duration in minutes"
-msgstr ""
-
-#. module: calendar
 #: code:addons/calendar/calendar.py:1245
 #, python-format
 msgid "interval cannot be negative."
-msgstr ""
+msgstr "El intervalo no puede ser negativo"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1245 code:addons/calendar/calendar.py:1247

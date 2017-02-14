@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-21 09:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-12-02 23:35+0000\n"
+"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-8/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,37 +42,37 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr ""
+msgstr "\n<p>\nHalo ${object.name},\n</p>\n<p>\nAnda telah diundang untuk memvalidasi email Anda untuk mendapatkan akses ke ${di object.company_id.name}\"Q / forum.</p>\n<p>Untuk memvalidasi email Anda, silakan klik pada link berikut:</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">Memvalidasi account ${di object.company_id.name}\"q / Forum</a></li>\n</ul>\n<p>Terima kasih</p>\n<pre>\n--\n${object.company_id.name atau ''}\n${object.company_id.email atau ''}\n${object.company_id.phone atau ''}\n</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} Forums validasi"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "&times;"
-msgstr ""
+msgstr "&times;"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "(only one answer per question is allowed)"
-msgstr ""
+msgstr "(hanya satu jawaban setiap pertanyaan diperbolehkan)"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "- it really helps to select the best questions and answers!"
-msgstr ""
+msgstr "-itu benar-benar membantu untuk memilih pertanyaan dan jawaban terbaik!"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "- no need to answer the same question twice. Also, please"
-msgstr ""
+msgstr "-tidak perlu menjawab pertanyaan yang sama dua kali. Juga, silakan"
 
 #. module: website_forum
 #: selection:forum.post.vote,vote:0
 msgid "-1"
-msgstr ""
+msgstr "-1"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:374
@@ -80,7 +80,7 @@ msgstr ""
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
-msgstr ""
+msgstr "<p>Sebuah jawaban yang baru untuk <i>%s</i> telah diposting. <a href=\"%s/forum/%s/question/%s\">Klik di sini untuk mengakses pos.</a></p>"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:380
@@ -88,14 +88,14 @@ msgstr ""
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
-msgstr ""
+msgstr "<p>Pertanyaan baru <i>%s</i> telah diminta pada %s. <a href=\"%s/forum/%s/question/%s\">Klik di sini untuk mengakses pertanyaannya.</a></p>"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
 msgid ""
 "<p>This community is for professionals and enthusiasts of our products and "
 "services.</p>"
-msgstr ""
+msgstr "<p>Komunitas ini adalah untuk para profesional dan penggemar produk dan layanan kami.</p>"
 
 #. module: website_forum
 #: view:website:website_forum.tag
@@ -103,27 +103,27 @@ msgid ""
 "A tag is a label that categorizes your question with other,\n"
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question."
-msgstr ""
+msgstr "Tag adalah label yang mengkategorikan pertanyaan Anda dengan pertanyaan-pertanyaan lain, serupa. Menggunakan tag tepat membuatnya lebih mudah bagi orang lain untuk menemukan dan menjawab pertanyaan Anda."
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "About This Forum"
-msgstr ""
+msgstr "Tentang Forum ini"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_own:0
 msgid "Accept an answer on its own questions"
-msgstr ""
+msgstr "Menerima jawaban pada pertanyaan sendiri"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_all:0
 msgid "Accept an answer to all questions"
-msgstr ""
+msgstr "Menerima jawaban untuk semua pertanyaan"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accept:0
 msgid "Accepting an answer"
-msgstr ""
+msgstr "Menerima jawaban"
 
 #. module: website_forum
 #: field:forum.post,active:0 selection:forum.post,state:0
@@ -143,7 +143,7 @@ msgstr "Semua"
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "Answer"
-msgstr ""
+msgstr "Jawaban"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:411
@@ -151,70 +151,70 @@ msgstr ""
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
 msgid "Answer Edited"
-msgstr ""
+msgstr "Jawaban yang diedit"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer:0
 msgid "Answer a question"
-msgstr ""
+msgstr "Menjawab pertanyaan"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accepted:0
 msgid "Answer accepted"
-msgstr ""
+msgstr "Jawaban yang diterima"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_downvote:0
 msgid "Answer downvoted"
-msgstr ""
+msgstr "Downvoted jawaban"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_flagged:0
 msgid "Answer flagged"
-msgstr ""
+msgstr "Jawaban yang ditandai"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_upvote:0
 msgid "Answer upvoted"
-msgstr ""
+msgstr "Upvoted jawaban"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Answered on"
-msgstr ""
+msgstr "Dijawab pada"
 
 #. module: website_forum
 #: field:forum.post,child_count:0 field:forum.post,child_ids:0
 #: view:website:website_forum.display_post
 #: view:website:website_forum.user_detail_full
 msgid "Answers"
-msgstr ""
+msgstr "Semua Jawaban"
 
 #. module: website_forum
 #: view:website:website_forum.header field:forum.forum,karma_ask:0
 msgid "Ask a Question"
-msgstr ""
+msgstr "Mengajukan pertanyaan"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Ask your Question"
-msgstr ""
+msgstr "Ajukan pertanyaan Anda"
 
 #. module: website_forum
 #: field:forum.post,create_date:0
 #: view:website:website_forum.post_description_full
 msgid "Asked on"
-msgstr ""
+msgstr "Bertanya pada"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Asked:"
-msgstr ""
+msgstr "Pertanyaan"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_new:0
 msgid "Asking a question"
-msgstr ""
+msgstr "Mengajukan pertanyaan"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -224,24 +224,24 @@ msgstr "Penulis"
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_1
 msgid "Autobiographer"
-msgstr ""
+msgstr "Otobiografi"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Back to"
-msgstr ""
+msgstr "Kembali ke"
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "Badge \""
-msgstr ""
+msgstr "Badge\""
 
 #. module: website_forum
 #: field:res.users,badge_ids:0 view:website:website_forum.badge
 #: view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Badges"
-msgstr ""
+msgstr "Lencana"
 
 #. module: website_forum
 #: view:website:website_forum.badge
@@ -249,78 +249,78 @@ msgid ""
 "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr ""
+msgstr "Selain mendapatkan reputasi dengan pertanyaan dan jawaban, Anda menerima lencana untuk menjadi sangat membantu. Lencana muncul di Halaman profil Anda, dan posting Anda."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Biography"
-msgstr ""
+msgstr "Biografi"
 
 #. module: website_forum
 #: field:forum.post,can_accept:0
 msgid "Can Accept"
-msgstr ""
+msgstr "Dapat menerima"
 
 #. module: website_forum
 #: field:forum.post,can_answer:0
 msgid "Can Answer"
-msgstr ""
+msgstr "Dapat menjawab"
 
 #. module: website_forum
 #: field:forum.post,can_ask:0
 msgid "Can Ask"
-msgstr ""
+msgstr "Dapat meminta"
 
 #. module: website_forum
 #: field:forum.post,can_close:0
 msgid "Can Close"
-msgstr ""
+msgstr "Dapat menutup"
 
 #. module: website_forum
 #: field:forum.post,can_comment:0
 msgid "Can Comment"
-msgstr ""
+msgstr "Dapat komentar"
 
 #. module: website_forum
 #: field:forum.post,can_comment_convert:0
 msgid "Can Convert to Comment"
-msgstr ""
+msgstr "Dapat mengkonversi ke komentar"
 
 #. module: website_forum
 #: field:forum.post,can_downvote:0
 msgid "Can Downvote"
-msgstr ""
+msgstr "Dapat Downvote"
 
 #. module: website_forum
 #: field:forum.post,can_edit:0
 msgid "Can Edit"
-msgstr ""
+msgstr "Dapatkah Edit"
 
 #. module: website_forum
 #: field:forum.post,can_unlink:0
 msgid "Can Unlink"
-msgstr ""
+msgstr "Dapat menghapus tautan"
 
 #. module: website_forum
 #: field:forum.post,can_upvote:0
 msgid "Can Upvote"
-msgstr ""
+msgstr "Dapat Upvote"
 
 #. module: website_forum
 #: field:forum.forum,karma_retag:0
 msgid "Change question tags"
-msgstr ""
+msgstr "Perubahan pertanyaan Tag"
 
 #. module: website_forum
 #: view:website:website_forum.user_badges
 msgid "Check available badges"
-msgstr ""
+msgstr "Memeriksa tersedia lencana"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
 #: model:gamification.challenge,name:website_forum.challenge_chief_commentator
 msgid "Chief Commentator"
-msgstr ""
+msgstr "Kepala komentator"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -332,12 +332,12 @@ msgstr "Kota"
 msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "forum."
-msgstr ""
+msgstr "Klik di sini untuk mengirim email verifikasi memungkinkan Anda untuk berpartisipasi dalam forum."
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_clickable_link:0
 msgid "Clickable links (Editor)"
-msgstr ""
+msgstr "Link diklik (Editor)"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -347,27 +347,27 @@ msgstr "Tutup"
 #. module: website_forum
 #: field:forum.forum,karma_close_all:0
 msgid "Close all posts"
-msgstr ""
+msgstr "Menutup semua posting"
 
 #. module: website_forum
 #: field:forum.forum,karma_close_own:0
 msgid "Close its own posts"
-msgstr ""
+msgstr "Dekat posting sendiri"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Close question"
-msgstr ""
+msgstr "Dekat pertanyaan"
 
 #. module: website_forum
 #: field:forum.post,closed_uid:0
 msgid "Closed by"
-msgstr ""
+msgstr "Ditutup oleh"
 
 #. module: website_forum
 #: field:forum.post,closed_date:0
 msgid "Closed on"
-msgstr ""
+msgstr "Tutup"
 
 #. module: website_forum
 #: view:website:website_forum.display_post_answer
@@ -378,24 +378,24 @@ msgstr "Komentar"
 #. module: website_forum
 #: field:forum.forum,karma_comment_all:0
 msgid "Comment all posts"
-msgstr ""
+msgstr "Semua posting komentar"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_own:0
 msgid "Comment its own posts"
-msgstr ""
+msgstr "Komentar posting sendiri"
 
 #. module: website_forum
 #: view:website:website_forum.post_comment
 msgid "Comment this post..."
-msgstr ""
+msgstr "Komentar posting ini..."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_2
 #: model:gamification.challenge,name:website_forum.challenge_commentator
 #: model:gamification.goal.definition,name:website_forum.definition_commentator
 msgid "Commentator"
-msgstr ""
+msgstr "Komentator"
 
 #. module: website_forum
 #: view:website:website_forum.display_post_answer
@@ -405,45 +405,45 @@ msgstr "Komentar"
 #. module: website_forum
 #: help:forum.post,website_message_ids:0
 msgid "Comments on forum post"
-msgstr ""
+msgstr "Komentar pada posting forum"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_configure_profile
 msgid "Complete own biography"
-msgstr ""
+msgstr "Biografi lengkap sendiri"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_configure_profile
 msgid "Completed own biography"
-msgstr ""
+msgstr "Biografi sendiri selesai"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid ""
 "Congratulations! Your email has just been validated. You may now participate"
 " to our forums."
-msgstr ""
+msgstr "Selamat! Email Anda hanya divalidasi. Anda sekarang dapat berpartisipasi forum kami."
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
 #: field:forum.post,content:0
 msgid "Content"
-msgstr ""
+msgstr "Konten"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_all:0
 msgid "Convert all answers to comments and vice versa"
-msgstr ""
+msgstr "Mengkonversi semua jawaban ke komentar dan sebaliknya"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_own:0
 msgid "Convert its own answers to comments and vice versa"
-msgstr ""
+msgstr "Mengkonversi sendiri jawaban ke komentar dan sebaliknya"
 
 #. module: website_forum
 #: help:forum.post,is_correct:0
 msgid "Correct Answer or Answer on this question accepted."
-msgstr ""
+msgstr "Benar jawaban atau jawaban pada pertanyaan ini diterima."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -453,7 +453,7 @@ msgstr "Negara"
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Country..."
-msgstr ""
+msgstr "Negara"
 
 #. module: website_forum
 #: field:forum.post.vote,create_date:0
@@ -477,29 +477,29 @@ msgstr "Dibuat pada"
 #: model:gamification.badge,name:website_forum.badge_q_4
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
 msgid "Credible Question"
-msgstr ""
+msgstr "Pertanyaan yang kredibel"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_5
 #: model:gamification.challenge,name:website_forum.challenge_critic
 #: model:gamification.goal.definition,name:website_forum.definition_critic
 msgid "Critic"
-msgstr ""
+msgstr "Kritikus"
 
 #. module: website_forum
 #: help:forum.forum,message_last_post:0 help:forum.post,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Tanggal pesan terakhir diposting pada catatan."
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_all:0
 msgid "Delete all posts"
-msgstr ""
+msgstr "Menghapus semua posting"
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_own:0
 msgid "Delete its own posts"
-msgstr ""
+msgstr "Menghapus posting sendiri"
 
 #. module: website_forum
 #: field:forum.forum,description:0
@@ -511,59 +511,59 @@ msgstr "Keterangan"
 #: model:gamification.challenge,name:website_forum.challenge_disciplined
 #: model:gamification.goal.definition,name:website_forum.definition_disciplined
 msgid "Disciplined"
-msgstr ""
+msgstr "Disiplin"
 
 #. module: website_forum
 #: field:forum.forum,karma_downvote:0
 msgid "Downvote"
-msgstr ""
+msgstr "Downvote"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Edit Profile"
-msgstr ""
+msgstr "Edit Profil"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Edit Your Bio"
-msgstr ""
+msgstr "Mengedit Bio Anda"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
-msgstr ""
+msgstr "Mengedit jawaban Anda sebelumnya"
 
 #. module: website_forum
 #: field:forum.forum,karma_edit_all:0
 msgid "Edit all posts"
-msgstr ""
+msgstr "Mengedit semua posting"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit answer"
-msgstr ""
+msgstr "Mengedit jawaban"
 
 #. module: website_forum
 #: field:forum.forum,karma_edit_own:0
 msgid "Edit its own posts"
-msgstr ""
+msgstr "Mengedit posting sendiri"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit question"
-msgstr ""
+msgstr "Rubah Pertanyaan"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit your Question"
-msgstr ""
+msgstr "Rubah Pertanyaan"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_7
 #: model:gamification.challenge,name:website_forum.challenge_editor
 #: model:gamification.goal.definition,name:website_forum.definition_editor
 msgid "Editor"
-msgstr ""
+msgstr "Editor"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -575,74 +575,74 @@ msgstr "e-mail"
 #: model:gamification.challenge,name:website_forum.challenge_enlightened
 #: model:gamification.goal.definition,name:website_forum.definition_enlightened
 msgid "Enlightened"
-msgstr ""
+msgstr "Tercerahkan"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Enter your Question"
-msgstr ""
+msgstr "Masukkan pertanyaan Anda"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
-msgstr ""
+msgstr "Pertanyaan yang terkenal"
 
 #. module: website_forum
 #: field:forum.post,favourite_count:0
 msgid "Favorite Count"
-msgstr ""
+msgstr "Count favorit"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_5
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
-msgstr ""
+msgstr "Pertanyaan favorit"
 
 #. module: website_forum
 #: field:forum.post,favourite_ids:0
 msgid "Favourite"
-msgstr ""
+msgstr "Favorit"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_1
 msgid "Favourite Question (1)"
-msgstr ""
+msgstr "Favorit pertanyaan (1)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_stellar_question_25
 msgid "Favourite Question (25)"
-msgstr ""
+msgstr "Favorit pertanyaan (25)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_5
 msgid "Favourite Question (5)"
-msgstr ""
+msgstr "Favorit pertanyaan (5)"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Favourite Questions"
-msgstr ""
+msgstr "Pertanyaan favorit"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Filter on"
-msgstr ""
+msgstr "Menyaring"
 
 #. module: website_forum
 #: field:forum.forum,karma_flag:0
 msgid "Flag a post as offensive"
-msgstr ""
+msgstr "Bendera posting ofensif"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Followed"
-msgstr ""
+msgstr "Diikuti"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Followed Questions"
-msgstr ""
+msgstr "Pertanyaan-pertanyaan yang diikuti"
 
 #. module: website_forum
 #: field:forum.forum,message_follower_ids:0
@@ -659,29 +659,29 @@ msgstr "Pengikut"
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
 #: model:website.menu,name:website_forum.menu_questions
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
 #. module: website_forum
 #: field:gamification.badge,level:0
 msgid "Forum Badge Level"
-msgstr ""
+msgstr "Forum lencana tingkat"
 
 #. module: website_forum
 #: view:res.users:website_forum.view_users_form_forum
 msgid "Forum Karma"
-msgstr ""
+msgstr "Forum Karma"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_form
 #: model:ir.model,name:website_forum.model_forum_post
 msgid "Forum Post"
-msgstr ""
+msgstr "Forum Post"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_list
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 msgid "Forum Posts"
-msgstr ""
+msgstr "Forum Posts"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_list
@@ -689,51 +689,51 @@ msgstr ""
 #: model:ir.model,name:website_forum.model_forum_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum view:website:website.layout
 msgid "Forums"
-msgstr ""
+msgstr "Forum"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
 msgid "Gamification badge"
-msgstr ""
+msgstr "Gamification lencana"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification challenge"
-msgstr ""
+msgstr "Gamification tantangan"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
 #: model:gamification.challenge,name:website_forum.challenge_good_answer
 msgid "Good Answer"
-msgstr ""
+msgstr "Jawaban yang baik"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_good_answer
 msgid "Good Answer (6)"
-msgstr ""
+msgstr "Jawaban yang baik (6)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_9
 #: model:gamification.challenge,name:website_forum.challenge_good_question
 msgid "Good Question"
-msgstr ""
+msgstr "Pertanyaan bagus"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_4
 #: model:gamification.challenge,name:website_forum.challenge_great_answer
 msgid "Great Answer"
-msgstr ""
+msgstr "Jawaban"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_great_answer
 msgid "Great Answer (15)"
-msgstr ""
+msgstr "Jawaban (15)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_10
 #: model:gamification.challenge,name:website_forum.challenge_great_question
 msgid "Great Question"
-msgstr ""
+msgstr "Pertanyaan besar"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -743,28 +743,28 @@ msgstr "Dikelompokan berdasarkan .."
 #. module: website_forum
 #: field:forum.forum,faq:0
 msgid "Guidelines"
-msgstr ""
+msgstr "Pedoman"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_6
 #: model:gamification.challenge,name:website_forum.challenge_guru
 msgid "Guru"
-msgstr ""
+msgstr "Guru"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_guru
 msgid "Guru (15)"
-msgstr ""
+msgstr "Guru (15)"
 
 #. module: website_forum
 #: field:forum.post,uid_has_answered:0
 msgid "Has Answered"
-msgstr ""
+msgstr "Telah menjawab"
 
 #. module: website_forum
 #: field:forum.post,has_validated_answer:0
 msgid "Has a Validated Answered"
-msgstr ""
+msgstr "Telah divalidasi menjawab"
 
 #. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
@@ -776,7 +776,7 @@ msgstr "Bantuan"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Gelar ringkasan menyimpang (jumlah pesan, ...). Ringkasan ini langsung dalam format html untuk dimasukkan dalam pandangan kanban."
 
 #. module: website_forum
 #: field:forum.forum,id:0 field:forum.post,id:0 field:forum.post.reason,id:0
@@ -787,7 +787,7 @@ msgstr "ID"
 #. module: website_forum
 #: help:forum.forum,message_unread:0 help:forum.post,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -795,88 +795,88 @@ msgid ""
 "If you close this question, it will be hidden for most users. Only\n"
 "            users having a high karma can see closed questions to moderate\n"
 "            them."
-msgstr ""
+msgstr "Jika Anda menutup pertanyaan ini, itu akan disembunyikan untuk sebagian besar pengguna. Hanya pengguna yang memiliki karma tinggi dapat melihat pertanyaan-pertanyaan tertutup untuk moderat mereka."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "If you wanted to comment on the question or answer, just"
-msgstr ""
+msgstr "Jika Anda ingin mengomentari pertanyaan atau jawaban, hanya"
 
 #. module: website_forum
 #: field:forum.forum,message_is_follower:0
 #: field:forum.post,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ini Pengikut"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "It appears your email has not been verified."
-msgstr ""
+msgstr "Tampaknya email belum diverifikasi."
 
 #. module: website_forum
 #: field:res.users,karma:0 view:website:website_forum.user_detail_full
 msgid "Karma"
-msgstr ""
+msgstr "Karma"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 msgid "Karma Gains"
-msgstr ""
+msgstr "Karma keuntungan"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 msgid "Karma Requirements"
-msgstr ""
+msgstr "Karma persyaratan"
 
 #. module: website_forum
 #: field:forum.post,karma_accept:0
 msgid "Karma to accept this answer"
-msgstr ""
+msgstr "Karma untuk menerima jawaban ini"
 
 #. module: website_forum
 #: field:forum.post,karma_answer:0
 msgid "Karma to answer"
-msgstr ""
+msgstr "Karma untuk menjawab"
 
 #. module: website_forum
 #: field:forum.post,karma_ask:0
 msgid "Karma to ask"
-msgstr ""
+msgstr "Karma untuk bertanya"
 
 #. module: website_forum
 #: field:forum.post,karma_close:0
 msgid "Karma to close"
-msgstr ""
+msgstr "Karma untuk menutup"
 
 #. module: website_forum
 #: field:forum.post,karma_comment:0
 msgid "Karma to comment"
-msgstr ""
+msgstr "Karma untuk komentar"
 
 #. module: website_forum
 #: field:forum.post,karma_downvote:0
 msgid "Karma to downvote"
-msgstr ""
+msgstr "Karma untuk downvote"
 
 #. module: website_forum
 #: field:forum.post,karma_edit:0
 msgid "Karma to edit"
-msgstr ""
+msgstr "Karma untuk mengedit"
 
 #. module: website_forum
 #: field:forum.post,karma_unlink:0
 msgid "Karma to unlink"
-msgstr ""
+msgstr "Karma untuk membatalkan tautan"
 
 #. module: website_forum
 #: field:forum.post,karma_upvote:0
 msgid "Karma to upvote"
-msgstr ""
+msgstr "Karma untuk upvote"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Keep Informed"
-msgstr ""
+msgstr "Info Terkini"
 
 #. module: website_forum
 #: field:forum.forum,message_last_post:0 field:forum.post,message_last_post:0
@@ -898,17 +898,17 @@ msgstr "Diperbaharui pada"
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Last activity date"
-msgstr ""
+msgstr "aktivitas terakhir"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Last updated:"
-msgstr ""
+msgstr "Terakhir diperbarui:"
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_link_files:0
 msgid "Linking files (Editor)"
-msgstr ""
+msgstr "Menghubungkan file (Editor)"
 
 #. module: website_forum
 #: field:forum.forum,message_ids:0 field:forum.post,message_ids:0
@@ -918,32 +918,32 @@ msgstr "Pesan"
 #. module: website_forum
 #: help:forum.forum,message_ids:0 help:forum.post,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Pesan dan riwayat komunikasi"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Most answered"
-msgstr ""
+msgstr "Paling menjawab"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Most voted"
-msgstr ""
+msgstr "Paling dipilih"
 
 #. module: website_forum
 #: field:forum.post,user_favourite:0
 msgid "My Favourite"
-msgstr ""
+msgstr "Favorit saya"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "My Profile"
-msgstr ""
+msgstr "Profile ku"
 
 #. module: website_forum
 #: field:forum.post,user_vote:0
 msgid "My Vote"
-msgstr ""
+msgstr "Suara saya"
 
 #. module: website_forum
 #: field:forum.forum,name:0 view:forum.post:website_forum.view_forum_post_form
@@ -956,7 +956,7 @@ msgstr "Nama"
 #: model:mail.message.subtype,name:website_forum.mt_answer_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_answer_new
 msgid "New Answer"
-msgstr ""
+msgstr "Tambahkan Jawaban Baru"
 
 #. module: website_forum
 #. openerp-web
@@ -964,209 +964,209 @@ msgstr ""
 #: view:website:website.layout
 #, python-format
 msgid "New Forum"
-msgstr ""
+msgstr "Tambahkan Kursus Baru"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_question_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_question_new
 #: model:mail.message.subtype,name:website_forum.mt_question_new
 msgid "New Question"
-msgstr ""
+msgstr "Pertanyaan Baru"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Newest"
-msgstr ""
+msgstr "Terbaru"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_2
 #: model:gamification.challenge,name:website_forum.challenge_nice_answer
 msgid "Nice Answer"
-msgstr ""
+msgstr "Jawaban menyenangkan"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_nice_answer
 msgid "Nice Answer (4)"
-msgstr ""
+msgstr "Bagus jawaban (4)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_8
 msgid "Nice Quesiotn"
-msgstr ""
+msgstr "Bagus Quesiotn"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_nice_question
 msgid "Nice Question"
-msgstr ""
+msgstr "Pertanyaan bagus"
 
 #. module: website_forum
 #: view:website:website_forum.user_badges
 msgid "No badge yet!"
-msgstr ""
+msgstr "Lencana No belum!"
 
 #. module: website_forum
 #: view:website:website_forum.user_votes
 msgid "No vote given by you yet!"
-msgstr ""
+msgstr "Tidak suara yang diberikan oleh Anda belum!"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
 #: model:gamification.challenge,name:website_forum.challenge_notable_question
 msgid "Notable Question"
-msgstr ""
+msgstr "Pertanyaan penting"
 
 #. module: website_forum
 #: field:forum.tag,posts_count:0
 msgid "Number of Posts"
-msgstr ""
+msgstr "Jumlah posting"
 
 #. module: website_forum
 #: field:forum.post,views:0
 msgid "Number of Views"
-msgstr ""
+msgstr "Jumlah Views"
 
 #. module: website_forum
 #: field:res.users,bronze_badge:0
 msgid "Number of bronze badges"
-msgstr ""
+msgstr "Jumlah perunggu lencana"
 
 #. module: website_forum
 #: field:res.users,gold_badge:0
 msgid "Number of gold badges"
-msgstr ""
+msgstr "Jumlah emas lencana"
 
 #. module: website_forum
 #: field:res.users,silver_badge:0
 msgid "Number of silver badges"
-msgstr ""
+msgstr "Jumlah perak lencana"
 
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Offensive"
-msgstr ""
+msgstr "Offensif"
 
 #. module: website_forum
 #: view:website:website_forum.forum_all
 msgid "Our forums"
-msgstr ""
+msgstr "Forum kami"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_23
 #: model:gamification.challenge,name:website_forum.challenge_peer_pressure
 #: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
 msgid "Peer Pressure"
-msgstr ""
+msgstr "Tekanan"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "People"
-msgstr ""
+msgstr "Orang"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Please enter a descriptive question (should finish by a '?')"
-msgstr ""
+msgstr "Masukkan pertanyaan deskriptif (harus menyelesaikan dengan '?')"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Please enter a descriptive question (should finish with a '?')"
-msgstr ""
+msgstr "Masukkan pertanyaan deskriptif (harus menyelesaikan dengan '?')"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
-msgstr ""
+msgstr "Harap masukkan alamat email yang valid untuk menerima pemberitahuan dari jawaban atau komentar."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Please remember that you can always"
-msgstr ""
+msgstr "Harap ingat bahwa Anda selalu dapat"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Please try to give a substantial answer."
-msgstr ""
+msgstr "Silakan coba untuk memberikan jawaban yang besar."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
 #: model:gamification.challenge,name:website_forum.challenge_popular_question
 msgid "Popular Question"
-msgstr ""
+msgstr "Pertanyaan populer"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_popular_question
 msgid "Popular Question (150)"
-msgstr ""
+msgstr "Pertanyaan populer (150)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_notable_question
 msgid "Popular Question (250)"
-msgstr ""
+msgstr "Pertanyaan populer (250)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_famous_question
 msgid "Popular Question (500)"
-msgstr ""
+msgstr "Pertanyaan populer (500)"
 
 #. module: website_forum
 #: field:forum.post.vote,post_id:0 view:website:website_forum.post_comment
 msgid "Post"
-msgstr ""
+msgstr "Kirim"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
 msgid "Post Closing Reason"
-msgstr ""
+msgstr "Posting menutup alasan"
 
 #. module: website_forum
 #: field:forum.post,website_message_ids:0
 msgid "Post Messages"
-msgstr ""
+msgstr "Mengirim pesan"
 
 #. module: website_forum
 #: field:forum.post.reason,name:0
 msgid "Post Reason"
-msgstr ""
+msgstr "Alasan posting"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Post Your Answer"
-msgstr ""
+msgstr "Posting jawaban Anda"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Post Your Question"
-msgstr ""
+msgstr "Tulis pertanyaan"
 
 #. module: website_forum
 #: field:forum.tag,post_ids:0
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
 msgid "Posts"
-msgstr ""
+msgstr "kiriman"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Public profile"
-msgstr ""
+msgstr "Profil Publik"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
 #: model:gamification.challenge,name:website_forum.challenge_pundit
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
-msgstr ""
+msgstr "Pakar"
 
 #. module: website_forum
 #: view:website:website.layout
 msgid "Q&A"
-msgstr ""
+msgstr "Q & A"
 
 #. module: website_forum
 #: field:forum.post,parent_id:0
 msgid "Question"
-msgstr ""
+msgstr "Pertanyaan"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:414
@@ -1174,54 +1174,54 @@ msgstr ""
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
 msgid "Question Edited"
-msgstr ""
+msgstr "Pertanyaan telah dirubah"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_downvote:0
 msgid "Question downvoted"
-msgstr ""
+msgstr "Pertanyaan downvoted"
 
 #. module: website_forum
 #: view:website:website_forum.404
 msgid "Question not found!"
-msgstr ""
+msgstr "Pertanyaan tidak ditemukan!"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Question tools"
-msgstr ""
+msgstr "Pertanyaan alat"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_upvote:0
 msgid "Question upvoted"
-msgstr ""
+msgstr "Pertanyaan upvoted"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Question:"
-msgstr ""
+msgstr "Pertanyaan"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Questions"
-msgstr ""
+msgstr "Pertanyaan"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:376
 #, python-format
 msgid "Re: %s"
-msgstr ""
+msgstr "Re: %s"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Read Guidelines"
-msgstr ""
+msgstr "Baca pedoman"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Real name"
-msgstr ""
+msgstr "Nama asli"
 
 #. module: website_forum
 #: field:forum.post,closed_reason_id:0
@@ -1231,12 +1231,12 @@ msgstr "Alasan"
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Reason:"
-msgstr ""
+msgstr "Alasan"
 
 #. module: website_forum
 #: view:website:website_forum.404 view:website:website_forum.private_profile
 msgid "Return to the question list."
-msgstr ""
+msgstr "Kembali ke daftar pertanyaan."
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -1248,7 +1248,7 @@ msgstr "Simpan"
 #: model:gamification.challenge,name:website_forum.challenge_scholar
 #: model:gamification.goal.definition,name:website_forum.definition_scholar
 msgid "Scholar"
-msgstr ""
+msgstr "Sarjana"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1258,24 +1258,24 @@ msgstr "Penelusuran"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Search a question..."
-msgstr ""
+msgstr "Cari pertanyaan..."
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
 msgid "Search in Post"
-msgstr ""
+msgstr "Cari dalam posting"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Seen:"
-msgstr ""
+msgstr "Dilihat"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_8
 #: model:gamification.challenge,name:website_forum.challenge_self_learner
 #: model:gamification.goal.definition,name:website_forum.definition_self_learner
 msgid "Self-Learner"
-msgstr ""
+msgstr "Diri pelajar"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
@@ -1286,7 +1286,7 @@ msgstr "Kirim pesan ke grup"
 #. module: website_forum
 #: view:website:website_forum.404
 msgid "Sorry, this question is not available anymore."
-msgstr ""
+msgstr "Maaf, pertanyaan ini sudah tidak tersedia lagi."
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1296,7 +1296,7 @@ msgstr "Susun sebagai"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Stats"
-msgstr ""
+msgstr "Statistik"
 
 #. module: website_forum
 #: field:forum.post,state:0
@@ -1307,13 +1307,13 @@ msgstr "Status"
 #: model:gamification.badge,name:website_forum.badge_q_6
 #: model:gamification.challenge,name:website_forum.challenge_stellar_question_25
 msgid "Stellar Question"
-msgstr ""
+msgstr "Stellar pertanyaan"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_7
 #: model:gamification.challenge,name:website_forum.challenge_student
 msgid "Student"
-msgstr ""
+msgstr "Siswa"
 
 #. module: website_forum
 #: field:forum.forum,message_summary:0 field:forum.post,message_summary:0
@@ -1325,53 +1325,53 @@ msgstr "Ringkasan"
 #: model:gamification.challenge,name:website_forum.challenge_supporter
 #: model:gamification.goal.definition,name:website_forum.definition_supporter
 msgid "Supporter"
-msgstr ""
+msgstr "Pendukung"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
 msgid "Tag"
-msgstr ""
+msgstr "Tanda"
 
 #. module: website_forum
 #: field:forum.post,tag_ids:0 view:website:website_forum.ask_question
 #: view:website:website_forum.edit_post view:website:website_forum.forum_index
 #: view:website:website_forum.header view:website:website_forum.tag
 msgid "Tags"
-msgstr ""
+msgstr "Tags"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_32
 #: model:gamification.challenge,name:website_forum.challenge_taxonomist
 #: model:gamification.goal.definition,name:website_forum.definition_taxonomist
 msgid "Taxonomist"
-msgstr ""
+msgstr "Taksonomi"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_1
 #: model:gamification.challenge,name:website_forum.challenge_teacher
 #: model:gamification.goal.definition,name:website_forum.definition_teacher
 msgid "Teacher"
-msgstr ""
+msgstr "Ustadz"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "The question has been closed"
-msgstr ""
+msgstr "Pertanyaan sudah ditutup"
 
 #. module: website_forum
 #: help:forum.post.vote,recipient_id:0
 msgid "The user receiving the vote"
-msgstr ""
+msgstr "Pengguna yang menerima suara"
 
 #. module: website_forum
 #: view:website:website_forum.private_profile
 msgid "This profile is private!"
-msgstr ""
+msgstr "Profil ini pribadi!"
 
 #. module: website_forum
 #: field:forum.post,name:0
 msgid "Title"
-msgstr ""
+msgstr "Judul"
 
 #. module: website_forum
 #: field:forum.post.vote,recipient_id:0
@@ -1381,22 +1381,22 @@ msgstr "Kepada"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Navigasi beralih"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Unanswered"
-msgstr ""
+msgstr "Belum terjawab"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_unlink_all:0
 msgid "Unlink all comments"
-msgstr ""
+msgstr "Membatalkan semua komentar"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_unlink_own:0
 msgid "Unlink its own comments"
-msgstr ""
+msgstr "Membatalkan komentar sendiri"
 
 #. module: website_forum
 #: field:forum.forum,message_unread:0 field:forum.post,message_unread:0
@@ -1411,37 +1411,37 @@ msgstr "Perbarui"
 #. module: website_forum
 #: field:forum.post,write_date:0
 msgid "Update on"
-msgstr ""
+msgstr "Update pada"
 
 #. module: website_forum
 #: field:forum.post,write_uid:0
 msgid "Updated by"
-msgstr ""
+msgstr "Diperbarui oleh"
 
 #. module: website_forum
 #: field:forum.forum,karma_upvote:0
 msgid "Upvote"
-msgstr ""
+msgstr "Upvote"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_student
 msgid "Upvoted question (1)"
-msgstr ""
+msgstr "Upvoted pertanyaan (1)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_great_question
 msgid "Upvoted question (15)"
-msgstr ""
+msgstr "Upvoted pertanyaan (15)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_nice_question
 msgid "Upvoted question (4)"
-msgstr ""
+msgstr "Pertanyaan Upvoted (4)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_good_question
 msgid "Upvoted question (6)"
-msgstr ""
+msgstr "Upvoted pertanyaan (6)"
 
 #. module: website_forum
 #: field:forum.post.vote,user_id:0
@@ -1456,23 +1456,23 @@ msgstr "Pengguna"
 #. module: website_forum
 #: field:forum.post,is_correct:0
 msgid "Valid Answer"
-msgstr ""
+msgstr "Jawaban yang valid"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "View Your Badges"
-msgstr ""
+msgstr "Lihat lencana"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Views"
-msgstr ""
+msgstr "Dilihat"
 
 #. module: website_forum
 #: field:forum.post.vote,vote:0
 #: model:ir.model,name:website_forum.model_forum_post_vote
 msgid "Vote"
-msgstr ""
+msgstr "Voting"
 
 #. module: website_forum
 #: field:forum.post,vote_count:0 field:forum.post,vote_ids:0
@@ -1488,49 +1488,49 @@ msgstr "Situs Web"
 #. module: website_forum
 #: field:forum.forum,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Pesan situs"
 
 #. module: website_forum
 #: help:forum.forum,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Sejarah komunikasi situs"
 
 #. module: website_forum
 #: field:forum.forum,website_meta_description:0
 #: field:forum.post,website_meta_description:0
 #: field:forum.tag,website_meta_description:0
 msgid "Website meta description"
-msgstr ""
+msgstr "Deskripsi meta situs web"
 
 #. module: website_forum
 #: field:forum.forum,website_meta_keywords:0
 #: field:forum.post,website_meta_keywords:0
 #: field:forum.tag,website_meta_keywords:0
 msgid "Website meta keywords"
-msgstr ""
+msgstr "Situs meta kata kunci"
 
 #. module: website_forum
 #: field:forum.forum,website_meta_title:0
 #: field:forum.post,website_meta_title:0 field:forum.tag,website_meta_title:0
 msgid "Website meta title"
-msgstr ""
+msgstr "Judul meta situs"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Your answer"
-msgstr ""
+msgstr "Jawaban Anda"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "[Closed]"
-msgstr ""
+msgstr "Tutup"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "[Deleted]"
-msgstr ""
+msgstr "Dihapus"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
@@ -1540,38 +1540,38 @@ msgstr "dan"
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "answers"
-msgstr ""
+msgstr "jawaban"
 
 #. module: website_forum
 #: view:website:website_forum.badge view:website:website_forum.user_badges
 msgid "awarded users"
-msgstr ""
+msgstr "pengguna yang diberikan"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "back to question"
-msgstr ""
+msgstr "kembali ke pertanyaan"
 
 #. module: website_forum
 #: view:website:website_forum.users
 msgid "badges:"
-msgstr ""
+msgstr "Lencana:"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid ""
 "be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...)"
-msgstr ""
+msgstr "jelas dan ringkas, menghindari tidak perlu perkenalan (Hi... Thanks...)"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "bio"
-msgstr ""
+msgstr "Biografi"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "bronze"
-msgstr ""
+msgstr "perunggu"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
@@ -1582,104 +1582,104 @@ msgstr "oleh"
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by activity date"
-msgstr ""
+msgstr "tanggal kegiatan"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by creation date"
-msgstr ""
+msgstr "oleh tanggal penciptaan"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by most answered"
-msgstr ""
+msgstr "oleh sebagian besar menjawab"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by most voted"
-msgstr ""
+msgstr "oleh yang paling memilih"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_7
 msgid "contains offensive or malicious remarks"
-msgstr ""
+msgstr "berisi pernyataan ofensif atau berbahaya"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "contributions"
-msgstr ""
+msgstr "kontribusi"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "don't forget to vote"
-msgstr ""
+msgstr "Jangan lupa untuk memilih"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
 msgid "duplicate question"
-msgstr ""
+msgstr "pertanyaan duplikat"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "follower(s)"
-msgstr ""
+msgstr "Follower(s)"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "for reason:"
-msgstr ""
+msgstr "alasan:"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "gold"
-msgstr ""
+msgstr "emas"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "karma"
-msgstr ""
+msgstr "Karma"
 
 #. module: website_forum
 #: field:forum.post,karma_comment_convert:0
 msgid "karma to convert as a comment"
-msgstr ""
+msgstr "Karma untuk mengkonversi sebagai komentar"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "last connection"
-msgstr ""
+msgstr "Terakhir koneksi"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "location"
-msgstr ""
+msgstr "Lokasi"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "member since"
-msgstr ""
+msgstr "Anggota sejak"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
 msgid "not a real question"
-msgstr ""
+msgstr "bukan pertanyaan nyata"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
 msgid "not relevant or out dated"
-msgstr ""
+msgstr "tidak relevan atau keluar-tanggal"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_2
 msgid "off-topic or not relevant"
-msgstr ""
+msgstr "off-topic atau tidak relevan"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_comment
 #: view:website:website_forum.post_description_full
 msgid "on"
-msgstr ""
+msgstr "hidup"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -1689,62 +1689,62 @@ msgstr "atau"
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "please, try to make your question interesting to others"
-msgstr ""
+msgstr "Silakan, coba untuk membuat pertanyaan yang menarik untuk orang lain"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "profile"
-msgstr ""
+msgstr "Profil"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "provide enough details and, if possible, give an example"
-msgstr ""
+msgstr "memberikan rincian cukup dan, jika mungkin, memberikan contoh"
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "received this badge:"
-msgstr ""
+msgstr "menerima lencana ini:"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "revise your answers"
-msgstr ""
+msgstr "merevisi jawaban Anda"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "silver"
-msgstr ""
+msgstr "perak"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
 msgid "spam or advertising"
-msgstr ""
+msgstr "spam atau iklan"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "stats"
-msgstr ""
+msgstr "Statistik"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "time"
-msgstr ""
+msgstr "waktu"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "times"
-msgstr ""
+msgstr "The Times"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
 msgid "too localized"
-msgstr ""
+msgstr "juga lokal"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_3
 msgid "too subjective and argumentative"
-msgstr ""
+msgstr "terlalu subjektif dan argumentatif"
 
 #. module: website_forum
 #: field:forum.post,self_reply:0
@@ -1754,40 +1754,40 @@ msgstr "tidak diketahui"
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "use the commenting tool."
-msgstr ""
+msgstr "Gunakan alat komentar."
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "user"
-msgstr ""
+msgstr "Pengguna"
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "users"
-msgstr ""
+msgstr "pengguna"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "views"
-msgstr ""
+msgstr "lihat"
 
 #. module: website_forum
 #: view:website:website_forum.display_post view:website:website_forum.vote
 msgid "vote"
-msgstr ""
+msgstr "suara"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.user_detail_full view:website:website_forum.vote
 msgid "votes"
-msgstr ""
+msgstr "voting"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "website"
-msgstr ""
+msgstr "Website"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "with"
-msgstr ""
+msgstr "google translete alasan"

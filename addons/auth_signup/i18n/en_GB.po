@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:50+0000\n"
+"POT-Creation-Date: 2015-12-16 13:15+0000\n"
+"PO-Revision-Date: 2015-12-17 08:25+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/odoo/odoo-8/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -95,7 +95,13 @@ msgid ""
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:58
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:130
 #, python-format
 msgid "Authentification Failed."
 msgstr ""
@@ -117,7 +123,13 @@ msgid "Confirm Password"
 msgstr "Confirm Password"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:61
+#, python-format
+msgid "Could not create a new account."
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
 msgstr ""
@@ -167,6 +179,12 @@ msgstr ""
 #: view:website:auth_signup.reset_password
 msgid "Reset password"
 msgstr "Reset password"
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:267
+#, python-format
+msgid "Reset password: invalid username or email"
+msgstr ""
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
@@ -221,7 +239,7 @@ msgstr "Template user for new users created through signup"
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr ""
+msgstr "This allows users to trigger a password reset from the Login page."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users

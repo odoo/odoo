@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 07:56+0000\n"
+"PO-Revision-Date: 2016-09-09 15:23+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -154,7 +154,7 @@ msgstr ""
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr ""
+msgstr "\nСоздает дроп-шиппинг маршрут и добавляет более сложные тесты-Это устанавливает модуль stock_dropshipping."
 
 #. module: purchase
 #: help:purchase.order.line,state:0
@@ -169,13 +169,13 @@ msgstr ""
 #: code:addons/purchase/stock.py:198
 #, python-format
 msgid " Buy"
-msgstr ""
+msgstr "Покупка"
 
 #. module: purchase
 #: field:product.product,purchase_count:0
 #: field:product.template,purchase_count:0
 msgid "# Purchases"
-msgstr ""
+msgstr "# Покупки"
 
 #. module: purchase
 #: field:res.partner,supplier_invoice_count:0
@@ -195,7 +195,7 @@ msgstr "№ заказа закупки"
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} Order (Ref ${object.name or '(нет)' })"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase_done
@@ -345,7 +345,7 @@ msgstr "Адресная книга"
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
 msgid "Advance bidding process"
-msgstr ""
+msgstr "Расширенный процесс торгов"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -531,7 +531,7 @@ msgstr ""
 #: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Can't find any generic Buy route."
-msgstr ""
+msgstr "Не могу найти общий Маршут покупки."
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -551,7 +551,7 @@ msgstr "Отменено"
 #: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "Нельзя удалить строку заказа на закупку, которая в состоянии '%s'."
 
 #. module: purchase
 #: field:purchase.report,category_id:0
@@ -729,12 +729,12 @@ msgstr "Определить журнал покупок для этой ком�
 #. module: purchase
 #: field:purchase.order,picking_type_id:0
 msgid "Deliver To"
-msgstr ""
+msgstr "Доставить"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Deliveries & Invoices"
-msgstr ""
+msgstr "Доставки и Счета"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -864,7 +864,7 @@ msgstr "Группировать по"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
-msgstr ""
+msgstr "Скрыть отмененные строки"
 
 #. module: purchase
 #: help:purchase.order,message_summary:0
@@ -922,7 +922,7 @@ msgstr "Поступающие грузы"
 #. module: purchase
 #: view:stock.picking:purchase.view_picking_in_search_picking_inherit
 msgid "Incoming Shipments to Invoice"
-msgstr ""
+msgstr "Поступающие товары в Счет-фактуру"
 
 #. module: purchase
 #: field:purchase.order,incoterm_id:0
@@ -1003,7 +1003,7 @@ msgstr "Счета"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_form
 msgid "Invoices and Incoming Shipments"
-msgstr ""
+msgstr "Счет-фактуры и Поступающие товары"
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -1143,7 +1143,7 @@ msgstr "Сообщения и журнал обращений"
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
-msgstr ""
+msgstr "Месячные закупки"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1276,7 +1276,7 @@ msgstr "ЗЗ: %s"
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "PO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1361,7 +1361,7 @@ msgstr "Прайс-листы"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr ""
+msgstr "Распечатать Запрос предложений"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1535,7 +1535,7 @@ msgstr "Заказы закупок, которые имеют позиции н
 #. module: purchase
 #: field:stock.warehouse,buy_to_resupply:0
 msgid "Purchase to resupply this warehouse"
-msgstr ""
+msgstr "Покупка, чтобы пополнить запасы этого склада"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
@@ -1611,7 +1611,7 @@ msgstr "ЗЦ подтвержден"
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr ""
+msgstr "ЗЦ Выполнен"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:327 code:addons/purchase/purchase.py:945
@@ -1632,12 +1632,12 @@ msgstr "Запросы и закупки"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Print RFQ"
-msgstr ""
+msgstr "Перепечатать Запрос предложений"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr ""
+msgstr "Отправить повторно Запрос цен по эл.почте"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1730,7 +1730,7 @@ msgstr "Ответственный"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Routes"
-msgstr ""
+msgstr "Маршруты"
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -1760,12 +1760,12 @@ msgstr "Выбранные единицы измерения не принадл
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send PO by Email"
-msgstr ""
+msgstr "Отправить Заказ Закупки по эл.почте"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr ""
+msgstr "Отправить Запрос цен по эл.почте"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1958,7 +1958,7 @@ msgstr "Для закупок у данного партнера вместо п
 #. module: purchase
 #: help:purchase.order,picking_type_id:0
 msgid "This will determine picking type of incoming shipment"
-msgstr ""
+msgstr "Это позволит определить тип комплектования входящей поставки"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -2120,7 +2120,7 @@ msgstr "История переписки сайта"
 #. module: purchase
 #: help:stock.warehouse,buy_to_resupply:0
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr ""
+msgstr "Когда продукты куплены, они могут быть доставлены в этот склад"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:538

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-08-19 09:24+0000\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-01-30 09:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Paraguay) (http://www.transifex.com/odoo/odoo-8/language/es_PY/)\n"
 "MIME-Version: 1.0\n"
@@ -53,6 +53,16 @@ msgstr ""
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid " (reserved)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
 msgstr ""
 
 #. module: stock
@@ -880,7 +890,7 @@ msgstr ""
 #. module: stock
 #: field:stock.pack.operation,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Costo"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
@@ -947,7 +957,7 @@ msgstr ""
 #: field:stock.warehouse,create_uid:0
 #: field:stock.warehouse.orderpoint,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: stock
 #: field:make.procurement,create_date:0
@@ -972,7 +982,7 @@ msgstr ""
 #: field:stock.warehouse,create_date:0
 #: field:stock.warehouse.orderpoint,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creado en"
 
 #. module: stock
 #: view:stock.move:stock.view_move_search
@@ -1450,7 +1460,7 @@ msgstr ""
 #: field:stock.picking,message_follower_ids:0
 #: field:stock.production.lot,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: stock
 #: view:stock.move:stock.view_move_picking_form
@@ -1501,6 +1511,7 @@ msgstr ""
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr ""
 
@@ -1610,7 +1621,7 @@ msgstr ""
 #: view:stock.production.lot:stock.search_product_lot_filter
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
 msgid "Group By"
-msgstr ""
+msgstr "Agrupado por"
 
 #. module: stock
 #: view:stock.quant:stock.quant_search_view
@@ -1708,7 +1719,7 @@ msgstr ""
 #: help:stock.picking,message_unread:0
 #: help:stock.production.lot,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Si marcado la nueva mensaje requiere atencion"
 
 #. module: stock
 #: help:stock.location.path,propagate:0
@@ -2074,7 +2085,7 @@ msgstr ""
 #: field:stock.picking,message_is_follower:0
 #: field:stock.production.lot,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Es un seguidor"
 
 #. module: stock
 #: field:stock.location,scrap_location:0
@@ -2111,7 +2122,7 @@ msgstr ""
 #: field:stock.picking,message_last_post:0
 #: field:stock.production.lot,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Fecha de la ultima mensaje"
 
 #. module: stock
 #: field:make.procurement,write_uid:0
@@ -2136,7 +2147,7 @@ msgstr ""
 #: field:stock.warehouse,write_uid:0
 #: field:stock.warehouse.orderpoint,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualización por"
 
 #. module: stock
 #: field:make.procurement,write_date:0
@@ -2161,7 +2172,7 @@ msgstr ""
 #: field:stock.warehouse,write_date:0
 #: field:stock.warehouse.orderpoint,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualización en"
 
 #. module: stock
 #: code:addons/stock/stock.py:4191
@@ -2475,7 +2486,7 @@ msgstr "Mensajes"
 #. module: stock
 #: help:stock.picking,message_ids:0 help:stock.production.lot,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Mensajes y historial de comunicación"
 
 #. module: stock
 #: field:product.putaway,method:0 field:product.removal,method:0
@@ -3419,7 +3430,7 @@ msgstr ""
 #. module: stock
 #: field:stock.inventory.line,product_name:0
 msgid "Product Name"
-msgstr ""
+msgstr "Nombre del producto"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -3620,7 +3631,7 @@ msgid "Quantity (UOS)"
 msgstr ""
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr ""
 
@@ -5132,7 +5143,7 @@ msgstr ""
 #: field:stock.picking,message_unread:0
 #: field:stock.production.lot,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensajes sin leer"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form

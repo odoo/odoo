@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:41+0000\n"
+"PO-Revision-Date: 2016-04-24 20:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,entry_count:0
 msgid "# Asset Entries"
-msgstr ""
+msgstr "# Wpisy środków trwałych"
 
 #. module: account_asset
 #: field:asset.asset.report,nbr:0
@@ -123,7 +123,7 @@ msgstr "Historia środka"
 #. module: account_asset
 #: field:asset.modify,asset_method_time:0
 msgid "Asset Method Time"
-msgstr ""
+msgstr "Metoda czasu Aktywu"
 
 #. module: account_asset
 #: field:account.asset.asset,name:0
@@ -217,7 +217,7 @@ msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
+msgstr "Wybierz metodę obliczania wartości amortyzacji.\n  * Liniowa: Obliczana na podstawie wartości brutto/liczby amortyzacji\n  * Degresywna: Obliczana na podstawie wzoru: cena częściowa * czynnik degresywny"
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
@@ -226,7 +226,7 @@ msgid ""
 "Choose the method to use to compute the dates and number of depreciation lines.\n"
 "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
-msgstr ""
+msgstr "Wybierz metodę obliczania dat i liczby amortyzacji.\n  * Liczba Amortyzacji: Określaj liczbę linii i czasu amortyzacji między dwoma amortzacjami.\n  * Data Końcowa: Wybierz czas pomiędzy dwoma amortyzacjami i datę, której amortyzacje nie przekroczą."
 
 #. module: account_asset
 #: help:asset.depreciation.confirmation.wizard,period_id:0
@@ -778,12 +778,20 @@ msgid ""
 "When an asset is created, the status is 'Draft'.\n"
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
+msgstr "Gdy środek trwały jest tworzony jego status to 'wersja robocza'.\nJeśli środek trwały jest zatwierdzony, jego status zmienia się w 'bieżący' i pozycje amortyzacji mogą być księgowane.\nMożesz ręcznie zamknąć środek trwały gdy okres amortyzacji się zakończy. Jeśli ostatnia pozycja amortyzacji jest zaksięgowana środek trwały automatycznie przechodzi w ten status."
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
 msgid "Year"
 msgstr "Rok"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset_invoice.py:53
+#, python-format
+msgid ""
+"You already have assets with the reference %s.\n"
+"Please delete these assets before creating new ones for this invoice."
+msgstr "Posiadasz aktualnie środek trwały odnoszący się do %s.\nUsuń te środki trwałe zanim stworzysz nowy dla tej faktury."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:81

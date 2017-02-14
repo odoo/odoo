@@ -154,7 +154,7 @@ class website(osv.osv):
         'name': fields.char('Domain'),
         'company_id': fields.many2one('res.company', string="Company"),
         'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
-        'default_lang_id': fields.many2one('res.lang', string="Default language"),
+        'default_lang_id': fields.many2one('res.lang', string="Default language", required=True),
         'default_lang_code': fields.related('default_lang_id', 'code', type="char", string="Default language code", store=True),
         'social_twitter': fields.char('Twitter Account'),
         'social_facebook': fields.char('Facebook Account'),
@@ -241,14 +241,22 @@ class website(osv.osv):
         if req is None:
             req = request.httprequest
         default = self.get_current_website(cr, uid, context=context).default_lang_code
-        uri = req.path
-        if req.query_string:
-            uri += '?' + req.query_string
         shorts = []
+
+        def get_url_localized(router, lang):
+            arguments = dict(request.endpoint_arguments)
+            for k, v in arguments.items():
+                if isinstance(v, orm.browse_record):
+                    arguments[k] = v.with_context(lang=lang)
+            return router.build(request.endpoint, arguments)
+        router = request.httprequest.app.get_db_router(request.db).bind('')
         for code, name in self.get_languages(cr, uid, ids, context=context):
             lg_path = ('/' + code) if code != default else ''
             lg = code.split('_')
             shorts.append(lg[0])
+            uri = request.endpoint and get_url_localized(router, code) or request.httprequest.path
+            if req.query_string:
+                uri += '?' + req.query_string
             lang = {
                 'hreflang': ('-'.join(lg)).lower(),
                 'short': lg[0],
@@ -347,7 +355,8 @@ class website(osv.osv):
         :rtype: bool
         """
         endpoint = rule.endpoint
-        methods = rule.methods or ['GET']
+        methods = endpoint.routing.get('methods') or ['GET']
+
         converters = rule._converters.values()
         if not ('GET' in methods
             and endpoint.routing['type'] == 'http'
@@ -383,7 +392,7 @@ class website(osv.osv):
         """
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
-        url_list = []
+        url_set = set()
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
@@ -415,20 +424,20 @@ class website(osv.osv):
                         page[key[2:]] = val
                 if url in ('/sitemap.xml',):
                     continue
-                if url in url_list:
+                if url in url_set:
                     continue
-                url_list.append(url)
+                url_set.add(url)
 
                 yield page
 
     def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
         name = (needle or "").replace("/page/website.", "").replace("/page/", "")
+        name = slugify(name, max_length=50)
         res = []
         for page in self.enumerate_pages(cr, uid, ids, query_string=name, context=context):
-            if needle in page['loc']:
-                res.append(page)
-                if len(res) == limit:
-                    break
+            res.append(page)
+            if len(res) == limit:
+                break
         return res
 
     def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
@@ -535,8 +544,10 @@ class website(osv.osv):
         Model = self.pool[model]
         id = int(id)
 
-        ids = Model.search(cr, uid,
-                           [('id', '=', id)], context=context)
+        ids = None
+        if Model.check_access_rights(cr, uid, 'read', raise_exception=False):
+            ids = Model.search(cr, uid,
+                               [('id', '=', id)], context=context)
         if not ids and 'website_published' in Model._fields:
             ids = Model.search(cr, openerp.SUPERUSER_ID,
                                [('id', '=', id), ('website_published', '=', True)], context=context)

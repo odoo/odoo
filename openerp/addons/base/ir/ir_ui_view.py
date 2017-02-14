@@ -68,7 +68,7 @@ def keep_query(*keep_params, **additional_params):
     for keep_param in keep_params:
         for param in fnmatch.filter(qs_keys, keep_param):
             if param not in additional_params and param in qs_keys:
-                params[param] = ','.join(request.httprequest.args.getlist(param))
+                params[param] = request.httprequest.args.getlist(param)
     return werkzeug.urls.url_encode(params)
 
 class view_custom(osv.osv):
@@ -93,10 +93,11 @@ class view_custom(osv.osv):
 
 
     def _auto_init(self, cr, context=None):
-        super(view_custom, self)._auto_init(cr, context)
+        res = super(view_custom, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_custom_user_id_ref_id\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_custom_user_id_ref_id ON ir_ui_view_custom (user_id, ref_id)')
+        return res
 
 def _hasclass(context, *cls):
     """ Checks if the context node has all the classes passed as arguments
@@ -227,10 +228,11 @@ class view(osv.osv):
     ]
 
     def _auto_init(self, cr, context=None):
-        super(view, self)._auto_init(cr, context)
+        res = super(view, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_model_type_inherit_id\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, inherit_id)')
+        return res
 
     def _compute_defaults(self, cr, uid, values, context=None):
         if 'inherit_id' in values:
@@ -398,7 +400,7 @@ class view(osv.osv):
     def inherit_branding(self, specs_tree, view_id, root_id):
         for node in specs_tree.iterchildren(tag=etree.Element):
             xpath = node.getroottree().getpath(node)
-            if node.tag == 'data' or node.tag == 'xpath':
+            if node.tag == 'data' or node.tag == 'xpath' or node.get('position') or node.get('t-field'):
                 self.inherit_branding(node, view_id, root_id)
             else:
                 node.set('data-oe-id', str(view_id))
@@ -509,10 +511,15 @@ class view(osv.osv):
                     requested (similar to ``id``)
         """
         if context is None: context = {}
+        context = context.copy()
 
         # if view_id is not a root view, climb back to the top.
         base = v = self.browse(cr, uid, view_id, context=context)
+        check_view_ids = context.setdefault('check_view_ids', [])
         while v.mode != 'primary':
+            # Add inherited views to the list of loading forced views
+            # Otherwise, inherited views could not find elements created in their direct parents if that parent is defined in the same module
+            check_view_ids.append(v.id)
             v = v.inherit_id
         root_id = v.id
 

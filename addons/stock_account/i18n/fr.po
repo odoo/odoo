@@ -3,16 +3,18 @@
 # * stock_account
 # 
 # Translators:
+# Christophe CHAUVET <christophe.chauvet@gmail.com>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Lionel Sausin <ls@numerigraphe.com>, 2015
+# Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2016
+# Lionel Sausin <ls@numerigraphe.com>, 2015-2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-05 15:02+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-07-05 00:13+0000\n"
+"Last-Translator: Jérôme Tanché <jerome.tanche@ouest-dsi.fr>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +25,7 @@ msgstr ""
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_tree
 msgid "# of Products"
-msgstr "Nb. de produits"
+msgstr "Nb. d'articles"
 
 #. module: stock_account
 #: view:product.template:stock_account.view_template_property_form
@@ -97,7 +99,7 @@ msgid ""
 "Choose the accounting period where you want to value the stock moves created"
 " by the inventory instead of the default one (chosen by the inventory end "
 "date)"
-msgstr ""
+msgstr "Sélectionnez la période de valorisation comptable à laquelle vous souhaitez valoriser le mouvement de stock (date de fin d'inventaire)"
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
@@ -106,7 +108,7 @@ msgid ""
 "\n"
 "                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity\n"
 "                        you had, and gives you the inventory value according to the standard price used at that time."
-msgstr ""
+msgstr "Choisissez la date pour laquelle vous souhaiter faire une calorisation de votre stock.\n\n                        Cela filtrera les opérations de stock qui ne sont pas terminées pour la date seléctionnée, pour récupérer les quantités.\n                        Vous avez et vous donnerez la valeur de l'inventaire par rapport au prix standard utiliser dans le même temps."
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
@@ -245,14 +247,14 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Quand la valorisation en temps réel est activée sur un article, le système génère automatiquement les écritures comptables correspondant aux mouvements de stock, à un prix conforme à la méthode de valorisation. Le compte de variation d'inventaire défini dans la catégorie d'articles représente la valorisation actuelle du stock, et les comptes d'entrée et de sortie de stock contiennent les contreparties des mouvements de stock entrants et sortants."
 
 #. module: stock_account
 #: help:stock.config.settings,module_stock_landed_costs:0
 msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
-msgstr ""
+msgstr "Installer le module qui permet d'imputer les frais de douane sur les réceptions et les répartir sur les différents articles."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -339,7 +341,7 @@ msgstr "Gérer les méthodes de valorisation des stocks"
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_search
 msgid "Move"
-msgstr "N° d'écriture"
+msgstr "Mouvement"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:116
@@ -384,7 +386,7 @@ msgid ""
 "    Stock Valuation Account: %s\n"
 "    Stock Journal: %s\n"
 "    "
-msgstr ""
+msgstr "L'une des informations suivantes manque sur l'article ou la catégorie dd'article et empêche la création des pièces comptables de valorisation : \nArticle : %s\nCompte d'entrée de stock : %s\nCompte de sortie de stock : %s\nCompte dde valorisation de stock : %s\nJournal de stock : %s"
 
 #. module: stock_account
 #: field:stock.history,date:0
@@ -432,7 +434,7 @@ msgstr "Catégorie d'articles"
 #. module: stock_account
 #: field:stock.history,quantity:0
 msgid "Product Quantity"
-msgstr "Quantité produit"
+msgstr "Quantité d'articles"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -507,7 +509,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
+msgstr "Prix Standard : Le prix de revient est mis à jour manuellement à la fin d'une période donnée (généralement une fois par an).\nPrix moyen : Le prix de revient est recalculé à chaque arrivage et utilisé pour l'évaluation de l'article.\nPrix réel : Le prix de revient affiché est le prix du dernier article sortant (il sera utilisé en cas de perte de stocks par exemple)."
 
 #. module: stock_account
 #: field:product.category,property_stock_account_input_categ:0
@@ -572,7 +574,7 @@ msgstr "Valeur du stock à la date"
 msgid ""
 "This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
 "-This installs the module stock_invoice_directly."
-msgstr ""
+msgstr "Cela permet de lancer automatiquement l'assistant de facturation si la livraison est\n                à facturer lorsque vous recevez ou livrez des marchandises.\n                - Cela installe le module stock_invoice_directly."
 
 #. module: stock_account
 #: selection:procurement.order,invoice_state:0
@@ -601,7 +603,7 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr "Utilisé pour la valorisation de l'inventaire en temps réel. Quand il mis sur un emplacement virtuel (type autre que \"Interne\"), ce compte sera utilisé pour enregistrer la valeur des produits qui ont été déplacés depuis un emplacement interne vers cet emplacement, à la place du compte générique de stock de sortie décrit dans le produit. Ceci n'a pas d'effet pour les emplacements internes."
+msgstr "Utilisé pour la valorisation de l'inventaire en temps réel. Quand il mis sur un emplacement virtuel (type autre que \"Interne\"), ce compte sera utilisé pour enregistrer la valeur des articles qui ont été déplacés depuis un emplacement interne vers cet emplacement, à la place du compte générique de stock de sortie décrit dans l'article. Ceci n'a pas d'effet pour les emplacements internes."
 
 #. module: stock_account
 #: help:stock.location,valuation_out_account_id:0
@@ -611,7 +613,7 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr "Utilisé pour la valorisation du stock en temps réel. Lorsqu'on le définit sur un emplacement virtuel, ce compte est utilisé pour valoriser les produits qui sont déplacés de cet emplacement à un emplacement interne, à la place du compte de sortie de stock générique défini sur l'article. Ceci est sans effet sur les emplacements internes."
+msgstr "Utilisé pour la valorisation du stock en temps réel. Lorsqu'on le définit sur un emplacement virtuel, ce compte est utilisé pour valoriser les articles qui sont déplacés de cet emplacement à un emplacement interne, à la place du compte de sortie de stock générique défini sur l'article. Ceci est sans effet sur les emplacements internes."
 
 #. module: stock_account
 #: field:stock.history,price_unit_on_quant:0
@@ -651,7 +653,7 @@ msgid ""
 "specific valuation account set on the destination location. This is the "
 "default value for all products in this category. It can also directly be set"
 " on each product"
-msgstr "Quand vous choisissez la valorisation en temps-réel de l'inventaire, les écritures de contrepartie des sorties de stock seront comptabilisés dans ce compte, à moins qu'il y ait un compte de valorisation spécifique définit sur l'emplacement de destination. Ceci est la valeur par défaut pour tous les produits de cette catégorie. Il peut aussi directement être définit sur chaque produit."
+msgstr "Quand vous choisissez la valorisation en temps-réel de l'inventaire, les écritures de contrepartie des sorties de stock seront comptabilisés dans ce compte, à moins qu'il y ait un compte de valorisation spécifique définit sur l'emplacement de destination. Ceci est la valeur par défaut pour tous les articles de cette catégorie. Il peut aussi directement être définit sur chaque article."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_output:0
@@ -660,7 +662,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr "Lorsque la valorisation du stock est faite en temps réel, les écritures de contrepartie de toutes les livraisons seront passées sur ce compte, à moins qu'un compte de valorisation particulier soit défini sur l'emplacement destination. Lorsqu'il n'est pas précisé sur le produit, celui de la catégorie de produit est utilisé."
+msgstr "Lorsque la valorisation du stock est faite en temps réel, les écritures de contrepartie de toutes les livraisons seront passées sur ce compte, à moins qu'un compte de valorisation particulier soit défini sur l'emplacement destination. Lorsqu'il n'est pas précisé sur l'article, celui de la catégorie d'article est utilisé."
 
 #. module: stock_account
 #: help:product.category,property_stock_journal:0
@@ -679,7 +681,7 @@ msgstr "Quand la valorisation en temps réel est activée sur un article, ce com
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
 msgid "Wizard that opens the stock valuation history table"
-msgstr ""
+msgstr "Assistant qui ouvre le tableau de l'historique de la valorisation"
 
 #. module: stock_account
 #: view:stock.change.standard.price:stock_account.view_change_standard_price

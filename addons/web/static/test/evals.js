@@ -1,3 +1,16 @@
+openerp.testing.section('eval.basics', {
+    dependencies: ['web.core'],
+    setup: function (instance) {
+        instance.session.uid = 42;
+    }
+}, function (test) {
+    test('not prefix', function (instance) {
+        ok(py.eval('not False'));
+        ok(py.eval('not foo', {foo: false}));
+        ok(py.eval('not a in b', {a: 3, b: [1, 2, 4, 8]}));
+    });
+});
+
 openerp.testing.section('eval.types', {
     dependencies: ['web.core'],
     setup: function (instance) {

@@ -198,7 +198,7 @@ class mail_mail(osv.Model):
         if partner:
             email_to = [formataddr((partner.name, partner.email))]
         else:
-            email_to = tools.email_split(mail.email_to)
+            email_to = tools.email_split_and_format(mail.email_to)
         return email_to
 
     def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):

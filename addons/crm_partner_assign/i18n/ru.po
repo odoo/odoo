@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 15:14+0000\n"
-"PO-Revision-Date: 2015-09-11 08:34+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-12-07 18:46+0000\n"
+"Last-Translator: Эдуард Манятовский\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +69,7 @@ msgstr "# предложений"
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:48
 #, python-format
 msgid "<p>I am interested by this lead.</p>"
-msgstr ""
+msgstr "<p>Я интересуюсь данными лидами.</p>"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:53
@@ -82,7 +82,7 @@ msgstr ""
 #, python-format
 msgid ""
 "<p>I am not interested by this lead. I have not contacted the lead.</p>"
-msgstr ""
+msgstr "<p>Я не интересуюсь данным лидом. Я не связался с этим лидом.</p>"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,activation:0
@@ -143,7 +143,7 @@ msgstr "Назначенный партнер"
 #: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
 #: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Automatic Assignation"
-msgstr ""
+msgstr "Автоматическое назначение"
 
 #. module: crm_partner_assign
 #: help:crm.lead.forward.to.partner,body:0
@@ -205,7 +205,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
 msgid "Contact"
-msgstr ""
+msgstr "Контакт"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,body:0
@@ -236,7 +236,7 @@ msgstr "Дата создания"
 #: field:res.partner.activation,create_uid:0
 #: field:res.partner.grade,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Создано"
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,create_date:0
@@ -245,7 +245,7 @@ msgstr ""
 #: field:res.partner.activation,create_date:0
 #: field:res.partner.grade,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Создан"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_partner_filter
@@ -288,12 +288,12 @@ msgstr ""
 #. module: crm_partner_assign
 #: field:crm.lead.channel.interested,contacted:0
 msgid "Did you contact the lead?"
-msgstr ""
+msgstr "Вы связывались с лидом?"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Do you have contacted the customer?"
-msgstr ""
+msgstr "Вы связались с клиентом?"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:102
@@ -305,7 +305,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Email Template"
-msgstr ""
+msgstr "Шаблон письма"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:87
@@ -338,12 +338,12 @@ msgstr "Расширенные фильтры..."
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,partner_id:0
 msgid "Forward Leads To"
-msgstr ""
+msgstr "Переслать лид к"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,forward_type:0
 msgid "Forward selected leads to"
-msgstr ""
+msgstr "Переслать выбранные лиды к"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_crm_send_mass_forward
@@ -354,7 +354,7 @@ msgstr "Переслать партнёру"
 #. module: crm_partner_assign
 #: model:email.template,subject:crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: ${ctx['partner_id'].name}"
-msgstr ""
+msgstr "Fwd: Инициатива: ${ctx['partner_id'].name}"
 
 #. module: crm_partner_assign
 #: field:crm.lead,partner_latitude:0
@@ -380,7 +380,7 @@ msgstr "Географическая долгота"
 #: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
 #: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Геопозиционирование"
 
 #. module: crm_partner_assign
 #: help:res.partner,partner_weight:0 help:res.partner.grade,partner_weight:0
@@ -409,7 +409,7 @@ msgstr ""
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
 #: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Group By"
-msgstr ""
+msgstr "Группировать по"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -420,13 +420,13 @@ msgstr "Высокий"
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_form
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm interested"
-msgstr ""
+msgstr "Я заинтересован"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_form
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm not interested"
-msgstr ""
+msgstr "Я не заинтересован"
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,id:0 field:crm.lead.channel.interested,id:0
@@ -434,22 +434,22 @@ msgstr ""
 #: field:crm.partner.report.assign,id:0 field:res.partner.activation,id:0
 #: field:res.partner.grade,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: crm_partner_assign
 #: field:res.partner,implemented_partner_ids:0
 msgid "Implementation References"
-msgstr ""
+msgstr "Рекомендации по осуществлению"
 
 #. module: crm_partner_assign
 #: field:res.partner,assigned_partner_id:0
 msgid "Implemented by"
-msgstr ""
+msgstr "Реализовано"
 
 #. module: crm_partner_assign
 #: field:crm.lead.channel.interested,interested:0
 msgid "Interested by this lead"
-msgstr ""
+msgstr "Интересуюсь этим лидом"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,period_id:0
@@ -463,7 +463,7 @@ msgstr "Период счета"
 #: field:res.partner.activation,write_uid:0
 #: field:res.partner.grade,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,write_date:0
@@ -472,7 +472,7 @@ msgstr ""
 #: field:res.partner.activation,write_date:0
 #: field:res.partner.grade,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: crm_partner_assign
 #: help:crm.lead,date_assign:0
@@ -504,12 +504,12 @@ msgstr "Кандидат распределен"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_channel_interested_act
 msgid "Lead Feedback"
-msgstr ""
+msgstr "Отзыв лида"
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,lead_location:0
 msgid "Lead Location"
-msgstr ""
+msgstr "Местоположение лида"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead
@@ -524,12 +524,12 @@ msgstr "Кандидат/Предложение"
 #: model:ir.actions.act_window,name:crm_partner_assign.action_portal_leads
 #: model:ir.ui.menu,name:crm_partner_assign.openerp_portal_menu_sales_leads_current
 msgid "Leads"
-msgstr ""
+msgstr "Инициативы"
 
 #. module: crm_partner_assign
 #: model:ir.ui.menu,name:crm_partner_assign.portal_leads
 msgid "Leads & Opportunities"
-msgstr ""
+msgstr "Лиды и Возможности"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
@@ -597,7 +597,7 @@ msgstr "Анализ назначений предложений"
 #: model:ir.actions.act_window,name:crm_partner_assign.action_portal_opportunities
 #: model:ir.ui.menu,name:crm_partner_assign.openerp_portal_menu_sales_leads_current1
 msgid "Opportunities"
-msgstr ""
+msgstr "Возможности"
 
 #. module: crm_partner_assign
 #: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_graph
@@ -659,7 +659,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_form
 msgid "Partner Name"
-msgstr ""
+msgstr "Имя партнера"
 
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
@@ -831,7 +831,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Why aren't you interested by this lead?"
-msgstr ""
+msgstr "Почему вы не заинтересованы этой инициативой?"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:44

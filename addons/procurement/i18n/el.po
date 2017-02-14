@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-22 01:17+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-01-02 22:27+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgid ""
 "                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να δημιουργήσετε μια Προμήθεια.\n</p>\n<p>\nΟι <b>Εντολές Προμήθειας</b> αντιπροσωπεύουν την ανάγκη για μια ορισμένη ποσότητα των προϊόντων, σε μια δεδομένη στιγμή, σε μια δεδομένη τοποθεσία.\n</p>\n<p>\n<b>Οι Παραγγελίες</b> είναι μία τυπική πηγή Εντολών Προμήθειας (αλλά αυτά είναι διακριτά έγγραφα).\n<br/>\nΑνάλογα με τις παραμέτρους των προμηθειών και τη παραμετροποίηση του προϊόντος, η μηχανή προμηθειών θα προσπαθήσει να ικανοποιήσει την ανάγκη δεσμεύοντας προϊόντα από τα αποθέματα, την παραγγελία των προϊόντων από προμηθευτή, ή περνώντας σε μια παραγγελία κατασκευής, κλπ ...\n</p>\n<p>\nΜια <b>Εξαίρεση Προμήθειας</b> συμβαίνει όταν το σύστημα δεν μπορεί να βρει έναν τρόπο να εκπληρώσει την προμήθεια. Ορισμένες εξαιρέσεις θα επιλυθούν αυτόματα, αλλά άλλες απαιτούν χειροκίνητη παρέμβαση (οι ενέργειες προσδιορίζονται από το συγκεκριμένο μήνυμα λάθους κατά την διαδικασία).\n</p>"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -55,7 +56,7 @@ msgid ""
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να δημιουργήσετε μια εντολή προμηθειών.\n</p>\n<p>\nΗ εντολή προμηθειών χρησιμοποιείται για να καταγράψει την ανάγκη για ένα συγκεκριμένο προϊόν σε μια συγκεκριμένη θέση. Οι εντολές προμηθειών συνήθως\nδημιουργούνται αυτόματα από τις παραγγελίες, εφαρμογή των εφοδιαστικών κανόνων ή κανόνες ελάχιστου αποθέματος.\n</p>\n<p>\nΌταν η εντολή προμηθειών επιβεβαιωθεί, αυτόματα\nδημιουργεί τις απαραίτητες λειτουργίες για να καλύψει την ανάγκη: πρόταση εντολής αγοράς, εντολή παραγωγής κ.λπ.\n</p>"
 
 #. module: procurement
 #: field:procurement.rule,action:0
@@ -91,12 +92,12 @@ msgstr "Ακυρωμένη"
 #: code:addons/procurement/procurement.py:156
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Δεν μπορεί να διαγραφεί Εντολή Προμήθειας η οποία είναι σε %s καθεστώς"
+msgstr "Δεν μπορεί να διαγραφεί η Εντολή(ες) Προμήθειας η οποία είναι σε κατάσταση %s."
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Check Procurement"
-msgstr ""
+msgstr "Έλεγχος Προμηθειών"
 
 #. module: procurement
 #: help:procurement.order,rule_id:0
@@ -104,7 +105,7 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but"
 " can be manually set by the procurement manager to force an unusual "
 "behavior."
-msgstr ""
+msgstr "Κανόνας ο οποίος επελέγη για τη διευθέτηση των προμηθειών. Συνήθως επιλέγεται από το σύστημα, αλλά μπορεί να ρυθμιστεί χειροκίνητα από τον διαχειριστή προμηθειών για να αναγκάσει μια ασυνήθιστη συμπεριφορά."
 
 #. module: procurement
 #: field:procurement.order,company_id:0 field:procurement.rule,company_id:0
@@ -114,7 +115,7 @@ msgstr "Εταιρία"
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Υπολογίστε το ιστορικό των προμηθειών."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -188,7 +189,7 @@ msgstr "Σταθερό"
 #. module: procurement
 #: field:procurement.rule,group_id:0
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "Σταθερή Ομάδα Προμηθειών"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -209,7 +210,7 @@ msgstr "Ομαδοποίηση Κατά"
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr ""
+msgstr "Προμήθειες Ομάδας"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -227,12 +228,12 @@ msgstr "Κωδικός"
 #. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Εάν επιλεγεί τα νέα μυνήματα χρειάζονται την προσοχή σας"
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
 
 #. module: procurement
 #: help:procurement.rule,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr ""
+msgstr "Εάν είναι απενεργοποιημένο σας επιτρέπει να αποκρύψετε τον κανόνα χωρίς να τον αφαιρέσετε."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:155
@@ -262,7 +263,7 @@ msgstr "Τελευταία ενημέρωση από"
 #: field:procurement.order.compute.all,write_date:0
 #: field:procurement.rule,write_date:0
 msgid "Last Updated on"
-msgstr "Τελευταία ενημέρωση στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -272,12 +273,12 @@ msgstr "Αργοπορημένη"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Leave Empty"
-msgstr ""
+msgstr "Αφήστε Κενό"
 
 #. module: procurement
 #: view:res.company:procurement.mrp_company
 msgid "Logistics"
-msgstr ""
+msgstr "Εφοδιαστική"
 
 #. module: procurement
 #: field:procurement.order,message_ids:0
@@ -298,7 +299,7 @@ msgstr "Ονομασία"
 #: code:addons/procurement/procurement.py:212
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "Κανένας κανόνας δεν ταιριάζει με αυτή την προμήθεια"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -318,7 +319,7 @@ msgstr "Σημειώσεις"
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "Partial"
-msgstr ""
+msgstr "Μερική"
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -341,7 +342,7 @@ msgstr "Εξαιρέσεις Προμήθειας"
 #. module: procurement
 #: field:procurement.order,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "Προμήθειες Συνόλου"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view
@@ -356,17 +357,17 @@ msgstr "Εντολές Προμηθειών"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Απαιτούμενα Προμήθειας"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Κανόνας Προμήθειας"
 
 #. module: procurement
 #: view:procurement.group:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "Ομάδα προμηθειών"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -399,27 +400,27 @@ msgstr "Προϊόν UoS"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "Μετάδοση"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "Επιλογές Μετάδοσης"
 
 #. module: procurement
 #: field:procurement.rule,group_propagation_option:0
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Ομάδα Μετάδοσης των Προμηθειών"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Pull Rule"
-msgstr ""
+msgstr "Κανόνας Απόσυρσης"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_tree
 msgid "Pull Rules"
-msgstr ""
+msgstr "Κανόνες Απόσυρσης"
 
 #. module: procurement
 #: field:procurement.order,product_qty:0
@@ -429,7 +430,7 @@ msgstr "Ποσότητα"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr ""
+msgstr "Επαναβεβαιώση Προμηθειών"
 
 #. module: procurement
 #: field:procurement.group,name:0
@@ -441,12 +442,12 @@ msgstr "Παραπομπή"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr ""
+msgstr "Αναφορά του εγγράφου που δημιούργησε αυτή την Προμήθεια.\nΑυτό ολοκληρώνεται αυτοματοποιημένα από το Odoo."
 
 #. module: procurement
 #: field:procurement.order,rule_id:0
 msgid "Rule"
-msgstr ""
+msgstr "Κανόνας"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
@@ -472,7 +473,7 @@ msgstr "Προγραμματισμένη Ημερομηνία"
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Προγραμματισμένος Μήνας"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
@@ -482,7 +483,7 @@ msgstr "Παράμετροι Προγραμματιστή"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Scheduling"
-msgstr ""
+msgstr "Προγραμματισμός"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -503,7 +504,7 @@ msgstr "Έγγραφο Προέλευσης"
 #: view:procurement.order:procurement.view_procurement_filter
 #: field:procurement.order,state:0
 msgid "Status"
-msgstr "Καθεστώς"
+msgstr "Κατάσταση"
 
 #. module: procurement
 #: field:procurement.order,message_summary:0
@@ -513,7 +514,7 @@ msgstr "Σύνοψη"
 #. module: procurement
 #: help:procurement.rule,name:0
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr ""
+msgstr "Αυτό το πεδίο θα συμπληρώσει την προέλευση της συσκευασίας και το όνομα των κινήσεων"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view
@@ -543,7 +544,7 @@ msgstr "Πολύ Επείγουσα"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "e.g. SO005"
-msgstr ""
+msgstr "π.χ. SO005"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard

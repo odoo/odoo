@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-08-19 09:24+0000\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-11-20 13:34+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-8/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -54,6 +54,16 @@ msgstr ""
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid " (reserved)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
 msgstr ""
 
 #. module: stock
@@ -369,7 +379,7 @@ msgstr "Активен"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Добави вътрешна бележка"
 
 #. module: stock
 #: view:stock.config.settings:stock.view_stock_config_settings
@@ -473,7 +483,7 @@ msgstr ""
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Applicable On"
-msgstr ""
+msgstr "Приложимо На"
 
 #. module: stock
 #: field:stock.location.route,product_selectable:0
@@ -777,7 +787,7 @@ msgstr "Код"
 #. module: stock
 #: field:stock.picking.type,color:0
 msgid "Color"
-msgstr ""
+msgstr "Цвят"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -1104,7 +1114,7 @@ msgstr ""
 #: help:stock.picking,message_last_post:0
 #: help:stock.production.lot,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Дата на последното съобщение, публикувано на записа."
 
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_tree
@@ -1502,8 +1512,9 @@ msgstr ""
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "Прогнозирано Количество"
 
 #. module: stock
 #: help:product.product,virtual_available:0
@@ -1640,7 +1651,7 @@ msgstr "Визочина (Z)"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Съдържа обобщена информация за Chatter - чат (брой съобщения и т.н).Това резшме е директно във формат HTML с цел да бъде вмъквано в изгледи kanban."
 
 #. module: stock
 #: field:make.procurement,id:0 field:procurement.orderpoint.compute,id:0
@@ -1709,7 +1720,7 @@ msgstr ""
 #: help:stock.picking,message_unread:0
 #: help:stock.production.lot,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
 
 #. module: stock
 #: help:stock.location.path,propagate:0
@@ -2476,7 +2487,7 @@ msgstr "Съобщения"
 #. module: stock
 #: help:stock.picking,message_ids:0 help:stock.production.lot,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "История на събщенията и комуникациите"
 
 #. module: stock
 #: field:product.putaway,method:0 field:product.removal,method:0
@@ -2507,7 +2518,7 @@ msgstr ""
 #. module: stock
 #: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rules"
-msgstr ""
+msgstr "Правила за Минимална Наличност"
 
 #. module: stock
 #: field:stock.config.settings,propagation_minimum_delta:0
@@ -3000,7 +3011,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_package_view
 #: model:ir.ui.menu,name:stock.menu_package
 msgid "Packages"
-msgstr ""
+msgstr "Пакети"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -3092,7 +3103,7 @@ msgstr "Физически местонахождения"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "Физически Пакети"
 
 #. module: stock
 #: code:addons/stock/stock.py:3302
@@ -3445,7 +3456,7 @@ msgstr "Мерни единици на продукт"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_variant_config_stock
 msgid "Product Variants"
-msgstr ""
+msgstr "Варианти на продукта"
 
 #. module: stock
 #: model:stock.location,name:stock.location_production
@@ -3621,7 +3632,7 @@ msgid "Quantity (UOS)"
 msgstr "Коливество (мер.ед)"
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr ""
 
@@ -3634,7 +3645,7 @@ msgstr ""
 #: field:product.product,qty_available:0
 #: field:product.template,qty_available:0
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Налично Количество"
 
 #. module: stock
 #: field:stock.pack.operation,qty_done:0
@@ -3911,7 +3922,7 @@ msgstr ""
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_tree
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
 msgid "Reordering Rules"
-msgstr ""
+msgstr "Правила за Повторна Поръчка"
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
@@ -4023,7 +4034,7 @@ msgstr ""
 #: view:stock.location.route:stock.stock_location_route_tree
 #: view:stock.warehouse:stock.view_warehouse field:stock.warehouse,route_ids:0
 msgid "Routes"
-msgstr ""
+msgstr "Маршрути"
 
 #. module: stock
 #: help:stock.warehouse,resupply_route_ids:0
@@ -5003,7 +5014,7 @@ msgstr ""
 #: view:stock.picking:stock.view_picking_form
 #: field:stock.transfer_details_items,transfer_id:0
 msgid "Transfer"
-msgstr ""
+msgstr "Трансфер"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -5060,7 +5071,7 @@ msgstr ""
 #. module: stock
 #: field:stock.quant,cost:0
 msgid "Unit Cost"
-msgstr ""
+msgstr "Цена за брой"
 
 #. module: stock
 #: help:stock.pack.operation,cost:0
@@ -5092,7 +5103,7 @@ msgstr "Мерна единица"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "Категории мерни единици"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock

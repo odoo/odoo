@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-09-07 09:30+0000\n"
+"PO-Revision-Date: 2015-11-11 17:15+0000\n"
 "Last-Translator: Florian Hatat\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -43,24 +43,24 @@ msgid ""
 "                its categories.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliquez pour ajouter une imprimante de commandes.\n</p><p>\nLes imprimantes de commandes sont utilisées dans les restaurants\net les bars pour irmprimer les modifications de commandes dans\nla cuisine ou le bar lorsque le serveur modifie la commande.\n</p><p>\nChaque Imprimante de Commande a une adresse IP qui définit \nle Point de Vente ou le matériel où se trouve l'imprimante, et une liste\nde catégories de produits.\nUne Imprimante de Commandes n'imprimera que des modifications\npour des produits appartenant à une des catégories de sa liste.\n</p>"
 
 #. module: pos_restaurant
 #: help:pos.config,iface_printbill:0
 msgid "Allows to print the Bill before payment"
-msgstr ""
+msgstr "Autoriser l'impression de la facture avant le paiement"
 
 #. module: pos_restaurant
 #: help:restaurant.printer,name:0
 msgid "An internal identification of the printer"
-msgstr ""
+msgstr "Une identification en interne de l'imprimante"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:61
 #, python-format
 msgid "Back"
-msgstr ""
+msgstr "Retour"
 
 #. module: pos_restaurant
 #: view:pos.config:pos_restaurant.view_pos_config_form
@@ -72,12 +72,12 @@ msgstr "Bar & Restaurant"
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:6
 #, python-format
 msgid "Bill"
-msgstr ""
+msgstr "Facture"
 
 #. module: pos_restaurant
 #: field:pos.config,iface_printbill:0
 msgid "Bill Printing"
-msgstr ""
+msgstr "Impression de la Facture"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -85,14 +85,14 @@ msgstr ""
 #: field:pos.config,iface_splitbill:0
 #, python-format
 msgid "Bill Splitting"
-msgstr ""
+msgstr "Partage d'addition"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:26
 #, python-format
 msgid "CANCELLED"
-msgstr ""
+msgstr "ANNULÉ"
 
 #. module: pos_restaurant
 #: field:restaurant.printer,create_uid:0
@@ -121,7 +121,7 @@ msgstr "Remises"
 #. module: pos_restaurant
 #: help:pos.config,iface_splitbill:0
 msgid "Enables Bill Splitting in the Point of Sale"
-msgstr ""
+msgstr "Autoriser le partage d'addition en Point de Vente"
 
 #. module: pos_restaurant
 #: field:restaurant.printer,id:0
@@ -157,7 +157,7 @@ msgstr "Ordre"
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_printer_all
 #: field:pos.config,printer_ids:0
 msgid "Order Printers"
-msgstr ""
+msgstr "Imprimantes de commandes"
 
 #. module: pos_restaurant
 #: view:restaurant.printer:pos_restaurant.view_restaurant_printer_form
@@ -167,29 +167,29 @@ msgstr "Imprimante PdV"
 #. module: pos_restaurant
 #: field:restaurant.printer,product_categories_ids:0
 msgid "Printed Product Categories"
-msgstr ""
+msgstr "Catégories de l'article imprimées"
 
 #. module: pos_restaurant
 #: field:restaurant.printer,name:0
 msgid "Printer Name"
-msgstr ""
+msgstr "Nom de l'imprimante"
 
 #. module: pos_restaurant
 #: field:restaurant.printer,proxy_ip:0
 msgid "Proxy IP Address"
-msgstr ""
+msgstr "adresse IP du proxy"
 
 #. module: pos_restaurant
 #: view:restaurant.printer:pos_restaurant.view_restaurant_printer
 msgid "Restaurant Order Printers"
-msgstr ""
+msgstr "Imprimantes pour les commandes du restaurant"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:45
 #, python-format
 msgid "Served by"
-msgstr ""
+msgstr "Servi par"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -210,7 +210,7 @@ msgstr "Sous-total"
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:104
 #, python-format
 msgid "TOTAL"
-msgstr ""
+msgstr "SOMME"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -222,7 +222,7 @@ msgstr "Tél. :"
 #. module: pos_restaurant
 #: help:restaurant.printer,proxy_ip:0
 msgid "The IP Address or hostname of the Printer's hardware proxy"
-msgstr ""
+msgstr "L'adresse IP ou le nom d'hôte du proxy de l'imprimante"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -250,4 +250,4 @@ msgstr "à"
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:46
 #, python-format
 msgid "discount"
-msgstr ""
+msgstr "Remise"

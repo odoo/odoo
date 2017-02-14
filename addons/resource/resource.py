@@ -20,6 +20,7 @@
 ##############################################################################
 
 import datetime
+from datetime import timedelta
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
@@ -338,8 +339,8 @@ class resource_calendar(osv.osv):
         working_intervals = []
         tz_info = fields.datetime.context_timestamp(cr, uid, work_dt, context=context).tzinfo
         for calendar_working_day in self.get_attendances_for_weekdays(cr, uid, id, [start_dt.weekday()], context):
-            x = work_dt.replace(hour=int(calendar_working_day.hour_from))
-            y = work_dt.replace(hour=int(calendar_working_day.hour_to))
+            x = work_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(calendar_working_day.hour_from * 3600))
+            y = work_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(calendar_working_day.hour_to * 3600))
             x = x.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None)
             y = y.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None)
             working_interval = (x, y)
@@ -644,7 +645,7 @@ class resource_calendar_attendance(osv.osv):
         'date_from' : fields.date('Starting Date'),
         'hour_from' : fields.float('Work from', required=True, help="Start and End time of working.", select=True),
         'hour_to' : fields.float("Work to", required=True),
-        'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True),
+        'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True, ondelete='cascade'),
     }
 
     _order = 'dayofweek, hour_from'

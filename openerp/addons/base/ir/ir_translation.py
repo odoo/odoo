@@ -125,11 +125,13 @@ class ir_translation_import_cursor(object):
             AND irt.type = ti.type
             AND irt.module = ti.module
             AND irt.name = ti.name
-            AND (ti.type IN ('field', 'help') OR irt.src = ti.src)
-            AND (    ti.type NOT IN ('model', 'view')
-                 OR (ti.type = 'model' AND ti.res_id = irt.res_id)
-                 OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id))
-                )
+            AND (   -- 8.0 only where unicity is assured on translations of 'model'
+                    (ti.type = 'model' AND ti.res_id = irt.res_id)
+                 OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id) AND irt.src = ti.src)
+                 OR (ti.type = 'field')
+                 OR (ti.type = 'help')
+                 OR (ti.type NOT IN ('model', 'view', 'field', 'help') AND irt.src = ti.src)
+            )
         """
 
         # Step 2: update existing (matching) translations
@@ -239,7 +241,7 @@ class ir_translation(osv.osv):
         'Language code of translation item must be among known languages' ), ]
 
     def _auto_init(self, cr, context=None):
-        super(ir_translation, self)._auto_init(cr, context)
+        res = super(ir_translation, self)._auto_init(cr, context)
 
         # FIXME: there is a size limit on btree indexed values so we can't index src column with normal btree.
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltns',))
@@ -262,6 +264,8 @@ class ir_translation(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
             cr.commit()
+
+        return res
 
     def _check_selection_field_value(self, cr, uid, field, value, context=None):
         if field == 'lang':
@@ -431,17 +435,19 @@ class ir_translation(osv.osv):
         if len(langs):
             fields = [f.get('name') for f in translatable_fields]
             record = trans_model.read(cr, uid, [id], fields, context={ 'lang': main_lang })[0]
+            external_id = trans_model.get_external_id(cr, uid, [id])[id]
+            module = external_id.split('.')[0]  # if no xml_id, empty string
             for lg in langs:
                 for f in translatable_fields:
                     # Check if record exists, else create it (at once)
-                    sql = """INSERT INTO ir_translation (lang, src, name, type, res_id, value)
-                        SELECT %s, %s, %s, 'model', %s, %s WHERE NOT EXISTS
+                    sql = """INSERT INTO ir_translation (lang, src, name, type, res_id, value, module)
+                        SELECT %s, %s, %s, 'model', %s, %s, %s WHERE NOT EXISTS
                         (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s AND type='model');
-                        UPDATE ir_translation SET src = %s WHERE lang=%s AND name=%s AND res_id=%s AND type='model';
+                        UPDATE ir_translation SET src = %s WHERE lang=%s AND name=%s AND res_id=%s AND type='model' AND module=%s;
                         """
                     src = record[f['name']] or None
                     name = "%s,%s" % (f['model'], f['name'])
-                    cr.execute(sql, (lg, src , name, f['id'], src, lg, name, f['id'], src, lg, name, id))
+                    cr.execute(sql, (lg, src, name, f['id'], src, module, lg, name, f['id'], src, lg, name, id, module))
 
         action = {
             'name': 'Translate',
@@ -464,12 +470,13 @@ class ir_translation(osv.osv):
         return ir_translation_import_cursor(cr, uid, self, context=context)
 
     def load_module_terms(self, cr, modules, langs, context=None):
-        context = dict(context or {}) # local copy
+        context_template = dict(context or {}) # local copy
         for module_name in modules:
             modpath = openerp.modules.get_module_path(module_name)
             if not modpath:
                 continue
             for lang in langs:
+                context = dict(context_template)
                 lang_code = tools.get_iso_codes(lang)
                 base_lang_code = None
                 if '_' in lang_code:

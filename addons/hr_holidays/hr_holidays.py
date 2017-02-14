@@ -29,6 +29,7 @@ from operator import attrgetter
 from openerp.exceptions import Warning
 from openerp import tools
 from openerp.osv import fields, osv
+from openerp.tools import float_compare
 from openerp.tools.translate import _
 
 
@@ -321,19 +322,30 @@ class hr_holidays(osv.osv):
 
         return result
 
+    def add_follower(self, cr, uid, ids, employee_id, context=None):
+        employee = self.pool['hr.employee'].browse(cr, uid, employee_id, context=context)
+        if employee.user_id:
+            self.message_subscribe(cr, uid, ids, [employee.user_id.partner_id.id], context=context)
+
     def create(self, cr, uid, values, context=None):
         """ Override to avoid automatic logging of creation """
         if context is None:
             context = {}
-        context = dict(context, mail_create_nolog=True)
+        employee_id = values.get('employee_id', False)
+        context = dict(context, mail_create_nolog=True, mail_create_nosubscribe=True)
         if values.get('state') and values['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
             raise osv.except_osv(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
-        return super(hr_holidays, self).create(cr, uid, values, context=context)
+        hr_holiday_id = super(hr_holidays, self).create(cr, uid, values, context=context)
+        self.add_follower(cr, uid, [hr_holiday_id], employee_id, context=context)
+        return hr_holiday_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        employee_id = vals.get('employee_id', False)
         if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
             raise osv.except_osv(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
-        return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
+        hr_holiday_id = super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
+        self.add_follower(cr, uid, ids, employee_id, context=context)
+        return hr_holiday_id
 
     def holidays_reset(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
@@ -393,7 +405,8 @@ class hr_holidays(osv.osv):
             elif record.holiday_type == 'category':
                 emp_ids = obj_emp.search(cr, uid, [('category_ids', 'child_of', [record.category_id.id])])
                 leave_ids = []
-                for emp in obj_emp.browse(cr, uid, emp_ids):
+                batch_context = dict(context, mail_notify_force_send=False)
+                for emp in obj_emp.browse(cr, uid, emp_ids, context=context):
                     vals = {
                         'name': record.name,
                         'type': record.type,
@@ -406,7 +419,7 @@ class hr_holidays(osv.osv):
                         'parent_id': record.id,
                         'employee_id': emp.id
                     }
-                    leave_ids.append(self.create(cr, uid, vals, context=None))
+                    leave_ids.append(self.create(cr, uid, vals, context=batch_context))
                 for leave_id in leave_ids:
                     # TODO is it necessary to interleave the calls?
                     for sig in ('confirm', 'validate', 'second_validate'):
@@ -432,7 +445,7 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids):
+        for record in self.browse(cr, uid, ids, context=context):
             # Delete the meeting
             if record.meeting_id:
                 record.meeting_id.unlink()
@@ -448,7 +461,8 @@ class hr_holidays(osv.osv):
             if record.holiday_type != 'employee' or record.type != 'remove' or not record.employee_id or record.holiday_status_id.limit:
                 continue
             leave_days = self.pool.get('hr.holidays.status').get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, context=context)[record.holiday_status_id.id]
-            if leave_days['remaining_leaves'] < 0 or leave_days['virtual_remaining_leaves'] < 0:
+            if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \
+              float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                 # Raising a warning gives a more user-friendly feedback than the default constraint error
                 raise Warning(_('The number of remaining leaves is not sufficient for this leave type.\n'
                                 'Please verify also the leaves waiting for validation.'))

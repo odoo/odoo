@@ -47,9 +47,13 @@ class TestMail(common.SavepointCase):
         def send_email(self, cr, uid, message, *args, **kwargs):
             return message['Message-Id']
 
+        def mail_group_message_get_recipient_values(self, cr, uid, id, notif_message=None, recipient_ids=None, context=None):
+            return self.pool['mail.thread'].message_get_recipient_values(cr, uid, id, notif_message=notif_message, recipient_ids=recipient_ids, context=context)
+
         cls._init_mock_build_email()
         cls.registry('ir.mail_server')._patch_method('build_email', build_email)
         cls.registry('ir.mail_server')._patch_method('send_email', send_email)
+        cls.registry('mail.group')._patch_method('message_get_recipient_values', mail_group_message_get_recipient_values)
 
         # Usefull models
         cls.ir_model = cls.registry('ir.model')
@@ -133,4 +137,5 @@ class TestMail(common.SavepointCase):
         # Remove mocks
         cls.registry('ir.mail_server')._revert_method('build_email')
         cls.registry('ir.mail_server')._revert_method('send_email')
+        cls.registry('mail.group')._revert_method('message_get_recipient_values')
         super(TestMail, cls).tearDownClass()

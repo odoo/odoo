@@ -167,6 +167,26 @@ TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
 # legal in the processed term.
 NEGATIVE_TERM_OPERATORS = ('!=', 'not like', 'not ilike', 'not in')
 
+# Negation of domain expressions
+DOMAIN_OPERATORS_NEGATION = {
+    AND_OPERATOR: OR_OPERATOR,
+    OR_OPERATOR: AND_OPERATOR,
+}
+TERM_OPERATORS_NEGATION = {
+    '<': '>=',
+    '>': '<=',
+    '<=': '>',
+    '>=': '<',
+    '=': '!=',
+    '!=': '=',
+    'in': 'not in',
+    'like': 'not like',
+    'ilike': 'not ilike',
+    'not in': 'in',
+    'not like': 'like',
+    'not ilike': 'ilike',
+}
+
 TRUE_LEAF = (1, '=', 1)
 FALSE_LEAF = (0, '=', 1)
 
@@ -263,51 +283,36 @@ def distribute_not(domain):
          ['|',('user_id','!=',4),('partner_id','not in',[1,2])]
 
     """
-    def negate(leaf):
-        """Negates and returns a single domain leaf term,
-        using the opposite operator if possible"""
-        left, operator, right = leaf
-        mapping = {
-            '<': '>=',
-            '>': '<=',
-            '<=': '>',
-            '>=': '<',
-            '=': '!=',
-            '!=': '=',
-        }
-        if operator in ('in', 'like', 'ilike'):
-            operator = 'not ' + operator
-            return [(left, operator, right)]
-        if operator in ('not in', 'not like', 'not ilike'):
-            operator = operator[4:]
-            return [(left, operator, right)]
-        if operator in mapping:
-            operator = mapping[operator]
-            return [(left, operator, right)]
-        return [NOT_OPERATOR, (left, operator, right)]
 
-    def distribute_negate(domain):
-        """Negate the domain ``subtree`` rooted at domain[0],
-        leaving the rest of the domain intact, and return
-        (negated_subtree, untouched_domain_rest)
-        """
-        if is_leaf(domain[0]):
-            return negate(domain[0]), domain[1:]
-        if domain[0] == AND_OPERATOR:
-            done1, todo1 = distribute_negate(domain[1:])
-            done2, todo2 = distribute_negate(todo1)
-            return [OR_OPERATOR] + done1 + done2, todo2
-        if domain[0] == OR_OPERATOR:
-            done1, todo1 = distribute_negate(domain[1:])
-            done2, todo2 = distribute_negate(todo1)
-            return [AND_OPERATOR] + done1 + done2, todo2
-    if not domain:
-        return []
-    if domain[0] != NOT_OPERATOR:
-        return [domain[0]] + distribute_not(domain[1:])
-    if domain[0] == NOT_OPERATOR:
-        done, todo = distribute_negate(domain[1:])
-        return done + distribute_not(todo)
+    # This is an iterative version of a recursive function that split domain
+    # into subdomains, processes them and combine the results. The "stack" below
+    # represents the recursive calls to be done.
+    result = []
+    stack = [False]
+
+    for token in domain:
+        negate = stack.pop()
+        # negate tells whether the subdomain starting with token must be negated
+        if is_leaf(token):
+            if negate:
+                left, operator, right = token
+                if operator in TERM_OPERATORS_NEGATION:
+                    result.append((left, TERM_OPERATORS_NEGATION[operator], right))
+                else:
+                    result.append(NOT_OPERATOR)
+                    result.append(token)
+            else:
+                result.append(token)
+        elif token == NOT_OPERATOR:
+            stack.append(not negate)
+        elif token in DOMAIN_OPERATORS_NEGATION:
+            result.append(DOMAIN_OPERATORS_NEGATION[token] if negate else token)
+            stack.append(negate)
+            stack.append(negate)
+        else:
+            result.append(token)
+
+    return result
 
 
 # --------------------------------------------------
@@ -724,6 +729,8 @@ class expression(object):
             """ Return a domain implementing the child_of operator for [(left,child_of,ids)],
                 either as a range using the parent_left/right tree lookup fields
                 (when available), or as an expanded [(left,in,child_ids)] """
+            if not ids:
+                return FALSE_DOMAIN
             if left_model._parent_store and (not left_model.pool._init):
                 # TODO: Improve where joins are implemented for many with '.', replace by:
                 # doms += ['&',(prefix+'.parent_left','<',o.parent_right),(prefix+'.parent_left','>=',o.parent_left)]
@@ -835,12 +842,12 @@ class expression(object):
             #    as after transforming the column, it will go through this loop once again
             # ----------------------------------------
 
-            elif len(path) > 1 and column._type == 'many2one' and column._auto_join:
+            elif len(path) > 1 and column and column._type == 'many2one' and column._auto_join:
                 # res_partner.state_id = res_partner__state_id.id
                 leaf.add_join_context(comodel, path[0], 'id', path[0])
                 push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
 
-            elif len(path) > 1 and column._type == 'one2many' and column._auto_join:
+            elif len(path) > 1 and column and column._type == 'one2many' and column._auto_join:
                 # res_partner.id = res_partner__bank_ids.partner_id
                 leaf.add_join_context(comodel, 'id', column._fields_id, path[0])
                 domain = column._domain(model) if callable(column._domain) else column._domain
@@ -851,16 +858,16 @@ class expression(object):
                         push(create_substitution_leaf(leaf, elem, comodel))
                     push(create_substitution_leaf(leaf, AND_OPERATOR, comodel))
 
-            elif len(path) > 1 and column._auto_join:
+            elif len(path) > 1 and column and column._auto_join:
                 raise NotImplementedError('_auto_join attribute not supported on many2many column %s' % left)
 
-            elif len(path) > 1 and column._type == 'many2one':
+            elif len(path) > 1 and column and column._type == 'many2one':
                 right_ids = comodel.search(cr, uid, [(path[1], operator, right)], context=context)
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
             # Making search easier when there is a left operand as column.o2m or column.m2m
-            elif len(path) > 1 and column._type in ['many2many', 'one2many']:
+            elif len(path) > 1 and column and column._type in ['many2many', 'one2many']:
                 right_ids = comodel.search(cr, uid, [(path[1], operator, right)], context=context)
                 table_ids = model.search(cr, uid, [(path[0], 'in', right_ids)], context=dict(context, active_test=False))
                 leaf.leaf = ('id', 'in', table_ids)
@@ -877,7 +884,12 @@ class expression(object):
                     domain = []
                 else:
                     # Let the field generate a domain.
-                    recs = model.browse(cr, uid, [], context)
+                    if len(path) > 1:
+                        right = comodel.search(
+                            cr, uid, [(path[1], operator, right)],
+                            context=context)
+                        operator = 'in'
+                    recs = model.browse(cr, uid, [], context=context)
                     domain = field.determine_domain(recs, operator, right)
 
                 if not domain:
@@ -962,10 +974,21 @@ class expression(object):
                             call_null = False
                             o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                             push(create_substitution_leaf(leaf, ('id', o2m_op, ids1), model))
+                        elif operator in ('like', 'ilike', 'in', '='):
+                            # no match found with positive search operator => no result (FALSE_LEAF)
+                            call_null = False
+                            push(create_substitution_leaf(leaf, FALSE_LEAF, model))
 
                 if call_null:
                     o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                    push(create_substitution_leaf(leaf, ('id', o2m_op, select_distinct_from_where_not_null(cr, column._fields_id, comodel._table)), model))
+                    # determine ids from column._fields_id
+                    if comodel._fields[column._fields_id].store:
+                        ids1 = select_distinct_from_where_not_null(cr, column._fields_id, comodel._table)
+                    else:
+                        ids2 = comodel.search(cr, uid, [(column._fields_id, '!=', False)], context=context)
+                        recs = comodel.browse(cr, SUPERUSER_ID, ids2, {'prefetch_fields': False})
+                        ids1 = recs.mapped(column._fields_id).ids
+                    push(create_substitution_leaf(leaf, ('id', o2m_op, ids1), model))
 
             elif column._type == 'many2many':
                 rel_table, rel_id1, rel_id2 = column._sql_names(model)
@@ -984,7 +1007,7 @@ class expression(object):
                     call_null_m2m = True
                     if right is not False:
                         if isinstance(right, basestring):
-                            res_ids = [x[0] for x in comodel.name_search(cr, uid, right, [], operator, context=context)]
+                            res_ids = [x[0] for x in comodel.name_search(cr, uid, right, [], operator, context=context, limit=None)]
                             if res_ids:
                                 operator = 'in'
                         else:
@@ -1185,7 +1208,7 @@ class expression(object):
             else:  # Must not happen
                 raise ValueError("Invalid domain term %r" % (leaf,))
 
-        elif right == False and (left in model._columns) and model._columns[left]._type == "boolean" and (operator == '='):
+        elif (left in model._columns) and model._columns[left]._type == "boolean" and ((operator == '=' and right is False) or (operator == '!=' and right is True)):
             query = '(%s."%s" IS NULL or %s."%s" = false )' % (table_alias, left, table_alias, left)
             params = []
 
@@ -1193,7 +1216,7 @@ class expression(object):
             query = '%s."%s" IS NULL ' % (table_alias, left)
             params = []
 
-        elif right == False and (left in model._columns) and model._columns[left]._type == "boolean" and (operator == '!='):
+        elif (left in model._columns) and model._columns[left]._type == "boolean" and ((operator == '!=' and right is False) or (operator == '==' and right is True)):
             query = '(%s."%s" IS NOT NULL and %s."%s" != false)' % (table_alias, left, table_alias, left)
             params = []
 

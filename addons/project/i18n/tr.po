@@ -4,13 +4,16 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# gezgin biri <gezginbiri@hotmail.com>, 2015
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
+# Murat Kaplan <muratk@projetgrup.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2015-10-19 08:29+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-11-09 13:10+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +82,7 @@ msgid ""
 "                solving a task or an issue.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Görev kanalına bir aşama eklemek için tıklayın.\n              </p><p>\n                Projede kullanılacak adımları görev oluşturma işleminden\n                tanımlayın, görevin ya da sorunun kapanışına kadar.\n                Bu aşamaları, görev ya da sorunun çözümlenme işlemlerinin\n                izlenmesinde kullanacaksınız.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Görev kanalına bir aşama eklemek için tıklayın.\n              </p><p>\n                Projede kullanılacak adımları görev oluşturma işleminden\n                tanımlayın, görevin ya da olay kaydının kapanışına kadar.\n                Bu aşamaları, görev ya da olay kaydının çözümlenme işlemlerinin\n                izlenmesinde kullanacaksınız.\n              </p>\n            "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -140,7 +143,7 @@ msgstr "Rumuz Modeli"
 #. module: project
 #: field:project.config.settings,group_manage_delegation_task:0
 msgid "Allow task delegation"
-msgstr "Görev delegasyonu izin verme"
+msgstr "Görev delegasyonuna izin ver"
 
 #. module: project
 #: help:project.config.settings,group_time_work_estimation_tasks:0
@@ -155,7 +158,7 @@ msgstr "Görevleri ile ilgili çalışma hesaplamak için izin verir."
 #. module: project
 #: help:project.config.settings,group_manage_delegation_task:0
 msgid "Allows you to delegate tasks to other users."
-msgstr "Başka kullanıcıları görevlendirmenizi sağlar"
+msgstr "Görevleri başka kullanıcılara delege etmenizi sağlar"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_analysis
@@ -165,7 +168,7 @@ msgstr "Analiz"
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analiz Hesap"
+msgstr "Analitik Hesap"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -254,7 +257,7 @@ msgstr "KOTROL: "
 #: code:addons/project/wizard/project_task_delegate.py:81
 #, python-format
 msgid "CHECK: %s"
-msgstr "KONTOL: %s"
+msgstr "KONTROL: %s"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -276,7 +279,7 @@ msgstr "İptal Edilen"
 #. module: project
 #: model:ir.model,name:project.model_project_category
 msgid "Category of project's task, issue, ..."
-msgstr "Projenin kategorileri görev, sorun, ..."
+msgstr "Projenin Görev, Olay Kaydı vb. konularla ilgili kategorisi"
 
 #. module: project
 #: code:addons/project/project.py:921
@@ -441,43 +444,43 @@ msgstr "Gecikme Saatleri"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Delegate"
-msgstr "Yekilendirme"
+msgstr "Delegasyon"
 
 #. module: project
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "Delegated Task"
-msgstr "Yekilendirilmiş Görev"
+msgstr "Delege Edilmiş Görev"
 
 #. module: project
 #: field:project.task,child_ids:0
 msgid "Delegated Tasks"
-msgstr "Yekilendirilmiş Görevler"
+msgstr "Delege Edilmiş Görevler"
 
 #. module: project
 #: field:project.task.delegate,name:0
 msgid "Delegated Title"
-msgstr "Aktarılan Başlık"
+msgstr "Delege Edilen Konu"
 
 #. module: project
 #: field:project.task,delegated_user_id:0
 msgid "Delegated To"
-msgstr "Aktarılan"
+msgstr "Delege Edilen"
 
 #. module: project
 #: code:addons/project/project.py:938
 #, python-format
 msgid "Delegated User should be specified"
-msgstr "Yetkili Kullanıcı belirtilmelidir"
+msgstr "Delege edilen kullanıcı belirtilmelidir"
 
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Delegated tasks"
-msgstr "Yekilendirilen Görevler"
+msgstr "Delege Edilen Görevler"
 
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Delegation"
-msgstr "Yetkilendirme"
+msgstr "Delegasyon"
 
 #. module: project
 #: view:project.project:project.view_project_kanban
@@ -548,7 +551,7 @@ msgstr "Bitiş Tarihi"
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater than task start-date"
-msgstr ""
+msgstr "Hata! Görev bitiş tarihi, görev başlangıç tarihinden büyük olmalıdır"
 
 #. module: project
 #: constraint:project.task:0
@@ -558,19 +561,19 @@ msgstr "Hata! Sen özyinelemeli görevleri oluşturamazsınız."
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower than project end-date."
-msgstr ""
+msgstr "Hata! Proje başlangıç tarihi proje bitiş tarihinden küçük olmalıdır."
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
 msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
-msgstr "Bu görev için görevlendirdiğiniz kullanıcı tarafından bitirilen işleri doğrulamanız için tahmini süre"
+msgstr "Bu görevi delege ettiğiniz kullanıcı tarafından bitirilen işleri doğrulamanız için tahmini süre"
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
 msgid "Estimated time to close this task by the delegated user"
-msgstr "Görevlendirilen kullanıcı tarafından bu görevin kapatılması için öngörülen süre"
+msgstr "Delege edilen kullanıcı tarafından bu görevin kapatılması için öngörülen süre"
 
 #. module: project
 #: help:project.task,planned_hours:0
@@ -592,7 +595,7 @@ msgstr "Genişletilmiş Filtreler"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Extra Info"
-msgstr "Ekstra Bilgisi"
+msgstr "Diğer Bilgiler"
 
 #. module: project
 #: model:project.category,name:project.project_category_02
@@ -609,13 +612,13 @@ msgstr "Kanban Görünümde Katlanmış"
 msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
-msgstr "Otomatik görevler ile ilişkili görevleri ve sorunları izlemek için bu projeyi izle."
+msgstr "Otomatik görevler ile ilişkili görevleri ve olay kayıtlarını izlemek için bu projeyi takip et"
 
 #. module: project
 #: field:project.project,message_follower_ids:0
 #: field:project.task,message_follower_ids:0
 msgid "Followers"
-msgstr "İzleyiciler"
+msgstr "Takipçiler"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -687,7 +690,7 @@ msgid ""
 "- Employees Only: employees see all tasks or issues\n"
 "- Followers Only: employees see only the followed tasks or issues; if portal\n"
 "   is activated, portal users see the followed tasks or issues."
-msgstr "Görevlerin ya da mevcut projeye ait sorunların görünürlüğünü düzenler:\n- Genel: herkes herşeyi görebilir; portal etkinse, portal kullanıcıları\n   bütün görev ve sorunları görebilir; anonim portal etkin ise, ziyaretçiler\n   bütün görev ve sorunları görür\n- Portal (yalnızca Portal kuruluysa kullanılabilir): personel her şeyi görür;\n   portal etkinse, portal kulanıcıları izledikleri ya da firmadan birinin izlediği\n   görev ya da sorunları görebilir\n- Yalnızca Personel: personel bütün görev ya da sorunları görebilir\n- Yalnızca İzleyiciler: personel yalnızca izlenen görev ya da sorunları görebilir; portal\n   etkinse, portal kullanıcıları izlenen görev ya da sorunları görebilir."
+msgstr "Görevlerin ya da mevcut projeye ait olay kayıtlarının görünürlüğünü düzenler:\n- Genel: Herkes her şeyi görebilir; portal etkinse, portal kullanıcıları\n   bütün görev ve olay kayıtlarını görebilir; anonim portal etkin ise, ziyaretçiler\n   bütün görev ve olay kayıtlarını görür\n- Portal (yalnızca Portal kuruluysa kullanılabilir): Personel her şeyi görür;\n   portal etkinse, portal kulanıcıları takipçi oldukları ya da firmadan birinin takip ettiği\n   görev ya da olay kayıtlarını görebilir\n- Yalnızca Personel: Personel bütün görev ya da olay kayıtlarını görebilir\n- Yalnızca Takipçiler: Personel yalnızca takip edilen görev ya da sorunları görebilir; portal\n   etkinse, portal kullanıcıları takip edilen görev ya da olay kayıtlarını görebilir."
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -718,7 +721,7 @@ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
 msgid ""
 "If checked, this contract will be available in the project menu and you will"
 " be able to manage tasks or track issues"
-msgstr "İşaretli ise, bu sözleşme proje menüsünde görünecektir ve siz görevleri yönetebilecek ya da sorunları izleyebileceksiniz"
+msgstr "İşaretli ise, bu sözleşme proje menüsünde görünecektir ve görevleri yönetebilecek ya da olay kayıtlarını izleyebileceksiniz"
 
 #. module: project
 #: help:project.project,active:0
@@ -763,7 +766,7 @@ msgid ""
 "Internal email associated with this project. Incoming emails are "
 "automatically synchronizedwith Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
-msgstr "Bu proje ile ilişkili iç eposta. Gelen epostalar Görevlerle kendiliğinden eşleştirilir (ya da eğer Sorun İzleme modülü kuruluysa seçmeli olarak Sorunlarla)."
+msgstr "Bu proje ile ilişkili iç e-posta. Gelen e-postalar Görevlerle kendiliğinden eşleştirilir (ya da eğer Olay Kaydı İzleme modülü kuruluysa)."
 
 #. module: project
 #: code:addons/project/project.py:201
@@ -780,18 +783,18 @@ msgstr "Geçersiz İşlem!"
 #. module: project
 #: field:project.config.settings,module_project_issue_sheet:0
 msgid "Invoice working time on issues"
-msgstr "Sorunlarda çalışma zamanı faturalama"
+msgstr "Olay Kayıtlarında çalışma zamanı faturalama"
 
 #. module: project
 #: field:project.project,message_is_follower:0
 #: field:project.task,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir İzleyicidir"
+msgstr "Bir Takipçidir"
 
 #. module: project
 #: view:project.category:project.project_category_search_view
 msgid "Issue Version"
-msgstr "Sorun Sürümü"
+msgstr "Olay Kaydı Sürümü"
 
 #. module: project
 #: field:project.task,kanban_state:0 field:project.task.history,kanban_state:0
@@ -842,7 +845,7 @@ msgstr "Son Güncelleme"
 msgid ""
 "Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
-msgstr ""
+msgstr "Firmanın hangi Pad kurulumunun yeni padlere bağlantı için kullanılabileceğini özelleştirmesine izin verir. (örneğin:  http://etherpad.com/).\n-pad Modülünü kurar"
 
 #. module: project
 #: help:project.project,analytic_account_id:0
@@ -955,12 +958,12 @@ msgstr "Yeni Görev Tanımı"
 msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
-msgstr "Görevinizi yeni durumu. Bekleyen, atanan görev kapandığında kendiliğinden yeniden açılacaktır"
+msgstr "Görevin yeni durumu. Bekleyen, delege edilen görev kapandığında kendiliğinden yeniden açılacaktır."
 
 #. module: project
 #: help:project.task.delegate,name:0
 msgid "New title of the task delegated to the user"
-msgstr "Görev Yeni başlık kullanıcıyı yekilenedirme için"
+msgstr "Delege edilen kullanıcının görevle ilgili yeni başlığı"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1008,7 +1011,7 @@ msgstr "Proje Menusünü Aç"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Other Info"
-msgstr "Diğer Bilgisi"
+msgstr "Diğer Bilgiler"
 
 #. module: project
 #: field:report.project.task.user,delay_endings_days:0
@@ -1149,7 +1152,7 @@ msgstr "Proje Aşamaları"
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "Project Task Delegate"
-msgstr "Proje Görevi Yetkilndirme"
+msgstr "Proje Görevi Delegasyonu"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
@@ -1200,20 +1203,20 @@ msgstr "Projeler"
 msgid ""
 "Provides management of issues/bugs in projects.\n"
 "-This installs the module project_issue."
-msgstr "Projelerdeki sorunların/hataların yönetimini sağlar.\n-project_issue Modülünü kurar."
+msgstr "Projelerdeki olay kayıtlarının (yardım, sorun, hata vb.) yönetimini sağlar.\n-project_issue modülünü kurar."
 
 #. module: project
 #: help:project.config.settings,module_project_issue_sheet:0
 msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
-msgstr "Prode sorun/hata yönetimi için zaman çizelgesi desteği sağlar.\n-project_issue_sheet Modülünü kurar."
+msgstr "Prode olay kayıtları yönetimi için zaman çizelgesi desteği sağlar.\n-project_issue_sheet modülünü kurar."
 
 #. module: project
 #: code:addons/project/project.py:200
 #, python-format
 msgid "Public project"
-msgstr "Genel Proje : Web sitesinden herkes görebilir"
+msgstr "Tüm Kullanıcılara Açık : Portal Dahil"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1236,7 +1239,7 @@ msgstr "Sonraki aşaması için hazır"
 #. module: project
 #: field:project.config.settings,module_project_timesheet:0
 msgid "Record timesheet lines per tasks"
-msgstr "Görev başına zamançizelge satırları"
+msgstr "Görev başına zaman çizelge satırları"
 
 #. module: project
 #: help:project.task.delegate,new_task_description:0
@@ -1438,12 +1441,12 @@ msgstr "Görev Oluşturuldu"
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
 msgid "Task Delegate"
-msgstr "Görev Yetkileri"
+msgstr "Görev Delegasyonu"
 
 #. module: project
 #: model:res.groups,name:project.group_delegate_task
 msgid "Task Delegation"
-msgstr "Görev Yetkilendirme"
+msgstr "Görev Delegasyonu"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -1549,7 +1552,7 @@ msgstr "Kullanıcı ve proje göre görevler"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Team"
-msgstr "Takım"
+msgstr "Ekip"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -1616,7 +1619,7 @@ msgstr "Bu aşamada gösterilecek kayıt kalmadığında kanban görünümünde 
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "Changing the unit will only impact new entries."
-msgstr ""
+msgstr "Bu projeler ve görevler için ölçüm birimini ayarlar.\nBirimi değiştirmek sadece yeni girişleri etkiler."
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -1677,7 +1680,7 @@ msgstr "Toplam kalan zaman. Belirli aralıklarla görevin atandığı kullanıc�
 #. module: project
 #: field:project.config.settings,module_project_issue:0
 msgid "Track issues and bugs"
-msgstr "Sorunları ve hataları izleme"
+msgstr "Olay Kayıtlarını ve hataları izleme"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -1724,7 +1727,7 @@ msgstr "Kullanıcı Email"
 #: help:project.task.delegate,project_id:0
 #: help:project.task.delegate,user_id:0
 msgid "User you want to delegate this task to"
-msgstr "Bu görevide yetki vermek istediğiniz Kullanıcı"
+msgstr "Bu görevi delege etmek istediğiniz kullanıcı"
 
 #. module: project
 #: field:project.task.delegate,state:0
@@ -1801,7 +1804,7 @@ msgstr "Görev Başlığınız"
 #. module: project
 #: view:project.task.delegate:project.view_project_task_delegate
 msgid "_Delegate"
-msgstr "_Yetki"
+msgstr "_Delegasyon"
 
 #. module: project
 #: view:project.task:project.view_task_kanban

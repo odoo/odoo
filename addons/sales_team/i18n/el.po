@@ -3,13 +3,14 @@
 # * sales_team
 # 
 # Translators:
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-22 01:17+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-01-02 22:27+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgid ""
 "                    its own list of opportunities.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Κάντε κλικ εδώ για να καθορίσετε μια νέα ομάδα πωλήσεων.\n                </p><p>\n                    Χρησιμοποιήστε τις ομάδες πωλήσεων για να οργανώσετε τους διάφορους πωλητές σας ή\n                    τα τμήματα σε ξεχωριστές ομάδες. Η κάθε ομάδα θα εργάζεται με \n                    το δικό της πελατολόγιο.\n                </p>\n            "
 
 #. module: sales_team
 #: field:crm.case.section,active:0
@@ -39,12 +40,12 @@ msgstr "Ενεργό"
 #. module: sales_team
 #: help:sale.config.settings,group_multi_salesteams:0
 msgid "Allows you to use Sales Teams to manage your leads and opportunities."
-msgstr ""
+msgstr "Σας επιτρέπει να χρησιμοποιήσετε Ομάδες Πωλήσεων για να διαχειριστείτε τις πιθανές ευκαιρίες πώλησης"
 
 #. module: sales_team
 #: field:crm.case.section,child_ids:0
 msgid "Child Teams"
-msgstr "ΥποΟμάδες"
+msgstr "Θυγατρικές Ομάδες"
 
 #. module: sales_team
 #: field:crm.case.section,code:0
@@ -74,7 +75,7 @@ msgstr "Ημερομηνία του τελευταίου μηνύματος "
 #. module: sales_team
 #: field:res.users,default_section_id:0
 msgid "Default Sales Team"
-msgstr ""
+msgstr "Προεπιλεγμένη Ομάδα Πωλήσεων"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_salesteams_view_kanban
@@ -89,7 +90,7 @@ msgstr "Περιγραφή"
 #. module: sales_team
 #: model:crm.case.section,name:sales_team.section_sales_department
 msgid "Direct Sales"
-msgstr ""
+msgstr "Απευθείας πωλήσεις"
 
 #. module: sales_team
 #: constraint:crm.case.section:0
@@ -101,7 +102,7 @@ msgstr "Λάθος! δεν μπορείς να δημιουργήσεις κεν
 msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
-msgstr ""
+msgstr "Ακολουθήστε αυτή την ομάδα πωλήσεων για να εντοπίζετε αυτοματοποιημένα τις εκδηλώσεις που σχετίζονται με τους χρήστες της ομάδας. "
 
 #. module: sales_team
 #: field:crm.case.section,message_follower_ids:0
@@ -140,7 +141,7 @@ msgstr "Εάν το ενεργό πεδίο είναι επιλεγμένο, σ�
 #. module: sales_team
 #: model:crm.case.section,name:sales_team.crm_case_section_1
 msgid "Indirect Sales"
-msgstr ""
+msgstr "Έμμεσων πωλήσεων"
 
 #. module: sales_team
 #: field:crm.case.section,message_is_follower:0
@@ -155,12 +156,12 @@ msgstr "Τελευταία ημερομηνία μηνύματος"
 #. module: sales_team
 #: field:crm.case.section,write_uid:0
 msgid "Last Updated by"
-msgstr "Τελευταία Αναβαθμίστηκε από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: sales_team
 #: field:crm.case.section,write_date:0
 msgid "Last Updated on"
-msgstr "Τελευταία Αναβαθμίστηκε στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: sales_team
 #: view:sale.config.settings:sales_team.view_sale_config_settings
@@ -170,7 +171,7 @@ msgstr "Διαχείριση Ομάδων Πώλησης"
 #. module: sales_team
 #: model:crm.case.section,name:sales_team.crm_case_section_2
 msgid "Marketing"
-msgstr "Μάρκετινγκ"
+msgstr "Marketing"
 
 #. module: sales_team
 #: field:crm.case.section,message_ids:0
@@ -185,7 +186,7 @@ msgstr "Μηνύματα και ιστορικό επικοινωνίας"
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_salesteams_search
 msgid "My Salesteams"
-msgstr ""
+msgstr "Οι Ομάδες Πωλήσεών μου"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_view_form
@@ -195,17 +196,17 @@ msgstr "Σημειώσεις"
 #. module: sales_team
 #: field:sale.config.settings,group_multi_salesteams:0
 msgid "Organize Sales activities into multiple Sales Teams"
-msgstr ""
+msgstr "Οργάνωση των εργασιών των Πωλήσεων σε πολλαπλές Ομάδες Πωλήσεων"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_salesteams_search
 msgid "Parent Sales Teams"
-msgstr ""
+msgstr "Γονική Ομάδα Πωλήσεων"
 
 #. module: sales_team
 #: field:crm.case.section,parent_id:0
 msgid "Parent Team"
-msgstr "Πατρική Ομάδα"
+msgstr "Γονική Ομάδα"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
@@ -215,7 +216,7 @@ msgstr "Συνεργάτης"
 #. module: sales_team
 #: field:crm.case.section,change_responsible:0
 msgid "Reassign Escalated"
-msgstr ""
+msgstr "Κλιμάκωση Ανάθεσης"
 
 #. module: sales_team
 #: field:crm.case.section,reply_to:0
@@ -241,22 +242,22 @@ msgstr "Ομάδες Πωλήσεων"
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_salesteams_view_kanban
 msgid "Sales Teams Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Ομάδων Πωλήσεων"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_view_form
 msgid "Sales team"
-msgstr ""
+msgstr "Ομάδα πωλήσεων"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_view_form
 msgid "Salesteam"
-msgstr ""
+msgstr "Ομάδα πωλήσεων"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_salesteams_search
 msgid "Salesteams Search"
-msgstr ""
+msgstr "Αναζήτηση Ομάδων Πωλήσεων"
 
 #. module: sales_team
 #: field:crm.case.section,message_summary:0
@@ -267,7 +268,7 @@ msgstr "Περίληψη"
 #: view:crm.case.section:sales_team.crm_case_section_salesteams_search
 #: field:crm.case.section,user_id:0
 msgid "Team Leader"
-msgstr ""
+msgstr "Αρχηγός Ομάδας"
 
 #. module: sales_team
 #: view:crm.case.section:sales_team.crm_case_section_view_form
@@ -285,12 +286,12 @@ msgstr "Ο κωδικός της ομάδας πώλησης πρέπει να �
 msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
 "cases in this sales team"
-msgstr ""
+msgstr "Η διεύθυνση e-mail που καταχωρείται στο \"Απάντηση σε\" όλων των e-mail που αποστέλλονται από το Odoo για περιπτώσεις αυτής της ομάδας πωλήσεων. "
 
 #. module: sales_team
 #: field:crm.case.section,message_unread:0
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Αδιάβαστα Μηνύματα"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -301,7 +302,7 @@ msgstr "Χρήστες"
 #: help:crm.case.section,change_responsible:0
 msgid ""
 "When escalating to this team override the salesman with the team leader."
-msgstr ""
+msgstr "Όταν κλιμακωθεί σε αυτή την ομάδα αντικαταστήστε τον πωλητή με τον αρχηγό της ομάδας."
 
 #. module: sales_team
 #: field:crm.case.section,working_hours:0

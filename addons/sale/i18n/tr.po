@@ -4,12 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Murat Kaplan <muratk@projetgrup.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-22 03:23+0000\n"
+"PO-Revision-Date: 2015-12-15 16:25+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -312,7 +313,7 @@ msgid ""
 "Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
-msgstr ""
+msgstr "Ürünler üzerinde bildirimler yapılandırmaya ve bir kullanıcının verilen bir ürünü ya da verilen bir tedarikçiden satınalma yapmak istediğinde bu uyarıların tetiklenmesini sağlar.\nÖrnek: Ürün: bu ürün önerilmemektedir, 5 ten fazla satınalmayın.\nTedarikçi: hızlı teslimat yapılmasını istemeyi unutmayın."
 
 #. module: sale
 #: field:sale.config.settings,group_uom:0
@@ -325,7 +326,7 @@ msgid ""
 "Allows to define your customer contracts conditions: invoicing method (fixed price, on timesheet, advance invoice), the exact pricing (650€/day for a developer), the duration (one year support contract).\n"
 "You will be able to follow the progress of the contract and invoice automatically.\n"
 "-It installs the account_analytic_analysis module."
-msgstr ""
+msgstr "Müşteri sözleşmeleri koşullarınızı tanımlamanızı sağlar: faturalama\n            yöntemi (sabit fiyat, zaman çizgelerinden, peşin fatura), gerçek fiyatlandırma\n            (bir geliştirici için 650€/gün), süresi (bir yıl destek sözleşmesi).\n            Sözleşme faturanın ilerlemesini otomatik olarak izleyebilirsiniz.\n            Bu, account_analytic_analysis modülünü yükler."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -351,7 +352,7 @@ msgstr "Her satış siparişi satır için indirim yapmaya olanak verir."
 msgid ""
 "Allows you to categorize your sales and deliveries (picking lists) between different journals, and perform batch operations on journals.\n"
 "-This installs the module sale_journal."
-msgstr ""
+msgstr "Satışlarınızı ve teslimatlarınızı (seçim listeleri) değişik yevmiyeler arasında sınıflandırmanızı sağlar,\n                yevmiyeler üzerin toplu işlemler yürütür.\n                Bu, sale_journal modülünü kurar."
 
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
@@ -359,7 +360,7 @@ msgid ""
 "Allows you to define what is the default function of a specific user on a given account.\n"
 "This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.\n"
 "-This installs the module analytic_user_function."
-msgstr ""
+msgstr "Bir hesap üzerinde belirli bir kullanıcı için varsayılan işlevin ne olacağını tanımlamanızı sağlar.\n                Bu, çoğunlukla kullanıcının zaman çizelgesini şifrelemesinde kullanılır. Değerler alınır ve kendiliğinden doldurulur.\n                Ama bu değerleri değiştirmek olasılığı da vardır.\n                Bu, modül analytic_user_function yükler."
 
 #. module: sale
 #: help:sale.config.settings,group_uom:0
@@ -397,7 +398,7 @@ msgstr "Satışlar için analitik muhasebe"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Before Delivery"
-msgstr "Teslimattan Önce"
+msgstr "Teslimattan Önce / Ön Ödemeli"
 
 #. module: sale
 #: code:addons/sale/sale.py:1048
@@ -420,7 +421,7 @@ msgstr "Satış Temsilcisine Göre"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr "Satış Takımına Göre"
+msgstr "Satış Ekibine Göre"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -559,7 +560,7 @@ msgstr "Sözleşme Özellikleri"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Contracts Management"
-msgstr "Şözleşme Yönetimi"
+msgstr "Sözleşme Yönetimi"
 
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
@@ -689,7 +690,7 @@ msgstr "Teklifler için Varsayılan Şartlar ve koşullar."
 msgid ""
 "Define an invoicing target in the sales team settings to see the period's "
 "achievement and forecast at a glance."
-msgstr "Bir bakışta dönemin başarısını ve tahminlerini görmek için satış takımı ayarlarında bir fatura hedefi tanımlayın."
+msgstr "Bir bakışta dönemin başarısını ve tahminlerini görmek için satış ekibi ayarlarında bir fatura hedefi tanımlayın."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -807,7 +808,7 @@ msgstr "Öncelikle bu satış siparişine bağlı tüm faturaları iptal et."
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr "Mali Durum"
+msgstr "Mali Koşul"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -817,14 +818,14 @@ msgstr "Sabit fiyat (hesaba)"
 #. module: sale
 #: field:sale.order,message_follower_ids:0
 msgid "Followers"
-msgstr "İzleyiciler"
+msgstr "Takipçiler"
 
 #. module: sale
 #: help:sale.config.settings,timesheet:0
 msgid ""
 "For modifying account analytic view to show important data to project manager of services companies.You can also view the report of account analytic summary user-wise as well as month wise.\n"
 "-This installs the module account_analytic_analysis."
-msgstr ""
+msgstr "Hizmet şirketlerinin proje yöneticilerine önemli verileri göstermek üzere analitik hesap görünümünü değiştirmek içindir.\n                Analitik hesap raporu özetini aylık usulde görebileceğiniz gibi kullanıcı usulünde de görebilirsiniz.\n                Bu, account_analytic_analysis modülünü kurar."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -837,7 +838,7 @@ msgid ""
 "Forecast of the invoice revenue for the current month. This is the amount the sales \n"
 "team should invoice this month. It is used to compute the progression ratio \n"
 " of the current and forecast revenue on the kanban view."
-msgstr "Geçerli ay için fatura geliri tahminidir. Satış takımının bu ay içinde kesmesi \nGereken faturaların tutarıdır. Kanban görünümünde mevcut ve  \nTahmini gelirin hesaplanmasında kullanılır."
+msgstr "Geçerli ay için fatura geliri tahminidir. Satış ekibinin bu ay içinde kesmesi \nGereken faturaların tutarıdır. Kanban görünümünde mevcut ve  \nTahmini gelirin hesaplanmasında kullanılır."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1065,7 +1066,7 @@ msgstr "Faturalama İşlemi"
 #. module: sale
 #: field:sale.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir İzleyicidir"
+msgstr "Bir Takipçidir"
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -1185,7 +1186,7 @@ msgid ""
 "On demand: A draft invoice can be created from the sales order when needed. \n"
 "On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
 "Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
-msgstr "İstek üzerine: Bir taslak fatura gerektiğinde satış siparişilerinden oluşturulabilir. \nTeslimat emirlerinden: Ürünlerin teslimatından sonra teslimat emrinden bir taslak fatura oluşturulabilir. \nTeslimattan önce: Satış siparişlerinden bir taslak fatura oluşturulur ve ürünlerin tesliminden önce ödenmelidir."
+msgstr "İstek Üzerine: Bir taslak fatura gerektiğinde satış siparişlerinden oluşturulabilir. (Sipariş > Teslimat ve Sipariş > Fatura)\n\nTeslimat Emirlerinden: Ürünlerin teslimatından sonra teslimat emrinden bir taslak fatura oluşturulabilir. (Sipariş > Teslimat > Fatura)\n\nTeslimattan Önce / Ön Ödemeli: Satış siparişlerinden bir taslak fatura oluşturulur ve ürünlerin tesliminden önce ödenmelidir. Ödeme gerçekleştikten sonra teslimat emri oluşur. (Sipariş > Fatura > Teslimat)"
 
 #. module: sale
 #: field:sale.config.settings,module_analytic_user_function:0
@@ -1369,7 +1370,7 @@ msgstr "Ürün Özellikleri"
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
 msgid "Product Template"
-msgstr "Ürün Şablon"
+msgstr "Ürün Şablonu"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -1389,7 +1390,7 @@ msgstr "Satır Özellikleri"
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_tree
 msgid "Qty"
-msgstr "Mik"
+msgstr "Miktar"
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
@@ -1559,7 +1560,7 @@ msgstr "Peşin Ödemeli Satış Faturası"
 #: view:sale.report:sale.view_order_product_graph
 #: view:sale.report:sale.view_order_product_search
 msgid "Sales Analysis"
-msgstr "Satış Analizi"
+msgstr "Sipariş & Teklif Analizi"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
@@ -1788,7 +1789,7 @@ msgstr "Özet"
 msgid ""
 "Target of invoice revenue for the current month. This is the amount the sales \n"
 "team estimates to be able to invoice this month."
-msgstr ""
+msgstr "Geçerli ay için fatura geliri tahminidir. Satış ekibinin bu ay içinde kesmesi \ngereken faturaların tutarıdır."
 
 #. module: sale
 #: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
@@ -1848,7 +1849,7 @@ msgstr "Avans Tutarı artı değer olmak zorundadır."
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
-msgstr "Ürün kategorilerinde varsayılan özellik olarak tanımlanmış Mali Durum ya da tanımlanmış Gelir kategorisi hesabı yoktur."
+msgstr "Ürün kategorilerinde varsayılan özellik olarak tanımlanmış Mali Koşulm ya da tanımlanmış Gelir kategorisi hesabı yoktur."
 
 #. module: sale
 #: code:addons/sale/sale.py:154
@@ -1917,7 +1918,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
+msgstr "Bu rapor fiyat teklifleri ve satış siparişlerinin analizini yapar. Bu analiz sizin satış gelirlerinizi kontrol eder ve farklı grup kriterlerine göre sıralar (satış temsilcisi, iş ortağı, ürün, vb.) Bu raporu henüz faturalanmamış satışlarınızı analiz etmek için kullanın. Eğer cironuzu analiz etmek istiyorsanız, muhasebe uygulamasındaki Fatura Analiz raporunu kullanmalısınız."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -1927,7 +1928,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
+msgstr "Bu rapor fiyat teklifleri ve satış siparişlerinin analizini yapar. Bu analiz sizin satış gelirlerinizi kontrol eder ve farklı grup kriterlerine göre sıralar (satış temsilcisi, iş ortağı, ürün, vb.) Bu raporu henüz faturalanmamış satışlarınızı analiz etmek için kullanın. Eğer cironuzu analiz etmek istiyorsanız, muhasebe uygulamasındaki Fatura Analiz raporunu kullanmalısınız."
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2024,7 +2025,7 @@ msgid ""
 "                Use Percentage to invoice a percentage of the total amount.\n"
 "                Use Fixed Price to invoice a specific amound in advance.\n"
 "                Use Some Order Lines to invoice a selection of the sales order lines."
-msgstr ""
+msgstr "Tüm siparişi faturaya dönüştürmek için Fatura'yı kullanın.\nToplam tutarın bir yüzdesini faturalamak için Yüzdeyi kullanın.\nPeşin olarak belirli bir tutarda faturalamak için Sabit Fiyatı kullanın.\nSatış Sipariş Kalemlerini seçerek faturalamak için Bazı Sipariş Kalemlerini kullanın."
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -2042,7 +2043,7 @@ msgstr "Sözleşme yönetimini kullanma"
 #. module: sale
 #: field:account.config.settings,module_sale_analytic_plans:0
 msgid "Use multiple analytic accounts on sales"
-msgstr "Satışlarda çoklu analitik hesap kullan"
+msgstr "Satış siparişlerinde analitik dağılım"
 
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0

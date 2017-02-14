@@ -517,6 +517,8 @@ class MassMailing(osv.Model):
                 value['mailing_domain'] = "[('list_id', 'in', %s), ('opt_out', '=', False)]" % list(mailing_list_ids)
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
+        elif mailing_model in ['res.partner']:
+            value['mailing_domain'] = "[('opt_out', '=', False)]"
         else:
             value['mailing_domain'] = []
         return {'value': value}

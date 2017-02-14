@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from email.utils import formataddr
+
 from .common import TestMail
 from openerp.exceptions import AccessError
 from openerp.osv.orm import except_orm
@@ -26,6 +28,20 @@ from openerp.tools import mute_logger
 
 
 class TestMailGroup(TestMail):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailGroup, cls).setUpClass()
+        # for specific tests of mail group, get back to its expected behavior
+        cls.registry('mail.group')._revert_method('message_get_recipient_values')
+
+    @classmethod
+    def tearDownClass(cls):
+        # set master class behavior back
+        def mail_group_message_get_recipient_values(self, cr, uid, id, notif_message=None, recipient_ids=None, context=None):
+            return self.pool['mail.thread'].message_get_recipient_values(cr, uid, id, notif_message=notif_message, recipient_ids=recipient_ids, context=context)
+        cls.registry('mail.group')._patch_method('message_get_recipient_values', mail_group_message_get_recipient_values)
+        super(TestMail, cls).tearDownClass()
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_00_mail_group_access_rights(self):
@@ -70,3 +86,39 @@ class TestMailGroup(TestMail):
         self.assertFalse(fol_ids, 'unlinked document should not have any followers left')
         msg_ids = self.mail_message.search(cr, uid, [('model', '=', 'mail.group'), ('res_id', '=', self.group_priv_id)])
         self.assertFalse(msg_ids, 'unlinked document should not have any followers left')
+
+    def test_mail_group_notification_recipients_grouped(self):
+        # Data: set alias_domain to see emails with alias
+        self.registry('ir.config_parameter').set_param(self.cr, self.uid, 'mail.catchall.domain', 'schlouby.fr')
+
+        self.mail_group.message_subscribe_users(
+            self.cr, self.uid,
+            [self.group_pigs_id],
+            [self.user_raoul_id, self.user_bert_id]
+        )
+
+        self.mail_group.message_post(self.cr, self.uid, [self.group_pigs_id], body="Test", type='comment', subtype='mt_comment')
+        sent_emails = self._build_email_kwargs_list
+        self.assertEqual(len(sent_emails), 1)
+        for email in sent_emails:
+            self.assertEqual(
+                set(email['email_to']),
+                set([formataddr((self.user_raoul.name, self.user_raoul.email)), formataddr((self.user_bert.name, self.user_bert.email))]))
+
+    def test_mail_group_notification_recipients_separated(self):
+        # Remove alias, should trigger classic behavior of mail group
+        self.mail_group.write(self.cr, self.uid, [self.group_pigs_id], {'alias_name': False})
+
+        self.mail_group.message_subscribe_users(
+            self.cr, self.uid,
+            [self.group_pigs_id],
+            [self.user_raoul_id, self.user_bert_id]
+        )
+
+        self.mail_group.message_post(self.cr, self.uid, [self.group_pigs_id], body="Test", type='comment', subtype='mt_comment')
+        sent_emails = self._build_email_kwargs_list
+        self.assertEqual(len(sent_emails), 2)
+        for email in sent_emails:
+            self.assertIn(
+                email['email_to'][0],
+                [formataddr((self.user_raoul.name, self.user_raoul.email)), formataddr((self.user_bert.name, self.user_bert.email))])

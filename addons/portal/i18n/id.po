@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-20 07:00+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-12-01 23:42+0000\n"
+"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-8/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,7 @@ msgid ""
 "                    follow.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                    <b>Pekerjaan baik!</b> Kotak masuk Anda masih kosong.</p><p>Kotak masuk menampilkan pesan pribadi atau email yang dikirim kepada Anda serta informasi yang berkaitan dengan dokumen atau orang yang Anda ikuti.</p>"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_star_feeds_portal
@@ -40,7 +40,7 @@ msgid ""
 "                    as <i>todo</i>. From this menu, you can process all your todo.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                    <b>Todo tidak.</b>\n                </p><p>Ketika Anda memproses pesan di kotak masuk Anda, Anda dapat menandai beberapa sebagai <i>todo</i>. Dari menu ini, Anda dapat memproses semua todo Anda.</p>"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
@@ -52,7 +52,7 @@ msgid ""
 "                    message will be sent by email if it's an internal contact.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>Tidak ada pesan yang ditemukan dan tidak ada pesan yang dikirim belum.</p><p>Klik kanan ikon untuk menulis pesan. Pesan ini akan dikirim melalui email jika kontak internal.</p>"
 
 #. module: portal
 #: code:addons/portal/mail_message.py:59
@@ -68,7 +68,7 @@ msgstr "Kelompok Akses"
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_after_sales
 msgid "After Sale Services"
-msgstr ""
+msgstr "Layanan Purna Jual"
 
 #. module: portal
 #: view:portal.wizard:portal.wizard_view
@@ -84,7 +84,7 @@ msgstr "Arsip"
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_orders
 msgid "Billing"
-msgstr ""
+msgstr "Pembayaran"
 
 #. module: portal
 #: view:portal.wizard:portal.wizard_view
@@ -105,7 +105,7 @@ msgstr "Daftar kontak"
 #: code:addons/portal/wizard/portal_wizard.py:163
 #, python-format
 msgid "Contacts Error"
-msgstr ""
+msgstr "Kontak kesalahan"
 
 #. module: portal
 #: field:portal.wizard,create_uid:0 field:portal.wizard.user,create_uid:0
@@ -138,7 +138,7 @@ msgid ""
 "--\n"
 "Odoo - Open Source Business Applications\n"
 "http://www.openerp.com\n"
-msgstr ""
+msgstr "Dear %(name)s,\n\nYou have been given access to %(company)s's %(portal)s.\n\nYour login account data is:\n  Username: %(login)s\n  Portal: %(portal_url)s\n  Database: %(db)s \n\nYou can set or change your password via the following url:\n   %(signup_url)s\n\n%(welcome_message)s\n\n--\nOdoo - Open Source Business Applications\nhttp://www.openerp.com\n"
 
 #. module: portal
 #: view:share.wizard:portal.share_step2_form_portal
@@ -154,30 +154,30 @@ msgstr "e-mail"
 #: code:addons/portal/wizard/portal_wizard.py:225
 #, python-format
 msgid "Email Required"
-msgstr ""
+msgstr "Email Diperlukan"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Untaian email"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:39
 #, python-format
 msgid "Existing Groups (e.g Portal Groups)"
-msgstr ""
+msgstr "Grup yang ada (misalnya Portal kelompok)"
 
 #. module: portal
 #: view:share.wizard:portal.share_step1_form_portal
 #: field:share.wizard,group_ids:0
 msgid "Existing groups"
-msgstr ""
+msgstr "Grup yang ada"
 
 #. module: portal
 #: view:share.wizard:portal.share_step1_form_portal
 #: field:share.wizard,user_ids:0
 msgid "Existing users"
-msgstr ""
+msgstr "Pengguna yang ada"
 
 #. module: portal
 #: field:portal.wizard,id:0 field:portal.wizard.user,id:0
@@ -187,12 +187,12 @@ msgstr "ID"
 #. module: portal
 #: help:res.groups,is_portal:0
 msgid "If checked, this group is usable as a portal."
-msgstr ""
+msgstr "Jika dicentang, kelompok ini berguna sebagai portal."
 
 #. module: portal
 #: field:portal.wizard.user,in_portal:0
 msgid "In Portal"
-msgstr ""
+msgstr "Di Portal"
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
@@ -203,7 +203,7 @@ msgstr "Kotak Pesan"
 #. module: portal
 #: field:portal.wizard,welcome_message:0
 msgid "Invitation Message"
-msgstr ""
+msgstr "PESAN UNDANGAN"
 
 #. module: portal
 #: field:portal.wizard,write_uid:0 field:portal.wizard.user,write_uid:0
@@ -223,52 +223,52 @@ msgstr "Pesan"
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_messages
 msgid "Messaging"
-msgstr ""
+msgstr "Pesan"
 
 #. module: portal
 #: view:res.groups:portal.group_search_view
 msgid "Non-Portal Groups"
-msgstr ""
+msgstr "Kelompok-kelompok non-Portal"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Outgoing Mail"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:54
 #, python-format
 msgid "Please select at least one group to share with"
-msgstr ""
+msgstr "Silakan pilih setidaknya satu kelompok untuk berbagi dengan"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:50
 #, python-format
 msgid "Please select at least one user to share with"
-msgstr ""
+msgstr "Silakan pilih setidaknya satu pengguna untuk berbagi dengan"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_menu field:portal.wizard,portal_id:0
 #: field:res.groups,is_portal:0
 msgid "Portal"
-msgstr ""
+msgstr "Pintu gerbang"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.model,name:portal.model_portal_wizard
 #: view:portal.wizard:portal.wizard_view
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Portal akses manajemen"
 
 #. module: portal
 #: view:res.groups:portal.group_search_view
 msgid "Portal Groups"
-msgstr ""
+msgstr "Kelompok-kelompok portal"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "Konfigurasi portal"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_projects
@@ -281,35 +281,35 @@ msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
-msgstr ""
+msgstr "Pilih kontak yang harus milik portal dalam daftar di bawah ini.\n                        Alamat email dari setiap kontak yang dipilih harus valid dan unik.\n                        Jika perlu, Anda dapat memperbaiki alamat email kontak apapun secara langsung dalam daftar."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:149
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Beberapa kontak memiliki email yang sama:"
 
 #. module: portal
 #: model:ir.model,name:portal.model_share_wizard
 msgid "Share Wizard"
-msgstr ""
+msgstr "Share Wisaya"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:146
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Beberapa kontak tidak memiliki imel:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:152
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr ""
+msgstr "Beberapa kontak memiliki email yang sama sebagai pengguna portal yang ada:"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "Portal bahwa pengguna dapat ditambahkan atau dihapus dari."
 
 #. module: portal
 #: code:addons/portal/mail_message.py:60
@@ -318,17 +318,17 @@ msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
+msgstr "Operasi yang diminta tidak dapat diselesaikan karena batasan keamanan. Hubungi administrator sistem Anda.\n\n(Jenis dokumen: %s, operasi: %s)"
 
 #. module: portal
 #: view:portal.wizard:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
-msgstr ""
+msgstr "Teks ini terdapat di email yang dikirim ke pengguna portal baru."
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
 msgid "This text is included in the email sent to new users of the portal."
-msgstr ""
+msgstr "Teks ini terdapat di email yang dikirim kepada pengguna baru portal."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:155
@@ -337,13 +337,13 @@ msgid ""
 "To resolve this error, you can: \n"
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
-msgstr ""
+msgstr "Untuk mengatasi kesalahan ini, Anda dapat: - benar email kontak yang relevan - memberikan akses hanya untuk kontak dengan email yang unik"
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
 #: model:ir.ui.menu,name:portal.portal_mail_starfeeds
 msgid "To-do"
-msgstr ""
+msgstr "Rencana"
 
 #. module: portal
 #: field:portal.wizard,user_ids:0
@@ -354,31 +354,31 @@ msgstr "Pengguna"
 #: code:addons/portal/wizard/share_wizard.py:38
 #, python-format
 msgid "Users you already shared with"
-msgstr ""
+msgstr "Pengguna yang Anda sudah berbagi dengan"
 
 #. module: portal
 #: field:portal.wizard.user,wizard_id:0
 msgid "Wizard"
-msgstr ""
+msgstr "Wizard"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:226
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
-msgstr ""
+msgstr "Anda harus memiliki alamat email dalam preferensi pengguna untuk mengirim email."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:33
 #, python-format
 msgid "Your Odoo account at %(company)s"
-msgstr ""
+msgstr "Your Odoo account at %(company)s"
 
 #. module: portal
 #: code:addons/portal/mail_mail.py:46
 #, python-format
 msgid "access directly to"
-msgstr ""
+msgstr "akses langsung ke"
 
 #. module: portal
 #: view:portal.wizard:portal.wizard_view
@@ -389,4 +389,4 @@ msgstr "atau"
 #: code:addons/portal/mail_mail.py:48
 #, python-format
 msgid "your messages "
-msgstr ""
+msgstr "pesan Anda"

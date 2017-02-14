@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014-2015
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014-2017
+# Vida Potočnik <vida.potocnik@mentis.si>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 08:00+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2017-01-24 08:46+0000\n"
+"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -300,7 +301,7 @@ msgstr "Omogoči oblikovanje opozoril po kupcu ali proizvodu"
 #. module: sale
 #: field:sale.config.settings,module_website_quote:0
 msgid "Allow online quotations and templates"
-msgstr "Dovoli spletne predračune in predloge"
+msgstr "Dovoli spletne ponudbe in predloge"
 
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
@@ -340,7 +341,7 @@ msgstr "Omogoča upravljanje različnih cen na osnovi pravil za posamezne skupin
 msgid ""
 "Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n"
 "-This installs the module sale_stock."
-msgstr "Dovoli ustvarjanje predračunov in prodajnih nalogov z različnimi pravili naročanja in upravljanje povezane zaloge.\n-Namesti modul sale_stock."
+msgstr "Dovoli ustvarjanje ponudb in prodajnih nalogov z različnimi pravili naročanja in upravljanje povezane zaloge.\n-Namesti modul sale_stock."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
@@ -443,7 +444,7 @@ msgstr "Preklic naloga"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Cancel Quotation"
-msgstr "Preklic predračuna"
+msgstr "Preklic ponudbe"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.order.line,state:0
@@ -485,7 +486,7 @@ msgstr "Označite polje za združitev računov za iste stranke"
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr "Označite to polje za upravljanje predračunov v tej prodajni ekipi."
+msgstr "Označite to polje za upravljanje ponudb v tej prodajni ekipi."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -683,7 +684,7 @@ msgstr "Privzeta pravila in pogoji"
 #. module: sale
 #: help:res.company,sale_note:0
 msgid "Default terms and conditions for quotations."
-msgstr "Privzeta pravila in pogoji za predračune."
+msgstr "Privzeta pravila in pogoji za ponudbe."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -753,7 +754,7 @@ msgstr "Osnutek"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr "Osnutek predračuna"
+msgstr "Osnutek ponudbe"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:140
@@ -825,7 +826,7 @@ msgstr "Sledilci"
 msgid ""
 "For modifying account analytic view to show important data to project manager of services companies.You can also view the report of account analytic summary user-wise as well as month wise.\n"
 "-This installs the module account_analytic_analysis."
-msgstr "Spreminjanje pogleda analitičnega konta za prikaz podatkov pomembnih za upravitelja projektov pri storitvenem podjetju. Možen je tudi pogled povzetka poročila analitičnega konta po uporabniku ali po mesecu.\n-Namesti modul account_analytic_analysis."
+msgstr "Spreminjanje prikaza analitičnega konta za prikaz podatkov pomembnih za upravitelja projektov pri storitvenem podjetju. Možen je tudi prikaz povzetka poročila analitičnega konta po uporabniku ali po mesecu.\n-Namesti modul account_analytic_analysis."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -838,7 +839,7 @@ msgid ""
 "Forecast of the invoice revenue for the current month. This is the amount the sales \n"
 "team should invoice this month. It is used to compute the progression ratio \n"
 " of the current and forecast revenue on the kanban view."
-msgstr "Napoved obračunskih prihodkov za tekoči mesec. To je znesek, ki bi ga \nprodajne ekipe morale obračunati ta mesec. Uporablja se za izračun razmerja zaporedja \ntekočih in napovedanih prihodkov v pogledu kanban."
+msgstr "Napoved obračunskih prihodkov za tekoči mesec. To je znesek, ki bi ga \nprodajne ekipe morale obračunati ta mesec. Uporablja se za izračun razmerja zaporedja \ntekočih in napovedanih prihodkov v kanban prikazu."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -884,7 +885,7 @@ msgstr "Združi račune"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v html formatu, da se lahko vstavlja v poglede kanban."
+msgstr "Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v html formatu, da se lahko vstavlja v kanban prikaze."
 
 #. module: sale
 #: code:addons/sale/res_config.py:100
@@ -1168,7 +1169,7 @@ msgstr "Število dni od potrditve naročila do odpreme artikla kupcu"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
 msgid "Old Quotations"
-msgstr "Stari predračuni"
+msgstr "Stare Ponudbe"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -1408,54 +1409,54 @@ msgstr "Količina (Prodajna EM)"
 #: view:sale.order:sale.view_order_form
 #: view:sale.order:sale.view_quotation_tree selection:sale.report,state:0
 msgid "Quotation"
-msgstr "Predračun"
+msgstr "Ponudba"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr "Predračun / Naročilo"
+msgstr "Ponudba/Naročilo"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr "Datum predračuna:"
+msgstr "Datum ponudbe"
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr "Številka predračuna"
+msgstr "Številka ponudbe"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation N°"
-msgstr "Predračun št."
+msgstr "Ponudba št."
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr "Odpošiljanje predračuna"
+msgstr "Ponudba poslana"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr "Predračun odposlan"
+msgstr "Ponudba poslana"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr "Predračun potrjen"
+msgstr "Ponudba potrjena"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
 #, python-format
 msgid "Quotation created"
-msgstr "Predračun ustvarjen"
+msgstr "Ponudba ustvarjena"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr "Predračun odposlan"
+msgstr "Ponudba poslana"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1465,22 +1466,22 @@ msgstr "Predračun odposlan"
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Quotations"
-msgstr "Predračuni"
+msgstr "Ponudbe"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr "Analiza predračunov"
+msgstr "Analiza ponudb"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr "Predračuni in prodaja"
+msgstr "Ponudbe in prodaja"
 
 #. module: sale
 #: field:crm.case.section,monthly_quoted:0
 msgid "Rate of created quotation per duration"
-msgstr "Stopnja ustvarjenih predračunov po trajanju"
+msgstr "Stopnja ustvarjenih ponudb po trajanju"
 
 #. module: sale
 #: field:crm.case.section,monthly_invoiced:0
@@ -1795,7 +1796,7 @@ msgstr "Cilj prihodkov iz obračuna za tekoči mesec. Ta znesek prodajna ekipa\n
 #: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
 #: view:website:sale.report_saleorder_document
 msgid "Taxes"
-msgstr "Davki"
+msgstr "DDV"
 
 #. module: sale
 #: field:sale.order,note:0
@@ -1969,7 +1970,7 @@ msgstr "Davek vključen"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Total Without Taxes"
-msgstr "Skupno brez davka"
+msgstr "Skupaj brez DDV"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0

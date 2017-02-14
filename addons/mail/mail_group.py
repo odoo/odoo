@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from email.utils import formataddr
+
 import openerp
 import openerp.tools as tools
 from openerp.osv import osv
@@ -151,7 +153,7 @@ class mail_group(osv.Model):
                 'thread_level': 1,
                 'header_description': self._generate_header_description(cr, uid, group, context=context),
                 'view_mailbox': True,
-                'compose_placeholder': 'Send a message to the group',
+                'compose_placeholder': _('Send a message to the group'),
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
@@ -240,3 +242,13 @@ class mail_group(osv.Model):
             headers['X-Forge-To'] = list_to
         res['headers'] = repr(headers)
         return res
+
+    def message_get_recipient_values(self, cr, uid, id, notif_message=None, recipient_ids=None, context=None):
+        group = self.browse(cr, uid, id, context=context)
+        # real mailing list: multiple recipients (hidden by X-Forge-To)
+        if group.alias_domain and group.alias_name:
+            return {
+                'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in self.pool['res.partner'].browse(cr, SUPERUSER_ID, recipient_ids, context=context)),
+                'recipient_ids': [],
+            }
+        return super(mail_group, self).message_get_recipient_values(cr, uid, id, notif_message=notif_message, recipient_ids=recipient_ids, context=context)

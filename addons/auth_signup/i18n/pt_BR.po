@@ -3,16 +3,18 @@
 # * auth_signup
 # 
 # Translators:
-# danimaribeiro <danimaribeiro@gmail.com>, 2015
+# danimaribeiro <danimaribeiro@gmail.com>, 2015-2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Martin Trigaux, 2016
+# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2015
 # Wagner Pereira <wagner@wagner.pereira.nom.br>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-24 13:31+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"POT-Creation-Date: 2015-12-16 13:15+0000\n"
+"PO-Revision-Date: 2016-12-09 08:26+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +61,7 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr "\n<p>Uma troca de senha foi requerida para sua conta do Odoo atrelada a este email.</p>\n\n<p>Você pode trocar a sua senha seguindo este link <a href=\"${object.signup_url}\"></a>.\n</p>\n\n<p>Atenção: Se você não estava esperando este email, você pode ignorá-lo sem problemas.</p>"
+msgstr "\n<p>Uma troca de senha foi requerida para sua conta do Odoo atrelada a este e-mail.</p>\n\n<p>Você pode trocar a sua senha seguindo <a href=\"${object.signup_url}\">este link</a>.\n</p>\n\n<p>Atenção: Se você não estava esperando este e-mail, você pode ignorá-lo sem problemas.</p>"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
@@ -87,7 +89,7 @@ msgstr "Permitir inscrição de usuários externos"
 #: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr "Um email foi enviado com as credenciais para resetar sua senha"
+msgstr "Um e-mail foi enviado com as credenciais para resetar sua senha"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
@@ -97,7 +99,13 @@ msgid ""
 msgstr "Um e-mail convite contendo a seguinte link de inscrição foi enviada:"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:58
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "Outro usuário já está registrado usando esse endereço de e-mail."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:130
 #, python-format
 msgid "Authentification Failed."
 msgstr "A Autenticação Falhou"
@@ -119,7 +127,13 @@ msgid "Confirm Password"
 msgstr "Confirmar Senha"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:61
+#, python-format
+msgid "Could not create a new account."
+msgstr "Não foi possível criar uma nova conta."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
 msgstr "Não foi possível resetar sua senha"
@@ -171,6 +185,12 @@ msgid "Reset password"
 msgstr "Redefinir Senha"
 
 #. module: auth_signup
+#: code:addons/auth_signup/res_users.py:267
+#, python-format
+msgid "Reset password: invalid username or email"
+msgstr "Redefinição de senha: nome de usuário ou e-mail inválido"
+
+#. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
 msgstr "Enviar informações de recuperação de senha"
@@ -178,7 +198,7 @@ msgstr "Enviar informações de recuperação de senha"
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr "Enviar um Convite por Email"
+msgstr "Enviar um Convite por E-mail"
 
 #. module: auth_signup
 #: view:website:auth_signup.signup view:website:web.login
@@ -233,7 +253,7 @@ msgstr "Usuários"
 #. module: auth_signup
 #: view:website:auth_signup.fields view:website:auth_signup.reset_password
 msgid "Your Email"
-msgstr "Seu email"
+msgstr "Seu e-mail"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields

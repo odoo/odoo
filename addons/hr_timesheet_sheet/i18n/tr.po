@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Murat Kaplan <muratk@projetgrup.com>, 2015
 # Saban Yildiz <sabany@projetgrup.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-22 03:23+0000\n"
+"PO-Revision-Date: 2015-12-11 13:24+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +31,7 @@ msgstr "* 'Taslak' durumu, kullanıcı bir doğrulanmamış ve yeni bir zaman ç
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,nbr:0
 msgid "# Nbr Timesheet"
-msgstr "Mesai Kart Sayısı"
+msgstr "# Zaman Çizelge Sayısı"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_attendance:0
@@ -45,7 +46,7 @@ msgstr "# Toplam Fark"
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_timesheet:0
 msgid "# Total Timesheet"
-msgstr "Toplam Mesai Kartı"
+msgstr "# Toplam Zaman Çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -99,17 +100,17 @@ msgstr "Sign ın/out ve bir yaprak için zaman çizelgesi hesaplama arasındaki 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analiz Hesabı"
+msgstr "Analitik Hesap"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analiz Satır"
+msgstr "Analitik Satırı"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,account_ids:0
 msgid "Analytic accounts"
-msgstr "Analiz hesapları"
+msgstr "Analitik Hesapları"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -145,7 +146,7 @@ msgstr "İptal"
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
 #, python-format
 msgid "Click to add projects, contracts or analytic accounts."
-msgstr "Projelere, sözleşme veya analiz hesaplar eklemek için tıklayın"
+msgstr "Projelere, sözleşme veya analitik hesaplar eklemek için tıklayın"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_res_company
@@ -173,7 +174,7 @@ msgstr "Onaylandı"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
-msgstr "Doğrulanmış Mesai Kartları"
+msgstr "Doğrulanmış Zaman Çizelgeleri"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.current.open,create_uid:0
@@ -291,12 +292,12 @@ msgstr "Hata!"
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
 msgid "External Timesheet"
-msgstr "Harici Mesai Kartı"
+msgstr "Harici Zaman Çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
 msgid "Followers"
-msgstr "İzleyiciler"
+msgstr "Takipçiler"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -339,7 +340,7 @@ msgstr "Taslak"
 msgid ""
 "In order to create a timesheet for this employee, you must assign an "
 "analytic journal to the employee, like 'Timesheet Journal'."
-msgstr "Bu personel için bir zaman çizelgesi oluşturmak için, 'Mesai Kartı Yevmiyesi' gibi, personel bir analiz yevmiyesi atamanız gerekir."
+msgstr "Bu personel için bir zaman çizelgesi oluşturmak için, 'Timesheet Yevmiyesi' gibi, personel bir analitik yevmiyesi atamanız gerekir."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
@@ -348,7 +349,7 @@ msgstr "Bu personel için bir zaman çizelgesi oluşturmak için, 'Mesai Kartı 
 msgid ""
 "In order to create a timesheet for this employee, you must link him/her to a"
 " user."
-msgstr "Bu çalışan için bir mesai kartı oluşturmak için/onu bir kullanıcıya bağlamanız gerekir."
+msgstr "Bu çalışan için bir zaman çizelgesi oluşturmak için/onu bir kullanıcıya bağlamanız gerekir."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
@@ -356,7 +357,7 @@ msgstr "Bu çalışan için bir mesai kartı oluşturmak için/onu bir kullanıc
 msgid ""
 "In order to create a timesheet for this employee, you must link the employee"
 " to a product, like 'Consultant'."
-msgstr "Bu personel için bir mesai kartı oluşturmak için, 'Danışman' gibi, bir ürün için personel bağlantı gerekir."
+msgstr "Bu personel için bir zaman çizelgesi oluşturmak için, 'Danışman' gibi, bir ürün için personel bağlantı gerekir."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
@@ -364,12 +365,12 @@ msgstr "Bu personel için bir mesai kartı oluşturmak için, 'Danışman' gibi,
 msgid ""
 "In order to create a timesheet for this employee, you must link the employee"
 " to a product."
-msgstr "Bu çalışan için bir mesai kartı oluşturmak için, bir ürün için çalışan bağlantı gerekir."
+msgstr "Bu çalışan için bir zaman çizelgesi oluşturmak için, bir ürün için çalışan bağlantı gerekir."
 
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
 msgid "Internal Timesheet"
-msgstr "İç Mesai Kartı"
+msgstr "İç Zaman Çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
@@ -386,12 +387,12 @@ msgstr "Fatura oranı"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir İzleyicidir"
+msgstr "Bir Takipçidir"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "It will open your current timesheet"
-msgstr "Bu mevcut mesai kartı açılacak"
+msgstr "Bu mevcut zaman çizelgesi açılacak"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_last_post:0
@@ -429,14 +430,14 @@ msgstr "Ay"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
 msgid "My Current Timesheet"
-msgstr "Mevcut Mesai Kartım"
+msgstr "Mevcut Zaman Çizelgem"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 msgid "My Timesheet"
-msgstr "Mesai Kartım"
+msgstr "Zaman Çizelgem"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
@@ -470,7 +471,7 @@ msgstr "Aç"
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:50
 #, python-format
 msgid "Open Timesheet"
-msgstr "Mesai Kartı Aç"
+msgstr "Zaman Çizelgesi Aç"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -483,7 +484,7 @@ msgstr "Dönem"
 #: help:hr.config.settings,timesheet_range:0
 #: help:res.company,timesheet_range:0
 msgid "Periodicity on which you validate your timesheets."
-msgstr "Periyodik olarak sizin mesai kartı doğrulama."
+msgstr "Periyodik olarak sizin zaman çizelgesi doğrulama."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
@@ -506,7 +507,7 @@ msgstr "Hazır"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,name:0
 msgid "Project / Analytic Account"
-msgstr "Proje / Analiz Hesap"
+msgstr "Proje / Analitik Hesap"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -521,7 +522,7 @@ msgstr "Hesap Arama"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Search Timesheet"
-msgstr "Mesai Kartı Arama"
+msgstr "Zaman Çizelgesi Arama"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -568,62 +569,62 @@ msgstr "Özet"
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
-msgstr "İşareti eşit sayıda verilmediği mesai kartı doğrulanamıyor ins ve işaret çıkışları."
+msgstr "İşareti eşit sayıda verilmediği zaman çizelgesi doğrulanamıyor ins ve işaret çıkışları."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 msgid "Timesheet"
-msgstr "Mesai Kartı"
+msgstr "Zaman Çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 #: field:hr_timesheet_sheet.sheet,timesheet_activity_count:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
 msgid "Timesheet Activities"
-msgstr "Mesai Kartı Etkinlikler"
+msgstr "Zaman Çizelgesi Etkinlikler"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr "Mesai Kart Satırı"
+msgstr "Zaman Çizelgesi Satırı"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet Period"
-msgstr "Mesai Kart Dönemi"
+msgstr "Zaman Çizelgesi Dönemi"
 
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_max_difference:0
 msgid "Timesheet allowed difference(Hours)"
-msgstr "Difference(hours) izin mesai kartı"
+msgstr "Zaman Çizelgeleri farklı saatlere izin verdi"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Account"
-msgstr "Hesap göre Mesai Kartı"
+msgstr "Hesap göre Zaman Çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_form
 #: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_tree
 msgid "Timesheet by Accounts"
-msgstr "Hesaplara göre Mesai Kartı"
+msgstr "Hesaplara göre Zaman Çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Day"
-msgstr "Günü olarak Mesai Kartı"
+msgstr "Günü olarak Zaman Çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,timesheet_ids:0
 msgid "Timesheet lines"
-msgstr "Mesai Kart satırıları"
+msgstr "Zaman Çizelgesi satırıları"
 
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_range:0
 msgid "Timesheet range"
-msgstr "Mesai kart aralığı"
+msgstr "Zaman Çizelgesi aralığı"
 
 #. module: hr_timesheet_sheet
 #: view:hr.employee:hr_timesheet_sheet.hr_timesheet_sheet_employee_extd_form
@@ -633,19 +634,19 @@ msgstr "Mesai kart aralığı"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
 #: view:res.company:hr_timesheet_sheet.hr_timesheet_sheet_company
 msgid "Timesheets"
-msgstr "Mesai Kartı"
+msgstr "Zaman Çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
 msgid "Timesheets by Period"
-msgstr "Döneme göre Mesai Kartı"
+msgstr "Döneme göre Zaman Çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 msgid "Timesheets to Validate"
-msgstr "Mesai Kartını Doğrulama"
+msgstr "Zaman Çizelgesini Doğrulama"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -687,7 +688,7 @@ msgstr "Toplam Zaman"
 #: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
 #: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
 msgid "Total Timesheet"
-msgstr "Toplam Mesai Kartı"
+msgstr "Toplam Zaman Çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
@@ -703,7 +704,7 @@ msgstr "Okunmamış Mesajlar"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unvalidated Timesheets"
-msgstr "Doğrulanmamış Mesai Kartı"
+msgstr "Doğrulanmamış Zaman Çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,user_id:0
@@ -720,7 +721,7 @@ msgstr "Kullanıcı Hatası!"
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_range:0
 msgid "Validate timesheets every"
-msgstr "Mesai Kartı doğrulama"
+msgstr "Zaman Çizelgesi doğrulama"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -792,7 +793,7 @@ msgstr "Onaylandıktan sonra bir zaman çizelgesini silemezsiniz."
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
 #, python-format
 msgid "You cannot duplicate a timesheet."
-msgstr "Bir zamançizelgesi çift olamaz."
+msgstr "Bir zaman çizelgesi çift olamaz."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
@@ -806,7 +807,7 @@ msgstr "Geçerli ZamanÇizelgesi tarihlerin dışında bir katılım tarihi gire
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr "Sen üst üste 2 mesai kartı oluşturamazsın!\nBu sorunu önlemek için menü'de 'Mevcut mesai kartı' kullanın."
+msgstr "Sen üst üste 2 zaman çizelgesi oluşturamazsın!\nBu sorunu önlemek için menü'de 'Mevcut zaman çizelgesi' kullanın."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
@@ -814,24 +815,24 @@ msgstr "Sen üst üste 2 mesai kartı oluşturamazsın!\nBu sorunu önlemek içi
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
-msgstr "Üst üste 2 mesai kartı olamaz! \nYou, bu sorunu önlemek için Menü 'mesai kartımı' kullanmalıdır."
+msgstr "Üst üste 2 zaman çizelgesi olamaz! \nYou, bu sorunu önlemek için Menü 'mesai kartımı' kullanmalıdır."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr.analytic.timesheet:0
 msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
-msgstr "Onaylanan/Biten mesai kartı  girişi değiştiremezsiniz!"
+msgstr "Onaylanan/Biten zaman çizelgesi  girişi değiştiremezsiniz!"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
-msgstr "Doğrulanmış bir girdi mesai kartı'da değiştiremezsiniz"
+msgstr "Doğrulanmış bir girdi zaman çizelgesi'da değiştiremezsiniz"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
-msgstr "Onaylamış mesai kart bir girişi değiştiremezsiniz."
+msgstr "Onaylamış zaman çizelgesi bir girişi değiştiremezsiniz."
 
 #. module: hr_timesheet_sheet
 #. openerp-web

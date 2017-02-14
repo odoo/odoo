@@ -181,7 +181,7 @@ class base_action_rule(osv.osv):
             def create(self, cr, uid, vals, context=None, **kwargs):
                 # avoid loops or cascading actions
                 if context and context.get('action'):
-                    return create.origin(self, cr, uid, vals, context=context)
+                    return create.origin(self, cr, uid, vals, context=context, **kwargs)
 
                 # call original method with a modified context
                 context = dict(context or {}, action=True)
@@ -206,7 +206,7 @@ class base_action_rule(osv.osv):
             def write(self, cr, uid, ids, vals, context=None, **kwargs):
                 # avoid loops or cascading actions
                 if context and context.get('action'):
-                    return write.origin(self, cr, uid, ids, vals, context=context)
+                    return write.origin(self, cr, uid, ids, vals, context=context, **kwargs)
 
                 # modify context
                 context = dict(context or {}, action=True)

@@ -84,7 +84,7 @@ website.if_dom_contains('div.o_website_quote', function () {
             case "h1":
                 id = _.uniqueId('quote_header_');
                 $(this.parentNode).attr('id',id);
-                sub_li = $("<li>").html('<a href="#'+id+'">'+$(this).text()+'</a>').appendTo(ul);
+                sub_li = $("<li>").append($('<a href="#'+id+'"/>').text($(this).text())).appendTo(ul);
                 sub_ul = null;
                 break;
             case "h2":
@@ -94,7 +94,7 @@ website.if_dom_contains('div.o_website_quote', function () {
                         sub_ul = $("<ul class='nav'>").appendTo(sub_li);
                     }
                     $(this.parentNode).attr('id',id);
-                    $("<li>").html('<a href="#'+id+'">'+$(this).text()+'</a>').appendTo(sub_ul);
+                    $("<li>").append($('<a href="#'+id+'"/>').text($(this).text())).appendTo(sub_ul);
                 }
                 break;
             }

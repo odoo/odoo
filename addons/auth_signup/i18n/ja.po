@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:50+0000\n"
+"POT-Creation-Date: 2015-12-16 13:15+0000\n"
+"PO-Revision-Date: 2016-11-27 05:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -62,7 +62,7 @@ msgstr ""
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "${object.company_id.name} 弊社Odooポータル接続のご招待"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
@@ -85,7 +85,7 @@ msgstr "外部ユーザの登録を許可"
 #: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "電子メールはあなたのパスワードをリセットするための資格情報を使用して送信されました"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
@@ -95,7 +95,13 @@ msgid ""
 msgstr "次のサブスクリプションリンクを含む招待Eメールが送信されました："
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:58
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "別のユーザーが既にこのメールアドレスを使用して登録されています。"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:130
 #, python-format
 msgid "Authentification Failed."
 msgstr ""
@@ -117,10 +123,16 @@ msgid "Confirm Password"
 msgstr "パスワードを確認"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:61
+#, python-format
+msgid "Could not create a new account."
+msgstr "新しいアカウントを作成できません"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "パスワードがリセットできません"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
@@ -130,13 +142,13 @@ msgstr "ログインページでのパスワードリセットを有効化"
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
+msgstr "チェックしない場合は、招待ユーザーのみががサインアップできます。"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:109
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "サインアップトークンは無効です。"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -156,12 +168,12 @@ msgstr "パスワード"
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "パスワードのリセット"
 
 #. module: auth_signup
 #: view:website:web.login
 msgid "Reset Password"
-msgstr ""
+msgstr "パスワードリセット"
 
 #. module: auth_signup
 #: view:website:auth_signup.reset_password
@@ -169,44 +181,50 @@ msgid "Reset password"
 msgstr "パスワードをリセット"
 
 #. module: auth_signup
+#: code:addons/auth_signup/res_users.py:267
+#, python-format
+msgid "Reset password: invalid username or email"
+msgstr "パスワードのリセット：無効なユーザー名または電子メール"
+
+#. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "パスワードリセットのEメールを送信"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "招待メールを送る"
 
 #. module: auth_signup
 #: view:website:auth_signup.signup view:website:web.login
 msgid "Sign up"
-msgstr ""
+msgstr "サインアップ"
 
 #. module: auth_signup
 #: field:res.partner,signup_expiration:0
 msgid "Signup Expiration"
-msgstr ""
+msgstr "サインアップ期限"
 
 #. module: auth_signup
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
-msgstr ""
+msgstr "サインアップトークン"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
 msgid "Signup Token Type"
-msgstr ""
+msgstr "サインアップトークンタイプ"
 
 #. module: auth_signup
 #: field:res.partner,signup_valid:0
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "サインアップトークンは無効です。"
 
 #. module: auth_signup
 #: field:res.partner,signup_url:0
 msgid "Signup URL"
-msgstr ""
+msgstr "サインアップ URL"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -216,12 +234,12 @@ msgstr "ステータス"
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_template_user_id:0
 msgid "Template user for new users created through signup"
-msgstr ""
+msgstr "サインアップで作成されるユーザのテンプレートユーザ"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr ""
+msgstr "これにより、ユーザーはログインページからパスワードのリセットをトリガすることができます。"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -231,14 +249,14 @@ msgstr "ユーザ"
 #. module: auth_signup
 #: view:website:auth_signup.fields view:website:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Eメール"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "お名前"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "例: 鈴木 一郎"

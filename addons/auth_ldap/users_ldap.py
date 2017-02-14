@@ -96,9 +96,13 @@ class CompanyLDAP(osv.osv):
             return False
 
         entry = False
-        filter = filter_format(conf['ldap_filter'], (login,))
         try:
-            results = self.query(conf, filter)
+            filter = filter_format(conf['ldap_filter'], (login,))
+        except TypeError:
+            _logger.warning('Could not format LDAP filter. Your filter should contain one \'%s\'.')
+            return False
+        try:
+            results = self.query(conf, filter.encode('utf-8'))
 
             # Get rid of (None, attrs) for searchResultReference replies
             results = [i for i in results if i[0]]

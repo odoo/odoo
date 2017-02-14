@@ -18,11 +18,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pickle
 
 from openerp import tools
 from openerp.osv import osv, fields
 from openerp.osv.orm import except_orm
+from openerp.tools import pickle
 
 EXCLUDED_FIELDS = set((
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
@@ -184,10 +184,11 @@ class ir_values(osv.osv):
     }
 
     def _auto_init(self, cr, context=None):
-        super(ir_values, self)._auto_init(cr, context)
+        res = super(ir_values, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_values_key_model_key2_res_id_user_id_idx\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_values_key_model_key2_res_id_user_id_idx ON ir_values (key, model, key2, res_id, user_id)')
+        return res
 
     def create(self, cr, uid, vals, context=None):
         res = super(ir_values, self).create(cr, uid, vals, context=context)

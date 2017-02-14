@@ -21,7 +21,9 @@
 
 import urlparse
 import werkzeug.urls
+import re
 
+from openerp.tools.translate import _
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
@@ -68,7 +70,7 @@ class MailMail(osv.Model):
                 'params': werkzeug.url_encode({'db': cr.dbname, 'res_id': mail.res_id, 'email': email_to})
             }
         )
-        return '<small><a href="%s">%s</a></small>' % (url, msg or 'Click to unsubscribe')
+        return '<small><a href="%s">%s</a></small>' % (url, msg or _('Click to unsubscribe'))
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
         """ Override to add the tracking URL to the body. """
@@ -78,6 +80,14 @@ class MailMail(osv.Model):
         domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
         base = "<base href='%s'>" % domain
         body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
+
+        # resolve relative image url to absolute for outlook.com
+        def _sub_relative2absolute(match):
+            return match.group(1) + urlparse.urljoin(domain, match.group(2))
+        # Regex: https://regex101.com/r/aE8uG5/3
+        body = re.sub('(<img(?=\s)[^>]*\ssrc=["\'])(/[^/][^"\']+)', _sub_relative2absolute, body)
+        # Regex: https://regex101.com/r/kT3lD5/2
+        body = re.sub(r'(<[^>]+\bstyle=["\'][^"\']+\burl\([\'"]?)(/[^/\'"][^\'")]+)', _sub_relative2absolute, body)
 
         # generate tracking URL
         if mail.statistics_ids:

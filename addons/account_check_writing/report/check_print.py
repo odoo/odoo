@@ -36,7 +36,7 @@ class report_print_check(report_sxw.rml_parse):
         })
 
     def fill_stars(self, amount):
-        if len(amount) < 100:
+        if amount and len(amount) < 100:
             stars = 100 - len(amount)
             return ' '.join([amount,'*'*stars])
 

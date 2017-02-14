@@ -134,7 +134,7 @@
                                                     on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
                                                 <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
                                                     context="{'company_id': parent.company_id}"
-                                                    on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
+                                                    on_change="onchange_product_uom(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, parent.fiscal_position, context)"/>
                                             </div>
                                             <label for="product_uos_qty" groups="product.group_uos"/>
                                             <div groups="product.group_uos">
@@ -175,7 +175,7 @@
                                         on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
                                     <field name="product_uom"
                                         context="{'company_id': parent.company_id}"
-                                        on_change="product_uom_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, context)"
+                                        on_change="onchange_product_uom(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, parent.fiscal_position, context)"
                                         groups="product.group_uom" options='{"no_open": True}'/>
                                     <field name="product_uos_qty" groups="product.group_uos" invisible="1"/>
                                     <field name="product_uos" string="UoS" groups="product.group_uos" invisible="1"/>

@@ -791,6 +791,13 @@ class mail_message(osv.Model):
             message_id = tools.generate_tracking_message_id('private')
         return message_id
 
+    @api.multi
+    def _invalidate_documents(self):
+        """ Invalidate the cache of the documents followed by ``self``. """
+        for record in self:
+            if record.model and record.res_id:
+                self.env[record.model].invalidate_cache(ids=[record.res_id])
+
     def create(self, cr, uid, values, context=None):
         context = dict(context or {})
         default_starred = context.pop('default_starred', False)
@@ -805,6 +812,7 @@ class mail_message(osv.Model):
             values['record_name'] = self._get_record_name(cr, uid, values, context=context)
 
         newid = super(mail_message, self).create(cr, uid, values, context)
+        self.browse(cr, uid, newid, context)._invalidate_documents()
 
         self._notify(cr, uid, newid, context=context,
                      force_send=context.get('mail_notify_force_send', True),
@@ -826,6 +834,14 @@ class mail_message(osv.Model):
         res = super(mail_message, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         return res
 
+    @api.multi
+    def write(self, vals):
+        if 'model' in vals or 'res_id' in vals:
+            self._invalidate_documents()
+        res = super(mail_message, self).write(vals)
+        self._invalidate_documents()
+        return res
+
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete attachments that are directly attached to the message (should only happen
         # for mail.messages that act as parent for a standalone mail.mail record).
@@ -837,6 +853,7 @@ class mail_message(osv.Model):
                     attachments_to_delete.append(attach.id)
         if attachments_to_delete:
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
+        self.browse(cr, uid, ids, context)._invalidate_documents()
         return super(mail_message, self).unlink(cr, uid, ids, context=context)
 
     #------------------------------------------------------
@@ -848,7 +865,7 @@ class mail_message(osv.Model):
             Call mail_notification.notify to manage the email sending
         """
         notification_obj = self.pool.get('mail.notification')
-        message = self.browse(cr, uid, newid, context=context)
+        message = self.browse(cr, SUPERUSER_ID, newid, context=context)
         partners_to_notify = set([])
 
         # all followers of the mail.message document have to be added as partners and notified if a subtype is defined (otherwise: log message)
@@ -879,16 +896,20 @@ class mail_message(osv.Model):
             cr, uid, newid, partners_to_notify=list(partners_to_notify), context=context,
             force_send=force_send, user_signature=user_signature
         )
-        message.refresh()
 
         # An error appear when a user receive a notification without notifying
         # the parent message -> add a read notification for the parent
         if message.parent_id:
-            # all notified_partner_ids of the mail.message have to be notified for the parented messages
-            partners_to_parent_notify = set(message.notified_partner_ids).difference(message.parent_id.notified_partner_ids)
-            for partner in partners_to_parent_notify:
-                notification_obj.create(cr, uid, {
-                        'message_id': message.parent_id.id,
-                        'partner_id': partner.id,
-                        'is_read': True,
-                    }, context=context)
+            parent_id = message.parent_id
+            check = set()
+            while parent_id and parent_id not in check:
+                # all notified_partner_ids of the mail.message have to be notified for the parented messages
+                partners_to_parent_notify = set(message.notified_partner_ids).difference(parent_id.notified_partner_ids)
+                for partner in partners_to_parent_notify:
+                    notification_obj.create(cr, uid, {
+                            'message_id': parent_id.id,
+                            'partner_id': partner.id,
+                            'is_read': True,
+                        }, context=context)
+                check.add(parent_id)
+                parent_id = parent_id.parent_id

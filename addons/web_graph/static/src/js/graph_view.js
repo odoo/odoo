@@ -83,6 +83,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
             groupbys = this.get_groupbys_from_searchview(),
             col_group_by = groupbys.col_group_by,
             measures = groupbys.measures;
+        // Do not forward-port
+        if(measures.length === 0 && context.measures) {
+            measures = context.measures;
+        }
 
         if (!this.graph_widget) {
             this.widget_config.context = _.clone(context);

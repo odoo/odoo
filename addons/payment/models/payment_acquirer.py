@@ -2,6 +2,7 @@
 
 import logging
 
+import openerp
 from openerp.osv import osv, fields
 from openerp.tools import float_round, float_repr
 from openerp.tools.translate import _
@@ -453,6 +454,14 @@ class PaymentTransaction(osv.Model):
             'partner_country_id': partner and partner.country_id.id or False,
             'partner_phone': partner and partner.phone or False,
         }}
+
+    def get_next_reference(self, cr, uid, reference, context=None):
+        ref_suffix = 1
+        init_ref = reference
+        while self.pool['payment.transaction'].search_count(cr, openerp.SUPERUSER_ID, [('reference', '=', reference)], context=context):
+            reference = init_ref + '-' + str(ref_suffix)
+            ref_suffix += 1
+        return reference
 
     # --------------------------------------------------
     # FORM RELATED METHODS

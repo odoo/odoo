@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-20 07:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-17 02:56+0000\n"
+"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-8/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,12 +22,12 @@ msgstr ""
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "(Keep empty for current time)"
-msgstr ""
+msgstr "(Biarkan kosong untuk saat)"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
 msgid "(local time on the server side)"
-msgstr ""
+msgstr "(waktu setempat pada sisi server)"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -41,7 +41,7 @@ msgid ""
 "                customers if required.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class \"oe_view_nocontent_create\">\n                Klik untuk merekam kegiatan.\n              </p> <p>\n                Anda dapat mendaftar dan melacak kerja jam dengan proyek setiap\n                hari. Setiap waktu yang dihabiskan untuk proyek akan menjadi biaya dalam\n                analitik akuntansi / kontrak dan dapat kembali tagihan ke\n                pelanggan jika diperlukan.\n              </ p>"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -62,7 +62,7 @@ msgid ""
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                Tidak ada aktivitas namun di kontrak ini.\n              </ p><p>\n                Dalam Odoo, kontrak dan proyek diimplementasikan menggunakan\n                akun analitik. Jadi, Anda dapat melacak biaya dan pendapatan untuk menganalisis\n                margin Anda dengan mudah.\n              </p><p>\n                Biaya akan dibuat secara otomatis saat Anda mendaftar pemasok\n                faktur, biaya atau timesheets.\n              </p><p>\n                Pendapatan akan dibuat secara otomatis bila Anda membuat pelanggan\n                faktur. Faktur pelanggan dapat dibuat berdasarkan pesanan penjualan\n                (tetap faktur harga), pada timesheets (berdasarkan pekerjaan yang dilakukan) atau\n                pada biaya (misalnya reinvoicing dari biaya perjalanan).\n              </p>"
 
 #. module: hr_timesheet
 #: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
@@ -88,7 +88,7 @@ msgstr "Jurnal Analisis"
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic Line"
-msgstr ""
+msgstr "analitik entri berdasarkan baris"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
@@ -105,7 +105,7 @@ msgstr "Batalkan"
 #. module: hr_timesheet
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "Change Work"
-msgstr ""
+msgstr "Mengubah pekerjaan"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:176
@@ -113,12 +113,12 @@ msgstr ""
 msgid ""
 "Changing the date will let this entry appear in the timesheet of the new "
 "date."
-msgstr ""
+msgstr "Mengubah tanggal akan membiarkan Catatan ini muncul dalam absen tanggal baru."
 
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
+msgstr "Periksa bidang ini jika proyek ini mengelola timesheets"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -134,17 +134,17 @@ msgstr "Perusahaan:"
 #. module: hr_timesheet
 #: field:hr.timesheet.report,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Biaya"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
 msgid "Cost/Revenue"
-msgstr ""
+msgstr "Cost/Revenue"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
 msgid "Costs & Revenues"
-msgstr ""
+msgstr "Biaya & pendapatan"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,create_uid:0
@@ -164,12 +164,12 @@ msgstr "Dibuat pada"
 #: field:hr.sign.in.project,server_date:0
 #: field:hr.sign.out.project,server_date:0
 msgid "Current Date"
-msgstr ""
+msgstr "Tanggal Saat Ini"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0 field:hr.sign.out.project,state:0
 msgid "Current Status"
-msgstr ""
+msgstr "Status Terbaru"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,date:0
@@ -179,7 +179,7 @@ msgstr "Tanggal"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
-msgstr ""
+msgstr "Mendefinisikan struktur Anda analitik"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,name:0
@@ -200,7 +200,7 @@ msgstr "Karyawan"
 #. module: hr_timesheet
 #: field:hr.sign.in.project,emp_id:0 field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
-msgstr ""
+msgstr "ID karyawan"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:152
@@ -208,12 +208,12 @@ msgstr ""
 msgid ""
 "Employee is not created for this user. Please create one from configuration "
 "panel."
-msgstr ""
+msgstr "Karyawan tidak dibuat untuk pengguna ini. Silakan membuat satu dari konfigurasi panel."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
 msgid "Employee's Name"
-msgstr ""
+msgstr "Nama karyawan"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
@@ -222,7 +222,7 @@ msgid ""
 "assigned on. A  project is an analytic account and the time spent on a "
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
-msgstr ""
+msgstr "Karyawan dapat menyandikan mereka waktu yang dihabiskan di proyek yang berbeda mereka ditugaskan pada. Sebuah proyek adalah account analitik dan waktu yang dihabiskan pada sebuah proyek menghasilkan biaya di akun Analytics. Fitur ini memungkinkan untuk merekam pada waktu yang sama peserta dan absen."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
@@ -231,7 +231,7 @@ msgid ""
 "is an analytic account and the time spent on a project generate costs on the"
 " analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
-msgstr ""
+msgstr "Karyawan dapat menyandikan mereka waktu yang dihabiskan di proyek yang berbeda. Sebuah proyek adalah account analitik dan waktu yang dihabiskan pada sebuah proyek menghasilkan biaya di akun Analytics. Fitur ini memungkinkan untuk merekam pada waktu yang sama peserta dan absen."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
@@ -263,7 +263,7 @@ msgstr "Dikelompokan berdasarkan .."
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group by month of date"
-msgstr ""
+msgstr "Kelompok bulan dari tanggal"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,id:0 field:hr.sign.in.project,id:0
@@ -276,7 +276,7 @@ msgstr "ID"
 msgid ""
 "If you want to reinvoice working time of employees, link this employee to a "
 "service to determinate the cost price of the job."
-msgstr ""
+msgstr "Jika Anda ingin reinvoice waktu kerja karyawan, link ini karyawan untuk layanan untuk menentukan harga dari pekerjaan."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -317,7 +317,7 @@ msgstr "Bulan"
 msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
-msgstr ""
+msgstr "Tidak ada 'jurnal analitik' didefinisikan untuk karyawan %s mendefinisikan karyawan untuk dipilih pengguna dan menetapkan 'jurnal analitik'!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:191
@@ -325,7 +325,7 @@ msgstr ""
 msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
-msgstr ""
+msgstr "No akun analitik didefinisikan pada proyek.\nSilakan menetapkan satu atau kami tidak dapat secara otomatis mengisi absen."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:158
@@ -333,7 +333,7 @@ msgstr ""
 msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
-msgstr ""
+msgstr "Tidak ada jurnal analitik yang didefinisikan untuk '%s'.\nAnda harus menetapkan sebuah jurnal analitik pada formulir karyawan."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
@@ -344,13 +344,13 @@ msgstr "Rekanan"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #, python-format
 msgid "Please define cost unit for this employee."
-msgstr ""
+msgstr "Harap define biaya unit untuk karyawan ini."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
 #, python-format
 msgid "Please define employee for your user."
-msgstr ""
+msgstr "Harap define karyawan untuk pengguna Anda."
 
 #. module: hr_timesheet
 #: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
@@ -367,12 +367,12 @@ msgstr "Produk"
 #. module: hr_timesheet
 #: field:hr.sign.out.project,account_id:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Akun Analisis"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
 msgid "Sign In By Project"
-msgstr ""
+msgstr "Masuk dengan proyek"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -384,7 +384,7 @@ msgstr "Sign In / Out Berdasarkan Proyek"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
 msgid "Sign Out By Project"
-msgstr ""
+msgstr "Sign Out oleh proyek"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -396,18 +396,18 @@ msgstr "Login"
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
 #, python-format
 msgid "Sign in / Sign out"
-msgstr ""
+msgstr "Masuk / keluar"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
 msgid "Sign in / Sign out by Project"
-msgstr ""
+msgstr "Sign In / Out Berdasarkan Proyek"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
 msgid "Start Working"
-msgstr ""
+msgstr "Berhenti Bekerja"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,date:0 field:hr.sign.out.project,date_start:0
@@ -422,12 +422,12 @@ msgstr "Berhenti Bekerja"
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "This Month"
-msgstr ""
+msgstr "Bulan"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,quantity:0
 msgid "Time"
-msgstr ""
+msgstr "Waktu"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
@@ -436,13 +436,13 @@ msgstr ""
 #: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_reports
 msgid "Timesheet"
-msgstr ""
+msgstr "Absen"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
 msgid "Timesheet Accounts"
-msgstr ""
+msgstr "Absen account"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -450,34 +450,34 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "Kegiatan absen"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
 msgid "Timesheet Analysis"
-msgstr ""
+msgstr "Analisis absen"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr ""
+msgstr "Baris Penjualan"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr ""
+msgstr "Bulan"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
-msgstr ""
+msgstr "Bulan"
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0
 #: view:hr.employee:hr_timesheet.hr_timesheet_employee_extd_form
 msgid "Timesheets"
-msgstr ""
+msgstr "Jadwal"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
@@ -487,7 +487,7 @@ msgstr "Total biaya"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
 msgid "Total time"
-msgstr ""
+msgstr "Waktu Pelenusuran"
 
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
@@ -504,14 +504,14 @@ msgstr "Pengguna"
 #: code:addons/hr_timesheet/hr_timesheet.py:176
 #, python-format
 msgid "User Alert!"
-msgstr ""
+msgstr "Waspada tanggal"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Pengguna"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
@@ -529,7 +529,7 @@ msgstr "Perhatian!"
 #. module: hr_timesheet
 #: field:hr.sign.out.project,info:0
 msgid "Work Description"
-msgstr ""
+msgstr "Keterangan"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
@@ -542,7 +542,7 @@ msgid ""
 "You should create an analytic account structure depending on your needs to "
 "analyse costs and revenues. In Odoo, analytic accounts are also used to "
 "track customer contracts."
-msgstr ""
+msgstr "Anda harus membuat struktur account analitik tergantung pada kebutuhan Anda untuk menganalisis biaya dan pendapatan. Dalam Odoo, analitik account juga digunakan untuk melacak pelanggan kontrak."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search

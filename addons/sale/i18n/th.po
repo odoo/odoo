@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Winyoo Kongkavitool <winyoo@tinnakorn.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 08:00+0000\n"
-"Last-Translator: Seksan Poltree <seksan.poltree@gmail.com>\n"
+"PO-Revision-Date: 2017-02-07 15:33+0000\n"
+"Last-Translator: Winyoo Kongkavitool <winyoo@tinnakorn.com>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-8/language/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,14 +123,14 @@ msgstr "# ของใบสั่งขาย"
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'ใบเสนอราคา' or 'คำสั่งซื้อ'} (อ้างอิง ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -294,7 +295,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,module_warning:0
 msgid "Allow configuring alerts by customer or products"
-msgstr ""
+msgstr "ยอมให้ตั้งเตือนตามลูกค้าหรือสินค้า"
 
 #. module: sale
 #: field:sale.config.settings,module_website_quote:0
@@ -344,7 +345,7 @@ msgstr ""
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr ""
+msgstr "ยอมให้ลดราคาแยกตามรายการสั่งซื้อแต่ละแถว"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -370,14 +371,14 @@ msgstr "ยอมให้เลือกและใส่ข้อมูลห
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
+msgstr "ยอมให้ตั้งบัญชีวิเคราะห์ตามใบสั่งซื้อ"
 
 #. module: sale
 #: help:sale.config.settings,group_sale_delivery_address:0
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
-msgstr ""
+msgstr "ยอมให้ระบุสถานที่จัดส่งและสถานที่ออกบิลที่แตกต่างกันในใบสั่งซื้อ"
 
 #. module: sale
 #: field:sale.report,analytic_account_id:0
@@ -432,7 +433,7 @@ msgstr "ยกเลิก"
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_form2
 msgid "Cancel Line"
-msgstr ""
+msgstr "ยกเลิกคำสั่่งซื้อแถวนั้น"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -442,7 +443,7 @@ msgstr "ยกเลิกคำสั่งซื้อ"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Cancel Quotation"
-msgstr ""
+msgstr "ยกเลิกการเสนอราคา"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.order.line,state:0
@@ -460,7 +461,7 @@ msgstr "ไม่สามารถยกเลิกรายการขาย
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr ""
+msgstr "ไม่สามารถลบรายการสั่งซื้อซึ่งมีสถานะเป็น '%s'"
 
 #. module: sale
 #: code:addons/sale/sale.py:1140
@@ -479,32 +480,32 @@ msgstr "ประเภทของสินค้า"
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr ""
+msgstr "ติ๊กเลือก เพื่อรวมใบเรียกเก็บเงินหลายใบที่เป็นลูกค้าคนเดียวกัน"
 
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "ติ๊กเลือก เพื่อบริหารใบเสนอราคาตามทีมเซล"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to acces the Sales Analysis."
-msgstr ""
+msgstr "ติ๊กเลือก เพื่อเข้ารายงานวิเคราะห์การขาย"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis of invoices."
-msgstr ""
+msgstr "ติ๊กเลือก เพื่อดู รายละเอียดผลวิเคราะห์ของใบเรียกเก็บเงิน"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis."
-msgstr ""
+msgstr "ติ๊กเลือก เพื่อดูรายละเอียดการวิเคราะห์"
 
 #. module: sale
 #: field:sale.report,delay:0
 msgid "Commitment Delay"
-msgstr ""
+msgstr "สายจากวันที่สัญญา"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -529,7 +530,7 @@ msgstr "การตั้งค่าผิดพลาด"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Confirm Sale"
-msgstr ""
+msgstr "ยืนยันการขาย"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -544,7 +545,7 @@ msgstr "ยืนยันแล้ว"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr ""
+msgstr "ยืนยันคำสั่งซื้อแล้ว แต่ยังไม่ได้จัดส่ง"
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -578,7 +579,7 @@ msgstr "สร้างใบแจ้งหนี้"
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid "Create Invoices"
-msgstr ""
+msgstr "สร้างใบวางบิล"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -652,7 +653,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "วันที่ของข้อความสุดท้ายที่ลงบันทึก"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -694,12 +695,12 @@ msgstr ""
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "ที่อยู่จัดส่ง"
 
 #. module: sale
 #: field:sale.order.line,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "เวลานำการจัดส่ง"
 
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
@@ -752,7 +753,7 @@ msgstr "ฉบับร่าง"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr ""
+msgstr "ร่างใบเสนอราคา"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:140
@@ -807,7 +808,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "ประเภทผู้เสียภาษี"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -883,7 +884,7 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "ยึดติดสรุปตัวแชท (จำนวนของข้อความ., …) สรุปนี้จะถูกจัดในรูปแบบ html โดยตรงเพื่อที่จะถูกใส่ในมุมมองคัมบัง"
 
 #. module: sale
 #: code:addons/sale/res_config.py:100
@@ -996,12 +997,12 @@ msgstr "ที่อยู่ใบแจ้งหนี้สำหรับใ
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice address:"
-msgstr ""
+msgstr "ที่อยู่ในใบแจ้งหนี้"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "ที่อยู่การจัดส่งและการแจ้งหนี้"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1022,7 +1023,7 @@ msgstr ""
 #: code:addons/sale/sale.py:1224
 #, python-format
 msgid "Invoice paid"
-msgstr ""
+msgstr "จ่ายใบแจ้งหนี้แล้ว"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1055,7 +1056,7 @@ msgstr "การวิเคราะห์ใบแจ้งหนี้"
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr ""
+msgstr "สถิติใบแจ้งหนี้"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -1080,7 +1081,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "วันที่ของข้อความสุดท้าย"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_uid:0
@@ -1132,7 +1133,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "New Copy of Quotation"
-msgstr ""
+msgstr "ทำสำเนาใบเสนอราคาใหม่"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1222,7 +1223,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_tree
 msgid "Order Number"
-msgstr ""
+msgstr "หมายเลขคำสั่ง"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1277,7 +1278,7 @@ msgstr "ระยะเวลาการชำระเิงิน"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Payment Term:"
-msgstr ""
+msgstr "เงื่อนไขการชำระ:"
 
 #. module: sale
 #: field:sale.order,paypal_url:0
@@ -1287,7 +1288,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Percentage"
-msgstr ""
+msgstr "เป็นเปอร์เซ็นต์"
 
 #. module: sale
 #: code:addons/sale/sale.py:935
@@ -1314,7 +1315,7 @@ msgstr "ราคา"
 #. module: sale
 #: field:sale.order.line,price_reduce:0
 msgid "Price Reduce"
-msgstr ""
+msgstr "ราคาลด"
 
 #. module: sale
 #: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
@@ -1417,12 +1418,12 @@ msgstr "ใบเสนอราคา / สั่งซื้อ"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "วันที่เสนอราคา:"
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr ""
+msgstr "หมายเลขใบเสนอราคา"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1432,23 +1433,23 @@ msgstr ""
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr ""
+msgstr "ส่งใบเสนอราคา"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr ""
+msgstr "ส่งใบเสนอราคาแล้ว"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "ยืนยันการเสนอราคา"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
 #, python-format
 msgid "Quotation created"
-msgstr ""
+msgstr "สร้างใบเสนอราคาแล้ว"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
@@ -1504,7 +1505,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Reference/Description"
-msgstr ""
+msgstr "อ้างอิง / คำอธิบาย"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1534,7 +1535,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Sale to Invoice"
-msgstr ""
+msgstr "วางบิลการขาย"
 
 #. module: sale
 #: view:product.product:sale.product_form_view_sale_order_button
@@ -1598,7 +1599,7 @@ msgstr "รายการใบสั่งขาย"
 #: view:sale.order.line:sale.view_order_line_form2
 #: view:sale.order.line:sale.view_order_line_tree
 msgid "Sales Order Lines"
-msgstr ""
+msgstr "รายการคำสั่งขาย"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
@@ -1696,7 +1697,7 @@ msgstr "พนักงานขาย"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Salesperson:"
-msgstr ""
+msgstr "พนักงานขาย:"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1762,7 +1763,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "ต้นฉบับ"
 
 #. module: sale
 #: field:sale.order,state:0
@@ -1799,7 +1800,7 @@ msgstr "ภาษี"
 #. module: sale
 #: field:sale.order,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "เงื่อนไขและข้อกำหนด"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1871,7 +1872,7 @@ msgstr ""
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "This Year"
-msgstr ""
+msgstr "ปีนี้"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_margin:0
@@ -1884,12 +1885,12 @@ msgstr ""
 #. module: sale
 #: help:sale.config.settings,module_website_quote:0
 msgid "This adds the online quotation"
-msgstr ""
+msgstr "นี่จะเป็นการเพิ่มใชเสนอราคาออนไลน์"
 
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
 msgid "This allows install module sale_analytic_plans."
-msgstr ""
+msgstr "นี่จะติดตั้งโมดูล sale_analytic_plans"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1938,7 +1939,7 @@ msgstr "สิ่งที่จะทำ"
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "To Invoice"
-msgstr ""
+msgstr "วางบิล"
 
 #. module: sale
 #: help:sale.config.settings,group_invoice_so_lines:0
@@ -1968,17 +1969,17 @@ msgstr "รวมทั้งหมด รวมภาษี"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "รวม"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sales orders"
-msgstr ""
+msgstr "กระตุ้นคำสั่งขนส่งอัตโนมัติจากรายการขาย"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Uninvoiced"
-msgstr ""
+msgstr "แจ้งหนี้ไม่ได้"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
@@ -2015,7 +2016,7 @@ msgstr "Base"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "UoS"
-msgstr ""
+msgstr "หน่วยขาย"
 
 #. module: sale
 #: help:sale.advance.payment.inv,advance_payment_method:0
@@ -2037,17 +2038,17 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
 msgid "Use contracts management"
-msgstr ""
+msgstr "ใช้การจัดการสัญญา"
 
 #. module: sale
 #: field:account.config.settings,module_sale_analytic_plans:0
 msgid "Use multiple analytic accounts on sales"
-msgstr ""
+msgstr "ใช้การวิเคราะห์บัญชีในการขาย"
 
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
 msgid "Use pricelists to adapt your price per customers"
-msgstr ""
+msgstr "ใช้รายการราคาเพื่อปรับเปลี่ยนราคาของคุณตามลูกค้า"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -2062,12 +2063,12 @@ msgstr "ดูใบกำกับภาษี"
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Waiting Schedule"
-msgstr ""
+msgstr "กำหนดการรอ"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Warehouse Features"
-msgstr ""
+msgstr "คุณสมบัติคลังสินค้า"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -2080,12 +2081,12 @@ msgstr "คำเตือน!"
 #. module: sale
 #: field:sale.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "ข้อความเว็บไซต์"
 
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "ประวัติการสื่อสารเว็บไซต์"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2095,25 +2096,25 @@ msgstr "น้ำหนัก"
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
 msgid "What do you want to invoice?"
-msgstr ""
+msgstr "คุณต้องการแจ้งหนี้อะไร ?"
 
 #. module: sale
 #: code:addons/sale/sale.py:990
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr ""
+msgstr "คุณไมาสามารถยกเลิกบรรทัดคำสั่งขายที่ได้ถูกแจ้งหนี้แล้ว"
 
 #. module: sale
 #: code:addons/sale/sale.py:605
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
-msgstr ""
+msgstr "คุณไม่สามารถยืนยันคำสั่งขายที่ไม่มีบรรทัดข้อมูล"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:42
 #, python-format
 msgid "You cannot create invoice when sales order is not confirmed."
-msgstr ""
+msgstr "คุณไม่สามารถสร้างการแจ้งหนี้เมื่อรายการขายไม่ถูกยืนยัน"
 
 #. module: sale
 #: code:addons/sale/sale.py:523
@@ -2128,18 +2129,18 @@ msgstr ""
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
-msgstr ""
+msgstr "คุณต้องเลือกรายการราคาหรือลูกค้าในแบบฟอร์มการขาย !\nกรุณาเลือกก่อนที่จะเลือกสินค้า"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "You shouldn't manually invoice the following sale order %s"
-msgstr ""
+msgstr "คุณไม่ควรแจ้งหนี้คำสั่งขาย %s ด้วยมือ"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Your Reference:"
-msgstr ""
+msgstr "อ้างอิงของคุณ"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -2151,4 +2152,4 @@ msgstr "หรือ"
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
 msgid "sale.group_delivery_invoice_address"
-msgstr ""
+msgstr "sale.group_delivery_invoice_address"

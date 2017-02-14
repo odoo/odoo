@@ -36,7 +36,7 @@ class test_inherits(common.TransactionCase):
         # the field daughter.name must have required=False and "Baz" as default
         field = daughter._fields['name']
         self.assertFalse(field.required)
-        self.assertEqual(field.default(mother), "Baz")
+        self.assertEqual(field.default(daughter), "Baz")
         self.assertEqual(daughter._defaults.get('name'), "Baz")
         self.assertEqual(daughter.default_get(['name']), {'name': "Baz"})
 
@@ -74,6 +74,12 @@ class test_inherits(common.TransactionCase):
         self.assertIn(daughter, partner_demo.daughter_ids)
 
         # search the partner from the daughter record
+        partners = self.env['res.partner'].search([('daughter_ids', 'like', 'not existing daugther')])
+        self.assertFalse(partners)
+        partners = self.env['res.partner'].search([('daughter_ids', 'not like', 'not existing daugther')])
+        self.assertIn(partner_demo, partners)
+        partners = self.env['res.partner'].search([('daughter_ids', '!=', False)])
+        self.assertIn(partner_demo, partners)
         partners = self.env['res.partner'].search([('daughter_ids', 'in', daughter.ids)])
         self.assertIn(partner_demo, partners)
 

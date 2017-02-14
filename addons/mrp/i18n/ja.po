@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-22 16:10+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
+"PO-Revision-Date: 2016-12-14 01:14+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,12 +29,12 @@ msgstr " 製造"
 #. module: mrp
 #: field:product.template,bom_count:0
 msgid "# Bill of Material"
-msgstr ""
+msgstr "部品表№"
 
 #. module: mrp
 #: field:product.product,mo_count:0 field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "製造オーダ数"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:323
@@ -45,7 +46,7 @@ msgstr "%s（コピー）"
 #: code:addons/mrp/mrp.py:977
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "%s 製造済"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -205,7 +206,7 @@ msgstr ""
 msgid ""
 "All product quantities must be greater than 0.\n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
-msgstr ""
+msgstr "すべての製品の量はゼロより大きくなければなりません。\nmrp_byproduct モジュールをインストールすれば部品表で副産品の管理ができます!"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
@@ -280,7 +281,7 @@ msgstr "部品表名"
 #. module: mrp
 #: help:mrp.bom.line,attribute_value_ids:0
 msgid "BOM Product Variants needed form apply this line."
-msgstr ""
+msgstr "部品表製品バリアントは、このラインが適用されたフォームが必要です。"
 
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
@@ -296,7 +297,7 @@ msgstr "部品表構造"
 #. module: mrp
 #: field:mrp.bom.line,child_line_ids:0
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "参照した部品表の部品表項目"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:44
@@ -388,7 +389,7 @@ msgstr "部品表タイプ"
 #: code:addons/mrp/stock.py:259
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "汎用的な製造ルートがありません。"
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
@@ -519,7 +520,7 @@ msgstr "設定"
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Configure Manufacturing"
-msgstr ""
+msgstr "製造を構成"
 
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
@@ -568,7 +569,7 @@ msgstr "消費構成品"
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr ""
+msgstr "使用先"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -643,7 +644,7 @@ msgstr "サイクルコスト"
 #: help:mrp.bom,message_last_post:0 help:mrp.production,message_last_post:0
 #: help:mrp.production.workcenter.line,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "記録上の最後のメッセージが投稿された日"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -782,7 +783,7 @@ msgstr "作業オーダーリストの表示の際には並びの順序を与え
 #. module: mrp
 #: help:mrp.bom.line,sequence:0
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "表示用にオーダ連番を付与します"
 
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
@@ -835,13 +836,13 @@ msgstr "ID"
 #: help:mrp.bom,product_id:0
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
+msgstr "製品バリアントが部品表(BOM)に定義されている場合にのみ、この製品で利用可能です。"
 
 #. module: mrp
 #: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -899,7 +900,7 @@ msgstr "完成品を必要とされる場所で製造する場合は空のまま
 #: field:mrp.bom,message_last_post:0 field:mrp.production,message_last_post:0
 #: field:mrp.production.workcenter.line,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: mrp
 #: field:change.production.qty,write_uid:0 field:mrp.bom,write_uid:0
@@ -991,7 +992,7 @@ msgstr "製造ルール"
 #. module: mrp
 #: field:stock.warehouse,manufacture_to_resupply:0
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "この倉庫で製造する"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -1025,7 +1026,7 @@ msgstr "製造オーダ"
 #: code:addons/mrp/procurement.py:131
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
-msgstr ""
+msgstr "製造オーダ <em>%s</em> が作成されました。"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_mrp_production
@@ -1123,7 +1124,7 @@ msgstr "新規"
 #: code:addons/mrp/procurement.py:127
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr ""
+msgstr "この製品用の部品表（BOM）がありません !"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1292,7 +1293,7 @@ msgstr "調達"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "調達規則"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1421,7 +1422,7 @@ msgstr "製品バリアント"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Product:"
-msgstr ""
+msgstr "製品："
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1448,12 +1449,12 @@ msgstr "製造オーダ番号"
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "生産品の製造オーダ"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "構成品の製造オーダ"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1567,7 +1568,7 @@ msgstr "数量"
 #. module: mrp
 #: field:mrp.product.produce.line,product_qty:0
 msgid "Quantity (in default UoM)"
-msgstr ""
+msgstr "数量 (デフォルト単位)"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1691,7 +1692,7 @@ msgstr "予定日"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "スケジュールされた月日"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1701,7 +1702,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "予定月"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1733,7 +1734,7 @@ msgstr "部品表の検索"
 #. module: mrp
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "部品表構成品の検索"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1863,7 +1864,7 @@ msgstr ""
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "選択された計量単位は、製品形態とは異なるカテゴリのものです。"
 
 #. module: mrp
 #: help:mrp.production,routing_id:0
@@ -1948,7 +1949,7 @@ msgstr "特定工順の操作を達成するためのこの作業区の時間（
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "消費対象"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
@@ -2005,7 +2006,7 @@ msgstr "単位"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "単位（計量単位、UOM）は、在庫管理のための計量単位です"
 
 #. module: mrp
 #: field:mrp.bom,message_unread:0 field:mrp.production,message_unread:0
@@ -2063,7 +2064,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Variant"
-msgstr ""
+msgstr "製品バリアント"
 
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
@@ -2098,14 +2099,14 @@ msgstr "警告"
 #: field:mrp.production,website_message_ids:0
 #: field:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "ウェブサイトメッセージ"
 
 #. module: mrp
 #: help:mrp.bom,website_message_ids:0
 #: help:mrp.production,website_message_ids:0
 #: help:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "ウェブサイトコミュニケーション履歴"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2138,7 +2139,7 @@ msgstr "この製品の受注を処理した場合、配送には完成品では
 #: help:stock.warehouse,manufacture_to_resupply:0
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr ""
+msgstr "製造対象の製品がこの倉庫で製造できることを示します。"
 
 #. module: mrp
 #: help:mrp.production,state:0
@@ -2253,7 +2254,7 @@ msgid ""
 "Without this module: A + B + C -> D.\n"
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
-msgstr ""
+msgstr "部品表に副産品を構成できます。\\n\nこのモジュールなし : A + B + C -> D.\\n\nこのモジュールあり : A + B + C -> D + E.\\n\n- mrp_byproduct　モジュールをインストールします。"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:339
@@ -2261,7 +2262,7 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
-msgstr ""
+msgstr "実行中の製造オーダで使われている部品表は削除できません.\n終了させるか、取り消してください"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:42

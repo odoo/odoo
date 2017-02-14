@@ -1537,12 +1537,6 @@
         </t>
     </a>
 </t>
-
-<t t-name="One2Many.viewmanager" t-extend="ViewManager">
-    <t t-jquery=".oe-view-manager-header">
-        this.attr('t-if', 'views.length != 1');
-    </t>
-</t>
 <t t-name="One2Many.formview" t-extend="FormView">
     <t t-jquery=".oe_form_buttons" t-operation="inner">
         <button type="button" class="oe_button oe_form_button_create">Add</button>
@@ -2029,13 +2023,11 @@
 <t t-name="FieldMany2ManyCheckBoxes">
     <t t-foreach="widget.get('records')" t-as="record">
         <div>
-            <t t-if="selected[record[0]]">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])" checked="true"/>
-            </t>
-            <t t-if="! selected[record[0]]">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"/>
-            </t>
-            <t t-esc="record[1]"/>
+            <label style="font-weight: normal">
+                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"
+                       t-att-checked="selected[record[0]] or null"/>
+                <t t-esc="record[1]"/>
+            </label>
         </div>
     </t>
 </t>

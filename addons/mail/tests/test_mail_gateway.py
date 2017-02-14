@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from email.utils import formataddr
+
 from .common import TestMail
 from openerp.tools import mute_logger
 import socket
@@ -298,7 +300,7 @@ class TestMailgateway(TestMail):
                          'message_process: incoming email on Partners alias should send a bounce email')
         self.assertIn('Frogs', sent_emails[0].get('subject'),
                       'message_process: bounce email on Partners alias should contain the original subject')
-        self.assertIn('test.sylvie.lelitre@agrolait.com', sent_emails[0].get('email_to'),
+        self.assertIn(formataddr(('Sylvie Lelitre', 'test.sylvie.lelitre@agrolait.com')), sent_emails[0].get('email_to'),
                       'message_process: bounce email on Partners alias should have original email sender as recipient')
 
         # Do: incoming email from an unknown partner on a Followers only alias -> bounce
@@ -313,7 +315,7 @@ class TestMailgateway(TestMail):
                          'message_process: incoming email on Followers alias should send a bounce email')
         self.assertIn('Frogs', sent_emails[0].get('subject'),
                       'message_process: bounce email on Followers alias should contain the original subject')
-        self.assertIn('test.sylvie.lelitre@agrolait.com', sent_emails[0].get('email_to'),
+        self.assertIn(formataddr(('Sylvie Lelitre', 'test.sylvie.lelitre@agrolait.com')), sent_emails[0].get('email_to'),
                       'message_process: bounce email on Followers alias should have original email sender as recipient')
 
         # Do: incoming email from a known partner on a Partners alias -> ok (+ test on alias.user_id)

@@ -91,6 +91,10 @@ preserve order.
 * ``record in set`` returns whether ``record`` (which must be a 1-element
   recordset) is present in ``set``. ``record not in set`` is the inverse
   operation
+* ``set1 <= set2`` and ``set1 < set2`` return whether ``set1`` is a subset
+  of ``set2`` (resp. strict)
+* ``set1 >= set2`` and ``set1 > set2`` return whether ``set1`` is a superset
+  of ``set2`` (resp. strict)
 * ``set1 | set2`` returns the union of the two recordsets, a new recordset
   containing all records present in either source
 * ``set1 & set2`` returns the intersection of two recordsets, a new recordset
@@ -376,9 +380,9 @@ it uses the values of other *fields*, it should specify those fields using
     def _apply_discount(self):
         for record in self:
             # compute actual discount from discount percentage
-            discount = self.value * self.discount
-            self.discount_value = discount
-            self.total = self.value - discount
+            discount = record.value * record.discount
+            record.discount_value = discount
+            record.total = record.value - discount
 
 Related fields
 ''''''''''''''
@@ -640,7 +644,7 @@ Model Reference
 
     .. automethod:: read
 
-    .. rubric:: Research
+    .. rubric:: Searching
 
     .. automethod:: search
     .. automethod:: search_count

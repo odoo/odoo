@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:50+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-12-16 13:15+0000\n"
+"PO-Revision-Date: 2016-06-07 07:46+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-8/language/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,13 +78,13 @@ msgstr ""
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
 msgid "Allow external users to sign up"
-msgstr ""
+msgstr "อนุญาตให้ผู้ใช้ภายนอกสมัครเข้าใช้งาน"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "อีเมลถูกต้องไปพร้อมกับการรับรองเพื่อรีเซ็ตรหัสผ่านของคุณ"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
@@ -94,7 +94,13 @@ msgid ""
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:58
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:130
 #, python-format
 msgid "Authentification Failed."
 msgstr ""
@@ -113,10 +119,16 @@ msgstr ""
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Confirm Password"
+msgstr "ยืนยันรหัสผ่าน"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:61
+#, python-format
+msgid "Could not create a new account."
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
 msgstr ""
@@ -124,7 +136,7 @@ msgstr ""
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "อนุญาตให้รีเซ็ตรหัสผ่านจากหน้าล๊อกอิน"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
@@ -140,7 +152,7 @@ msgstr ""
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "ไม่เคยเชื่อมต่อ"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -155,12 +167,12 @@ msgstr "รหัสผ่าน"
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "การรีเซ็ตรหัสผ่าน"
 
 #. module: auth_signup
 #: view:website:web.login
 msgid "Reset Password"
-msgstr ""
+msgstr "ตั้งรหัสผ่านใหม่"
 
 #. module: auth_signup
 #: view:website:auth_signup.reset_password
@@ -168,14 +180,20 @@ msgid "Reset password"
 msgstr ""
 
 #. module: auth_signup
-#: view:res.users:auth_signup.res_users_form_view
-msgid "Send Reset Password Instructions"
+#: code:addons/auth_signup/res_users.py:267
+#, python-format
+msgid "Reset password: invalid username or email"
 msgstr ""
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
+msgid "Send Reset Password Instructions"
+msgstr "ส่งวิธีการรีเซ็ตรหัสผ่าน"
+
+#. module: auth_signup
+#: view:res.users:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "ส่งอีเมลเชิญ"
 
 #. module: auth_signup
 #: view:website:auth_signup.signup view:website:web.login
@@ -230,14 +248,14 @@ msgstr "ผู้ใช้งาน"
 #. module: auth_signup
 #: view:website:auth_signup.fields view:website:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "อีเมลของคุณ"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "ชื่อของคุณ"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "เช่น John Doe"

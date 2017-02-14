@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Paolo Valier, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 07:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-05-13 13:23+0000\n"
+"Last-Translator: Paolo Valier\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,17 +23,17 @@ msgstr ""
 #: code:addons/mrp/stock.py:262
 #, python-format
 msgid " Manufacture"
-msgstr ""
+msgstr "Produzione"
 
 #. module: mrp
 #: field:product.template,bom_count:0
 msgid "# Bill of Material"
-msgstr ""
+msgstr "# Distinta Base"
 
 #. module: mrp
 #: field:product.product,mo_count:0 field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "# Ordini di produzione"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:323
@@ -44,7 +45,7 @@ msgstr "%s (copia)"
 #: code:addons/mrp/mrp.py:977
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "%s prodotto"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -64,7 +65,7 @@ msgid ""
 "                search in which BoM a specific component is used.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Click to add a component to a bill of material.\n                Cliccare per aggiungere un componente alla distinta base.\n              </p><p>\n                I componenti delle distinte base sono usati per creare le distinte base\n                principali. Usa questo menù per cercare in quale BoM uno specifico\n                componente viene usato.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliccare per aggiungere un componente alla distinta base.\n</p><p>\nI componenti delle distinte base sono componenti e sottoprodotti\nutilizzati per creare le distinte base principali. Usa questo menu per \ncercare in quale distinta base uno specifico componente viene utilizzato.\n</p>"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -295,7 +296,7 @@ msgstr "Struttura Distinta Base"
 #. module: mrp
 #: field:mrp.bom.line,child_line_ids:0
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "Righe della Distinta base di riferimento"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:44
@@ -371,7 +372,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.line,type:0
 msgid "BoM Line Type"
-msgstr ""
+msgstr "Tipo righe Distinta Base"
 
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
@@ -387,7 +388,7 @@ msgstr "Tipo di Distinta base"
 #: code:addons/mrp/stock.py:259
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "Non è possibile trovare un percorso di Produzione generico"
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
@@ -402,7 +403,7 @@ msgstr "Annulla"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Cancel Production"
-msgstr "Cancella la produzione"
+msgstr "Annulla Produzione"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -413,7 +414,7 @@ msgstr "Annullato"
 #: code:addons/mrp/stock.py:183
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "Non è possibile usare un movimento con quantità nulla o negativa."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:605
@@ -538,7 +539,7 @@ msgstr "Consuma & Produci"
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Utilizza righe"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
@@ -567,7 +568,7 @@ msgstr "Prodotti Utilizzati"
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr ""
+msgstr "Utilizzato per"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -803,7 +804,7 @@ msgstr "Raggruppa per..."
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Gestisce il sommario (numero di messaggi, ...) di Chatter. Questo sommario è direttamente in html così da poter essere inserito nelle viste kanban."
+msgstr "Contiene il riepilogo Chatter (numero di messaggi, ...). Questa sintesi è direttamente in formato HTML, al fine di essere inserita nelle viste kanban."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
@@ -834,7 +835,7 @@ msgstr "ID"
 #: help:mrp.bom,product_id:0
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
+msgstr "Se è definita una variante di prodotto la Distinta Base è disponibile solo per questo prodotto."
 
 #. module: mrp
 #: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
@@ -884,7 +885,7 @@ msgstr "Azione non valida!"
 #: field:mrp.production,message_is_follower:0
 #: field:mrp.production.workcenter.line,message_is_follower:0
 msgid "Is a Follower"
-msgstr "E' un Follower"
+msgstr "È un Follower"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -980,17 +981,17 @@ msgstr "Manager"
 #: code:addons/mrp/procurement.py:33 code:addons/mrp/stock.py:256
 #, python-format
 msgid "Manufacture"
-msgstr ""
+msgstr "Produci"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_pull_id:0
 msgid "Manufacture Rule"
-msgstr ""
+msgstr "Regola di Produzione"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_to_resupply:0
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "Produci in questo Magazzino"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -998,7 +999,7 @@ msgstr ""
 #: view:product.product:mrp.product_product_form_view_bom_button
 #: view:product.template:mrp.product_template_form_view_bom_button
 msgid "Manufacturing"
-msgstr "Gestione della Produzione"
+msgstr "Produzione"
 
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0 field:mrp.bom.line,product_efficiency:0
@@ -1051,7 +1052,7 @@ msgstr "Ordini di produzione in attesa di materiale"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 msgid "Manufacturing Orders in Progress"
-msgstr "Ordini di produzione in progresso"
+msgstr "Ordini di produzione in corso"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1240,7 +1241,7 @@ msgstr "Settimanale"
 #. module: mrp
 #: selection:mrp.bom.line,type:0
 msgid "Phantom"
-msgstr ""
+msgstr "Codice Fittizio"
 
 #. module: mrp
 #: help:mrp.bom.line,type:0
@@ -1291,7 +1292,7 @@ msgstr "Approvvigionamento"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Regole d'appalto"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1447,12 +1448,12 @@ msgstr "Ordine di produzione N° :"
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Ordine di Produzione per Prodotti fabbricati"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "Ordine di Produzione per Materie prime"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1472,7 +1473,7 @@ msgstr "Centri di lavoro"
 #. module: mrp
 #: field:mrp.production,progress:0
 msgid "Production progress"
-msgstr ""
+msgstr "Progresso produzione"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1495,7 +1496,7 @@ msgstr "Prodotti"
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
 msgid "Products Consumed"
-msgstr ""
+msgstr "Prodotti utilizzati"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1690,17 +1691,17 @@ msgstr "Data prevista"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "Data pianificata per Mese"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Scheduled Date:"
-msgstr ""
+msgstr "Data pianificata:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Mese programmato"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1732,7 +1733,7 @@ msgstr "Cerca distinta base"
 #. module: mrp
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "Cerca Componenti della Distinta base"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1769,7 +1770,7 @@ msgstr "Sequenza"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Set"
-msgstr ""
+msgstr "Imposta"
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -1947,7 +1948,7 @@ msgstr "Tempo in ore che questo centro di lavoro impiegherà per completare le o
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "Da utilizzare"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
@@ -1980,7 +1981,7 @@ msgstr "Tracciamento lotti di produzione"
 #. module: mrp
 #: field:mrp.product.produce,track_production:0
 msgid "Track production"
-msgstr ""
+msgstr "Traccia Produzione"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -2036,13 +2037,13 @@ msgstr "Valido da"
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Date by Month"
-msgstr ""
+msgstr "Valido dalla data per Mese"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "Valido dal Mese"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
@@ -2057,12 +2058,12 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
 msgid "Validity of this BoM. Keep empty if it's always valid."
-msgstr ""
+msgstr "Validità di questa Distinta Base. Lasciando vuoto è sempre valida."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Variant"
-msgstr ""
+msgstr "Variante"
 
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
@@ -2131,7 +2132,7 @@ msgstr ""
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
 "                                will contain the raw materials, instead of the finished product."
-msgstr "Quando si processa un ordine di vendita per questo prodotto, l'ordine di consegna\n                                Conterrà le righe dei materiali, invece del prodotto finito."
+msgstr "Quando si processa un ordine di vendita per questo prodotto, l'ordine di consegna\nconterrà le righe dei materiali, invece del prodotto finito."
 
 #. module: mrp
 #: help:stock.warehouse,manufacture_to_resupply:0
@@ -2148,7 +2149,7 @@ msgid ""
 "                If the stock is available then the status is set to 'Ready to Produce'.\n"
 "                When the production gets started then the status is set to 'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
-msgstr "Quando l'ordine di produzione viene creato lo stato è impostato a 'Bozza'.\nSe l'ordine viene convermato lo stato passa a 'Attesa Materiale'.\nIn caso di eccezioni, lo stato passa a 'Eccezione Prelievo'.\nSe il materiale è disponibile, lo stato passa a 'Pronto per la produzione'.\nQuando la produzione parte lo stato passa a 'In Produzione'.\nQuando la produzione termina, lo stato passa a 'Completato'."
+msgstr "Quando l'ordine di produzione viene creato lo stato è impostato a 'Bozza'.\nSe l'ordine viene confermato lo stato passa a 'Attesa Materiale'.\nIn caso di eccezioni, lo stato passa a 'Eccezione Prelievo'.\nSe il materiale è disponibile, lo stato passa a 'Pronto per la produzione'.\nQuando la produzione parte lo stato passa a 'In Produzione'.\nQuando la produzione termina, lo stato passa a 'Completato'."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -2252,7 +2253,7 @@ msgid ""
 "Without this module: A + B + C -> D.\n"
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
-msgstr ""
+msgstr "È possibile configurare i sottoprodotti nella distinta base.\nSenza questo modulo: A + B + C -> D.\nCon questo modulo: A + B + C -> D + E.\n- Installa il modulo mrp_byproduct."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:339
@@ -2260,7 +2261,7 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
-msgstr ""
+msgstr "Non è possibile eliminare una Distinta Base con Ordini di Produzione in corso.\nPrima terminare o annullare questi."
 
 #. module: mrp
 #: code:addons/mrp/stock.py:42

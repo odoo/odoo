@@ -117,7 +117,9 @@ class wizard_user(osv.osv_memory):
 
     _columns = {
         'wizard_id': fields.many2one('portal.wizard', string='Wizard', required=True, ondelete='cascade'),
-        'partner_id': fields.many2one('res.partner', string='Contact', required=True, readonly=True),
+        'partner_id': fields.many2one(
+            'res.partner', string='Contact', required=True, readonly=True,
+            ondelete='cascade'),
         'email': fields.char(string='Email', size=240),
         'in_portal': fields.boolean('In Portal'),
     }
@@ -158,12 +160,15 @@ class wizard_user(osv.osv_memory):
         return error_msg
 
     def action_apply(self, cr, uid, ids, context=None):
+        self.pool['res.partner'].check_access_rights(cr, uid, 'write')
         error_msg = self.get_error_messages(cr, uid, ids, context=context)
         if error_msg:
             raise osv.except_osv(_('Contacts Error'), "\n\n".join(error_msg))
 
         for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
             portal = wizard_user.wizard_id.portal_id
+            if not portal.is_portal:
+                raise osv.except_osv("Error", "Not a portal: " + portal.name)
             user = self._retrieve_user(cr, SUPERUSER_ID, wizard_user, context)
             if wizard_user.partner_id.email != wizard_user.email:
                 wizard_user.partner_id.write({'email': wizard_user.email})

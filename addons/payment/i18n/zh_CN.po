@@ -3,16 +3,20 @@
 # * payment
 # 
 # Translators:
-# 珠海-老天 <liangjia@qq.com>, 2015
+# Jeffery CHEN <jeffery9@gmail.com>, 2015
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2016-2017
 # mrshelly <mrshelly@hotmail.com>, 2015
 # THL <wt39181819@gmail.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-24 15:04+0000\n"
-"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"PO-Revision-Date: 2017-02-02 16:48+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,27 +32,27 @@ msgstr "-安装模块 payment_adyen 。"
 #. module: payment
 #: help:account.config.settings,module_payment_buckaroo:0
 msgid "-It installs the module payment_buckaroo."
-msgstr "-为此将安装“ payment_buckaroo”模块。"
+msgstr "-安装“ payment_buckaroo”模块。"
 
 #. module: payment
 #: help:account.config.settings,module_payment_ogone:0
 msgid "-It installs the module payment_ogone."
-msgstr "-它安装模块“payment_ogone”。"
+msgstr "-安装模块“payment_ogone”。"
 
 #. module: payment
 #: help:account.config.settings,module_payment_paypal:0
 msgid "-It installs the module payment_paypal."
-msgstr "-为此将安装 payment_paypal 模块。"
+msgstr "-安装 payment_paypal 模块。"
 
 #. module: payment
 #: field:payment.transaction,acquirer_id:0
 msgid "Acquirer"
-msgstr "采购方"
+msgstr "收单方"
 
 #. module: payment
 #: field:payment.transaction,acquirer_reference:0
 msgid "Acquirer Order Reference"
-msgstr "采购单参考"
+msgstr "收单方订单参考"
 
 #. module: payment
 #: field:payment.transaction,partner_address:0
@@ -104,7 +108,7 @@ msgstr "创建人"
 #: field:payment.acquirer,create_date:0
 #: field:payment.transaction,create_date:0
 msgid "Created on"
-msgstr "创建"
+msgstr "创建于"
 
 #. module: payment
 #: field:payment.transaction,date_create:0
@@ -114,7 +118,7 @@ msgstr "创建日期"
 #. module: payment
 #: field:payment.transaction,currency_id:0
 msgid "Currency"
-msgstr "币别"
+msgstr "货币"
 
 #. module: payment
 #: help:payment.transaction,message_last_post:0
@@ -184,12 +188,12 @@ msgstr "表单"
 #. module: payment
 #: field:payment.acquirer,view_template_id:0
 msgid "Form Button Template"
-msgstr "Form按钮模板"
+msgstr "表单按钮模板"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_search
 msgid "Group By"
-msgstr "分组"
+msgstr "分组于"
 
 #. module: payment
 #: help:payment.transaction,message_summary:0
@@ -216,7 +220,7 @@ msgstr "是一个关注者"
 #. module: payment
 #: field:payment.transaction,partner_lang:0
 msgid "Lang"
-msgstr "长度"
+msgstr "语言"
 
 #. module: payment
 #: field:payment.transaction,message_last_post:0
@@ -296,7 +300,7 @@ msgstr "名称"
 #. module: payment
 #: field:payment.transaction,reference:0
 msgid "Order Reference"
-msgstr "订单关联"
+msgstr "订单参考"
 
 #. module: payment
 #: field:payment.transaction,partner_id:0
@@ -330,7 +334,7 @@ msgstr "付款方式"
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: view:payment.acquirer:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr "收单银行"
+msgstr "付款方式"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -363,7 +367,7 @@ msgstr "电话"
 #. module: payment
 #: field:payment.acquirer,validation:0
 msgid "Process Method"
-msgstr "过程方法"
+msgstr "处理方式"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -374,7 +378,7 @@ msgstr "生产单编码"
 #: view:payment.acquirer:payment.acquirer_search
 #: field:payment.acquirer,provider:0
 msgid "Provider"
-msgstr "提供者"
+msgstr "服务商"
 
 #. module: payment
 #: help:payment.transaction,acquirer_reference:0
@@ -399,7 +403,7 @@ msgstr "发送信息到该组"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
-msgstr "服务器间"
+msgstr "服务器到服务器"
 
 #. module: payment
 #: help:payment.acquirer,validation:0
@@ -486,12 +490,12 @@ msgstr "邮编"
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr "采购: payment.acquirer 浏览数据"
+msgstr "acquirer: payment.acquirer 浏览记录"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr "金额:交易金额,浮点数"
+msgstr "amount:交易金额,浮点数"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
@@ -501,12 +505,12 @@ msgstr "context:当前上下相关字典"
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr "货币：货币交易浏览记录"
+msgstr "currency：货币交易浏览记录"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr "联系人:客户浏览历史(不完全)"
+msgstr "partner: the buyer partner browse record, not necessarily set"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
@@ -518,7 +522,7 @@ msgstr "partner_values: 关于购买的运费需要参考具体的货运方法,�
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr "reference: 参考订单号"
+msgstr "reference:  交易参考号码"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form

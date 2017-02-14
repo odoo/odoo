@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-20 07:31+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-11-28 06:38+0000\n"
+"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-8/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,12 +95,12 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hello ${object.partner_id.name},</p>\n    \n    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n    <p>\n        You can view your quotation online:\n    </p>\n    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n\n    % if object.paypal_url:\n    <br/>\n    <p>It is also possible to directly pay with Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>If you have any question, do not hesitate to contact us.</p>\n    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "Penjualan"
 
 #. module: sale
 #: field:sale.report,nbr:0
@@ -115,21 +115,21 @@ msgstr "# of Qty"
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "Pesanan Penjualan"
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "$ {(object.name atau '') Menggantikan ('/', '_')} _ $ {object.state == 'draft' dan 'draft' atau ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${di object.company_id.name|safe} ${object.state di ('draft', 'dikirim') dan 'Kutipan' atau 'Order'} (Ref ${object.name atau 'n/a'})"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -144,7 +144,7 @@ msgid ""
 "* The 'Exception' status is set when the related sales order is set as exception.                     \n"
 "* The 'Done' status is set when the sales order line has been picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr ""
+msgstr "* Status 'Draf' diatur ketika pesanan penjualan terkait status rancangan.                     \\n* Status 'Dikonfirmasi' diatur ketika pesanan penjualan terkait dikonfirmasi.                     \\n* Status 'Pengecualian' diatur ketika pesanan penjualan terkait ditetapkan sebagai pengecualian.                     \\n* Status 'Selesai' diatur ketika batas order penjualan telah dipilih.                     \\n* Status 'Dibatalkan' diatur bila pengguna membatalkan order penjualan terkait."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -157,7 +157,7 @@ msgid ""
 "                    quotation, sales order, delivery, invoicing and payment.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">Klik untuk membuat kuotasi yang dapat dikonversi menjadi order penjualan.</p><p>Odoo akan membantu Anda efisien menangani aliran penjualan lengkap: kutipan, order penjualan, pengiriman, faktur dan pembayaran.</p>"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -174,7 +174,7 @@ msgid ""
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Click to create a quotation or sales order for this customer.\n              </p><p>\n                Odoo will help you efficiently handle the complete sale flow:\n                quotation, sales order, delivery, invoicing and\n                payment.\n              </p><p>\n                The social feature helps you organize discussions on each sales\n                order, and allow your customer to keep track of the evolution\n                of the sales order.\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
@@ -187,7 +187,7 @@ msgid ""
 "                quotation, sales order, delivery, invoicing and payment.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">Klik untuk membuat kuotasi yang dapat dikonversi menjadi order penjualan.</p><p>Odoo akan membantu Anda efisien menangani aliran penjualan lengkap: kutipan, order penjualan, pengiriman, faktur dan pembayaran.</p>"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -205,7 +205,7 @@ msgid ""
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Click to create a quotation, the first step of a new sale.\n              </p><p>\n                Odoo will help you handle efficiently the complete sale flow:\n                from the quotation to the sales order, the\n                delivery, the invoicing and the payment collection.\n              </p><p>\n                The social feature helps you organize discussions on each sales\n                order, and allow your customers to keep track of the evolution\n                of the sales order.\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
@@ -217,17 +217,17 @@ msgid ""
 "                if you invoice sales totally.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>Berikut adalah daftar dari setiap order penjualan baris untuk dikenakan tagihan. Anda dapat faktur order penjualan sebagian, oleh garis order penjualan. Anda tidak perlu daftar ini jika Anda faktur dari perintah pengiriman atau jika Anda faktur penjualan benar-benar.</p>"
 
 #. module: sale
 #: help:sale.order.line,address_allotment_id:0
 msgid "A partner to whom the particular product needs to be allotted."
-msgstr ""
+msgstr "Seorang mitra kepada siapa produk tertentu perlu diberikan."
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "Alamat di order penjualan"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -254,27 +254,27 @@ msgstr "Produk advance"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:62
 #, python-format
 msgid "Advance of %s %%"
-msgstr ""
+msgstr "Uang muka %s %%"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:62
 #, python-format
 msgid "Advance of %s %s"
-msgstr ""
+msgstr "Uang muka %s %s"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
-msgstr ""
+msgstr "Setelah mengklik 'Tampilkan Baris untuk Faktur', pilih baris untuk faktur dan membuat faktur dari menu 'Selanjutnya'."
 
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid ""
 "All items in these order lines will be invoiced. You can also invoice a percentage of the sales order\n"
 "                    or a fixed price (for advances) directly from the sales order form if you prefer."
-msgstr ""
+msgstr "Semua item dalam baris perintah tersebut akan ditagih. Anda juga dapat menagih persentase dari order penjualan\\n                     atau harga tetap (untuk uang muka) langsung dari bentuk pesanan penjualan jika Anda inginkan."
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -284,27 +284,27 @@ msgstr "Peruntukan rekanan"
 #. module: sale
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "Memungkinkan alamat yang berbeda untuk pengiriman dan faktur"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
 msgid "Allow batch invoicing of delivery orders through journals"
-msgstr ""
+msgstr "Memungkinkan sejumlah faktur pesanan pengiriman melalui jurnal"
 
 #. module: sale
 #: field:sale.config.settings,module_warning:0
 msgid "Allow configuring alerts by customer or products"
-msgstr ""
+msgstr "Memungkinkan konfigurasi peringatan oleh pelanggan atau produk"
 
 #. module: sale
 #: field:sale.config.settings,module_website_quote:0
 msgid "Allow online quotations and templates"
-msgstr ""
+msgstr "Memungkinkan kutipan dan contoh secara online"
 
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow setting a discount on the sales order lines"
-msgstr ""
+msgstr "Memungkinkan pengaturan diskon di bagian order penjualan"
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -312,12 +312,12 @@ msgid ""
 "Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
-msgstr ""
+msgstr "Memungkinkan untuk mengkonfigurasi notifikasi pada produk dan memicu mereka ketika pengguna ingin menjual suatu produk tertentu atau pelanggan yang diberikan.\\nContoh: Produk: Produk ini sudah ditinggalkan, jangan membeli lebih dari 5.\\nSupplier: jangan lupa untuk meminta pengiriman ekspres."
 
 #. module: sale
 #: field:sale.config.settings,group_uom:0
 msgid "Allow using different units of measure"
-msgstr ""
+msgstr "Memungkinkan menggunakan unit yang berbeda ukuran"
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -325,33 +325,33 @@ msgid ""
 "Allows to define your customer contracts conditions: invoicing method (fixed price, on timesheet, advance invoice), the exact pricing (650€/day for a developer), the duration (one year support contract).\n"
 "You will be able to follow the progress of the contract and invoice automatically.\n"
 "-It installs the account_analytic_analysis module."
-msgstr ""
+msgstr "Memungkinkan untuk mendefinisikan kondisi kontrak pelanggan Anda: Metode faktur (harga tetap, pada absen, faktur muka), harga yang tepat (650 € / hari untuk pengembang), durasi (kontrak dukungan satu tahun).\\nAnda akan dapat mengikuti perkembangan kontrak dan faktur otomatis.\\n- Ini Menginstal modul account_analytic_analysis."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
+msgstr "Memungkinkan untuk mengelola harga yang berbeda berdasarkan aturan per kategori pelanggan.\\nContoh: 10% untuk pengecer, promosi 5 EUR pada produk ini, dll."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_stock:0
 msgid ""
 "Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n"
 "-This installs the module sale_stock."
-msgstr ""
+msgstr "Memungkinkan Anda untuk membuat Penawaran, Order Penjualan menggunakan kebijakan Order berbeda dan Mengelola Stok Terkait.\\n -Ini menginstal sale_stock modul."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr ""
+msgstr "Memungkinkan Anda untuk menerapkan beberapa diskon per baris order penjualan."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
 msgid ""
 "Allows you to categorize your sales and deliveries (picking lists) between different journals, and perform batch operations on journals.\n"
 "-This installs the module sale_journal."
-msgstr ""
+msgstr "Memungkinkan Anda untuk mengkategorikan penjualan dan pengiriman (memilih daftar) antara jurnal yang berbeda, dan melakukan sejumlah operasi pada jurnal.\\n-Ini menginstal modul sale_journal."
 
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
@@ -359,25 +359,25 @@ msgid ""
 "Allows you to define what is the default function of a specific user on a given account.\n"
 "This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.\n"
 "-This installs the module analytic_user_function."
-msgstr ""
+msgstr "Memungkinkan Anda untuk menentukan apa fungsi utama pengguna tertentu pada rekening yang ditentukan.\\nHal ini sebagian besar digunakan ketika pengguna mengkodekan absennya. Nilai-nilai yang akan diambil dan bidang terisi otomatis. Tapi kemungkinan untuk mengubah nilai-nilai ini masih tersedia.\\n-Ini menginstal modul analytic_user_function."
 
 #. module: sale
 #: help:sale.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
+msgstr "Memungkinkan Anda untuk memilih dan mempertahankan unit yang berbeda ukuran untuk produk."
 
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
+msgstr "Memungkinkan Anda untuk menentukan akun analitik pada order penjualan."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_delivery_address:0
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
-msgstr ""
+msgstr "Memungkinkan Anda untuk menentukan pengiriman dan faktur yang berbeda alamat pada order penjualan."
 
 #. module: sale
 #: field:sale.report,analytic_account_id:0
@@ -387,17 +387,17 @@ msgstr "Akun Analisis"
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "Akuntansi Analitik untuk Penjualan"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "Akuntansi Analitik untuk penjualan"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Before Delivery"
-msgstr ""
+msgstr "Sebelum Pengiriman"
 
 #. module: sale
 #: code:addons/sale/sale.py:1048
@@ -405,22 +405,22 @@ msgstr ""
 msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
-msgstr ""
+msgstr "Sebelum memilih produk,\\n pilih pelanggan dalam bentuk penjualan."
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "Berdasarkan Produk"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "Berdasarkan Penjual"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "Berdasarkan Tim Penjualan"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -432,7 +432,7 @@ msgstr "Batal"
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_form2
 msgid "Cancel Line"
-msgstr ""
+msgstr "Pembatalan Batas"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -442,7 +442,7 @@ msgstr "Batalkan order"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Cancel Quotation"
-msgstr ""
+msgstr "Pembatalan Penawaran"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.order.line,state:0
@@ -454,13 +454,13 @@ msgstr "Dibatalkan"
 #: code:addons/sale/sale.py:588
 #, python-format
 msgid "Cannot cancel this sales order!"
-msgstr ""
+msgstr "Tidak bisa membatalkan pesanan penjualan ini!"
 
 #. module: sale
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr ""
+msgstr "Tidak dapat menghapus batas order penjualan yang dalam keadaan '% s'."
 
 #. module: sale
 #: code:addons/sale/sale.py:1140
@@ -468,7 +468,7 @@ msgstr ""
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr ""
+msgstr "Tidak dapat menemukan daftar harga yang cocok dengan produk dan kuantitas ini.\\nAnda harus mengubah baik produk, kuantitas atau daftar harga."
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -484,22 +484,22 @@ msgstr "centang kotak untuk kelompok invoice untuk pelanggan yang sama"
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "Centang kotak ini untuk mengelola kutipan dalam tim penjualan ini."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to acces the Sales Analysis."
-msgstr ""
+msgstr "Klik untuk mengakses Analisis Penjualan."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis of invoices."
-msgstr ""
+msgstr "Klik untuk melihat faktur analisis detil."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis."
-msgstr ""
+msgstr "Klik untuk melihat analisis detil."
 
 #. module: sale
 #: field:sale.report,delay:0
@@ -529,7 +529,7 @@ msgstr "Konfigurasi error !"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Confirm Sale"
-msgstr ""
+msgstr "Konfirmasi Penjualan"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -544,27 +544,27 @@ msgstr "Dikonfirmasi"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr ""
+msgstr "Batas order penjualan dikonfirmasi, belum disampaikan."
 
 #. module: sale
 #: field:sale.order,project_id:0
 msgid "Contract / Analytic"
-msgstr ""
+msgstr "Kontrak / Analitik"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Contract Features"
-msgstr ""
+msgstr "Fitur Kontrak"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Contracts Management"
-msgstr ""
+msgstr "Manajemen Kontrak"
 
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid "Create & View Invoice"
-msgstr ""
+msgstr "Buat & Lihat Faktur"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
@@ -583,7 +583,7 @@ msgstr "Buat Faktur"
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoice"
-msgstr ""
+msgstr "Buat & Lihat Faktur"
 
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
@@ -647,12 +647,12 @@ msgstr "Tanggal Pemesanan"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "Tanggal Pesan:"
 
 #. module: sale
 #: help:sale.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Tanggal pesan terakhir diposting pada catatan."
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -667,34 +667,34 @@ msgstr "Tanggal pesanan penjualan dibuat"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Default Options"
-msgstr ""
+msgstr "Pilihan Utama"
 
 #. module: sale
 #: field:res.company,sale_note:0
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "Syarat dan Ketentuan standar"
 
 #. module: sale
 #: view:res.company:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr ""
+msgstr "syarat & ketentuan standar..."
 
 #. module: sale
 #: help:res.company,sale_note:0
 msgid "Default terms and conditions for quotations."
-msgstr ""
+msgstr "Persyaratan standar dan kondisi untuk kutipan."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid ""
 "Define an invoicing target in the sales team settings to see the period's "
 "achievement and forecast at a glance."
-msgstr ""
+msgstr "Tentukan target faktur dalam pengaturan tim penjualan untuk melihat prestasi dan perkiraan masa sekilas."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "Alamat Pengiriman"
 
 #. module: sale
 #: field:sale.order.line,delay:0
@@ -704,7 +704,7 @@ msgstr "Lama Waktu Pengiriman"
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Delivery address for current sales order."
-msgstr ""
+msgstr "Alamat pengiriman untuk pesanan penjualan saat ini."
 
 #. module: sale
 #: field:sale.order.line,name:0 view:website:sale.report_saleorder_document
@@ -724,12 +724,12 @@ msgstr "Potongan (%)"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Diskon pada baris"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
 msgid "Display margins on sales orders"
-msgstr ""
+msgstr "Tampilan batas pada pesanan penjualan"
 
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
@@ -752,28 +752,28 @@ msgstr "Rancangan"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr ""
+msgstr "Rancangan Penawaran"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:140
 #, python-format
 msgid "EDI Pricelist (%s)"
-msgstr ""
+msgstr "Daftar Harga EDI (%s)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_email_templates
 msgid "Email Templates"
-msgstr ""
+msgstr "Contoh Email"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Petunjuk komposisi email"
 
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
 msgid "Enable Invoicing Sales order lines"
-msgstr ""
+msgstr "Aktifkan Faktur Penjualan baris pesanan"
 
 #. module: sale
 #: code:addons/sale/sale.py:154 code:addons/sale/sale.py:390
@@ -791,18 +791,18 @@ msgstr "Pengecualian"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Penyaring tambahan"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
 msgid "False"
-msgstr ""
+msgstr "Salah"
 
 #. module: sale
 #: code:addons/sale/sale.py:589
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
-msgstr ""
+msgstr "Pertama membatalkan semua faktur yang melekat pada order penjualan ini."
 
 #. module: sale
 #: field:sale.order,fiscal_position:0
@@ -812,7 +812,7 @@ msgstr "Posisi Fiskal"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Fixed price (deposit)"
-msgstr ""
+msgstr "Harga tetap (deposit)"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -824,12 +824,12 @@ msgstr "Pengikut"
 msgid ""
 "For modifying account analytic view to show important data to project manager of services companies.You can also view the report of account analytic summary user-wise as well as month wise.\n"
 "-This installs the module account_analytic_analysis."
-msgstr ""
+msgstr "Untuk memodifikasi akun tampilan analitik untuk menunjukkan data penting kepada manajer perusahaan jasa proyek. Anda juga dapat melihat laporan rekening ringkasan analitik pengguna-bijaksana serta bulan yang bijaksana.\\n-Ini menginstal modul account_analytic_analysis."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Forecast"
-msgstr ""
+msgstr "Prakiraan"
 
 #. module: sale
 #: help:crm.case.section,invoiced_forecast:0
@@ -837,7 +837,7 @@ msgid ""
 "Forecast of the invoice revenue for the current month. This is the amount the sales \n"
 "team should invoice this month. It is used to compute the progression ratio \n"
 " of the current and forecast revenue on the kanban view."
-msgstr ""
+msgstr "Prakiraan dari pendapatan faktur untuk bulan ini. Ini adalah jumlah penjualan \\nTim harus menagih bulan ini. Hal ini digunakan untuk menghitung rasio perkembangan \\n  arus dan perkiraan pendapatan pada tampilan kanban."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -845,17 +845,17 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr ""
+msgstr "Dari laporan ini, Anda bisa memiliki gambaran tentang jumlah tagihan kepada pelanggan Anda. Alat pencarian juga dapat digunakan untuk personalisasi Laporan Faktur dan sebagainya, sesuai dengan analisis ini dengan kebutuhan Anda."
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr ""
+msgstr "Menghasilkan faktur berdasarkan batas pesanan penjualan"
 
 #. module: sale
 #: help:sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
-msgstr ""
+msgstr "Memberikan urutan pesanan ketika menampilkan daftar jalur pesanan penjualan."
 
 #. module: sale
 #: help:sale.order,state:0
@@ -863,7 +863,7 @@ msgid ""
 "Gives the status of the quotation or sales order.              \n"
 "The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
 "The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
-msgstr ""
+msgstr "Memberikan status kutipan atau pesanan penjualan.              \\nStatus pengecualian diatur secara otomatis ketika membatalkan operasi terjadi               dalam validasi faktur (Pengecualian Faktur) atau dalam proses daftar memilih (Pengecualian Pengiriman).\\nStatus 'Menunggu Jadwal' diatur ketika faktur dikonfirmasi               tapi menunggu penjadwalan untuk menjalankan pada tanggal pesanan."
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -883,13 +883,13 @@ msgstr "Mengelompokan Faktur"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Gelar ringkasan menyimpang (jumlah pesan, ...). Ringkasan ini langsung dalam format html untuk dimasukkan dalam pandangan kanban."
 
 #. module: sale
 #: code:addons/sale/res_config.py:100
 #, python-format
 msgid "Hour"
-msgstr ""
+msgstr "Jam"
 
 #. module: sale
 #: field:sale.advance.payment.inv,id:0 field:sale.make.invoice,id:0
@@ -901,7 +901,7 @@ msgstr "ID"
 #. module: sale
 #: help:sale.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
 
 #. module: sale
 #: code:addons/sale/sale.py:305
@@ -909,7 +909,7 @@ msgstr ""
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
 "prices of existing order lines will not be updated."
-msgstr ""
+msgstr "Jika Anda mengubah daftar harga order ini (dan akhirnya mata uang), harga baris pesanan yang sudah ada tidak akan diperbarui."
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -925,20 +925,20 @@ msgstr "Dalam Proses"
 #: code:addons/sale/sale.py:274
 #, python-format
 msgid "In order to delete a confirmed sales order, you must cancel it before!"
-msgstr ""
+msgstr "Untuk menghapus pesanan penjualan dikonfirmasi, Anda harus membatalkan sebelumnya!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:105
 #, python-format
 msgid "Incorrect Data"
-msgstr ""
+msgstr "Data yang tidak benar"
 
 #. module: sale
 #: code:addons/sale/sale.py:274 code:addons/sale/sale.py:990
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Invalid Action!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:127
@@ -966,7 +966,7 @@ msgstr "Faktur pengecualian"
 #. module: sale
 #: field:crm.case.section,invoiced_forecast:0
 msgid "Invoice Forecast"
-msgstr ""
+msgstr "Perkiraan Faktur"
 
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
@@ -976,17 +976,17 @@ msgstr "Detail Invoice"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Invoice Order"
-msgstr ""
+msgstr "Faktur Pesanan"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "Faktur Pesanan Penjualan"
 
 #. module: sale
 #: field:crm.case.section,invoiced_target:0
 msgid "Invoice Target"
-msgstr ""
+msgstr "Faktur Target"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -996,12 +996,12 @@ msgstr "Faktur alamat untuk order penjualan saat ini."
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice address:"
-msgstr ""
+msgstr "Alamat faktur:"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "Faktur dan alamat pengiriman:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1016,18 +1016,18 @@ msgstr "Faktur tidak dapat dibuat untuk Sales Order Line karena salah satu alasa
 #: code:addons/sale/wizard/sale_line_invoice.py:102
 #, python-format
 msgid "Invoice created"
-msgstr ""
+msgstr "Faktur dibuat"
 
 #. module: sale
 #: code:addons/sale/sale.py:1224
 #, python-format
 msgid "Invoice paid"
-msgstr ""
+msgstr "Faktur dibayar"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoice the whole sales order"
-msgstr ""
+msgstr "Faktur seluruh pesanan penjualan"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1038,7 +1038,7 @@ msgstr "Terinvoice"
 #. module: sale
 #: field:sale.order,invoiced_rate:0
 msgid "Invoiced Ratio"
-msgstr ""
+msgstr "Rasio Faktur"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1055,17 +1055,17 @@ msgstr "Analisa Invoice"
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr ""
+msgstr "Faktur Statistik"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Invoicing Process"
-msgstr ""
+msgstr "Faktur Proses"
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ini Pengikut"
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -1075,7 +1075,7 @@ msgstr "Ini mengindikasikan bahwa faktur telah di bayar"
 #. module: sale
 #: help:sale.order,invoice_exists:0
 msgid "It indicates that sales order has at least one invoice."
-msgstr ""
+msgstr "Hal ini menunjukkan bahwa order penjualan setidaknya memiliki satu faktur."
 
 #. module: sale
 #: field:sale.order,message_last_post:0
@@ -1116,7 +1116,7 @@ msgstr "Pesan"
 #. module: sale
 #: help:sale.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Pesan dan riwayat komunikasi"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -1127,42 +1127,42 @@ msgstr "Sales Saya"
 #: view:sale.order.line:sale.view_sales_order_line_filter
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "Baris Order Penjualan saya"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "New Copy of Quotation"
-msgstr ""
+msgstr "Salinan Baru Kutipan"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Pesan Baru"
 
 #. module: sale
 #: code:addons/sale/sale.py:1048
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "Pelanggan tidak didefinisikan!"
 
 #. module: sale
 #: code:addons/sale/sale.py:1132
 #, python-format
 msgid "No Pricelist ! : "
-msgstr ""
+msgstr "Tidak ada daftar harga ! :"
 
 #. module: sale
 #: code:addons/sale/sale.py:1143
 #, python-format
 msgid "No valid pricelist line found ! :"
-msgstr ""
+msgstr "Tidak ditemukan baris daftar harga yang valid ! :"
 
 #. module: sale
 #: help:sale.order.line,delay:0
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "Jumlah hari antara konfirmasi pesanan dan pengiriman produk ke pelanggan"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1172,12 +1172,12 @@ msgstr "Quotations Lama"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Delivery Order"
-msgstr ""
+msgstr "Proses Pesan Antar"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Demand"
-msgstr ""
+msgstr "Proses Permintaan"
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -1185,17 +1185,17 @@ msgid ""
 "On demand: A draft invoice can be created from the sales order when needed. \n"
 "On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
 "Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
-msgstr ""
+msgstr "Pada permintaan: Rancangan faktur dapat dibuat dari order penjualan bila diperlukan. \\nPada pengiriman pesanan: Rancangan faktur dapat dibuat dari pesan antar saat produk telah disampaikan. \\nSebelum pengiriman: Rancangan faktur dibuat dari pesanan penjualan dan harus dibayar sebelum produk dapat disampaikan."
 
 #. module: sale
 #: field:sale.config.settings,module_analytic_user_function:0
 msgid "One employee can have different roles per contract"
-msgstr ""
+msgstr "Satu karyawan dapat memiliki tugas yang berbeda per kontrak"
 
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
 msgid "Open Sale Menu"
-msgstr ""
+msgstr "Menu Buka Penjualan"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
@@ -1211,18 +1211,18 @@ msgstr "Baris Order"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 msgid "Order Lines to Invoice"
-msgstr ""
+msgstr "Baris Order untuk Faktur"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Order Month"
-msgstr ""
+msgstr "Bulan Pemesanan"
 
 #. module: sale
 #: view:sale.order:sale.view_order_tree
 msgid "Order Number"
-msgstr ""
+msgstr "Nomor ID Pesanan"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1237,22 +1237,22 @@ msgstr "Referensi Order"
 #. module: sale
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "Referensi order harus unik per perusahaan!"
 
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "Status Penjualan"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Order reference"
-msgstr ""
+msgstr "Referensi Pesanan"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Ordered date of the sales order"
-msgstr ""
+msgstr "Tanggal pesanan penjualan"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1277,12 +1277,12 @@ msgstr "Termin Pembayaran"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Payment Term:"
-msgstr ""
+msgstr "Jangka Waktu Pembayaran"
 
 #. module: sale
 #: field:sale.order,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "Paypal Url"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1293,18 +1293,18 @@ msgstr "Persentase"
 #: code:addons/sale/sale.py:935
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Silakan menentukan nama pendapatan untuk produk ini: \"%s\" (id:%d)."
 
 #. module: sale
 #: code:addons/sale/sale.py:391
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Silakan menentukan jurnal penjualan untuk perusahaan ini: \"%s\" (id:%d)."
 
 #. module: sale
 #: field:sale.config.settings,timesheet:0
 msgid "Prepare invoices based on timesheets"
-msgstr ""
+msgstr "Siapkan faktur berdasarkan absensi"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1314,7 +1314,7 @@ msgstr "Harga"
 #. module: sale
 #: field:sale.order.line,price_reduce:0
 msgid "Price Reduce"
-msgstr ""
+msgstr "Pengurangan Harga"
 
 #. module: sale
 #: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
@@ -1325,7 +1325,7 @@ msgstr "Harga"
 #: code:addons/sale/sale.py:304
 #, python-format
 msgid "Pricelist Warning!"
-msgstr ""
+msgstr "Peringatan daftar harga!"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
@@ -1345,12 +1345,12 @@ msgstr "Pengadaan"
 #. module: sale
 #: field:sale.order,procurement_group_id:0
 msgid "Procurement group"
-msgstr ""
+msgstr "Kelompok pengadaan"
 
 #. module: sale
 #: field:sale.order.line,procurement_ids:0
 msgid "Procurements"
-msgstr ""
+msgstr "Pengadaan"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -1364,7 +1364,7 @@ msgstr "Produk"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Product Features"
-msgstr ""
+msgstr "FITUR-FITUR PRODUK"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -1384,7 +1384,7 @@ msgstr "Proyek"
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr ""
+msgstr "Properti pada baris"
 
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_tree
@@ -1417,12 +1417,12 @@ msgstr "penawaran/permintaan"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Tanggal Penawaran:"
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr ""
+msgstr "Nomor Pemesanan"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1432,29 +1432,29 @@ msgstr "Quotation N°"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr ""
+msgstr "Pengiriman Penawaran"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr ""
+msgstr "Penawaran Terkirim"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "Penawaran dikonfirmasi"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
 #, python-format
 msgid "Quotation created"
-msgstr ""
+msgstr "Penawaran dibuat"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr ""
+msgstr "Penawaran terkirim"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1469,27 +1469,27 @@ msgstr "Penawaran"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "Analisis Penawaran"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "Penawaran dan Penjualan"
 
 #. module: sale
 #: field:crm.case.section,monthly_quoted:0
 msgid "Rate of created quotation per duration"
-msgstr ""
+msgstr "Tingkat pembuatan penawaran per durasi"
 
 #. module: sale
 #: field:crm.case.section,monthly_invoiced:0
 msgid "Rate of sent invoices per duration"
-msgstr ""
+msgstr "Tingkat faktur dikirim per durasi"
 
 #. module: sale
 #: field:crm.case.section,monthly_confirmed:0
 msgid "Rate of validate sales orders per duration"
-msgstr ""
+msgstr "Tingkat validasi order penjualan per durasi"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1504,27 +1504,27 @@ msgstr "Referensi dokumen yang dihasilkan dari permintaan  pesanan  penjualan."
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Reference/Description"
-msgstr ""
+msgstr "Deskripsi:"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of confirmed sales orders per month."
-msgstr ""
+msgstr "Pendapatan dikonfirmasi pesanan penjualan per bulan."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of created quotations per month."
-msgstr ""
+msgstr "Pendapatan pembuatan penawaran per bulan."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of sent invoices per month."
-msgstr ""
+msgstr "Pendapatan dari faktur yang dikirim per bulan."
 
 #. module: sale
 #: field:procurement.order,sale_line_id:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Baris Pesanan Penjualan"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
@@ -1534,7 +1534,7 @@ msgstr "Penjualan Orderline Buat_invoice"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Sale to Invoice"
-msgstr ""
+msgstr "Penjualan ke Faktur"
 
 #. module: sale
 #: view:product.product:sale.product_form_view_sale_order_button
@@ -1564,7 +1564,7 @@ msgstr "Analisa Penjualan"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "Saluran Penjualan"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -1585,7 +1585,7 @@ msgstr "Sales order"
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "Pesanan Penjualan Dikonfirmasi"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -1603,29 +1603,29 @@ msgstr "Baris Order Penjualan"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "Baris Order Penjualan siap untuk tagihan"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
+msgstr "Baris Order Penjualan yang terkait dengan Order Penjualan saya"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid ""
 "Sales Order Lines that are confirmed, done or in exception state and haven't"
 " yet been invoiced"
-msgstr ""
+msgstr "Baris Order Penjualan yang dikonfirmasi, selesai atau dalam kondisi pengecualian dan belum ditagih"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Sales Order Lines that are in 'done' state"
-msgstr ""
+msgstr "Baris Order Penjualan yang dalam kondisi 'selesai'"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Sales Order done"
-msgstr ""
+msgstr "Pesanan penjualan selesai"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_in_progress
@@ -1635,12 +1635,12 @@ msgstr "Order Penjualan dalam Penyelesaian"
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Sales Order ready to be invoiced"
-msgstr ""
+msgstr "Order Penjualan siap untuk ditagih"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Sales Order that haven't yet been confirmed"
-msgstr ""
+msgstr "Order Penjualan belum dikonfirmasi"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1673,7 +1673,7 @@ msgstr "Team Sales"
 #. module: sale
 #: model:ir.model,name:sale.model_crm_case_section
 msgid "Sales Teams"
-msgstr ""
+msgstr "Penjualan Tim"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_exception
@@ -1683,7 +1683,7 @@ msgstr "Sales dalam Pengecualian"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Sales order lines done"
-msgstr ""
+msgstr "Baris order penjualan selesai"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter field:sale.order,user_id:0
@@ -1696,7 +1696,7 @@ msgstr "Pramuniaga"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Salesperson:"
-msgstr ""
+msgstr "Penjual:"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1714,7 +1714,7 @@ msgstr "Pencarian daftar yang tidak terfakturkan"
 msgid ""
 "Select a product of type service which is called 'Advance Product'.\n"
 "                You may have to create it and set it as a default value on this field."
-msgstr ""
+msgstr "Pilih produk jenis layanan yang disebut 'Produk Uang Muka'.\\n                Anda mungkin harus membuat dan mengaturnya sebagai nilai standar pada bidang ini."
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -1722,7 +1722,7 @@ msgid ""
 "Select how you want to invoice this order. This\n"
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
-msgstr ""
+msgstr "Pilih cara yang Anda inginkan untuk faktur pesanan ini. Ini akan membuat faktur rancangan yang dapat dimodifikasi sebelum validasi."
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1747,17 +1747,17 @@ msgstr "Pengecualian dalam pengiriman"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Shipping address:"
-msgstr ""
+msgstr "Alamat Pengiriman"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid "Show Lines to Invoice"
-msgstr ""
+msgstr "Tampilkan baris untuk menagih"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Some order lines"
-msgstr ""
+msgstr "Beberapa baris pesanan"
 
 #. module: sale
 #: field:sale.order,origin:0
@@ -1788,7 +1788,7 @@ msgstr "Ringkasan"
 msgid ""
 "Target of invoice revenue for the current month. This is the amount the sales \n"
 "team estimates to be able to invoice this month."
-msgstr ""
+msgstr "Target penerimaan faktur untuk bulan ini. Ini adalah jumlah perkiraan \\ntim penjualan untuk dapat menagih bulan ini."
 
 #. module: sale
 #: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
@@ -1799,12 +1799,12 @@ msgstr "Pajak"
 #. module: sale
 #: field:sale.order,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Syarat dan ketentuan"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "Syarat dan ketentuan..."
 
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
@@ -1824,7 +1824,7 @@ msgstr "Akun  analitik yang terkait  dengan  order penjualan"
 #. module: sale
 #: field:sale.config.settings,time_unit:0
 msgid "The default working time unit for services is"
-msgstr ""
+msgstr "Unit waktu standar bekerja untuk jasa adalah"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -1840,7 +1840,7 @@ msgstr "Jumlah total"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:106
 #, python-format
 msgid "The value of Advance Amount must be positive."
-msgstr ""
+msgstr "Nilai jumlah uang muka harus positif."
 
 #. module: sale
 #: code:addons/sale/sale.py:952
@@ -1848,25 +1848,25 @@ msgstr ""
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
-msgstr ""
+msgstr "Tidak ada Posisi Fiskal ditentukan atau akun kategori Penghasilan ditetapkan untuk properti standar kategori produk."
 
 #. module: sale
 #: code:addons/sale/sale.py:154
 #, python-format
 msgid "There is no default company for the current user!"
-msgstr ""
+msgstr "Tidak ada perusahaan utama untuk pengguna saat ini!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
 #, python-format
 msgid "There is no income account defined as global property."
-msgstr ""
+msgstr "Tidak ada neraca pendapatan didefinisikan sebagai properti global."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:100
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Tidak ada neraca pendapatan didefinisikan untuk produk ini: \"%s\" (id:%d)."
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -1879,17 +1879,17 @@ msgid ""
 "This adds the 'Margin' on sales order.\n"
 "This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n"
 "-This installs the module sale_margin."
-msgstr ""
+msgstr "Ini menambahkan 'Margin' pada pesanan penjualan.\\nHal ini memberikan keuntungan dengan menghitung selisih antara Harga Satuan dan Biaya Harga.\\n-Ini menginstal modul sale_margin."
 
 #. module: sale
 #: help:sale.config.settings,module_website_quote:0
 msgid "This adds the online quotation"
-msgstr ""
+msgstr "Ini menambahkan penawaran secara online"
 
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
 msgid "This allows install module sale_analytic_plans."
-msgstr ""
+msgstr "Ini memungkinkan menginstal modul sale_analytic_plans."
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1917,7 +1917,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
+msgstr "Laporan ini melakukan analisis pada kutipan Anda. Analisis Periksa pendapatan penjualan Anda dan semacam itu oleh kelompok berbeda kriteria (Penjual, mitra, produk, dll.) Gunakan laporan ini untuk melakukan analisis pada penjualan yang tidak memiliki tagihan belum. Jika Anda ingin menganalisis omset Anda, Anda harus menggunakan faktur analisis laporan dalam aplikasi akuntansi."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -1927,7 +1927,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
+msgstr "Laporan ini melakukan analisis pada order penjualan Anda. Analisis Periksa pendapatan penjualan Anda dan semacam itu oleh kelompok berbeda kriteria (Penjual, mitra, produk, dll.) Gunakan laporan ini untuk melakukan analisis pada penjualan yang tidak memiliki tagihan belum. Jika Anda ingin menganalisis omset Anda, Anda harus menggunakan faktur analisis laporan dalam aplikasi akuntansi."
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1945,7 +1945,7 @@ msgstr "Pada Faktur"
 msgid ""
 "To allow your salesman to make invoices for sales order lines using the menu"
 " 'Lines to Invoice'."
-msgstr ""
+msgstr "Memungkinkan salesman Anda untuk membuat faktur untuk jalur order penjualan dengan menggunakan menu 'Jalur untuk Faktur'."
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -1973,7 +1973,7 @@ msgstr "Jumlah Tanpa Pajak"
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sales orders"
-msgstr ""
+msgstr "Memicu pengiriman pesanan secara otomatis dari order penjualan"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2000,7 +2000,7 @@ msgstr "Satuan Ukuran"
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Ukuran Unit"
 
 #. module: sale
 #: field:sale.order,message_unread:0
@@ -2015,7 +2015,7 @@ msgstr "Jumlah sebelum kena pajak"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "UoS"
-msgstr ""
+msgstr "UoS"
 
 #. module: sale
 #: help:sale.advance.payment.inv,advance_payment_method:0
@@ -2024,7 +2024,7 @@ msgid ""
 "                Use Percentage to invoice a percentage of the total amount.\n"
 "                Use Fixed Price to invoice a specific amound in advance.\n"
 "                Use Some Order Lines to invoice a selection of the sales order lines."
-msgstr ""
+msgstr "Gunakan Faktur urutan seluruh penjualan membuat faktur akhir.\\n                 Gunakan Persentase untuk faktur persentase dari jumlah total.\\n                 Gunakan Harga Tetap untuk faktur yang amound tertentu di muka.\\n                 Gunakan Beberapa Garis Order untuk faktur pilihan dari garis order penjualan."
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -2032,22 +2032,22 @@ msgid ""
 "Use contract to be able to manage your services with\n"
 "                        multiple invoicing as part of the same contract with\n"
 "                        your customer."
-msgstr ""
+msgstr "Menggunakan kontrak untuk dapat mengelola layanan Anda dengan beberapa faktur sebagai bagian dari kontrak sama dengan pelanggan Anda."
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
 msgid "Use contracts management"
-msgstr ""
+msgstr "Manajemen Kontrak"
 
 #. module: sale
 #: field:account.config.settings,module_sale_analytic_plans:0
 msgid "Use multiple analytic accounts on sales"
-msgstr ""
+msgstr "Gunakan beberapa account analitik pada penjualan"
 
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
 msgid "Use pricelists to adapt your price per customers"
-msgstr ""
+msgstr "Gunakan daftar harga untuk menyesuaikan harga per pelanggan"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -2057,7 +2057,7 @@ msgstr "PPN :"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "View Invoice"
-msgstr ""
+msgstr "Lihat tagihan"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
@@ -2067,7 +2067,7 @@ msgstr "Jadwal Tunggu"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Warehouse Features"
-msgstr ""
+msgstr "Fitur gudang"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -2080,12 +2080,12 @@ msgstr "Perhatian!"
 #. module: sale
 #: field:sale.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Pesan situs"
 
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Sejarah komunikasi situs"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2095,32 +2095,32 @@ msgstr "Berat"
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
 msgid "What do you want to invoice?"
-msgstr ""
+msgstr "Apa yang Anda ingin tagih?"
 
 #. module: sale
 #: code:addons/sale/sale.py:990
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr ""
+msgstr "Anda tidak dapat membatalkan baris pesanan penjualan yang telah ditagih."
 
 #. module: sale
 #: code:addons/sale/sale.py:605
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
-msgstr ""
+msgstr "Anda tidak dapat memastikan order penjualan yang tidak memiliki jalur."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:42
 #, python-format
 msgid "You cannot create invoice when sales order is not confirmed."
-msgstr ""
+msgstr "Anda tidak dapat membuat faktur ketika order penjualan tidak dikonfirmasi."
 
 #. module: sale
 #: code:addons/sale/sale.py:523
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr ""
+msgstr "Anda tidak dapat mengelompokkan penjualan memiliki mata uang yang berbeda untuk mitra sama."
 
 #. module: sale
 #: code:addons/sale/sale.py:1130
@@ -2128,18 +2128,18 @@ msgstr ""
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
-msgstr ""
+msgstr "Anda harus memilih daftar harga atau pelanggan dalam bentuk penjualan!\\nSilahkan pilih satu sebelum memilih produk."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "You shouldn't manually invoice the following sale order %s"
-msgstr ""
+msgstr "Anda tidak harus secara manual menagih urutan penjualan berikut %s"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Your Reference:"
-msgstr ""
+msgstr "Referensi Anda:"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -2151,4 +2151,4 @@ msgstr "atau"
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
 msgid "sale.group_delivery_invoice_address"
-msgstr ""
+msgstr "Sale.group_delivery_invoice_address"
