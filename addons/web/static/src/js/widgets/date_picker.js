@@ -46,8 +46,8 @@ var DateWidget = Widget.extend({
         this.$input.focus(function(e) {
             e.stopImmediatePropagation();
         });
-        this.$el.datetimepicker(this.options);
-        this.picker = this.$el.data('DateTimePicker');
+        this.$input.datetimepicker(this.options);
+        this.picker = this.$input.data('DateTimePicker');
         this.$input.click(this.picker.toggle.bind(this.picker));
         this.set_readonly(false);
         this.set_value(false);
