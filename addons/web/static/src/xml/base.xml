@@ -844,7 +844,8 @@
     </div>
 </t>
 <t t-name="FieldBinaryImage-img">
-    <img t-att-src='url'
+    <img class="img img-responsive"
+        t-att-src='url'
         t-att-border="widget.readonly ? 0 : 1"
         t-att-name="widget.name"
         t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
