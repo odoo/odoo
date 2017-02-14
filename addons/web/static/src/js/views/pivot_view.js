@@ -53,6 +53,7 @@ var PivotView = View.extend({
         this.initial_col_groupby = [];
         this.initial_row_groupby = [];
 
+        this.disabled_measures = [];
         this.active_measures = [];
         this.headers = {};
         this.cells = {};
@@ -77,6 +78,10 @@ var PivotView = View.extend({
 
         this.fields_view.arch.children.forEach(function (field) {
             var name = field.attrs.name;
+            if (field.attrs.disabled && JSON.parse(field.attrs.disabled)) {
+                self.disabled_measures.push(name);
+                return;
+            }
             if (field.attrs.interval) {
                 name += ':' + field.attrs.interval;
             }
@@ -184,7 +189,7 @@ var PivotView = View.extend({
                                'selection', 'date', 'datetime'];
         this.fields = fields;
         _.each(fields, function (field, name) {
-            if ((name !== 'id') && (field.store === true)) {
+            if ((name !== 'id') && (field.store === true) && !_.contains(self.disabled_measures, name)) {
                 if (field.type === 'integer' || field.type === 'float' || field.type === 'monetary') {
                     self.measures[name] = field;
                 }
