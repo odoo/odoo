@@ -412,59 +412,118 @@
 
 <!-- Registration Templates -->
 <template id="registration_template">
-    <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post">
-        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-        <table itemprop="offers" class="table table-striped">
-            <thead>
-                <tr>
-                    <th class="col-sm-4 col-md-6">Ticket Type</th>
-                    <th>End of Registration</th>
-                    <th class="o_th_price">Price</th>
-                    <th>Quantity</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr t-if="event.state == 'confirm'">
-                    <td>Event Registration</td>
-                    <td>
-                        <t t-if="event.date_begin">
-                            <span t-esc="event.date_begin_located"/>
+    <t t-set="tickets_available" t-value="event.seats_available or event.seats_availability == 'unlimited'"/>
+    <t t-set="buy" t-value="tickets_available and event.state == 'confirm'"/>
+    <div itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
+        <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post" class="panel panel-default" t-if="buy">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <div class="panel-heading hidden-xs hidden-sm">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h5><b>Ticket Type</b></h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5><b>End of Registration</b></h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5><b>Price</b></h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5><b>Quantity</b></h5>
+                    </div>
+                </div>
+            </div>
+            <t t-id="tickets" t-call="website_event.ticket">
+                <t t-set="name">
+                    <span itemprop="name">Event Registration</span>
+                </t>
+                <t t-set="registration_end">
+                    <t t-if="event.date_begin">
+                        <span t-esc="event.date_begin_located"/>
+                    </t>
+                    <t t-if="not event.date_begin">
+                        <span>Unlimited</span>
+                    </t>
+                </t>
+                <t t-set="price">
+                    <span itemprop="price" content="0">
+                        Free
+                    </span>
+                </t>
+                <t t-set="quantity">
+                    <select name="nb_register-0" class="form-control">
+                        <t t-foreach="range(0, (event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available+1)" t-as="nb">
+                            <option t-esc="nb" t-att-selected="nb == 1 and 'selected'"/>
                         </t>
-                        <t t-if="not event.date_begin">
-                            <span>Unlimited</span>
-                        </t>
-                    </td>
-                    <td>Free</td>
-                    <td>
-                        <select t-if="event.seats_available or event.seats_availability == 'unlimited'" name="nb_register-0" class="form-control">
-                            <t t-foreach="range(0, (event.seats_availability == 'unlimited' or event.seats_available > 9) and 10 or event.seats_available+1)" t-as="nb">
-                                <t t-if="nb == 1">
-                                    <option t-esc="nb" selected="selected"/>
-                                </t>
-                                <t t-if="nb != 1">
-                                    <option t-esc="nb"/>
-                                </t>
-                            </t>
-                        </select>
-                        <span t-if="event.seats_availability == 'limited' and not event.seats_available">Sold Out</span>
-                    </td>
-                 </tr>
-            </tbody>
-        </table>
-        <button type="submit" t-if="event.state == 'confirm' and (event.seats_availability == 'unlimited' or event.seats_available)"
-            class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Register Now</button>
-        <div t-if="not event.state == 'confirm'" class="alert alert-info">
-            <t t-if="event.state == 'draft'">
+                    </select>
+                </t>
+            </t>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-8 col-lg-3 col-lg-offset-9">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block a-submit" t-attf-id="#{event.id}">
+                            Register Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div t-if="not buy" class="alert alert-info">
+            <t t-if="event.state == 'draft'" itemprop="availability" content="http://schema.org/OutOfStock">
                 Event registration not yet started.
             </t>
-            <t t-if="event.state != 'draft'">
+            <t t-if="event.state != 'draft'" itemprop="availability" content="http://schema.org/Discontinued">
                 Event registration is closed.
             </t>
             <t t-if="uid">
-                <i class="fa fa-plus-circle"><a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event"> <em>Configure and Launch Event Registration</em></a></i>
+                <a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
+                    <i class="fa fa-plus-circle"></i>
+                    <em>Configure and Launch Event Registration</em>
+                </a>
             </t>
         </div>
-    </form>
+    </div>
+</template>
+
+<template id="ticket" name="Ticket offer template">
+    <div class="col-xs-12 hidden-md hidden-lg panel-heading mb4">
+        <h5>
+            <strong>Ticket Type:</strong>
+            <t t-raw="name"/>
+        </h5>
+        <small t-if="description">
+            <t t-raw="description"/>
+        </small>
+    </div>
+    <div class="panel-body">
+        <div class="row" itemscope="itemscope" itemtype="http://schema.org/Offer">
+            <div class="col-md-3 hidden-xs hidden-sm" t-raw="name"/>
+            <div class="col-xs-6 hidden-md hidden-lg">
+                <h6>End of Registration</h6>
+            </div>
+            <div class="col-xs-6 col-md-3" itemprop="availabilityEnds" t-raw="registration_end"/>
+            <div class="clearfix hidden-md hidden-lg mb4"/>
+            <div class="col-xs-6 hidden-md hidden-lg">
+                <h6>Price</h6>
+            </div>
+            <div class="col-xs-6 col-md-3" t-raw="price"/>
+            <div class="clearfix hidden-md hidden-lg mb4"/>
+            <div class="col-xs-6 hidden-md hidden-lg">
+                <h6>Quantity</h6>
+            </div>
+            <div class="col-xs-6 col-md-3">
+                <t t-if="tickets_available">
+                    <link itemprop="availability" content="http://schema.org/InStock"/>
+                    <t t-raw="quantity"/>
+                </t>
+                <t t-else="">
+                    <span itemprop="availability" content="http://schema.org/SoldOut">
+                        Sold Out
+                    </span>
+                </t>
+            </div>
+        </div>
+    </div>
 </template>
 
 <template id="registration_attendee_details" name="Registration Attendee Details">
@@ -529,7 +588,7 @@
                 </div>
                 <div class="col-md-9 mt16">
                     <h4><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h4>
-                    <i class="fa fa-clock-o"/> <span itemprop="startDate" t-esc="event.date_begin_located"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located"> </span>
+                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-esc="event.date_begin_located"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located"> </span>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                             "widget": "contact",
                             "fields": ["name", "address", "phone", "mobile", "fax", "email"]
@@ -623,7 +682,7 @@
                         </t>
                         <b><span t-esc="event_dict['date']"/>: <span><a t-att-href="event_dict['url']"><t t-esc="event_dict['event'].name"/></a></span></b>
                     </div>
-                    <t t-if="len(events) > 5">
+                    <t t-if="len(events) &gt; 5">
                         <div t-if="country">
                             <b><a t-att-href="'/event?country='+str(country.id)">See all events from <span t-esc="country.name"></span></a></b>
                         </div>
@@ -655,7 +714,7 @@
 <!-- User Navbar -->
 <template id="content_new_event" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
-        <li groups="event.group_event_manager"><a href="#" data-action="new_event"><i class="fa fa-glass"/><p>New Event</p></a></li>
+        <li groups="event.group_event_manager"><a href="#" data-action="new_event"><i class="fa fa-glass"></i><p>New Event</p></a></li>
     </xpath>
 </template>
 </odoo>
