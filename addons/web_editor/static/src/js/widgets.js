@@ -1107,19 +1107,17 @@ var LinkDialog = Dialog.extend({
 
         this.$('input#link-text').val(text);
         this.$('input.window-new').prop('checked', new_window);
-        this.$('input[value=""]').prop('checked', 'checked');
+        this.$('input.link-style').prop('checked', false).first().prop("checked", true);
 
         if (classes) {
-            this.$('input[value!=""]').each(function () {
+            this.$('input.link-style, select.link-style > option').each(function () {
                 var $option = $(this);
-                if (classes.indexOf($option.val()) !== -1) {
-                    $option.attr("checked", "checked");
-                }
-            });
-            this.$('select option[value!=""]').each(function () {
-                var $option = $(this);
-                if (classes.indexOf($option.val()) !== -1) {
-                    $option.attr("selected", "selected");
+                if ($option.val() && classes.indexOf($option.val()) >= 0) {
+                    if ($option.is("input")) {
+                        $option.prop("checked", true);
+                    } else {
+                        $option.parent().val($option.val());
+                    }
                 }
             });
         }

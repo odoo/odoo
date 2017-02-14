@@ -259,25 +259,37 @@ a.o_underline {
 @color-white-50: fade(white, 50%);
 @color-white-75: fade(white, 75%);
 
-.o-create-color-classes(@class_name, @color, @complementary: contrast(@color, @text-color, #FFF, 60%), @content-color: @color) {
-    .bg-@{class_name} {
+.o-create-color-classes(@name, @color, @complementary: contrast(@color, @text-color, #FFF, 60%), @content-color: @color) {
+    .bg-@{name} {
         background-color: @color;
         color: @complementary;
         .text-muted {
             color: fade(@complementary, 40%);
         }
     }
-    body .text-@{class_name} { // html to make the rules more important that bg-* ones
+    body .text-@{name} { // body to make the rules more important that bg-* ones
         color: @content-color;
     }
 }
+.o-create-color-btn-classes(@name, @color, @complementary: contrast(@color, @text-color, #FFF, 60%), @border-color: darken(@color, 5%)) {
+    .btn-@{name} {
+        .button-variant(@complementary, @color, @border-color);
+    }
+}
 
-// Create classes for theme colors
+// Create classes for theme colors...
 .o-create-color-classes(alpha, @color-alpha);
 .o-create-color-classes(beta, @color-beta);
 .o-create-color-classes(gamma, @color-gamma);
 .o-create-color-classes(delta, @color-delta);
 .o-create-color-classes(epsilon, @color-epsilon);
+
+// ... and button classes
+.o-create-color-btn-classes(alpha, @color-alpha);
+.o-create-color-btn-classes(beta, @color-beta);
+.o-create-color-btn-classes(gamma, @color-gamma);
+.o-create-color-btn-classes(delta, @color-delta);
+.o-create-color-btn-classes(epsilon, @color-epsilon);
 
 // Create classes for UI colors
 .o-create-color-classes(primary, @brand-primary);
@@ -302,32 +314,3 @@ a.o_underline {
 .o-create-color-classes(~'white-25', @color-white-25);
 .o-create-color-classes(~'white-50', @color-white-50);
 .o-create-color-classes(~'white-75', @color-white-75);
-
-// Create buttons for theme colors
-@color-alpha-border: darken(@color-alpha, 5);
-@color-beta-border: darken(@color-beta, 5);
-@color-gamma-border: darken(@color-gamma, 5);
-@color-delta-border: darken(@color-delta, 5);
-@color-epsilon-border: darken(@color-epsilon, 5);
-
-@color-alpha-text: #fff;
-@color-beta-text: #fff;
-@color-gamma-text: #fff;
-@color-delta-text: #fff;
-@color-epsilon-text: #fff;
-
-.btn-alpha {
-  .button-variant(@color-alpha-text;@color-alpha;@color-alpha-border);
-}
-.btn-beta {
-  .button-variant(@color-beta-text;@color-beta;@color-beta-border);
-}
-.btn-gamma {
-  .button-variant(@color-gamma-text;@color-gamma;@color-gamma-border);
-}
-.btn-delta {
-  .button-variant(@color-delta-text;@color-delta;@color-delta-border);
-}
-.btn-epsilon {
-  .button-variant(@color-epsilon-text;@color-epsilon;@color-epsilon-border);
-}
