@@ -342,7 +342,6 @@ options.registry.parallax = options.Class.extend({
     _refresh: function () {
         _.defer((function () {
             this.$target.data("snippet-view")._rebuild();
-            this._update_target_to_bg();
         }).bind(this));
     },
     _toggle_refresh_callback: function (on) {
