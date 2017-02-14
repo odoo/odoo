@@ -89,7 +89,6 @@ class SaleOrderLine(models.Model):
 
     product_packaging = fields.Many2one('product.packaging', string='Packaging', default=False)
     route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)])
-    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', string='Product Template', readonly=True)
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):
