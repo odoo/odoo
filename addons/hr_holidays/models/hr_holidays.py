@@ -6,7 +6,6 @@
 import logging
 import math
 from datetime import timedelta
-from werkzeug import url_encode
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
@@ -20,7 +19,6 @@ HOURS_PER_DAY = 8
 
 
 class HolidaysType(models.Model):
-
     _name = "hr.holidays.status"
     _description = "Leave Type"
 
@@ -149,7 +147,6 @@ class HolidaysType(models.Model):
 
 
 class Holidays(models.Model):
-
     _name = "hr.holidays"
     _description = "Leave"
     _order = "type desc, date_from desc"
