@@ -442,6 +442,10 @@ class SaleOrder(models.Model):
     def action_done(self):
         self.write({'state': 'done'})
 
+    @api.multi
+    def action_unlock(self):
+        self.write({'state': 'sale'})
+
     @api.model
     def _prepare_procurement_group(self):
         return {'name': self.name}
