@@ -26,8 +26,7 @@ class TestOnchangeProductId(TransactionCase):
     def test_onchange_product_id(self):
 
         uom_id = self.product_uom_model.search([('name', '=', 'Unit(s)')])[0]
-        pricelist = self.pricelist_model.search([('name', '=', 'Public Pricelist')])[0].copy()
-        pricelist.currency_id = base_company.currency_id
+        pricelist = self.pricelist_model.search([('name', '=', 'Public Pricelist')])[0]
 
         partner_id = self.res_partner_model.create(dict(name="George"))
         tax_include_id = self.tax_model.create(dict(name="Include tax",
