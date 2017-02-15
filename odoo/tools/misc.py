@@ -16,6 +16,7 @@ import subprocess
 import logging
 import os
 import passlib.utils
+import pytz
 import re
 import socket
 import sys
@@ -25,6 +26,7 @@ import werkzeug.utils
 import zipfile
 from cStringIO import StringIO
 from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
+from dateutil.relativedelta import relativedelta
 from itertools import islice, izip, groupby, repeat
 from lxml import etree
 from which import which
@@ -1160,35 +1162,77 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
             res = '%s %s' % (currency_obj.symbol, res)
     return res
 
-def format_date(env, value, lang_code=False, date_format=False):
+
+def format_date(env, value, lang_code=False, date_format=False, from_now=False):
+    return _format_date(env, 'date', value, lang_code=lang_code, date_format=date_format, from_now=from_now)
+
+
+def format_datetime(env, value, lang_code=False, date_format=False, from_now=False, hide_seconds=False):
+    return _format_date(env, 'datetime', value, lang_code=lang_code, date_format=date_format, from_now=from_now, hide_seconds=hide_seconds)
+
+
+def _format_date(env, datetype, value, **params):
     '''
-        Formats the date in a given format.
+        Formats the date/datetime in a given format.
 
         :param env: an environment.
+        :param string datetype: either `date` or `datetime`
         :param date, datetime or string value: the date to format.
         :param string lang_code: the lang code, if not specified it is extracted from the
             environment context.
         :param string date_format: the format or the date (LDML format), if not specified the
             default format of the lang.
+        :param boolean from_now: return the time delta from now instead of the actual date
+        :param dict from_now: kwargs to pass to relativedelta.
+                              return the time delta from now instead of the actual date
+                              if the delta is smaller than what instructed in this dict.
         :return: date formatted in the specified format.
         :rtype: string
     '''
+    babel_format_method = babel.dates.format_datetime
+    granularity = 'second'
+    if datetype == 'date':
+        babel_format_method = babel.dates.format_date
+        granularity = 'day'
+
     if not value:
         return ''
+    if isinstance(value, basestring):
+        if len(value) > DATE_LENGTH:
+            # Assume this is a datetime
+            value = datetime.datetime.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)
+        else:
+            value = datetime.datetime.strptime(value, DEFAULT_SERVER_DATE_FORMAT).date()
+    now = datetime.datetime.now(pytz.timezone("UTC"))
+
     if isinstance(value, datetime.datetime):
-        value = value.date()
-    elif isinstance(value, basestring):
-        if len(value) < DATE_LENGTH:
-            return ''
-        value = value[:DATE_LENGTH]
-        value = datetime.datetime.strptime(value, DEFAULT_SERVER_DATE_FORMAT).date()
+        tz = params.get('tz') or env.context.get('tz') or env.user.tz or 'UTC'
+        tzinfo = pytz.timezone(tz)
+        value = pytz.utc.localize(value, is_dst=False).astimezone(tzinfo)
+        now = now.astimezone(tzinfo)
+        if datetype == 'date':
+            value = value.date()
+            now = now.date()
 
-    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+    lang = env['res.lang']._lang_get(params.get('lang_code') or env.context.get('lang') or 'en_US')
     locale = babel.Locale.parse(lang.code)
+    if params.get('from_now'):
+        delta = None
+        if isinstance(params['from_now'], dict):
+            delta = now - relativedelta(**params['from_now'])
+            if not isinstance(value, datetime.datetime):
+                delta = delta.date()
+        if not delta or value > delta:
+            return babel.dates.format_timedelta(now - value, locale=locale, granularity=granularity)
+    date_format = params.get('date_format')
     if not date_format:
-        date_format = posix_to_ldml(lang.date_format, locale=locale)
-
-    return babel.dates.format_date(value, format=date_format, locale=locale)
+        date_format = (u"%s %s" % (lang.date_format, lang.time_format))
+        if datetype == 'date':
+            date_format = lang.date_format
+        date_format = posix_to_ldml(date_format, locale=locale)
+    if params.get('hide_seconds'):
+        date_format = date_format.replace(":ss", "").replace(":s", "")
+    return babel_format_method(value, format=date_format, locale=locale)
 
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,

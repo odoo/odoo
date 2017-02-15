@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import re
 from collections import OrderedDict
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from PIL import Image
 from cStringIO import StringIO
 import babel
-from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date
+from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, format_datetime
 from .qweb import unicodifier
 
 import logging
@@ -167,7 +169,12 @@ class DateConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return format_date(self.env, value, date_format=(options or {}).get('format'))
+        from_now = options and options.get('from_now')
+        formatted_date = format_date(self.env, value, date_format=(options or {}).get('format'))
+        if from_now:
+            formatted_timedelta = format_date(self.env, value, date_format=(options or {}).get('format'), from_now=from_now)
+            return '<span title="%s">%s</span>' % (formatted_date, formatted_timedelta)
+        return formatted_date
 
 
 class DateTimeConverter(models.AbstractModel):
@@ -176,26 +183,13 @@ class DateTimeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        if not value:
-            return ''
-        lang = self.user_lang()
-        locale = babel.Locale.parse(lang.code)
-
-        if isinstance(value, basestring):
-            value = fields.Datetime.from_string(value)
-
-        value = fields.Datetime.context_timestamp(self, value)
-
-        if options and 'format' in options:
-            pattern = options['format']
-        else:
-            strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
-            pattern = posix_to_ldml(strftime_pattern, locale=locale)
-
-        if options and options.get('hide_seconds'):
-            pattern = pattern.replace(":ss", "").replace(":s", "")
-
-        return unicodifier(babel.dates.format_datetime(value, format=pattern, locale=locale))
+        from_now = options and options.get('from_now')
+        hide_seconds = options and options.get('hide_seconds')
+        formatted_date = format_datetime(self.env, value, date_format=(options or {}).get('format'), hide_seconds=hide_seconds)
+        if from_now:
+            formatted_timedelta = format_datetime(self.env, value, date_format=(options or {}).get('format'), from_now=from_now)
+            return '<span title="%s">%s</span>' % (formatted_date, formatted_timedelta)
+        return formatted_date
 
 
 class TextConverter(models.AbstractModel):
