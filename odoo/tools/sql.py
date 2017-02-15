@@ -6,6 +6,13 @@ import psycopg2
 
 _schema = logging.getLogger('odoo.schema')
 
+_TABLE_KIND = {
+    'BASE TABLE': 'r',
+    'VIEW': 'v',
+    'FOREIGN TABLE': 'f',
+    'LOCAL TEMPORARY': 't',
+}
+
 _CONFDELTYPES = {
     'RESTRICT': 'r',
     'NO ACTION': 'a',
@@ -16,14 +23,17 @@ _CONFDELTYPES = {
 
 def table_exists(cr, tablename):
     """ Return whether the given table exists. """
-    query = "SELECT 1 FROM pg_class WHERE relkind IN ('r','v') AND relname=%s"
+    query = "SELECT 1 FROM information_schema.tables WHERE table_name=%s"
     cr.execute(query, (tablename,))
     return cr.rowcount
 
 def table_kind(cr, tablename):
-    """ Return the kind of a table: 'r' for ordinary tables, 'v' for views. """
-    cr.execute("SELECT relkind FROM pg_class WHERE relname=%s", (tablename,))
-    return cr.fetchone()[0] if cr.rowcount else None
+    """ Return the kind of a table: ``'r'`` (regular table), ``'v'`` (view),
+        ``'f'`` (foreign table), ``'t'`` (temporary table), or ``None``.
+    """
+    query = "SELECT table_type FROM information_schema.tables WHERE table_name=%s"
+    cr.execute(query, (tablename,))
+    return _TABLE_KIND[cr.fetchone()[0]] if cr.rowcount else None
 
 def create_model_table(cr, tablename, comment=None):
     """ Create the table for a model. """
@@ -34,28 +44,16 @@ def create_model_table(cr, tablename, comment=None):
 
 def table_columns(cr, tablename):
     """ Return a dict mapping column names to their configuration. The latter is
-        a dict with the following keys: `relname` (table name), `attname`
-        (column name), `attlen`, `atttypmod`, `attnotnull` (whether it has a NOT
-        NULL constraint), `atthasdef` (whether it has a default value),
-        `typname` (data type name), `size` (varchar size).
+        a dict with the data from the table ``information_schema.columns``.
     """
-    # attlen is the number of bytes necessary to represent the type when the
-    # type has a fixed size. If the type has a varying size attlen is -1 and
-    # atttypmod is the size limit + 4, or -1 if there is no limit.
-    query = """ SELECT c.relname, a.attname, a.attlen, a.atttypmod,
-                       a.attnotnull, a.atthasdef, t.typname,
-                       CASE WHEN a.attlen=-1 THEN (
-                           CASE WHEN a.atttypmod=-1 THEN 0 ELSE a.atttypmod-4 END
-                       ) ELSE a.attlen END as size
-                FROM pg_class c, pg_attribute a, pg_type t
-                WHERE c.relname=%s AND c.oid=a.attrelid AND a.atttypid=t.oid """
+    query = 'SELECT * FROM information_schema.columns WHERE table_name=%s'
     cr.execute(query, (tablename,))
-    return {row['attname']: row for row in cr.dictfetchall()}
+    return {row['column_name']: row for row in cr.dictfetchall()}
 
 def column_exists(cr, tablename, columnname):
     """ Return whether the given column exists. """
-    query = """ SELECT 1 FROM pg_class c, pg_attribute a
-                WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid """
+    query = """ SELECT 1 FROM information_schema.columns
+                WHERE table_name=%s AND column_name=%s """
     cr.execute(query, (tablename, columnname))
     return cr.rowcount
 
@@ -141,6 +139,7 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
     """ Update the foreign keys between tables to match the given one, and
         return ``True`` if the given foreign key has been recreated.
     """
+    # Do not use 'information_schema' here, as those views are awfully slow!
     deltype = _CONFDELTYPES.get(ondelete.upper(), 'a')
     query = """ SELECT con.conname, c2.relname, a2.attnum, con.confdeltype as deltype
                   FROM pg_constraint as con, pg_class as c1, pg_class as c2,
