@@ -831,16 +831,16 @@ class Field(object):
             # the column does not exist, create it
             sql.create_column(model._cr, model._table, self.name, self.column_type[1], self.string)
             return
-        if column['typname'] == self.column_type[0]:
+        if column['udt_name'] == self.column_type[0]:
             return
-        if column['typname'] in self.column_cast_from:
+        if column['udt_name'] in self.column_cast_from:
             sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
         else:
             newname = (self.name + '_moved{}').format
             i = 0
             while sql.column_exists(model._cr, model._table, newname(i)):
                 i += 1
-            if column['attnotnull']:
+            if column['is_nullable'] == 'NO':
                 sql.drop_not_null(model._cr, model._table, self.name)
             sql.rename_column(model._cr, model._table, self.name, newname(i))
             sql.create_column(model._cr, model._table, self.name, self.column_type[1], self.string)
@@ -851,7 +851,7 @@ class Field(object):
             :param model: an instance of the field's model
             :param column: the column's configuration (dict) if it exists, or ``None``
         """
-        has_notnull = column and column['attnotnull']
+        has_notnull = column and column['is_nullable'] == 'NO'
 
         if not column or (self.required and not has_notnull):
             # the column is new or it becomes required; initialize its values
@@ -1377,8 +1377,8 @@ class Char(_String):
 
     def update_db_column(self, model, column):
         if (
-            column and column['typname'] == 'varchar' and column['size'] and
-            (self.size is None or column['size'] < self.size)
+            column and column['udt_name'] == 'varchar' and column['character_maximum_length'] and
+            (self.size is None or column['character_maximum_length'] < self.size)
         ):
             # the column's varchar size does not match self.size; convert it
             sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
