@@ -149,7 +149,7 @@ class AccountMove(models.Model):
                             if not journal.refund_sequence_id:
                                 raise UserError(_('Please define a sequence for the credit notes'))
                             sequence = journal.refund_sequence_id
-                                                            
+
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
                         raise UserError(_('Please define a sequence on the journal.'))
@@ -1426,6 +1426,17 @@ class AccountMoveLine(models.Model):
                 ids.append(aml.id)
         action['domain'] = [('id', 'in', ids)]
         return action
+
+    def open_move(self):
+        return {
+            'type':'ir.actions.act_window',
+            'res_model':'account.move',
+            'view_type':'form',
+            'view_mode':'form',
+            'target':'current',
+            'res_id':self.move_id.id,
+            'context':self.env.context
+        }
 
 
 class AccountPartialReconcile(models.Model):
