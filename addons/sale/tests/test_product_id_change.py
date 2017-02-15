@@ -24,9 +24,6 @@ class TestOnchangeProductId(TransactionCase):
         self.pricelist_model = self.env['product.pricelist']
 
     def test_onchange_product_id(self):
-        # Ensure the computation are done with the USD currency
-        base_company = self.env.ref('base.main_company')
-        base_company.currency_id = self.env.ref('base.USD')
 
         uom_id = self.product_uom_model.search([('name', '=', 'Unit(s)')])[0]
         pricelist = self.pricelist_model.search([('name', '=', 'Public Pricelist')])[0].copy()
