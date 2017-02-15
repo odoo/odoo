@@ -1185,15 +1185,6 @@ class product_product(osv.osv):
             args.append((('categ_id', 'child_of', context['search_default_categ_id'])))
         return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
-    def open_product_template(self, cr, uid, ids, context=None):
-        """ Utility method used to add an "Open Template" button in product views """
-        product = self.browse(cr, uid, ids[0], context=context)
-        return {'type': 'ir.actions.act_window',
-                'res_model': 'product.template',
-                'view_mode': 'form',
-                'res_id': product.product_tmpl_id.id,
-                'target': 'new'}
-
     def create(self, cr, uid, vals, context=None):
         ctx = dict(context or {}, create_product_product=True)
         product_id = super(product_product, self).create(cr, uid, vals, context=ctx)
