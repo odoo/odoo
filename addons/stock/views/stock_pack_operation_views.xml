@@ -81,7 +81,9 @@
                 </group>
                 <group>
                     <field name="pack_lot_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'done')]}">
-                        <tree editable="bottom" decoration-success="qty_todo==qty" decoration-danger="(qty_todo &gt; 0) and (qty&gt;qty_todo)">
+                        <tree editable="bottom" decoration-success="qty_todo==qty or is_done_equal_todo and not warning" decoration-danger="(qty_todo &gt; 0) and (qty&gt;qty_todo) or warning">
+                            <field name="warning" invisible="1"/>
+                            <field name="is_done_equal_todo" invisible="1"/>
                             <field name="lot_name" invisible="not context.get('only_create', False)"/>
                             <field name="lot_id" invisible="context.get('only_create', False)"
                                    domain="[('product_id','=', parent.product_id)]"
