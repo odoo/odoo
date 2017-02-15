@@ -6,7 +6,7 @@
     <xpath expr="//ul[@name='financial_infos']" position="inside">
         <t t-if="not company.custom_footer">
             <t t-set="is_first" t-value="True"/>
-            <t t-foreach="company.bank_journal_ids.sudo()" t-as="journal">
+            <t t-foreach="company.bank_journal_ids" t-as="journal">
                 <t t-set="bank_acc" t-value="journal.bank_account_id"/>
                 <t t-if="journal.display_on_footer">
                     <li t-if="(is_first and company.vat) or (not is_first)">&amp;bull;</li>
