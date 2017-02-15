@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-05 14:10+0000\n"
-"PO-Revision-Date: 2016-09-05 14:10+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -64,7 +64,7 @@ msgid "<p class=\"oe_view_nocontent\">\n"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "<span>kg</span>"
 msgstr ""
 
@@ -82,7 +82,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
-msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"
+msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Refund"
 msgstr ""
 
 #. module: delivery
@@ -298,13 +298,13 @@ msgid "Cost"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_standard_price
-msgid "Cost Price"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
+msgid "Cost Method"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
-msgid "Cost method"
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_standard_price
+msgid "Cost Price"
 msgstr ""
 
 #. module: delivery
@@ -324,16 +324,18 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_project_id
-msgid "Create a task under this project on sale order validation. This setting must be set for each company."
+msgid "Create a task under this project on sales order validation. This setting must be set for each company."
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_date
 msgid "Created on"
@@ -425,7 +427,19 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
+#: model:ir.ui.view,arch_db:delivery.sale_config_settings_view_form_inherit_delivery
 msgid "Delivery Methods"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_choose_delivery_package
+msgid "Delivery Package Selection Wizard"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_delivery_packaging_id
+#: model:ir.ui.menu,name:delivery.menu_delivery_packagings
+msgid "Delivery Packaging"
 msgstr ""
 
 #. module: delivery
@@ -449,8 +463,18 @@ msgid "Description"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_pickingout
+msgid "Description on Delivery Orders"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
 msgid "Description on Picking"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_pickingin
+msgid "Description on Receptions"
 msgstr ""
 
 #. module: delivery
@@ -469,11 +493,12 @@ msgid "Determine the display order"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Discard"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
 msgid "Display Name"
@@ -608,7 +633,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
-msgid "Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."
+msgid "Gives the different ways to package the same product."
 msgstr ""
 
 #. module: delivery
@@ -638,6 +663,7 @@ msgid "Height must be positive"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_id
 msgid "ID"
@@ -765,18 +791,21 @@ msgid "Last Message Date"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package___last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
 msgid "Last Modified on"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_write_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_date
 msgid "Last Updated on"
@@ -798,11 +827,6 @@ msgid "Location"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
-msgid "Logistical Units"
-msgstr ""
-
-#. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Manage Package Type"
 msgstr ""
@@ -811,7 +835,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
 msgid "Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sale order validation and track the work hours."
+"Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 
 #. module: delivery
@@ -944,6 +968,26 @@ msgid "Number of Packages"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
+msgid "Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
+msgid "Number of days before the goods may become dangerous and must not be consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
+msgid "Number of days before the goods should be removed from the stock. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_use_time
+msgid "Number of days before the goods starts deteriorating, without being dangerous yet. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr ""
@@ -976,7 +1020,7 @@ msgid "Outgoing"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
 msgstr ""
 
@@ -986,7 +1030,7 @@ msgid "Package Code"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:35
+#: code:addons/delivery/models/stock_picking.py:36
 #: code:addons/delivery/models/stock_picking.py:128
 #, python-format
 msgid "Package Details"
@@ -999,7 +1043,13 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
 msgid "Packaging"
+msgstr ""
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
+msgid "Packagings"
 msgstr ""
 
 #. module: delivery
@@ -1046,13 +1096,13 @@ msgid "Pricelist"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
-msgid "Pricelist Items"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
+msgid "Pricelist Item"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
-msgid "Pricelist item ids"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
+msgid "Pricelist Items"
 msgstr ""
 
 #. module: delivery
@@ -1198,18 +1248,18 @@ msgid "Receipt"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
-msgid "Reordering Rules"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
-msgid "Reordering max qty"
+msgid "Reordering Max Qty"
 msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
-msgid "Reordering min qty"
+msgid "Reordering Min Qty"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
+msgid "Reordering Rules"
 msgstr ""
 
 #. module: delivery
@@ -1258,7 +1308,7 @@ msgid "Sales Order Line"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Save"
 msgstr ""
 
@@ -1303,7 +1353,7 @@ msgstr ""
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:147
 #, python-format
-msgid "Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost: %.2f %s"
+msgid "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: %.2f %s"
 msgstr ""
 
 #. module: delivery
@@ -1312,6 +1362,7 @@ msgid "Shipping Cost"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_shipping_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
 msgstr ""
@@ -1357,6 +1408,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
 msgid "Stock Move"
 msgstr ""
 
@@ -1366,13 +1418,13 @@ msgid "Stock Output Account"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
-msgid "Stock move ids"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
+msgid "Stock Quant"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
-msgid "Stock quant ids"
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
+msgid "Stock Quant Package"
 msgstr ""
 
 #. module: delivery
@@ -1664,26 +1716,6 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
-msgid "When a new a Serial Number is issued, this is the number of days before an alert should be notified."
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
-msgid "When a new a Serial Number is issued, this is the number of days before the goods may become dangerous and must not be consumed."
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
-msgid "When a new a Serial Number is issued, this is the number of days before the goods should be removed from the stock."
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_use_time
-msgid "When a new a Serial Number is issued, this is the number of days before the goods starts deteriorating, without being dangerous yet."
 msgstr ""
 
 #. module: delivery

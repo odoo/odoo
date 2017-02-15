@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,14 +31,9 @@ msgid "# of Issues"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:148
+#: code:addons/project_issue/models/project_issue.py:146
 #, python-format
 msgid "%s (copy)"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
-msgid "<b>Category:</b>"
 msgstr ""
 
 #. module: project_issue
@@ -69,12 +64,9 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
 msgid "An Issue's kanban state indicates special situations affecting it:\n"
-"\n"
-"                                           * Normal is the default situation\n"
-"\n"
-"                                           * Blocked indicates something is preventing the progress of this issue\n"
-"\n"
-"                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
+" * Grey is the default situation\n"
+" * Red indicates something is preventing the progress of this issue\n"
+" * Green indicates the issue is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project_issue
@@ -121,18 +113,12 @@ msgid "Avg. Working Hours to Open"
 msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
-msgid "Blocked"
-msgstr ""
-
-#. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
 msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_channel
 msgid "Channel"
 msgstr ""
 
@@ -150,11 +136,6 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_color
 msgid "Color Index"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_report_channel
-msgid "Communication Channel."
 msgstr ""
 
 #. module: project_issue
@@ -205,13 +186,18 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:286
+#: model:ir.actions.act_window,help:project_issue.project_issue_action_activity
+msgid "Currently there are not any activity scheduled."
+msgstr ""
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:267
 #, python-format
 msgid "Customer"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:288
+#: code:addons/project_issue/models/project_issue.py:269
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -328,6 +314,16 @@ msgid "Feature description"
 msgstr ""
 
 #. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Green"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Grey"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
@@ -345,7 +341,7 @@ msgid "High"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:261
+#: code:addons/project_issue/models/project_issue.py:242
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -419,6 +415,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.action_view_issues
+#: model:ir.actions.act_window,name:project_issue.project_issue_action_from_partner
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
@@ -498,19 +495,22 @@ msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
-msgid "My Issues"
+msgid "My Activities"
 msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
-#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
-msgid "New"
+msgid "My Issues"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:265
-#, python-format
-msgid "New Issue"
+#: model:ir.actions.act_window,name:project_issue.project_issue_action_activity
+msgid "My Next Issue Activities"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "New"
 msgstr ""
 
 #. module: project_issue
@@ -519,7 +519,17 @@ msgid "Next Action"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:312
+#: model:ir.ui.view,arch_db:project_issue.project_issue_view_tree_activity
+msgid "Next Activities"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.menu,name:project_issue.project_issue_menu_activity
+msgid "Next Issue Activities"
+msgstr ""
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:293
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -530,7 +540,6 @@ msgid "No customer rating"
 msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
@@ -544,6 +553,11 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_open
 msgid "Number of Days to open the project issue."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Overdue Activities"
 msgstr ""
 
 #. module: project_issue
@@ -622,12 +636,17 @@ msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
-msgid "Ready for next stage"
+msgid "Red"
 msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Search"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Show all records which has next action date is before today"
 msgstr ""
 
 #. module: project_issue
@@ -655,7 +674,6 @@ msgid "Tags"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_task_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_task_id
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Task"
@@ -669,16 +687,10 @@ msgstr ""
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
 msgid "The Odoo issues tracker allows you to efficiently manage things\n"
 "                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
-msgstr ""
-
-#. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
-msgid "The Odoo issues tracker allows you to efficiently manage things\n"
-"                like internal requests, software development bugs, customer\n"
-"                complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
 #. module: project_issue
@@ -704,13 +716,18 @@ msgid "This report on the project issues allows you to analyse the quality of yo
 msgstr ""
 
 #. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.view_config_settings_form_inherit_project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
 msgid "Timesheets"
 msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets on Issues"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Today Activities"
 msgstr ""
 
 #. module: project_issue
@@ -728,6 +745,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Unread Messages"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Upcoming Activities (7 days)"
 msgstr ""
 
 #. module: project_issue
@@ -767,7 +789,7 @@ msgid "You can link this issue to an existing task or directly create a new one 
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:183
+#: code:addons/project_issue/models/project_issue.py:181
 #, python-format
 msgid "issues"
 msgstr ""

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-05 14:11+0000\n"
-"PO-Revision-Date: 2016-09-05 14:11+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,11 @@ msgid "Analytic Line"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
+msgid "Assign to Order"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_company
 msgid "Companies"
 msgstr ""
@@ -33,12 +38,32 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
 #: model:ir.model.fields,help:sale_timesheet.field_product_template_project_id
-msgid "Create a task under this project on sale order validation. This setting must be set for each company."
+msgid "Create a task under this project on sales order validation. This setting must be set for each company."
 msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
 msgid "Employee"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
+msgid "Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
+msgid "Number of days before the goods may become dangerous and must not be consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
+msgid "Number of days before the goods should be removed from the stock. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
+msgid "Number of days before the goods starts deteriorating, without being dangerous yet. It will be computed on the lot/serial number."
 msgstr ""
 
 #. module: sale_timesheet
@@ -48,8 +73,12 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
-#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
 msgid "Procurement"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_procurement_id
+msgid "Procurement of the sale order line on which the timesheets should be assigned"
 msgstr ""
 
 #. module: sale_timesheet
@@ -114,9 +143,8 @@ msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/procurement.py:80
-#: code:addons/sale_timesheet/models/procurement.py:82
 #, python-format
-msgid "Task created"
+msgid "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
 msgstr ""
 
 #. module: sale_timesheet
@@ -128,6 +156,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/procurement.py:84
+#, python-format
+msgid "This task has been created from: <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a> (%s)"
 msgstr ""
 
 #. module: sale_timesheet
@@ -163,34 +197,14 @@ msgid "Timesheets"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
-msgid "When a new a Serial Number is issued, this is the number of days before an alert should be notified."
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
-msgid "When a new a Serial Number is issued, this is the number of days before the goods may become dangerous and must not be consumed."
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
-msgid "When a new a Serial Number is issued, this is the number of days before the goods should be removed from the stock."
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
-msgid "When a new a Serial Number is issued, this is the number of days before the goods starts deteriorating, without being dangerous yet."
-msgstr ""
-
-#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:55
 #, python-format
-msgid "You can use only one product on timesheet within the same sale order. You should split your order to include only one contract based on time and material."
+msgid "You can use only one product on timesheet within the same sales order. You should split your order to include only one contract based on time and material."
 msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:17
 #, python-format
-msgid "You cannot delete a task related to a Sale Order. You can only archive this task."
+msgid "You cannot delete a task related to a Sales Order. You can only archive this task."
 msgstr ""
 

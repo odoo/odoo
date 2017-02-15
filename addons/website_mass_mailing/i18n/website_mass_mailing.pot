@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-05 14:11+0000\n"
-"PO-Revision-Date: 2016-09-05 14:11+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,22 +16,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "&amp;times;"
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
-msgid "<span class=\"oe_snippet_thumbnail_title\">Newsletter Popup</span>"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-msgid "<span class=\"oe_snippet_thumbnail_title\">Newsletter</span>"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "<strong>Newsletter Popup!</strong> The newsletter popup snippet effect is active on this page. Click"
 msgstr ""
 
@@ -55,8 +45,7 @@ msgid "Allow the use of a pop-up snippet on website to encourage visitors to sig
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_options
+#: model:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Change Newsletter"
 msgstr ""
 
@@ -66,12 +55,18 @@ msgid "Choose your mailing subscriptions."
 msgstr ""
 
 #. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
+msgid "Contact"
+msgstr ""
+
+#. module: website_mass_mailing
 #: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
 msgid "Do not add extra content on website pages to encourage visitors to sign up"
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Here To Edit Dialog Content"
 msgstr ""
 
@@ -99,18 +94,18 @@ msgid "Popup Content"
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Subscribe"
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks"
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks for your subscription!"
 msgstr ""
 
@@ -147,8 +142,18 @@ msgid "You are not subscribed to any of our mailing list."
 msgstr ""
 
 #. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:154
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
+#, python-format
 msgid "Your changes have been saved."
+msgstr ""
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:157
+#, python-format
+msgid "Your changes have not been saved, try again later."
 msgstr ""
 
 #. module: website_mass_mailing
@@ -157,8 +162,8 @@ msgid "mass.mailing.config.settings"
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "your email..."
 msgstr ""
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-05 14:12+0000\n"
-"PO-Revision-Date: 2016-09-05 14:12+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -175,8 +175,8 @@ msgid "Confirmed"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:512
-#: code:addons/mrp_repair/models/mrp_repair.py:574
+#: code:addons/mrp_repair/models/mrp_repair.py:508
+#: code:addons/mrp_repair/models/mrp_repair.py:570
 #, python-format
 msgid "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
@@ -219,7 +219,7 @@ msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
-msgid "Default address id"
+msgid "Default Address"
 msgstr ""
 
 #. module: mrp_repair
@@ -432,13 +432,18 @@ msgid "Move created by the repair order"
 msgstr ""
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "My Activities"
+msgstr ""
+
+#. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "No Invoice"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:503
-#: code:addons/mrp_repair/models/mrp_repair.py:565
+#: code:addons/mrp_repair/models/mrp_repair.py:499
+#: code:addons/mrp_repair/models/mrp_repair.py:561
 #, python-format
 msgid "No Pricelist!"
 msgstr ""
@@ -463,8 +468,8 @@ msgid "No product defined on Fees!"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:510
-#: code:addons/mrp_repair/models/mrp_repair.py:572
+#: code:addons/mrp_repair/models/mrp_repair.py:506
+#: code:addons/mrp_repair/models/mrp_repair.py:568
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr ""
@@ -482,6 +487,11 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Operations"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Overdue Activities"
 msgstr ""
 
 #. module: mrp_repair
@@ -639,15 +649,9 @@ msgid "Repair must be confirmed before starting reparation."
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:373
-#, python-format
-msgid "Repair must be invoiced in order to finalize it."
-msgstr ""
-
-#. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:371
 #, python-format
-msgid "Repair must be repaired in order to finalize it."
+msgid "Repair must be repaired in order to make the product moves."
 msgstr ""
 
 #. module: mrp_repair
@@ -709,6 +713,11 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Set to Draft"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Show all records which has next action date is before today"
 msgstr ""
 
 #. module: mrp_repair
@@ -787,6 +796,11 @@ msgid "To be Invoiced"
 msgstr ""
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Today Activities"
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_total
 msgid "Total"
 msgstr ""
@@ -829,6 +843,11 @@ msgid "Untaxed amount"
 msgstr ""
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Upcoming Activities (7 days)"
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "VAT:"
 msgstr ""
@@ -856,8 +875,8 @@ msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:505
-#: code:addons/mrp_repair/models/mrp_repair.py:567
+#: code:addons/mrp_repair/models/mrp_repair.py:501
+#: code:addons/mrp_repair/models/mrp_repair.py:563
 #, python-format
 msgid "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
