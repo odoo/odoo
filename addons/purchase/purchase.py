@@ -609,15 +609,16 @@ class PurchaseOrderLine(models.Model):
             diff_quantity = line.product_qty
             for procurement in line.procurement_ids:
                 procurement_qty = procurement.product_uom._compute_qty_obj(procurement.product_uom, procurement.product_qty, line.product_uom)
-                tmp = template.copy()
-                tmp.update({
-                    'product_uom_qty': min(procurement_qty, diff_quantity),
-                    'move_dest_id': procurement.move_dest_id.id,  #move destination is same as procurement destination
-                    'procurement_id': procurement.id,
-                    'propagate': procurement.rule_id.propagate,
-                })
-                done += moves.create(tmp)
-                diff_quantity -= min(procurement_qty, diff_quantity)
+                if float_compare(diff_quantity, 0.0, precision_rounding=line.product_uom.rounding) > 0:
+                    tmp = template.copy()
+                    tmp.update({
+                        'product_uom_qty': min(procurement_qty, diff_quantity),
+                        'move_dest_id': procurement.move_dest_id.id,  #move destination is same as procurement destination
+                        'procurement_id': procurement.id,
+                        'propagate': procurement.rule_id.propagate,
+                    })
+                    done += moves.create(tmp)
+                    diff_quantity -= min(procurement_qty, diff_quantity)
             if float_compare(diff_quantity, 0.0, precision_rounding=line.product_uom.rounding) > 0:
                 template['product_uom_qty'] = diff_quantity
                 done += moves.create(template)
