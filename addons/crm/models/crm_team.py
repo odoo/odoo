@@ -235,5 +235,5 @@ class Team(models.Model):
 
     def _graph_title_and_key(self):
         if self.dashboard_graph_model == 'crm.opportunity.report':
-            return ['', _('Expected Revenue')] # no more title
+            return ['', _('Pipeline: Expected Revenue')] # no more title
         return super(Team, self)._graph_title_and_key()
