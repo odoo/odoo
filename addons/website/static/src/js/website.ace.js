@@ -26,14 +26,22 @@ var Ace = Widget.extend({
             this.globalEditor.do_show();
         } else {
             var currentHash = window.location.hash;
-            var indexOfView = currentHash.indexOf("?view=");
-            var initialViewID = undefined;
+            var indexOfView = currentHash.indexOf("?res=");
+            var initialResID = undefined;
             if (indexOfView >= 0) {
-                initialViewID = parseInt(currentHash.substr(indexOfView + 6), 10);
+                initialResID = currentHash.substr(indexOfView + ("?res=".length));
+                var parsedResID = parseInt(initialResID, 10);
+                if (parsedResID) {
+                    initialResID = parsedResID;
+                }
             }
 
             this.globalEditor = new ViewEditor(this, $(document.documentElement).data('view-xmlid'), {
-                initialViewID: initialViewID
+                initialResID: initialResID,
+                defaultBundlesRestriction: [
+                    "web.assets_frontend",
+                    "website.assets_frontend",
+                ],
             });
             this.globalEditor.appendTo(document.body);
 
@@ -46,7 +54,7 @@ var Ace = Widget.extend({
  * Extend the default view editor so that the URL hash is updated with view id.
  */
 ViewEditor = ViewEditor.extend({
-    displayView: function () {
+    displayResource: function () {
         this._super.apply(this, arguments);
         this._updateHash();
     },
@@ -56,12 +64,17 @@ ViewEditor = ViewEditor.extend({
             window.location.reload();
         }).bind(this));
     },
+    resetResource: function () {
+        return this._super.apply(this, arguments).then((function () {
+            window.location.reload();
+        }).bind(this));
+    },
     do_hide: function () {
         this._super.apply(this, arguments);
         window.location.hash = "";
     },
     _updateHash: function () {
-        window.location.hash = hash + "?view=" + this.selectedViewId();
+        window.location.hash = hash + "?res=" + this.selectedResource();
     },
 });
 

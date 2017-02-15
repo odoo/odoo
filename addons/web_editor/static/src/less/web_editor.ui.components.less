@@ -132,14 +132,18 @@
         .o-flex(0, 0, auto);
         .o-flex-display();
         .o-align-items(center);
-        .o-justify-content(space-between);
         padding: @grid-gutter-width/4;
+
+        > .o_ace_type_switcher > button::after {
+            .o-caret-down();
+            margin-left: 4px;
+        }
 
         > * {
             .o-flex(0, 0, auto);
             margin: 0 @grid-gutter-width/4;
 
-            &.oe_include_bundles {
+            &.o_include_option {
                 .o-flex-display();
                 .o-align-items(center);
                 font-size: 11px;
@@ -148,11 +152,11 @@
                     margin-right: @grid-gutter-width/4;
                 }
             }
-        }
 
-        > select {
-            .o-flex(0, 1, auto);
-            min-width: 60px;
+            &.o_res_list {
+                .o-flex(1, 1, auto);
+                min-width: 60px;
+            }
         }
     }
     #ace-view-id {

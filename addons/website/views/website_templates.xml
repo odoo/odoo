@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <!-- Assets -->
-<template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets">
+<template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/website.backend.js"></script>
         <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
@@ -10,7 +10,7 @@
     </xpath>
 </template>
 
-<template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Frontend Assets">
+<template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Assets">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.less"/>
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.components.less"/>
@@ -27,7 +27,7 @@
     </xpath>
 </template>
 
-<template id="website.assets_editor" name="Website Editor Assets">
+<template id="website.assets_editor" name="Website Editor Assets (used in website editor)">
     <t t-call="web.less_helpers"/>
 
     <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.edit_mode.less"/>

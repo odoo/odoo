@@ -58,7 +58,7 @@
     </xpath>
 </template>
 
-<template id="assets_common" inherit_id="web.assets_common" name="web_editor base assets_common">
+<template id="assets_common" inherit_id="web.assets_common" name="Web Editor Common Assets (used in backend interface and website)">
     <xpath expr="script[last()]" position="after">
         <script type="text/javascript" src="/web_editor/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
         <script type="text/javascript" src="/web_editor/static/src/js/ace.js" />
@@ -67,7 +67,7 @@
     </xpath>
 </template>
 
-<template id="assets_backend" inherit_id="web.assets_backend" name="web_editor assets for backend">
+<template id="assets_backend" inherit_id="web.assets_backend" name="Web Editor Backend Assets (used in backend interface)">
     <xpath expr="link[last()]" position="after">
         <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/> <!-- not in common because compiled differently with context -->
         <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.backend.less"/>
@@ -77,13 +77,13 @@
     </xpath>
 </template>
 
-<template id="assets_frontend" inherit_id="web.assets_frontend" priority="15">
+<template id="assets_frontend" inherit_id="web.assets_frontend" name="Web Editor Frontend Assets (used in public odoo)" priority="15">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/> <!-- not in common because compiled differently with context -->
     </xpath>
 </template>
 
-<template id="assets_editor" name="Full web_editor assets">
+<template id="assets_editor" name="Web Editor Assets (used in private and public editor)">
     <t t-call="web.less_helpers"/>
 
     <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.less"/>
