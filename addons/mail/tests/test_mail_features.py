@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import TestMail
+from odoo.addons.mail.tests.test_mail_gateway import MAIL_TEMPLATE_PLAINTEXT
 from odoo.tools import mute_logger
 
 
@@ -181,6 +182,27 @@ class TestMessagePost(TestMail):
 
         self.assertEqual(new_msg.parent_id.id, parent_msg.id, 'message_post: flatten error')
         self.assertFalse(new_msg.partner_ids)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_post_internal(self):
+        self.group_pigs.message_subscribe_users([self.user_admin.id])
+        msg = self.group_pigs.sudo(self.user_employee).message_post(
+            body='My Body', subject='My Subject',
+            message_type='comment', subtype='mt_note')
+        self.assertEqual(msg.partner_ids, self.env['res.partner'])
+        self.assertEqual(msg.needaction_partner_ids, self.env['res.partner'])
+        self.assertEqual(self.group_pigs.message_ids, msg)
+
+        self.format_and_process(
+            MAIL_TEMPLATE_PLAINTEXT,
+            email_from=self.user_admin.email,
+            msg_id='<1198923581.41972151344608186800.JavaMail.diff1@agrolait.com>',
+            to='not_my_businesss@example.com',
+            extra='In-Reply-To:\r\n\t%s\n' % msg.message_id)
+        reply = self.group_pigs.message_ids - msg
+        self.assertTrue(reply)
+        self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(reply.needaction_partner_ids, self.env['res.partner'])
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_compose(self):
