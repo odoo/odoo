@@ -347,9 +347,8 @@ class AccountChartTemplate(models.Model):
         # xmlid is the concatenation of company_id and template_xml_id
         ir_model_data = self.env['ir.model.data']
         template_xmlid = ir_model_data.search([('model', '=', template._name), ('res_id', '=', template.id)])
-        if template_xmlid:
-            new_xml_id = str(company.id)+'_'+template_xmlid.name
-            return ir_model_data._update(model, template_xmlid.module, vals, xml_id=new_xml_id, store=True, noupdate=True, mode='init', res_id=False)
+        new_xml_id = str(company.id)+'_'+template_xmlid.name
+        return ir_model_data._update(model, template_xmlid.module, vals, xml_id=new_xml_id, store=True, noupdate=True, mode='init', res_id=False)
 
     def _get_account_vals(self, company, account_template, code_acc, tax_template_ref):
         """ This method generates a dictionnary of all the values for the account that will be created.
