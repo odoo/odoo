@@ -298,12 +298,11 @@ class ProjectIssue(models.Model):
         if custom_values:
             defaults.update(custom_values)
 
-        res_id = super(ProjectIssue, self.with_context(create_context)).message_new(msg, custom_values=defaults)
-        issue = self.browse(res_id)
+        issue = super(ProjectIssue, self.with_context(create_context)).message_new(msg, custom_values=defaults)
         email_list = issue.email_split(msg)
         partner_ids = filter(None, issue._find_partner_from_emails(email_list))
         issue.message_subscribe(partner_ids)
-        return res_id
+        return issue
 
     @api.multi
     def message_update(self, msg, update_vals=None):

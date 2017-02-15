@@ -1195,17 +1195,18 @@ class MailThread(models.AbstractModel):
                 # email gateway become a follower of all inbound messages
                 MessageModel = Model.sudo(user_id).with_context(mail_create_nosubscribe=True, mail_create_nolog=True)
                 if thread_id and hasattr(MessageModel, 'message_update'):
-                    MessageModel.browse(thread_id).message_update(message_dict)
+                    thread = MessageModel.browse(thread_id)
+                    thread.message_update(message_dict)
                 else:
                     # if a new thread is created, parent is irrelevant
                     message_dict.pop('parent_id', None)
-                    thread_id = MessageModel.message_new(message_dict, custom_values)
+                    thread = MessageModel.message_new(message_dict, custom_values)
             else:
                 if thread_id:
                     raise ValueError("Posting a message without model should be with a null res_id, to create a private message.")
-                Model = self.env['mail.thread']
-            if not hasattr(Model, 'message_post'):
-                Model = self.env['mail.thread'].with_context(thread_model=model)
+                thread = self.env['mail.thread']
+            if not hasattr(thread, 'message_post'):
+                thread = self.env['mail.thread'].with_context(thread_model=model)
 
             # replies to internal message are considered as notes, but parent message
             # author is added in recipients to ensure he is notified of a private answer
@@ -1217,7 +1218,7 @@ class MailThread(models.AbstractModel):
                     partner_ids = [(4, parent_message.author_id.id)]
             else:
                 subtype = 'mail.mt_comment'
-            new_msg = Model.browse(thread_id).message_post(subtype=subtype, partner_ids=partner_ids, **message_dict)
+            new_msg = thread.message_post(subtype=subtype, partner_ids=partner_ids, **message_dict)
 
             if original_partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
@@ -1321,8 +1322,7 @@ class MailThread(models.AbstractModel):
         name_field = RecordModel._rec_name or 'name'
         if name_field in fields and not data.get('name'):
             data[name_field] = msg_dict.get('subject', '')
-        res = RecordModel.create(data)
-        return res.id
+        return RecordModel.create(data)
 
     @api.multi
     def message_update(self, msg_dict, update_vals=None):

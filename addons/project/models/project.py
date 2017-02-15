@@ -618,12 +618,11 @@ class Task(models.Model):
         }
         defaults.update(custom_values)
 
-        res = super(Task, self).message_new(msg, custom_values=defaults)
-        task = self.browse(res)
+        task = super(Task, self).message_new(msg, custom_values=defaults)
         email_list = task.email_split(msg)
         partner_ids = filter(None, task._find_partner_from_emails(email_list, force_create=False))
         task.message_subscribe(partner_ids)
-        return res
+        return task
 
     @api.multi
     def message_update(self, msg, update_vals=None):
