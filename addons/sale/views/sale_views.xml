@@ -165,6 +165,7 @@
                     <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
                     <button name="action_done" type="object" string="Lock" states="sale"
                         help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
+                    <button name="action_unlock" type="object" string="Unlock" states="done" groups="sales_team.group_sale_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
                 </header>
                 <sheet>
