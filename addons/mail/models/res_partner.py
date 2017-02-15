@@ -237,7 +237,7 @@ class Partner(models.Model):
 
             def send_notifications():
                 db_registry = registry(dbname)
-                with db_registry.cursor() as cr:
+                with api.Environment.manage(), db_registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
                     env['mail.mail'].browse(email_ids).send()
 

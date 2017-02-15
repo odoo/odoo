@@ -247,9 +247,9 @@ odoo.define('website_sale.website_sale', function (require) {
                 $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
                     .data('oe-model', 'product.product').data('oe-id', product_id);
 
-                $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('img.js_variant_img_small');
-                if ($img) { // if only one, thumbnails are not displayed
-                    $img.attr("src", "/web/image/product.product/" + product_id + "/image/90x90");
+                var $thumbnail = $(event_source).closest('tr.js_product, .oe_website_sale').find('img.js_variant_img_small');
+                if ($thumbnail.length !== 0) { // if only one, thumbnails are not displayed
+                    $thumbnail.attr("src", "/web/image/product.product/" + product_id + "/image/90x90");
                     $('.carousel').carousel(0);
                 }
             }
@@ -258,6 +258,11 @@ odoo.define('website_sale.website_sale', function (require) {
                 $img.attr("src", "/web/image/product.product/" + product_id + "/image");
                 $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
                     .data('oe-model', 'product.product').data('oe-id', product_id);
+            }
+            // reset zooming constructs
+            $img.filter('[data-zoom-image]').attr('data-zoom-image', $img.attr('src'));
+            if ($img.data('zoomOdoo') !== undefined) {
+                $img.data('zoomOdoo').isReady = false;
             }
         }
 
