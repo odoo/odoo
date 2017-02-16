@@ -224,9 +224,10 @@ class Picking(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
     max_date = fields.Datetime(
-        'Max. Expected Date', compute='_compute_dates', store=True,
-        index=True,
-        help="Scheduled time for the last part of the shipment to be processed")
+        'Scheduled Date', compute='_compute_dates', inverse='_set_max_date',
+        store=True, index=True,
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        help="Scheduled time for the last part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
     date = fields.Datetime(
         'Creation Date',
         default=fields.Datetime.now, index=True, track_visibility='onchange',
@@ -363,6 +364,10 @@ class Picking(models.Model):
     @api.one
     def _set_min_date(self):
         self.move_lines.write({'date_expected': self.min_date})
+
+    @api.one
+    def _set_max_date(self):
+        self.move_lines.write({'date_expected': self.max_date})
 
     @api.one
     def _has_scrap_move(self):
