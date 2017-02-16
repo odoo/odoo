@@ -252,20 +252,6 @@
             </field>
         </record>
 
-        <record id="product_product_view_form_easy_inherit_stock" model="ir.ui.view">
-            <field name="name">product.product.view.form.easy.inherit.stock</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
-            <field name="arch" type="xml">
-                <sheet position="before">
-                    <header>
-                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
-                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
-                    </header>
-                </sheet>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="product_form_view_procurement_button">
             <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>
