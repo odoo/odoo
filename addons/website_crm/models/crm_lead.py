@@ -9,4 +9,7 @@ class Lead(models.Model):
                 self.default_get(['medium_id']).get('medium_id') or
                 self.sudo().env['ir.model.data'].xmlid_to_res_id('utm.utm_medium_website')
         )
+        values.setdefault(
+            "team_id",
+            self.sudo().env.ref("website.salesteam_website_sales").id)
         return values
