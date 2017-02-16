@@ -438,9 +438,11 @@ class Home(http.Controller):
             return werkzeug.utils.redirect(kw.get('redirect'), 303)
 
         request.uid = request.session.uid
-        context = request.env['ir.http'].webclient_rendering_context()
-
-        return request.render('web.webclient_bootstrap', qcontext=context)
+        try:
+            context = request.env['ir.http'].webclient_rendering_context()
+            return request.render('web.webclient_bootstrap', qcontext=context)
+        except AccessError:
+            return werkzeug.utils.redirect('/web/login?error=access')
 
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
@@ -473,6 +475,10 @@ class Home(http.Controller):
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
             values['error'] = _("Wrong login/password")
+        else:
+            if 'error' in request.params and request.params.get('error') == 'access':
+                values['error'] = _('Only employee can access this database. Please contact the administrator.')
+
         return request.render('web.login', values)
 
 

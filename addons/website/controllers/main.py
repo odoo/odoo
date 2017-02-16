@@ -16,6 +16,7 @@ from odoo import http
 from odoo import fields
 from odoo.http import request
 from odoo.osv.orm import browse_record
+from odoo.exceptions import AccessError
 
 from odoo.addons.website.models.website import slug
 from odoo.addons.web.controllers.main import WebClient, Binary, Home
