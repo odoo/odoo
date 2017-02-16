@@ -393,8 +393,9 @@ class ResourceCalendar(models.Model):
     def get_working_hours(self, start_dt, end_dt, compute_leaves=False,
                           resource_id=None, default_interval=None):
         hours = 0.0
-        for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
-                               until=(end_dt + timedelta(days=1)).replace(hour=0, minute=0, second=0),
+        for day in rrule.rrule(rrule.DAILY,
+                               dtstart=start_dt,
+                               until=end_dt,
                                byweekday=self.get_weekdays()):
             day_start_dt = day.replace(hour=0, minute=0, second=0)
             if start_dt and day.date() == start_dt.date():
