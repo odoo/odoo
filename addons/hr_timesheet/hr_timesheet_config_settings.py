@@ -14,3 +14,4 @@ class HrTimesheetConfiguration(models.TransientModel):
     module_hr_expense = fields.Boolean("Expenses")
     module_hr_holidays = fields.Boolean("Leave Management")
     module_hr_timesheet_attendance = fields.Boolean("Attendances")
+    module_project_timesheet_holidays = fields.Boolean("Leaves")

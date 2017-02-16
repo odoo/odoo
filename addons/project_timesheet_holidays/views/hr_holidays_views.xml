@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_holiday_status_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.holidays.status.form</field>
+        <field name="model">hr.holidays.status</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='description']" position="after">
+                <group name="timesheet" string="Timesheet">
+                    <field name="timesheet_generate"/>
+                    <field name="timesheet_project_id" attrs="{'invisible': [('timesheet_generate', '!=', True)], 'required': [('timesheet_generate', '=', True)]}" context="{'active_test': False}"/>
+                    <field name="timesheet_task_id" attrs="{'invisible': [('timesheet_generate', '!=', True)], 'required': [('timesheet_generate', '=', True)]}" context="{'active_test': False}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

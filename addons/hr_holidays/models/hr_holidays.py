@@ -471,10 +471,7 @@ class Holidays(models.Model):
             else:
                 holiday.write({'first_approver_id': current_employee.id})
             if holiday.holiday_type == 'employee' and holiday.type == 'remove':
-                meeting_values = holiday._prepare_holidays_meeting_values()
-                meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
-                holiday._create_resource_leave()
-                holiday.write({'meeting_id': meeting.id})
+                holiday._validate_leave_request()
             elif holiday.holiday_type == 'category':
                 leaves = self.env['hr.holidays']
                 for employee in holiday.category_id.employee_ids:
@@ -485,6 +482,15 @@ class Holidays(models.Model):
                 if leaves and leaves[0].double_validation:
                     leaves.action_validate()
         return True
+
+    def _validate_leave_request(self):
+        """ Validate leave requests (holiday_type='employee' and holiday.type='remove')
+        by creating a calendar event and a resource leaves. """
+        for holiday in self.filtered(lambda request: request.type == 'remove' and request.holiday_type == 'employee'):
+            meeting_values = holiday._prepare_holidays_meeting_values()
+            meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
+            holiday.write({'meeting_id': meeting.id})
+            holiday._create_resource_leave()
 
     @api.multi
     def _prepare_holidays_meeting_values(self):
