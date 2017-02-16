@@ -18,7 +18,7 @@
                 <group name="account_property" position="before">
                     <group>
                         <group string="Inventory Valuation">
-                            <field name="property_cost_method" attrs="{'invisible': [('property_valuation', '=', 'manual_periodic')]}"/>
+                            <field name="property_cost_method" groups="stock_account.group_inventory_valuation"/>
                             <field name="property_valuation"/>
                         </group>
                     </group>
