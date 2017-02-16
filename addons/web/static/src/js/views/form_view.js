@@ -333,7 +333,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 } else {
                     self.do_push_state({});
                 }
-                self.$el.removeClass('oe_form_dirty');                
+                self.$el.removeClass('oe_form_dirty');
             });
          });
     },
@@ -1159,7 +1159,11 @@ var FormView = View.extend(common.FieldManagerMixin, {
         return this.fields[field_name].get_value();
     },
     compute_domain: function(expression) {
-        return data.compute_domain(expression, this.fields);
+        var fields = this.fields;
+        if (!fields.id) {
+            fields = _.extend({id: {value: this.datarecord.id || false}}, fields);
+        }
+        return data.compute_domain(expression, fields);
     },
     _build_view_fields_values: function() {
         var a_dataset = this.dataset;
