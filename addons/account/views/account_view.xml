@@ -173,20 +173,37 @@
             res_model="account.invoice"
             domain="[('partner_id', 'child_of', active_id)]"
             src_model="res.partner"/>
+        <act_window
+            id="act_account_partner_ledger_payable"
+            name="Partner Ledger: Payable"
+            res_model="account.move.line"
+            context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_payable':1}"
+            src_model="res.partner"
+            view_mode="tree"/>
+
+        <act_window
+            id="act_account_partner_ledger_receivable"
+            name="Partner Ledger: Receivable"
+            res_model="account.move.line"
+            context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_receivable':1}"
+            src_model="res.partner"
+            view_mode="tree"/>
 
         <act_window
             id="act_account_acount_move_line_open_unreconciled"
             name="Unreconciled Entries"
             res_model="account.move.line"
             context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1, 'default_account_id': active_id}"
-            src_model="account.account"/>
+            src_model="account.account"
+            view_mode="tree"/>
 
         <act_window
             id="action_move_line_select"
             name="Journal Items"
             context="{'search_default_account_id': [active_id]}"
             res_model="account.move.line"
-            src_model="account.account"/>
+            src_model="account.account"
+            view_mode="tree"/>
 
         <act_window
             id="action_move_select"
@@ -199,28 +216,48 @@
             name="Journal Items"
             context="{'search_default_user_type_id': [active_id]}"
             res_model="account.move.line"
-            src_model="account.account.type"/>
+            src_model="account.account.type"
+            view_mode="tree"/>
 
         <act_window
             id="action_move_line_select_by_partner"
             name="Journal Items"
             context="{'search_default_partner_id': [active_id]}"
             res_model="account.move.line"
-            src_model="res.partner"/>
+            src_model="res.partner"
+            view_mode="tree"/>
+
+        <act_window
+            id="act_account_tax_net"
+            name="Net Tax Lines"
+            res_model="account.move.line"
+            context="{'search_default_tax_ids': [active_id]}"
+            src_model="account.tax"
+            view_mode="tree"/>
+
+        <act_window
+            id="act_account_tax_tax"
+            name="Tax Lines"
+            res_model="account.move.line"
+            context="{'search_default_tax_line_id': [active_id]}"
+            src_model="account.tax"
+            view_mode="tree"/>
 
         <act_window
             id="act_account_tax_net_posted"
             name="Net Tax Lines (Posted)"
             res_model="account.move.line"
             context="{'search_default_tax_ids': [active_id], 'search_default_posted': 1}"
-            src_model="account.tax"/>
+            src_model="account.tax"
+            view_mode="tree"/>
 
         <act_window
             id="act_account_tax_tax_posted"
             name="Tax Lines (Posted)"
             res_model="account.move.line"
             context="{'search_default_tax_line_id': [active_id], 'search_default_posted': 1}"
-            src_model="account.tax"/>
+            src_model="account.tax"
+            view_mode="tree"/>
 
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">
@@ -436,7 +473,8 @@
            name="Journal Items"
            context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
            res_model="account.move.line"
-           src_model="account.journal"/>
+           src_model="account.journal"
+           view_mode="tree"/>
 
         <!-- Tags -->
         <record id="account_tag_view_form" model="ir.ui.view">
@@ -1098,18 +1136,22 @@
                                         <field name="credit"/>
                                         <field name="quantity"/>
                                     </group>
+                                    <group string="Accounting" invisible="[('move_id','=',False), ('statement_id','=',False)]">
+                                        <field name="move_id" required="False" invisible="[('move_id','=',False)]"/>
+                                        <field name="statement_id" readonly="True" invisible="[('statement_id','=',False)]"/>
+                                    </group>
                                     <group string="Dates">
                                         <field name="date_maturity"/>
                                     </group>
-                                    <group string="Taxes">
-                                        <field name="tax_line_id" readonly="1"/>
-                                        <field name="tax_ids" widget="many2many_tags" readonly="1"/>
+
+                                    <group string="Taxes" attrs="{'invisible': [('tax_line_id','=',False), ('tax_ids','=',[])]}">
+                                        <field name="tax_line_id" readonly="1" attrs="{'invisible': [('tax_line_id','=',False)]}"/>
+                                        <field name="tax_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('tax_ids','=',[])]}"/>
                                     </group>
-                                    <group string="Matching">
+                                    <group string="Matching" attrs="{'invisible':[('full_reconcile_id','=',False)]}">
                                         <label for="full_reconcile_id"/>
                                         <div>
                                             <field name="full_reconcile_id"/>
-                                            <field name="reconciled" invisible="1"/>
                                             <field name="matched_debit_ids" invisible="1"/>
                                             <field name="matched_credit_ids" invisible="1"/>
                                             <button name="open_reconcile_view"
@@ -1143,7 +1185,7 @@
                 </form>
             </field>
         </record>
-        <record id="view_move_line_form2" model="ir.ui.view">
+        <record id="view_move_line_form2" model="ir.ui.view"> <!--TODO n'est pas appelé ?? A vérifier et voir si tu le supprimes (si tu le fais, garde ça dans un commit séparé, après le reste, au cas où ... Ce sera plus facile à annuler comme ça)-->
             <field name="name">account.move.line.form2</field>
             <field name="model">account.move.line</field>
             <field eval="9" name="priority"/>
@@ -1533,7 +1575,8 @@
             name="Journal Items"
             context="{'search_default_move_id': active_id, 'default_move_id': active_id}"
             res_model="account.move.line"
-            src_model="account.move"/>
+            src_model="account.move"
+            view_mode="tree"/>
 
         <!-- Full Reconcile -->
         <record id="view_full_reconcile_form" model="ir.ui.view">
