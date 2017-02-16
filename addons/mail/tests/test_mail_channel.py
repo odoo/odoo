@@ -32,7 +32,7 @@ class TestMailGroup(TestMail):
         def mail_group_message_get_recipient_values(self, notif_message=None, recipient_ids=None):
             return self.env['mail.thread'].message_get_recipient_values(notif_message=notif_message, recipient_ids=recipient_ids)
         cls.env['mail.channel']._patch_method('message_get_recipient_values', mail_group_message_get_recipient_values)
-        super(TestMail, cls).tearDownClass()
+        super(TestMailGroup, cls).tearDownClass()
 
     @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_access_rights_public(self):
