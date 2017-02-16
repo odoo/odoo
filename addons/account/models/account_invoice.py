@@ -414,7 +414,7 @@ class AccountInvoice(models.Model):
             })
             self.sent = True
             # Print on the chatter
-            self.message_post(body=_('Invoire report generated'), attachment_ids=[attachment_id.id], subtype='account.mt_invoice_validated')
+            self.message_post(body=_('Invoice report generated'), attachment_ids=[attachment_id.id], subtype='account.mt_invoice_validated')
             # Special case when the invoice already has payments
             if self.payment_ids:
                 ctx = dict(self._context, post_process_report=False)
