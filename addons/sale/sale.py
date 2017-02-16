@@ -1313,6 +1313,7 @@ class account_invoice(osv.Model):
         so_ids = sale_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
         for so_id in so_ids:
             sale_order_obj.message_post(cr, uid, so_id, body=_("Invoice paid"), context=context)
+            workflow.trg_write(uid, 'sale.order', so_id, cr)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
