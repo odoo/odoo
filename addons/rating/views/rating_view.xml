@@ -23,6 +23,13 @@
             <field name="arch" type="xml">
                 <form string="Rating" create="false" edit="false">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_open_rated_object" icon="fa-file">
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">Ressource</span>
+                                </div>
+                            </button>
+                        </div>
                         <group>
                             <group>
                                 <field name="res_name"/>
@@ -67,7 +74,7 @@
                                         <field name="rated_partner_id" />
                                     </strong>
                                     <ul>
-                                        <li>
+                                        <li t-if="record.partner_id.value">
                                             <span class="o_text_overflow">
                                                 by
                                                 <span t-att-title="record.partner_id.value">
