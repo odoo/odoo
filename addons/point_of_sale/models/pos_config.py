@@ -104,6 +104,9 @@ class PosConfig(models.Model):
     sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
         help="This sequence is automatically created by Odoo but you can change it "
         "to customize the reference numbers of your orders.", copy=False)
+    sequence_line_id = fields.Many2one('ir.sequence', string='Order Line IDs Sequence', readonly=True,
+        help="This sequence is automatically created by Odoo but you can change it "
+        "to customize the reference numbers of your orders lines.", copy=False)
     session_ids = fields.One2many('pos.session', 'config_id', string='Sessions')
     current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session")
     current_session_state = fields.Char(compute='_compute_current_session')
@@ -218,16 +221,15 @@ class PosConfig(models.Model):
         # force sequence_id field to new pos.order sequence
         values['sequence_id'] = IrSequence.create(val).id
 
-        # TODO master: add field sequence_line_id on model
-        # this make sure we always have one available per company
         val.update(name=_('POS order line %s') % values['name'], code='pos.order.line')
-        IrSequence.create(val)
+        values['sequence_line_id'] = IrSequence.create(val).id
         return super(PosConfig, self).create(values)
 
     @api.multi
     def unlink(self):
-        for pos_config in self.filtered(lambda pos_config: pos_config.sequence_id):
+        for pos_config in self.filtered(lambda pos_config: pos_config.sequence_id or pos_config.sequence_line_id):
             pos_config.sequence_id.unlink()
+            pos_config.sequence_line_id.unlink()
         return super(PosConfig, self).unlink()
 
     # Methods to open the POS
