@@ -22,6 +22,10 @@
             <field name="arch" type="xml">
                 <form string="Rating" create="false" edit="false">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_rated_object" type="object" class="oe_stat_button" icon="fa-tasks" string="Resource">
+                            </button>
+                        </div>
                         <group>
                             <group>
                                 <field name="res_name"/>
