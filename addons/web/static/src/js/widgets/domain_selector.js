@@ -58,6 +58,7 @@ var DomainNode = Widget.extend({
     /// @param domain - an array of the prefix representation of the domain (or a string which represents it)
     /// @param options - an object with possible values:
     ///                    - readonly, a boolean to indicate if the widget is readonly or not (default to true)
+    ///                    - operators, a list of available operators (default to null, which indicates all of supported ones)
     ///                    - debugMode, a boolean which is true if the widget should be in debug mode (default to false)
     ///                    - @see ModelFieldSelector for other options
     init: function (parent, model, domain, options) {
@@ -66,6 +67,7 @@ var DomainNode = Widget.extend({
         this.model = model;
         this.options = _.extend({
             readonly: true,
+            operators: null,
             debugMode: false,
         }, options || {});
 
@@ -480,38 +482,53 @@ var DomainLeaf = DomainNode.extend({
     /// The private _getOperatorsFromType returns the mapping of "technical operator" to "display operator value"
     /// of the operators which are available for the given field type.
     _getOperatorsFromType: function (type) {
+        var operators = {};
+
         switch (type) {
             case "boolean":
-                return {
+                operators = {
                     "=": _t("is"),
                     "!=": _t("is not"),
                 };
+                break;
 
             case "char":
             case "text":
             case "html":
-                return _.pick(operator_mapping, "=", "!=", "ilike", "not ilike", "set", "not set", "in", "not in");
+                operators = _.pick(operator_mapping, "=", "!=", "ilike", "not ilike", "set", "not set", "in", "not in");
+                break;
 
             case "many2many":
             case "one2many":
             case "many2one":
-                return _.pick(operator_mapping, "=", "!=", "ilike", "not ilike", "set", "not set");
+                operators = _.pick(operator_mapping, "=", "!=", "ilike", "not ilike", "set", "not set");
+                break;
 
             case "integer":
             case "float":
             case "monetary":
-                return _.pick(operator_mapping, "=", "!=", ">", "<", ">=", "<=", "ilike", "not ilike", "set", "not set");
+                operators = _.pick(operator_mapping, "=", "!=", ">", "<", ">=", "<=", "ilike", "not ilike", "set", "not set");
+                break;
 
             case "selection":
-                return _.pick(operator_mapping, "=", "!=", "set", "not set");
+                operators = _.pick(operator_mapping, "=", "!=", "set", "not set");
+                break;
 
             case "date":
             case "datetime":
-                return _.pick(operator_mapping, "=", "!=", ">", "<", ">=", "<=", "set", "not set");
+                operators = _.pick(operator_mapping, "=", "!=", ">", "<", ">=", "<=", "set", "not set");
+                break;
 
             default:
-                return _.extend({}, operator_mapping);
+                operators = _.extend({}, operator_mapping);
+                break;
         }
+
+        if (this.options.operators) {
+            operators = _.pick.apply(_, [operators].concat(this.options.operators));
+        }
+
+        return operators;
     },
 
     on_add_tag: function (e) {
