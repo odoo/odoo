@@ -155,11 +155,11 @@ class sale_quote(http.Controller):
 
     # note dbo: website_sale code
     @http.route(['/quote/<int:order_id>/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
-    def payment_transaction(self, acquirer_id, order_id):
-        return self.payment_transaction_token(acquirer_id, order_id, None)
+    def payment_transaction(self, acquirer_id, tx_type, order_id):
+        return self.payment_transaction_token(acquirer_id, tx_type, order_id, None)
 
     @http.route(['/quote/<int:order_id>/transaction/<int:acquirer_id>/<token>'], type='json', auth="public", website=True)
-    def payment_transaction_token(self, acquirer_id, order_id, token):
+    def payment_transaction_token(self, acquirer_id, tx_type, order_id, token):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -186,7 +186,7 @@ class sale_quote(http.Controller):
         if not Transaction:
             Transaction = PaymentTransaction.create({
                 'acquirer_id': acquirer_id,
-                'type': Order._get_payment_type(),
+                'type': tx_type,
                 'amount': Order.amount_total,
                 'currency_id': Order.pricelist_id.currency_id.id,
                 'partner_id': Order.partner_id.id,
@@ -197,7 +197,6 @@ class sale_quote(http.Controller):
                 'callback_method': '_confirm_online_quote',
             })
             request.session['quote_%s_transaction_id' % Order.id] = Transaction.id
-
             # update quotation
             Order.write({
                 'payment_acquirer_id': acquirer_id,
@@ -212,7 +211,7 @@ class sale_quote(http.Controller):
             Order.pricelist_id.currency_id.id,
             values={
                 'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
-                'type': Order._get_payment_type(),
+                'type': tx_type,
                 'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
                 'partner_id': Order.partner_shipping_id.id or Order.partner_invoice_id.id,
                 'billing_partner_id': Order.partner_invoice_id.id,

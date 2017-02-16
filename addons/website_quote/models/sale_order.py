@@ -191,14 +191,6 @@ class SaleOrder(models.Model):
                 self.template_id.mail_template_id.send_mail(order.id)
         return res
 
-    @api.multi
-    def _get_payment_type(self):
-        self.ensure_one()
-        if self.require_payment == 2:
-            return 'form_save'
-        else:
-            return 'form'
-
 
 class SaleOrderOption(models.Model):
     _name = "sale.order.option"

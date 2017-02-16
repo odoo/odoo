@@ -227,15 +227,22 @@ odoo.define('website_quote.payment_method', function (require) {
       ev.preventDefault();
       ev.stopPropagation();
       var $form = $(ev.currentTarget).parents('form');
-      var acquirer_id = $(ev.currentTarget).parents('.oe_quote_acquirer_button').first().data('id');
+      var acquirer = $(ev.currentTarget).parents('.oe_quote_acquirer_button').first();
+      var acquirer_id = acquirer.data('id');
+      var acquirer_token = acquirer.attr('data-token'); // !=data
+      var params = {'tx_type': acquirer.find('input[name="odoo_save_token"]').is(':checked')?'form_save':'form'};
       if (! acquirer_id) {
         return false;
       }
+      if (acquirer_token) {
+        params.token = acquirer_token;
+      }
+      $form.off('submit');
       var href = $(location).attr("href");
       var order_id = href.match(/quote\/([0-9]+)/)[1];
       var token = href.match(/quote\/[0-9]+\/([^\/?]*)/);
       token = token ? token[1] : '';
-      ajax.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id + (token ? '/' + token : ''), 'call', {}).then(function (data) {
+      ajax.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id + (token ? '/' + token : ''), 'call', params, {}).then(function (data) {
           $form.html(data);
           $form.submit();
       });
