@@ -25,3 +25,16 @@ class ResCompany(models.Model):
             'fields_id': field.id
         })
         return new_company
+
+    @api.multi
+    def write(self, values):
+        # The pricelist and its company must have the same currency to avoid some valuation troubles.
+        # When the currency_id changes, we ensure that the pricelist keeps the same currency as it's
+        # related company. If no company is specified, the write is still done because we suppose the
+        # currency is the same in a multicompany environment sharing the same pricelist.
+        currency_id = values.get('currency_id')
+        if currency_id:
+            pricelist_ids = self.env['product.pricelist'].search([('company_id', 'in', [self.id, False])])
+            if pricelist_ids:
+                pricelist_ids.write({'currency_id': currency_id})
+        return super(ResCompany, self).write(values)
