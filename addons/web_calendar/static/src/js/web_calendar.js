@@ -958,9 +958,7 @@ openerp.web_calendar = function(instance) {
             if (_.isUndefined(parent)) {
                 return _t("Create");
             }
-            var title = (_.isUndefined(parent.field_widget)) ?
-                    (parent.string || parent.name) :
-                    parent.field_widget.string || parent.field_widget.name || '';
+            var title = (this.options.action)? this.options.action.name : '';
             return _t("Create: ") + title;
         },
         start: function () {
