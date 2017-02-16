@@ -367,13 +367,13 @@
                             <group>
                                 <group>
                                     <field name="move_type"/>
-                                    <field name="picking_type_id"/>
+                                    <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="quant_reserved_exist" invisible="1"/>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                    <field name="group_id"/>
+                                    <field name="group_id" groups="base.group_no_one"/>
                                     <field name="priority"/>
                                 </group>
                             </group>
