@@ -22,6 +22,7 @@ class sale_order_line(osv.osv):
         product_obj = self.pool['product.product']
         field_name = 'lst_price'
         currency_id = None
+        product_currency = None
         if res_dict.get(pricelist):
             rule_id = res_dict[pricelist][1]
         else:
@@ -30,10 +31,14 @@ class sale_order_line(osv.osv):
             item = item_obj.browse(cr, uid, rule_id, context=context)
             if item.base == 'standard_price':
                 field_name = 'standard_price'
+            if item.base == 'pricelist' and item.base_pricelist_id:
+                field_name = 'price'
+                context = dict(context, pricelist=item.base_pricelist_id.id)
+                product_currency = item.base_pricelist_id.currency_id
             currency_id = item.pricelist_id.currency_id
 
         product = product_obj.browse(cr, uid, product_id, context=context)
-        product_currency = (product.company_id and product.company_id.currency_id) or self.pool['res.users'].browse(cr, uid, uid).company_id.currency_id
+        product_currency = product_currency or (product.company_id and product.company_id.currency_id) or self.pool['res.users'].browse(cr, uid, uid).company_id.currency_id
         if not currency_id:
             currency_id = product_currency
             cur_factor = 1.0
