@@ -1295,6 +1295,7 @@ class pos_order(osv.osv):
 
         grouped_data = {}
         have_to_group_by = session and session.config_id.group_by or False
+        rounding_method = session and session.config_id.company_id.tax_calculation_rounding_method
 
         for order in self.browse(cr, uid, ids, context=context):
             if order.account_move:
@@ -1420,6 +1421,14 @@ class pos_order(osv.osv):
                         'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                     })
 
+            # round tax lines per order
+            if rounding_method == 'round_globally':
+                for group_key, group_value in grouped_data.iteritems():
+                    if group_key[0] == 'tax':
+                        for line in group_value:
+                            line['credit'] = cur.round(line['credit'])
+                            line['debit'] = cur.round(line['debit'])
+
             # counterpart
             insert_data('counter_part', {
                 'name': _("Trade Receivables"), #order.name,
@@ -1520,6 +1529,31 @@ class pos_order_line(osv.osv):
             res[line.id] = line.order_id.fiscal_position_id.map_tax(line.tax_ids)
         return res
 
+    @api.model
+    def create(self, values):
+        if values.get('order_id') and not values.get('name'):
+            # set name based on the sequence specified on the config
+            config_id = self.env['pos.order'].browse(values['order_id']).session_id.config_id.id
+            # HACK: sequence created in the same transaction as the config
+            # cf TODO master is pos.config create
+            # remove me saas-15
+            self.env.cr.execute("""
+                SELECT s.id
+                FROM ir_sequence s
+                JOIN pos_config c
+                  ON s.create_date=c.create_date
+                WHERE c.id = %s
+                  AND s.code = 'pos.order.line'
+                LIMIT 1
+                """, (config_id,))
+            sequence = self.env.cr.fetchone()
+            if sequence:
+                values['name'] = self.env['ir.sequence'].browse(sequence[0])._next()
+        if not values.get('name'):
+            # fallback on any pos.order sequence
+            values['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')
+        return super(pos_order_line, self).create(values)
+
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'name': fields.char('Line No', required=True, copy=False),
@@ -1557,7 +1591,6 @@ class pos_order_line(osv.osv):
 
 
     _defaults = {
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'pos.order.line', context=context),
         'qty': lambda *a: 1,
         'discount': lambda *a: 0.0,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
