@@ -413,7 +413,7 @@ FavoriteMenu.include({
             name = self.$add_dashboard_input.val();
         
         return self.rpc('/board/add_to_dashboard', {
-            action_id: self.action_id,
+            action_id: self.action_id || false,
             context_to_save: c,
             domain: d,
             view_mode: self.view_manager.active_view.type,

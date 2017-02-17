@@ -99,7 +99,6 @@ class Report(models.Model):
 
         context = dict(self.env.context, inherit_branding=True)  # Tell QWeb to brand the generated html
 
-        view_obj = self.env['ir.ui.view']
         # Browse the user instead of using the sudo self.env.user
         user = self.env['res.users'].browse(self.env.uid)
         website = None
@@ -108,6 +107,7 @@ class Report(models.Model):
                 website = request.website
                 context = dict(context, translatable=context.get('lang') != request.website.default_lang_code)
 
+        view_obj = self.env['ir.ui.view'].with_context(context)
         values.update(
             time=time,
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),

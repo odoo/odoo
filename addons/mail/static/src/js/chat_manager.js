@@ -479,7 +479,9 @@ function on_needaction_notification (message) {
         increment_unread: true,
     });
     invalidate_caches(message.channel_ids);
-    needaction_counter++;
+    if (message.channel_ids.length !== 0) {
+        needaction_counter++;
+    }
     _.each(message.channel_ids, function (channel_id) {
         var channel = chat_manager.get_channel(channel_id);
         if (channel) {
@@ -1044,7 +1046,9 @@ function init () {
 
     bus.on('notification', null, on_notification);
 
-    return session.rpc('/mail/client_action').then(function (result) {
+    return session.is_bound.then(function(){
+        return session.rpc('/mail/client_action');
+    }).then(function (result) {
         _.each(result.channel_slots, function (channels) {
             _.each(channels, add_channel);
         });

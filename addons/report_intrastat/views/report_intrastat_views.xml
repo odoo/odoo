@@ -29,9 +29,11 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="stock.view_template_property_form"/>
             <field name="arch" type="xml">
-                <field name="categ_id" position="after">
-                    <field name="intrastat_id"/>
-                </field>
+                <group name="group_lots_and_weight" position="after">
+                    <group>
+                        <field name="intrastat_id"/>
+                    </group>
+                </group>
             </field>
         </record>
 
