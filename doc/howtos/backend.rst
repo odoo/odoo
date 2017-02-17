@@ -1853,7 +1853,7 @@ Examples can be easily adapted from XML-RPC to JSON-RPC.
     * https://github.com/akretion/ooor
     * https://github.com/syleam/openobject-library
     * https://github.com/nicolas-van/openerp-client-lib
-    * https://pypi.python.org/pypi/oersted/
+    * http://pythonhosted.org/OdooRPC
     * https://github.com/abhishek-jaiswal/php-openerp-lib
 
 .. [#autofields] it is possible to :attr:`disable the automatic creation of some
