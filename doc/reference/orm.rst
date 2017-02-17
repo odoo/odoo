@@ -710,7 +710,7 @@ Model Reference
     .. automethod:: fields_get
     .. automethod:: fields_view_get
 
-    .. rubric:: ???
+    .. rubric:: Miscellaneous methods
 
     .. automethod:: default_get
     .. automethod:: copy
