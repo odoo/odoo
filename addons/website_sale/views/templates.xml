@@ -217,9 +217,9 @@
 
     <template id="sort" inherit_id="website_sale.products" active="True" customize_show="True" name="Show Sort by">
         <xpath expr="//div[@class='products_pager']/div/t[@t-call][last()]" position="after">
-            <t t-set="list_price_desc_label">Price <i class="fa fa-carret-up" aria-hidden="true"/></t>
-            <t t-set="list_price_asc_label">Price <i class="fa fa-carret-down" aria-hidden="true"/></t>
-            <t t-set="name_asc_label">Name <i class="fa fa-carret-down" aria-hidden="true"/></t>
+            <t t-set="list_price_desc_label">Price <i class="fa fa-caret-up" aria-hidden="true"/></t>
+            <t t-set="list_price_asc_label">Price <i class="fa fa-caret-down" aria-hidden="true"/></t>
+            <t t-set="name_asc_label">Name <i class="fa fa-caret-down" aria-hidden="true"/></t>
             <t t-set="website_sale_sortable" t-value="[
                 (list_price_desc_label, 'list_price desc'),
                 (list_price_asc_label, 'list_price asc'),
