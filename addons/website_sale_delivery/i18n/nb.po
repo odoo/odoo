@@ -3,16 +3,15 @@
 # * website_sale_delivery
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Aleksander <aleksander@provendo.no>, 2016
-# Roy Edvard Ellingsen <roy@royedvard.com>, 2016
+# Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2016
+# Mari Løken <mari@tinderbox.no>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:36+0000\n"
 "PO-Revision-Date: 2016-09-19 12:36+0000\n"
-"Last-Translator: Roy Edvard Ellingsen <roy@royedvard.com>, 2016\n"
+"Last-Translator: Mari Løken <mari@tinderbox.no>, 2016\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +25,8 @@ msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Delivery:</span>"
 msgstr ""
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Frakt blir oppdatert "
+"etter valg av leveringsmåte \"> Frakt:</span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
@@ -34,6 +35,8 @@ msgid ""
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
+"En beskrivelse av produktet som du vil vise dine kunder. Denne beskrivelsen "
+"blir kopiert til alle salgsordre, leveringsordre og kundefaktura/kreditnota."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -42,6 +45,9 @@ msgid ""
 "sell strategy, e.g. for computers: mouse, keyboard, etc.). An algorithm "
 "figures out a list of accessories based on all the products added to cart."
 msgstr ""
+"Tillegg som blir vist når kunden ser på handlevognen før betaling (kryssalg "
+"strategi, for eksempel for datamaskiner: mus, tastatur etc). En algoritme "
+"finner tillegg basert på alle produktene som blir lagt i handlevognen."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -51,7 +57,7 @@ msgstr "Tilbehør"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
 msgid "Adds an availability status on the web product page."
-msgstr ""
+msgstr "Legger til en tilgjengelighetsstatus på produktsiden."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_alternative_product_ids
@@ -61,12 +67,12 @@ msgstr "Produktalternativer"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
 msgid "Availability"
-msgstr "Tilgjengelighet."
+msgstr "Tilgjengelighet"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
 msgid "Availability Warning"
-msgstr ""
+msgstr "Advarsel om tilgjengelighet"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
@@ -81,11 +87,15 @@ msgid ""
 "Shop page, hit Customize and turn *Product Categories* on. A product can "
 "belong to several categories."
 msgstr ""
+"Kategorier kan publiseres på nettbutikken (katalog grid) for å hjelpe kunden"
+" med å finne alle produkter innen en kategori. For å publisere, gå til "
+"butikk-siden, velg Tilpass og skru på Produktkategorier. Et produkt kan "
+"tilhøre flere kategorier."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose your Delivery Method"
-msgstr ""
+msgstr "Velg leveringsmåte"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
@@ -95,12 +105,12 @@ msgstr "Land"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
-msgstr ""
+msgstr "Levert antall"
 
 #. module: website_sale_delivery
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Leveringsmåte"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -110,17 +120,17 @@ msgstr "Beskrivelse"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr ""
+msgstr "Beskrivelse vist på nettbutikken og online tilbud."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
 msgid "Description for Online Quotations"
-msgstr ""
+msgstr "Beskrivelse for online tilbud"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_quote_description
 msgid "Description for the quote"
-msgstr ""
+msgstr "Beskrivelse på tilbudet"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_sequence
@@ -136,6 +146,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Lik: Kostnad blir delt likt.\n"
+"Etter antall: Kostnad blir delt etter antall av produktet.\n"
+"Etter nåværende kostnad: Kostnaden blir forddelt etter produktet sin nåværende kostnad.\n"
+"Etter vekt: Kostnaden blir fordelt avhengig av vekt.\n"
+"Etter volum: Kostnaden blir fordelt avhengig av volum."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
@@ -145,27 +160,27 @@ msgstr "Fil"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has an order line set for delivery"
-msgstr ""
+msgstr "Har en ordrelinje klar for levering"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has delivery"
-msgstr ""
+msgstr "Har leveranse"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_product_image_ids
 msgid "Images"
-msgstr ""
+msgstr "Bilder"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_intrastat_id
 msgid "Intrastat code"
-msgstr ""
+msgstr "Intrastat kode"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_landed_cost_ok
 msgid "Landed Costs"
-msgstr ""
+msgstr "Mottakskostnader"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/models/sale_order.py:99
@@ -174,11 +189,13 @@ msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
 msgstr ""
+"Ingen leveransemåte er tilgjengelig for denne ordren og leveringsadressen. "
+"Vennligst kontakt oss for mer informasjon."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_optional_product_ids
 msgid "Optional Products"
-msgstr ""
+msgstr "Valgfrie produkter"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
@@ -186,6 +203,9 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
+"Valgfrie produkter blir foreslått når kunden klikker på \"Legg i "
+"handlevogn\" (krysssalgs strategi, for eksempel for datamaskiner: "
+"garantiutvidelse, programvare etc)."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_requisition
@@ -200,22 +220,22 @@ msgstr "Publisert"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
 msgid "Rating"
-msgstr ""
+msgstr "Vurdering"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Siste vurdering"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Antall vurderinger"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
 msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr ""
+msgstr "Vurdering: 0=Misfornøyd, 10=Fornøyd"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
@@ -236,12 +256,12 @@ msgstr "Størrelse Y"
 #: code:addons/website_sale_delivery/models/sale_order.py:98
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr ""
+msgstr "Beklager, vi kan ikke sende din ordre"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_split_method
 msgid "Split Method"
-msgstr ""
+msgstr "Splittmetode"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_style_ids
@@ -254,21 +274,23 @@ msgid ""
 "Suggest more expensive alternatives to your customers (upsell strategy). "
 "Those products show up on the product page."
 msgstr ""
+"Foreslå dyrere alternativer til dine kunder (oppsalgsstrategi). Disse "
+"produktene blir vist på produktsiden."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
 msgid "The amount without tax."
-msgstr "Beløp uten avgift"
+msgstr "Beløp uten mva"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.shipping_tracking
 msgid "Tracking:"
-msgstr ""
+msgstr "Sporing:"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
 msgid "Visible in Website"
-msgstr "Synlig på webside"
+msgstr "Synlig på websiden"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
@@ -278,12 +300,12 @@ msgstr "Nettsidekommentarer"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
-msgstr ""
+msgstr "Kategori for nettbutikken"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
 msgid "Website Sequence"
-msgstr ""
+msgstr "Rekkefølge på nettsiden"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
@@ -303,9 +325,9 @@ msgstr "Nettside meta-tittel"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_price
 msgid "Website price"
-msgstr ""
+msgstr "Pris på nettsiden"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_public_price
 msgid "Website public price"
-msgstr ""
+msgstr "Offentlig pris på nettsiden"

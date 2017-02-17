@@ -323,6 +323,7 @@ class MrpProduction(models.Model):
         data = {
             'name': self.name,
             'date': self.date_planned_start,
+            'date_expected': self.date_planned_start,
             'bom_line_id': bom_line.id,
             'product_id': bom_line.product_id.id,
             'product_uom_qty': quantity,
@@ -466,10 +467,10 @@ class MrpProduction(models.Model):
             production.workorder_ids.filtered(lambda x: x.state != 'cancel').action_cancel()
 
             finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')).action_cancel()
-            finish_moves.action_cancel()
+            raw_moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            (finish_moves | raw_moves).action_cancel()
 
-            procurements = ProcurementOrder.search([('move_dest_id', 'in', finish_moves.ids)])
+            procurements = ProcurementOrder.search([('move_dest_id', 'in', (finish_moves | raw_moves).ids)])
             if procurements:
                 procurements.cancel()
 
@@ -479,18 +480,17 @@ class MrpProduction(models.Model):
         self.write({'state': 'cancel'})
         return True
 
-    @api.multi
     def _cal_price(self, consumed_moves):
+        self.ensure_one()
         return True
 
     @api.multi
     def post_inventory(self):
         for order in self:
-            moves_to_do = order.move_raw_ids
+            moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves_to_do.action_done()
-            #order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel')).move_validate()
             order._cal_price(moves_to_do)
-            moves_to_finish = order.move_finished_ids
+            moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
             moves_to_finish.action_done()
             for move in moves_to_finish:
                 #Group quants by lots

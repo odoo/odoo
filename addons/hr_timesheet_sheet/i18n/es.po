@@ -3,7 +3,7 @@
 # * hr_timesheet_sheet
 # 
 # Translators:
-# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
@@ -16,15 +16,16 @@
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Gelo Joga Rodríguez <gj@landoo.es>, 2016
+# Gelo Joga Landoo <gj@landoo.es>, 2016
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
+# José Antonio Cuello <yopli2000@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2016\n"
+"Last-Translator: José Antonio Cuello <yopli2000@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,9 @@ msgid ""
 "* The 'Waiting Approval' status is used to confirm the timesheet by user. \n"
 "* The 'Approved' status is used when the users timesheet is accepted by his/her senior."
 msgstr ""
+"El estado 'Abierto' es usado cuando un usuario esta introduciendo un nuevo parte de horas sin confirmar.\n"
+"El estado 'Esperando Aprobación' es usado cuando el usuario confirma el parte de horas.\n"
+"El estado 'Aprobado' es usado cuando el parte de horas es aprobado por su encargado."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -72,7 +76,7 @@ msgstr "Aprobado"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:140
 #, python-format
 msgid "Cannot approve a non-submitted timesheet."
-msgstr ""
+msgstr "No es posible aprobar un parte de horas no confirmado."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -259,7 +263,7 @@ msgstr "Nota"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:138
 #, python-format
 msgid "Only an HR Officer or Manager can approve timesheets."
-msgstr ""
+msgstr "Sólo un encargado o administrador puede aprobar partes de horas."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:123
@@ -267,6 +271,7 @@ msgstr ""
 msgid ""
 "Only an HR Officer or Manager can refuse timesheets or reset them to draft."
 msgstr ""
+"Sólo un encargado o administrador puede rechazar o volver a estado borrador."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -382,7 +387,7 @@ msgstr "Rango hoja de asistencia"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_timesheet_range
 msgid "Timesheet range *"
-msgstr ""
+msgstr "Rango del parte de horas *"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_department_timesheet_to_approve_count

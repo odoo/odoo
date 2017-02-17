@@ -137,7 +137,10 @@ class PortalWizardUser(models.TransientModel):
                 user_portal = None
                 # create a user if necessary, and make sure it is in the portal group
                 if not user:
-                    company_id = wizard_user.partner_id.company_id.id
+                    if wizard_user.partner_id.company_id:
+                        company_id = wizard_user.partner_id.company_id.id
+                    else:
+                        company_id = self.env['res.company']._company_default_get('res.users')
                     user_portal = wizard_user.sudo().with_context(company_id=company_id)._create_user()
                 else:
                     user_portal = user

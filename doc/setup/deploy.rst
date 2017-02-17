@@ -4,9 +4,15 @@
 Deploying Odoo
 ==============
 
-This document describes basic steps to set up Odoo in production. It follows
-:ref:`installation <setup/install>`, but should not be used for development
-systems.
+This document describes basic steps to set up Odoo in production or on an
+internet-facing server. It follows :ref:`installation <setup/install>`, and is
+not generally necessary for a development systems that is not exposed on the
+internet.
+
+.. warning:: If you are setting up a public server, be sure to check our :ref:`security` recommandations!
+
+
+.. _db_filter:
 
 dbfilter
 ========
@@ -20,24 +26,25 @@ company user: the database can be selected when logging in, and customizations
 loaded afterwards.
 
 However it is an issue for non-logged users (portal, website) which aren't
-bound to a database: Odoo need to know which database should be used for the
-operations or to get the data. If multi-tenancy is not used that is not an
+bound to a database: Odoo needs to know which database should be used to load
+the website page or perform the operation. If multi-tenancy is not used that is not an
 issue, there's only one database to use, but if there are multiple databases
 accessible Odoo needs a rule to know which one it should use.
 
 That is one of the purposes of :option:`--db-filter <odoo-bin --db-filter>`:
-it specifies the default database for the Odoo system. The value is a
-`regular expression`_, possibly including the dynamically injected hostname
-or subdomain through which the Odoo system is accessed.
+it specifies how the database should be selected based on the hostname (domain)
+that is being requested. The value is a `regular expression`_, possibly
+including the dynamically injected hostname (`%h`) or the first subdomain (`%d`)
+through which the system is being accessed.
 
-If an Odoo hosts multiple databases in production, especially if ``website``
-is used, it **must** use a dbfilter or a number of features will not work
-correctly or not use at all.
+For servers hosting multiple databases in production, especially if ``website``
+is used, dbfilter **must** be set, otherwise a number of features will not work
+correctly.
 
-Configuration sample
---------------------
+Configuration samples
+---------------------
 
-* filtering only db with a name beginning with 'mycompany'
+* show only databases with names beginning with 'mycompany'
 
 in ``/etc/odoo.conf`` set:
 
@@ -45,16 +52,28 @@ in ``/etc/odoo.conf`` set:
 
   [options]
   dbfilter = ^mycompany.*$
-  
-* filtering only db with a name equal to hostname without domain
+
+* Show only databases matching the first subdomain after ``www``: for example
+  the database "mycompany" will be shown if the incoming request
+  was sent to ``www.mycompany.com`` or ``mycompany.co.uk``, but not
+  for ``www2.mycompany.com`` or ``helpdesk.mycompany.com``.
 
 in ``/etc/odoo.conf`` set:
 
 .. code-block:: apacheconf
 
   [options]
-  dbfilter = %d
-  
+  dbfilter = ^%d$
+
+.. note::
+  Setting a proper :option:`--db-filter <odoo-bin --db-filter>` is an important part
+  of securing your deployment.
+  Once it is correctly working and only matching a single database per hostname, it
+  is strongly recommended to block access to the database manager screens,
+  and to use the `--no-database-list` startup paramater to prevent listing
+  your databases. See also security_.
+
+
 PostgreSQL
 ==========
 
@@ -145,6 +164,8 @@ in ``/etc/odoo.conf`` set:
   db_password = pwd
   dbfilter = ^mycompany.*$
 
+.. _builtin_server:
+
 Builtin server
 ==============
 
@@ -216,11 +237,12 @@ in ``/etc/odoo.conf``:
   max_cron_threads = 1
   workers = 8
 
+.. _https_proxy:
 
 HTTPS
 =====
 
-Whether it's accessed via website/web client or the webservice, Odoo transmits
+Whether it's accessed via website/web client or web service, Odoo transmits
 authentication information in cleartext. This means a secure deployment of
 Odoo must use HTTPS\ [#switching]_. SSL termination can be implemented via
 just about any SSL termination proxy, but requires the following setup:
@@ -229,7 +251,7 @@ just about any SSL termination proxy, but requires the following setup:
 * set up the SSL termination proxy (`Nginx termination example`_)
 * set up the proxying itself (`Nginx proxying example`_)
 * your SSL termination proxy should also automatically redirect non-secure
-connections to the secure port
+  connections to the secure port
 
 .. warning::
 
@@ -372,11 +394,75 @@ and looking up the right module (and file) in the various addons paths.
           via this, and how (e.g. possibility of mapping ir.attachment id to
           filestore hash in the database?)
 
+.. _security:
+
 Security
 ========
 
-"Super-admin" password
-----------------------
+For starters, keep in mind that securing an information system is a continuous process,
+not a one-shot operation. At any moment, you will only be as secure as the weakest link
+in your environment.
+
+So please do not take this section as the ultimate list of measures that will prevent
+all security problems. It's only intended as a summary of the first important things
+you should be sure to include in your security action plan. The rest will come
+from best security practices for your operating system and distribution,
+best practices in terms of users, passwords, and access control management, etc.
+
+When deploying an internet-facing server, please be sure to consider the following
+security-related topics:
+
+- Always set a strong super-admin admin password, and restrict access to the database
+  management pages as soon as the system is set up. See :ref:`db_manager_security`.
+
+- Choose unique logins and strong passwords for all administrator accounts on all databases.
+  Do not use 'admin' as the login. Do not use those logins for day-to-day operations,
+  only for controlling/managing the installation.
+  *Never* use any default passwords like admin/admin, even for test/staging databases.
+
+- Use appropriate database filters ( :option:`--db-filter <odoo-bin --db-filter>`)
+  to restrict the visibility of your databases according to the hostname.
+  See :ref:`db_filter`.
+
+- Once your ``db_filter`` is configured and only matches a single database per hostname,
+  you should set ``list_db`` configuration option to ``False``, to prevent listing databases
+  entirely (this is also exposed as the :option:`--no-database-list <odoo-bin --no-database-list>`
+  command-line option)
+
+- Make sure the PostgreSQL user (:option:`--db_user <odoo-bin --db_user>`) is *not* a super-user,
+  and that your databases are owned by a different user. For example they could be owned by
+  the ``postgres`` super-user if you are using a dedicated non-privileged ``db_user``.
+  See also :ref:`setup/deploy/odoo`.
+
+- Keep installations updated by regularly installing the latest builds,
+  either via GitHub or by downloading the latest version from
+  https://www.odoo.com/page/download or http://nightly.odoo.com
+
+- Configure your server in multi-process mode with proper limits matching your typical
+  usage (memory/CPU/timeouts). See also :ref:`builtin_server`.
+
+- Run Odoo behind a web server providing HTTPS termination with a valid SSL certificate,
+  in order to prevent eavesdropping on cleartext communications. SSL certificates are
+  cheap, and many free options exist.
+  Configure the web proxy to limit the size of requests, set appropriate timeouts,
+  and then enable the :option:`proxy mode <odoo-bin --proxy-mode>` option.
+  See also :ref:`https_proxy`.
+
+- Whenever possible, host your public-facing demo/test/staging instances on different
+  machines than the production ones. And apply the same security precautions as for
+  production.
+
+- If you are hosting multiple customers, isolate customer data and files from each other
+  using containers or appropriate "jail" techniques.
+
+- Setup daily backups of your databases and filestore data, and copy them to a remote
+  archiving server that is not accessible from the server itself.
+
+
+.. _db_manager_security:
+
+Database Manager Security
+-------------------------
 
 :ref:`setup/deploy/odoo` mentioned ``admin_passwd`` in passing.
 

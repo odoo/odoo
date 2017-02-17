@@ -290,9 +290,10 @@ class BaseModel(object):
                            VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
                            RETURNING id """, params)
         model = self.env['ir.model'].browse(cr.fetchone()[0])
-        self._context['todo'].append((10, model.modified, [list(params)]))
+        self._context['todo'].append((10, model.modified, [['name', 'info', 'transient']]))
 
-        if 'module' in self._context:
+        if self._module == self._context.get('module'):
+            # self._module is the name of the module that last extended self
             xmlid = 'model_' + self._name.replace('.', '_')
             cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
                        (xmlid, self._context['module']))
@@ -1999,7 +2000,7 @@ class BaseModel(object):
         prefix_term = lambda prefix, term: ('%s %s' % (prefix, term)) if term else ''
 
         query = """
-            SELECT min(%(table)s.id) AS id, count(%(table)s.id) AS %(count_field)s %(extra_fields)s
+            SELECT min("%(table)s".id) AS id, count("%(table)s".id) AS "%(count_field)s" %(extra_fields)s
             FROM %(from)s
             %(where)s
             %(groupby)s

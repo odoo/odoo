@@ -11,6 +11,7 @@
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
+# Alexis de Lattre <alexis@via.ecp.fr>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Florian Hatat <mininet@wanadoo.fr>, 2016
@@ -26,7 +27,6 @@
 # Nicolas Martinelli <nim@odoo.com>, 2016
 # Jean-Marc Dupont <jmd@6it.fr>, 2016
 # Kévin R. <realrom@hotmail.fr>, 2016
-# Miguel Vidali <mvidali129@gmail.com>, 2016
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2016
 # zeroheure <xavier@alternatif.org>, 2016
 # Fabien Bourgeois <fabien@yaltik.com>, 2016
@@ -45,8 +45,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-11-14 15:54+0000\n"
+"POT-Creation-Date: 2017-01-27 11:58+0000\n"
+"PO-Revision-Date: 2017-01-27 11:58+0000\n"
 "Last-Translator: Hadrien TOMA <toma.hadrien@gmail.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -6033,6 +6033,12 @@ msgstr "Traductions automatisées avec l'API Gengo"
 #: model:ir.model.fields,field_description:base.field_ir_module_module_auto_install
 msgid "Automatic Installation"
 msgstr "Installation automatisée"
+
+#. module: base
+#: code:addons/base/module/module.py:650
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
@@ -12210,7 +12216,7 @@ msgstr "M."
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Mrs."
-msgstr "Mme."
+msgstr "Mme"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
@@ -15019,7 +15025,7 @@ msgstr "États"
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_state
 #: model:ir.ui.view,arch_db:base.view_workflow_workitem_search
 msgid "Status"
-msgstr "Statut"
+msgstr "État"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_number_increment
@@ -16099,6 +16105,13 @@ msgstr "À désinstaller"
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
 msgstr "À mettre à jour"
+
+#. module: base
+#: code:addons/base/module/module.py:651
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree

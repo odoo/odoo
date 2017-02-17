@@ -17,7 +17,7 @@ _logger = logging.getLogger(__name__)
 
 class PosOrder(models.Model):
     _name = "pos.order"
-    _description = "Point of Sale"
+    _description = "Point of Sale Orders"
     _order = "id desc"
 
     @api.model
@@ -198,6 +198,7 @@ class PosOrder(models.Model):
 
         grouped_data = {}
         have_to_group_by = session and session.config_id.group_by or False
+        rounding_method = session and session.config_id.company_id.tax_calculation_rounding_method
 
         for order in self.filtered(lambda o: not o.account_move or order.state == 'paid'):
             current_company = order.sale_journal.company_id
@@ -295,6 +296,14 @@ class PosOrder(models.Model):
                         'tax_line_id': tax['id'],
                         'partner_id': partner_id
                     })
+
+            # round tax lines per order
+            if rounding_method == 'round_globally':
+                for group_key, group_value in grouped_data.iteritems():
+                    if group_key[0] == 'tax':
+                        for line in group_value:
+                            line['credit'] = cur.round(line['credit'])
+                            line['debit'] = cur.round(line['debit'])
 
             # counterpart
             insert_data('counter_part', {
@@ -514,6 +523,7 @@ class PosOrder(models.Model):
             if to_invoice:
                 pos_order.action_pos_order_invoice()
                 pos_order.invoice_id.sudo().action_invoice_open()
+                pos_order.account_move = pos_order.invoice_id.move_id
         return order_ids
 
     def test_paid(self):

@@ -269,9 +269,15 @@
         </table>
     </t>
 
-    <t t-name="icon_do_partial_reconciliation"><i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open."></i></t>
+    <t t-name="icon_do_partial_reconciliation">
+        <t t-set="message_content">This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open.</t>
+        <i class="do_partial_reconcile_button fa fa-exclamation-triangle" t-att-data-content="message_content"></i>
+    </t>
 
-    <t t-name="icon_undo_partial_reconciliation"><i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i></t>
+    <t t-name="icon_undo_partial_reconciliation">
+        <t t-set="message_content">Undo the partial reconciliation.</t>
+        <i class="undo_partial_reconcile_button fa fa-exclamation-triangle" t-att-data-content="message_content"></i>
+    </t>
 
     <!-- manual reconciliation -->
 

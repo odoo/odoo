@@ -16,13 +16,14 @@
 # Mario Jureša <mario.juresa@uvid.hr>, 2016
 # Filip Cuk <filipcuk2@gmail.com>, 2016
 # Davor Bojkić <davor.bojkic@storm.hr>, 2016
+# Tina Milas <tina@uvid.hr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-14 13:41+0000\n"
 "PO-Revision-Date: 2016-12-14 13:41+0000\n"
-"Last-Translator: Davor Bojkić <davor.bojkic@storm.hr>, 2016\n"
+"Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -219,6 +220,9 @@ msgid ""
 "attached to this opportunity.</p><p class=\"mb0\">Type <i>'@'</i> to mention"
 " people - it's like cc-ing on emails.</p>"
 msgstr ""
+"<p><b>Pošaljite poruke</b> Vašem mogućem klijentu i primite odgovore koji su"
+" automatski povezani s tom ponudom.</p><p class=\"mb0\">Upišite <i>'@'</i> "
+"kako biste naveli osobe - to je poput CC-a u e-mailu.</p>"
 
 #. module: crm
 #: model:ir.actions.server,body_html:crm.action_email_reminder_lead
@@ -294,6 +298,13 @@ msgid ""
 "                        We recommend to start with standard quotations\n"
 "                        and upgrade later."
 msgstr ""
+"<span class=\"fa fa-lightbulb-o fa-lg\"/>\n"
+"<strong>Napomena:</strong>\n"
+"Korištenje prdložaka može povećati kvalitetu Vaših\n"
+"ponuda i njihovu stopu uspješnosti. Ipak,\n"
+"kreiranje ovakvih predložaka može iziskivati veći napor.\n"
+"Naš je savjet da započnete sa standardnim ponudama\n"
+"koje ćete kasnije nadograditi."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -303,6 +314,10 @@ msgid ""
 "                        use our API to load data through scripts: read\n"
 "                        the"
 msgstr ""
+"<span class=\"fa fa-lightbulb-o fa-lg\"/>\n"
+"<strong>Savjet:</strong> Za programere, možete\n"
+"koristiti naš API za učitavanje podataka u skripte:\n"
+"pročitajte"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -348,11 +363,14 @@ msgid ""
 "('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
 "</span>"
 msgstr ""
+"<span class=\"oe_form_field\" attrs=\"{'invisible': ['|', "
+"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> na "
+"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "<span class=\"oe_grey\"> at </span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\"> kod </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -402,6 +420,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &gt;50 items</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa\" data-icon=\"&#57408;\"/>\n"
+"<strong>Unesi datoteku</strong><br/>\n"
+"<span class=\"small\">Preporučeno ako &gt;50 proizvoda</span>\n"
+"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -457,6 +480,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &lt;50 items</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa\" data-icon=\"&#57440;\"/>\n"
+"<strong> Kreiraj ručno</strong><br/>\n"
+"<span class=\"small\">Preporučeno ako &lt;50 stavaka</span>\n"
+"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -491,6 +519,9 @@ msgid ""
 "                                        <strong>Specific Price per Audience</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<strong>Posebna cijena za čitatelje</strong>\n"
+"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -499,6 +530,9 @@ msgid ""
 "                                        <strong>Unique Price (default)</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<strong>Jedinstvena cijena (zadano)</strong>\n"
+"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -524,6 +558,8 @@ msgid ""
 "<span class=\"panel-title\"><span data-icon=\"&#57463;\"/><strong> Exercise 2</strong></span>\n"
 "                                    <span>(Sales Manager)</span>"
 msgstr ""
+"<span class=\"panel-title\"><span data-icon=\"&#57463;\"/><strong> Vježba 2</strong></span>\n"
+"<span>(Voditelj prodaje)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -558,6 +594,10 @@ msgid ""
 "                        advice to customize screens to fit your sales process.\n"
 "                        <strong>Customizations are done by Odoo experts.</strong>"
 msgstr ""
+"<strong>Svaki posao je drugačiji.</strong> Odoo dopušta\n"
+"prilagodbusvake aplikacije i obično se preporuča\n"
+"prilagodba zaslona kako bi odgovarala Vašim prodajnim procesima.\n"
+"<strong>Prilagodbe izvršavaju Odoo stručnjaci.</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -577,6 +617,10 @@ msgid ""
 "                                        Group Y Axis: Expected Closing Date\n"
 "                                        Filter: Won Opportunities"
 msgstr ""
+"<strong>Vježba: </strong>Pokušajte analizirati prosječno vrijeme za sklopiti posao.\n"
+"Grupirajte na X osi: Datum kreiranja\n"
+"Grupirajte na Y osi: Očekivani datum zatvaranja\n"
+"Filter: Dobivene prilike"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -590,6 +634,8 @@ msgid ""
 "<strong>Exercise:</strong> Try to get the number of leads per salesperson "
 "and by creation date"
 msgstr ""
+"<strong>Vježba:</strong> Pokušaj dobiti broj potencijala prema prodavaču i "
+"datumu kreiranja"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -597,6 +643,8 @@ msgid ""
 "<strong>For complex imports</strong> (&gt;5000 items, product variants, "
 "pictures, etc.):"
 msgstr ""
+"<strong>Za složene unose</strong> (&gt;5000 stavaka, varijante produkta, "
+"slike itd.):"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -608,6 +656,9 @@ msgid ""
 "                                    After a few month, set the real success rate according to the stages, to have\n"
 "                                    accurate expected revenues by closing date."
 msgstr ""
+"<strong>Predvidite buduće prihode</strong><br/>\n"
+"Iskustvo prodajnog tima možete procijeniti prema njegovoj sposobnosti predviđanja budućih prihoda tijekom nadolazećih mjeseci i kvartala. Uvježbajte tim efikasnom predviđanju tako što koristite aktualizirani tok ponuda.\n"
+"Nakon nekoliko mjeseci ustanovit ćete prve uspjehe kojiće Vam pomoći pri izračunavanju realnih očekivanih prihoda prema datumu zatvaranja."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -635,6 +686,8 @@ msgid ""
 "<strong>Organize weekly sales meetings</strong><br/>\n"
 "                                    It's a great way to see where you can improve and keep track of the progress of your sales team. Start the pipeline review by looking at the big picture; revenues and number of opportunities by stage, by expected closing date and by salespeople."
 msgstr ""
+"<strong>Organizirajte tjedne sastanke za prodaju</strong><br/>\n"
+"To je odličan način kako biste vidjeli gdje možete poboljšati i pratiti napredak svog prodajnog tima. Započnite pregled toka prodaje gledajući veliku sliku; prihodi i prilike prema fazi, očekivanom datumu završetka i prodavačima."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -671,6 +724,8 @@ msgid ""
 "<strong>Review the top 5 opportunities</strong><br/>\n"
 "                                    Once the big picture is clear, focus on the best opportunities. Start from stages on the right (negotiation, proposal, etc) and review the biggest opportunities one by one with the team."
 msgstr ""
+"<strong>Pregledajte top 5 ponuda</strong><br/>\n"
+"Kada je velika slika jasna, fokusirajte se na najbolje prilike. Započnite s fazama s desne strane (pregovaranje, ponuda itd.) i pregledajte najveće prilike jednu po jednu s timom."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -688,6 +743,8 @@ msgid ""
 "<strong>Sales tools</strong><br/>\n"
 "                                Efficiently following up the pipeline will lead to great improvements. But to achieve excellence in your sales organization, you need  to provide your team with sales tools. For every stage of the opportunities pipeline, identify the blocking points and create  documents to train the team."
 msgstr ""
+"<strong>Prodajni alati</strong><br/>\n"
+"Efikasno podešavanje toka prodaje brzo će donijeti poboljšanja. Ali kako biste usavršili svoju organizaciju prodaje trebate svom timu pružiti prodajne alate. Odredite zapreke u svakoj fazi toka prodaje i kreirajte dokumente kako biste educirali tim.   "
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -719,11 +776,13 @@ msgid ""
 "<strong>The customer</strong> understood his pain points and proposed the "
 "next step in the buying process"
 msgstr ""
+"<strong>Kupac</strong> je razumio svoje bolne točke i predložio je sljedeći "
+"korak u procesu kupnje"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>The prospect</strong> started to discuss your offer"
-msgstr ""
+msgstr "<strong>Mogući klijent</strong> počeo je razmatrati Vašu ponudu"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -731,6 +790,8 @@ msgid ""
 "<strong>To boost your leads acquisition,</strong> you should have a look at "
 "our marketing apps:"
 msgstr ""
+"<strong>Kako biste povećali potencijale,</strong> trebali biste pogledati "
+"naše marketing aplikacije:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -739,6 +800,8 @@ msgid ""
 "                                To build a strong sales training program, you can use the following\n"
 "                                apps of Odoo:"
 msgstr ""
+"<strong>Edukacije</strong><br/>\n"
+"Kako biste izradili dobar edukacijski program o prodaji, možete koristiti sljedeće aplikacije Odoo-a:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -749,6 +812,8 @@ msgstr "<strong>Website Live Chat</strong>"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>You</strong> called the prospect for a follow up on your offer"
 msgstr ""
+"<strong>Vi</strong> ste zvali mogućeg klienta kako biste pratili svoju "
+"ponudu"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -756,11 +821,13 @@ msgid ""
 "<strong>You</strong> understand the customer's needs and pain points, and "
 "you have a fairly good idea of his budget to spend"
 msgstr ""
+"<strong>Vi</strong> razumijete potrebe i bolne točke kupca i imate "
+"poprilično jasnu predodžbu budžeta kojim raspolaže"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Your Main KPIs:</strong>"
-msgstr ""
+msgstr "<strong>Vaši ključni pokazatelji uspjeha:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -788,6 +855,9 @@ msgid ""
 "                    be a goods, consumable or services. Choose how you want to\n"
 "                    create your products:"
 msgstr ""
+"Proizvod u Odoo je nešto što prodajete ili kupujete\n"
+"bilo da je roba,  potrošni materijal ili usluge.\n"
+"Odaberite kako želite kreirati svoje proizvode:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -858,7 +928,7 @@ msgstr "Analiza aktivnosti"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_done
 msgid "Activities Done Target"
-msgstr ""
+msgstr "Završene aktivnosti"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_next_activity_id
@@ -925,6 +995,9 @@ msgid ""
 "                        process will allow you to continuously improve your\n"
 "                        sales performance."
 msgstr ""
+"Podešavanje Vaše organizacije prodaje na sistematičan\n"
+"proces omogućit će Vam stalno poboljšavanje na području\n"
+"prodaje."
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:310
@@ -960,6 +1033,9 @@ msgid ""
 "efficiently forecast its future revenues. The pipeline review will allow you"
 " to identify sales inefficiencies or pick up on the best practices."
 msgstr ""
+"Analizirajući tok prodaje prema očekivanom datumu završetka pomoći će Vašem "
+"timu predvidjeti buduće prihode. Pregled toka prodaje omogućit će Vam "
+"identificirati neefikasnosti prodaje ili odabrati najbolju prodajnu praksu."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_deduplicate
@@ -1025,6 +1101,9 @@ msgid ""
 "                        <br/>\n"
 "                        If not, our CRM experts are available to help you achieve your KPIs."
 msgstr ""
+"Vaša bi očekivanja na kraju razvojnog procesa trebala biti ispunjena.\n"
+"<br/>\n"
+"Ako ne, naši CRM stručnjaci stoje Vam na raspolaganju kako bi Vam pomogli u postizanju Vaših ključnih pokazatelja uspješnosti."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1198,6 +1277,8 @@ msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
 "pipeline."
 msgstr ""
+"Kliknite na <b>kreirajte Vašu prvu priliku</b> i dodajte je Vašem toku "
+"prodaje."
 
 #. module: crm
 #. openerp-web
@@ -1235,7 +1316,7 @@ msgstr "Kliknite za definiranje nove oznake prodaje."
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Click to set a new stage in your opportunity pipeline."
-msgstr ""
+msgstr "Kliknite da biste dodali novu fazu u prikazu prilika."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1255,6 +1336,8 @@ msgid ""
 "Close opportunity if: \"pre-sales days * $500\" < \"expected revenue\" * "
 "probability"
 msgstr ""
+"Zatvori priliku ako: \"pre-sales days * $500\" < \"expected revenue\" * "
+"probability"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_closed
@@ -1323,12 +1406,12 @@ msgstr "Čestitamo, završili ste!"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor7
 msgid "Consulting"
-msgstr ""
+msgstr "Savjetovanje"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Consumers, Retailers"
-msgstr ""
+msgstr "Potrošači, trgovci"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -1446,7 +1529,7 @@ msgstr "Kreiraj dobavljače"
 #: code:addons/crm/static/src/js/web_planner_crm.js:31
 #, python-format
 msgid "Create a Proof of Concept with consultants"
-msgstr ""
+msgstr "Kreirajte Proof of Concept s konzultantima"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -1487,7 +1570,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create the three firsts opportunities"
-msgstr ""
+msgstr "Kreirajte svoje prve tri prilike"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1663,7 +1746,7 @@ msgstr "Obriši"
 #: code:addons/crm/static/src/js/web_planner_crm.js:28
 #, python-format
 msgid "Demonstration"
-msgstr ""
+msgstr "Prikaz"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1671,6 +1754,8 @@ msgid ""
 "Depending on how complex your business is, it may take between 6 months and 18 months for a new\n"
 "                                    sales team to efficiently forecasts future revenues."
 msgstr ""
+"Ovisno o složenosti Vašeg posla novom bi prodajnom timu trebalo između 6 i 18 mjeseci\n"
+"za efikasno predviđanje budućih prihoda."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1699,7 +1784,7 @@ msgstr ""
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor5
 msgid "Design"
-msgstr ""
+msgstr "Dizajn"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1845,6 +1930,8 @@ msgid ""
 "Enter here the internal requirements for this stage (ex: Offer sent to "
 "customer). It will appear as a tooltip over the stage's name."
 msgstr ""
+"Unesite ovdje interne zahtjeve za ovu fazu (npr. Ponuda poslana kupcu). "
+"Pojavit će se kao skočni prozor iznad imena faze."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_date_deadline
@@ -1862,6 +1949,8 @@ msgid ""
 "Every salesperson can analyze their own pipe by clicking on the 'switch view"
 " to graph' icon."
 msgstr ""
+"Svaki prodavač može analizirati vlastiti tok prodaje tako što klikne ikonu "
+"'prebaci na grafički prikaz'."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1869,6 +1958,8 @@ msgid ""
 "Every stage should be a step forward in the buyer's decision-making, not a "
 "task to carry out"
 msgstr ""
+"Svaka faza trebala bi biti korak prema odluci kupca, a ne zadatak koji se "
+"treba izvršiti."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1960,13 +2051,16 @@ msgid ""
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
 msgstr ""
+"Ovo polje se koristi za spajanje povezanog modela s podvrstom modela kada se"
+" koristi automatska pretplata na povezani dokument. Polje se koristi za "
+"račinanje getattr(related_document.relation_field). "
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:32
 #, python-format
 msgid "Final Proposal sent"
-msgstr ""
+msgstr "Konačna ponuda poslana"
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -2034,13 +2128,15 @@ msgstr "Od %s do %s"
 #: code:addons/crm/static/src/js/web_planner_crm.js:31
 #, python-format
 msgid "GAP analysis with customer"
-msgstr ""
+msgstr "GAP analiza s kupcem "
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Gain high quality insight from surveys, a great way to engage with prospects"
 msgstr ""
+"Kvalitetan uvid iz anketa odličan je način za ostvarenje suradnje s mogućim "
+"klijentima."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2065,6 +2161,8 @@ msgid ""
 "Good job! Your completed the tour of the CRM. You can continue with the "
 "<b>implementation guide</b> to help you setup the CRM in your company."
 msgstr ""
+"Bravo! Završili ste s pregledom CRM-a. Možete nastaviti s <b>vodičem za "
+"implementaciju</b> kako biste postavili CRM u Vašoj firmi."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2072,6 +2170,8 @@ msgid ""
 "Great pipelines have stages <strong>aligned with the buyer's buying "
 "process</strong>, not your selling process:"
 msgstr ""
+"Dobri tokovi prodaje imaju faze <strong>u skladu s procesom kupnje od "
+"kupca</strong>, a ne Vaš prodajni proces:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2122,6 +2222,8 @@ msgid ""
 "Here are a few examples of documents you should provide to your sales team "
 "based on the sales stage:"
 msgstr ""
+"Ovdje je nekoliko primjera dokumenata koje biste trebali dati svom timu "
+"prodaje ovisno o fazi prodaje: "
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2134,6 +2236,8 @@ msgid ""
 "Here is the list of your next activities. Those are linked to your opportunities.\n"
 "                   To set a next activity, go on an opportunity and add one. It will then appear in this list."
 msgstr ""
+"Ovdje je popis vaših narednih aktivnosti. One su povezane s vašim prilikama.\n"
+"Da biste postavili sljedeću aktivnost, idite na priliku i dodajte ju. Ona će se tada pojaviti na popisu."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_hidden
@@ -2207,6 +2311,9 @@ msgid ""
 "                        the foundations to a strong process leading to\n"
 "                        continuous improvements of your sales teams."
 msgstr ""
+"Ako ste pratili prethodne korake, već ste postavili\n"
+"temelje snažnog procesa koji vodi\n"
+"stalnom poboljšanju Vašeg prodajnog tima."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2262,14 +2369,14 @@ msgstr "Dolazna e-mail pošta"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor4
 msgid "Information"
-msgstr ""
+msgstr "Informacije"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:23
 #, python-format
 msgid "Initial Contact"
-msgstr ""
+msgstr "Početni kontakt"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_sale_config_settings_module_crm_voip
@@ -2378,7 +2485,7 @@ msgstr "Vrijeme promjene"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "Zadnje upozorenje označeno kao pročitano iz osnovnog kalendara"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:841
@@ -2526,6 +2633,8 @@ msgid ""
 "Leads that you selected that have duplicates. If the list is empty, it means"
 " that no duplicates were found"
 msgstr ""
+"Odabrani potencijali imaju duplikate. Ako je popis prazan, to znači da nije "
+"pronađen nijedan duplikat."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -2542,7 +2651,7 @@ msgstr "Potencijali/prilike"
 #: code:addons/crm/static/src/js/tour.js:18
 #, python-format
 msgid "Let's have a look at your opportunities pipeline."
-msgstr ""
+msgstr "Pogledajmo tok Vaših prilika."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2569,7 +2678,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "List of possible pain points by segment/profile"
-msgstr ""
+msgstr "Popis mogućih bolnih točaka po segmentu/profilu"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
@@ -2665,7 +2774,7 @@ msgstr "Masovni potencijal u  partnera prilike"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_maximum_group
 msgid "Maximum of Group of Contacts"
-msgstr ""
+msgstr "Maksimum grupe kontakata"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_medium_id
@@ -2818,6 +2927,8 @@ msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
 msgstr ""
+"Poruke s internom podvrstom vidljive se samo zaposlenicima, odnosno "
+"članovima base_user group"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_min_id
@@ -2860,7 +2971,7 @@ msgstr "Više informacija"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Motivation letter from the management"
-msgstr ""
+msgstr "Motivacijsko pismo iz menadžmenta"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2877,7 +2988,7 @@ msgstr "Moje prilike"
 #: model:ir.actions.server,name:crm.action_your_pipeline
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
 msgid "My Pipeline"
-msgstr ""
+msgstr "Moj tok prodaje"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_name
@@ -2891,7 +3002,7 @@ msgstr "Naziv"
 #: code:addons/crm/static/src/js/web_planner_crm.js:28
 #, python-format
 msgid "Needs assessment"
-msgstr ""
+msgstr "Analiza potražnje"
 
 #. module: crm
 #. openerp-web
@@ -2899,7 +3010,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/web_planner_crm.js:34
 #, python-format
 msgid "Negotiation"
-msgstr ""
+msgstr "Pregovaranje"
 
 #. module: crm
 #. openerp-web
@@ -2921,7 +3032,7 @@ msgstr "Nova Prilika"
 #: code:addons/crm/static/src/js/web_planner_crm.js:17
 #, python-format
 msgid "New propspect assigned to the right salesperson"
-msgstr ""
+msgstr "Novi potencijalni kupac dodijeljen pravom prodavaču"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action_next
@@ -3051,7 +3162,7 @@ msgstr "Odoo Zadano"
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_website_sign
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
 msgid "Odoo Sign"
-msgstr ""
+msgstr "Odoo znak"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -3070,6 +3181,8 @@ msgid ""
 "Odoo is the world's only software to have a full integration of Marketing "
 "Apps for your sales channel: insight sales, point of sale, ecommerce."
 msgstr ""
+"Odoo je jedini softver na svijetu koji ima potpunu integraciju Marketing "
+"Aplikacija za Vaš prodajni kanal: uvid u prodaju, POS, e-commerce."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_sale_config_settings_generate_sales_team_alias
@@ -3083,6 +3196,9 @@ msgid ""
 "                        Tell us how you sell and we will tell you what\n"
 "                        configuration will best fit your quotation process."
 msgstr ""
+"Odoo će Vam pomoći kreirati profesionalne ponude i ugovore.\n"
+"Recite nam način Vaše prodaje, a mi ćemo Vam reći koja\n"
+"konfiguracija najviše odgovara Vašem procesu ponude. "
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
@@ -3091,6 +3207,8 @@ msgid ""
 "Once qualified, the lead can be converted into a business\n"
 "                    opportunity and/or a new customer in your address book."
 msgstr ""
+"Jednom kada se kvalificira, potencijal se može promijeniti u poslovnu\n"
+"priliku i/ili novog kupca u Vašem adresaru."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3100,11 +3218,14 @@ msgid ""
 "weekly sales meeting with the team during which you will do a pipeline "
 "review."
 msgstr ""
+"Kada razvijete svoj CRM vrijeme je za povećanje Vaših prihoda. Za početak "
+"Vam savjetujemo organiziranje tjednih sastanaka s prodajnim timom tijekom, "
+"kojih ćete pregledavati tok prodaje."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Online users: we do it for you!"
-msgstr ""
+msgstr "Online korisnici: mi ćemo to učiniti za vas!"
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:323
@@ -3114,6 +3235,9 @@ msgid ""
 " ask the Administrator if you need to merge several contacts linked to "
 "existing Journal Items."
 msgstr ""
+"Samo odredišni kontakt može biti povezan s postojećim stavkama dnevnika. "
+"Molimo pitajte administratora ako trebate spojiti nekoliko kontakata koji su"
+" povezani s postojećim stavkama dnevnika."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -3159,7 +3283,7 @@ msgstr ""
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
 msgid "Opportunities Cohort"
-msgstr ""
+msgstr "Prema grupi prilike"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_opportunities_won_per_team
@@ -3253,7 +3377,7 @@ msgstr "Opcije"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor8
 msgid "Other"
-msgstr ""
+msgstr "Ostalo"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3282,7 +3406,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/web_planner_crm.js:32
 #, python-format
 msgid "POC demonstration to the customer"
-msgstr ""
+msgstr "POC demonstracija kupcu"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_parent_id
@@ -3322,6 +3446,9 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
+"Nadređena podvrsta, korištena za automatsku pretplatu. Naziv ovog polja nije"
+" točan. Npr. na nekom projektu; nadređeni_id podvrste projekta odnosi se na "
+"podvrste koje su povezane sa zadatkom."
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -3360,7 +3487,7 @@ msgstr "Telefon"
 #: code:addons/crm/static/src/js/web_planner_crm.js:24
 #, python-format
 msgid "Phone call with following questions: ..."
-msgstr ""
+msgstr "Telefonski poziv sa sljedećim pitanjima"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3393,6 +3520,11 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the\n"
 "teams of the sales pipeline."
 msgstr ""
+"Analiza prilika daje vam brz pristup Vašim poslovnim\n"
+"prilikama s informacijama kao što su očekivani prihod, planirani troškovi,\n"
+"propušteni rokovi ili broj interakcija po prilici. Voditelj prodaje uglavnom\n"
+"koristi ovaj izvještaj kako bi s timovima obavio\n"
+"periodični pregled prodaje."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_graph
@@ -3403,11 +3535,17 @@ msgid ""
 "mainly used by the sales manager in order to periodically review the pipeline\n"
 "with the the sales teams."
 msgstr ""
+"Analiza prilika daje vam brz pristup\n"
+"Vašim poslovnim prilikama s informacijama kao što su očekivani prihod, planirani troškovi,\n"
+"propušteni rokovi ili broj interakcija po prilici. Voditelj prodaje uglavnom\n"
+"koristi ovaj izvještaj kako bi s timovima obavio periodični pregled prodaje."
 
 #. module: crm
 #: model:web.planner,tooltip_planner:crm.planner_crm
 msgid "Plan your sales strategy: objectives, leads, KPIs, and much more!"
 msgstr ""
+"Planirajte prodajnu strategiju: ciljevi, vođenje, ključni pokazatelji "
+"uspjeha i još puno toga!"
 
 #. module: crm
 #: model:ir.model,name:crm.model_web_planner
@@ -3431,6 +3569,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Politika ostavljanja poruka na dokumentu koristeći mailgateway.\n"
+"- svatko: svatko može objaviti poruku\n"
+"- partneri: samo autentificirani partner\n"
+"- pratitelji: samo pratitelji srodne dokumentacije\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
@@ -3477,14 +3619,14 @@ msgstr "Vjerojatni obrtaj"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor1
 msgid "Product"
-msgstr ""
+msgstr "Proizvod"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:23
 #, python-format
 msgid "Product Demonstration"
-msgstr ""
+msgstr "Prikaz proizvoda"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3529,28 +3671,28 @@ msgstr "Kvalificiran"
 #: code:addons/crm/static/src/js/web_planner_crm.js:15
 #, python-format
 msgid "Qualified Sponsor"
-msgstr ""
+msgstr "Kvalificirani sponzor"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:26
 #, python-format
 msgid "Quotation sent"
-msgstr ""
+msgstr "Ponuda poslana"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:20
 #, python-format
 msgid "Quotation sent to customer"
-msgstr ""
+msgstr "Ponuda poslana kupcu"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:21
 #, python-format
 msgid "Quotation signed by the customer"
-msgstr ""
+msgstr "Ponuda potpisana od strane kupca"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_priority
@@ -3570,6 +3712,8 @@ msgid ""
 "Ready to boost you sales? Your <b>sales pipeline</b> can be found here, "
 "under this app."
 msgstr ""
+"Spremni za podizanje prodaje? Vaš <b>tok prodaje</b> možete pronaći ovdje, "
+"pod ovom aplikacijom."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -3620,6 +3764,8 @@ msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and "
 "object.partner_id.name or object.contact_name}"
 msgstr ""
+"Podsjetnik: Potencijal ${object.name} iz ${object.partner_id != False and "
+"object.partner_id.name or object.contact_name}"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3748,11 +3894,15 @@ msgid ""
 "                            Odoo will propose you to merge only those having\n"
 "                            all these fields in common. (not one of the fields)."
 msgstr ""
+"Odaberite popis polja koji se koriste za\n"
+"dupliciranje zapisa. Ako odaberete nekoliko polja,\n"
+"Odoo će Vam ponuditi spajanje samo onih koji\n"
+"imaju sva polja zajednička. (ne jedno polje)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Select your pricing preference and allow discounts"
-msgstr ""
+msgstr "Odaberite željeni način oblikovanja cijena i dopustite popuste"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -3762,6 +3912,10 @@ msgid ""
 "                                will be redirected to the destination contact.\n"
 "                                You can remove contacts from this list to avoid merging them."
 msgstr ""
+"Odabrani kontakti bit će spojeni.\n"
+"Svi dokumenti povezani s jednim od ovih kontakata\n"
+"bit će preusmjereni odredišnom kontaktu.\n"
+"Možete ukloniti kontakte s ovog popisa kako biste izbjegli njihovo spajanje."
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -3780,6 +3934,8 @@ msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
 "20 days"
 msgstr ""
+"Pošalji e-mail svim prilikama koje su u \"kvalificiranoj\" fazi više od 20 "
+"dana"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_sequence
@@ -3790,7 +3946,7 @@ msgstr "Sekvenca"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor3
 msgid "Services"
-msgstr ""
+msgstr "Usluge"
 
 #. module: crm
 #. openerp-web
@@ -3799,6 +3955,7 @@ msgstr ""
 #, python-format
 msgid "Set fields: Expected Revenue, Expected Closing Date, Next Action"
 msgstr ""
+"Postavljena polja: očekivani prihod, očekivani rok slanja, sljedeći korak"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_set_team_sales_department
@@ -3826,6 +3983,10 @@ msgid ""
 "                      Odoo CRM to transform how your salespeople work.\n"
 "                      That's the purpose of this guide."
 msgstr ""
+"Postavljanje Vaših prodajnih kanala je tek prvi korak. Kako biste ostvarili\n"
+"značajnije poboljšanje, pomoći ćemo Vam da izvučete najviše iz\n"
+"Odoo CRM-a kako biste promijenili način rada Vaših prodavača.\n"
+"To je cilj ovog vodiča."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
@@ -3877,7 +4038,7 @@ msgstr "Prezentacije"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor2
 msgid "Software"
-msgstr ""
+msgstr "Softver"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4066,14 +4227,14 @@ msgstr "Predlošci upita (koristite Odoo online prijedloge za to)"
 #: code:addons/crm/static/src/js/web_planner_crm.js:15
 #, python-format
 msgid "Territory"
-msgstr ""
+msgstr "Područje"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:20
 #, python-format
 msgid "The customer came back to you to discuss your quotation"
-msgstr ""
+msgstr "Kupac želi razmotriti Vašu ponudu"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_id
@@ -4144,7 +4305,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "The point of contact <strong>for all your prospects</strong>"
-msgstr ""
+msgstr "Kontakt osoba <strong>za sve Vaše moguće klijente</strong>"
 
 #. module: crm
 #: sql_constraint:crm.lead:0
@@ -4158,6 +4319,9 @@ msgid ""
 "                        <strong>methodical organization</strong>, <strong>trainings</strong> and\n"
 "                        <strong>good sales tools</strong>."
 msgstr ""
+"Tri glavna principa za razvoj prodaje su\n"
+"<strong>metodička organizacija</strong>, <strong>edukacije</strong> i\n"
+"<strong>dobri prodajni alati</strong>."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4224,6 +4388,8 @@ msgid ""
 "This opportunity has <b>no next activity scheduled</b>. <i>Click to set "
 "one.</i>"
 msgstr ""
+"Ova prilika <b>nema zakazanu sljedeću aktivnost</b>. <i>Kliknite kako biste "
+"ju zakazali.</i>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_probability
@@ -4240,6 +4406,8 @@ msgid ""
 "This report analyses the source of your leads\n"
 "(including those converted into opportunities)."
 msgstr ""
+"Ovo izvješće analizira izvor Vaših potencijala\n"
+"(uključujući one koji su postali prilike)."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_fold
@@ -4278,6 +4446,8 @@ msgid ""
 "applied to it. This is settable in the pricelist configuration if you allow "
 "discounts."
 msgstr ""
+"Prikažite javnu cijenu i uračunati popust kako biste potaknuli kupce. To se "
+"može podesiti u konfiguraciji cjenika ako dopustite popuste."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -4302,7 +4472,7 @@ msgstr "Praćenje"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor6
 msgid "Training"
-msgstr ""
+msgstr "Edukacija"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_type
@@ -4358,7 +4528,7 @@ msgstr "Datum ažuriranja"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Upsell more to existing customers"
-msgstr ""
+msgstr "Prodajte više postojećim kupcima"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4379,6 +4549,10 @@ msgid ""
 "                    a contact form filled in your website, or a file of unqualified\n"
 "                    prospects you import, etc."
 msgstr ""
+"Koristite potencijale ako Vam treba kvalifikacijski korak prije kreiranja\n"
+"prilike ili kupca. To može biti poslovna posjetnica koju ste dobili,\n"
+"kontakt obrazac ispunjen na Vašoj internetskoj stranici ili datoteka nekvalificiranih\n"
+"mogućih klijenata koju unosite itd."
 
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
@@ -4417,6 +4591,10 @@ msgid ""
 "                                            annual support contract, monthly\n"
 "                                            subscription to a service, etc."
 msgstr ""
+"Koristite pretplate za ponavljajuće naplate.\n"
+"Primjeri pretplate mogu uključivati:\n"
+"godišnji ugovor zapodršku, mjesečnu\n"
+"pretplatu servisa itd."
 
 #. module: crm
 #. openerp-web
@@ -4424,6 +4602,8 @@ msgstr ""
 #, python-format
 msgid "Use the <b>implementation guide</b> to setup the CRM in your company."
 msgstr ""
+"Slijedite <b>vodič za implementaciju</b> kako biste postavili CRM za Vašu "
+"firmu."
 
 #. module: crm
 #. openerp-web
@@ -4431,6 +4611,8 @@ msgstr ""
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your sales pipeline</b>."
 msgstr ""
+"Koristite breadcrumbs navigaciju kako biste se <b>vratili na Vaš tok "
+"prodaje</b>."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_resource_calendar_id
@@ -4540,6 +4722,9 @@ msgid ""
 "                      is not just a tool, we want it to have a major impact on your\n"
 "                      sales performance. That's our mission, and we are serious about it."
 msgstr ""
+"Razvili smo Odoo kako bismo Vam pomogli poboljšati poslovanje. Odoo CRM\n"
+"nije samo alat, želimo da ima velik utjecaj na Vaš uspjeh\n"
+"u prodaji. To je naša misija na kojoj strastveno radimo. "
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
@@ -4575,7 +4760,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "What are the main KPIs you need to track for your the sales activities?"
-msgstr ""
+msgstr "Koje ključne pokazatelje uspješnosti morate pratiti za Vaš prodaju?"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4584,6 +4769,9 @@ msgid ""
 "                        dealing with? Being clear on your expectations is the first step\n"
 "                        of a successful implementation."
 msgstr ""
+"Koji su Vaši ciljevi prodaje? S kojim se izazovima\n"
+"susrećete? Jasna očekivanja prvi su korak\n"
+"uspješne implementacije."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_team_id
@@ -4628,7 +4816,7 @@ msgstr "Dobiveno po državi"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_won
 msgid "Won in Opportunities Target"
-msgstr ""
+msgstr "Dobivene prilike"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_resource_calendar_id
@@ -4643,6 +4831,7 @@ msgid ""
 "You are in discussion with the decision maker and HE agreed on his pain "
 "points"
 msgstr ""
+"U razmatranju ste s donositeljem odluke i on je pristao na svoje bolne točke"
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:306
@@ -4658,6 +4847,10 @@ msgid ""
 "                            identify why they were lost and use this information to generate statistics. Here are\n"
 "                            some examples of tags to create: no budget, competition, no pain found, etc."
 msgstr ""
+"Izgubljene prilike ne trebaju se razmatrati na svakom sastanku prodajnog tima, ali se to\n"
+"savjetuje barem jednom mjesečno. Zatražite od Vašeg tima da na prilikama\n"
+"zabilježe zašto su izgubljene i iskoristite te informacije kako biste napravili statistiku. \n"
+"Ovdje su neki primjeri bilješki: nema financijskih sredstava, konkurencija itd."
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:398
@@ -4672,6 +4865,9 @@ msgid ""
 "                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
+"Bit ćete u mogućnosti planirati sastanke i unositi aktivnosti\n"
+"prilika, pretvarati ih u ponude, priložiti povezane\n"
+"dokumente, pratiti sve razgovore i još mnogo toga."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -4680,6 +4876,9 @@ msgid ""
 "                opportunities, convert them into quotations, attach related\n"
 "                documents, track all discussions, and much more."
 msgstr ""
+"Bit ćete u mogućnosti planirati sastanke i unositi aktivnosti\n"
+"prilika, pretvarati ih u ponude, priložiti povezane\n"
+"dokumente, pratiti sve razgovore i još mnogo toga."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_opportunities
@@ -4689,6 +4888,9 @@ msgid ""
 "                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
+"Bit ćete u mogućnosti planirati sastanke i telefonske pozive od\n"
+"prilika, pretvarati ih u ponude, priložiti povezane\n"
+"dokumente, pratiti sve razgovore i još mnogo toga."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4698,7 +4900,7 @@ msgstr "Vaša Očekivanja"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Your KPIs"
-msgstr ""
+msgstr "Vaši ključni indeksi učinka"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4843,7 +5045,7 @@ msgstr "za kreiranje testova i certifikacija."
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "to describe<br/> your experience or to suggest improvements!"
-msgstr ""
+msgstr "opiši <br/> svoje iskustvo ili predloži poboljšanja!"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4851,6 +5053,8 @@ msgid ""
 "to organize all your documents like: customer presentations, product sheets,"
 " comparisons with competitors, pain points sheets, training materials, etc."
 msgstr ""
+"organizirajte sve Vaše dokumente kao: popis proizvoda, usporedba s "
+"konkurencijom, popis bolnih točaka, materijali za edukaciju itd."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4858,6 +5062,8 @@ msgid ""
 "to setup your own domain\n"
 "                                 name (e.g. sales@yourcompany.com)"
 msgstr ""
+"postavljanje vlastite domene\n"
+"(npr. sales@yourcompany.com)"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:877
@@ -4868,9 +5074,9 @@ msgstr "nepoznato"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "use Odoo API to import through scripts"
-msgstr ""
+msgstr "koristite Odoo API za unos preko skripti"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
-msgstr ""
+msgstr "s Vašim radnjama iznad"

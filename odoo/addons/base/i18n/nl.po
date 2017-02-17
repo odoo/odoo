@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-11-14 15:54+0000\n"
+"POT-Creation-Date: 2017-01-27 11:58+0000\n"
+"PO-Revision-Date: 2017-01-27 11:58+0000\n"
 "Last-Translator: wilcobergacker <wilcobergacker@gmail.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -2538,7 +2538,7 @@ msgstr ""
 "Module voor resource management.\n"
 "===============================\n"
 "\n"
-"Een bron stelt iets voor dat kan gepland worden (een ontwikkelaar op een taak of een bewerking op een productieorder). Deze module beheert een resource kalender gekoppeld aan resources. Het beheert ook de bladeren van elk middel.\n"
+"Een bron stelt iets voor dat kan gepland worden (een ontwikkelaar op een taak of een werkplek op een productieorder). Deze module beheert een resource kalender gekoppeld aan resources. Het beheert ook de bladeren van elk middel.\n"
 "    "
 
 #. module: base
@@ -6884,6 +6884,14 @@ msgid "Automatic Installation"
 msgstr "Automatische installatie"
 
 #. module: base
+#: code:addons/base/module/module.py:650
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+"Automatische installatie van gedownloade apps is op dit moment "
+"uitgeschakeld."
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
 msgid ""
 "Automatically set to let administators find new terms that might need to be "
@@ -7285,7 +7293,7 @@ msgstr "Kalenders"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_calendar
 msgid "Calendars on Orderpoints"
-msgstr "Kalenders op orderpunten"
+msgstr "Kalenders op aanvulregels"
 
 #. module: base
 #: model:res.country,name:base.kh
@@ -12845,7 +12853,7 @@ msgstr "Ontbrekende verplichte waarde voor het veld '%s'."
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
 msgid "Mister"
-msgstr "Dhr."
+msgstr "De heer"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_mobile
@@ -14496,7 +14504,7 @@ msgstr "Publiceer uw resellerkanaal"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_customer
 msgid "Publish Your Customer References"
-msgstr "Publiceer uw klantgetuigenissen"
+msgstr "Publiceer uw klant referenties"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_published_version
@@ -17041,6 +17049,15 @@ msgid "To be upgraded"
 msgstr "Bij te werken"
 
 #. module: base
+#: code:addons/base/module/module.py:651
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+"Om het in te schakelen, zorg ervoor dat de directory is schrijfbaar op de "
+"server:"
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Todo"
 msgstr "Te doen"
@@ -18613,9 +18630,9 @@ msgid ""
 "instead.If SSL is needed, an upgrade to Python 2.6 on the server-side should"
 " do the trick."
 msgstr ""
-"Uw OpenERP Server ondersteunt geen SMTP over een SSL verbinding. U kan "
-"daarvoor in de plaats gebruik maken van STARTSSL. Indien SSL noodzakelijk "
-"is, dient u up te graden naar Python 2.6 op de server."
+"Uw Odoo Server ondersteunt geen SMTP over een SSL verbinding. U kan daarvoor"
+" in de plaats gebruik maken van STARTSSL. Indien SSL noodzakelijk is, dient "
+"u up te graden naar Python 2.6 op de server."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:475

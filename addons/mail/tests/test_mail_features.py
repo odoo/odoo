@@ -12,6 +12,17 @@ class TestMailFeatures(TestMail):
         alias = self.env['mail.alias'].with_context(alias_model_name='mail.channel').create({'alias_name': 'b4r+_#_R3wl$$'})
         self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
 
+    def test_10_cache_invalidation(self):
+        """ Test that creating a mail-thread record does not invalidate the whole cache. """
+        # make a new record in cache
+        record = self.env['res.partner'].new({'name': 'Brave New Partner'})
+        self.assertTrue(record.name)
+
+        # creating a mail-thread record should not invalidate the whole cache
+        self.env['res.partner'].create({'name': 'Actual Partner'})
+        self.assertTrue(record.name)
+
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_needaction(self):
         na_emp1_base = self.env['mail.message'].sudo(self.user_employee)._needaction_count(domain=[])

@@ -64,7 +64,7 @@ class ProductProduct(models.Model):
                     products = self.search(re['__domain'])
                     tot_products |= products
                     for prod in products:
-                        prod_re[prod] = re_ind
+                        prod_re[prod.id] = re_ind
                 re_ind += 1
             res_val = tot_products._compute_product_margin_fields_values(field_names=[x for x in fields if fields in fields_list])
             for key in res_val.keys():
