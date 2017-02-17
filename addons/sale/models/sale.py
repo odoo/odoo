@@ -440,7 +440,7 @@ class SaleOrder(models.Model):
     def action_done(self):
         self.write({'state': 'done'})
 
-    @api.model
+    @api.multi
     def _prepare_procurement_group(self):
         return {'name': self.name}
 
