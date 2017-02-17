@@ -334,10 +334,10 @@ class ProductTemplate(models.Model):
         while True:
             domain = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             args = args if args is not None else []
-            products_ns = Product.name_search(name, args+domain, operator=operator, limit=limit)
+            products_ns = Product.name_search(name, args+domain, operator=operator)
             products = Product.browse([x[0] for x in products_ns])
             templates |= products.mapped('product_tmpl_id')
-            if (not products) or (len(templates) > limit):
+            if (not products) or (limit and (len(templates) > limit)):
                 break
 
         # re-apply product.template order + name_get
