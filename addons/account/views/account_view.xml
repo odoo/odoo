@@ -1130,7 +1130,7 @@
                         <notebook colspan="4">
                             <page string="Information">
                                 <group>
-                                    <group string="Amount"> <!--TODO : remonter ce bloc avec name et partner ? C'est les infos principales-->
+                                    <group string="Amount">
                                         <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                         <field name="debit"/>
                                         <field name="credit"/>
@@ -1172,7 +1172,7 @@
                                     <group groups="analytic.group_analytic_accounting" string="Analytic">
                                         <field name="analytic_account_id"/>
                                         <field name="analytic_tag_ids" widget="many2many_tags"/>
-                                    </group> <!--TODO voir si la définition ci-dessus n'est pas redondante avec ce qui est 5 lignes plus bas (en fait si, mais il y a quelques différences mineures, à tester !)-->
+                                    </group>
                                 </group>
                                 <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
                             </page>
@@ -1182,50 +1182,6 @@
                             </page>
                         </notebook>
                     </sheet>
-                </form>
-            </field>
-        </record>
-        <record id="view_move_line_form2" model="ir.ui.view"> <!--TODO n'est pas appelé ?? A vérifier et voir si tu le supprimes (si tu le fais, garde ça dans un commit séparé, après le reste, au cas où ... Ce sera plus facile à annuler comme ça)-->
-            <field name="name">account.move.line.form2</field>
-            <field name="model">account.move.line</field>
-            <field eval="9" name="priority"/>
-            <field name="arch" type="xml">
-                <form string="Journal Item">
-                    <notebook colspan="4">
-                        <page string="Information">
-                            <group col="4">
-                                <separator colspan="4" string="General Information"/>
-                                <field name="name"/>
-                                <field name="date"/>
-                                <field name="journal_id" readonly="False"/>
-                                <field name="account_id" domain="[('company_id', '=', company_id)]"/>
-                                <field name="partner_id"
-                                    domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
-                                <newline/>
-                                <field name="debit"/>
-                                <field name="credit"/>
-
-                                <separator colspan="4" string="Optional Information"/>
-                                <field name="currency_id" invisible="1"/>
-                                <field name="amount_currency" groups="base.group_multi_currency"/>
-                                <field name="quantity"/>
-                                <field name="move_id" required="False"/>
-                                <newline/>
-                                <field name="date_maturity"/>
-                                <field name="blocked"/>
-                                <newline/>
-                                <field name="tax_ids" readonly="1"/>
-                                <field name="tax_line_id" readonly="1"/>
-                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                <separator colspan="4" string="Status"/>
-                                <newline/>
-                                <field name="full_reconcile_id"/>
-                            </group>
-                        </page>
-                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
-                            <field name="analytic_line_ids"/>
-                        </page>
-                    </notebook>
                 </form>
             </field>
         </record>
