@@ -395,6 +395,8 @@ class InventoryLine(models.Model):
             if float_utils.float_compare(line.theoretical_qty, 0, precision_rounding=line.product_id.uom_id.rounding) < 0:
                 neg_quant_qty += line.theoretical_qty # As the theoretical_qty is negative, we add it to neg_quant_qty
             diff = line.theoretical_qty - line.product_qty
+            if diff > 0:
+                neg_quant_qty -= diff
             vals = {
                 'name': _('INV:') + (line.inventory_id.name or ''),
                 'product_id': line.product_id.id,
