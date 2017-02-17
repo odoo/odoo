@@ -585,7 +585,7 @@ class HrPayslip(models.Model):
         })
         return res
 
-    @api.onchange('employee_id', 'date_from')
+    @api.onchange('employee_id', 'date_from', 'date_to')
     def onchange_employee(self):
 
         if (not self.employee_id) or (not self.date_from) or (not self.date_to):
