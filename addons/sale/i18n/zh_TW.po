@@ -3,14 +3,15 @@
 # * sale
 # 
 # Translators:
+# amos lin <seeing@edirect168.com>, 2017
 # Andy Cheng <andy.cheng@richsoda.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:44+0000\n"
-"PO-Revision-Date: 2016-09-22 13:46+0000\n"
-"Last-Translator: Andy Cheng <andy.cheng@richsoda.com>\n"
+"PO-Revision-Date: 2017-02-12 15:59+0000\n"
+"Last-Translator: amos lin <seeing@edirect168.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,7 +125,7 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'd
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -164,7 +165,7 @@ msgstr "<strong>合計</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr ""
+msgstr "<strong>你的參考:</strong>"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
@@ -212,14 +213,14 @@ msgstr "允許在銷售訂單細項設折扣"
 msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
-msgstr ""
+msgstr "允許從 '銷售訂單' 選單編輯銷售訂單(不是從報價單選單)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                    Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
+msgstr "允許根據客戶的類別管理不同的定價規則。\n例如：零售打折 10%，特定產品促銷 5 歐元等。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_uom
@@ -235,7 +236,7 @@ msgstr "讓您可為銷售訂單指定一分析科目。"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_amount
 msgid "Amount of sales to invoice"
-msgstr ""
+msgstr "銷售發票金額"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
@@ -276,7 +277,7 @@ msgstr "依業務團隊"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered_updateable
 msgid "Can Edit Delivered"
-msgstr ""
+msgstr "可以編輯交付"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -292,17 +293,17 @@ msgstr "取消"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_invoices
 msgid "Check this box to manage invoices in this sales team."
-msgstr ""
+msgstr "選擇此項來管理銷售團隊中的發票。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "選擇此項來管理銷售團隊中的報價。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define a team target"
-msgstr ""
+msgstr "點擊定義團隊目標"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
@@ -344,17 +345,17 @@ msgstr "開立發票"
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a Quotation, the first step of a new sale."
-msgstr ""
+msgstr "建立一個報價，新的銷售的第一步。"
 
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Create a task and track hours"
-msgstr ""
+msgstr "建立任務並追蹤時數"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
-msgstr ""
+msgstr "建立並查看發票"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_uid
@@ -402,7 +403,7 @@ msgstr "客戶稅"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Customer portal"
-msgstr ""
+msgstr "客戶入口"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_date
@@ -412,7 +413,7 @@ msgstr "下單日期"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "下單日期："
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_last_post
@@ -427,22 +428,22 @@ msgstr "銷售訂單於該日期建立。"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_default_invoice_policy
 msgid "Default Invoicing"
-msgstr ""
+msgstr "預設開票"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company_sale_note
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "預設條款和條件"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Default product used for payment advances"
-msgstr ""
+msgstr "用於預收付款的預設產品"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr ""
+msgstr "預設條款和條件..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered
@@ -452,12 +453,12 @@ msgstr "已出貨"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered Quantity"
-msgstr ""
+msgstr "已出貨數量"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr ""
+msgstr "已出貨數量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_shipping_id
@@ -478,12 +479,12 @@ msgstr "目前銷售訂單的送貨地址"
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr ""
+msgstr "押金"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
-msgstr ""
+msgstr "押金產品"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
@@ -494,7 +495,7 @@ msgstr "說明"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Different prices per customer segment"
-msgstr ""
+msgstr "每個客戶段的不同價格"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -521,7 +522,7 @@ msgstr "依細項折扣"
 msgid ""
 "Display 3 fields on sales orders: customer, invoice address, delivery "
 "address"
-msgstr ""
+msgstr "在銷售訂單中顯示 3 個欄位：客戶，發票地址，送貨地址"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
@@ -534,12 +535,12 @@ msgstr "顯示名稱"
 #. module: sale
 #: model:res.groups,name:sale.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr ""
+msgstr "在銷售訂單和發票中顯示國際貿易術語"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Display margins on quotations and sales orders"
-msgstr ""
+msgstr "在報價單和銷售訂單中顯示利潤"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -550,33 +551,33 @@ msgstr "完成"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:70
 #, python-format
 msgid "Down Payment"
-msgstr ""
+msgstr "訂金"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr ""
+msgstr "訂金總額"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr ""
+msgstr "訂金產品"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (fixed amount)"
-msgstr ""
+msgstr "訂金(固定總額)"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (percentage)"
-msgstr ""
+msgstr "訂金(百分比)"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:67
 #, python-format
 msgid "Down payment of %s%%"
-msgstr ""
+msgstr "%s%% 的訂金"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -591,7 +592,7 @@ msgstr "電子郵件撰寫精靈"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
 msgid "Enable customer portal to track orders, delivery and invoices"
-msgstr ""
+msgstr "啟用追蹤訂單、 交貨和發票的客戶入口"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
@@ -601,7 +602,7 @@ msgstr "有效日期"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "進階過濾器"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -614,7 +615,7 @@ msgid ""
 "Fix Price: all price manage from products sale price.\n"
 "Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n"
 "Advanced pricing based on formula: You can have all the rights on pricelist"
-msgstr ""
+msgstr "固定價格：在產品銷售價格中管理所有價格。\n每個客戶不同的價格：您可以在產品銷售標籤中分配最低數量的價格購買。\n基於公式的高級定價：您可以擁有價格表的所有權利"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_follower_ids
@@ -624,12 +625,12 @@ msgstr "關注者"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "關注者(頻道)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "關注者(業務伙伴)"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -637,13 +638,13 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr ""
+msgstr "從這個報表中，您可以得到向客戶開具的發票金額概覽。搜尋功能也能用來個性化您的發票報表等，根據你的需求匹配分析。"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
-msgstr ""
+msgstr "完全開票"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -666,7 +667,7 @@ msgid ""
 "If a sale order is done, you cannot modify it manually anymore. However, you"
 " will still be able to invoice or deliver. This is used to freeze the sale "
 "order."
-msgstr ""
+msgstr "如果銷售訂單已完成，你就不能手動修改它。然而，你仍然可以開具發票或送貨。這是用於凍結銷售訂單的。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_unread
@@ -676,7 +677,7 @@ msgstr "當有新訊息時通知您。"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "確認後，會出現新訊息。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -697,7 +698,7 @@ msgstr "發票"
 #: code:addons/sale/sale.py:785
 #, python-format
 msgid "Invoice %s paid"
-msgstr ""
+msgstr "發票 %s 已付"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_invoice_id
@@ -707,12 +708,12 @@ msgstr "發票地址"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr ""
+msgstr "確認的發票"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
 msgid "Invoice Created"
-msgstr ""
+msgstr "建立的發票"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_line
@@ -743,7 +744,7 @@ msgstr "發票狀態"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced_target
 msgid "Invoice Target"
-msgstr ""
+msgstr "發票對象"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_invoice_id
@@ -753,22 +754,22 @@ msgstr "當前銷售訂單的發票地址。"
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice based on costs (time and material, expenses)"
-msgstr ""
+msgstr "基於成本(時間和材料，費用)的發票"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Invoice based on time and material"
-msgstr ""
+msgstr "基於時間和物料的發票"
 
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice delivered quantities"
-msgstr ""
+msgstr "發票已交貨的數量"
 
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice ordered quantities"
-msgstr ""
+msgstr "發票已訂購數量"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced
@@ -776,17 +777,17 @@ msgid ""
 "Invoice revenue for the current month. This is the amount the sales team has"
 " invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
-msgstr ""
+msgstr "當月發票的收入。這是本月銷售團隊已開具的發票金額。 它是用來在看板視圖中計算實際和預測的收入之間的比例關係。"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines"
-msgstr ""
+msgstr "可開具發票明細"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr ""
+msgstr "可開具發票明細 (扣除預付訂金)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
@@ -796,12 +797,12 @@ msgstr "已開發票"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced Quantity"
-msgstr ""
+msgstr "已開發票數量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced
 msgid "Invoiced This Month"
-msgstr ""
+msgstr "本月已開發票"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -827,7 +828,7 @@ msgstr "發票統計"
 msgid ""
 "Invoices will be created in draft so that you can update\n"
 "                        them before validation."
-msgstr ""
+msgstr "發票將被建立為草稿以便你在驗證前能更新它們。"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -840,12 +841,12 @@ msgstr "發票開立"
 #: model:ir.model.fields,field_description:sale.field_product_product_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "發票開立策略"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing address:"
-msgstr ""
+msgstr "發票開立地址："
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -857,17 +858,17 @@ msgstr "發票與運送地址"
 msgid ""
 "Invoicing and shipping addresses are always the same (Example: services "
 "companies)"
-msgstr ""
+msgstr "發票和送貨地址總是相同的 (例如：服務公司)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "Invoicing/Progression Ratio"
-msgstr ""
+msgstr "開票/進展比例"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "是關注者"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_last_post
@@ -899,17 +900,17 @@ msgstr "最後更新於"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
 msgid "Manage subscriptions and recurring invoicing"
-msgstr ""
+msgstr "管理訂閱和定期開票"
 
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "在訂單中手動設置數量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
 msgid "Margins"
-msgstr ""
+msgstr "利潤"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_ids
@@ -919,7 +920,7 @@ msgstr "訊息"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
-msgstr ""
+msgstr "我的訂單"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -929,33 +930,33 @@ msgstr "我的銷售訂單項目"
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sale order"
-msgstr ""
+msgstr "絕不允許修改已確認的銷售訂單"
 
 #. module: sale
 #: code:addons/sale/sale.py:96
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "新增"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr ""
+msgstr "新報價單"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "No discount on sales order lines, global discount only"
-msgstr ""
+msgstr "不在銷售訂單明細中顯示折扣，只顯示全域折扣"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "No incoterm on reports"
-msgstr ""
+msgstr "不在報表顯示國際貿易術語"
 
 #. module: sale
 #: selection:sale.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "產品無任何變化"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -963,7 +964,7 @@ msgstr ""
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved \n"
 "                from the Quotations list to the Sales Order list."
-msgstr ""
+msgstr "注意一旦報價轉為銷售訂單，它將從報價單清單移動到銷售訂單清單中。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -972,18 +973,18 @@ msgstr ""
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved from the "
 "Quotations list to the Sales Order list."
-msgstr ""
+msgstr "注意一旦報價轉為銷售訂單，它將從報價單清單移動到銷售訂單清單中。"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr ""
+msgstr "沒有可開立發票"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "操作數"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -995,24 +996,24 @@ msgstr "訂單確認後與產品出貨至客戶間的天數"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "需要動作的訊息編號"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "未讀的訊息數量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
 msgid "Online Quotations"
-msgstr ""
+msgstr "線上報價單"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/sale.js:26
 #, python-format
 msgid "Only Integer Value should be valid."
-msgstr ""
+msgstr "僅支持整數數值。"
 
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
@@ -1027,7 +1028,7 @@ msgstr "訂單"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order #"
-msgstr ""
+msgstr "訂單 #"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_date_order
@@ -1044,7 +1045,7 @@ msgstr "訂單行"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Order Month"
-msgstr ""
+msgstr "訂單月份"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_tree
@@ -1065,12 +1066,12 @@ msgstr "訂單狀態"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
-msgstr ""
+msgstr "訂購數量"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Quantity"
-msgstr ""
+msgstr "訂購數量"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1080,13 +1081,13 @@ msgstr "銷售訂單的下單日期"
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Ordered quantities"
-msgstr ""
+msgstr "訂購數量"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr ""
+msgstr "超售訂單"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1102,12 +1103,12 @@ msgstr "伙伴"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr ""
+msgstr "伙伴的國家"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr ""
+msgstr "伙伴的國家"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -1118,7 +1119,7 @@ msgstr "付款條件"
 #: code:addons/sale/sale.py:233
 #, python-format
 msgid "Please define an accounting sale journal for this company."
-msgstr ""
+msgstr "請為此公司定義會計銷售日誌。"
 
 #. module: sale
 #: code:addons/sale/sale.py:654
@@ -1126,7 +1127,7 @@ msgstr ""
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
-msgstr ""
+msgstr "請定義此產品的收入帳戶：\\\"%s\\\" (id:%d) - 或為它的類別: \\\"%s\\\"。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1136,7 +1137,7 @@ msgstr "價格"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce
 msgid "Price Reduce"
-msgstr ""
+msgstr "降價"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_pricelist_id
@@ -1157,7 +1158,7 @@ msgstr "列印"
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Print quotes or send by email"
-msgstr ""
+msgstr "列印報價或發送電子郵件"
 
 #. module: sale
 #: model:ir.model,name:sale.model_procurement_order
@@ -1210,12 +1211,12 @@ msgstr "產品"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr ""
+msgstr "產品可以有好幾個屬性，通過不同屬性來定義不同的產品變化 (例如: 尺寸, 顏色...)"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
 msgid "Products have only one unit of measure (easier)"
-msgstr ""
+msgstr "產品只有一個計量單位 (較容易)"
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
@@ -1230,17 +1231,17 @@ msgstr "數量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_delivered
 msgid "Qty Delivered"
-msgstr ""
+msgstr "已送貨數量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_invoiced
 msgid "Qty Invoiced"
-msgstr ""
+msgstr "已開票數量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_to_invoice
 msgid "Qty To Invoice"
-msgstr ""
+msgstr "待開票數量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom_qty
@@ -1258,7 +1259,7 @@ msgstr "報價單"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
-msgstr "報價單"
+msgstr "報價單 #"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
@@ -1347,12 +1348,12 @@ msgstr "銷貨單明細"
 #: model:ir.actions.act_window,name:sale.action_product_sale_list
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_sale_line_ids
 msgid "Sale Order Lines"
-msgstr ""
+msgstr "銷貨單明細"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr ""
+msgstr "銷貨單修改"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1388,12 +1389,12 @@ msgstr "業務銷售分析"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
-msgstr ""
+msgstr "銷售完成"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "銷售漏斗"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1478,12 +1479,12 @@ msgstr "銷售團隊"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Sales to Invoice"
-msgstr ""
+msgstr "銷售發票"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Salespeople do not need to view margins when quoting"
-msgstr ""
+msgstr "銷售人員在報價時不需要查看利潤"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_salesman_id
@@ -1505,7 +1506,7 @@ msgstr "搜尋銷售訂單"
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_sale_digital
 msgid ""
 "Sell digital products - provide downloadable content on your customer portal"
-msgstr ""
+msgstr "銷售數位產品 - 在你的客戶入口網站提供可下載的內容"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1515,7 +1516,7 @@ msgstr "以電子郵件傳送"
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Send online quotations based on templates (advanced)"
-msgstr ""
+msgstr "基於模板的線上報價單 (進階)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_sequence
@@ -1527,43 +1528,43 @@ msgstr "序列"
 #: code:addons/sale/static/src/js/sale.js:19
 #, python-format
 msgid "Set an invoicing target: "
-msgstr ""
+msgstr "設置開票對象:"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Done"
-msgstr ""
+msgstr "設置為完成"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr "新建報價"
+msgstr "設為報價"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your company settings."
-msgstr ""
+msgstr "在您的公司設置中設置預設的條款和條件。"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "Show incoterms on sale orders and invoices"
-msgstr ""
+msgstr "在銷售訂單和發票中顯示國際貿易術語"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr ""
+msgstr "顯示產品的價格表"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr ""
+msgstr "顯示價格表給客戶"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/purchased in different unit of measures (advanced)"
-msgstr ""
+msgstr "一些產品可使用不同的單位銷售 / 採購 (進階)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1580,7 +1581,7 @@ msgstr "狀態"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Subscriptions"
-msgstr ""
+msgstr "訂閱"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
@@ -1592,7 +1593,7 @@ msgstr "小計"
 msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales team estimates to be able to invoice this month."
-msgstr ""
+msgstr "當月發票收入目標。這是銷售團隊本月預計能夠開出的發票。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
@@ -1605,7 +1606,7 @@ msgstr "稅別"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr ""
+msgstr "用於押金的稅金"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_note
@@ -1618,12 +1619,12 @@ msgstr "條款"
 msgid ""
 "The Sale Order %s linked to the Analytic Account must be validated before "
 "registering expenses."
-msgstr ""
+msgstr "此銷售訂單 %s 在連結到分析會計時必須在登記費用前驗證。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "預先開具發票金額，不含稅。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_project_id
@@ -1635,7 +1636,7 @@ msgstr "銷售訂單相關的分析科目"
 msgid ""
 "The printed reports will display the incoterms for the sale orders and the "
 "related invoices"
-msgstr ""
+msgstr "列印的報表將在銷售訂單和發票中顯示國際貿易術語"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:124
@@ -1643,7 +1644,7 @@ msgstr ""
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
-msgstr ""
+msgstr "用於開立定金發票的產品，應該為 “服務” 類型。請使用其它產品或更新本產品。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:122
@@ -1652,13 +1653,13 @@ msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
-msgstr ""
+msgstr "此產品用於訂金開票，開票策略應該設為“訂購數量”。請更新你的存款產品，以建立存款發票。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:64
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr ""
+msgstr "訂金必須為正數。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:60
@@ -1666,13 +1667,13 @@ msgstr ""
 msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
 " install a chart of account from Accounting app, settings menu."
-msgstr ""
+msgstr "沒有為此產品定義收入科目：\"%s\"。你可能需要從會計應用程序的設置選單中安裝一個科目表。"
 
 #. module: sale
 #: code:addons/sale/sale.py:316
 #, python-format
 msgid "There is no invoicable line."
-msgstr ""
+msgstr "沒有可開票的訂單行"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1684,7 +1685,7 @@ msgstr "本年"
 msgid ""
 "This progress bar shows the stages your quotation will go through.\n"
 "                Use buttons on the left to move forward to the next stages."
-msgstr ""
+msgstr "這個進度列顯示您的報價將經歷的階段。\n使用左側的按鈕前進到下一階段。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1704,7 +1705,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
+msgstr "此份報表會對您的報價單執行分析。分析您的銷售收入並且依照不同的分組篩選條件排序(業務人員，業務夥伴，產品等)。利用報表對尚未開立發票的銷售訂單進行分析。如果您想分析您的週轉率，應使用會計模組裡的發票分析報表。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -1714,12 +1715,12 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr ""
+msgstr "此份報表會對您的銷售訂單執行分析。分析您的銷售收入並且依照不同的分組篩選條件排序(業務人員，業務夥伴，產品等)。利用報表對尚未開立發票的銷售訂單進行分析。如果您想分析您的週轉率，應使用會計模組裡的發票分析報表。"
 
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Timesheets on contract"
-msgstr ""
+msgstr "合約時間表"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1752,7 +1753,7 @@ msgstr "含稅總額"
 #: model:ir.model.fields,field_description:sale.field_product_product_track_service
 #: model:ir.model.fields,field_description:sale.field_product_template_track_service
 msgid "Track Service"
-msgstr ""
+msgstr "追蹤服務"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
@@ -1770,7 +1771,7 @@ msgstr "量度單位"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
 msgid "Unit of Measures"
-msgstr ""
+msgstr "量度單位"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
@@ -1781,7 +1782,7 @@ msgstr "未讀訊息"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "未讀訊息計數器"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_untaxed
@@ -1791,25 +1792,25 @@ msgstr "未完稅金額"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
 msgid "Untaxed Total Price"
-msgstr ""
+msgstr "不含稅總價"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Upselling"
-msgstr ""
+msgstr "超售"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
-msgstr ""
+msgstr "超售商機"
 
 #. module: sale
 #: model:web.tip,description:sale.sale_tip_2
 msgid ""
 "Use pivot and graph views to analyze your sales pipeline.\n"
 "                Select measures, filter and group dimensions to get the perfect report according to your needs."
-msgstr ""
+msgstr "使用透視圖和圖表視圖，來分析你的銷售管道。\n根據您的需求，選擇度量，過濾和組合維度，以獲得完美的報表。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist
@@ -1824,12 +1825,12 @@ msgstr "增值稅:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "網站訊息"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "網站溝通記錄"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1841,14 +1842,14 @@ msgstr "您要開立什麼的發票?"
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr ""
+msgstr "使用產品變化允許您定義相同產品的一些變化，例如，減輕電子商務中的產品管理"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/sale.js:26
 #, python-format
 msgid "Wrong value entered!"
-msgstr ""
+msgstr "輸入值錯誤!"
 
 #. module: sale
 #: code:addons/sale/sale.py:741
@@ -1856,13 +1857,13 @@ msgstr ""
 msgid ""
 "You can not remove a sale order line.\n"
 "Discard changes and try setting the quantity to 0."
-msgstr ""
+msgstr "你不能刪除銷售訂單明細。\n放棄更改並嘗試將數量設置為 0。"
 
 #. module: sale
 #: code:addons/sale/sale.py:153
 #, python-format
 msgid "You can only delete draft quotations!"
-msgstr ""
+msgstr "你只能刪除草稿報價單！"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1870,7 +1871,7 @@ msgstr ""
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation \n"
 "                to a Sale Order, then create the Invoice and collect the Payment."
-msgstr ""
+msgstr "你的下一步行動應該為：確認報價單\n並轉為銷售訂單，然後建立發票和收取款項。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1879,7 +1880,7 @@ msgstr ""
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sale "
 "Order, then create the Invoice and collect the Payment."
-msgstr ""
+msgstr "你的下一步行動應該為：確認報價單並轉為銷售訂單，然後建立發票和收取款項。"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
