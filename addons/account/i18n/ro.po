@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-01-16 19:33+0000\n"
+"PO-Revision-Date: 2017-02-15 14:46+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -238,7 +238,7 @@ msgid ""
 "                                        <strong> Create manually</strong><br/>\n"
 "                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n                                        <strong> Creare manuală</strong><br/>\n                                        <span class=\"small\">&lt; 200 contacte</span>\n                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -325,7 +325,7 @@ msgstr "<span class=\"panel-title\">\n<strong>Inregistreaza Chitantele tale</str
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Balanță în CM</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -596,7 +596,7 @@ msgstr "<strong>Achiziţii</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile Bank Statement</strong>"
-msgstr ""
+msgstr "<strong>Reconciliere extras bancă</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -760,7 +760,7 @@ msgstr "O linie în extrasul de cont reprezintă o tranzacţie financiară pe un
 msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
-msgstr ""
+msgstr "O notă contabilă conține mai multe poziții,\nfiecare din acestea pot fi tranzacții pe debit sau credit."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -1269,7 +1269,7 @@ msgstr "Configurari Avansate"
 #: model:ir.ui.menu,name:account.menu_finance_entries
 #: model:res.groups,name:account.group_account_manager
 msgid "Adviser"
-msgstr ""
+msgstr "Consilier"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_include_base_amount
@@ -2117,7 +2117,7 @@ msgstr "Nu pot fi create mișcări pentru companii diferite."
 #: code:addons/account/models/account_move.py:192
 #, python-format
 msgid "Cannot create unbalanced journal entry."
-msgstr ""
+msgstr "Nu se poate crea o notă contabilă neechilibrată."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:446
@@ -2152,7 +2152,7 @@ msgstr ""
 #: code:addons/account/wizard/account_invoice_refund.py:54
 #, python-format
 msgid "Cannot refund draft/proforma/cancelled invoice."
-msgstr ""
+msgstr "Nu se poate rambursa factura ciornă/proformă/anulată."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:56
@@ -2373,7 +2373,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Click to add a journal."
-msgstr ""
+msgstr "Clic pentru a adaugă un registru."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -2413,7 +2413,7 @@ msgstr "Click pentru a defini un nou tip de cont"
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
 msgid "Click to record a new vendor bill."
-msgstr ""
+msgstr "Click pentru a înregistra o nouă factură furnizor."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2781,7 +2781,7 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:213
 #, python-format
 msgid "Create invoice/bill"
-msgstr ""
+msgstr "Creare factură"
 
 #. module: account
 #. openerp-web
@@ -3481,7 +3481,7 @@ msgstr "Rambursare Ciorna"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Draft bills"
-msgstr ""
+msgstr "Facturi ciornă"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
@@ -4090,7 +4090,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:225
 #, python-format
 msgid "Go to bank statements"
-msgstr ""
+msgstr "Mergi la extrase bancă"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:447
@@ -4313,7 +4313,7 @@ msgstr ""
 msgid ""
 "If you have less than 200 contacts, we recommend you\n"
 "                                        create them manually."
-msgstr ""
+msgstr "Dacă aveți mai puțin de 200 de contacte vă recomandăm să\nle creați manual."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_tax_calculation_rounding_method
@@ -4898,7 +4898,7 @@ msgstr "Element Jurnal"
 #: model:ir.model.fields,field_description:account.field_account_operation_template_label
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_label
 msgid "Journal Item Label"
-msgstr ""
+msgstr "Etichetă element registru"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:259
@@ -4944,7 +4944,7 @@ msgstr "Numele Jurnalului"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "Journal and Partner"
-msgstr ""
+msgstr "Registru și partener"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -5016,7 +5016,7 @@ msgstr "Eticheta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_description
 msgid "Label on Invoices"
-msgstr ""
+msgstr "Etichetă în factură"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_last_post
@@ -5336,7 +5336,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_config_settings_period_lock_date
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr ""
+msgstr "Dată de blocare pentru non cosultanți"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -5692,7 +5692,7 @@ msgstr ""
 msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
-msgstr ""
+msgstr "Niciun utilizator, inclusiv consilieri, nu pot edita conturi anterior și inclusiv acestei date. Folositț-l pentru blocarea anului fiscal, de exemplu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_code_digits
@@ -5845,7 +5845,7 @@ msgid ""
 "                document: invoice, refund, vendor payment, bank statements,\n"
 "                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
-msgstr ""
+msgstr "Odoo face automat o intrare în jurnal pentru documentul contabil: factură, storno, plată, extras de bancă, etc. Deci, trebuie să înregistrați manual intrările în registru numai / în principal pentru operațiuni diverse."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5944,7 +5944,7 @@ msgid ""
 "Only users with the 'Adviser' role can edit accounts prior to and inclusive "
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
-msgstr ""
+msgstr "Numai utilizatorii cu rolul \"Consultant\" poate edita conturi anterioare și inclusiv această dată. Folosiți-l pentru blocare perioadă în interiorul unui an fiscal deschis, de exemplu."
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -6405,7 +6405,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Payments to do"
-msgstr ""
+msgstr "Plăți de făcut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_payments_widget
@@ -6572,7 +6572,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr ""
+msgstr "Înregistrări registru postate"
 
 #. module: account
 #: selection:account.move,state:0 selection:account.payment,state:0
@@ -6793,7 +6793,7 @@ msgstr "Cantitate"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_exchange_journal_id
 msgid "Rate Difference Journal"
-msgstr ""
+msgstr "Registru deferențe de rată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_description
@@ -6903,7 +6903,7 @@ msgstr ""
 #: model:ir.actions.client,name:account.action_bank_reconcile
 #: model:ir.actions.client,name:account.action_bank_reconcile_bank_statements
 msgid "Reconciliation on Bank Statements"
-msgstr ""
+msgstr "Reconciliere pe extrase bancă"
 
 #. module: account
 #. openerp-web
@@ -6915,7 +6915,7 @@ msgstr "Reconciliere"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Reconciling journal entries"
-msgstr ""
+msgstr "Reconciliere înregistrări registru"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0
@@ -7010,7 +7010,7 @@ msgstr "Metoda de rambursare"
 msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
-msgstr ""
+msgstr "Rambursare bazată pe acest tip. Nu puteți Modifica și Anula dacă factura este deja reconciliată"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7255,12 +7255,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Search Bank Statements"
-msgstr ""
+msgstr "Cauta Extrasele bancă"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_line_search
 msgid "Search Bank Statements Line"
-msgstr ""
+msgstr "Caută linie extrase bancă"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -7445,7 +7445,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr ""
+msgstr "Afișare registru în tablou de bord"
 
 #. module: account
 #. openerp-web
@@ -7644,7 +7644,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_refund_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template_refund_account_id
 msgid "Tax Account on Refunds"
-msgstr ""
+msgstr "Cont taxă în rambursare"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
@@ -8159,7 +8159,7 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
-msgstr ""
+msgstr "Contul selectat din nota contabilă solicita furnizarea unei monede secundare. Ar trebui sa ștergeți moneda secundara din cont sau să selectați o vizualizare multi-moneda în jurnal."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1162
@@ -8820,7 +8820,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_journal_id
 msgid "Use Specific Journal"
-msgstr ""
+msgstr "Utilizează registru specific"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_anglo_saxon_accounting
@@ -9213,7 +9213,7 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
-msgstr ""
+msgstr "Nu puteți adăuga / modifica intrările anterioare și incluzând data de blocare %s. Verificați setările de companie sau cere pe cineva cu rolul \"Consultant\""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:866
@@ -9254,7 +9254,7 @@ msgstr ""
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "refund it instead."
-msgstr ""
+msgstr "Nu puteți șterge o factura care nu este ciorna sau anulata. Ar trebui să o rambursați."
 
 #. module: account
 #: code:addons/account/models/account.py:168
@@ -9313,7 +9313,7 @@ msgstr ""
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
-msgstr ""
+msgstr "Nu puteți modifica o notă contabilă postată a acestui registru.\nMai întâi ar trebui să configurați registrul pentru a permite anularea înregistrărilor."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
@@ -9408,7 +9408,7 @@ msgstr ""
 msgid ""
 "You should have defined an 'Internal Transfer Account' in your cash "
 "register's journal!"
-msgstr ""
+msgstr "Ar trebui definit un cont pentru transfer intern, în registrul de numerar!"
 
 #. module: account
 #. openerp-web
@@ -9538,7 +9538,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "create a journal entry"
-msgstr ""
+msgstr "creare înregistrare registru"
 
 #. module: account
 #. openerp-web
