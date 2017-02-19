@@ -4,16 +4,16 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016-2017
 # 开阖—gilbert <gilbert@osbzr.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-09-03 18:18+0000\n"
+"PO-Revision-Date: 2017-02-14 04:46+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -126,7 +126,7 @@ msgstr "销售订单的 #"
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and '草稿' or ''}"
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
@@ -148,7 +148,7 @@ msgid ""
 "* The 'Exception' status is set when the related sales order is set as exception.                     \n"
 "* The 'Done' status is set when the sales order line has been picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr "*一个销售定单是草稿的时候，设置为“草稿”状态\n*销售定被用户确认后，状态切换为“已经确认”。\n*销售订单发生异常时（发货被取消等），状态为“异常”。\n*当销售订单收货以后，状态变成“完成”。\n*当用户取消了销售订单，状态成为“取消”。"
+msgstr "*一个销售定单是草稿的时候，设置为'草稿'状态\n*销售定被用户确认后，状态切换为'已经确认'。\n*销售订单发生异常时（发货被取消等），状态为'异常'。\n*当销售订单收货以后，状态变成'完成'。\n*当用户取消了销售订单，状态成为'取消'。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -271,7 +271,7 @@ msgstr "预收：%s %s"
 msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
-msgstr "点击“显示要开票的行”"
+msgstr "点击 '显示线发票 '之后，选择要发票从 '更多 '下拉菜单创建发票行。"
 
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
@@ -772,7 +772,7 @@ msgstr "电子邮件模板"
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Email撰写向导"
+msgstr "电子邮件撰写向导"
 
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
@@ -1120,7 +1120,7 @@ msgstr "消息"
 #. module: sale
 #: help:sale.order,message_ids:0
 msgid "Messages and communication history"
-msgstr "消息和通信历史"
+msgstr "信息和通信历史记录"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -2089,7 +2089,7 @@ msgstr "网站消息"
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr "网站沟通记录"
+msgstr "网站通信历史"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
