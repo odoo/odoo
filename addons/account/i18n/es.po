@@ -52,8 +52,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-03 14:29+0000\n"
-"PO-Revision-Date: 2017-02-03 14:29+0000\n"
+"POT-Creation-Date: 2017-02-14 10:20+0000\n"
+"PO-Revision-Date: 2017-02-14 10:20+0000\n"
 "Last-Translator: David de León <leceda09@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -6784,7 +6784,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid ""
 "Once this module is installed, you have to configure Tax Cash Basis Journal."
-msgstr ""
+msgstr "Una vez este módulo instalado, debes configurar el diario de efectivo"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6893,6 +6893,10 @@ msgid ""
 "would make a gap in the numbering. You should book an entry and make a "
 "regular revert of it in case you want to cancel it."
 msgstr ""
+"Operación no permitida. Cuando tu declaración ya recibe un número, no puedes"
+" conciliarla completamente con otras entradas contables ya que habrá un "
+"salto en la secuencia. Debes reservar un asiento y hacer un reverso normal "
+"de ese caso si lo deseas anular."
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:66
@@ -9653,6 +9657,15 @@ msgstr ""
 "para el filtro de comparación introducido."
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:273
+#, python-format
+msgid ""
+"This move's amount is higher than the transaction's amount. Click to "
+"register a partial payment and keep the payment balance open."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_debit_credit
 msgid ""
 "This option allows you to get more details about the way your balances are "
@@ -9999,6 +10012,13 @@ msgid "Undistributed Profits/Losses"
 msgstr "Pérdidas/ganancias no distribuídas"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:278
+#, python-format
+msgid "Undo the partial reconciliation."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_unit
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Unit Price"
@@ -10021,7 +10041,7 @@ msgstr "Empresa desconocida"
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable_no_partner
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_receivable_no_partner
 msgid "Unknown Partner Ledger"
-msgstr ""
+msgstr "Libro mayor de empresa"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10090,7 +10110,7 @@ msgstr "Base imponible"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount in Company Currency"
-msgstr ""
+msgstr "Monto sin impuestos"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10105,7 +10125,7 @@ msgstr "Utilizar contabilidad anglo-sajona"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_use_anglo_saxon
 msgid "Use Anglo-Saxon Accounting *"
-msgstr ""
+msgstr "Contabilidad anglo-sajona"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_use_anglo_saxon
@@ -10607,6 +10627,8 @@ msgid ""
 "You cannot change the value of the reconciliation on this account as it "
 "already has some moves"
 msgstr ""
+"No puede cambiar al propietario de la compañía en una cuenta que ya contiene"
+" asientos"
 
 #. module: account
 #: code:addons/account/models/account_move.py:418
@@ -10718,6 +10740,8 @@ msgid ""
 "You cannot pay an invoice which is partially paid. You need to reconcile "
 "payment entries first."
 msgstr ""
+"No puede cancelar una factura que está parcialmente pagada. Necesita romper "
+"la conciliación del pago relacionado primero."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36

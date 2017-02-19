@@ -52,13 +52,14 @@
 # leemannd <denis.leemann@camptocamp.com>, 2016
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2016
 # Jeanjean Noname <monsieur.spock@gmail.com>, 2016
+# Davy <cottet_davy@yahoo.fr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-03 14:29+0000\n"
-"PO-Revision-Date: 2017-02-03 14:29+0000\n"
-"Last-Translator: Jeanjean Noname <monsieur.spock@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-14 10:20+0000\n"
+"PO-Revision-Date: 2017-02-14 10:20+0000\n"
+"Last-Translator: Davy <cottet_davy@yahoo.fr>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -189,7 +190,7 @@ msgstr "${object.company_id.name} Facture (Ref ${object.number or 'n/a'})"
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
 msgid "${object.subject}"
-msgstr ""
+msgstr "${object.subject}"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:467
@@ -1109,7 +1110,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr ""
+msgstr "Une alerte peut être mise sur un contact (compte)"
 
 #. module: account
 #. openerp-web
@@ -1814,7 +1815,7 @@ msgstr "Montant"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
 msgid "Amount Currency"
-msgstr ""
+msgstr "Montant en Devise"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -1825,12 +1826,12 @@ msgstr "Montant dû"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
 msgid "Amount Due in Company Currency"
-msgstr ""
+msgstr "Montant dû en devise société"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
 msgid "Amount Due in Invoice Currency"
-msgstr ""
+msgstr "Montant dû en devise de la facture"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
@@ -1950,7 +1951,7 @@ msgstr "Comptes analytiques"
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_tag_menu
 msgid "Analytic Accounts Tags"
-msgstr ""
+msgstr "Tags comptes analytiques"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_analytic
@@ -1998,7 +1999,7 @@ msgstr "Lignes analytiques"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_analytic_tag_ids
 msgid "Analytic tags"
-msgstr ""
+msgstr "Tags analytiques"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_exigible
@@ -2217,7 +2218,7 @@ msgstr "Préfixe des comptes bancaires"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_bank_account_code_prefix
 msgid "Bank Accounts Prefix *"
-msgstr ""
+msgstr "Préfixe du compte banque *"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_statements_source
@@ -3262,7 +3263,7 @@ msgstr "Créer une facture"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:81
 #, python-format
 msgid "Create model"
-msgstr ""
+msgstr "Créer le modèle"
 
 #. module: account
 #. openerp-web
@@ -3425,7 +3426,7 @@ msgstr "Avoir"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_credit_account_id
 msgid "Credit account"
-msgstr ""
+msgstr "Compte créditeur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_credit
@@ -3653,7 +3654,7 @@ msgstr "Méthodes de débit"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_debit_account_id
 msgid "Debit account"
-msgstr ""
+msgstr "Compte débiteur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_debit
@@ -4275,7 +4276,7 @@ msgstr "Charges"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
 msgid "External Reference"
-msgstr ""
+msgstr "Référence externe"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8399,7 +8400,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_template_action
 msgid "Sellable Products"
-msgstr ""
+msgstr "Produits en vente"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -9637,6 +9638,15 @@ msgstr ""
 "calculé pour les filtres de comparaison donnés."
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:273
+#, python-format
+msgid ""
+"This move's amount is higher than the transaction's amount. Click to "
+"register a partial payment and keep the payment balance open."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_debit_credit
 msgid ""
 "This option allows you to get more details about the way your balances are "
@@ -9979,6 +9989,13 @@ msgstr "Type"
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "Profits/pertes non distribués"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:278
+#, python-format
+msgid "Undo the partial reconciliation."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_unit

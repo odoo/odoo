@@ -12,13 +12,14 @@
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
 # Вадим Кунгурцев <kvadim@aport.ru>, 2016
 # Evgeny <transingularity@gmail.com>, 2016
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Evgeny <transingularity@gmail.com>, 2016\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +48,8 @@ msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Участник, с которым требуется связать ваше участие. Оно будет рассматривать "
+"состояние участия соответствующего участника."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -78,7 +81,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:membership.field_res_partner_associate_member
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Associate Member"
-msgstr ""
+msgstr "Ассоциированный участник"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -98,7 +101,7 @@ msgstr "Отмена"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_cancel
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "Отмена дату участия"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_cancel
@@ -165,7 +168,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_state
 msgid "Current Membership Status"
-msgstr ""
+msgstr "Текущий статус членства"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -186,7 +189,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_cancel
 msgid "Date on which membership has been cancelled"
-msgstr ""
+msgstr "Дата, на котором было отменено участие"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_template_membership_date_to
@@ -328,6 +331,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Это показывает состояние участия.\n"
+"-Не участник: Партнер, который не применяется для какого либо участия.\n"
+"-Отмененный участник: Участник, который отменил его участие.\n"
+"-Старый участник: Участник, дата участия которого истекла.\n"
+"-Ожидание участия Участник, кто подал заявку на участие и чей счет будет создан.\n"
+"-Счет участника: Участник, чей счет был создан.\n"
+"-Платный участник: участник который заплатила членский взнос."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
@@ -403,7 +413,7 @@ msgstr "Членство"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_amount
 msgid "Membership Amount"
-msgstr ""
+msgstr "Количество участников"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
@@ -570,7 +580,7 @@ msgstr "Продавец"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_free_member
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Выберите, если вы хотите дать бесплатное участие."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_start_date

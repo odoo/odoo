@@ -10,13 +10,14 @@
 # 老窦 北京 <2662059195@qq.com>, 2016
 # xiaobin wu <bd5dml@gmail.com>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
+# Godners Ren <godners@163.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-03 14:29+0000\n"
-"PO-Revision-Date: 2017-02-03 14:29+0000\n"
-"Last-Translator: Ted Wang <feiyuwang2012@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-14 10:20+0000\n"
+"PO-Revision-Date: 2017-02-14 10:20+0000\n"
+"Last-Translator: Godners Ren <godners@163.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -953,7 +954,7 @@ msgstr "<strong>小计</strong>"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Target Moves:</strong>"
-msgstr "<strong>目标分录：</strong>"
+msgstr "<strong>目标凭证：</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1068,14 +1069,14 @@ msgstr "Odoo中的产品是用来买卖的货物，耗材或者服务你可以�
 #: code:addons/account/models/account_move.py:731
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
-msgstr "对账至少要２个分录行"
+msgstr "对账至少要２个凭证行"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:867
 #: code:addons/account/models/account_bank_statement.py:870
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr "选择的分录行早已调节"
+msgstr "选择的凭证行早已调节"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:218
@@ -1215,7 +1216,7 @@ msgstr "科目映射"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Account Move Reversal"
-msgstr "会计逆转分录"
+msgstr "会计凭证逆转"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_acc_name
@@ -1367,17 +1368,17 @@ msgstr "会计取消调节"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
 msgid "Account move line reconcile"
-msgstr "会计分录行调节"
+msgstr "会计凭证行调节"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr "会计分录行调节(销账)"
+msgstr "会计凭证行调节(销账)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account move reversal"
-msgstr "会计逆转分录"
+msgstr "会计凭证逆转"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_src_id
@@ -1840,7 +1841,7 @@ msgstr "外币金额"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_amount_type
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Amount type"
-msgstr "总额类型"
+msgstr "金额类型"
 
 #. module: account
 #. openerp-web
@@ -2219,12 +2220,12 @@ msgstr "银行调节"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr "银行调节分录预设"
+msgstr "银行调节凭证预设"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Bank Reconciliation Move preset"
-msgstr "银行调节分录预设"
+msgstr "银行调节凭证预设"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -2497,7 +2498,7 @@ msgstr "已取消的发票"
 #: code:addons/account/models/account_move.py:173
 #, python-format
 msgid "Cannot create moves for different companies."
-msgstr "不能创建不同公司的分录"
+msgstr "不能为不同公司创建凭证"
 
 #. module: account
 #: code:addons/account/models/account_move.py:205
@@ -3184,7 +3185,7 @@ msgstr "创建草稿退款"
 #. module: account
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Create and post move"
-msgstr "创建并提交移动"
+msgstr "创建并登录凭证"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:248
@@ -3386,7 +3387,7 @@ msgstr "和这个日记账项目匹配的贷方日记账项目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_credit_move_id
 msgid "Credit move id"
-msgstr "贷方移动id"
+msgstr "贷方凭证id"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -3614,7 +3615,7 @@ msgstr "和这个日记账项目匹配的借方日记账项目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_debit_move_id
 msgid "Debit move id"
-msgstr "借方移动id"
+msgstr "借方凭证id"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -4158,7 +4159,7 @@ msgstr "汇兑增益或损失日记账"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_move_id
 msgid "Exchange move id"
-msgstr "借方移动id"
+msgstr "交换凭证id"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_partial_rec_id
@@ -4425,13 +4426,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_currency_id
 msgid "Forces all moves for this account to have this account currency."
-msgstr "强制这个科目所有的移动拥有这个科目的币种"
+msgstr "强制这个科目所有的凭证拥有这个科目的币种"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_currency_id
 #: model:ir.model.fields,help:account.field_account_bank_accounts_wizard_currency_id
 msgid "Forces all moves for this account to have this secondary currency."
-msgstr "强制将这科目的所有分录转为第二货币。"
+msgstr "强制将这科目的所有凭证转为第二货币。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:81
@@ -5396,7 +5397,7 @@ msgid ""
 "                            we recommend you start using Odoo for invoicing and payments \n"
 "                            now, and then move all other accounting transactions at a later time."
 msgstr ""
-"在财政年度的结尾变更会计软件是一种很常见实践。这让你有更少的数据导入和平衡设置。如果你打算这么做，我们建议你开始使用Odoo开开票和付款，然后将在稍后的时间做所有其他会计事务。"
+"在财政年度结尾时，变更会计软件是一种很常见实践。这让你导入最少的数据，做最少余额设置。如果你打算这么做，我们建议你现在开始使用Odoo进行开票和付款，然后在稍后的时间做所有其他会计事务。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6230,23 +6231,23 @@ msgstr "多数货币已经被默认创建。如果你打算用其中的一些，
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Move"
-msgstr "分录"
+msgstr "凭证"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_move_id
 msgid "Move Line"
-msgstr "分录行"
+msgstr "凭证行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_move_line_ids
 msgid "Move line ids"
-msgstr "移动行ids"
+msgstr "凭证行ids"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1155
 #, python-format
 msgid "Move name (id): %s (%s)"
-msgstr "分录名称 (id): %s (%s)"
+msgstr "凭证名称 (id): %s (%s)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -6460,7 +6461,7 @@ msgstr "号码"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Number (Move)"
-msgstr "号码（分录）"
+msgstr "号码（凭证）"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_number
@@ -7008,7 +7009,7 @@ msgstr "付款方式"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_payment_move_line_ids
 msgid "Payment Move Lines"
-msgstr "付款移动明细行"
+msgstr "付款凭证明细行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference_type
@@ -7122,8 +7123,8 @@ msgid ""
 "Payments are used to register liquidity movements (send, collect or transfer money).\n"
 "                  You can then process those payments by your own means or by using installed facilities."
 msgstr ""
-"付款用来登记流动性的运动（付，收或者转 金钱）。\n"
-"然后你可以自己的方式，或者用安装的工具处理这些付款。"
+"付款用来登记流动性运动（付出，收回或者转移 金钱）。\n"
+"你可以自己的方式，或者用安装的工具处理这些付款。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8439,7 +8440,7 @@ msgstr "调节一个交易的时间平均少于5秒"
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_target_move
 #: model:ir.model.fields,field_description:account.field_accounting_report_target_move
 msgid "Target Moves"
-msgstr "目标分录"
+msgstr "目标凭证"
 
 #. module: account
 #. openerp-web
@@ -8944,7 +8945,7 @@ msgstr "为保证全部总量被分配，最后一行的计算类型应该是 \"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
 msgid "The move of this entry line."
-msgstr "这条分录行的移动"
+msgstr "这条分录行的凭证"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8960,7 +8961,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_name
 msgid "The name that will be used on account move lines"
-msgstr "会计分录行的名称"
+msgstr "此名称将用于会计凭证行"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_currency_id
@@ -9025,7 +9026,7 @@ msgstr "日记账项目的剩余总量使用公司的默认币种"
 msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
-msgstr "所选日记帐分录的帐户强制提供辅助货币。您应该移除帐户的辅助货币。"
+msgstr "日记帐分录所选的科目强制提供辅助货币。您应该移除科目的辅助货币。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1325
@@ -9179,7 +9180,7 @@ msgid ""
 "This allows you to manage the revenue recognition on selling products. It keeps track of the installments occurred on those revenue recognitions, and creates account moves for those installment lines\n"
 "-This installs the module account_deferred_revenue."
 msgstr ""
-"这允许您管理销售产品的收入确认。它跟踪在这些收入确认上发生的分期付款，并为这些分期付款行创建帐户移动。\n"
+"这允许您管理销售产品的收入识别。它跟踪在这些收入确认上发生的分期付款，并为这些分期付款行创建帐户移动。\n"
 "- 这将安装模块"
 
 #. module: account
@@ -9286,6 +9287,15 @@ msgid ""
 "This label will be displayed on report to show the balance computed for the "
 "given comparison filter."
 msgstr "这个标签将放在报告上用来显示根据比较筛选条件计算出来的余额"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:273
+#, python-format
+msgid ""
+"This move's amount is higher than the transaction's amount. Click to "
+"register a partial payment and keep the payment balance open."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_debit_credit
@@ -9604,6 +9614,13 @@ msgid "Undistributed Profits/Losses"
 msgstr "未分配利润 / 损失"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:278
+#, python-format
+msgid "Undo the partial reconciliation."
+msgstr "撤销部分调整。"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_unit
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Unit Price"
@@ -9827,7 +9844,7 @@ msgstr "验证"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr "验证科目分录"
+msgstr "验证会计凭证"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10171,7 +10188,7 @@ msgstr "不能更改已经包含日记账项目的所属公司 "
 msgid ""
 "You cannot change the value of the reconciliation on this account as it "
 "already has some moves"
-msgstr "您无法更改此帐户的对帐值，因为它已经有一些移动"
+msgstr "您无法更改此帐户的对帐值，因为它已经有一些凭证"
 
 #. module: account
 #: code:addons/account/models/account_move.py:418

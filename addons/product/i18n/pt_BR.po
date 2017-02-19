@@ -151,11 +151,14 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Preço Público - </span>\n"
+"<span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Custo - </span>\n"
+"<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Outras Listas de Preços - </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Produtos</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -270,6 +273,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Um produto estocável é um produto para o qual você gerencia estoque. O aplicativo \"Inventário\" deve ser instalado.\n"
+"Um produto consumível, por outro lado, é um produto para o qual o estoque não é gerenciado.\n"
+"Um serviço é um produto não-material que você fornece.\n"
+"Um conteúdo digital é um produto não-material que você vende on-line. Os ficheiros anexados aos produtos são os que são vendidos no e-commerce, tais como e-books, música, imagens, ... O módulo \"Produto Digital\" tem de ser instalado."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -779,7 +786,7 @@ msgstr "Custo do produto, na unidade de medida padrão do produto."
 #: model:product.product,name:product.service_delivery
 #: model:product.template,name:product.service_delivery_product_template
 msgid "Cost-plus Contract"
-msgstr ""
+msgstr "Contrato de maior custo "
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -1022,7 +1029,7 @@ msgstr "Erro! Você não pode criar categorias recursivas."
 #: code:addons/product/models/product_attribute.py:97
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
-msgstr ""
+msgstr "Erro! Você não pode usar esse atributo com o seguinte valor."
 
 #. module: product
 #: code:addons/product/models/product.py:302
@@ -1031,6 +1038,8 @@ msgid ""
 "Error! It is not allowed to choose more than one value for a given "
 "attribute."
 msgstr ""
+"Erro! Não é permitido escolher mais de um valor para um determinado "
+"atributo."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:419
@@ -2157,7 +2166,7 @@ msgstr "Unidade de Medida de Compra"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
 msgid "Quantity per Package"
-msgstr ""
+msgstr "Quantidade por Embalagem"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -2679,6 +2688,8 @@ msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
 msgstr ""
+"O número de produtos nesta categoria (Não considera as categorias de "
+"crianças)"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:74
@@ -2769,7 +2780,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
 msgid "The total number of products you can have per pallet or box."
-msgstr ""
+msgstr "O número total de produtos que você pode ter por palete ou caixa."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -2921,6 +2932,7 @@ msgstr "Design ultra fino."
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
+"Desmarque o campo ativo para desativar uma unidade de medida sem excluí-la."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3245,6 +3257,8 @@ msgid ""
 "You must define a product for everything you sell, whether it's a physical "
 "product, a consumable or a service you offer to customers."
 msgstr ""
+"Você deve definir um produto para tudo que você vende, se é um produto "
+"físico, um consumível ou um serviço que você oferece aos clientes."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
