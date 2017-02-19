@@ -30,7 +30,7 @@ msgstr ""
 "* ‘草稿’状态被用来标识新生成的但是还没被确认的凭证\n"
 "* ‘形式’状态被用在凭证还没有凭证号的时候\n"
 "* ‘已过账’状态用在创建了凭证，生成了相关的凭证号并且该凭证的会计分录也已经生成的时候\n"
-"* “取消’状态被用在已经去小的凭证上"
+"* “取消’状态被用在已取消凭证"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -51,7 +51,7 @@ msgstr "会计日期"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr "会计凭单"
+msgstr "会计凭证"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
@@ -105,7 +105,7 @@ msgstr "已取消"
 #: code:addons/account_voucher/models/account_voucher.py:159
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr "不能删除已经开启或者支付的单据。"
+msgstr "不能删除已经开启或者支付的凭证。"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -183,7 +183,7 @@ msgstr "草稿"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft Vouchers"
-msgstr "草稿凭单"
+msgstr "草稿凭证"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
@@ -333,7 +333,7 @@ msgstr "已过账"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted Vouchers"
-msgstr "已过账凭单"
+msgstr "已过账凭证"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -364,7 +364,7 @@ msgstr "采购收据"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr "采购凭单"
+msgstr "采购凭证"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
@@ -397,7 +397,7 @@ msgstr "销售收据"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Search Vouchers"
-msgstr "搜索凭单"
+msgstr "搜索凭证"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
@@ -446,7 +446,7 @@ msgstr "修正的税"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
 msgid "The Voucher has been totally paid."
-msgstr "这张凭单已全部付完"
+msgstr "这张凭证已付清。"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
@@ -500,7 +500,7 @@ msgstr "供应商"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr "供应商凭单"
+msgstr "供应商凭证"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:97
@@ -510,14 +510,14 @@ msgstr "供应商凭单"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #, python-format
 msgid "Voucher"
-msgstr "凭单"
+msgstr "凭证"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Voucher Entries"
-msgstr "凭单分录"
+msgstr "凭证分录"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
@@ -527,17 +527,17 @@ msgstr "凭单分录"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_tree
 msgid "Voucher Lines"
-msgstr "凭单行"
+msgstr "凭证明细行"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.account_cash_statement_graph
 msgid "Voucher Statistics"
-msgstr "凭单统计"
+msgstr "凭证统计"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr "凭单分录"
+msgstr "凭证分录"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt

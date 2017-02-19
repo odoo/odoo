@@ -12,13 +12,14 @@
 # Jesper Carstensen <jc@danodoo.dk>, 2016
 # Nicolaj Helmer Hansen <nhh@softwarehuset.com>, 2016
 # jonas jensen <j.jensen@tcomp.dk>, 2016
+# Kenneth Hansen <kenneth@vkdata.dk>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-03 14:29+0000\n"
-"PO-Revision-Date: 2017-02-03 14:29+0000\n"
+"POT-Creation-Date: 2017-02-14 10:20+0000\n"
+"PO-Revision-Date: 2017-02-14 10:20+0000\n"
 "Last-Translator: Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
@@ -6801,7 +6802,7 @@ msgstr "Udløbet"
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payable"
-msgstr "Kreditor"
+msgstr "Kreditorer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_payable_id
@@ -7391,7 +7392,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Receivable"
-msgstr "Kreditor"
+msgstr "Debitorer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_receivable_id
@@ -9142,6 +9143,15 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:273
+#, python-format
+msgid ""
+"This move's amount is higher than the transaction's amount. Click to "
+"register a partial payment and keep the payment balance open."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_debit_credit
 msgid ""
 "This option allows you to get more details about the way your balances are "
@@ -9456,6 +9466,13 @@ msgstr "Type"
 #: code:addons/account/models/chart_template.py:819
 #, python-format
 msgid "Undistributed Profits/Losses"
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:278
+#, python-format
+msgid "Undo the partial reconciliation."
 msgstr ""
 
 #. module: account
