@@ -7,8 +7,8 @@
 # Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
-# Philipp Hug <philipp@hug.cx>, 2016
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Philipp Hug <philipp@hug.cx>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # JackTheHunter <Maximilian.N98@gmail.com>, 2016
@@ -37,8 +37,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-03 14:29+0000\n"
-"PO-Revision-Date: 2017-02-03 14:29+0000\n"
+"POT-Creation-Date: 2017-02-14 10:20+0000\n"
+"PO-Revision-Date: 2017-02-14 10:20+0000\n"
 "Last-Translator: key six <mobile.umts@gmail.com>, 2016\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -2462,7 +2462,7 @@ msgstr "Storniere die ausgewählten Rechnungen"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create refund and reconcile"
-msgstr "Abbrechen: Storno erstellen und ausgleichen"
+msgstr "Storno: Rückerstattung erstellen und ausgleichen"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -2517,8 +2517,8 @@ msgstr ""
 #, python-format
 msgid "Cannot refund draft/proforma/cancelled invoice."
 msgstr ""
-"Entwurf / Pro-Forma / Abgebrochen- Rechnungen können nicht rückerstattet "
-"werden."
+"Entwurf / Pro-Forma / abgebrochene Rechnungen können nicht "
+"rückerstattet/storniert werden."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:56
@@ -7661,7 +7661,7 @@ msgstr "Python Code"
 #: model:ir.model.fields,field_description:account.field_account_move_line_quantity
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Quantity"
-msgstr "Anzahl"
+msgstr "Menge"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_exchange_journal_id
@@ -9578,6 +9578,15 @@ msgstr ""
 "Vergleichsfilter zu beschreiben"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:273
+#, python-format
+msgid ""
+"This move's amount is higher than the transaction's amount. Click to "
+"register a partial payment and keep the payment balance open."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_debit_credit
 msgid ""
 "This option allows you to get more details about the way your balances are "
@@ -9923,10 +9932,17 @@ msgid "Undistributed Profits/Losses"
 msgstr "Unverteilte Gewinne/Verluste"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:278
+#, python-format
+msgid "Undo the partial reconciliation."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_unit
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Unit Price"
-msgstr "Stückpreis"
+msgstr "Preis pro ME"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_uom_id
@@ -10563,7 +10579,7 @@ msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "refund it instead."
 msgstr ""
-"Sie können keine Rechnung löschen, die im Entwurfsstatus ist oder "
+"Sie können keine Rechnung löschen, die nicht im Entwurfsstatus ist oder "
 "abgebrochen wurde. Anstatt dessen sollten Sie eine Rückerstattung/Storno "
 "erzeugen."
 
