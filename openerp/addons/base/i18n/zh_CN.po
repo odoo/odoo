@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2017-02-04 07:07+0000\n"
+"PO-Revision-Date: 2017-02-14 04:52+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -959,7 +959,7 @@ msgid ""
 "\n"
 "    **Technical note:** only the templating system of the original Power Email by Openlabs was kept.\n"
 "    "
-msgstr "\nEmail 模板(Openlabs 原创的Power Email的简化版本).\n==============================================================================\n\n让你设计完整的可关联Odoo单据（销售订单，发票 等等）的 email 模板，包括发送者，接收者，主题，邮件正文(html或者文本 格式)。\n\n你也能自动附加文件到膜拜中，或者打印并附加一个报表。\n\n对高级的使用，模板也能包括他们关联的单据的动态属性。\n\n 例如，当你写信给他们的时候，你能使用业务伙伴的国家的名称，在 该属性没有定义的时候也可以提供一个可靠的默认值 。\n\n 每个模板包括了一个内置的助手 以帮你 包含这些动态的值.\n\n如果你允许这个选项，一个写信助手将显示在模板适用的Openerp 单据（例如 发票）的工具栏 。\n一次被多个单据调用时，写信助手 也将变成一个大规模的邮件系统 \n\n如果你需要自动在任何OpenERP 单据上面操作一个较大的活动 ，\n\n这个邮件模板 也是 市场营销系统（参阅  ``marketing_campaign`` 应用）。\n\n**技术提示:**  只有通过OpenLabs原创Power Email的模板系统会被保存。"
+msgstr "\n电子邮件模板(Openlabs 原创的Power Email的简化版本).\n==============================================================================\n\n让你设计完整的可关联Odoo单据(销售订单，发票 等等)的 电子邮件 模板，包括发送者，接收者，主题，邮件正文(html或者文本 格式)。\n\n你也能自动附加文件到膜拜中，或者打印并附加一个报表。\n\n对高级的使用，模板也能包括他们关联的单据的动态属性。\n\n 例如，当你写信给他们的时候，你能使用业务伙伴的国家的名称，在 该属性没有定义的时候也可以提供一个可靠的默认值 。\n\n 每个模板包括了一个内置的助手 以帮你 包含这些动态的值.\n\n如果你允许这个选项，一个写信助手将显示在模板适用的Openerp 单据(例如 发票)的工具栏 。\n一次被多个单据调用时，写信助手 也将变成一个大规模的邮件系统 \n\n如果你需要自动在任何OpenERP 单据上面操作一个较大的活动 ，\n\n这个邮件模板 也是 市场营销系统(参阅  ``marketing_campaign`` 应用)。\n\n**技术提示:**  只有通过OpenLabs原创Power Email的模板系统会被保存。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_crypt
@@ -2322,7 +2322,7 @@ msgid ""
 "For more specific needs, you may also assign custom-defined actions\n"
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
-msgstr "\n收取POP/IMAP服务器上的电子邮件。\n============================================\n\n输入你的POP/IMAP帐号参数，这些帐号的邮件\n将自动下载到你的OpenERP系统。支持所有\n兼容POP3/IMAP的服务器, 包括那些要求加密的SSL/TLS连接。\n\n这个可很容易地用于生成基于邮件的OpenERP文件工作流，例如：\n----------------------------------------------------------------------------------------------------------\n * CRM 线索/机会\n * CRM 投诉\n * 项目问题\n * 项目任务\n * 人力资源招聘 (应用)\n\n只需安装相关应用，你可以将任何这样的文件类型\nt (线索, 项目问题) 应用到你的电子邮件帐户。新邮件将\n自动生成所选类型的新文件，这是建立\n邮箱-到-OpenERP整合的捷径。更好地是：这些文件将直接作为通过Email同步的最小会话。你可以从OpenERP内回复，回复将自动汇总附到\n相同的 *会话* 文件。\n\n对于一些特殊应用，你可以分配定义的动作\n(技术上: 服务器动作) 触发处理每个收到的邮件."
+msgstr "\n收取POP/IMAP服务器上的电子邮件。\n============================================\n\n输入你的POP/IMAP帐号参数，这些帐号的邮件\n将自动下载到你的OpenERP系统。支持所有\n兼容POP3/IMAP的服务器, 包括那些要求加密的SSL/TLS连接。\n\n这个可很容易地用于生成基于邮件的OpenERP文件工作流，例如：\n----------------------------------------------------------------------------------------------------------\n * CRM 线索/机会\n * CRM 投诉\n * 项目问题\n * 项目任务\n * 人力资源招聘 (应用)\n\n只需安装相关应用，你可以将任何这样的文件类型\n (线索, 项目问题) 应用到你的电子邮件帐户。新邮件将\n自动生成所选类型的新文件，这是建立\n邮箱-到-OpenERP整合的捷径。更好地是：这些文件将直接作为通过电子邮箱同步的最小会话。你可以从OpenERP内回复，回复将自动汇总附到\n相同的 *会话* 文件。\n\n对于一些特殊应用，你可以分配定义的动作\n(技术上: 服务器动作) 触发处理每个收到的邮件."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_default
@@ -5405,7 +5405,7 @@ msgstr "Belgium - Payroll with Accounting"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_invoice_bba
 msgid "Belgium - Structured Communication"
-msgstr "比利时 - 结构化 沟通"
+msgstr "比利时 - 结构化通信接口"
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -6070,7 +6070,7 @@ msgstr "商业实体"
 #. module: base
 #: view:res.bank:base.view_res_bank_form
 msgid "Communication"
-msgstr "联络方式"
+msgstr "通信"
 
 #. module: base
 #: model:res.country,name:base.km
@@ -7413,28 +7413,28 @@ msgstr "元素 '%s' 在父视图中没有找到"
 #: field:res.company,email:0 field:res.partner,email:0
 #, python-format
 msgid "Email"
-msgstr "Email"
+msgstr "电子邮箱"
 
 #. module: base
 #: view:res.users:base.view_users_form
 #: view:res.users:base.view_users_simple_form
 msgid "Email Address"
-msgstr "Email地址"
+msgstr "电子邮箱地址"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail
 msgid "Email Gateway"
-msgstr "Email网关"
+msgstr "电子邮箱网关"
 
 #. module: base
 #: view:res.users:base.view_users_form_simple_modif
 msgid "Email Preferences"
-msgstr "Email首选项"
+msgstr "电子邮箱首选项"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_email_template
 msgid "Email Templates"
-msgstr "Email模板"
+msgstr "电子邮件模板"
 
 #. module: base
 #: model:res.groups,name:base.group_user field:res.partner,employee:0
@@ -12429,7 +12429,7 @@ msgstr "从附件重新载入"
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "Remove from the 'More' menu"
-msgstr "从'More'菜单中移走"
+msgstr "从'更多'菜单中移走"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
