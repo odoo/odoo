@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-02-03 04:03+0000\n"
+"PO-Revision-Date: 2017-02-13 14:51+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -171,7 +171,7 @@ msgid ""
 "* The 'Confirmed' status is set automatically as confirm when purchase order in confirm status.                                        \n"
 "* The 'Done' status is set automatically when purchase order is set as done.                                        \n"
 "* The 'Cancelled' status is set automatically when user cancel purchase order."
-msgstr " *当采购单在草稿状态时，自动设置为“草稿”。\n*当采购单确认为确认状态时，设置为“确认”。\n*当采购订单完成后，自动设置为“完成”\n*当用户取消了采购订单后，自动设置为“已经取消”"
+msgstr " *当采购单在草稿状态时，自动设置为'草稿'。\n*当采购单确认为确认状态时，设置为'确认'。\n*当采购订单完成后，自动设置为'完成'。\n*当用户取消了采购订单后，自动设置为'已经取消'。"
 
 #. module: purchase
 #: code:addons/purchase/stock.py:198
@@ -203,12 +203,12 @@ msgstr "采购订单号"
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name|safe} 订单 (编号 ${object.name or 'n/a' })"
+msgstr "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name} 订单 (编号 ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -468,7 +468,7 @@ msgid ""
 "Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n"
 "Based on generated invoice: create a draft invoice you can validate later.\n"
 "Based on incoming shipments: let you create an invoice when receipts are validated."
-msgstr "基于采购单行: 在”发票管理 ->基于采购单行”你可以单独为每个订单行开票。\n基于订单: 生成一个发票草稿供你以后确认。\n基于进仓入库: 入库后根据入库单手动开票。"
+msgstr "基于采购单行: 在 '发票管理 ->基于采购单行 '你可以单独为每个订单行开票。\n基于订单: 生成一个发票草稿供你以后确认。\n基于进仓入库: 入库后根据入库单手动开票。"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -1146,7 +1146,7 @@ msgstr "消息"
 #. module: purchase
 #: help:purchase.order,message_ids:0
 msgid "Messages and communication history"
-msgstr "消息和通信历史"
+msgstr "信息和通信历史记录"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -2123,7 +2123,7 @@ msgstr "网站消息"
 #. module: purchase
 #: help:purchase.order,website_message_ids:0
 msgid "Website communication history"
-msgstr "网站沟通记录"
+msgstr "网站通信历史"
 
 #. module: purchase
 #: help:stock.warehouse,buy_to_resupply:0
