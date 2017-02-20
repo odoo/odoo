@@ -103,6 +103,7 @@ var UsernameWidget = PosBaseWidget.extend({
             'title':      _t('Change Cashier'),
         }).then(function(user){
             self.pos.set_cashier(user);
+            self.pos.gui.screen_instances.products.numpad.check_price_control_rights();
             self.renderElement();
         });
     },

@@ -155,7 +155,7 @@ class PosSession(models.Model):
                 ('config_id', '=', self.config_id.id),
                 ('rescue', '=', False)
             ]) > 1:
-            raise ValidationError(_("You cannot create two active sessions related to the same point of sale!"))
+            raise ValidationError(_("Another session is already opened for this point of sale."))
 
     @api.model
     def create(self, values):
