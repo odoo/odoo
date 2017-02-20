@@ -37,6 +37,7 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_ups = fields.Boolean("UPS")
     module_delivery_usps = fields.Boolean("USPS")
     module_delivery_bpost = fields.Boolean("bpost")
+    module_delivery_easypost = fields.Boolean("Easypost")
     group_stock_multi_locations = fields.Boolean('Storage Locations', implied_group='stock.group_stock_multi_locations',
         help="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.")
     group_stock_multi_warehouses = fields.Boolean('Multi-Warehouses', implied_group='stock.group_stock_multi_warehouses')
