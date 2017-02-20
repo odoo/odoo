@@ -127,6 +127,21 @@ class ProcurementOrder(models.Model):
         ('done', 'Done')], string='Status', default='confirmed',
         copy=False, required=True, track_visibility='onchange')
 
+    @api.multi
+    def _get_purchase_orders(self):
+        return False
+
+    @api.multi
+    def _get_manufacturing_orders(self):
+        return False
+
+    @api.multi
+    def action_open_purchase_orders(self):
+        return False
+
+    @api.multi
+    def action_open_manufacturing_orders(self):
+        return False
 
     @api.multi
     def name_get(self):

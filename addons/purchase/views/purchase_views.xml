@@ -311,7 +311,7 @@
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                    <field name="name" string="Reference"/>
+                    <field name="name" string="Reference" filter_domain="['|', ('name', 'ilike', self), ('origin', 'ilike', self)]"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>

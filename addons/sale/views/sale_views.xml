@@ -170,6 +170,12 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_open_purchase_orders" class="oe_stat_button" icon="fa-shopping-cart" attrs="{'invisible':[('count_po', '=', 0)]}">
+                            <field name="count_po" widget="statinfo" string="RFQ"/>
+                        </button>
+                        <button type="object" name="action_open_manufacturing_orders" class="oe_stat_button" icon="fa-list-alt" attrs="{'invisible':[('count_mo', '=', 0)]}">
+                            <field name="count_mo" widget="statinfo" string="Manufacturing"/>
+                        </button>
                         <button name="action_view_invoice"
                             type="object"
                             class="oe_stat_button"
