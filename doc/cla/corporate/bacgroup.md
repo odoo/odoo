@@ -13,7 +13,6 @@ Leandro Gabriel Di Pasquale dipasquale@bacgroup.net https://github.com/leodipasq
 List of contributors:
 
 Allan Daniel Aguilar Archaga aguilar@bacgroup.net https://github.com/allanaguilar
-Cesar Alejandro Rodriguez Castillo rodriguez@bacgroup.net https://github.com/hondurasopen
 Dewin Javier Garcia Armijo garcia@bacgroup.net https://github.com/dewingarcia
 Jose Reynaldo Cabrera Ayala cabrera@bacgroup.net https://github.com/jcabrera1990
 Leandro Gabriel Di Pasquale dipasquale@bacgroup.net https://github.com/leodipasquale
