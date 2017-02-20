@@ -1,0 +1,59 @@
+<openerp>
+  <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="academy.list">
+      <field name="name">Academy list</field>
+      <field name="model">academy.academy</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="academy.action_window">
+      <field name="name">Academy window</field>
+      <field name="res_model">academy.academy</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="academy.action_server">
+      <field name="name">Academy server</field>
+      <field name="model_id" ref="model_academy_academy"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="Academy" id="academy.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="academy.menu_1" parent="academy.menu_root"/>
+    <menuitem name="Menu 2" id="academy.menu_2" parent="academy.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="academy.menu_1_list" parent="academy.menu_1"
+              action="academy.action_window"/>
+    <menuitem name="Server to list" id="academy" parent="academy.menu_2"
+              action="academy.action_server"/>
+    -->
+  </data>
+</openerp>
