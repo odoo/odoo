@@ -1051,10 +1051,13 @@ class many2many(_column):
             for sub_ids in cr.split_for_in_conditions(ids):
                 cr.execute(query, (id, list(sub_ids), id))
 
-        def unlink_all():
+        def unlink_all(keep_ids=None):
             # remove all records for which user has access rights
             clauses, params, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
             cond = " AND ".join(clauses) if clauses else "1=1"
+            if keep_ids:
+                cond += " AND {rel}.{id2} not in %s".format(rel=rel, id2=id2)
+                params.append(tuple(keep_ids))
             query = """ DELETE FROM {rel} USING {tables}
                         WHERE {rel}.{id1}=%s AND {rel}.{id2}={table}.id AND {cond}
                     """.format(rel=rel, id1=id1, id2=id2,
@@ -1078,7 +1081,10 @@ class many2many(_column):
             elif act[0] == 5:
                 unlink_all()
             elif act[0] == 6:
-                unlink_all()
+                keep_ids = set(act[2])
+                for act1 in [v for v in values if v[0] in (1, 4)]:
+                    keep_ids.add(act1[1])
+                unlink_all(keep_ids)
                 link(act[2])
 
     #
