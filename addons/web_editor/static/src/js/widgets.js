@@ -945,7 +945,7 @@ var LinkDialog = Dialog.extend({
         'keyup :input.url': 'onkeyup',
         'keyup :input': 'preview',
         'click button.remove': 'remove_link',
-        'change input#link-text': function (e) {
+        'change input#o_link_dialog_label_input': function (e) {
             this.text = $(e.target).val();
         },
         'change .link-style': function (e) {
@@ -1041,6 +1041,7 @@ var LinkDialog = Dialog.extend({
     start: function () {
         this.bind_data();
         this.$('input.url-source:eq(1)').closest('.list-group-item').addClass('active');
+        this.$('#o_link_dialog_label_input').focus();
         return this._super.apply(this, arguments);
     },
     get_data: function (test) {
@@ -1051,7 +1052,7 @@ var LinkDialog = Dialog.extend({
             $e = this.$('input.url-source:first');
         }
         var val = $e.val();
-        var label = this.$('#link-text').val() || val;
+        var label = this.$('#o_link_dialog_label_input').val() || val;
 
         if (label && this.data.images) {
             for(var i=0; i<this.data.images.length; i++) {
@@ -1105,7 +1106,7 @@ var LinkDialog = Dialog.extend({
         var text = this.data.text;
         var classes = this.data.iniClassName;
 
-        this.$('input#link-text').val(text);
+        this.$('input#o_link_dialog_label_input').val(text);
         this.$('input.window-new').prop('checked', new_window);
         this.$('input.link-style').prop('checked', false).first().prop("checked", true);
 

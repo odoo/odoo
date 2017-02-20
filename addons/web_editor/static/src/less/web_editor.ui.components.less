@@ -442,49 +442,31 @@ body .modal {
     }
 
     // LINK EDITOR DIALOG COLOR SELECTOR
-    .o-link-editor-dialog{
-        .o-link-color-selector{
-            .o-link-color{
-                position: relative;
-                display: inline-block;
-                height: 30px;
-                width: 30px;
-                border-radius: 15px;
-                border: 2px solid rgba(0, 0, 0, 0.25);
-                input.link-style{
-                    display: none;
-                }
-                &:first-child{
-                    span{
-                        color: #444;
-                    }
-                    &::before{
-                        content: 'L';
-                        display: inline-block;
-                        color: @link-color;
-                        font-weight: bold;
-                        font-size: 17px;
-                        text-decoration: underline;
-                        .o-position-absolute(@top: 0px, @left: 8px);
-                    }
-                }
-                input:checked + span{
-                    height: 0px;
-                    width: 0px;
-                    &::before {
-                        content: '\f00c';
-                        font: normal normal normal 14px/1 FontAwesome;
-                        display: inline-block;
-                        .o-position-absolute(@top: 6px, @left: 5px);
-                    }
+    .o_link_dialog {
+        .o_link_dialog_color > .o_link_dialog_color_item {
+            position: relative;
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(0, 0, 0, 0.25);
+            border-radius: 50%;
+
+            input:checked + i::before {
+                content: "\f00c";
+                .o-position-absolute(@top: 6px, @left: 5px);
+            }
+
+            &.btn-link {
+                padding: 3px 9px;
+
+                > span {
+                    text-decoration: underline;
                 }
             }
         }
-        .o-link-vr{
-            border-right: 1px solid @gray-lighter;
+        .o_link_dialog_preview {
+            border-left: 1px solid @gray-lighter;
         }
     }
-
 }
 
 // FIXME bootstrap modal : 1050

@@ -218,58 +218,61 @@
     </t>
 
     <!-- Link Dialog (allows to choose a style and content for a link on the page) -->
-    <form t-name="web_editor.dialog.link" class="o-link-editor-dialog">
+    <div t-name="web_editor.dialog.link" class="o_link_dialog">
         <div class="row">
-            <div class="col-md-8 o-link-vr">
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label class="control-label col-sm-3" for="link-new">Link Label</label>
-                        <div class="col-sm-9">
-                            <input class="form-control" id="link-text" required="required"/>
-                        </div>
+            <form class="col-md-8 form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="o_link_dialog_label_input">Link Label</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" id="o_link_dialog_label_input" required="required"/>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-3" for="link-new">URL or Email</label>
-                        <div class="col-sm-9">
-                            <input class="form-control url email-address url-source" id="link-external" required="required"/>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="o_link_dialog_url_input">URL or Email</label>
+                    <div class="col-sm-9">
+                        <input class="form-control url email-address url-source" id="o_link_dialog_url_input" required="required"/>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-3">Size</label>
-                        <div class="col-sm-9">
-                            <select class="form-control col-sm-3 link-style">
-                                <option value="btn-xs">Extra Small</option>
-                                <option value="btn-sm">Small</option>
-                                <option value="" selected="selected">Medium</option>
-                                <option value="btn-lg">Large</option>
-                            </select>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Size</label>
+                    <div class="col-sm-9">
+                        <select class="form-control col-sm-3 link-style">
+                            <option value="btn-xs">Extra Small</option>
+                            <option value="btn-sm">Small</option>
+                            <option value="" selected="selected">Medium</option>
+                            <option value="btn-lg">Large</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-3">Color</label>
-                        <div class="col-sm-9">
-                            <div class="o-link-color-selector">
-                                <t t-foreach="['', 'btn-primary', 'btn-success', 'btn-info', 'btn-warning', 'btn-danger', 'btn-alpha', 'btn-beta', 'btn-gamma', 'btn-delta', 'btn-epsilon', 'btn-default']" t-as="color">
-                                    <label t-attf-class="o-link-color #{color}" t-att-data-color="color">
-                                        <input class="link-style" name="link-style-type" type="radio" t-att-value="color"/>
-                                        <span/>
-                                    </label>
-                                </t>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-9">
-                        <label class="o_switch">
-                            <input class="window-new" type="checkbox"/>
-                            <span/>
-                            Open in new window
-                        </label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Color</label>
+                    <div class="col-sm-9">
+                        <div class="o_link_dialog_color">
+                            <label t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-link text-center" data-color="">
+                                <span>L</span>
+                                <input class="hidden link-style" name="link-style-type" type="radio" value=""/>
+                                <i class="fa"/>
+                            </label>
+                            <t t-foreach="['btn-primary', 'btn-default', 'btn-success', 'btn-info', 'btn-warning', 'btn-danger', 'btn-alpha', 'btn-beta', 'btn-gamma', 'btn-delta', 'btn-epsilon']" t-as="color">
+                                <label t-attf-class="o_link_dialog_color_item o_btn_preview btn #{color}" t-att-data-color="color">
+                                    <input class="hidden link-style" name="link-style-type" type="radio" t-att-value="color"/>
+                                    <i class="fa"/>
+                                </label>
+                            </t>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                    <label class="o_switch">
+                        <input class="window-new" type="checkbox"/>
+                        <span/>
+                        Open in new window
+                    </label>
+                    </div>
+                </div>
+            </form>
+            <div class="col-md-4 o_link_dialog_preview">
                 <div class="form-group text-center">
                     <label>Preview</label>
                     <div style="overflow: auto; max-width: 100%; max-height: 200px;">
@@ -278,7 +281,7 @@
                 </div>
             </div>
         </div>
-    </form>
+    </div>
 
     <!--=================-->
     <!-- Snippet options -->
