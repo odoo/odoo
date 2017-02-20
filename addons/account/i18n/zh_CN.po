@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2017-02-03 04:03+0000\n"
+"PO-Revision-Date: 2017-02-14 04:53+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -109,7 +109,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * 当用户编辑一张新的未确认的发票时为“草稿\"状态。            \n* 当一张发票无发票号码时为“形式”状态。             \n* 当发票已创建，发票号已生成，但仍未发出，则为“启用”状态。             \n* 当发票已收款，则会自动配置为“已收款”状态，发票的相关会计分录可以关联或不关联。            \n* 当用户删除发票时为“删除”状态。"
+msgstr "* 当用户编辑一张新的未确认的发票时为'草稿'状态。            \n* 当一张发票无发票号码时为'形式'状态。             \n* 当发票已创建，发票号已生成，但仍未发出，则为'启用'状态。             \n* 当发票已收款，则会自动配置为'已收款'状态，发票的相关会计分录可以关联或不关联。            \n* 当用户删除发票时为'删除'状态。"
 
 #. module: account
 #: code:addons/account/account.py:1477
@@ -164,7 +164,7 @@ msgstr "# 交易"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name|safe} 发票 (Ref ${object.number or 'n/a'})"
+msgstr "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account.py:1861
@@ -386,7 +386,7 @@ msgid ""
 "                goes out of the cash box.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建新的现金记录.\n              </p><p>\n                现金出纳机允许您在您的现金分类账中管理您的现金分录。\n                这个特性提供了按天的方式来跟踪现金付款的方式。\n                您可以查看在您钱箱中的每一分钱，并且在资金进出时创建记录。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建新的收款机记录.\n              </p><p>\n                这里可以管理你的收款机收入或取出的现金情况录入到财务会计分录中。\n                此特性为您提供了按天的方式来跟踪您的现金流向的功能。\n                在这里您可查看在钱箱中的每一分钱，并且在资金进出时创建记录。\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_statement_operation_template
@@ -2266,7 +2266,7 @@ msgstr "现金管理"
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.ui.menu,name:account.journal_cash_move_lines
 msgid "Cash Registers"
-msgstr "现金出纳机"
+msgstr "收款机"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -2728,7 +2728,7 @@ msgstr "共通报告"
 #. module: account
 #: field:account.bank.statement.line,name:0
 msgid "Communication"
-msgstr "联络方式"
+msgstr "通信"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -3686,7 +3686,7 @@ msgstr "定义定期分录"
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
 msgid "Describe why you take money from the cash register:"
-msgstr "说明从现金出纳机取钱的原因。"
+msgstr "请说明在收款机取钱的原因："
 
 #. module: account
 #. openerp-web
@@ -3941,12 +3941,12 @@ msgstr "最佳效率"
 #: model:ir.actions.act_window,name:account.action_email_templates
 #: model:ir.ui.menu,name:account.menu_email_templates
 msgid "Email Templates"
-msgstr "Email 模板"
+msgstr "电子邮件模板"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Email撰写向导"
+msgstr "电子邮件撰写向导"
 
 #. module: account
 #: field:account.analytic.balance,empty_acc:0
@@ -7352,12 +7352,12 @@ msgid ""
 "you set a paypal account, the customer  will be able to pay your invoices or"
 " quotations with a button \"Pay with  Paypal\" in automated emails or "
 "through the Odoo portal."
-msgstr "若配置了接收在线支付（比如，信用卡 等）的Paypal账户（email），客户可单击按钮 \"使用Paypal支付\" 在自动发送的邮件中或通过OpenERP接口支付发票或报价单。"
+msgstr "若配置了接收在线支付（比如，信用卡 等）的Paypal账户（电子邮箱），客户可单击按钮 \"使用Paypal支付\" 在自动发送的邮件中或通过OpenERP接口支付发票或报价单。"
 
 #. module: account
 #: help:res.company,paypal_account:0
 msgid "Paypal username (usually email) for receiving online payments."
-msgstr "Paypal 用户名 (通常为 email) 用于接受在线支付。"
+msgstr "Paypal 用户名 (通常为电子邮箱地址) 用于接受在线支付。"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search

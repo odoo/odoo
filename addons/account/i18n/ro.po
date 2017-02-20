@@ -3,7 +3,7 @@
 # * account
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2015-2016
+# Dorin Hongu <dhongu@gmail.com>, 2015-2017
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-10-31 20:21+0000\n"
+"PO-Revision-Date: 2017-02-15 14:49+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -361,7 +361,7 @@ msgid ""
 "                for miscellaneous operations.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Click aici pentru a crea o intrare de jurnal.\n              </p><p>\n                A journal entry consists of several journal items, each of\n                which is either a debit or a credit transaction.\n              </p><p>\n                Odoo automatically creates one journal entry per accounting\n                document: invoice, refund, supplier payment, bank statements,\n                etc. So, you should record journal entries manually only/mainly\n                for miscellaneous operations.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Click aici pentru a crea o notă contabilă.\n              </p><p>\n                A journal entry consists of several journal items, each of\n                which is either a debit or a credit transaction.\n              </p><p>\n                Odoo automatically creates one journal entry per accounting\n                document: invoice, refund, supplier payment, bank statements,\n                etc. So, you should record journal entries manually only/mainly\n                for miscellaneous operations.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -2497,7 +2497,7 @@ msgstr "Selectati aceasta casuta daca aceasta companie este entitate juridica."
 msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
-msgstr "Bifati aceasta casuta daca nu sunteti sigur de acea inregistrare in jurnal si daca doriti sa o notati drept 'a fi verificata' de catre un expert contabil."
+msgstr "Bifati aceasta casuta daca nu sunteti sigur de acea notă contabilă si daca doriti sa o notati drept 'a fi verificata' de catre un expert contabil."
 
 #. module: account
 #: help:account.tax.code.template,notprintable:0
@@ -5745,7 +5745,7 @@ msgstr "Inregistrari in Jurnal cu perioada in anul curent"
 #: field:account.invoice,move_id:0 field:account.invoice,move_name:0
 #: field:account.move.line,move_id:0
 msgid "Journal Entry"
-msgstr "Înregistrare în Jurnal"
+msgstr "Notă contabilă"
 
 #. module: account
 #: view:account.model:account.view_model_form
@@ -5765,12 +5765,12 @@ msgstr "Linie Model Înregistrare în Jurnal"
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 msgid "Journal Entry Number"
-msgstr "Numărul Înregistrarii în Jurnal"
+msgstr "Numărul notă contabilă"
 
 #. module: account
 #: view:account.move.reconcile:account.view_move_reconcile_form
 msgid "Journal Entry Reconcile"
-msgstr "Reconciliere Inregistrari in Jurnalul contabil"
+msgstr "Reconciliere Note contabile"
 
 #. module: account
 #: view:account.move:account.view_move_form
@@ -9687,7 +9687,7 @@ msgstr "Moneda folosita la introducerea extrasului"
 msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
-msgstr "Data Inregistrarii in Jurnal nu se afla in perioada definita! Ar trebui sa schimbati data sau sa eliminati aceasta restrictie din jurnal."
+msgstr "Data notei contabile nu se afla in perioada definita! Ar trebui sa schimbati data sau sa eliminati aceasta restrictie din jurnal."
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
@@ -9824,14 +9824,14 @@ msgstr "Valuta asociata contului daca nu este aceeasi ca si cea a companiei."
 msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
-msgstr "Suma reziduala dintr-un cont de incasari sau plati ale unei inregistrari in jurnal exprimata in moneda ei (poate fi diferita de moneda companiei)."
+msgstr "Suma reziduala dintr-un cont de incasari sau plati ale unei note contabile exprimata in moneda ei (poate fi diferita de moneda companiei)."
 
 #. module: account
 #: help:account.move.line,amount_residual:0
 msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
-msgstr "Suma reziduală de încasat sau de plată dintr-o înregistrare de jurnal exprimată în moneda companiei."
+msgstr "Suma reziduală de încasat sau de plată dintr-o notă contabilă exprimată în moneda companiei."
 
 #. module: account
 #: constraint:account.move.line:0
@@ -9839,7 +9839,7 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
-msgstr "Contul selectat din Inregistrarea in Jurnal solicita furnizarea unei monede secundare. Ar trebui sa stergeti moneda secundara din cont sau sa selectati o vizualizare multi-moneda in jurnal."
+msgstr "Contul selectat din nota contabilă solicita furnizarea unei monede secundare. Ar trebui sa ștergeți moneda secundara din cont sau să selectați o vizualizare multi-moneda în jurnal."
 
 #. module: account
 #: code:addons/account/account_invoice.py:1391
@@ -11303,7 +11303,7 @@ msgstr "Nu puteti dezactiva un cont care contine elemente ale registrului."
 #: code:addons/account/account.py:1415
 #, python-format
 msgid "You cannot delete a posted journal entry \"%s\"."
-msgstr "Nu puteți șterge o înregistrare postată \"%s\" a registrului."
+msgstr "Nu puteți șterge o notă contabilă postată \"%s\" a registrului."
 
 #. module: account
 #: code:addons/account/account_invoice.py:423
