@@ -1429,6 +1429,9 @@ exports.Orderline = Backbone.Model.extend({
     },
     // changes the base price of the product for this orderline
     set_unit_price: function(price){
+        if (!this.pos.config.restrict_price_control || this.pos.get_cashier().role == 'manager') {
+            return;
+        }
         this.order.assert_editable();
         this.price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
         this.trigger('change',this);

@@ -364,12 +364,17 @@ var NumpadWidget = PosBaseWidget.extend({
         this.state = new models.NumpadState();
     },
     start: function() {
+        this.check_price_control_rights();
         this.state.bind('change:mode', this.changedMode, this);
         this.changedMode();
         this.$el.find('.numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
         this.$el.find('.numpad-minus').click(_.bind(this.clickSwitchSign, this));
         this.$el.find('.number-char').click(_.bind(this.clickAppendNewChar, this));
         this.$el.find('.mode-button').click(_.bind(this.clickChangeMode, this));
+    },
+    check_price_control_rights: function() {
+        var has_rights = !this.pos.config.restrict_price_control || this.pos.get_cashier().role == 'manager';
+        this.$el.find('.mode-button[data-mode="price"]').toggleClass('disabled-mode', !has_rights).prop('disabled', !has_rights);
     },
     clickDeleteLastChar: function() {
         return this.state.deleteLastChar();
