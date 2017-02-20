@@ -76,6 +76,7 @@ class SaleConfigSettings(models.TransientModel):
     module_sale_stock = fields.Boolean("Inventory Management")
     module_delivery = fields.Boolean("Shipping Costs")
     module_delivery_dhl = fields.Boolean("DHL")
+    module_delivery_easypost = fields.Boolean("Easypost")
     module_delivery_fedex = fields.Boolean("FedEx")
     module_delivery_ups = fields.Boolean("UPS")
     module_delivery_usps = fields.Boolean("USPS")
