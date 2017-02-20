@@ -2848,7 +2848,7 @@ body.oe_single_form .oe_single_form_container {
   .openerp .oe_header_row, .openerp ul.oe_header, .openerp div.oe_mail_thread_action, .openerp .oe_mail_recthread_actions, .openerp .oe_button_box, .openerp .oe_form button, .openerp button.oe_invite, .openerp .oe_form header, .openerp .openerp .oe_notebook > li.ui-state-default, .openerp .oe_topbar, .openerp .oe_leftbar, .openerp .oe_loading {
     display: none !important;
   }
-  .openerp .oe_list_content button, .openerp .oe_list_content input[type=checkbox] {
+  .openerp .oe_list_content button, .openerp .oe_list_content input[type=checkbox]:not(:checked) {
     visibility: hidden;
   }
   .openerp .tree_header button, .openerp .oe_mail .oe_mail_thread_msg .oe_mail_unread, .openerp .oe_mail_fetch_more, .openerp .oe_m2o_drop_down_button img, .openerp .oe_form_field_x2many_list_row_add {
