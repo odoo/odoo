@@ -17,4 +17,5 @@ Dewin Javier Garcia Armijo garcia@bacgroup.net https://github.com/dewingarcia
 Jose Reynaldo Cabrera Ayala cabrera@bacgroup.net https://github.com/jcabrera1990
 Leandro Gabriel Di Pasquale dipasquale@bacgroup.net https://github.com/leodipasquale
 Edwin Omar McClellan Salinas mcclellan@bacgroup.net https://github.com/prometeomcclellan
+Osvaldo Jorge Gentile ogentile@bacgroup.net https://github.com/osvaldo35
 Salvatore Josue Trimarchi Pinto trimarchi@bacgroup.net https://github.com/salvatoretrimarchi
