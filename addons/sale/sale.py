@@ -901,7 +901,7 @@ class ProductTemplate(models.Model):
     def action_view_sales(self):
         self.ensure_one()
         action = self.env.ref('sale.action_product_sale_list')
-        product_ids = self.product_variant_ids.ids
+        product_ids = self.with_context(active_test=False).product_variant_ids.ids
 
         return {
             'name': action.name,
