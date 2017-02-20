@@ -112,8 +112,8 @@ website.TopBar.include({
 
 widget.LinkDialog.include({
     bind_data: function () {
-        this.$( "#link-external" ).autocomplete({
-            source: function(request, response) {
+        this.$( "#o_link_dialog_url_input" ).autocomplete({
+            source: function (request, response) {
                 return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
                     model: 'website',
                     method: 'search_pages',

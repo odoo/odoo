@@ -321,23 +321,13 @@ var MenuEntryDialog = widget.LinkDialog.extend({
         return this._super.apply(this, arguments);
     },
     start: function () {
-        var self = this;
-
-        this.$(".link-style").remove();
-        this.$("label[for=link-new]").text("Menu Label");
-
-        return $.when(this._super.apply(this, arguments)).then(function () {
-            var $link_text = self.$('#link-text').focus();
-            self.$('#link-page').change(function (e) {
-                if ($link_text.val()) { return; }
-                var data = $(this).select2('data');
-                $link_text.val(data.create ? data.id : data.text);
-                $link_text.focus();
-            });
-        });
+        this.$(".o_link_dialog_preview").remove();
+        this.$(".window-new, .link-style").closest(".form-group").remove();
+        this.$("label[for='o_link_dialog_label_input']").text(_t("Menu Label"));
+        return this._super.apply(this, arguments);
     },
     save: function () {
-        var $e = this.$('#link-text');
+        var $e = this.$('#o_link_dialog_label_input');
         if (!$e.val() || !$e[0].checkValidity()) {
             $e.closest('.form-group').addClass('has-error');
             $e.focus();
