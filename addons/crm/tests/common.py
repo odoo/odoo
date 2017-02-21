@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
-from odoo.addons.mail.tests.common import TestMail
+from odoo.addons.mail.tests.common import BaseFunctionalTest
 
-class TestCrm(TestMail):
+class TestCrm(BaseFunctionalTest):
 
     @classmethod
     def setUpClass(cls):
@@ -19,6 +19,7 @@ class TestCrm(TestMail):
             'name': 'Riton La Chignole',
             'login': 'riton',
             'email': 'riton.salesman_all@example.com',
+            'notification_type': 'inbox',
             'groups_id': [(6, 0, [user_group_employee.id, user_group_salesman_all.id])]
         })
 

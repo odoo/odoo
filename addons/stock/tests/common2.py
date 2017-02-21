@@ -59,13 +59,13 @@ class TestStockCommon(common.TestProductCommon):
             'name': 'Pauline Poivraisselle',
             'login': 'pauline',
             'email': 'p.p@example.com',
-            'notify_email': 'none',
+            'notification_type': 'inbox',
             'groups_id': [(6, 0, [user_group_stock_user.id])]})
         cls.user_stock_manager = Users.create({
             'name': 'Julie Tablier',
             'login': 'julie',
             'email': 'j.j@example.com',
-            'notify_email': 'none',
+            'notification_type': 'inbox',
             'groups_id': [(6, 0, [user_group_stock_manager.id])]})
 
         # Warehouses

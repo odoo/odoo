@@ -761,18 +761,16 @@ class Message(models.Model):
 
     @api.multi
     def _notify(self, force_send=False, send_after_commit=True, user_signature=True):
-        """ Add the related record followers to the destination partner_ids if is not a private message.
-            Call mail_notification.notify to manage the email sending
-        """
+        """ Compute recipients to notify based on specified recipients and document
+        followers. Delegate notification to partners to send emails and bus notifications
+        and to channels to broadcast messages on channels """
         group_user = self.env.ref('base.group_user')
-        # have a sudoed copy to manipulate partners (public can go here with 
-        # website modules like forum / blog / ...
+        # have a sudoed copy to manipulate partners (public can go here with website modules like forum / blog / ... )
         self_sudo = self.sudo()
 
-        # TDE CHECK: add partners / channels as arguments to be able to notify a message with / without computation ??
-        self.ensure_one()  # tde: not sure, just for testinh, will see
-        partners = self.env['res.partner'] | self.partner_ids
-        channels = self.env['mail.channel'] | self.channel_ids
+        self.ensure_one()
+        partners_sudo = self.env['res.partner'].sudo() | self_sudo.partner_ids
+        channels_sudo = self.env['mail.channel'].sudo() | self_sudo.channel_ids
 
         # all followers of the mail.message document have to be added as partners and notified
         # and filter to employees only if the subtype is internal
@@ -783,28 +781,38 @@ class Message(models.Model):
             ]).filtered(lambda fol: self.subtype_id in fol.subtype_ids)
             if self_sudo.subtype_id.internal:
                 followers = followers.filtered(lambda fol: fol.channel_id or (fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id')))
-            channels = self_sudo.channel_ids | followers.mapped('channel_id')
-            partners = self_sudo.partner_ids | followers.mapped('partner_id')
-        else:
-            channels = self_sudo.channel_ids
-            partners = self_sudo.partner_ids
+            channels_sudo |= followers.mapped('channel_id')
+            partners_sudo |= followers.mapped('partner_id')
 
         # remove author from notified partners
         if not self._context.get('mail_notify_author', False) and self_sudo.author_id:
-            partners = partners - self_sudo.author_id
+            partners_sudo = partners_sudo - self_sudo.author_id
 
         # update message, with maybe custom values
         message_values = {
-            'channel_ids': [(6, 0, channels.ids)],
-            'needaction_partner_ids': [(6, 0, partners.ids)]
+            'channel_ids': [(6, 0, channels_sudo.ids)],
+            'needaction_partner_ids': [(6, 0, partners_sudo.ids)]
         }
         if self.model and self.res_id and hasattr(self.env[self.model], 'message_get_message_notify_values'):
             message_values.update(self.env[self.model].browse(self.res_id).message_get_message_notify_values(self, message_values))
         self.write(message_values)
 
         # notify partners and channels
-        partners._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
-        channels._notify(self)
+        # those methods are called as SUPERUSER because portal users posting messages
+        # have no access to partner model. Maybe propagating a real uid could be necessary.
+        email_channels = channels_sudo.filtered(lambda channel: channel.email_send)
+        # make a dedicated search on res.users to avoid user_ids.notification_type that will be user_ids.id in [ARRAY]
+        notif_users = self.env['res.users'].sudo().search([
+            ('partner_id', 'in', partners_sudo.ids),
+            ('notification_type', '=', 'inbox')
+        ])
+        partners_sudo.search([
+            '|',
+            ('id', 'in', (partners_sudo - notif_users.mapped('partner_id')).ids),
+            ('channel_ids', 'in', email_channels.ids),
+            ('email', '!=', self_sudo.author_id and self_sudo.author_id.email or self_sudo.email_from),
+        ])._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
+        channels_sudo._notify(self)
 
         # Discard cache, because child / parent allow reading and therefore
         # change access rights.

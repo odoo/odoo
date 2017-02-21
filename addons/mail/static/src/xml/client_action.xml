@@ -113,13 +113,6 @@
         <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline"/>
     </t>
 
-    <t t-name="mail.chat.UndoSnackbar">
-        <div class="alert o_mail_snackbar" data-dismiss="alert" role="alert">
-            <t t-esc="nb_needactions"/> mention(s) marked as read.
-            <a href="#" class="alert-link o_snackbar_undo">Undo</a>
-        </div>
-    </t>
-
     <t t-name="mail.chat.MessageSentSnackbar">
         <div class="alert o_mail_snackbar" data-dismiss="alert" role="alert">
             Message sent in "<t t-esc="record_name"/>".
