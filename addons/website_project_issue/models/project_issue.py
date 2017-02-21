@@ -35,7 +35,7 @@ class Issue(models.Model):
             else:
                 return {
                     'type': 'ir.actions.act_url',
-                    'url': '/my/issues/%s' % self.id,
+                    'url': self.website_url,
                     'target': 'self',
                     'res_id': self.id,
                 }

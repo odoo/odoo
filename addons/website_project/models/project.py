@@ -44,7 +44,7 @@ class Task(models.Model):
 
     def _compute_website_url(self):
         for task in self:
-            task.website_url = '/my/task/%s' % slug(task)
+            task.website_url = '/my/task/%s' % task.id
 
     @api.multi
     def get_access_action(self):
@@ -59,7 +59,7 @@ class Task(models.Model):
             else:
                 return {
                     'type': 'ir.actions.act_url',
-                    'url': '/my/task/%s' % self.id,
+                    'url': self.website_url,
                     'target': 'self',
                     'res_id': self.id,
                 }
