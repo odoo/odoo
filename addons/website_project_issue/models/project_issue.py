@@ -8,8 +8,8 @@ class Issue(models.Model):
     _name = "project.issue"
     _inherit = ['project.issue']
 
-    main_attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
-                                          help="Attachment that don't come from message.")
+    attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
+                                     help="Attachment that don't come from message.")
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
     def _compute_website_url(self):
@@ -18,11 +18,9 @@ class Issue(models.Model):
 
     def _compute_attachment_ids(self):
         for issue in self:
-            all_attach = self.env['ir.attachment'].search([('res_id', '=', issue.id), ('res_model', '=', 'project.issue')]).ids
-            message_attach_ids = []
-            for m in self.mapped('message_ids'):
-                message_attach_ids += m.attachment_ids.ids
-            issue.main_attachment_ids = list(set(all_attach) - set(message_attach_ids))
+            attachment_ids = self.env['ir.attachment'].search([('res_id', '=', issue.id), ('res_model', '=', 'project.issue')]).ids
+            message_attachment_ids = self.mapped('message_ids.attachment_ids').ids # from mail_thread
+            issue.attachment_ids = list(set(attachment_ids) - set(message_attachment_ids))
 
     @api.multi
     def get_access_action(self):
