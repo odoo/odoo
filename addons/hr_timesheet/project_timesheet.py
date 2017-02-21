@@ -24,12 +24,14 @@ class Task(models.Model):
                  'child_ids.planned_hours', 'child_ids.effective_hours', 'child_ids.children_hours', 'child_ids.timesheet_ids.unit_amount')
     def _hours_get(self):
         for task in self.sorted(key='id', reverse=True):
+            children_hours = 0
             for child_task in task.child_ids:
                 if child_task.stage_id and not child_task.stage_id.fold:
-                    task.children_hours += child_task.effective_hours + child_task.children_hours
+                    children_hours += child_task.effective_hours + child_task.children_hours
                 else:
-                    task.children_hours += max(child_task.planned_hours, child_task.effective_hours + child_task.children_hours)
+                    children_hours += max(child_task.planned_hours, child_task.effective_hours + child_task.children_hours)
 
+            task.children_hours = children_hours
             task.effective_hours = sum(task.timesheet_ids.mapped('unit_amount'))
             task.remaining_hours = task.planned_hours - task.effective_hours - task.children_hours
             task.total_hours = max(task.planned_hours, task.effective_hours)
