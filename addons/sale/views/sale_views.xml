@@ -573,7 +573,7 @@
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter string="To Invoice" domain="[('qty_to_invoice','&lt;&gt;', 0)]"  help="Sales Order Lines ready to be invoiced"/>
+                    <filter string="To Invoice" domain="[('qty_to_invoice','!=', 0)]"  help="Sales Order Lines ready to be invoiced"/>
                     <separator/>
                     <filter string="My Sales Order Lines" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine"/>
                     <field name="order_id"/>

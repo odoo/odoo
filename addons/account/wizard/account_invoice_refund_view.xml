@@ -13,18 +13,18 @@
                              <field name="filter_refund" attrs="{'invisible': [('refund_only','=',True)]}" widget="radio"/>
                          </group>
                          <group>
-                             <div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','&lt;&gt;','refund')]}" class="oe_grey" colspan="4">
+                             <div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','!=','refund')]}" class="oe_grey" colspan="4">
                                 You will be able to edit and validate this
                                 credit note directly or keep it draft,
                                 waiting for the document to be issued by
                                 your supplier/customer.
                              </div>
-                             <div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','&lt;&gt;','cancel')]}" class="oe_grey" colspan="4">
+                             <div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','!=','cancel')]}" class="oe_grey" colspan="4">
                                 Use this option if you want to cancel an invoice you should not
                                 have issued. The credit note will be created, validated and reconciled
                                 with the invoice. You will not be able to modify the credit note.
                              </div>
-                             <div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','&lt;&gt;','modify')]}" class="oe_grey" colspan="4">
+                             <div attrs="{'invisible':['|',('refund_only','=',True),('filter_refund','!=','modify')]}" class="oe_grey" colspan="4">
                                 Use this option if you want to cancel an invoice and create a new
                                 one. The credit note will be created, validated and reconciled
                                 with the current invoice. A new, draft, invoice will be created 

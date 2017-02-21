@@ -89,7 +89,7 @@
                             <group>
                                 <field name="sale_journal" domain="[('type','=','sale')]"/>
                                 <field name="account_move" readonly="1"
-                                        attrs="{'invisible':[('state','&lt;&gt;','done')]}"/>
+                                        attrs="{'invisible':[('state','!=','done')]}"/>
                             </group>
                         </group>
                     </page>

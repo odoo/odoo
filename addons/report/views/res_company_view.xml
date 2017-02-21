@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <form string="Company">
                 <field name="logo" invisible="1"/>
-                <div class="alert alert-warning" attrs="{'invisible': [('logo','&lt;&gt;',False)]}">
+                <div class="alert alert-warning" attrs="{'invisible': [('logo','!=',False)]}">
                     <p>
                         <strong>No logo found!</strong>
                         To get a beautiful document, you should review your

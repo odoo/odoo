@@ -230,10 +230,10 @@
                 <field name="has_outstanding" invisible="1"/>
                 <sheet string="Vendor Bill">
                     <div>
-                        <label string="Draft Bill" attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_invoice')]}"/>
-                        <label string="Draft Refund" attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_refund')]}"/>
-                        <label string="Bill " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_invoice')]}"/>
-                        <label string="Refund " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_refund')]}"/>
+                        <label string="Draft Bill" attrs="{'invisible': ['|',('state','!=','draft'), ('type','!=','in_invoice')]}"/>
+                        <label string="Draft Refund" attrs="{'invisible': ['|',('state','!=','draft'), ('type','!=','in_refund')]}"/>
+                        <label string="Bill " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}"/>
+                        <label string="Refund " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}"/>
                         <h1 class="mt0">
                             <field name="number" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
                         </h1>
@@ -364,10 +364,10 @@
                 </div>
                 <field name="has_outstanding" invisible="1"/>
                 <sheet string="Invoice">
-                    <label string="Refund" attrs="{'invisible': ['|',('state','=','draft'), ('type','&lt;&gt;','out_refund')]}"/>
+                    <label string="Refund" attrs="{'invisible': ['|',('state','=','draft'), ('type','!=','out_refund')]}"/>
                     <h1 class="mt0">
-                        <label string="Draft Invoice" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_invoice')]}"/>
-                        <label string="Draft Refund" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_refund')]}"/>
+                        <label string="Draft Invoice" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','!=','out_invoice')]}"/>
+                        <label string="Draft Refund" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','!=','out_refund')]}"/>
                         <field name="number" readonly="1" class="oe_inline" attrs="{'invisible': [('state','in',('draft',))]}"/>
                     </h1>
                     <field name="type" invisible="1"/>

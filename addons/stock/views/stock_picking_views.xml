@@ -403,7 +403,7 @@
                     <separator/>
                     <filter name="late" string="Late" domain="[('min_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S'))]" help="Pickings that are late on scheduled time"/>
                     <separator/>
-                    <filter name="backorder" string="Backorders" domain="[('backorder_id','&lt;&gt;', False)]" help="Remaining parts of picking partially processed"/>
+                    <filter name="backorder" string="Backorders" domain="[('backorder_id','!=', False)]" help="Remaining parts of picking partially processed"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>

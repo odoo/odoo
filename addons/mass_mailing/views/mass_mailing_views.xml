@@ -353,7 +353,7 @@
                                     attrs="{'invisible': [('mailing_model', '=', 'mail.mass_mailing.list')]}"
                                     options="{'model': 'mailing_model'}"
                                     context="{'search_default_not_opt_out':1}"/>
-                                <div attrs="{'invisible': [('mailing_model', '&lt;&gt;', 'mail.mass_mailing.list')]}">
+                                <div attrs="{'invisible': [('mailing_model', '!=', 'mail.mass_mailing.list')]}">
                                     <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
                                     <field name="contact_list_ids" widget="many2many_tags"
                                         placeholder="Select mailing lists..." class="oe_inline"/>

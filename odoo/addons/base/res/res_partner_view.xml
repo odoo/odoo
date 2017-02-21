@@ -281,9 +281,9 @@
                                             <group>
                                                 <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                                                 <field name="title" placeholder="e.g. Mr."
-                                                    attrs="{'invisible': [('type','&lt;&gt;', 'contact')]}"/>
+                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
                                                 <field name="function" placeholder="e.g. Sales Director"
-                                                    attrs="{'invisible': [('type','&lt;&gt;', 'contact')]}"/>
+                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
                                                 <field name="email"/>
                                                 <field name="phone" widget="phone"/>
                                                 <field name="mobile" widget="phone"/>
@@ -512,7 +512,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="domain">[('supplier','&lt;&gt;',1),('customer','&lt;&gt;',1)]</field>
+            <field name="domain">[('supplier','!=',1),('customer','!=',1)]</field>
             <field name="filter" eval="True"/>
         </record>
 

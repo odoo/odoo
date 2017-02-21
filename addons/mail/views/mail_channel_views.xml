@@ -114,7 +114,7 @@
                                 <group class="o_label_nowrap">
                                     <field name="public" widget="radio" string="Who can follow the group's activities?"/>
                                     <field name="group_public_id"
-                                        attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
+                                        attrs="{'invisible': [('public','!=','groups')], 'required': [('public','=','groups')]}"
                                         />
                                     <field name="group_ids" widget="many2many_tags"/>
                                 </group>

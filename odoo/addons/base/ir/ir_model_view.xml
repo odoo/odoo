@@ -9,7 +9,7 @@
                 <form string="Create Menu">
                     <group>
                         <field name="name"/>
-                        <field name="menu_id" domain="[('parent_id','&lt;&gt;',False)]"/>
+                        <field name="menu_id" domain="[('parent_id','!=',False)]"/>
                     </group>
                     <footer>
                         <button name="menu_create" string="Create _Menu" type="object" class="btn-primary"/>
