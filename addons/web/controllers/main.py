@@ -37,7 +37,7 @@ from odoo.tools.safe_eval import safe_eval
 from odoo import http
 from odoo.http import content_disposition, dispatch_rpc, request, \
                       serialize_exception as _serialize_exception
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.models import check_method_name
 
 _logger = logging.getLogger(__name__)
@@ -1341,6 +1341,9 @@ class ExportFormat(object):
         """
         raise NotImplementedError()
 
+    def check_records_length(self, row_len=0):
+        pass
+
     def base(self, data, token):
         params = json.loads(data)
         model, fields, ids, domain, import_compat = \
@@ -1348,6 +1351,8 @@ class ExportFormat(object):
 
         Model = request.env[model].with_context(**params.get('context', {}))
         records = Model.browse(ids) or Model.search(domain, offset=0, limit=False, order=False)
+
+        self.check_records_length(len(records))
 
         if not Model._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']
@@ -1426,6 +1431,7 @@ class ExcelExport(ExportFormat, http.Controller):
         return base + '.xls'
 
     def from_data(self, fields, rows):
+        self.check_records_length(len(rows))
         workbook = xlwt.Workbook()
         worksheet = workbook.add_sheet('Sheet 1')
 
@@ -1454,6 +1460,10 @@ class ExcelExport(ExportFormat, http.Controller):
         data = fp.read()
         fp.close()
         return data
+
+    def check_records_length(self, row_len=0):
+        if row_len + 1 > 65536:  # rows + header
+            raise UserError(_('Records can not exported because either you are trying to export more than 65536 records or during processing the records system has reached the limit of 65536 records in excel format, please split the records or use the csv to export.'))
 
 class Reports(http.Controller):
     POLLING_DELAY = 0.25
