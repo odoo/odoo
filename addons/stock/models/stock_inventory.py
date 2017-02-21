@@ -390,15 +390,11 @@ class InventoryLine(models.Model):
             if float_utils.float_compare(line.theoretical_qty, line.product_qty, precision_rounding=line.product_id.uom_id.rounding) == 0 and not neg_quants:
                 continue
 
-            neg_quant_qty = - sum([x.qty for x in neg_quants])
-            if float_utils.float_compare(line.theoretical_qty, 0, precision_rounding=line.product_id.uom_id.rounding) < 0:
-                neg_quant_qty += line.theoretical_qty # As the theoretical_qty is negative, we add it to neg_quant_qty
             diff = line.theoretical_qty - line.product_qty
-            if diff > 0:
-                neg_quant_qty -= diff
-                if neg_quant_qty < 0:
-                    neg_quant_qty = 0
-                
+            neg_quant_qty = - sum([x.qty for x in neg_quants])
+            if diff < 0:
+                neg_quant_qty -= min(neg_quant_qty, -diff) # Reconciliation will be done when adding material for the difference already
+
             vals = {
                 'name': _('INV:') + (line.inventory_id.name or ''),
                 'product_id': line.product_id.id,
@@ -408,7 +404,8 @@ class InventoryLine(models.Model):
                 'inventory_id': line.inventory_id.id,
                 'state': 'confirmed',
                 'restrict_lot_id': line.prod_lot_id.id,
-                'restrict_partner_id': line.partner_id.id}
+                'restrict_partner_id': line.partner_id.id
+                }
             move_add = False
             move_rem = False
             if diff < 0 or neg_quant_qty:  # found more than expected
