@@ -740,15 +740,15 @@
                 <t t-if="step&gt;20 and step&lt;50">
                     <a href="/shop/checkout" class="text-success">
                         <!-- billing if not loggedin - TODO -->
-                        <t>Billing</t>
-                        <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services" groups="sale.group_delivery_invoice_address"> &amp; Shipping</t>
-                        <span class="chevron"/>
+                        <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Shipping &amp;</t>
+                            Billing<span class="chevron"/>
                     </a>
                 </t>
                 <t t-if="not (step&gt;20 and step&lt;50)">
-                    <t>Billing</t>
-                    <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services" groups="sale.group_delivery_invoice_address"> &amp; Shipping</t>
-                    <span class="chevron"/>
+                    <!-- why website_sale_order is not set here ? -->
+                    <t t-set="website_sale_order" t-value="website.sale_get_order()" />
+                    <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Shipping &amp;</t>
+                        Billing<span class="chevron"/>
                 </t>
             </li>
             <li t-att-class="(step==40 and 'text-primary') or 'text-muted'" id="step40">
@@ -1076,7 +1076,7 @@
                                     </t>
                                 </div>
                             </div>
-                            <t t-if="not only_services" groups="sale.group_delivery_invoice_address">
+                            <t t-if="not only_services">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h3 class="page-header mt16">Shipping Address
@@ -1739,7 +1739,7 @@
             <div class='o_div_text_overflow' t-field="order.partner_invoice_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
           </div>
         </div>
-        <t t-if="not order.only_services" groups="sale.group_delivery_invoice_address">
+        <t t-if="not order.only_services">
             <div class="panel panel-info break-word">
               <div class="panel-heading">Ship To:</div>
               <div class="panel-body">
