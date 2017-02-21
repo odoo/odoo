@@ -6,6 +6,7 @@ from collections import OrderedDict
 from odoo import http, _
 from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
 from odoo.http import request
+from odoo.osv.expression import OR
 
 
 class WebsiteAccount(website_account):
@@ -67,18 +68,12 @@ class WebsiteAccount(website_account):
         # search
         if search and search_in:
             search_domain = []
-            search_all = 0
             if search_in in ('content', 'all'):
-                search_domain += ['|', ('name', 'ilike', search), ('description', 'ilike', search)]
-                search_all += 1
+                search_domain = OR([search_domain, ['|', ('name', 'ilike', search), ('description', 'ilike', search)]])
             if search_in in ('customer', 'all'):
-                search_domain += [('partner_id', 'ilike', search)]
-                search_all += 1
+                search_domain = OR([search_domain, [('partner_id', 'ilike', search)]])
             if search_in in ('message', 'all'):
-                search_domain += [('message_ids.body', 'ilike', search)]
-                search_all += 1
-            if search_in == 'all':
-                search_domain[:0] = ['|'] * (search_all - 1)
+                search_domain = OR([search_domain, [('message_ids.body', 'ilike', search)]])
             domain += search_domain
 
         # issue count
