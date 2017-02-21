@@ -56,7 +56,7 @@ class website_account(website_account):
 
         searchbar_sortings = {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Name'), 'order': 'name'},
+            'name': {'label': _('Reference'), 'order': 'name'},
         }
 
         # default sortby order
@@ -107,7 +107,7 @@ class website_account(website_account):
 
         searchbar_sortings = {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Name'), 'order': 'name'},
+            'name': {'label': _('Reference'), 'order': 'name'},
         }
         # default sortby order
         if not sortby:
@@ -181,7 +181,7 @@ class website_account(website_account):
         searchbar_sortings = {
             'date': {'label': _('Invoice Date'), 'order': 'date_invoice desc'},
             'duedate': {'label': _('Due Date'), 'order': 'date_due desc'},
-            'name': {'label': _('Name'), 'order': 'name desc'},
+            'name': {'label': _('Reference'), 'order': 'name desc'},
             'state': {'label': _('Status'), 'order': 'state'},
         }
         # default sort by order
