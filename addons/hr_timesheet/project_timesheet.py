@@ -26,7 +26,7 @@ class Task(models.Model):
         for task in self.sorted(key='id', reverse=True):
             children_hours = 0
             for child_task in task.child_ids:
-                if child_task.stage_id and not child_task.stage_id.fold:
+                if child_task.stage_id and child_task.stage_id.fold:
                     children_hours += child_task.effective_hours + child_task.children_hours
                 else:
                     children_hours += max(child_task.planned_hours, child_task.effective_hours + child_task.children_hours)
