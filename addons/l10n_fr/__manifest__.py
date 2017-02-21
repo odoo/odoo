@@ -39,5 +39,6 @@ configuration of their taxes and fiscal positions manually.
         'data/account_fiscal_position_template_data.xml',
         'data/account_reconcile_model_template.xml',
         'data/account_chart_template_data.yml',
+        'data/res_country_data.xml',
     ],
 }

@@ -591,6 +591,9 @@ class AccountFiscalPositionTemplate(models.Model):
     account_ids = fields.One2many('account.fiscal.position.account.template', 'position_id', string='Account Mapping')
     tax_ids = fields.One2many('account.fiscal.position.tax.template', 'position_id', string='Tax Mapping')
     note = fields.Text(string='Notes')
+    auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
+    country_group_id = fields.Many2one('res.country.group', string='Country Group',
+        help="Apply only if delivery or invocing country match the group.")
 
 
 class AccountFiscalPositionTaxTemplate(models.Model):
