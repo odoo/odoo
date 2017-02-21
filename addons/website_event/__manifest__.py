@@ -3,7 +3,7 @@
 {
     'name': 'Online Events',
     'category': 'Marketing',
-    'sequence': 135,
+    'sequence': 166,
     'summary': 'Schedule, Promote and Sell Events',
     'website': 'https://www.odoo.com/page/website-builder',
     'description': """
