@@ -1180,7 +1180,7 @@ class MailThread(models.AbstractModel):
     def message_route_process(self, message, message_dict, routes):
         self = self.with_context(attachments_mime_plainxml=True) # import XML attachments as text
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
-        partner_ids = message_dict.pop('partner_ids', [])
+        original_partner_ids = message_dict.pop('partner_ids', [])
         thread_id = False
         for model, thread_id, custom_values, user_id, alias in routes or ():
             if model:
@@ -1206,13 +1206,23 @@ class MailThread(models.AbstractModel):
                 Model = self.env['mail.thread']
             if not hasattr(Model, 'message_post'):
                 Model = self.env['mail.thread'].with_context(thread_model=model)
-            internal = message_dict.pop('internal', False)
-            new_msg = Model.browse(thread_id).message_post(subtype=internal and 'mail.mt_note' or 'mail.mt_comment', **message_dict)
 
-            if partner_ids:
+            # replies to internal message are considered as notes, but parent message
+            # author is added in recipients to ensure he is notified of a private answer
+            partner_ids = []
+            if message_dict.pop('internal', False):
+                subtype = 'mail.mt_note'
+                if message_dict.get('parent_id'):
+                    parent_message = self.env['mail.message'].sudo().browse(message_dict['parent_id'])
+                    partner_ids = [(4, parent_message.author_id.id)]
+            else:
+                subtype = 'mail.mt_comment'
+            new_msg = Model.browse(thread_id).message_post(subtype=subtype, partner_ids=partner_ids, **message_dict)
+
+            if original_partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
                 # duplicate emails due to notifications
-                new_msg.write({'partner_ids': partner_ids})
+                new_msg.write({'partner_ids': original_partner_ids})
         return thread_id
 
     @api.model

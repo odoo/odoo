@@ -202,7 +202,7 @@ class TestMessagePost(TestMail):
         reply = self.group_pigs.message_ids - msg
         self.assertTrue(reply)
         self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
-        self.assertEqual(reply.needaction_partner_ids, self.env['res.partner'])
+        self.assertEqual(reply.needaction_partner_ids, self.user_employee.partner_id)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_compose(self):
