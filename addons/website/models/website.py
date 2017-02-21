@@ -205,12 +205,16 @@ class Website(models.Model):
     #----------------------------------------------------------
 
     @api.model
-    def new_page(self, name, template='website.default_page', ispage=True):
+    def new_page(self, name, template='website.default_page', ispage=True, namespace=None):
         """ Create a new website page, and assign it a xmlid based on the given one
             :param name : the name of the page
             :param template : potential xml_id of the page to create
+            :param namespace : module part of the xml_id if none, the template module name is used
         """
-        template_module, dummy = template.split('.')
+        if namespace:
+            template_module = namespace
+        else:
+            template_module, dummy = template.split('.')
         website_id = self._context.get('website_id')
 
         # completely arbitrary max_length
