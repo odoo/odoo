@@ -149,8 +149,8 @@
                     <group string="Calculations">
                         <field name="category_id"/>
                         <field name="amount_select"/>
-                        <field name="amount_fix"  attrs="{'readonly':[('amount_select','&lt;&gt;','fix')]}"/>
-                        <field name="amount_percentage"  attrs="{'readonly':[('amount_select','&lt;&gt;','percentage')]}"/>
+                        <field name="amount_fix"  attrs="{'readonly':[('amount_select','!=','fix')]}"/>
+                        <field name="amount_percentage"  attrs="{'readonly':[('amount_select','!=','percentage')]}"/>
                         <field name="sequence"/>
                     </group>
                     <field name="note"/>
@@ -236,7 +236,7 @@
                         </div>
                         <field name="contract_id" domain="[('employee_id','=',employee_id),('date_start','&lt;=',date_to),'|',('date_end','&gt;=',date_from),('date_end','=',False)]" context="{'default_employee_id': employee_id}"/>
                         <field name="number"/>
-                        <field name="struct_id" attrs="{'required':[('contract_id','&lt;&gt;',False)]}"/>
+                        <field name="struct_id" attrs="{'required':[('contract_id','!=',False)]}"/>
                         <field name="name"/>
                         <field name="credit_note"/>
                     </group>
@@ -590,17 +590,17 @@
                             <group col="4">
                                 <separator colspan="4" string="Conditions"/>
                                 <field name="condition_select"/><newline/>
-                                <field name="condition_python" attrs="{'invisible':[('condition_select','&lt;&gt;','python')], 'required': [('condition_select','=','python')]}" colspan="4"/> <newline/>
-                                <field name="condition_range" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/><newline/>
-                                <field name="condition_range_min" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/><newline/>
-                                <field name="condition_range_max" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/><newline/>
+                                <field name="condition_python" attrs="{'invisible':[('condition_select','!=','python')], 'required': [('condition_select','=','python')]}" colspan="4"/> <newline/>
+                                <field name="condition_range" attrs="{'invisible':[('condition_select','!=','range')], 'required':[('condition_select','=','range')]}"/><newline/>
+                                <field name="condition_range_min" colspan="2" attrs="{'invisible':[('condition_select','!=','range')], 'required':[('condition_select','=','range')]}"/><newline/>
+                                <field name="condition_range_max" colspan="2" attrs="{'invisible':[('condition_select','!=','range')], 'required':[('condition_select','=','range')]}"/><newline/>
                                 <separator colspan="4" string="Computation"/>
                                 <field name="amount_select"/><newline/>
-                                <field name="amount_percentage_base" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required': [('amount_select','=','percentage')]}"/><newline/>
+                                <field name="amount_percentage_base" attrs="{'invisible':[('amount_select','!=','percentage')], 'required': [('amount_select','=','percentage')]}"/><newline/>
                                 <field name="quantity" attrs="{'invisible':[('amount_select','=','code')], 'required':[('amount_select','!=','code')]}"/><newline/>
-                                <field name="amount_fix"  attrs="{'invisible':[('amount_select','&lt;&gt;','fix')], 'required':[('amount_select','=','fix')]}"/><newline/>
-                                <field colspan="4" name="amount_python_compute" attrs="{'invisible':[('amount_select','&lt;&gt;','code')], 'required':[('amount_select','=','code')]}"/>
-                                <field name="amount_percentage" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required':[('amount_select','=','percentage')]}"/>
+                                <field name="amount_fix"  attrs="{'invisible':[('amount_select','!=','fix')], 'required':[('amount_select','=','fix')]}"/><newline/>
+                                <field colspan="4" name="amount_python_compute" attrs="{'invisible':[('amount_select','!=','code')], 'required':[('amount_select','=','code')]}"/>
+                                <field name="amount_percentage" attrs="{'invisible':[('amount_select','!=','percentage')], 'required':[('amount_select','=','percentage')]}"/>
                                 <separator colspan="4" string="Company Contribution"/>
                                 <field name="register_id"/>
                             </group>

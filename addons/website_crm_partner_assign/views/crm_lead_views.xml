@@ -21,7 +21,7 @@
                             </div>
                             <button string="Automatic Assignation" name="action_assign_partner" type="object" class="btn-link"/>
 
-                            <field name="partner_assigned_id" domain="[('grade_id','&lt;&gt;',False)]"/>
+                            <field name="partner_assigned_id" domain="[('grade_id','!=',False)]"/>
                             <button string="Send Email" type="action" class="btn-link"
                                 attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                 name="%(crm_lead_forward_to_partner_act)d"
@@ -82,7 +82,7 @@
                             </div>
                             <button string="Automatic Assignation" name="action_assign_partner" type="object" class="btn-link"/>
 
-                            <field name="partner_assigned_id" domain="[('grade_id','&lt;&gt;',False)]"/>
+                            <field name="partner_assigned_id" domain="[('grade_id','!=',False)]"/>
                             <button string="Send Email" type="action" class="btn-link"
                                 attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                 name="%(crm_lead_forward_to_partner_act)d"

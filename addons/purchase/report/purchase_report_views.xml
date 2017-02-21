@@ -29,21 +29,21 @@
         <record id="filter_purchase_order_monthly_purchases" model="ir.filters">
             <field name="name">Monthly Purchases</field>
             <field name="model_id">purchase.report</field>
-            <field name="domain">[('state','&lt;&gt;','cancel')]</field>
+            <field name="domain">[('state','!=','cancel')]</field>
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['category_id'], 'col_group_by': ['date_order:month'], 'measures': ['unit_quantity']}</field>
         </record>
         <record id="filter_purchase_order_price_per_supplier" model="ir.filters">
             <field name="name">Price Per Vendor</field>
             <field name="model_id">purchase.report</field>
-            <field name="domain">[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
+            <field name="domain">[('state','!=','draft'),('state','!=','cancel')]</field>
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['partner_id'], 'col_group_by': ['product_id'], 'measures': ['price_average']}</field>
         </record>
         <record id="filter_purchase_order_average_delivery_time" model="ir.filters">
             <field name="name">Average Delivery Time</field>
             <field name="model_id">purchase.report</field>
-            <field name="domain">[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
+            <field name="domain">[('state','!=','draft'),('state','!=','cancel')]</field>
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['partner_id'], 'measures': ['delay_pass']}</field>
         </record>
@@ -55,7 +55,7 @@
         <field name="arch" type="xml">
             <search string="Purchase Orders">
                 <filter string="Quotations" name="quotes" domain="[('state','=','draft')]"/>
-                <filter string="Orders" name="orders" domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
+                <filter string="Orders" name="orders" domain="[('state','!=','draft'),('state','!=','cancel')]"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
                 <group expand="0" string="Extended Filters">

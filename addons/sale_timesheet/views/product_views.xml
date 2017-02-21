@@ -10,7 +10,7 @@
                 <attribute name="attrs">{'invisible': [('type','!=','service')]}</attribute>
             </xpath>
             <field name="track_service" position="after">
-                <field name="project_id" attrs="{'invisible':['|', ('type','!=','service'), ('track_service', '&lt;&gt;', 'task')]}"/>
+                <field name="project_id" attrs="{'invisible':['|', ('type','!=','service'), ('track_service', '!=', 'task')]}"/>
             </field>
         </field>
     </record>
