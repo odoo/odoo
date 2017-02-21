@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import AccessDenied
 
 
 class WebsiteConfigSettings(models.TransientModel):
@@ -55,11 +56,15 @@ class WebsiteConfigSettings(models.TransientModel):
     has_google_maps = fields.Boolean("Google Maps")
 
     def get_default_google_maps_api_key(self, fields):
-        google_maps_api_key = self.env['ir.config_parameter'].get_param('google_maps_api_key', default='')
+        if not self.user_has_groups('website.group_website_designer'):
+            raise AccessDenied()
+        google_maps_api_key = self.env['ir.config_parameter'].sudo().get_param('google_maps_api_key', default='')
         return dict(google_maps_api_key=google_maps_api_key)
 
     def set_google_maps_api_key(self):
-        self.env['ir.config_parameter'].set_param('google_maps_api_key', (self.google_maps_api_key or '').strip())
+        if not self.user_has_groups('website.group_website_designer'):
+            raise AccessDenied()
+        self.env['ir.config_parameter'].sudo().set_param('google_maps_api_key', (self.google_maps_api_key or '').strip())
 
     @api.depends('language_ids')
     def _compute_language_count(self):
