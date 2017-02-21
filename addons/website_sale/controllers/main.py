@@ -632,7 +632,6 @@ class website_sale(http.Controller):
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
         order.write({'partner_id': partner_id})
         order_obj.onchange_partner_id(cr, SUPERUSER_ID, [order.id], context=context)
-        order.write({'partner_invoice_id': partner_id})
 
         # create a new shipping partner
         if checkout.get('shipping_id') == -1:
@@ -682,9 +681,6 @@ class website_sale(http.Controller):
             return request.website.render("website_sale.checkout", values)
 
         self.checkout_form_save(values["checkout"])
-
-        if not int(post.get('shipping_id', 0)):
-            order.partner_shipping_id = order.partner_invoice_id
 
         order.onchange_partner_shipping_id()
         order.order_line._compute_tax_id()
