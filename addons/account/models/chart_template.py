@@ -161,6 +161,8 @@ class AccountChartTemplate(models.Model):
             journal = JournalObj.create(vals_journal)
             if vals_journal['type'] == 'general' and vals_journal['code'] == _('EXCH'):
                 company.write({'currency_exchange_journal_id': journal.id})
+            if vals_journal['type'] == 'general' and vals_journal['code'] == _('CABA'):
+                company.write({'tax_cash_basis_journal_id': journal.id})
         return True
 
     @api.multi
@@ -182,7 +184,8 @@ class AccountChartTemplate(models.Model):
         journals = [{'name': _('Customer Invoices'), 'type': 'sale', 'code': _('INV'), 'favorite': True, 'sequence': 5},
                     {'name': _('Vendor Bills'), 'type': 'purchase', 'code': _('BILL'), 'favorite': True, 'sequence': 6},
                     {'name': _('Miscellaneous Operations'), 'type': 'general', 'code': _('MISC'), 'favorite': False, 'sequence': 7},
-                    {'name': _('Exchange Difference'), 'type': 'general', 'code': _('EXCH'), 'favorite': False, 'sequence': 9},]
+                    {'name': _('Exchange Difference'), 'type': 'general', 'code': _('EXCH'), 'favorite': False, 'sequence': 9},
+                    {'name': _('Cash Basis VAT'), 'type': 'general', 'code': _('CABA'), 'favorite': False, 'sequence': 10}]
         if journals_dict != None:
             journals.extend(journals_dict)
 
