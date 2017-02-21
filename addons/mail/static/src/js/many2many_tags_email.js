@@ -50,8 +50,7 @@ var FieldMany2ManyTagsEmail = form_relational.FieldMany2ManyTags.extend({
         var self = this;
         new Model('res.partner').call("search", [[
                 ["id", "in", ids], 
-                ["email", "=", false], 
-                ["notify_email", "=", 'always'] ]], 
+                ["email", "=", false] ]], 
                 {context: this.build_context()})
             .then(function (record_ids) {
                 // valid partner

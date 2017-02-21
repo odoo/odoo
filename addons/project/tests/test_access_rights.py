@@ -15,7 +15,7 @@ class TestPortalProjectBase(TestProjectBase):
             'login': 'noemie',
             'email': 'n.n@example.com',
             'signature': '--\nNoemie',
-            'notify_email': 'always',
+            'notification_type': 'email',
             'groups_id': [(6, 0, [])]})
 
         self.task_3 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
