@@ -120,7 +120,7 @@ class DeliveryCarrier(models.Model):
                 try:
                     computed_price = self.get_shipping_price_from_so(order)[0]
                     self.available = True
-                except UserError as e:
+                except ValidationError as e:
                     # No suitable delivery method found, probably configuration error
                     _logger.info("Carrier %s: %s, not found", self.name, e.name)
                     computed_price = 0.0
