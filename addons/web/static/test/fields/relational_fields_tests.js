@@ -1334,6 +1334,41 @@ QUnit.module('relational_fields', {
         form.$('tbody td.o_form_field_x2many_list_row_add a').click();
     });
 
+    QUnit.test('new record, the context is properly evaluated and sent', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.int_field.default = 17;
+        var n = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="int_field"/>' +
+                    '<field name="p" context="{\'hello\': \'world\', \'abc\': int_field}">' +
+                        '<tree editable="top">' +
+                            '<field name="foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    n++;
+                    if (n === 2) {
+                        var context = args.kwargs.context;
+                        assert.strictEqual(context.hello, "world");
+                        assert.strictEqual(context.abc, 17);
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('tbody td.o_form_field_x2many_list_row_add a').click();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
