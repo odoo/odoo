@@ -19,7 +19,7 @@ QUnit.module('relational_fields', {
                     bar: {string: "Bar", type: "boolean", default: true},
                     int_field: {string: "int_field", type: "integer", sortable: true},
                     qux: {string: "Qux", type: "float", digits: [16,1] },
-                    p: {string: "one2many field", type: "one2many", relation: 'partner'},
+                    p: {string: "one2many field", type: "one2many", relation: 'partner', relation_field: 'trululu'},
                     trululu: {string: "Trululu", type: "many2one", relation: 'partner'},
                     timmy: { string: "pokemon", type: "many2many", relation: 'partner_type'},
                     product_id: {string: "Product", type: "many2one", relation: 'product'},
@@ -1360,6 +1360,67 @@ QUnit.module('relational_fields', {
                         assert.strictEqual(context.hello, "world");
                         assert.strictEqual(context.abc, 17);
                     }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('tbody td.o_form_field_x2many_list_row_add a').click();
+    });
+
+    QUnit.test('parent data is properly sent on an onchange rpc', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.onchanges = {bar: function () {}};
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="p">' +
+                        '<tree editable="top">' +
+                            '<field name="bar"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    var fieldValues = args.args[1];
+                    assert.strictEqual(fieldValues.trululu.foo, "yop",
+                        "should have properly sent the parent foo value");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('tbody td.o_form_field_x2many_list_row_add a').click();
+    });
+
+    QUnit.test('parent data is properly sent on an onchange rpc, new record', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.onchanges = {bar: function () {}};
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="p">' +
+                        '<tree editable="top">' +
+                            '<field name="bar"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    var fieldValues = args.args[1];
+                    assert.strictEqual(fieldValues.trululu.foo, "My little Foo Value",
+                        "should have properly sent the parent foo value");
                 }
                 return this._super.apply(this, arguments);
             },

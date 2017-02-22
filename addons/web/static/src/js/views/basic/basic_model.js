@@ -168,6 +168,8 @@ var Model = AbstractModel.extend({
             fieldAttrs: list.fieldAttrs,
             fieldNames: list.fieldNames,
             fields: list.fields,
+            parentID: list.id,
+            relationField: list.relationField,
         };
         return this.makeDefaultRecord(list.model, params).then(function(id) {
             list.count++;
@@ -354,6 +356,7 @@ var Model = AbstractModel.extend({
         delete element._changes;
         delete element.static;
         delete element.parentID;
+        delete element.relation_field;
         delete element.rawContext;
         return element;
     },
@@ -459,6 +462,8 @@ var Model = AbstractModel.extend({
                 fieldNames: params.fieldNames,
                 fieldAttrs: params.fieldAttrs,
                 context: params.context,
+                parentID: params.parentID,
+                relationField: params.relationField,
                 res_ids: params.res_ids,
             });
 
@@ -484,6 +489,7 @@ var Model = AbstractModel.extend({
                         modelName: field.relation,
                         parentID: record.id,
                         rawContext: attrs && attrs.context,
+                        relationField: field.relation_field,
                         res_ids: [],
                         static: true,
                         type: 'list',
@@ -955,7 +961,19 @@ var Model = AbstractModel.extend({
 
         var rawData = this.get(record.id, {raw: true}).data;
         var commands = this._generateX2ManyCommands(record);
+
+        // compute field values
         var currentData = _.pick(_.extend(rawData, commands), record.fieldNames);
+        if (record.relationField) {
+            // if there is a relation field, this means that record is an elem
+            // in a one2many.  The relation field is the corresponding many2one
+
+            // parent is the list element containing all the records in the o2m
+            // and parent.parentID is the ID of the main record
+            var parent = this.localData[record.parentID];
+            currentData[record.relationField] = this.get(parent.parentID, {raw:true}).data;
+        }
+
         if (fields.length === 1) {
             fields = fields[0];
         }
@@ -1362,6 +1380,7 @@ var Model = AbstractModel.extend({
                         type: 'list',
                         parentID: record.id,
                         rawContext: rawContext,
+                        relationField: field.relation_field,
                     });
                 }
                 record.data[fieldName] = list.id;
@@ -1628,6 +1647,7 @@ var Model = AbstractModel.extend({
             orderedBy: params.orderedBy || [],
             parentID: params.parentID,
             rawContext: params.rawContext,
+            relationField: params.relationField,
             static: params.static || false,
             type: type,  // 'record' | 'list'
             value: value,
