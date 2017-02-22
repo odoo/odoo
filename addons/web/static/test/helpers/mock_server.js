@@ -174,17 +174,23 @@ var MockServer = Class.extend({
             var modifiers = {};
             if (node.attrs.attrs) {
                 var attrs = pyeval.py_eval(node.attrs.attrs);
-                if (attrs.invisible) {
-                    modifiers.invisible = attrs.invisible;
-                }
-                if (attrs.readonly) {
-                    modifiers.readonly = attrs.readonly;
-                }
+                _.extend(modifiers, attrs);
                 delete node.attrs.attrs;
             }
-            if (node.attrs.invisible) {
-                modifiers.invisible = pyeval.py_eval(node.attrs.invisible);
+            if (node.attrs.states) {
+                if (!modifiers.invisible) {
+                    modifiers.invisible = [];
+                }
+                modifiers.invisible.push(["state", "not in", node.attrs.states.split(",")]);
             }
+            _.each(["invisible", "readonly", "required"], function (a) {
+                if (node.attrs[a]) {
+                    var v = pyeval.py_eval(node.attrs[a]);
+                    if (v || modifiers[a] === undefined) {
+                        modifiers[a] = v;
+                    }
+                }
+            });
             node.attrs.modifiers = JSON.stringify(modifiers);
             if (node.tag === 'field') {
                 fieldNodes[node.attrs.name] = node;

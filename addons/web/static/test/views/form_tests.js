@@ -30,6 +30,7 @@ QUnit.module('Views', {
                         selection: [[1, "Low"], [2, "Medium"], [3, "High"]],
                         default: 1,
                     },
+                    state: {string: "State", type: "selection", selection: [["ab", "AB"], ["cd", "CD"], ["ef", "EF"]]}
                 },
                 records: [{
                     id: 1,
@@ -41,6 +42,7 @@ QUnit.module('Views', {
                     p: [],
                     timmy: [],
                     trululu: 4,
+                    state: "ab",
                 }, {
                     id: 2,
                     display_name: "second record",
@@ -51,9 +53,11 @@ QUnit.module('Views', {
                     p: [],
                     timmy: [],
                     trululu: 1,
+                    state: "cd",
                 }, {
                     id: 4,
-                    display_name: "aaa"
+                    display_name: "aaa",
+                    state: "ef",
                 }],
                 onchanges: {},
             },
@@ -529,7 +533,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('buttons in form view', function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         var rpcCount = 0;
 
@@ -538,8 +542,9 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners">' +
+                    '<field name="state" invisible="1"/>' +
                     '<header>' +
-                        '<button name="post" class="p" states="draft" string="Confirm" type="object"/>' +
+                        '<button name="post" class="p" states="ab,ef" string="Confirm" type="object"/>' +
                         '<button name="some_method" class="s" string="Do it" type="object"/>' +
                     '</header>' +
                     '<sheet>' +
@@ -559,6 +564,9 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('.o_form_statusbar button').length, 2,
             "should have 2 buttons in the statusbar");
+
+        assert.strictEqual(form.$('.o_form_statusbar button:visible').length, 1,
+            "should have only 1 visible button in the statusbar");
 
         testUtils.intercept(form, 'execute_action', function (event) {
             assert.strictEqual(event.data.action_data.name, "post",
@@ -592,7 +600,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<header>' +
-                        '<button name="post" class="p" states="draft" string="Confirm" type="object"/>' +
+                        '<button name="post" class="p" string="Confirm" type="object"/>' +
                         '<button name="some_method" class="s" string="Do it" type="object"/>' +
                     '</header>' +
                     '<sheet>' +
