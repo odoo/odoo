@@ -17,12 +17,13 @@ QUnit.module('Views', {
                     qux: {string: "my float", type: "float"},
                     product_id: {string: "something_id", type: "many2one", relation: "product"},
                     category_ids: { string: "categories", type: "many2many", relation: 'category'},
+                    state: { string: "State", type: "selection", selection: [["abc", "ABC"], ["def", "DEF"], ["ghi", "GHI"]]},
                 },
                 records: [
-                    {id: 1, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3},
-                    {id: 2, bar: true, foo: "blip", int_field: 9, qux: 13, product_id: 5},
-                    {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3, product_id: 3},
-                    {id: 4, bar: false, foo: "blip", int_field: -4, qux: 9, product_id: 5},
+                    {id: 1, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc"},
+                    {id: 2, bar: true, foo: "blip", int_field: 9, qux: 13, product_id: 5, state: "def"},
+                    {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3, product_id: 3, state: "ghi"},
+                    {id: 4, bar: false, foo: "blip", int_field: -4, qux: 9, product_id: 5, state: "ghi"},
                 ]
             },
             product: {
@@ -764,6 +765,35 @@ QUnit.module('Views', {
             "should not display the no content helper");
     });
 
+    QUnit.test('buttons with modifiers', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[1].bar = false; // so that test is more complete
+
+        var kanban = createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="state"/>' +
+                    '<templates><div t-name="kanban-box">' +
+                        '<button class="o_btn_test_1" type="object" name="a1" ' +
+                            'attrs="{\'invisible\': [[\'foo\', \'!=\', \'yop\']]}"/>' +
+                        '<button class="o_btn_test_2" type="object" name="a2" ' +
+                            'attrs="{\'invisible\': [[\'bar\', \'=\', True]]}" ' +
+                            'states="abc,def"/>' +
+                    '</div></templates>' +
+                '</kanban>',
+        });
+
+        assert.strictEqual(kanban.$(".o_btn_test_1").length, 1,
+            "kanban should have one buttons of type 1");
+        assert.strictEqual(kanban.$(".o_btn_test_2").length, 3,
+            "kanban should have three buttons of type 2");
+    });
 });
 
 });
