@@ -351,7 +351,10 @@ var FieldTextHtml = widget.extend({
         });
     },
     render_value: function() {
-        if (this.lang !== this.view.dataset.context.lang || this.$iframe.attr('src').match(/[?&]edit_translations=1/)) {
+        if (
+            (this.lang !== "en_US" && this.lang !== this.view.dataset.context.lang) ||
+            this.$iframe.attr('src').match(/[?&]edit_translations=1/)
+        ) {
             return;
         }
         var value = (this.get('value') || "").replace(/^<p[^>]*>(\s*|<br\/?>)<\/p>$/, '');
