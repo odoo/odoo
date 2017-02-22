@@ -451,7 +451,7 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         positions = self.env['account.fiscal.position.template'].search([('chart_template_id', '=', self.id)])
         for position in positions:
-            new_fp = self.create_record_with_xmlid(company, position, 'account.fiscal.position', {'company_id': company.id, 'name': position.name, 'note': position.note})
+            new_fp = self.create_record_with_xmlid(company, position, 'account.fiscal.position', {'company_id': company.id, 'name': position.name, 'auto_apply': position.auto_apply, 'note': position.note, 'country_group_id': position.country_group_id.id})
             for tax in position.tax_ids:
                 self.create_record_with_xmlid(company, tax, 'account.fiscal.position.tax', {
                     'tax_src_id': tax_template_ref[tax.tax_src_id.id],
