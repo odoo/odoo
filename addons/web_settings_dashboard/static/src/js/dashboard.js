@@ -2,13 +2,11 @@ odoo.define('web_settings_dashboard', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Widget = require('web.Widget');
-var Model = require('web.Model');
-var session = require('web.session');
-var PlannerCommon = require('web.planner.common');
 var framework = require('web.framework');
-var webclient = require('web.web_client');
+var Model = require('web.Model');
+var PlannerCommon = require('web.planner.common');
 var PlannerDialog = PlannerCommon.PlannerDialog;
+var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -16,7 +14,7 @@ var _t = core._t;
 var Dashboard = Widget.extend({
     template: 'DashboardMain',
 
-    init: function(parent, data){
+    init: function(){
         this.all_dashboards = ['apps', 'invitations', 'planner', 'share'];
         return this._super.apply(this, arguments);
     },
@@ -28,7 +26,7 @@ var Dashboard = Widget.extend({
     load: function(dashboards){
         var self = this;
         var loading_done = new $.Deferred();
-        session.rpc("/web_settings_dashboard/data", {}).then(function (data) {
+        this.performRPC("/web_settings_dashboard/data", {}).then(function (data) {
             // Load each dashboard
             var all_dashboards_defs = [];
             _.each(dashboards, function(dashboard) {
