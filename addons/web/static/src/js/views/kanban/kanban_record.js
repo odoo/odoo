@@ -64,16 +64,10 @@ var KanbanRecord = Widget.extend({
     },
 
     init_content: function (state) {
-        var self = this;
         this.state = state;
         this.id = state.res_id;
         this.db_id = state.id;
-        this.values = {};
-        _.each(state.data, function (v, k) {
-            self.values[k] = {
-                value: v
-            };
-        });
+        this.values = _.clone(state.data);
         this.record = this.transform_record(state.data);
         var qweb_context = {
             record: this.record,
@@ -331,7 +325,7 @@ var KanbanRecord = Widget.extend({
         event.preventDefault();
         this.$('.o_kanban_card_content').toggleClass('o_visible o_invisible');
         this.$('.o_kanban_card_manage_pane').toggleClass('o_visible o_invisible');
-        this.$('.o_kanban_manage_button_section').toggleClass(this.kanban_color((this.values['color'] && this.values['color'].value) || 0));
+        this.$('.o_kanban_manage_button_section').toggleClass(this.kanban_color(this.values['color'] || 0));
     },
 
     on_kanban_action_clicked: function (ev) {
@@ -374,7 +368,7 @@ var KanbanRecord = Widget.extend({
     setup_color: function () {
         var color_field = this.$el.attr('color');
         if (color_field && color_field in this.fields) {
-            this.$el.addClass(this.kanban_color(this.values[color_field].value));
+            this.$el.addClass(this.kanban_color(this.values[color_field]));
         }
     },
 

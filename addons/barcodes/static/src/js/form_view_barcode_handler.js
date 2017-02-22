@@ -18,7 +18,7 @@ var _t = core._t;
 // is fine.
 KanbanRecord.include({
     get: function (key) {
-        return this.values[key] && this.values[key].value;
+        return this.values[key];
     },
 });
 
