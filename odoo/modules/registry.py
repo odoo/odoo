@@ -6,6 +6,7 @@
 """
 from collections import Mapping, defaultdict, deque
 from contextlib import closing
+from functools import partial
 from operator import attrgetter
 import logging
 import os
@@ -14,7 +15,7 @@ import threading
 import odoo
 from .. import SUPERUSER_ID
 from odoo.tools import (assertion_report, lazy_classproperty, config,
-                        lazy_property, topological_sort, OrderedSet)
+                        lazy_property, table_exists, topological_sort, OrderedSet)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -106,6 +107,7 @@ class Registry(Mapping):
         self._init_parent = {}
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
+        self._post_init_queue = deque()
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -273,12 +275,13 @@ class Registry(Mapping):
         lazy_property.reset_all(self)
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
 
-        # load custom models
-        ir_model = env['ir.model']
-        cr.execute('SELECT * FROM ir_model WHERE state=%s', ('manual',))
-        for model_data in cr.dictfetchall():
-            model_class = ir_model._instanciate(model_data)
-            model_class._build_model(self, cr)
+        # load custom models (except when loading 'base')
+        if self._init_modules:
+            ir_model = env['ir.model']
+            cr.execute('SELECT * FROM ir_model WHERE state=%s', ('manual',))
+            for model_data in cr.dictfetchall():
+                model_class = ir_model._instanciate(model_data)
+                model_class._build_model(self, cr)
 
         # prepare the setup on all models
         models = env.values()
@@ -296,10 +299,14 @@ class Registry(Mapping):
         for model in models:
             model._setup_complete()
 
+    def post_init(self, func, *args, **kwargs):
+        """ Register a function to call at the end of :meth:`~.init_models`. """
+        self._post_init_queue.append(partial(func, *args, **kwargs))
+
     def init_models(self, cr, model_names, context):
         """ Initialize a list of models (given by their name). Call methods
-            ``_auto_init``, ``init``, and ``_auto_end`` on each model to create
-            or update the database tables supporting the models.
+            ``_auto_init`` and ``init`` on each model to create or update the
+            database tables supporting the models.
 
             The ``context`` may contain the following items:
              - ``module``: the name of the module being installed/updated, if any;
@@ -308,21 +315,16 @@ class Registry(Mapping):
         if 'module' in context:
             _logger.info('module %s: creating or updating database tables', context['module'])
 
-        context = dict(context, todo=[])
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
 
         for model in models:
             model._auto_init()
             model.init()
-            cr.commit()
 
-        for model in models:
-            model._auto_end()
-            cr.commit()
-
-        for _, func, args in sorted(context['todo']):
-            func(*args)
+        while self._post_init_queue:
+            func = self._post_init_queue.popleft()
+            func()
 
         if models:
             models[0].recompute()
@@ -331,7 +333,7 @@ class Registry(Mapping):
         # make sure all tables are present
         missing = [name
                    for name, model in env.items()
-                   if not model._abstract and not model._table_exist()]
+                   if not model._abstract and not table_exists(cr, model._table)]
         if missing:
             _logger.warning("Models have no table: %s.", ", ".join(missing))
             # recreate missing tables following model dependencies
@@ -340,10 +342,10 @@ class Registry(Mapping):
                 if name in missing:
                     _logger.info("Recreate table of model %s.", name)
                     env[name].init()
-                    cr.commit()
+            cr.commit()
             # check again, and log errors if tables are still missing
             for name, model in env.items():
-                if not model._abstract and not model._table_exist():
+                if not model._abstract and not table_exists(cr, model._table):
                     _logger.error("Model %s has no table.", name)
 
     def clear_caches(self):
