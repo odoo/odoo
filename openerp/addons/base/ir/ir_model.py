@@ -721,8 +721,6 @@ class ir_model_relation(Model):
             cr.execute('DROP TABLE %s CASCADE'% table,)
             _logger.info('Dropped table %s', table)
 
-        cr.commit()
-
 class ir_model_access(osv.osv):
     _name = 'ir.model.access'
     _columns = {
@@ -1295,7 +1293,6 @@ class ir_model_data(osv.osv):
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
                                 if model == 'ir.model')
 
-        cr.commit()
 
         self.unlink(cr, uid, ids, context)
 
