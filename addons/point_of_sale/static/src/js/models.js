@@ -803,9 +803,10 @@ exports.PosModel = Backbone.Model.extend({
             return server_ids;
         }).fail(function (error, event){
             if(error.code === 200 ){    // Business Logic Error, not a connection problem
-                //if warning do not need to display traceback!!
-                if (error.data.exception_type == 'warning') {
-                    delete error.data.debug;
+                //if warning or user_error do not need to display traceback!!
+                if (error.data.exception_type == 'warning' || error.data.exception_type == 'user_error') {
+                    error.data.message = _t('Warning');
+                    error.data.debug = error.data.arguments[0];
                 }
 
                 // Hide error if already shown before ... 
