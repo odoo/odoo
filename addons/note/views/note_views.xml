@@ -88,6 +88,8 @@
           <field name="date_done"/>
           <field name="message_partner_ids"/>
           <field name="tag_ids"/>
+          <field name="activity_ids" />
+          <field name="activity_state" />
           <templates>
             <t t-name="kanban-box">
 
@@ -112,6 +114,11 @@
                 <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
+                  <div class="oe_kanban_bottom_right">
+                    <div class="o_kanban_inline_block mt16 mr4">
+                        <field name="activity_ids" widget="kanban_activity" />
+                    </div>
+                  </div>
                 </span>
                 <t t-if="record.message_partner_ids.raw_value.length &gt; 1">
                     <div class="clearfix"></div>
