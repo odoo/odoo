@@ -2389,6 +2389,14 @@
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
     </record>
 
+    <record id="pcg_445800" model="account.account.template">
+      <field name="name">Taxes sur le chiffre d'affaires à régulariser ou en attente</field>
+      <field name="code">445800</field>
+      <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+      <field name="reconcile" eval="True"/>
+      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+    </record>
+
     <record id="pcg_44581" model="account.account.template">
       <field name="name">Acomptes - Régime simplifié d'imposition</field>
       <field name="code">44581</field>
