@@ -1696,6 +1696,8 @@
                                     <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
                                     <field name="active" groups="base.group_no_one"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                    <field name="use_cash_basis" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                    <field name="cash_basis_account" attrs="{'invisible': [('use_cash_basis', '=', False)], 'required': [('use_cash_basis', '=', True)]}"/>
                                 </group>
                             </group>
                         </page>
