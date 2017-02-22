@@ -388,20 +388,6 @@
         </a>
     </template>
 
-    <template id="web.webclient_script">
-        <script type="text/javascript">
-            odoo.define('web.web_client', function (require) {
-                var WebClient = require('web.WebClient');
-                var web_client = new WebClient();
-                $(function() {
-                    web_client.setElement($(document.body));
-                    web_client.start();
-                });
-                return web_client;
-            });
-        </script>
-    </template>
-
     <template id="web.qunit_suite">
         <t t-call="web.layout">
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
@@ -415,6 +401,21 @@
                 <t t-call-assets="web.assets_backend" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
+                <script type="text/javascript">
+                    // define the 'web.web_client' module because some other modules require it
+                    odoo.define('web.web_client', function (require) {
+                        var WebClient = require('web.WebClient');
+                        var web_client = new WebClient();
+                        // override _call_service to prevent the web_client from doing RPCs
+                        web_client._call_service = function () {};
+                        $(function() {
+                            web_client.setElement($(document.body));
+                            web_client.start();
+                        });
+                        return web_client;
+                    });
+                </script>
+
                 <style>
                     body:not(.debug) .modal-backdrop, body:not(.debug) .modal, body:not(.debug) .ui-autocomplete {
                         opacity: 0 !important;
@@ -482,7 +483,17 @@
                     <![endif]-->
                 ]]>
 
-                <t t-call="web.webclient_script"/>
+                <script type="text/javascript">
+                    odoo.define('web.web_client', function (require) {
+                        var WebClient = require('web.WebClient');
+                        var web_client = new WebClient();
+                        $(function() {
+                            web_client.setElement($(document.body));
+                            web_client.start();
+                        });
+                        return web_client;
+                    });
+                </script>
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>
