@@ -1554,6 +1554,42 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('.o_priority .fa-star').length, 2,
             'priority widget should have correct value');
     });
-});
 
-});
+    QUnit.test('display a dialog if onchange result is a warning', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.onchanges = { foo: true };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group><field name="foo"/><field name="int_field"/></group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return $.when({
+                        valu: {},
+                        warning: {
+                            title: "Warning",
+                            message: "You must first select a partner"
+                        }
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        form.$('input').first().val("tralala").trigger('input');
+
+        assert.strictEqual($('.modal .modal-title:contains(Warning)').length, 1,
+            "should have rendered a modal dialog with correct title");
+        assert.strictEqual($('.modal .modal-body:contains(You must first select a partner)').length, 1,
+            "should have rendered a modal dialog with correct content");
+    });
+
+});});
