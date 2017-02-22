@@ -475,12 +475,15 @@ var Model = AbstractModel.extend({
                     });
                     record._changes[name] = rec.id;
                 } else if (field.type === 'one2many' || field.type === 'many2many') {
+                    var attrs = record.fieldAttrs[name];
                     var x2manyList = self._makeDataPoint({
                         context: record.context,
                         fieldAttrs: field.fieldAttrs,
                         fields: field.relatedFields,
                         limit: field.limit,
                         modelName: field.relation,
+                        parentID: record.id,
+                        rawContext: attrs && attrs.context,
                         res_ids: [],
                         static: true,
                         type: 'list',
@@ -1541,6 +1544,7 @@ var Model = AbstractModel.extend({
         if (element.rawContext) {
             context.add(element.rawContext);
             var evalContext = this.get(element.parentID, {raw: true}).data;
+            evalContext.id = evalContext.id || false;
             context.set_eval_context(evalContext);
         }
         return context.eval();
