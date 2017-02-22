@@ -258,12 +258,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
 
         this.render_sidebar();
-
         return $.when(def1, def2, def3, def4)
             .then(this.set_channel.bind(this, default_channel))
             .then(function () {
                 chat_manager.bus.on('open_channel', self, self.set_channel);
                 chat_manager.bus.on('new_message', self, self.on_new_message);
+                chat_manager.bus.on('show_welcome_msg', self, self.on_welcome_msg);
                 chat_manager.bus.on('update_message', self, self.on_update_message);
                 chat_manager.bus.on('new_channel', self, self.on_new_channel);
                 chat_manager.bus.on('anyone_listening', self, function (channel, query) {
@@ -614,6 +614,14 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.render_sidebar();
         // Dump scroll position of channels in which the new message arrived
         this.channels_scrolltop = _.omit(this.channels_scrolltop, message.channel_ids);
+    },
+    on_welcome_msg:  function(channel, msg){
+        var self = this;
+        if(channel.id === this.channel.id){
+            this.set_channel(channel).then(function(){
+                self.thread.$el.append(msg.body);
+            });
+        }
     },
     on_update_message: function (message) {
         var self = this;

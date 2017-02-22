@@ -53,7 +53,12 @@ class AuthSignupHome(Home):
             try:
                 if qcontext.get('token'):
                     self.do_signup(qcontext)
-                    return super(AuthSignupHome, self).web_login(*args, **kw)
+                    response = super(AuthSignupHome, self).web_login(*args, **kw)
+                    invite_by = qcontext.get('invite_by')
+                    if invite_by:
+                        invite_by_partner = request.env['res.partner'].browse(invite_by)
+                        invite_by_partner.send_welcome_notification()
+                    return response
                 else:
                     login = qcontext.get('login')
                     assert login, "No login provided."
