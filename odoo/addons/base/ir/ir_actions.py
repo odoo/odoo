@@ -385,9 +385,8 @@ class IrActionsActWindowView(models.Model):
     @api.model_cr_context
     def _auto_init(self):
         res = super(IrActionsActWindowView, self)._auto_init()
-        self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'act_window_view_unique_mode_per_action\'')
-        if not self._cr.fetchone():
-            self._cr.execute('CREATE UNIQUE INDEX act_window_view_unique_mode_per_action ON ir_act_window_view (act_window_id, view_mode)')
+        tools.create_unique_index(self._cr, 'act_window_view_unique_mode_per_action',
+                                  self._table, ['act_window_id', 'view_mode'])
         return res
 
 

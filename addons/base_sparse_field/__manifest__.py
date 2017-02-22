@@ -14,5 +14,4 @@
     'data': [
         'views/views.xml',
     ],
-    'pre_init_hook': '_update_database_schema',
 }

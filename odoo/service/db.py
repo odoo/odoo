@@ -354,8 +354,7 @@ def list_db_incompatible(databases):
     server_version = '.'.join(map(str, version_info[:2]))
     for database_name in databases:
         with closing(db_connect(database_name).cursor()) as cr:
-            cr.execute("SELECT 1 FROM information_schema.tables WHERE table_name='ir_module_module'")
-            if cr.fetchone():
+            if odoo.tools.table_exists(cr, 'ir_module_module'):
                 cr.execute("SELECT latest_version FROM ir_module_module WHERE name=%s", ('base',))
                 base_version = cr.fetchone()
                 if not base_version or not base_version[0]:

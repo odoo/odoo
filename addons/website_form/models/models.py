@@ -80,7 +80,7 @@ class website_form_model_fields(models.Model):
                          ' SET website_form_blacklisted=true'
                          ' WHERE website_form_blacklisted IS NULL')
         # add an SQL-level default value on website_form_blacklisted to that
-        # pure-SQL ir.model.field creations (e.g. in _field_create) generate
+        # pure-SQL ir.model.field creations (e.g. in _reflect) generate
         # the right default value for a whitelist (aka fields should be
         # blacklisted by default)
         self._cr.execute('ALTER TABLE ir_model_fields '
