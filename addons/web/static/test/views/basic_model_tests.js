@@ -139,6 +139,42 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('basic onchange', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.onchanges.foo = function (obj) {
+            obj.bar = obj.foo.length;
+        };
+
+        this.params.fieldNames = ['foo', 'bar'];
+        this.params.context = {hello: 'world'};
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    var context = args.args[4];
+                    assert.deepEqual(context, {hello: 'world'},
+                        "context should be sent by the onchange");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.foo, 'gnap', "foo field is properly initialized");
+            assert.strictEqual(record.data.bar, 2, "bar field is properly initialized");
+
+            model.notifyChanges(resultID, {foo: 'mary poppins'});
+
+            record = model.get(resultID);
+            assert.strictEqual(record.data.foo, 'mary poppins', "onchange has been applied");
+            assert.strictEqual(record.data.bar, 12, "onchange has been applied");
+        });
+    });
+
     QUnit.test('onchange with a many2one', function (assert) {
         assert.expect(5);
 

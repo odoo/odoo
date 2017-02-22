@@ -951,7 +951,7 @@ var Model = AbstractModel.extend({
         var self = this;
         var onchange_spec = this._buildOnchangeSpecs(record);
         var idList = record.data.id ? [record.data.id] : [];
-        var context = data.build_context(record, session.user_context).eval();
+        var context = this._getContext(record);
 
         var rawData = this.get(record.id, {raw: true}).data;
         var commands = this._generateX2ManyCommands(record);
