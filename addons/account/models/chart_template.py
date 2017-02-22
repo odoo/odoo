@@ -319,10 +319,11 @@ class AccountChartTemplate(models.Model):
         # writing account values after creation of accounts
         company.transfer_account_id = account_template_ref[transfer_account_id.id]
         for key, value in generated_tax_res['account_dict'].items():
-            if value['refund_account_id'] or value['account_id']:
+            if value['refund_account_id'] or value['account_id'] or value['cash_basis_account']:
                 AccountTaxObj.browse(key).write({
                     'refund_account_id': account_ref.get(value['refund_account_id'], False),
                     'account_id': account_ref.get(value['account_id'], False),
+                    'cash_basis_account': account_ref.get(value['cash_basis_account'], False),
                 })
 
         # Create Journals - Only done for root chart template
@@ -499,7 +500,7 @@ class AccountTaxTemplate(models.Model):
         help="Select this if the tax should use cash basis,"
         "which will create an entry for this tax on a given account during reconciliation")
     cash_basis_account = fields.Many2one(
-        'account.account',
+        'account.account.template',
         string='Tax Received Account',
         domain=[('deprecated', '=', False)],
         help='Account use when creating entry for tax cash basis')
@@ -542,8 +543,8 @@ class AccountTaxTemplate(models.Model):
             'children_tax_ids': [(6, 0, children_ids)],
             'tax_adjustment': self.tax_adjustment,
             'use_cash_basis': self.use_cash_basis,
-            'cash_basis_account': self.cash_basis_account,
         }
+
         if self.tax_group_id:
             val['tax_group_id'] = self.tax_group_id.id
         return val
@@ -568,13 +569,13 @@ class AccountTaxTemplate(models.Model):
             todo_dict[new_tax] = {
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
+                'cash_basis_account': tax.cash_basis_account.id,
             }
 
         return {
             'tax_template_to_tax': tax_template_to_tax,
             'account_dict': todo_dict
         }
-
 
 # Fiscal Position Templates
 
