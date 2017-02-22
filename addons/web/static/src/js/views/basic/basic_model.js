@@ -951,7 +951,8 @@ var Model = AbstractModel.extend({
      *
      * @param {Object} record
      * @param {string[]} fields changed fields
-     * @returns
+     * @returns {Deferred} The returned deferred can fail, in which case the
+     *   fail value will be the warning message received from the server
      */
     _applyOnChange: function (record, fields) {
         var self = this;
@@ -980,6 +981,9 @@ var Model = AbstractModel.extend({
         return this.mutex.exec(function () {
             var args = [idList, currentData, fields, onchange_spec, context];
             return self.performModelRPC(record.model, 'onchange', args, {}).then(function (result) {
+                if (result.warning) {
+                    return $.Deferred().reject(result.warning);
+                }
                 var defs = [];
                 _.each(result.value, function (val, name) {
                     var field = record.fields[name];

@@ -9,6 +9,10 @@ odoo.define('web.FieldManagerMixin', function (require) {
  */
 
 var BasicModel = require('web.BasicModel');
+var Dialog = require('web.Dialog');
+var core = require('web.core');
+
+var qweb = core.qweb;
 
 return {
     custom_events: {
@@ -84,6 +88,12 @@ return {
             } else {
                 self._confirmChange(dataPointID, result, event);
             }
+        }).fail(function (warning) {
+            new Dialog(self, {
+                size: 'medium',
+                title: warning.title,
+                $content: qweb.render("CrashManager.warning", warning)
+            }).open();
         });
     },
     /**
