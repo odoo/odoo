@@ -391,7 +391,7 @@
     <template id="web.qunit_suite">
         <t t-call="web.layout">
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
-            <t t-set="title">Odoo Web Tests</t>
+            <t t-set="title">Web Tests</t>
             <t t-set="head">
                 <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.0.1.css"/>
                 <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.0.1.js"></script>
@@ -408,10 +408,6 @@
                         var web_client = new WebClient();
                         // override _call_service to prevent the web_client from doing RPCs
                         web_client._call_service = function () {};
-                        $(function() {
-                            web_client.setElement($(document.body));
-                            web_client.start();
-                        });
                         return web_client;
                     });
                 </script>
