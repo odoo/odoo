@@ -189,7 +189,11 @@ class DateTimeConverter(models.AbstractModel):
         if options and 'format' in options:
             pattern = options['format']
         else:
-            strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
+            if options and options.get('time_only'):
+                strftime_pattern = (u"%s" % (lang.time_format))
+            else:
+                strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
+
             pattern = posix_to_ldml(strftime_pattern, locale=locale)
 
         if options and options.get('hide_seconds'):
