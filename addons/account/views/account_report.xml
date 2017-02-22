@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <!-- QWeb Reports -->
-        <report 
+        <report
             id="account_invoices"
             model="account.invoice"
             string="Invoices"
@@ -24,7 +24,7 @@
             object.type == 'in_refund' and 'Vendor Refund'+'-'+(object.number))</field>
         </record>
 
-        <report 
+        <report
             id="account_invoice_action_report_duplicate"
             model="account.invoice"
             string="Duplicates"
@@ -44,7 +44,7 @@
             object.type == 'in_refund' and 'Duplicate Vendor Refund'+'-'+(object.number))</field>
         </record>
 
-        <report 
+        <report
             id="action_report_print_overdue"
             model="res.partner"
             report_type="qweb-pdf"
@@ -56,7 +56,7 @@
             <field name="print_report_name">'Due Payments'+'-'+(object.name)</field>
         </record>
 
-        <report 
+        <report
             id="action_report_general_ledger"
             model="account.report.general.ledger"
             string="General Ledger"
@@ -65,7 +65,7 @@
             file="account.report_generalledger"
             />
 
-        <report 
+        <report
             id="action_report_trial_balance"
             model="account.balance.report"
             string="Trial Balance"
@@ -74,7 +74,7 @@
             file="account.report_trialbalance"
             />
 
-        <report 
+        <report
             id="action_report_financial"
             model="account.financial.report"
             string="Financial report"
@@ -93,7 +93,7 @@
             file="account.report_agedpartnerbalance"
         />
 
-        <report 
+        <report
             id="action_report_journal"
             model="account.report.journal"
             string="Sale/Purchase Journal"
@@ -102,7 +102,7 @@
             file="account.report_journal"
             />
 
-        <report 
+        <report
             id="action_report_partnerledger"
             model="account.report_partnerledger"
             string="Partner Ledger"
