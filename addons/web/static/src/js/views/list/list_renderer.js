@@ -88,6 +88,8 @@ var ListRenderer = BasicRenderer.extend({
      * The result of these computations is stored in the 'aggregate' key of each
      * column of this.columns.  This will be then used by the _renderFooter
      * method to display the appropriate amount.
+     *
+     * @private
      */
     _computeAggregates: function () {
         var self = this;
@@ -105,43 +107,53 @@ var ListRenderer = BasicRenderer.extend({
             return;
         }
 
-        _.each(this.columns, function (column) {
-            var attrs = column.attrs;
-            var field = self.state.fields[attrs.name];
-            if (!field) {
-                return;
-            }
-            var type = field.type;
-            if (type !== 'integer' && type !== 'float' && type !== 'monetary') {
-                return;
-            }
-            var func = (attrs.sum && 'sum') || (attrs.avg && 'avg') ||
-                       (attrs.max && 'max') || (attrs.min && 'min');
-            if (func) {
-                var count = 0;
-                var aggregate_value = (func === 'max') ? -Infinity : (func === 'min') ? Infinity : 0;
-                _.each(data, function (d) {
-                    count += 1;
-                    var value = (d.type === 'record') ? d.data[attrs.name] : d.aggregateValues[attrs.name];
-                    if (func === 'avg') {
-                        aggregate_value += value;
-                    } else if (func === 'sum') {
-                        aggregate_value += value;
-                    } else if (func === 'max') {
-                        aggregate_value = Math.max(aggregate_value, value);
-                    } else if (func === 'min') {
-                        aggregate_value = Math.min(aggregate_value, value);
-                    }
-                });
+        _.each(this.columns, this._computeColumnAggregates.bind(this, data));
+    },
+    /**
+     * Compute the aggregate values for a given column and a set of records.
+     * The aggregate values are then written, if applicable, in the 'aggregate'
+     * key of the column object.
+     *
+     * @private
+     * @param {Object[]} data a list of selected/all records
+     * @param {Object} column
+     */
+    _computeColumnAggregates: function (data, column) {
+        var attrs = column.attrs;
+        var field = this.state.fields[attrs.name];
+        if (!field) {
+            return;
+        }
+        var type = field.type;
+        if (type !== 'integer' && type !== 'float' && type !== 'monetary') {
+            return;
+        }
+        var func = (attrs.sum && 'sum') || (attrs.avg && 'avg') ||
+                    (attrs.max && 'max') || (attrs.min && 'min');
+        if (func) {
+            var count = 0;
+            var aggregateValue = (func === 'max') ? -Infinity : (func === 'min') ? Infinity : 0;
+            _.each(data, function (d) {
+                count += 1;
+                var value = (d.type === 'record') ? d.data[attrs.name] : d.aggregateValues[attrs.name];
                 if (func === 'avg') {
-                    aggregate_value = aggregate_value / count;
+                    aggregateValue += value;
+                } else if (func === 'sum') {
+                    aggregateValue += value;
+                } else if (func === 'max') {
+                    aggregateValue = Math.max(aggregateValue, value);
+                } else if (func === 'min') {
+                    aggregateValue = Math.min(aggregateValue, value);
                 }
-                column.aggregate = {
-                    help: attrs[func],
-                    value: aggregate_value,
-                };
+            });
+            if (func === 'avg') {
+                aggregateValue = aggregateValue / count;
             }
-        });
+            column.aggregate = {
+                help: attrs[func],
+                value: aggregateValue,
+            };
+        }
     },
     /**
      * Each line can be decorated according to a few simple rules. The arch
@@ -151,6 +163,7 @@ var ListRenderer = BasicRenderer.extend({
      * concerned with the computation of the list of css classes for a given
      * record.
      *
+     * @private
      * @param {Object} record a basic model record
      * @returns {string[]} a list of css classes
      */
@@ -171,6 +184,7 @@ var ListRenderer = BasicRenderer.extend({
      * When a list view is grouped, we need to display the name of each group in
      * the 'title' row.  This is the purpose of this method.
      *
+     * @private
      * @param {any} value
      * @param {Object} field a field description
      * @returns {string}
@@ -190,7 +204,8 @@ var ListRenderer = BasicRenderer.extend({
      * one more that in non editable mode, because there may be a visible 'trash
      * icon'.
      *
-     * @returns {number}
+     * @private
+     * @returns {integer}
      */
     _getNumberOfCols: function () {
         var n = this.columns.length;
@@ -200,6 +215,7 @@ var ListRenderer = BasicRenderer.extend({
      * Determine if a given cell is invisible.  A cell is considered invisible
      * if there is an 'invisible' attr, with a matching domain.
      *
+     * @private
      * @param {Object} record a basic model record
      * @param {Object} node a node object (from the arch)
      * @returns {boolean}
@@ -215,17 +231,18 @@ var ListRenderer = BasicRenderer.extend({
      * Render a list of <td>, with aggregates if available.  It can be displayed
      * in the footer, or for each open groups.
      *
-     * @param {any} aggregate_values
+     * @private
+     * @param {any} aggregateValues
      * @returns {jQueryElement[]} a list of <td> with the aggregate values
      */
-    _renderAggregateCells: function (aggregate_values) {
+    _renderAggregateCells: function (aggregateValues) {
         var self = this;
         return _.map(this.columns, function (column) {
             var $cell = $('<td>');
-            if (column.attrs.name in aggregate_values) {
+            if (column.attrs.name in aggregateValues) {
                 var field = self.state.fields[column.attrs.name];
-                var value = aggregate_values[column.attrs.name].value;
-                var help = aggregate_values[column.attrs.name].help;
+                var value = aggregateValues[column.attrs.name].value;
+                var help = aggregateValues[column.attrs.name].help;
                 var formattedValue = field_utils['format_' + field.type](value, field, {});
                 $cell.addClass('o_list_number').attr('title', help).html(formattedValue);
             }
@@ -238,6 +255,7 @@ var ListRenderer = BasicRenderer.extend({
      * data.  The reason is that lists with 0 or 1 lines don't really look like
      * a table.
      *
+     * @private
      * @returns {jQueryElement} a jquery element <tbody>
      */
     _renderBody: function () {
@@ -253,6 +271,7 @@ var ListRenderer = BasicRenderer.extend({
      * node was explicitely defined with a 'widget' attribute, then we
      * instantiate the corresponding widget.
      *
+     * @private
      * @param {Object} record
      * @param {Object} node
      * @returns {jQueryElement} a <td> element
@@ -299,6 +318,7 @@ var ListRenderer = BasicRenderer.extend({
      * Render a complete empty row.  This is used to fill in the blanks when we
      * have less than 4 lines to display.
      *
+     * @private
      * @returns {jQueryElement} a <tr> element
      */
     _renderEmptyRow: function () {
@@ -309,6 +329,7 @@ var ListRenderer = BasicRenderer.extend({
      * Render the footer.  It is a <tfoot> with a single row, containing all
      * aggregates, if applicable.
      *
+     * @private
      * @param {boolean} isGrouped if the view is grouped, we have to add an
      *   extra <td>
      * @returns {jQueryElement} a <tfoot> element
@@ -332,6 +353,7 @@ var ListRenderer = BasicRenderer.extend({
     /**
      * Render the row that represent a group
      *
+     * @private
      * @param {Object} group
      * @returns {jQueryElement} a <tr> element
      */
@@ -368,6 +390,7 @@ var ListRenderer = BasicRenderer.extend({
      * Note that each group is rendered inside a <tbody>, which contains a group
      * row, then possibly a bunch of rows for each record.
      *
+     * @private
      * @returns {jQueryElement[]} a list of <tbody>
      */
     _renderGroups: function () {
@@ -397,6 +420,7 @@ var ListRenderer = BasicRenderer.extend({
      * Render the main header for the list view.  It is basically just a <thead>
      * with the name of each fields
      *
+     * @private
      * @param {boolean} isGrouped
      * @returns {jQueryElement} a <thead> element
      */
@@ -416,6 +440,7 @@ var ListRenderer = BasicRenderer.extend({
      * field, the th will be empty. Otherwise, it will contains all relevant
      * information for the field.
      *
+     * @private
      * @param {Object} node
      * @returns {jQueryElement} a <th> element
      */
@@ -460,6 +485,7 @@ var ListRenderer = BasicRenderer.extend({
     /**
      * Render a row, corresponding to a record.
      *
+     * @private
      * @param {Object} record
      * @returns {jQueryElement} a <tr> element
      */
@@ -479,11 +505,24 @@ var ListRenderer = BasicRenderer.extend({
      * Render all rows. This method should only called when the view is not
      * grouped.
      *
+     * @private
      * @returns {jQueryElement[]} a list of <tr>
      */
     _renderRows: function () {
         return _.map(this.state.data, this._renderRow.bind(this));
     },
+    /**
+     * A 'selector' is the small checkbox on the left of a record in a list
+     * view.  This is rendered as an input inside a div, so we can properly
+     * style it.
+     *
+     * Note that it takes a tag in argument, because selectores in the header
+     * are renderd in a th, and those in the tbody are in a td.
+     *
+     * @private
+     * @param {any} tag either th or td
+     * @returns {jQueryElement}
+     */
     _renderSelector: function (tag) {
         var $content = $('<div class="o_checkbox"><input type="checkbox"><span/></div>');
         return $('<' + tag + ' width="1">')
@@ -491,8 +530,12 @@ var ListRenderer = BasicRenderer.extend({
                     .append($content);
     },
     /**
+     * Main render function for the list.  It is rendered as a table. For now,
+     * this method does not wait for the field widgets to be ready.
+     *
      * @override
-     * returns {Deferred}
+     * @private
+     * returns {Deferred} this deferred is resolved immediately
      */
     _renderView: function () {
         var self = this;
@@ -521,6 +564,13 @@ var ListRenderer = BasicRenderer.extend({
         }
         return this._super();
     },
+    /**
+     * Whenever we change the state of the selected rows, we need to call this
+     * method to keep the this.selection variable in sync, and also to recompute
+     * the aggregates.
+     *
+     * @private
+     */
     _updateSelection: function () {
         var $selectedRows = this.$('tbody .o_list_record_selector input:checked')
                                 .closest('tr');
@@ -537,6 +587,7 @@ var ListRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @private
      * @param {MouseEvent} event
      */
     _onRowClicked: function (event) {
@@ -546,6 +597,7 @@ var ListRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * @private
      * @param {MouseEvent} event
      */
     _onSelectRecord: function (event) {
@@ -556,6 +608,7 @@ var ListRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * @private
      * @param {MouseEvent} event
      */
     _onSortColumn: function (event) {
@@ -563,6 +616,7 @@ var ListRenderer = BasicRenderer.extend({
         this.trigger_up('toggle_column_order', {id: this.state.id, name: name});
     },
     /**
+     * @private
      * @param {MouseEvent} event
      */
     _onToggleGroup: function (event) {
@@ -571,6 +625,13 @@ var ListRenderer = BasicRenderer.extend({
             this.trigger_up('toggle_group', {group: group});
         }
     },
+    /**
+     * When the user clicks on the 'checkbox' on the left of a record, we need
+     * to toggle its status.
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
     _onToggleSelection: function (event) {
         var checked = $(event.currentTarget).prop('checked') || false;
         this.$('tbody .o_list_record_selector input').prop('checked', checked);
