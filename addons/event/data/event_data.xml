@@ -21,5 +21,18 @@
             <field name="doall" eval="False" />
         </record>
 
+        <record id="event_type_data_online" model="event.type">
+            <field name="name">Online</field>
+            <field name="is_online" eval="True"/>
+            <field name="auto_confirm" eval="True"/>
+            <field name="use_mail_schedule" eval="False"/>
+        </record>
+
+        <record id="event_type_data_physical" model="event.type">
+            <field name="name">Physical Event</field>
+            <field name="is_online" eval="False"/>
+            <field name="auto_confirm" eval="True"/>
+            <field name="use_mail_schedule" eval="False"/>
+        </record>
     </data>
 </odoo>
