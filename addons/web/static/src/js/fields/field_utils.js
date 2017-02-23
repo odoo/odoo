@@ -35,18 +35,26 @@ function format_char(value) {
     return typeof value === 'string' ? value : '';
 }
 
+/**
+ * @params {Moment}
+ * @returns {string}
+ */
 function format_date(value) {
     var l10n = core._t.database.parameters;
     var date_format = time.strftime_to_moment_format(l10n.date_format);
-    return value && moment(time.str_to_date(value), moment.ISO_8601).format(date_format);
+    return value.format(date_format);
 }
 
+/**
+ * @params {Moment}
+ * @returns {string}
+ */
 function format_datetime(value) {
     var l10n = core._t.database.parameters;
     var date_format = time.strftime_to_moment_format(l10n.date_format);
     var time_format = time.strftime_to_moment_format(l10n.time_format);
     var datetime_format = date_format + ' ' + time_format;
-    return value && moment(time.str_to_datetime(value), moment.ISO_8601).format(datetime_format);
+    return value.format(datetime_format);
 }
 
 // Format a float, according to the local settings
@@ -147,12 +155,20 @@ function format_selection(value, field) {
 // Parse
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * create an Date object
+ * The method toJSON return the formated value to send value server side
+ *
+ * @params {string}
+ * @returns {Moment} Moment date object
+ */
 function parse_date(value) {
     var date_pattern = time.strftime_to_moment_format(core._t.database.parameters.date_format);
     var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D');
     var date = moment(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601], true);
     if (date.isValid() && date.year() >= 1900) {
-        return time.date_to_str(date.toDate());
+        date.toJSON = time.date_to_str.bind(time, date.toDate());
+        return date;
     }
     date = moment(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601]);
     if (date.isValid()) {
@@ -160,12 +176,20 @@ function parse_date(value) {
             date.year(moment.utc().year());
         }
         if (date.year() >= 1900) {
-            return time.date_to_str(date.toDate());
+            date.toJSON = time.date_to_str.bind(time, date.toDate());
+            return date;
         }
     }
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct date"), value));
 }
 
+/**
+ * create an Date object
+ * The method toJSON return the formated value to send value server side
+ *
+ * @params {string}
+ * @returns {Moment} Moment date object
+ */
 function parse_datetime(value) {
     var date_pattern = time.strftime_to_moment_format(core._t.database.parameters.date_format),
         time_pattern = time.strftime_to_moment_format(core._t.database.parameters.time_format);
@@ -175,7 +199,8 @@ function parse_datetime(value) {
     var pattern2 = date_pattern_wo_zero + ' ' + time_pattern_wo_zero;
     var datetime = moment(value, [pattern1, pattern2, moment.ISO_8601], true);
     if (datetime.isValid() && datetime.year() >= 1900) {
-        return time.datetime_to_str(datetime.toDate());
+        datetime.toJSON = time.datetime_to_str.bind(time, datetime.toDate());
+        return datetime;
     }
     datetime = moment(value, [pattern1, pattern2, moment.ISO_8601]);
     if (datetime.isValid()) {
@@ -183,7 +208,8 @@ function parse_datetime(value) {
             datetime.year(moment.utc().year());
         }
         if (datetime.year() >= 1900) {
-            return time.datetime_to_str(datetime.toDate());
+            datetime.toJSON = time.datetime_to_str.bind(time, datetime.toDate());
+            return datetime;
         }
     }
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct datetime"), value));

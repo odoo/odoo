@@ -519,7 +519,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('field date in editable list view', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         this.data.partner.fields.date.default = "2017-02-10";
         this.data.partner.records = [];
@@ -535,7 +535,10 @@ QUnit.module('basic_fields', {
 
         list.$buttons.find('.o_list_button_add').click();
 
-        assert.ok(list.$('input').is(':focus'),
+        assert.strictEqual(list.$('input.o_datepicker_input').length, 1,
+            "the view should have a date input for editable mode");
+
+        assert.ok(list.$('input.o_datepicker_input').is(':focus'),
             "date input should have the focus (make sure the test window had the focus)");
     });
 

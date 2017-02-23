@@ -83,6 +83,7 @@ var Context = require('web.Context');
 var data = require('web.data'); // TODO: remove dependency to data.js
 var pyeval = require('web.pyeval');
 var session = require('web.session');
+var field_utils = require('web.field_utils');
 
 var x2ManyCommands = {
     // (0, _, {values})
@@ -536,6 +537,12 @@ var Model = AbstractModel.extend({
                     _.each(_.keys(many2ones), function (name) {
                         defs.push(self._fetchNameGets(x2manyList, name));
                     });
+                } else if (field.type === 'date') {
+                    // process date: convert into Date object
+                    record._changes[name] = field_utils.parse_date(result[name]);
+                } else if (field.type === 'datetime') {
+                    // process datetime: convert into Date object
+                    record._changes[name] = field_utils.parse_datetime(result[name]);
                 } else {
                     record._changes[name] = result[name];
                 }
@@ -1252,11 +1259,11 @@ var Model = AbstractModel.extend({
             record.data = _.extend({}, record.data, result);
             return self._postprocess(record);
         }).then(function (record) {
-            // process many2one: split [id, nameget] and create corresponding record
             _.each(fieldNames, function (name) {
                 var field = record.fields[name];
                 var val = record.data[name];
                 if (field.type === 'many2one') {
+                    // process many2one: split [id, nameget] and create corresponding record
                     if (val !== false) {
                         // the many2one value is of the form [id, display_name]
                         var r = self._makeDataPoint({
@@ -1271,6 +1278,12 @@ var Model = AbstractModel.extend({
                         // no value for the many2one
                         record.data[name] = false;
                     }
+                } else if (field.type === 'date') {
+                    // process data: convert into Date object
+                    record.data[name] = field_utils.parse_date(val);
+                } else if (field.type === 'datetime') {
+                    // process datetime: convert into Date object
+                    record.data[name] = field_utils.parse_datetime(val);
                 }
             });
         }).then(function () {
