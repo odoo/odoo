@@ -1,6 +1,8 @@
 odoo.define('hr_timesheet_sheet.sheet', function (require) {
 "use strict";
 
+return;
+
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var form_common = require('web.view_dialogs');
