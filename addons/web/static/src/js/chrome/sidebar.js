@@ -1,6 +1,7 @@
 odoo.define('web.Sidebar', function (require) {
 "use strict";
 
+var Context = require('web.Context');
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
@@ -144,15 +145,15 @@ var Sidebar = Widget.extend({
                     active_ids_context.active_domain = domain;
                 }
                 var c = pyeval.eval('context',
-                new data.CompoundContext(
+                new Context(
                     sidebar_eval_context, active_ids_context));
 
                 self.rpc("/web/action/load", {
                     action_id: item.action.id,
-                    context: new data.CompoundContext(
+                    context: new Context(
                         dataset.get_context(), active_ids_context).eval()
                 }).done(function(result) {
-                    result.context = new data.CompoundContext(
+                    result.context = new Context(
                         result.context || {}, active_ids_context)
                             .set_eval_context(c);
                     result.flags = result.flags || {};

@@ -2,6 +2,7 @@ odoo.define('google_spreadsheet.google.spreadsheet', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
+var Context = require('web.Context');
 var core = require('web.core');
 var data = require('web.data');
 var FavoriteMenu = require('web.FavoriteMenu');
@@ -28,7 +29,7 @@ FavoriteMenu.include({
             list_view = this.view_manager.views.list,
             list_view_id = list_view ? list_view.view_id : false,
             context = this.searchview.dataset.get_context() || [],
-            compound_context = new data.CompoundContext(context),
+            compound_context = new Context(context),
             compound_domain = new data.CompoundDomain(context),
             groupbys = pyeval.eval('groupbys', sv_data.groupbys).join(" "),
             ds = new data.DataSet(this, 'google.drive.config');
