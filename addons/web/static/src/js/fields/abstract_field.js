@@ -207,6 +207,17 @@ var AbstractField = Widget.extend({
         this._reset(record, event);
         return this._render();
     },
+    /**
+     * @override performModelRPC from ServicesMixin
+     * Adds the dataPointID to the option parameter so that the BasicController
+     * (the FieldManagerMixin) knows the context to bind to the rpc call.
+     */
+    performModelRPC: function (model, method, args, kwargs, options) {
+        return this._super(model, method, args, kwargs, _.extend({
+            dataPointID: this.dataPointID,
+            fieldName: this.name,
+        }, options || {}));
+    },
 
     //--------------------------------------------------------------------------
     // Private

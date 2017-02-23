@@ -14,13 +14,11 @@ var core = require('web.core');
 
 var qweb = core.qweb;
 
-return {
+var FieldManagerMixin = {
     custom_events: {
         field_changed: '_onFieldChanged',
-        name_create: '_onNameCreate',
-        name_get: '_onNameGet',
-        name_search: '_onNameSearch',
         load: '_onLoad',
+        call_service: '_onCallService',
     },
     /**
      * A FieldManagerMixin can be initialized with an instance of a basicModel.
@@ -123,52 +121,36 @@ return {
         });
     },
     /**
-     * When a name_create event arrives, the nameCreate method from the model
-     * should be called.
+     * Some widgets perform model RPCs. These are intercepted so that the
+     * context can be automatically added according to the given dataPointID
+     * option the AbstractField implementation automatically adds.
      *
-     * @param {OdooEvent} event
+     * @param {OdooEvent} e
+     * @param {string} e.data.service - the service called, here we are only
+     *                                interested in the "ajax" service
+     * @param {string} e.data.method - the service method called, here we are
+     *                               only interested by the "rpc" method
+     * @param {Array} e.data.args
+     *        the args parameters contains the route, the route arguments and
+     *        the RPC call options. This method purpose is to check the RPC
+     *        call options for the dataPointID (and field name) and merge the
+     *        appropriate context with the route arguments' one.
      */
-    _onNameCreate: function (event) {
-        var data = event.data;
-        if (!data.on_success) { return; }
-        this.model
-            .nameCreate(data.model, data.name)
-            .then(data.on_success)
-            .fail(function () {
-                if (data.on_fail) {
-                    data.on_fail();
-                }
-            });
-    },
-    /**
-     * When a name_get event arrives, the name_get method from the model should
-     * be called.
-     *
-     * @param {OdooEvent} event
-     */
-    _onNameGet: function (event) {
-        var data = event.data;
-        if (!data.on_success) { return; }
-        this.model.name_get(data.model, data.ids)
-                  .then(data.on_success); // fixme: handle context
-    },
-    /**
-     * Some field widgets need to perform a namesearch. For example, a many2one
-     * widget when it needs to fetch its autocompletion data.
-     *
-     * @todo Note: I think that this is wrong, the field widget should just perform
-     * a name_search rpc on its own, no need for this.
-     *
-     * @deprecated Just do a regular name_search
-     * @param {OdooEvent} event
-     */
-    _onNameSearch: function (event) {
-        var data = event.data;
-        if (!data.on_success) { return; }
-        this.model
-            .nameSearch(data.model, data.search_val, data.domain, data.operator, data.limit)
-            .then(data.on_success);
+    _onCallService: function (e) {
+        if (e.data.service !== "ajax" || e.data.method !== "rpc") return;
+
+        var args = e.data.args[1];
+        var options = e.data.args[2];
+        if (args.kwargs && options.dataPointID) {
+            args.kwargs.context = _.extend(
+                this.model.getContext(options.dataPointID, {
+                    fieldName: options.fieldName || false,
+                }),
+                args.kwargs.context || {}
+            );
+        }
     },
 };
 
+return FieldManagerMixin;
 });
