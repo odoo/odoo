@@ -15,35 +15,34 @@ odoo.define('web.BasicModel', function (require) {
  * its id as key in many methods.
  *
  * Here is a description of what those data point look like:
- * {
- *    _changes: {
- *        data: { fieldName: field_values |  [commands] },
- *        relational_data: { field_names: datapoint }
- *    },
- *    aggregate_values: { fieldName: number} | undefined
- *    count: number, default=0,
- *    context: {string:value},
- *    data: {string:value} | [{string:value}],
- *    field_names: [string],
- *    fields: {string:field description},
- *    grouped_by: [strings] | undefined,
- *    id: number,
- *    is_group: boolean,
- *    is_list: boolean,
- *    is_open: boolean,
- *    is_record: boolean,
- *    limit: number | undefined (default=80 for lists)
- *    model: string,
- *    offset: number, default=0,
- *    openGroupByDefault: boolean,
- *    ordered_by: [order] | undefined,
- *    res_id: [number]|undefined,
- *    res_ids: [number] | undefined,
- *    relational_data: {
- *      field_names: datapoints
- *    },
- *    static: boolean,  * like previous DatasetStatic
- * }
+ *   var dataPoint = {
+ *      _cache: {Object|undefined}
+ *      _changes: {Object|null},
+ *      aggregateValues: {Object},
+ *      context: {Object},
+ *      count: {integer},
+ *      data: {Object|Object[]},
+ *      domain: {*[]},
+ *      fieldNames: {string[]},
+ *      fields: {Object},
+ *      fieldAttrs: {Object},
+ *      groupedBy: {string[]},
+ *      id: {integer},
+ *      isOpen: {boolean},
+ *      limit: {integer},
+ *      model: {string,
+ *      offset: {integer},
+ *      openGroupByDefault: {boolean},
+ *      orderedBy: {string[]},
+ *      parentID: {string},
+ *      rawContext: {Object},
+ *      relationField: {string},
+ *      res_id: {integer|null},
+ *      res_ids: {integer[]},
+ *      static: {boolean},
+ *      type: {string} 'record' | 'list'
+ *      value: ?,
+ *  };
  *
  * Notes:
  * - id: is totally unrelated to res_id.  id is a web client local concept
@@ -1620,55 +1619,51 @@ var BasicModel = AbstractModel.extend({
     _makeDataPoint: function (params) {
         var type = params.type || ('domain' in params && 'list') || 'record';
 
-        var res_id;
-        var value;
+        var res_id, value;
+        var res_ids = params.res_ids || [];
         if (type === 'record') {
             res_id = params.res_id || (params.data && params.data.id) || _.uniqueId('virtual_');
         } else {
-            var value_is_array = params.value instanceof Array;
-            res_id = value_is_array ? params.value[0] : undefined;
-            value = value_is_array ? params.value[1] : params.value;
+            var isValueArray = params.value instanceof Array;
+            res_id = isValueArray ? params.value[0] : undefined;
+            value = isValueArray ? params.value[1] : params.value;
         }
-        params.res_id = res_id;
-
-        var dataPoint = {
-            context: params.context || {},
-            domain: params.domain || [],
-            groupedBy: params.groupedBy || [],
-            id: _.uniqueId(params.modelName + '_'),
-            model: params.modelName,
-            res_id: res_id,
-            res_ids: params.res_ids || [],
-        };
-
-        this.localData[dataPoint.id] = dataPoint;
 
         var fields = _.extend({
             display_name: {type: 'char'},
             id: {type: 'integer'},
         }, params.fields);
 
-        _.extend(dataPoint, {
+        var dataPoint = {
             _cache: type === 'list' ? {} : undefined,
             _changes: null,
             aggregateValues: params.aggregateValues || {},
-            count: params.count || dataPoint.res_ids.length,
+            context: params.context || {},
+            count: params.count || res_ids.length,
             data: params.data || (type === 'record' ? {} : []),
+            domain: params.domain || [],
             fieldNames: params.fieldNames || Object.keys(fields),
             fields: fields,
             fieldAttrs: params.fieldAttrs || {},
+            groupedBy: params.groupedBy || [],
+            id: _.uniqueId(params.modelName + '_'),
             isOpen: params.isOpen,
             limit: type === 'record' ? 1 : params.limit,
-            offset: params.offset || (type === 'record' ? _.indexOf(dataPoint.res_ids, res_id) : 0),
+            model: params.modelName,
+            offset: params.offset || (type === 'record' ? _.indexOf(res_ids, res_id) : 0),
             openGroupByDefault: params.openGroupByDefault,
             orderedBy: params.orderedBy || [],
             parentID: params.parentID,
             rawContext: params.rawContext,
             relationField: params.relationField,
+            res_id: res_id,
+            res_ids: res_ids,
             static: params.static || false,
             type: type,  // 'record' | 'list'
             value: value,
-        });
+        };
+
+        this.localData[dataPoint.id] = dataPoint;
 
         return dataPoint;
     },
