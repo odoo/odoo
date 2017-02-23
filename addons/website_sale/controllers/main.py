@@ -581,7 +581,6 @@ class WebsiteSale(http.Controller):
             partner = Partner.sudo().create(billing_info)
         order.write({'partner_id': partner.id})
         order.onchange_partner_id()
-        order.write({'partner_invoice_id': partner.id})
 
         # create a new shipping partner
         if checkout.get('shipping_id') == -1:
@@ -590,11 +589,10 @@ class WebsiteSale(http.Controller):
                 shipping_info['lang'] = partner_lang
             shipping_info['parent_id'] = partner.id
             checkout['shipping_id'] = Partner.sudo().create(shipping_info).id
-        if checkout.get('shipping_id'):
-            order.write({'partner_shipping_id': checkout['shipping_id']})
 
         order_info = {
             'message_partner_ids': [(4, partner.id), (3, request.website.partner_id.id)],
+            'partner_shipping_id': checkout.get('shipping_id') or partner.id,
         }
         order.write(order_info)
 
@@ -629,9 +627,6 @@ class WebsiteSale(http.Controller):
             return request.website.render("website_sale.checkout", values)
 
         self.checkout_form_save(values["checkout"])
-
-        if not int(post.get('shipping_id', 0)):
-            order.partner_shipping_id = order.partner_invoice_id
 
         order.onchange_partner_shipping_id()
         order.order_line._compute_tax_id()
