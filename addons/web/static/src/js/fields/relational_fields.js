@@ -999,6 +999,9 @@ var FieldMany2ManyTags = AbstractRelationalField.extend({
     _renderEdit: function () {
         var self = this;
         this._renderTags();
+        if (this.many2one) {
+            this.many2one.destroy();
+        }
         this.many2one = new FieldMany2One(this, this.name, this.record, {
             idForLabel: this.idForLabel,
             mode: 'edit',
