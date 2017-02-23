@@ -2040,7 +2040,7 @@ class BaseModel(object):
                 _logger.debug("column %s is in the table %s but not in the corresponding object %s",
                               row['attname'], self._table, self._name)
             if row['attnotnull']:
-                tools.drop_not_null(self._table, row['attname'])
+                tools.drop_not_null(self._cr, self._table, row['attname'])
 
     @api.model_cr_context
     def _init_column(self, column_name):
