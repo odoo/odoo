@@ -1088,12 +1088,19 @@ class Binary(http.Controller):
                 # create an empty registry
                 registry = odoo.modules.registry.Registry(dbname)
                 with registry.cursor() as cr:
-                    cr.execute("""SELECT c.logo_web, c.write_date
-                                    FROM res_users u
-                               LEFT JOIN res_company c
-                                      ON c.id = u.company_id
-                                   WHERE u.id = %s
-                               """, (uid,))
+                    company = int(kw['company']) if kw and kw.get('company') else False
+                    if company:
+                        cr.execute("""SELECT logo_web, write_date
+                                        FROM res_company
+                                       WHERE id = %s
+                                   """, (company,))
+                    else:
+                        cr.execute("""SELECT c.logo_web, c.write_date
+                                        FROM res_users u
+                                   LEFT JOIN res_company c
+                                          ON c.id = u.company_id
+                                       WHERE u.id = %s
+                                   """, (uid,))
                     row = cr.fetchone()
                     if row and row[0]:
                         image_base64 = str(row[0]).decode('base64')

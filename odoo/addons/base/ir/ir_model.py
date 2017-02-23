@@ -784,8 +784,6 @@ class IrModelRelation(models.Model):
             self._cr.execute('DROP TABLE %s CASCADE' % table,)
             _logger.info('Dropped table %s', table)
 
-        self._cr.commit()
-
 
 class IrModelAccess(models.Model):
     _name = 'ir.model.access'
@@ -1300,7 +1298,6 @@ class IrModelData(models.Model):
 
         undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model')
 
-        self._cr.commit()
 
         (datas - undeletable).unlink()
 

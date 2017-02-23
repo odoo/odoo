@@ -232,6 +232,8 @@ class MaintenanceEquipment(models.Model):
             'maintenance_type': 'preventive',
             'owner_user_id': self.owner_user_id.id,
             'technician_user_id': self.technician_user_id.id,
+            'maintenance_team_id': self.maintenance_team_id.id,
+            'duration': self.maintenance_duration,
             })
 
     @api.model

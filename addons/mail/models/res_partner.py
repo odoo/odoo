@@ -77,11 +77,16 @@ class Partner(models.Model):
 
         is_discussion = message.subtype_id.id == self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
 
+        record = False
+        if message.res_id and message.model in self.env:
+            record = self.env[message.model].browse(message.res_id)
+
         return {
             'signature': signature,
             'website_url': website_url,
             'company_name': company_name,
             'model_name': model_name,
+            'record': record,
             'record_name': record_name,
             'tracking': tracking,
             'is_discussion': is_discussion,
@@ -232,7 +237,7 @@ class Partner(models.Model):
 
             def send_notifications():
                 db_registry = registry(dbname)
-                with db_registry.cursor() as cr:
+                with api.Environment.manage(), db_registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
                     env['mail.mail'].browse(email_ids).send()
 

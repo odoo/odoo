@@ -162,7 +162,7 @@ class Company(models.Model):
         for company in self.filtered(lambda company: company.partner_id):
             address_data = company.partner_id.sudo().address_get(adr_pref=['contact'])
             if address_data['contact']:
-                partner = company.partner_id.browse(address_data['contact'])
+                partner = company.partner_id.browse(address_data['contact']).sudo()
                 company.street = partner.street
                 company.street2 = partner.street2
                 company.city = partner.city
