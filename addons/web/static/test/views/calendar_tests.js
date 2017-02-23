@@ -7,7 +7,7 @@ var session = require('web.session');
 
 var createView = testUtils.createView;
 
-var initialDate = new Date("2016-12-12 08:00:00");
+var initialDate = new Date("2016-12-12T08:00:00Z");
 
 
 function mock_check_access_rights(route, args) {
