@@ -565,8 +565,7 @@
                     <field name="probability"/>
                     <field name="lost_reason"/>
                     <separator/>
-                    <filter string="Won" name="won"
-                            domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
                     <filter string="My Opportunities" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"
@@ -589,8 +588,9 @@
                             domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all opportunities with a deadline for which the next action date is before today"/>
                     <separator/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Lost" domain="[('active', '=', False)]"/>
+                    <filter string="Won" name="won"
+                            domain="[('stage_id.probability', '=', 100)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Channel" context="{'group_by':'team_id'}"/>
