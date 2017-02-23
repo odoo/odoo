@@ -399,6 +399,41 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('a').text(), '', 'the tag a should be empty');
     });
 
+    QUnit.test('check that the field context is used when doing a name_search in a m2o', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<field name="product_id" context="{\'hello\': \'world\', \'test\': foo}"/>' +
+                    '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+            session: {user_context: {hey: "ho"}},
+            manualDestroy: true,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/product/name_search') {
+                    var context = args.kwargs.context;
+                    assert.strictEqual(context.hey, "ho",
+                        'the session context should have been used for the rpc');
+                    assert.strictEqual(context.hello, "world",
+                        'the field context should have been used for the RPC');
+                    assert.strictEqual(context.test, "yop",
+                        'the field context should have been properly evaluated');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input').first().click();
+
+        form.destroy();
+    });
+
     QUnit.module('FieldOne2Many');
 
     QUnit.test('one2many basic properties', function (assert) {

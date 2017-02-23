@@ -614,42 +614,6 @@ var BasicModel = AbstractModel.extend({
         return record.id;
     },
     /**
-     * This method just does a name_create call to the server.
-     *
-     * @todo Maybe this method should also create a local record...
-     *
-     * @param {string} model the name of the model
-     * @param {string} name the desired name of the created record
-     * @param {Object} context the context to be passed to the rpc
-     * @returns {Deferred}
-     */
-    nameCreate: function (model, name, context) {
-        return this.performModelRPC(model, 'name_create', [name], {
-            context: _.extend({}, session.user_context, context),
-        });
-    },
-    /**
-     * Do a name_search.  I think that it should be done directly by the widget
-     * @todo remove this
-     * @deprecated
-     *
-     * @param {any} model
-     * @param {any} name
-     * @param {any} domain
-     * @param {any} operator
-     * @param {any} limit
-     * @returns
-     */
-    nameSearch: function (model, name, domain, operator, limit) {
-        // fixme: correctly handle context
-        return this.performModelRPC(model, 'name_search', [], {
-            name: name || '',
-            args: domain || [],
-            operator: operator || 'ilike',
-            limit: limit || 0,
-        });
-    },
-    /**
      * This is an extremely important method.  All changes in any field go
      * through this method.  It will then apply them in the local state, check
      * if onchanges needs to be applied, actually do them if necessary, then
@@ -908,6 +872,20 @@ var BasicModel = AbstractModel.extend({
                 return groupId;
             });
         }
+    },
+    /**
+     * Every RPC done by the model need to add some context, which is a
+     * combination of the context of the session, of the record/list, and/or of
+     * the concerned field. This method combines all these contexts and evaluate
+     * them with the proper evalcontext.
+     *
+     * @param {string} recordID - the id of an element from the localData
+     * @see _getContext for the options parameter
+     * @returns {Object} the evaluated context
+     */
+    getContext: function (recordID, options) {
+        var record = this.localData[recordID];
+        return this._getContext(record, options);
     },
 
     //--------------------------------------------------------------------------
@@ -2039,4 +2017,3 @@ var BasicModel = AbstractModel.extend({
 
 return BasicModel;
 });
-

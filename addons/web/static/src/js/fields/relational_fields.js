@@ -224,21 +224,18 @@ var FieldMany2One = AbstractRelationalField.extend({
      */
     _quickCreate: function (name) {
         var self = this;
-        var slow_create = this._searchCreatePopup.bind(this, "form", false, this._createContext(name));
+        var slowCreate = this._searchCreatePopup.bind(this, "form", false, this._createContext(name));
         if (this.nodeOptions.quick_create) {
-            this.trigger_up('name_create', {
-                model: this.field.relation,
-                name: name,
-                context: data.build_context(this.record, this.context),
-                on_success: function (result) {
+            this.performModelRPC(this.field.relation, "name_create", [name]).then(
+                function (result) {
                     if (self.mode === "edit") {
                         self.reinitialize({id: result[0], display_name: result[1]});
                     }
                 },
-                on_fail: slow_create,
-            });
+                slowCreate
+            );
         } else {
-            slow_create();
+            slowCreate();
         }
     },
     /**
@@ -296,69 +293,66 @@ var FieldMany2One = AbstractRelationalField.extend({
             exclusion_domain.push(['id', 'not in', blacklisted_ids]);
         }
         var domain = new data.CompoundDomain(data.build_domain(this.record, this.domain), exclusion_domain);
-        this.trigger_up('name_search', {
-            model: this.field.relation,
-            search_val: search_val,
-            domain: pyeval.eval('domain', domain),
-            operator: 'ilike',
+
+        this.performModelRPC(this.field.relation, "name_search", [], {
+            name: search_val,
+            args: pyeval.eval("domain", domain),
+            operator: "ilike",
             limit: this.limit + 1,
-            on_success: function (result) {
-                // possible selections for the m2o
-                var values = _.map(result, function (x) {
-                    x[1] = x[1].split("\n")[0];
-                    return {
-                        label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
-                        value: x[1],
-                        name: x[1],
-                        id: x[0],
-                    };
+        }).then(function (result) {
+            // possible selections for the m2o
+            var values = _.map(result, function (x) {
+                x[1] = x[1].split("\n")[0];
+                return {
+                    label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
+                    value: x[1],
+                    name: x[1],
+                    id: x[0],
+                };
+            });
+
+            // search more... if more results than limit
+            if (values.length > self.limit) {
+                values = values.slice(0, self.limit);
+                values.push({
+                    label: _t("Search More..."),
+                    action: function () {
+                        self.performModelRPC(self.field.relation, "name_search", {
+                            name: search_val,
+                            args: pyeval.eval('domain', domain),
+                            operator: "ilike",
+                            limit: 160,
+                        }).then(self._searchCreatePopup.bind(self, "search"));
+                    },
+                    classname: 'o_m2o_dropdown_option',
                 });
+            }
+            var create_enabled = self.can_create && !self.nodeOptions.no_create;
+            // quick create
+            var raw_result = _.map(result, function (x) { return x[1]; });
+            if (create_enabled && !self.nodeOptions.no_quick_create &&
+                search_val.length > 0 && !_.contains(raw_result, search_val)) {
+                values.push({
+                    label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
+                        $('<span />').text(search_val).html()),
+                    action: self._quickCreate.bind(self, search_val),
+                    classname: 'o_m2o_dropdown_option'
+                });
+            }
+            // create and edit ...
+            if (create_enabled && !self.nodeOptions.no_create_edit) {
+                values.push({
+                    label: _t("Create and Edit..."),
+                    action: self._searchCreatePopup.bind(self, "form", false, self._createContext(search_val)),
+                    classname: 'o_m2o_dropdown_option',
+                });
+            } else if (values.length === 0) {
+                values.push({
+                    label: _t("No results to show..."),
+                });
+            }
 
-                // search more... if more results than limit
-                if (values.length > self.limit) {
-                    values = values.slice(0, self.limit);
-                    values.push({
-                        label: _t("Search More..."),
-                        action: function () {
-                            self.trigger_up('name_search', {
-                                model: self.field.relation,
-                                search_val: search_val,
-                                domain: pyeval.eval('domain', domain),
-                                operator: 'ilike',
-                                limit: 160,
-                                on_success: self._searchCreatePopup.bind(self, "search"),
-                            });
-                        },
-                        classname: 'o_m2o_dropdown_option',
-                    });
-                }
-                var create_enabled = self.can_create && !self.nodeOptions.no_create;
-                // quick create
-                var raw_result = _.map(result, function (x) { return x[1]; });
-                if (create_enabled && !self.nodeOptions.no_quick_create &&
-                    search_val.length > 0 && !_.contains(raw_result, search_val)) {
-                    values.push({
-                        label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
-                            $('<span />').text(search_val).html()),
-                        action: self._quickCreate.bind(self, search_val),
-                        classname: 'o_m2o_dropdown_option'
-                    });
-                }
-                // create and edit ...
-                if (create_enabled && !self.nodeOptions.no_create_edit) {
-                    values.push({
-                        label: _t("Create and Edit..."),
-                        action: self._searchCreatePopup.bind(self, "form", false, self._createContext(search_val)),
-                        classname: 'o_m2o_dropdown_option',
-                    });
-                } else if (values.length === 0) {
-                    values.push({
-                        label: _t("No results to show..."),
-                    });
-                }
-
-                def.resolve(values);
-            },
+            def.resolve(values);
         });
 
         return def;
