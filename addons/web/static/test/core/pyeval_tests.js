@@ -1,6 +1,7 @@
 odoo.define('web.pyEval_tests', function(require) {
 "use strict";
 
+var Context = require('web.Context');
 var data = require('web.data');
 var pyEval = require('web.pyeval');
 var time = require('web.time');
@@ -577,7 +578,7 @@ QUnit.module('core', function () {
 
         // setup(session);
         var c = "{'default_opportunity_id': active_id, 'default_duration': 1.0, 'lng': lang}";
-        var cc = new data.CompoundContext(c);
+        var cc = new Context(c);
         cc.set_eval_context({active_id: 42});
         var result = pyEval.eval_domains_and_contexts({
             domains:[], contexts: [this.user_context, cc]

@@ -16,6 +16,7 @@ odoo.define('web.relational_fields', function (require) {
 var AbstractField = require('web.AbstractField');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
+var Context = require('web.Context');
 var ControlPanel = require('web.ControlPanel');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
@@ -376,7 +377,7 @@ var FieldMany2One = AbstractRelationalField.extend(mixins.ServicesMixin, {
         new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, {
             res_model: this.field.relation,
             domain: data.build_domain(this.record, this.domain),
-            context: new data.CompoundContext(data.build_context(this.record, this.context), context || {}),
+            context: new Context(data.build_context(this.record, this.context), context || {}),
             title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
             initial_ids: ids ? _.map(ids, function (x) { return x[0]; }) : undefined,
             initial_view: view,

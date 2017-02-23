@@ -1,6 +1,7 @@
 odoo.define('web.ViewManager', function (require) {
 "use strict";
 
+var Context = require('web.Context');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var data = require('web.data');
@@ -538,7 +539,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     do_execute_action: function (action_data, model, record_id, on_closed) {
         var self = this;
         var result_handler = on_closed || function () {};
-        var context = new data.CompoundContext(this.env.context, action_data.context || {});
+        var context = new Context(this.env.context, action_data.context || {});
 
         // response handler
         var handler = function (action) {
@@ -546,7 +547,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 // filter out context keys that are specific to the current action.
                 // Wrong default_* and search_default_* values will no give the expected result
                 // Wrong group_by values will simply fail and forbid rendering of the destination view
-                var ncontext = new data.CompoundContext(
+                var ncontext = new Context(
                     _.object(_.reject(_.pairs(self.env.context), function(pair) {
                       return pair[0].match('^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids)$') !== null;
                     }))

@@ -9,7 +9,7 @@ odoo.define('web.KanbanController', function (require) {
 
 var BasicController = require('web.BasicController');
 var core = require('web.core');
-var data = require('web.data');
+var Context = require('web.Context');
 var form_common = require('web.view_dialogs');
 
 var _t = core._t;
@@ -265,7 +265,7 @@ var KanbanController = BasicController.extend({
         var self = this;
         var record = event.target;
         if (event.data.context) {
-            event.data.context = new data.CompoundContext(event.data.context)
+            event.data.context = new Context(event.data.context)
                 .set_eval_context({
                     active_id: event.target.id,
                     active_ids: [event.target.id],

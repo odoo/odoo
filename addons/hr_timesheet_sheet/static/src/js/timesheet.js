@@ -2,6 +2,7 @@ odoo.define('hr_timesheet_sheet.sheet', function (require) {
 "use strict";
 
 var concurrency = require('web.concurrency');
+var Context = require('web.Context');
 var core = require('web.core');
 var data = require('web.data');
 var form_common = require('web.view_dialogs');
@@ -59,7 +60,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         var commands = this.field_manager.get_field_value("timesheet_ids");
         var self = this;
         this.res_o2m_drop.add(new Model(this.view.model).call("resolve_2many_commands", 
-                ["timesheet_ids", commands, [], new data.CompoundContext()]))
+                ["timesheet_ids", commands, [], new Context()]))
             .done(function(result) {
                 self.set({sheets: result});
                 self.querying = false;
@@ -112,7 +113,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         var self = this;
         return this.render_drop.add(new Model("account.analytic.line").call("default_get", [
             ['account_id','general_account_id','journal_id','date','name','user_id','product_id','product_uom_id','amount','unit_amount','project_id'],
-            new data.CompoundContext({'user_id': self.get('user_id')})
+            new Context({'user_id': self.get('user_id')})
         ]).then(function(result) {
             default_get = result;
             // calculating dates
@@ -164,7 +165,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
 
             // we need the name_get of the projects
             return new Model("project.project").call("name_get", [_.pluck(projects, "project"),
-                new data.CompoundContext()]).then(function(result) {
+                new Context()]).then(function(result) {
                 project_names = {};
                 _.each(result, function(el) {
                     project_names[el[0]] = el[1];

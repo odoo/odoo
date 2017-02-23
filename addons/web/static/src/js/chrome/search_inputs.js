@@ -1,6 +1,7 @@
 odoo.define('web.search_inputs', function (require) {
 "use strict";
 
+var Context = require('web.Context');
 var core = require('web.core');
 var data = require('web.data');
 var field_utils = require('web.field_utils');
@@ -118,13 +119,13 @@ var Field = Input.extend( /** @lends instance.web.search.Field# */ {
             return;
         }
         var contexts = facet.values.map(function (facetValue) {
-            return new data.CompoundContext(context)
+            return new Context(context)
                 .set_eval_context({self: self.value_from(facetValue)});
         });
 
         if (contexts.length === 1) { return contexts[0]; }
 
-        return _.extend(new data.CompoundContext(), {
+        return _.extend(new Context(), {
             __contexts: contexts
         });
     },
@@ -588,7 +589,7 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
 
         if (!contexts.length) { return; }
         if (contexts.length === 1) { return contexts[0]; }
-        return _.extend(new data.CompoundContext(), {
+        return _.extend(new Context(), {
             __contexts: contexts
         });
     },

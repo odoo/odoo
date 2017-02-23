@@ -2,6 +2,7 @@ odoo.define('web.data', function (require) {
 "use strict";
 
 var Class = require('web.Class');
+var Context = require('web.Context');
 var concurrency = require('web.concurrency');
 var mixins = require('web.mixins');
 var Model = require('web.Model');
@@ -68,7 +69,7 @@ var Query = Class.extend({
                         q._filter, to_set.filter);
                 break;
             case 'context':
-                q._context = new CompoundContext(
+                q._context = new Context(
                         q._context, to_set.context);
                 break;
             case 'lazy':
@@ -379,7 +380,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         if (options.check_access_rule === true){
             method = 'search_read';
             ids_arg = [['id', 'in', ids]];
-            context = new CompoundContext(context, {active_test: false});
+            context = new Context(context, {active_test: false});
         }
         return this._model.call(method,
                 [ids_arg, fields || false],
@@ -729,32 +730,6 @@ var DataSetSearch = DataSet.extend({
     }
 });
 
-var CompoundContext = Class.extend({
-    init: function () {
-        this.__ref = "compound_context";
-        this.__contexts = [];
-        this.__eval_context = null;
-        var self = this;
-        _.each(arguments, function(x) {
-            self.add(x);
-        });
-    },
-    add: function (context) {
-        this.__contexts.push(context);
-        return this;
-    },
-    set_eval_context: function (eval_context) {
-        this.__eval_context = eval_context;
-        return this;
-    },
-    get_eval_context: function () {
-        return this.__eval_context;
-    },
-    eval: function() {
-        return pyeval.eval('context', this);
-    },
-});
-
 var CompoundDomain = Class.extend({
     init: function () {
         this.__ref = "compound_domain";
@@ -799,13 +774,13 @@ function build_eval_context (record) {
         field_values.active_ids = [record.data.id];
     }
     // FIXME: parent?
-    return new CompoundContext(field_values);
+    return new Context(field_values);
 }
 
 function build_context(record, context) {
     context = context || {};
     var eval_context = build_eval_context(record);
-    return new CompoundContext(context).set_eval_context(eval_context);
+    return new Context(context).set_eval_context(eval_context);
 }
 
 function build_domain(record, domain) {
@@ -819,7 +794,6 @@ return {
     DataSet: DataSet,
     DataSetStatic: DataSetStatic,
     DataSetSearch: DataSetSearch,
-    CompoundContext: CompoundContext,
     CompoundDomain: CompoundDomain,
     noDisplayContent: "<em class=\"text-warning\">" + _t("Unnamed") + "</em>",
     build_context: build_context,

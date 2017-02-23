@@ -79,6 +79,7 @@ odoo.define('web.BasicModel', function (require) {
 
 var AbstractModel = require('web.AbstractModel');
 var concurrency = require('web.concurrency');
+var Context = require('web.Context');
 var data = require('web.data'); // TODO: remove dependency to data.js
 var pyeval = require('web.pyeval');
 var session = require('web.session');
@@ -1557,7 +1558,7 @@ var Model = AbstractModel.extend({
      * @returns {Object} the evaluated context
      */
     _getContext: function (element, options) {
-        var context = new data.CompoundContext(session.user_context, element.context);
+        var context = new Context(session.user_context, element.context);
         if (options && options.field) {
             var attrs = element.fieldAttrs[options.field];
             if (attrs && attrs.context) {

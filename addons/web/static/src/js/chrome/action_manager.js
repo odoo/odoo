@@ -11,6 +11,7 @@ odoo.define('web.ActionManager', function (require) {
 
 var Bus = require('web.Bus');
 var ControlPanel = require('web.ControlPanel');
+var Context = require('web.Context');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
@@ -620,7 +621,7 @@ var ActionManager = Widget.extend({
 
         // Ensure context & domain are evaluated and can be manipulated/used
         var user_context = this.getSession().user_context;
-        var ncontext = new data.CompoundContext(user_context, options.additional_context, action.context || {});
+        var ncontext = new Context(user_context, options.additional_context, action.context || {});
         action.context = pyeval.eval('context', ncontext);
         if (action.context.active_id || action.context.active_ids) {
             // Here we assume that when an `active_id` or `active_ids` is used

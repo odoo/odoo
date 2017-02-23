@@ -2,12 +2,12 @@ odoo.define('board.dashboard', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
+var Context = require('web.Context');
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var FavoriteMenu = require('web.FavoriteMenu');
 var form_common = require('web.view_dialogs');
-var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var ViewManager = require('web.ViewManager');
 
@@ -395,7 +395,7 @@ FavoriteMenu.include({
         var self = this;
 
         var search_data = this.searchview.build_search_data(),
-            context = new data.CompoundContext(this.searchview.dataset.get_context() || []),
+            context = new Context(this.searchview.dataset.get_context() || []),
             domain = new data.CompoundDomain(this.searchview.dataset.get_domain() || []);
         _.each(search_data.contexts, context.add, context);
         _.each(search_data.domains, domain.add, domain);

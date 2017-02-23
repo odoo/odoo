@@ -217,7 +217,7 @@ var Followers = AbstractField.extend({
     _follow: function () {
         var kwargs = {
             partner_ids: [this.partnerID],
-            context: {}, // new data.CompoundContext(this.build_context(), {}) // fixme
+            context: {}, // new Context(this.build_context(), {}) // fixme
         };
         this.performModelRPC(this.model, 'message_subscribe', [[this.res_id]], kwargs)
             .then(this._reload.bind(this));
@@ -237,7 +237,7 @@ var Followers = AbstractField.extend({
                     [self.res_id],
                     ids.partner_ids,
                     ids.channel_ids,
-                    {}, // new data.CompoundContext(self.build_context(), {}) // fixme
+                    {}, // new Context(self.build_context(), {}) // fixme
                 ];
                 self.performModelRPC(self.model, 'message_unsubscribe', args)
                     .then(self._reload.bind(self));
@@ -280,7 +280,7 @@ var Followers = AbstractField.extend({
         } else {
             var kwargs = _.extend({}, ids);
             kwargs.subtype_ids = checklist;
-            kwargs.context = {}; // new data.CompoundContext(this.build_context(), {}); // fixme
+            kwargs.context = {}; // new Context(this.build_context(), {}); // fixme
             this.performModelRPC(this.model, 'message_subscribe', [[this.res_id]], kwargs)
                 .then(this._reload.bind(this));
         }

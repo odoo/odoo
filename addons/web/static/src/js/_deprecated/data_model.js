@@ -1,6 +1,7 @@
 odoo.define('web.DataModel', function (require) {
 "use strict";
 
+var Context = require('web.Context');
 var data = require('web.data');
 var Model = require('web.Model');
 var pyeval = require('web.pyeval');
@@ -31,10 +32,10 @@ Model.include({
      * combined with the provided context if any
      *
      * @param {Object} [context] to combine with the model's internal context
-     * @returns {instance.web.CompoundContext} The union of the user's context and the model's internal context, as well as the provided context if any. In that order.
+     * @returns {web.Context} The union of the user's context and the model's internal context, as well as the provided context if any. In that order.
      */
     context: function (context) {
-        return new data.CompoundContext(session.user_context, this._context, context || {});
+        return new Context(session.user_context, this._context, context || {});
     },
     /**
      * Call a method (over RPC) on the bound OpenERP model.
