@@ -1311,7 +1311,7 @@ var FieldSelection = AbstractField.extend({
     template: 'FieldSelection',
     supportedFieldTypes: ['selection', 'many2one'],
     events: _.extend({}, AbstractField.prototype.events, {
-        'input': '_onInput',
+        'change': '_onChange',
     }),
     replace_element: true,
     /**
@@ -1391,7 +1391,7 @@ var FieldSelection = AbstractField.extend({
      * depending on the field type.
      * @private
      */
-    _onInput: function () {
+    _onChange: function () {
         var res_id = JSON.parse(this.$el.val());
         if (this.field.type === 'many2one') {
             var value = _.find(this.values, function (val) {
