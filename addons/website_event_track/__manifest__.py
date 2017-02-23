@@ -23,6 +23,7 @@ Adds support for:
     'data': [
         'security/ir.model.access.csv',
         'security/event_track_security.xml',
+        'data/event_data.xml',
         'data/event_track_data.xml',
         'views/event_track_templates.xml',
         'views/event_track_views.xml',

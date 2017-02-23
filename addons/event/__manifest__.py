@@ -25,11 +25,11 @@ Key Features
         'views/event_views.xml',
         'report/event_event_templates.xml',
         'report/event_event_reports.xml',
+        'data/email_template_data.xml',
         'data/event_data.xml',
         'views/event_config_settings_views.xml',
         'views/event_templates.xml',
         'views/res_partner_views.xml',
-        'data/email_template_data.xml',
     ],
     'demo': [
         'data/event_demo.xml',
