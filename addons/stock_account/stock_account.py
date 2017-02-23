@@ -300,19 +300,26 @@ class stock_move(osv.osv):
 
     def _store_average_cost_price(self, cr, uid, move, context=None):
         ''' move is a browe record '''
-        product_obj = self.pool.get('product.product')
-        if any([q.qty <= 0 for q in move.quant_ids]) or move.product_qty == 0:
-            #if there is a negative quant, the standard price shouldn't be updated
-            return
-        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will svaluate it at 6€
-        average_valuation_price = 0.0
-        for q in move.quant_ids:
-            average_valuation_price += q.qty * q.cost
-        average_valuation_price = average_valuation_price / move.product_qty
-        # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-        ctx = dict(context or {}, force_company=move.company_id.id)
-        product_obj.write(cr, SUPERUSER_ID, [move.product_id.id], {'standard_price': average_valuation_price}, context=ctx)
-        self.write(cr, uid, [move.id], {'price_unit': average_valuation_price}, context=context)
+        if move.product_id.cost_method == 'real':
+            product_obj = self.pool.get('product.product')
+            if any([q.qty <= 0 for q in move.quant_ids]) or move.product_qty == 0:
+                #if there is a negative quant, the standard price shouldn't be updated
+                return
+            #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will svaluate it at 6€
+            average_valuation_price = 0.0
+            for q in move.quant_ids:
+                average_valuation_price += q.qty * q.cost
+            average_valuation_price = average_valuation_price / move.product_qty
+            # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
+            ctx = dict(context or {}, force_company=move.company_id.id)
+            product_obj.write(cr, SUPERUSER_ID, [move.product_id.id], {'standard_price': average_valuation_price}, context=ctx)
+            self.write(cr, uid, [move.id], {'price_unit': average_valuation_price}, context=context)
+
+        elif move.product_id.cost_method != 'real' and not move.origin_returned_move_id:
+            # Unit price of the move should be the current standard price, taking into account
+            # price fluctuations due to products received between move creation (e.g. at SO
+            # confirmation) and move set to done (delivery completed).
+            self.write(cr, uid, [move.id], {'price_unit': move.product_id.standard_price}, context=context)
 
     def product_price_update_before_done(self, cr, uid, ids, context=None):
         product_obj = self.pool.get('product.product')
@@ -346,6 +353,6 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             #adapt standard price on outgoing moves if the product cost_method is 'real', so that a return
             #or an inventory loss is made using the last value used for an outgoing valuation.
-            if move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal':
+            if move.location_dest_id.usage != 'internal':
                 #store the average price of the move on the move and product form
                 self._store_average_cost_price(cr, uid, move, context=context)
