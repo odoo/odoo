@@ -10,7 +10,7 @@ var Context = Class.extend({
         this.__contexts = [];
         this.__eval_context = null;
         var self = this;
-        _.each(arguments, function(x) {
+        _.each(arguments, function (x) {
             self.add(x);
         });
     },
@@ -25,7 +25,7 @@ var Context = Class.extend({
     get_eval_context: function () {
         return this.__eval_context;
     },
-    eval: function() {
+    eval: function () {
         return pyeval.eval('context', this);
     },
 });

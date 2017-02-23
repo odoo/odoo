@@ -314,7 +314,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
      *
      * @param {String} model the OpenERP model this dataset will manage
      */
-    init: function(parent, model, context) {
+    init: function (parent, model, context) {
         mixins.PropertiesMixin.init.call(this);
         this.model = model;
         this.context = context || {};
@@ -341,7 +341,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         }
         return this;
     },
-    select_id: function(id) {
+    select_id: function (id) {
         var idx = this.get_id_index(id);
         if (idx === null) {
             return false;
@@ -350,7 +350,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
             return true;
         }
     },
-    get_id_index: function(id) {
+    get_id_index: function (id) {
         for (var i=0, ii=this.ids.length; i<ii; i++) {
             // Here we use type coercion because of the mess potentially caused by
             // OpenERP ids fetched from the DOM as string. (eg: dhtmlxcalendar)
@@ -439,7 +439,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
      * @param {Object} [options.context] context data to add to the request payload, on top of the DataSet's own context
      * @returns {$.Deferred}
      */
-    default_get: function(fields, options) {
+    default_get: function (fields, options) {
         options = options || {};
         return this._model.call('default_get',
             [fields], {context: this.get_context(options.context)});
@@ -453,7 +453,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
      *     on_changes. Only used by the BufferedDataSet to make the o2m work correctly.
      * @returns {$.Deferred}
      */
-    create: function(data, options) {
+    create: function (data, options) {
         var self = this;
         return this._model.call('create', [data], {
             context: this.get_context()
@@ -486,7 +486,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
      *
      * @param {Number|String} ids identifier of the record to delete
      */
-    unlink: function(ids) {
+    unlink: function (ids) {
         var self = this;
         return this._model.call('unlink', [ids], {
             context: this.get_context()
@@ -522,7 +522,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
      * @param {Array} ids
      * @returns {$.Deferred}
      */
-    name_get: function(ids) {
+    name_get: function (ids) {
         return this._model.call('name_get', [ids], {context: this.get_context()});
     },
     /**
@@ -546,10 +546,10 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
     /**
      * @param name
      */
-    name_create: function(name, context) {
+    name_create: function (name, context) {
         return this._model.call('name_create', [name], {context: this.get_context(context)});
     },
-    get_context: function(request_context) {
+    get_context: function (request_context) {
         return this._model.context(request_context);
     },
     /**
@@ -589,13 +589,13 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
     size: function () {
         return this.ids.length;
     },
-    alter_ids: function(n_ids) {
+    alter_ids: function (n_ids) {
         this.ids = n_ids;
     },
     remove_ids: function (ids) {
         this.alter_ids(_(this.ids).difference(ids));
     },
-    add_ids: function(ids, at) {
+    add_ids: function (ids, at) {
         var args = [at, 0].concat(_.difference(ids, this.ids));
         this.ids.splice.apply(this.ids, args);
     },
@@ -619,7 +619,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
 });
 
 var DataSetStatic =  DataSet.extend({
-    init: function(parent, model, context, ids) {
+    init: function (parent, model, context, ids) {
         this._super(parent, model, context);
         // all local records
         this.ids = ids || [];
@@ -640,7 +640,7 @@ var DataSetStatic =  DataSet.extend({
             this.index = ids.length - 1;
         }
     },
-    unlink: function(ids) {
+    unlink: function (ids) {
         this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
         this.trigger('unlink', ids);
         return $.Deferred().resolve({result: true});
@@ -657,7 +657,7 @@ var DataSetSearch = DataSet.extend({
      * @param {Object} context
      * @param {Array} domain
      */
-    init: function(parent, model, context, domain) {
+    init: function (parent, model, context, domain) {
         this._super(parent, model, context);
         this.domain = domain || [];
         this._length = null;
@@ -708,16 +708,16 @@ var DataSetSearch = DataSet.extend({
             this._length -= (before - this.ids.length);
         }
     },
-    add_ids: function(ids, at) {
+    add_ids: function (ids, at) {
         var before = this.ids.length;
         this._super(ids, at);
         if(this._length){
             this._length += (this.ids.length - before);
         }
     },
-    unlink: function(ids, callback, error_callback) {
+    unlink: function (ids, callback, error_callback) {
         var self = this;
-        return this._super(ids).done(function() {
+        return this._super(ids).done(function () {
             self.remove_ids( ids);
             self.trigger("dataset_changed", ids, callback, error_callback);
         });
@@ -736,22 +736,22 @@ var CompoundDomain = Class.extend({
         this.__domains = [];
         this.__eval_context = null;
         var self = this;
-        _.each(arguments, function(x) {
+        _.each(arguments, function (x) {
             self.add(x);
         });
     },
-    add: function(domain) {
+    add: function (domain) {
         this.__domains.push(domain);
         return this;
     },
-    set_eval_context: function(eval_context) {
+    set_eval_context: function (eval_context) {
         this.__eval_context = eval_context;
         return this;
     },
-    get_eval_context: function() {
+    get_eval_context: function () {
         return this.__eval_context;
     },
-    eval: function() {
+    eval: function () {
         return pyeval.eval('domain', this);
     },
 });

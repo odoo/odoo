@@ -123,7 +123,7 @@ var x2ManyCommands = {
     }
 };
 
-var Model = AbstractModel.extend({
+var BasicModel = AbstractModel.extend({
     /**
      * @override
      */
@@ -149,7 +149,6 @@ var Model = AbstractModel.extend({
     // Public
     //--------------------------------------------------------------------------
 
-
     /**
      * Add a default record to a list object.  This method actually make a new
      * record with the makeDefaultRecord method, then add it to the list object.
@@ -173,7 +172,7 @@ var Model = AbstractModel.extend({
             parentID: list.id,
             relationField: list.relationField,
         };
-        return this.makeDefaultRecord(list.model, params).then(function(id) {
+        return this.makeDefaultRecord(list.model, params).then(function (id) {
             list.count++;
             if (position === 'top') {
                 list.data.unshift(id);
@@ -874,10 +873,10 @@ var Model = AbstractModel.extend({
      * @param {string} parentID id of the parent resource to reload
      * @returns {Deferred -> string} resolves to the parent id
      */
-    toggleActive: function(recordIDs, value, parentID) {
+    toggleActive: function (recordIDs, value, parentID) {
         var self = this;
         var parent = this.localData[parentID];
-        var resIDs = _.map(recordIDs, function(recordID) {
+        var resIDs = _.map(recordIDs, function (recordID) {
             return self.localData[recordID].res_id;
         });
         return this
@@ -997,6 +996,7 @@ var Model = AbstractModel.extend({
                     var field = record.fields[name];
                     if (!field) { return; } // ignore changes of unknown fields
 
+                    var rec;
                     if (field.type === 'many2one' ) {
                         // in some case, the value returned by the onchange can
                         // be false (no value), so we need to avoid creating a
@@ -1008,7 +1008,7 @@ var Model = AbstractModel.extend({
                             var data = _.isArray(val) ?
                                 {id: val[0], display_name: val[1]} :
                                 {id: val};
-                            var rec = self._makeDataPoint({
+                            rec = self._makeDataPoint({
                                 context: context,
                                 data: data,
                                 modelName: field.relation,
@@ -1019,7 +1019,6 @@ var Model = AbstractModel.extend({
                         record._changes = record._changes || {};
                         var listId = record._changes[name] || record.data[name];
                         var list = self.localData[listId];
-                        var rec;
                         _.each(val, function (command) {
                             if (command[0] === 0 || command[0] === 1) {
                                 // CREATE or UPDATE
@@ -2032,7 +2031,6 @@ var Model = AbstractModel.extend({
     },
 });
 
-return Model;
-
+return BasicModel;
 });
 
