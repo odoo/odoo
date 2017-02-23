@@ -66,13 +66,15 @@ var Priority = Widget.extend({
         this._render_value();
     },
     _render_value: function() {
-        var current_value = this.value;
+        var self = this;
+        var index_value = this.value ? _.findIndex(this.values, function (v) {
+            return v[0] === self.value;
+        }) : 0;
         this.$stars = this.$('.o_priority_star');
         this.$stars.each(function(i, el) {
             var $star = $(el);
-            var star_value = $star.data('value');
-            $star.toggleClass('fa-star', (star_value <= current_value))
-                 .toggleClass('fa-star-o', (star_value > current_value));
+            $star.toggleClass('fa-star', (i+1 <= index_value))
+                 .toggleClass('fa-star-o', (i+1 > index_value));
         });
     },
 });
