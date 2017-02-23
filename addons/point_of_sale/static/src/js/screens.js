@@ -33,7 +33,7 @@ var models = require('point_of_sale.models');
 var core = require('web.core');
 var Model = require('web.DataModel');
 var utils = require('web.utils');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -1627,7 +1627,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 var amount = this.inputbuffer;
 
                 if (this.inputbuffer !== "-") {
-                    amount = formats.parse_value(this.inputbuffer, {type: "float"}, 0.0);
+                    amount = field_utils.parse_float(this.inputbuffer);
                 }
 
                 order.selected_paymentline.set_amount(amount);
@@ -1761,7 +1761,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             'title': tip ? _t('Change Tip') : _t('Add Tip'),
             'value': self.format_currency_no_symbol(value),
             'confirm': function(value) {
-                order.set_tip(formats.parse_value(value, {type: "float"}, 0));
+                order.set_tip(field_utils.parse_float(value));
                 self.order_changes();
                 self.render_paymentlines();
             }

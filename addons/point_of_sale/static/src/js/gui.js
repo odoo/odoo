@@ -8,7 +8,7 @@ odoo.define('point_of_sale.gui', function (require) {
 
 var core = require('web.core');
 var Model = require('web.DataModel');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var session = require('web.session');
 
 var _t = core._t;
@@ -437,7 +437,7 @@ var Gui = core.Class.extend({
     numpad_input: function(buffer, input, options) { 
         var newbuf  = buffer.slice(0);
         options = options || {};
-        var newbuf_float  = formats.parse_value(newbuf, {type: "float"}, 0);
+        var newbuf_float  = field_utils.parse_float(newbuf);
         var decimal_point = _t.database.parameters.decimal_point;
 
         if (input === decimal_point) {

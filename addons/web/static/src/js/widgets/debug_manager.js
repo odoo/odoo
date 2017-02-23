@@ -5,7 +5,7 @@ var ActionManager = require('web.ActionManager');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var framework = require('web.framework');
 var Model = require('web.Model');
 var session = require('web.session');
@@ -327,7 +327,7 @@ DebugManager.include({
                 size: 'medium',
                 $content: QWeb.render('WebClient.DebugViewLog', {
                     perm : result[0],
-                    format : formats.format_value
+                    format : field_utils.format_field
                 })
             }).open();
         });

@@ -3,7 +3,7 @@ odoo.define('web.search_filters', function (require) {
 
 var core = require('web.core');
 var datepicker = require('web.datepicker');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -216,10 +216,10 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
         }
     },
     toString: function () {
-        var str = formats.format_value(this.get_value(), {type: this.attributes['type']});
+        var str = field_utils.format_field(this.get_value(), {type: this.attributes.type});
         var date_1_value = this.datewidget_1 && this.get_value(1);
         if (date_1_value) {
-            str += _lt(" and ") + formats.format_value(date_1_value, {type: this.attributes['type']});
+            str += _lt(" and ") + field_utils.format_field(date_1_value, {type: this.attributes.type});
         }
         return str;
     },
@@ -271,7 +271,7 @@ ExtendedSearchProposition.Integer = ExtendedSearchProposition.Field.extend({
     get_value: function () {
         try {
             var val =this.$el.val();
-            return formats.parse_value(val === "" ? 0 : val, {'widget': 'integer'});
+            return field_utils.parse_integer(val === "" ? 0 : val);
         } catch (e) {
             return "";
         }
@@ -304,7 +304,7 @@ ExtendedSearchProposition.Float = ExtendedSearchProposition.Field.extend({
     get_value: function () {
         try {
             var val =this.$el.val();
-            return formats.parse_value(val === "" ? 0.0 : val, {'widget': 'float'});
+            return field_utils.parse_float(val === "" ? 0.0 : val);
         } catch (e) {
             return "";
         }

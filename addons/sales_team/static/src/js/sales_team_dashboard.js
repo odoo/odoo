@@ -10,7 +10,7 @@ odoo.define('sales_team.dashboard', function (require) {
  */
 
 var core = require('web.core');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var KanbanView = require('web.KanbanView');
 var KanbanModel = require('web.KanbanModel');
 var KanbanRenderer = require('web.KanbanRenderer');
@@ -72,7 +72,7 @@ var SalesTeamDashboardRenderer = KanbanRenderer.extend({
     _renderMonetaryField: function (value, currency_id) {
         var currency = session.get_currency(currency_id);
         var digits_precision = currency && currency.digits;
-        value = formats.format_value(value || 0, {type: "float", digits: digits_precision});
+        value = field_utils.format_float(value || 0, {digits: digits_precision});
         if (currency) {
             if (currency.position === "after") {
                 value += currency.symbol;

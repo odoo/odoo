@@ -5,7 +5,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var data = require('web.data');
 var form_common = require('web.view_dialogs');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var Model = require('web.DataModel');
 var time = require('web.time');
 
@@ -321,11 +321,11 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
     },
     //converts hour value to float
     parse_client: function(value) {
-        return formats.parse_value(value, { type:"float_time" });
+        return field_utils.parse_float_time(value);
     },
     //converts float value to hour
     format_client:function(value){
-        return formats.format_value(value, { type:"float_time" });
+        return field_utils.format_float_time(value);
     },
     generate_o2m_value: function() {
         var ops = [];

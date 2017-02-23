@@ -3,8 +3,8 @@ odoo.define('account.payment', function (require) {
 
 var AbstractField = require('web.AbstractField');
 var core = require('web.core');
-var formats = require('web.formats');
 var field_registry = require('web.field_registry');
+var field_utils = require('web.field_utils');
 
 var QWeb = core.qweb;
 
@@ -18,9 +18,9 @@ var ShowPaymentLineWidget = AbstractField.extend({
         if (info !== false) {
             _.each(info.content, function(k,v){
                 k.index = v;
-                k.amount = formats.format_value(k.amount, {type: "float", digits: k.digits});
+                k.amount = field_utils.format_float(k.amount, {digits: k.digits});
                 if (k.date){
-                    k.date = formats.format_value(k.date, {type: "date"});
+                    k.date = field_utils.format_date(k.date);
                 }
             });
             this.$el.html(QWeb.render('ShowPaymentInfo', {
