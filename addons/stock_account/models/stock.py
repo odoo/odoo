@@ -201,14 +201,14 @@ class StockMove(models.Model):
 
     @api.multi
     def product_price_update_after_done(self):
-        ''' Adapt standard price on outgoing moves if the product cost_method is 'real', so that a
+        ''' Adapt standard price on outgoing moves, so that a
         return or an inventory loss is made using the last value used for an outgoing valuation. '''
-        to_update_moves = self.filtered(lambda move: move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal')
+        to_update_moves = self.filtered(lambda move: move.location_dest_id.usage != 'internal')
         to_update_moves._store_average_cost_price()
 
     def _store_average_cost_price(self):
-        """ Store the average price of the move on the move and product form """
-        for move in self:
+        """ Store the average price of the move on the move and product form (costing method 'real')"""
+        for move in self.filtered(lambda move: move.product_id.cost_method == 'real'):
             # product_obj = self.pool.get('product.product')
             if any(q.qty <= 0 for q in move.quant_ids) or move.product_qty == 0:
                 # if there is a negative quant, the standard price shouldn't be updated
@@ -222,6 +222,12 @@ class StockMove(models.Model):
 
             move.product_id.with_context(force_company=move.company_id.id).sudo().write({'standard_price': average_valuation_price})
             move.write({'price_unit': average_valuation_price})
+
+        for move in self.filtered(lambda move: move.product_id.cost_method != 'real' and not move.origin_returned_move_id):
+            # Unit price of the move should be the current standard price, taking into account
+            # price fluctuations due to products received between move creation (e.g. at SO
+            # confirmation) and move set to done (delivery completed).
+            move.write({'price_unit': move.product_id.standard_price})
 
     @api.multi
     def _get_accounting_data_for_valuation(self):
