@@ -17,14 +17,19 @@ class SaleOrder(models.Model):
             return super(SaleOrder, self)._get_reward_line_values(program)
 
     def _get_reward_values_free_shipping(self, program):
+        delivery_line = self.order_line.filtered(lambda x: x.is_delivery)
+        taxes = delivery_line.product_id.taxes_id
+        if self.fiscal_position_id:
+            taxes = self.fiscal_position_id.map_tax(taxes)
         return {
             'name': "Discount: %s" % (program.name),
             'product_id': program.discount_line_product_id.id,
-            'price_unit': - self.order_line.filtered(lambda x: x.is_delivery).price_unit,
+            'price_unit': - delivery_line.price_unit,
             'product_uom_qty': 1.0,
             'product_uom': program.discount_line_product_id.uom_id.id,
             'order_id': self.id,
-            'is_reward_line': True
+            'is_reward_line': True,
+            'tax_id': [(4, tax.id, False) for tax in taxes],
         }
 
     def _get_lines_unit_prices(self):
