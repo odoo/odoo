@@ -565,7 +565,7 @@ class Meeting(models.Model):
         end_type = data.get('end_type')
         final_date = data.get('final_date')
         if end_type == 'count' and all(data.get(key) for key in ['count', 'rrule_type', 'stop', 'interval']):
-            count = (data['count'] + 1) * data['interval']
+            count = (data['count'] - 1) * data['interval']
             delay, mult = {
                 'daily': ('days', 1),
                 'weekly': ('days', 7),
@@ -738,6 +738,16 @@ class Meeting(models.Model):
     partner_ids = fields.Many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}, default=_default_partners)
     alarm_ids = fields.Many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False)
     is_highlighted = fields.Boolean(compute='_compute_is_highlighted', string='# Meetings Highlight')
+
+    is_virtual = fields.Boolean('Is a virtual event', compute="_compute_is_virtual")
+
+    @api.multi
+    def _compute_is_virtual(self):
+        for meeting in self:
+            if is_calendar_id(meeting.id):
+                meeting.is_virtual = True
+            else:
+                meeting.is_virtual = False
 
     @api.multi
     def _compute_attendee(self):
@@ -1166,6 +1176,9 @@ class Meeting(models.Model):
             data['end_type'] = 'end_date'
         return data
 
+    def get_data(self):
+        return self.read(['allday', 'start', 'stop', 'rrule', 'duration'])[0]
+
     @api.multi
     def get_interval(self, interval, tz=None):
         """ Format and localize some dates to be used in email templates
@@ -1207,11 +1220,7 @@ class Meeting(models.Model):
             self = self.with_context(tz=tz)
         return self._get_display_time(self.start, self.stop, self.duration, self.allday)
 
-    @api.multi
-    def detach_recurring_event(self, values=None):
-        """ Detach a virtual recurring event by duplicating the original and change reccurent values
-            :param values : dict of value to override on the detached event
-        """
+    def init_action(self, values=None):
         if not values:
             values = {}
 
@@ -1221,6 +1230,15 @@ class Meeting(models.Model):
         data = self.read(['allday', 'start', 'stop', 'rrule', 'duration'])[0]
         data['start_date' if data['allday'] else 'start_datetime'] = data['start']
         data['stop_date' if data['allday'] else 'stop_datetime'] = data['stop']
+
+        return values, real_id, meeting_origin, data
+
+    @api.multi
+    def detach_recurring_event(self, values=None):
+        """ Detach a virtual recurring event by duplicating the original and change reccurent values
+            :param values : dict of value to override on the detached event
+        """
+        values, real_id, meeting_origin, data = self.init_action(values)
         if data.get('rrule'):
             data.update(
                 values,
@@ -1245,6 +1263,75 @@ class Meeting(models.Model):
             'res_model': 'calendar.event',
             'view_mode': 'form',
             'res_id': meeting.id,
+            'target': 'current',
+            'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
+        }
+
+    @api.multi
+    def split_recurring_event(self, values=None):
+        """ Duplicate a calendar.event if we want to update all the virtual events from a fixed date.
+            modify the original calendar.event to end for the fixed date.
+            The new calendar.event  will start from the fixed date and end at the original final_date
+            :param values : dict of value to override on the new calendar.event
+        """
+        values, real_id, meeting_origin, data = self.init_action(values)
+
+        # if we want to update all the future event from the first event, that means "update all events of the recurrency".
+        if meeting_origin['start'] == data['start']:
+            return meeting_origin
+
+        if data.get('rrule'):
+            # if use final date, split old reccurent event until self.start
+            final_date = meeting_origin.final_date
+            if meeting_origin.end_type == 'end_date':
+                meeting_origin.write({
+                    'final_date': data['start']
+                })
+            elif meeting_origin.end_type == 'count':
+                # If we use count
+                final_date = meeting_origin.final_date
+                meeting_origin.write({
+                    'end_type': 'end_date',
+                    'final_date': data['start']
+                })
+
+            data.update(
+                values,
+                recurrent_id=real_id,
+                recurrent_id_date=data.get('start'),
+                rrule_type=meeting_origin.rrule_type,
+                rrule='',
+                recurrency=True,
+                final_date=final_date,
+            )
+
+            # do not copy the id
+            if data.get('id'):
+                del data['id']
+
+        return meeting_origin.with_context(future=True).copy(default=data)
+
+    @api.multi
+    def action_future_recurring_event(self):
+        meeting = self.split_recurring_event()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'calendar.event',
+            'view_mode': 'form',
+            'res_id': meeting.id,
+            'target': 'current',
+            'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
+        }
+
+    @api.multi
+    def action_all_recurring_event(self):
+        real_id = calendar_id2real_id(self.id)
+        meeting_origin = self.browse(real_id)
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'calendar.event',
+            'view_mode': 'form',
+            'res_id': meeting_origin.with_context(all=True).id,
             'target': 'current',
             'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
         }
@@ -1351,13 +1438,19 @@ class Meeting(models.Model):
                 if not values.get('recurrency', True) or not blacklisted:
                     real_ids = [real_event_id]
                 else:
-                    data = meeting.read(['start', 'stop', 'rrule', 'duration'])[0]
+                    data = meeting.get_data()
                     if data.get('rrule'):
-                        new_ids = meeting.with_context(dont_notify=True).detach_recurring_event(values).ids  # to prevent multiple notify_next_alarm
+                        if self._context.get('future'):
+                            new_ids = meeting.with_context(dont_notify=True).ids  # to prevent multiple notify_next_alarm
+                        elif self._context.get('all'):
+                            real_ids = [real_event_id]
+                        else:
+                            new_ids = meeting.with_context(dont_notify=True).detach_recurring_event(values).ids  # to prevent multiple notify_next_alarm
 
             new_meetings = self.browse(new_ids)
             real_meetings = self.browse(real_ids)
             all_meetings = real_meetings + new_meetings
+
             super(Meeting, real_meetings).write(values)
 
             # set end_date for calendar searching
@@ -1388,7 +1481,6 @@ class Meeting(models.Model):
                         attendee_to_email = attendees_create['old_attendees'] - attendees_create['removed_attendees']
                     else:
                         attendee_to_email = current_meeting.attendee_ids
-
                     if attendee_to_email:
                         attendee_to_email._send_mail_to_attendees('calendar.calendar_template_meeting_changedate')
         return True
@@ -1460,6 +1552,7 @@ class Meeting(models.Model):
                     res['display_time'] = self._get_display_time(ls[1], ls[2], res['duration'], res['allday'])
 
             res['id'] = calendar_id
+            res['is_virtual'] = calendar_id != real_id
             result.append(res)
 
         for r in result:
@@ -1537,6 +1630,7 @@ class Meeting(models.Model):
         # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
         events = super(Meeting, self).search(new_args, offset=0, limit=0, order=None, count=False)
         events = self.browse(events.get_recurrent_ids(args, order=order))
+
         if count:
             return len(events)
         elif limit:

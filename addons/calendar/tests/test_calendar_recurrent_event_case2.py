@@ -55,7 +55,7 @@ class TestRecurrentEvent(common.TransactionCase):
         self.assertEqual(meetings_count, 10, 'Recurrent weekly meetings are not created !')
 
     def test_recurrent_meeting3(self):
-        #I want to schedule a meeting every month for Sprint review.
+        # I want to schedule a meeting every month for Sprint review.
         self.calendar_event_sprint_review = self.CalendarEvent.create({
             'count': 12,
             'start': '2011-04-01 12:01:00',
