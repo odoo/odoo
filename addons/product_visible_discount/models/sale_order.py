@@ -17,14 +17,19 @@ class SaleOrderLine(models.Model):
         PricelistItem = self.env['product.pricelist.item']
         field_name = 'lst_price'
         currency_id = None
+        product_currency = None
         rule_id = pricelist_dict[pricelist_id][1] if pricelist_dict.get(pricelist_id) else False
         if rule_id:
             pricelist_item = PricelistItem.browse(rule_id)
             if pricelist_item.base == 'standard_price':
                 field_name = 'standard_price'
+            if pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id:
+                field_name = 'price'
+                product = product.with_context(pricelist=pricelist_item.base_pricelist_id.id)
+                product_currency = pricelist_item.base_pricelist_id.currency_id
             currency_id = pricelist_item.pricelist_id.currency_id
 
-        product_currency = (product.company_id and product.company_id.currency_id) or self.env.user.company_id.currency_id
+        product_currency = product_currency or (product.company_id and product.company_id.currency_id) or self.env.user.company_id.currency_id
         if not currency_id:
             currency_id = product_currency
             cur_factor = 1.0

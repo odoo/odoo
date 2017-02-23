@@ -8,7 +8,7 @@ from lxml import html
 from urllib2 import urlopen
 from urlparse import urljoin
 from urlparse import urlparse
-from werkzeug import url_encode
+from werkzeug import url_encode, unescape
 
 from openerp import models, fields, api, _
 from openerp.tools import ustr
@@ -54,7 +54,7 @@ class link_tracker(models.Model):
             href = match[0]
             long_url = match[1]
 
-            vals['url'] = long_url
+            vals['url'] = unescape(long_url)
 
             if not blacklist or not [s for s in blacklist if s in long_url] and not long_url.startswith(short_schema):
                 link = self.create(vals)

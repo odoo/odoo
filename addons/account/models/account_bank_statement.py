@@ -419,12 +419,11 @@ class AccountBankStatementLine(models.Model):
 
     @api.multi
     def button_cancel_reconciliation(self):
-        moves_to_unbind = self.env['account.move']
         moves_to_cancel = self.env['account.move']
         payment_to_unreconcile = self.env['account.payment']
         payment_to_cancel = self.env['account.payment']
         for st_line in self:
-            moves_to_unbind |= st_line.journal_entry_ids
+            moves_to_unbind = st_line.journal_entry_ids
             for move in st_line.journal_entry_ids:
                 for line in move.line_ids:
                     payment_to_unreconcile |= line.payment_id
@@ -432,13 +431,15 @@ class AccountBankStatementLine(models.Model):
                         #there can be several moves linked to a statement line but maximum one created by the line itself
                         moves_to_cancel |= st_line.journal_entry_ids
                         payment_to_cancel |= line.payment_id
-        moves_to_unbind = moves_to_unbind - moves_to_cancel
-        payment_to_unreconcile = payment_to_unreconcile - payment_to_cancel
 
-        if moves_to_unbind:
-            moves_to_unbind.write({'statement_line_id': False})
-            for move in moves_to_unbind:
-                move.line_ids.filtered(lambda x:x.statement_id == st_line.statement_id).write({'statement_id': False})
+            moves_to_unbind = moves_to_unbind - moves_to_cancel
+
+            if moves_to_unbind:
+                moves_to_unbind.write({'statement_line_id': False})
+                for move in moves_to_unbind:
+                    move.line_ids.filtered(lambda x: x.statement_id == st_line.statement_id).write({'statement_id': False})
+
+        payment_to_unreconcile = payment_to_unreconcile - payment_to_cancel
         if payment_to_unreconcile:
             payment_to_unreconcile.unreconcile()
 
