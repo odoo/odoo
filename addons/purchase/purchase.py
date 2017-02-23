@@ -1544,7 +1544,7 @@ class procurement_order(osv.osv):
                     po_id = available_draft_po_ids[0]
                     po_rec = po_obj.browse(cr, uid, po_id, context=context)
 
-                    po_to_update = {'origin': ', '.join(filter(None, set([po_rec.origin, procurement.origin])))}
+                    po_to_update = {'origin': ', '.join(filter(None, set((po_rec.origin and po_rec.origin.split(', ') or []) + [procurement.origin])))}
                     #if the product has to be ordered earlier those in the existing PO, we replace the purchase date on the order to avoid ordering it too late
                     if datetime.strptime(po_rec.date_order, DEFAULT_SERVER_DATETIME_FORMAT) > purchase_date:
                         po_to_update.update({'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
