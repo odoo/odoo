@@ -2809,7 +2809,7 @@ class stock_inventory(osv.osv):
     def _get_inventory_lines(self, cr, uid, inventory, context=None):
         location_obj = self.pool.get('stock.location')
         product_obj = self.pool.get('product.product')
-        location_ids = location_obj.search(cr, uid, [('id', 'child_of', [inventory.location_id.id])], context=context)
+        location_ids = location_obj.search(cr, uid, ['|',('id', 'child_of', [inventory.location_id.id]),('id', '=', inventory.location_id.id)], context=context)
         domain = ' location_id in %s'
         args = (tuple(location_ids),)
         if inventory.partner_id:
