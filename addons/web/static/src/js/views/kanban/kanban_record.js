@@ -5,7 +5,6 @@ var core = require('web.core');
 var Domain = require('web.Domain');
 var field_registry = require('web.field_registry');
 var field_utils = require('web.field_utils');
-var formats = require('web.formats');
 var framework = require('web.framework');
 var session = require('web.session');
 var time = require('web.time');
@@ -74,7 +73,6 @@ var KanbanRecord = Widget.extend({
             widget: this,
             read_only_mode: this.read_only_mode,
             user_context: session.user_context,
-            formats: formats,
         };
         for (var p in this) {
             if (_.str.startsWith(p, 'kanban_')) {

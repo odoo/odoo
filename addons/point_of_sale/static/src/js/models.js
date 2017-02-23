@@ -7,7 +7,7 @@ var devices = require('point_of_sale.devices');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Model = require('web.DataModel');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
@@ -1247,7 +1247,7 @@ exports.Orderline = Backbone.Model.extend({
                 if (unit.rounding) {
                     this.quantity    = round_pr(quant, unit.rounding);
                     var decimals = this.pos.dp['Product Unit of Measure'];
-                    this.quantityStr = formats.format_value(round_di(this.quantity, decimals), { type: 'float', digits: [69, decimals]});
+                    this.quantityStr = field_utils.format_float(round_di(this.quantity, decimals), {digits: [69, decimals]});
                 } else {
                     this.quantity    = round_pr(quant, 1);
                     this.quantityStr = this.quantity.toFixed(0);
@@ -1693,9 +1693,7 @@ exports.Paymentline = Backbone.Model.extend({
         return this.amount;
     },
     get_amount_str: function(){
-        return formats.format_value(this.amount, {
-            type: 'float', digits: [69, this.pos.currency.decimals]
-        });
+        return field_utils.format_float(this.amount, {digits: [69, this.pos.currency.decimals]});
     },
     set_selected: function(selected){
         if(this.selected !== selected){

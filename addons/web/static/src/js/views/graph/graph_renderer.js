@@ -12,7 +12,7 @@ odoo.define('web.GraphRenderer', function (require) {
 var AbstractRenderer = require('web.AbstractRenderer');
 var config = require('web.config');
 var core = require('web.core');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -175,8 +175,7 @@ return AbstractRenderer.extend({
         });
         chart.yAxis.tickFormat(function (d) {
             var measure_field = self.state.fields[self.measure];
-            return formats.format_value(d, {
-                type: 'float',
+            return field_utils.format_float(d, {
                 digits: measure_field && measure_field.digits || [69, 2],
             });
         });
@@ -320,8 +319,7 @@ return AbstractRenderer.extend({
         chart.xAxis.tickValues(tickValues)
             .tickFormat(tickFormat);
         chart.yAxis.tickFormat(function (d) {
-            return formats.format_value(d, {
-                type : 'float',
+            return field_utils.format_float(d, {
                 digits : self.state.fields[self.state.measure] && self.state.fields[self.state.measure].digits || [69, 2],
             });
         });

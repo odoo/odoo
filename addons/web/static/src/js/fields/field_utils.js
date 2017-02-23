@@ -17,6 +17,10 @@ var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
 
+////////////////////////////////////////////////////////////////////////////////
+// Format
+////////////////////////////////////////////////////////////////////////////////
+
 function format_boolean(value) {
     var $input = $('<input type="checkbox">')
                 .prop('checked', value)
@@ -34,7 +38,7 @@ function format_char(value) {
 function format_date(value) {
     var l10n = core._t.database.parameters;
     var date_format = time.strftime_to_moment_format(l10n.date_format);
-    return value && moment(time.str_to_date(value)).format(date_format);
+    return value && moment(time.str_to_date(value), moment.ISO_8601).format(date_format);
 }
 
 function format_datetime(value) {
@@ -42,7 +46,7 @@ function format_datetime(value) {
     var date_format = time.strftime_to_moment_format(l10n.date_format);
     var time_format = time.strftime_to_moment_format(l10n.time_format);
     var datetime_format = date_format + ' ' + time_format;
-    return value && moment(time.str_to_datetime(value)).format(datetime_format);
+    return value && moment(time.str_to_datetime(value), moment.ISO_8601).format(datetime_format);
 }
 
 // Format a float, according to the local settings
@@ -72,7 +76,6 @@ function format_float_time(value) {
     }
     return _.str.sprintf(pattern, hour, min);
 }
-
 
 function format_id(value) {
     return value ? value.toString() : false;
@@ -140,11 +143,56 @@ function format_selection(value, field) {
     return val[1];
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Parse
+////////////////////////////////////////////////////////////////////////////////
+
+function parse_date(value) {
+    var date_pattern = time.strftime_to_moment_format(core._t.database.parameters.date_format);
+    var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D');
+    var date = moment(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601], true);
+    if (date.isValid() && date.year() >= 1900) {
+        return time.date_to_str(date.toDate());
+    }
+    date = moment(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601]);
+    if (date.isValid()) {
+        if (date.year() === 0) {
+            date.year(moment.utc().year());
+        }
+        if (date.year() >= 1900) {
+            return time.date_to_str(date.toDate());
+        }
+    }
+    throw new Error(_.str.sprintf(core._t("'%s' is not a correct date"), value));
+}
+
+function parse_datetime(value) {
+    var date_pattern = time.strftime_to_moment_format(core._t.database.parameters.date_format),
+        time_pattern = time.strftime_to_moment_format(core._t.database.parameters.time_format);
+    var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D'),
+        time_pattern_wo_zero = time_pattern.replace('HH','H').replace('mm','m').replace('ss','s');
+    var pattern1 = date_pattern + ' ' + time_pattern;
+    var pattern2 = date_pattern_wo_zero + ' ' + time_pattern_wo_zero;
+    var datetime = moment(value, [pattern1, pattern2, moment.ISO_8601], true);
+    if (datetime.isValid() && datetime.year() >= 1900) {
+        return time.datetime_to_str(datetime.toDate());
+    }
+    datetime = moment(value, [pattern1, pattern2, moment.ISO_8601]);
+    if (datetime.isValid()) {
+        if (datetime.year() === 0) {
+            datetime.year(moment.utc().year());
+        }
+        if (datetime.year() >= 1900) {
+            return time.datetime_to_str(datetime.toDate());
+        }
+    }
+    throw new Error(_.str.sprintf(core._t("'%s' is not a correct datetime"), value));
+}
+
 function parse_field(value, field) {
     var parser = result['parse_' + field.type];
     return parser(value, field);
 }
-
 
 function parse_float(value) {
     value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
@@ -216,8 +264,8 @@ var result = {
     parse_binary: identity, // todo
     parse_boolean: identity, // todo
     parse_char: identity, // todo
-    parse_date: identity, // todo
-    parse_datetime: identity, // todo
+    parse_date: parse_date, // todo
+    parse_datetime: parse_datetime, // todo
     parse_float: parse_float,
     parse_float_time: parse_float_time,
     parse_html: identity, // todo
@@ -232,7 +280,6 @@ var result = {
     parse_text: identity, // todo
 
     parse_field: parse_field,
-
 };
 
 return result;

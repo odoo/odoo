@@ -4,7 +4,7 @@ odoo.define("web.DomainSelector", function (require) {
 var core = require("web.core");
 var datepicker = require("web.datepicker");
 var Domain = require("web.Domain");
-var formats = require ("web.formats");
+var field_utils = require ("web.field_utils");
 var ModelFieldSelector = require("web.ModelFieldSelector");
 var Widget = require("web.Widget");
 
@@ -378,7 +378,7 @@ var DomainLeaf = DomainNode.extend({
                 try {
                     var f = this.fieldSelector.selectedField;
                     if (!f.relation) { // TODO in this case, the value should be m2o input, etc...
-                        this.displayValue = formats.format_value(this.value, this.fieldSelector.selectedField);
+                        this.displayValue = field_utils.format_field(this.value, this.fieldSelector.selectedField);
                     }
                 } catch (err) {/**/}
                 this.displayOperator = this.operator;
@@ -466,7 +466,7 @@ var DomainLeaf = DomainNode.extend({
     onValueChange: function (value, silent) {
         var couldNotParse = false;
         try {
-            this.value = formats.parse_value(value, this.fieldSelector.selectedField);
+            this.value = field_utils.parse_field(value, this.fieldSelector.selectedField);
         } catch (err) {
             this.value = value;
             couldNotParse = true;
@@ -482,7 +482,7 @@ var DomainLeaf = DomainNode.extend({
             }
         } else if (_.contains(["date", "datetime"], this.fieldSelector.selectedField.type)) {
             if (couldNotParse || _.isBoolean(this.value)) {
-                this.value = formats.parse_value(formats.format_value(Date.now(), this.fieldSelector.selectedField), this.fieldSelector.selectedField);
+                this.value = field_utils.parse_field(field_utils.format_field(Date.now(), this.fieldSelector.selectedField), this.fieldSelector.selectedField);
             }
         } else {
             if (_.isBoolean(this.value)) { // Never display "true" or "false" strings from boolean value

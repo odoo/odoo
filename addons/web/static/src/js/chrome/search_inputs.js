@@ -3,7 +3,7 @@ odoo.define('web.search_inputs', function (require) {
 
 var core = require('web.core');
 var data = require('web.data');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var time = require('web.time');
@@ -231,7 +231,7 @@ var IntegerField = NumberField.extend(/** @lends instance.web.search.IntegerFiel
     error_message: _t("not a valid integer"),
     parse: function (value) {
         try {
-            return formats.parse_value(value, {'widget': 'integer'});
+            return field_utils.parse_interger(value);
         } catch (e) {
             return NaN;
         }
@@ -246,7 +246,7 @@ var FloatField = NumberField.extend(/** @lends instance.web.search.FloatField# *
     error_message: _t("not a valid number"),
     parse: function (value) {
         try {
-            return formats.parse_value(value, {'widget': 'float'});
+            return field_utils.parse_float(value);
         } catch (e) {
             return NaN;
         }
@@ -348,7 +348,7 @@ var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
         var t, v;
         try {
             t = (this.attrs && this.attrs.type === 'datetime') ? 'datetime' : 'date';
-            v = formats.parse_value(needle, {'widget': t});
+            v = field_utils.parse_field(needle, {type: t});
         } catch (e) {
             return $.when(null);
         }
@@ -356,7 +356,7 @@ var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
         var m = moment(v, t === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
         if (!m.isValid()) { return $.when(null); }
         var d = m.toDate();
-        var date_string = formats.format_value(d, this.attrs);
+        var date_string = field_utils.format_field(d, {type: t.attrs.type});
         var label = _.str.sprintf(_.str.escapeHTML(
             _t("Search %(field)s at: %(value)s")), {
                 field: '<em>' + _.escape(this.attrs.string) + '</em>',

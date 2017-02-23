@@ -129,8 +129,9 @@ var FieldDate = InputField.extend({
         if (this.mode === 'edit') {
             this.datewidget = this._makeDatePicker();
             this.datewidget.on('datetime_changed', this, function () {
-                if (this.datewidget.get_value() !== this._parseValue(this.value)) {
-                    this._setValue(this.datewidget.get_value());
+                var value = this._parseValue(this.datewidget.get_value());
+                if (value !== this._parseValue(this.value)) {
+                    this._setValue(value);
                 }
             });
             def = this.datewidget.appendTo('<div>').done(function () {

@@ -2,7 +2,7 @@ odoo.define('web.datepicker', function (require) {
 "use strict";
 
 var core = require('web.core');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var time = require('web.time');
 var Widget = require('web.Widget');
 
@@ -83,10 +83,10 @@ var DateWidget = Widget.extend({
         }
     },
     parse_client: function(v) {
-        return formats.parse_value(v, {"widget": this.type_of_date});
+        return field_utils.parse_field(v, {type: this.type_of_date});
     },
     format_client: function(v) {
-        return formats.format_value(v, {"widget": this.type_of_date});
+        return field_utils.format_field(v, {type: this.type_of_date});
     },
     set_datetime_default: function() {
         //when opening datetimepicker the date and time by default should be the one from
