@@ -31,7 +31,7 @@ class Company(models.Model):
         <stroke color="#000000"/>
         <lines>%s</lines>
         <!-- Set here the default font to use for all <drawString> tags -->
-        <!-- don't forget to change the 2 other occurence of <setFont> above if needed --> 
+        <!-- don't forget to change the 2 other occurence of <setFont> above if needed -->
         <setFont name="DejaVuSans" size="8"/>
     </pageGraphics>
 </pageTemplate>
@@ -158,6 +158,16 @@ class Company(models.Model):
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
 
+    def _get_sync_address_fields(self, partner):
+        return {
+            'street'     : partner.street,
+            'street2'    : partner.street2,
+            'city'       : partner.city,
+            'zip'        : partner.zip,
+            'state_id'   : partner.state_id,
+            'country_id' : partner.country_id,
+            'fax'        : partner.fax}
+
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address
     def _compute_address(self):
@@ -165,13 +175,7 @@ class Company(models.Model):
             address_data = company.partner_id.sudo().address_get(adr_pref=['contact'])
             if address_data['contact']:
                 partner = company.partner_id.browse(address_data['contact'])
-                company.street = partner.street
-                company.street2 = partner.street2
-                company.city = partner.city
-                company.zip = partner.zip
-                company.state_id = partner.state_id
-                company.country_id = partner.country_id
-                company.fax = partner.fax
+                company.write(self._get_sync_address_fields(partner))
 
     def _inverse_street(self):
         for company in self:
