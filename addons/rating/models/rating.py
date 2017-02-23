@@ -53,8 +53,16 @@ class RatingMixin(models.AbstractModel):
     _description = "Rating Mixin"
 
     rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', domain=lambda self: [('res_model', '=', self._name)])
-    rating_last_value = fields.Float('Rating Last Value', related='rating_ids.rating', store=True)
+    rating_last_value = fields.Float('Rating Last Value', compute='_compute_rating_last_value', compute_sudo=True, store=True)
     rating_count = fields.Integer('Rating count', compute="_compute_rating_count")
+
+    @api.multi
+    @api.depends('rating_ids.rating')
+    def _compute_rating_last_value(self):
+        for record in self:
+            ratings = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', record.id)], limit=1)
+            if ratings:
+                record.rating_last_value = ratings.rating
 
     @api.multi
     def _compute_rating_count(self):
@@ -65,7 +73,7 @@ class RatingMixin(models.AbstractModel):
         for data in read_group_res:
             result[data['res_id']] += data['res_id_count']
         for record in self:
-            record.rating_count = result[record.id]
+            record.rating_count = result.get(record.id)
 
     def rating_get_partner_id(self):
         if hasattr(self, 'partner_id') and self.partner_id:

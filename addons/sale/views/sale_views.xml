@@ -679,6 +679,9 @@
                     <xpath expr="//page/field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="after">
                         <field name="layout_category_id" groups="sale.group_sale_layout"/>
                     </xpath>
+                    <xpath expr="//field[@name='discount']" position="attributes">
+                        <attribute name="groups">sale.group_discount_per_so_line</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>
