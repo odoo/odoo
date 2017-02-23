@@ -74,7 +74,7 @@ QUnit.moduleDone(function(result) {
         console.log('"' + result.name + '"', "passed", result.total, "tests.");
     } else {
         console.log('"' + result.name + '"',
-                    "failed:", result.failed,
+                    "failed", result.failed,
                     "tests out of", result.total, ".");
     }
 
