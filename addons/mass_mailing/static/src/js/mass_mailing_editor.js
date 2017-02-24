@@ -228,7 +228,10 @@ snippets_editor.Class.include({
         var theme = ($("#o_left_bar .o_panel_body > div:not(.hidden)").attr("class") || "").replace(/^\s*|\s*o_mail_block[^\s]+\s*|\s*oe_snippet\s*|\s*ui-draggable\s*|\s*$/g, '');
         var $theme = $("#editable_area [data-snippet-theme]").removeAttr("data-snippet-theme").removeData("snippet-theme");
         $editable.children().first().attr("data-snippet-theme", theme);
-        $editable.find(":not(br):hidden").remove();
+        // HACK Chrome needs the `:not(:has(:visible))` part
+        // SEE http://stackoverflow.com/q/8337186/1468388
+        // TODO Possibly remove HACK in jQuery 3
+        $editable.find(":not(br):hidden:not(:has(:visible))").remove();
     },
 });
 
