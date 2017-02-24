@@ -25,7 +25,6 @@ var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
-var mixins = require('web.mixins');
 var Pager = require('web.Pager');
 var pyeval = require('web.pyeval');
 
@@ -105,7 +104,7 @@ var M2ODialog = Dialog.extend({
     },
 });
 
-var FieldMany2One = AbstractRelationalField.extend(mixins.ServicesMixin, {
+var FieldMany2One = AbstractRelationalField.extend({
     template: 'FieldMany2One',
     custom_events: {
         'quick_create': '_onQuickCreate',
