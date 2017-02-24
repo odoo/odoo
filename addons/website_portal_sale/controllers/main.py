@@ -27,7 +27,7 @@ class website_account(website_account):
         ])
         invoices = res_invoices.search([
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['open', 'paid', 'cancelled'])
+            ('state', 'in', ['open', 'paid', 'cancel'])
         ])
 
         response.qcontext.update({
