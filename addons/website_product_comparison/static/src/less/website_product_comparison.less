@@ -1,0 +1,118 @@
+.o_product_feature_panel {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index:10;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: 0px;
+    padding: 10px 20px;
+    text-align: center;
+    border: 2px solid @brand-primary;
+    border-bottom: 0px;
+    background-color: white;
+    opacity: 0.95;
+
+    .o_product_panel {
+        position: relative;
+        .o_product_panel_header {
+            color: @navbar-default-link-color;
+            margin: 0 10px 0 10px;
+            cursor: pointer;
+            .o_product_icon {
+                margin-right: 5px;
+            }
+            .o_product_text {
+                text-transform: uppercase;
+                vertical-align: middle;
+                font-size: 16px;
+            }
+            .o_product_circle {
+                vertical-align: 6px;
+                padding: 0 3px;
+                line-height: 14px;
+            }
+            .o_red_highlight {
+                background: #db0700 !important;
+                box-shadow: 0 0 0px 0px rgba(240,8,0,0.4);
+                transition: all 0.5s linear;
+            }
+            .o_shadow_animation {
+                box-shadow:0 0 5px 10px rgba(240,8,0,0.4)!important;
+            }
+        }
+        .o_product_panel_content {
+            display: none !important;
+        }
+    }
+}
+
+.o_specification_panel {
+    cursor:pointer;
+}
+.o_specification_panel_body {
+    padding:0px;
+    display:none;
+    .table-bordered {
+        border-width: 0px;
+        tbody > tr > td {
+            border-width: 0px;
+            border-top-width: 1px;
+        }
+        tbody > tr > td:first-child {
+            border-right-width: 1px;
+        }
+    }
+}
+
+.oe_website_sale {
+    .td-wish-btn {
+        width: 140px;
+    }
+    .product_summary > *{
+        display: block;
+        margin: 15px 0 15px 0;
+    }
+    .table-comparator {
+        .o_product_comparison_collpase {
+            margin-right: 8px;
+        }
+    }
+}
+
+.o_product_comparison_animate {
+    opacity: 0.7;
+    position: absolute;
+    height: 150px;
+    width: 150px;
+    z-index: 3000;
+}
+
+// XS size
+@media (max-width: @screen-xs-max) {
+    .oe_website_sale {
+        .td-wish-btn {
+            width: 100px;
+        }
+    }
+
+    .o_product_feature_panel {
+        .o_product_panel {
+            .o_product_panel_header{
+                display: block;
+                .o_product_text {
+                    font-size: 14px;
+                }
+            }
+            .o_product_panel_content {
+                min-width: 275px;
+                width: 100%;
+                left: -137px;
+                .o_product_panel_empty .o_panel_empty {
+                    height: 242px;
+                }
+            }
+        }
+    }
+}

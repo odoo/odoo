@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Comparison">
+        <xpath expr="." position="inside">
+            <link type="text/less" rel='stylesheet' href='/website_product_comparison/static/src/less/website_product_comparison.less'/>
+            <script type="text/javascript" src="/website_product_comparison/static/src/js/website_product_comparison.js"></script>
+        </xpath>
+    </template>
+
+    <template id="add_to_compare" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Add to compare">
+        <xpath expr="//div[@class='product_price']" position="inside">
+            <a class="btn btn-default btn-xs o_add_compare" title="Add to compare" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_comparelist"><span class="fa fa-exchange"/></a>
+        </xpath>
+    </template>
+    <template id="add_to_wishlist" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Add to wishlist">
+        <xpath expr="//div[@class='product_price']" position="inside">
+            <a class="btn btn-default btn-xs o_add_wishlist" title="Add to wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist"><span class="fa fa-heart"/></a>
+        </xpath>
+    </template>
+
+    <template id="product_add_to_compare" inherit_id="website_sale.product">
+        <xpath expr="//a[@id='add_to_cart']" position="after">
+            <t t-if="product.env.ref('website_product_comparison.add_to_compare').active">
+                <a class="btn btn-default btn-sm mt8 o_add_compare_dyn" title="Add to compare" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_comparelist"><span class="fa fa-exchange"/></a>
+            </t>
+        </xpath>
+    </template>
+    <template id="product_add_to_wishlist" inherit_id="website_sale.product">
+        <xpath expr="//a[@id='add_to_cart']" position="after">
+            <t t-if="product.env.ref('website_product_comparison.add_to_wishlist').active">
+                <a class="btn btn-default btn-sm mt8 o_add_wishlist" title="Add to wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist"><span class="fa fa-heart"/></a>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="product_attributes_body" inherit_id="website_sale.product" customize_show="True" active="True" name="Product attributes Grouped">
+        <xpath expr="//hr[@id='hr_product_attributes_simple']" position="replace"/>
+        <xpath expr="//p[@id='product_attributes_simple']" position="replace"/>
+        <xpath expr="//div[@id='product_full_description']" position="after">
+            <section class="container" id="product_full_spec">
+                <t t-set="atts" t-value="product.get_variant_groups()"/>
+                <t t-if='len(atts)'>
+                    <h3 class="text-center mb32">Characteristics of <t t-esc="product.name"/></h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <t t-foreach="atts.keys()" t-as="att">
+                                <t t-if="att_even"><t t-call="website_product_comparison.product_spec"/></t>
+                            </t>
+                        </div>
+                        <div class="col-md-6">
+                            <t t-foreach="atts.keys()" t-as="att">
+                                <t t-if="att_odd"><t t-call="website_product_comparison.product_spec"/></t>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </section>
+        </xpath>
+    </template>
+
+    <template id="product_spec" name="Product Characteristics">
+        <div class="col-xs-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading o_specification_panel">
+                    <h3 class="panel-title">
+                        <b t-esc="att"/><i class="fa fa fa-angle-double-right pull-right"/>
+                    </h3>
+                </div>
+                <div class="panel-body o_specification_panel_body">
+                    <table class="table table-bordered mb0">
+                        <tbody>
+                            <t t-foreach="atts[att]" t-as="attrib">
+                                <tr>
+                                    <td t-esc="attrib.attribute_id.name"/>
+                                    <td>
+                                        <t t-set='or_separator'>or</t>
+                                        <t t-esc="(' %s ' % or_separator).join(attrib.value_ids.mapped('name'))"/>
+                                        <!-- <t t-if="len(attrib.value_ids) == 1">
+                                            <t t-esc="attrib.value_ids[0].name"/>
+                                        </t>
+                                        <t t-if="len(attrib.value_ids) &gt; 1">
+                                        </t> -->
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id='recommended_product' inherit_id="website_sale.recommended_products" name="Alternative Products">
+        <xpath expr="//h3" position="replace">
+            <t t-set="ids" t-value="str(product.id) + ','+ ','.join([str(a) for a in product.alternative_product_ids.ids])"></t>
+            <div><span class='h3'>Suggested alternatives: </span><a class="btn btn-primary" t-attf-href="/shop/compare/?products=#{ids}"><i class="fa fa-exchange"></i> Compare</a></div>
+        </xpath>
+    </template>
+
+    <template id="product_compare" name="Table comparator">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Shop Comparator</t>
+            <div id="wrap" class="js_sale">
+                <div class="oe_structure"/>
+                <div class="container oe_website_sale">
+                    <section class="container">
+                        <h3>Comparator</h3>
+                        <table class="table table-bordered table-hover text-center mt16 table-comparator" id="o_comparelist_table">
+                            <thead>
+                                <td class='td-top-left'></td>
+                                <td t-foreach="products" t-as="product">
+                                    <a t-attf-href="/shop/compare/?products=#{','.join([str(id) for id in products._ids if id != product.id])}" t-att-data-product_product_id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
+                                        <strong class='pull-right'>x</strong>
+                                    </a>
+                                    <a t-att-href="'/shop/product/%s' % slug(product.product_tmpl_id)">
+                                        <img t-attf-src="/web/image/product.product/#{product.id}/image/200x150" class="img img-responsive" style="margin:auto;"/>
+                                    </a>
+                                    <div class='product_summary'>
+                                        <a class="o_product_comparison_table" t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
+                                            <span t-field='product.name'/><br/>
+                                        </a>
+
+                                        <span>
+                                            <strong>Price:</strong>
+                                            <t t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
+                                                <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+                                            </t>
+                                            <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                        </span>
+
+                                        <form action="/shop/cart/update" method="post" class="text-center">
+                                            <input name="product_id" t-att-value="product.id" type="hidden"/>
+                                            <a class="btn btn-primary btn-block fa fa-shopping-cart a-submit">&amp;nbsp;Add to cart</a>
+                                        </form>
+                                    </div>
+                                </td>
+                            </thead>
+                        <tbody>
+                            <t t-foreach="specs.keys()" t-as="spec">
+                                <tr class="success text-left breadcrumb clickable" data-toggle="collapse" t-att-data-target="'.'+spec.split()[0]">
+                                    <th t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase"/><t t-esc="spec"/></th>
+                                </tr>
+                                <tr t-foreach="specs[spec].keys()" t-as="att" t-att-class="'collapse in ' + spec.split()[0]">
+                                    <td t-esc="att"/>
+                                    <td t-foreach="specs[spec][att]" t-as="val"><t t-esc="val"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="product_product" name="Comparator - Product row in comparator popover">
+        <div class="row mt8 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
+            <div class="col-sm-3 col-xs-3 mb8">
+                <img class="img img-responsive" t-attf-src="/web/image/product.product/#{product.id}/image_small" style="max-height: 50px;" />
+            </div>
+            <div class="col-sm-7 col-xs-7 mb8 text-left">
+                <h5>
+                    <strong><a t-attf-href="/shop/product/#{product.product_tmpl_id[0].id}"><t t-esc="product.name" /></a></strong>
+                </h5>
+                <h5 class="mt0 mb0">
+                    <strong>
+                        <t t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
+                            <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+                        </t>
+                        <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                    </strong>
+                </h5>
+            </div>
+            <div class="col-sm-1 col-xs-1 mt32">
+                <a href='#' class="o_remove" title="Remove" t-att-data-product_product_id="product.id">
+                    <i class="fa fa-trash" />
+                </a>
+            </div>
+        </div>
+    </template>
+
+    <template id="product_wishlist" name="Wishes List">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Shop Wishlist</t>
+            <div id="wrap" class="js_sale">
+                <div class="oe_structure"/>
+                <div class="container oe_website_sale">
+                    <section class="container wishlist-section">
+                        <h3>Wishlist</h3>
+                        <table class="table table-bordered table-striped table-hover text-center mt16 table-comparator" id="o_comparelist_table">
+                            <body>
+                                <t t-foreach="wishes" t-as="wish">
+                                    <tr t-att-data-wish-id='wish.id' t-att-data-product-id='wish.product_id.id'>
+                                        <td class='td-img'>
+                                            <a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)">
+                                                <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image/100x100" class="img img-responsive" style="margin:auto;"/>
+                                            </a>
+                                        </td>
+                                        <td class='text-left'>
+                                            <a class="btn btn-link btn-xs fa fa-trash o_wish_rm pull-right"></a>
+                                            <strong><a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)"><t t-esc="wish.product_id.name" /></a></strong>
+                                            <small class='hidden-xs'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
+                                        </td>
+                                        <td style='width:80px'>
+                                            <t t-if='wish.price_new != wish.price'>
+                                                <del class='text-danger'><t t-esc='wish.price' t-options="{'widget': 'monetary', 'display_currency': wish.currency_id}"/></del>
+                                                <br/>
+                                            </t>
+                                            <t t-if="wish.product_id.availability == 'warning'">
+                                                <div class="alert alert-warning">
+                                                    <span class="fa fa-warning" />
+                                                    <span t-field="wish.product_id.availability_warning" />
+                                                </div>
+                                            </t>
+                                            <t t-else="1">
+                                                <t t-esc='wish.price_new' t-options="{'widget': 'monetary', 'display_currency': wish.currency_id}"/>
+                                            </t>
+                                        </td>
+                                        <td class='text-center td-wish-btn'>
+                                            <input name="product_id" t-att-value="wish.product_id.id" type="hidden"/>
+                                            <a class="btn btn-primary btn-block fa fa-forward o_wish_mv mb4">&amp;nbsp;Move <span class='hidden-xs'>to cart</span></a>
+                                            <a class="btn btn-default btn-block fa fa-plus o_wish_add mb4" >&amp;nbsp;Add <span class='hidden-xs'>to cart</span></a>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </body>
+                        </table>
+                    </section>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>
