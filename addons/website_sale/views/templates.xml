@@ -1162,26 +1162,26 @@
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="container oe_website_sale">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2 oe_cart">
                     <div class='row'>
                         <t t-call="website_sale.wizard_checkout">
                             <t t-set="step" t-value="20" />
                         </t>
                     </div>
-                    <div class="row">
-                        <div class="col-md-9 oe_cart">
                             <div class="row">
                                 <t t-if="mode == ('new', 'billing')">
-                                    <h2 class="page-header mt16 ml16">Your Address
+                                    <h3 class="page-header mt32 ml16">Your Address
                                         <small> or </small>
                                         <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', 'Sign Up') or ('login', 'Log In')"/>
                                         <a t-attf-href='/web/{{connect[0]}}?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px"><t t-esc='connect[1]'/></a>
-                                    </h2>
+                                    </h3>
                                 </t>
                                 <t t-if="mode == ('edit', 'billing')">
-                                    <h2 class="page-header mt16 ml16">Your Address</h2>
+                                    <h3 class="page-header mt32 ml16">Your Address</h3>
                                 </t>
                                 <t t-if="mode[1] == 'shipping'">
-                                    <h2 class="page-header mt16 ml16">Shipping Address </h2>
+                                    <h3 class="page-header mt32 ml16">Shipping Address </h3>
                                 </t>
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
                                     <h4 class="text-danger" t-esc="err" />
@@ -1205,11 +1205,11 @@
                                     <div class="clearfix" />
                                     <t t-if="mode == ('new', 'billing')">
                                         <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-md-6">
-                                            <label class="control-label" for="company_name">Company Name</label>
+                                            <label class="control-label font-weight-normal" for="company_name">Company Name</label>
                                             <input type="text" name="company_name" class="form-control" t-att-value="'company_name' in checkout and checkout['company_name']" />
                                         </div>
                                         <div t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-md-6 div_vat">
-                                            <label class="control-label" for="vat">TIN / VAT </label>
+                                            <label class="control-label font-weight-normal" for="vat">TIN / VAT </label>
                                             <input type="text" name="vat" class="form-control" t-att-value="'vat' in checkout and checkout['vat']" />
                                         </div>
                                     </t>
@@ -1282,11 +1282,6 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>
-                        <div class="col-md-3 text-muted hidden-sm hidden-xs">
-                            <h2 class="page-header mt16 text-center">Your Order</h2>
-                            <t t-set="website_sale_order" t-value="website.sale_get_order()" />
-                            <t t-call="website_sale.total" />
                         </div>
                     </div>
                 </div>
