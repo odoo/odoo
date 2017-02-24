@@ -80,9 +80,9 @@ var AbstractModel = require('web.AbstractModel');
 var concurrency = require('web.concurrency');
 var Context = require('web.Context');
 var data = require('web.data'); // TODO: remove dependency to data.js
+var fieldUtils = require('web.field_utils');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
-var field_utils = require('web.field_utils');
 
 var x2ManyCommands = {
     // (0, _, {values})
@@ -537,10 +537,10 @@ var BasicModel = AbstractModel.extend({
                     });
                 } else if (field.type === 'date') {
                     // process date: convert into Date object
-                    record._changes[name] = field_utils.parse_date(result[name]);
+                    record._changes[name] = fieldUtils.parse_date(result[name]);
                 } else if (field.type === 'datetime') {
                     // process datetime: convert into Date object
-                    record._changes[name] = field_utils.parse_datetime(result[name]);
+                    record._changes[name] = fieldUtils.parse_datetime(result[name]);
                 } else {
                     record._changes[name] = result[name];
                 }
@@ -1278,10 +1278,10 @@ var BasicModel = AbstractModel.extend({
                     }
                 } else if (field.type === 'date') {
                     // process data: convert into Date object
-                    record.data[name] = field_utils.parse_date(val);
+                    record.data[name] = fieldUtils.parse_date(val);
                 } else if (field.type === 'datetime') {
                     // process datetime: convert into Date object
-                    record.data[name] = field_utils.parse_datetime(val);
+                    record.data[name] = fieldUtils.parse_datetime(val);
                 }
             });
         }).then(function () {
@@ -1925,6 +1925,12 @@ var BasicModel = AbstractModel.extend({
                         });
 
                         dataPoint.data[name] = r.id;
+                    }
+                    if (field.type === 'date') {
+                        dataPoint.data[name] = fieldUtils.parse_date(dataPoint.data[name]);
+                    }
+                    if (field.type === 'datetime') {
+                        dataPoint.data[name] = fieldUtils.parse_datetime(dataPoint.data[name]);
                     }
                 });
                 return dataPoint.id;

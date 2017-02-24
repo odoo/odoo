@@ -19,10 +19,11 @@ QUnit.module('Views', {
                     product_id: {string: "Favorite product", type: 'many2one', relation: 'product'},
                     product_ids: {string: "Favorite products", type: 'one2many', relation: 'product'},
                     category: {string: "Category M2M", type: 'many2many', relation: 'partner_type'},
+                    date: {string: "Date Field", type: 'date'},
                 },
                 records: [
-                    {id: 1, foo: 'blip', bar: 1, product_id: 37, category: [12], display_name: "first partner"},
-                    {id: 2, foo: 'gnap', bar: 2, product_id: 41, display_name: "second partner"},
+                    {id: 1, foo: 'blip', bar: 1, product_id: 37, category: [12], display_name: "first partner", date: "2017-01-25"},
+                    {id: 2, foo: 'gnap', bar: 2, product_id: 41, display_name: "second partner", date: "2017-01-26"},
                 ],
                 onchanges: {},
             },
@@ -717,5 +718,29 @@ QUnit.module('Views', {
 
     });
 
-});
-});
+    QUnit.test('dates are properly loaded and parsed', function (assert) {
+        assert.expect(1);
+
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        var params = {
+            fieldNames: ['date'],
+            fields: this.data.partner.fields,
+            modelName: 'partner',
+            type: 'list',
+        };
+
+        model.load(params).then(function (resultID) {
+            var record = model.get(resultID);
+            var firstRecord = record.data[0];
+            assert.ok(firstRecord.data.date instanceof moment,
+                "fetched date field should have been formatted");
+        });
+    });
+
+
+});});
