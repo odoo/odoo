@@ -76,7 +76,7 @@ QUnit.module('DomainSelector', {
             "there should be a field selector");
 
         // Focusing the field selector input should open a field selector popover
-        $fieldSelector.find("> input").focus();
+        $fieldSelector.find("> input").trigger('focusin');
         var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover:visible");
         assert.strictEqual($fieldSelectorPopover.length, 1,
             "field selector popover should be visible");
