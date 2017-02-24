@@ -311,14 +311,14 @@ return BasicRenderer.extend({
     },
     _renderInnerField: function (node) {
         var field = this.state.fields[node.attrs.name];
-        var field_descr = node.attrs.string || field.string;
+        var fieldDescr = node.attrs.string || field.string;
         var hasLabel = !node.attrs.nolabel;
         var widget = this._renderFieldWidget(node);
         if (hasLabel) {
             var $label = $('<label>')
                             .addClass('o_form_label')
                             .attr('for', this._getIDForLabel(node.attrs.name))
-                            .text(field_descr);
+                            .text(fieldDescr);
             var isReadOnly = this.mode === 'readonly' || field.readonly;
             if (this.state.data.id && !widget.isSet() && isReadOnly) {
                 $label.addClass('o_form_label_empty');
@@ -356,8 +356,8 @@ return BasicRenderer.extend({
                 var label =  children[i];
                 // If there is a "for" attribute, we expect to have an id concerned in the next node.
                 if (label.attrs.for) {
-                    var linked_node = children[i+1];
-                    $result = this._renderInnerGroupLabel($result, label, linked_node);
+                    var linkedNode = children[i+1];
+                    $result = this._renderInnerGroupLabel($result, label, linkedNode);
                     i++; // Skip the rendering of the next node because we just did it.
                 } else {
                     $result = this._renderInnerGroupLabel($result, label);
@@ -369,10 +369,10 @@ return BasicRenderer.extend({
         }
         return $result;
     },
-    _renderInnerGroupLabel: function ($result, label, linked_node) {
+    _renderInnerGroupLabel: function ($result, label, linkedNode) {
         var $first = $('<td class="o_td_label">')
                     .append(this._renderNode(label));
-        var $second = linked_node ? $('<td>').append(this._renderNode(linked_node)) : $('<td>');
+        var $second = linkedNode ? $('<td>').append(this._renderNode(linkedNode)) : $('<td>');
         var $tr = $('<tr>').append($first).append($second);
         return $result.append($tr);
     },
@@ -464,10 +464,10 @@ return BasicRenderer.extend({
     },
     _renderTagGroup: function (node) {
         var self = this;
-        var is_outer_group = _.some(node.children, function (child) {
+        var isOuterGroup = _.some(node.children, function (child) {
             return child.tag === 'group';
         });
-        if (!is_outer_group) {
+        if (!isOuterGroup) {
             return this._renderInnerGroup(node);
         }
 

@@ -53,9 +53,9 @@ var BasicView = AbstractView.extend({
 
         var result = this._processFieldsView(arch, fields);
         var fieldAttrs = result.fieldAttrs;
-        var view_fields = result.view_fields;
-        var fieldNames = _.keys(view_fields);
-        fields = _.defaults(view_fields, fields);
+        var viewFields = result.view_fields;
+        var fieldNames = _.keys(viewFields);
+        fields = _.defaults(viewFields, fields);
         var self = this;
         // process the inner fields_view as well to find the fields they use.
         // register those fields' description directly on the view.
@@ -63,12 +63,12 @@ var BasicView = AbstractView.extend({
         // basically the field_names will be the keys of the fields obj.
         // don't use _ to iterate on fields in case there is a 'length' field,
         // as _ doesn't behave correctly when there is a length key in the object
-        for (var field_name in fields) {
-            var field = fields[field_name];
-            _.each(field.views, function (inner_fields_view) {
-                result = self._processFieldsView(inner_fields_view.arch, inner_fields_view.fields);
-                inner_fields_view.fieldAttrs = result.fieldAttrs;
-                inner_fields_view.fields = result.view_fields;
+        for (var fieldName in fields) {
+            var field = fields[fieldName];
+            _.each(field.views, function (innerFieldsView) {
+                result = self._processFieldsView(innerFieldsView.arch, innerFieldsView.fields);
+                innerFieldsView.fieldAttrs = result.fieldAttrs;
+                innerFieldsView.fields = result.view_fields;
             });
             if (field.type === 'one2many' || field.type === 'many2many') {
                 if (field.views && field.views.tree) {
@@ -114,7 +114,7 @@ var BasicView = AbstractView.extend({
      */
     _processFieldsView: function (arch, fields) {
         var self = this;
-        var view_fields = Object.create(null);
+        var viewFields = Object.create(null);
         var fieldAttrs = Object.create(null);
         traverse(arch, function (node) {
             if (typeof node === 'string') {
@@ -124,14 +124,14 @@ var BasicView = AbstractView.extend({
                 var attrs = node.attrs || {};
                 var field = _.extend({}, fields[node.attrs.name]);
                 self._processField(field, node, attrs);
-                view_fields[node.attrs.name] = field;
+                viewFields[node.attrs.name] = field;
                 fieldAttrs[node.attrs.name] = attrs;
                 return false;
             }
             return node.tag !== 'arch';
         });
         return {
-            view_fields: view_fields,
+            view_fields: viewFields,
             fieldAttrs: fieldAttrs,
         };
     },

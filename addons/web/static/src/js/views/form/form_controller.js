@@ -179,19 +179,18 @@ var FormController = BasicController.extend({
         options = options || {};
         var stayInEdit = 'stayInEdit' in options ? options.stayInEdit : false;
         var shouldReload = 'reload' in options ? options.reload : true;
-        var db_id = this.handle;
-        if (!this.model.isDirty(db_id) && !this.model.isNew(db_id)) {
+        if (!this.model.isDirty(this.handle) && !this.model.isNew(this.handle)) {
             if (!stayInEdit) {
                 this._toReadOnlyMode();
             }
             return $.Deferred().resolve();
         } else {
-            var invalid_fields = this.renderer.checkInvalidFields();
-            if (invalid_fields.length) {
-                this._notifyInvalidFields(invalid_fields);
+            var invalidFields = this.renderer.checkInvalidFields();
+            if (invalidFields.length) {
+                this._notifyInvalidFields(invalidFields);
                 return $.Deferred().reject();
             } else {
-                return this.model.save(db_id, {reload: shouldReload})
+                return this.model.save(this.handle, {reload: shouldReload})
                     .then(function (element) {
                         if (!stayInEdit) {
                             self._toReadOnlyMode();
@@ -229,8 +228,7 @@ var FormController = BasicController.extend({
     _callButtonAction: function (attrs, record) {
         var self = this;
         var def = $.Deferred();
-        var db_id = this.handle;
-        record = record || this.model.get(db_id);
+        record = record || this.model.get(this.handle);
         var recordID = record.data.id;
         this.trigger_up('execute_action', {
             action_data: _.extend({}, attrs, {
