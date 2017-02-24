@@ -374,16 +374,16 @@ var ServicesMixin = {
         return result;
     },
     // AJAX calls
-    performRPC: function (route, args) {
-        return this.call('ajax', 'rpc', route, args);
+    performRPC: function (route, args, options) {
+        return this.call('ajax', 'rpc', route, args || {}, options || {});
     },
-    performModelRPC: function (model, method, args, kwargs) {
+    performModelRPC: function (model, method, args, kwargs, options) {
         return this.performRPC('/web/dataset/call_kw/' + model + '/' + method, {
             model: model,
             method: method,
             args: args || [],
             kwargs: kwargs || {},
-        });
+        }, options || {});
     },
     loadFieldView: function (dataset, view_id, view_type, options) {
         return this.loadViews(dataset.model, dataset.get_context(), [[view_id, view_type]], options).then(function (result) {
