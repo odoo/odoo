@@ -1731,4 +1731,46 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-});});
+    QUnit.test('properly apply onchange on many2many fields', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.timmy = [
+                    [5],
+                    [1, 12, {display_name: "gold"}],
+                ];
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group><field name="foo"/></group>' +
+                    '<field name="timmy">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$('.o_form_field_many2many .o_data_row').length, 0,
+            "there should be no many2many record linked at first");
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_input').val('let us trigger an onchange').trigger('input');
+        assert.strictEqual(form.$('.o_form_field_many2many .o_data_row').length, 1,
+            "there should be one linked record");
+        assert.strictEqual(form.$('.o_form_field_many2many .o_data_row td:first').text(), 'gold',
+            "the 'display_name' of the many2many record should be correctly displayed");
+
+        form.destroy();
+    });
+
+});
+
+});

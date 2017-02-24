@@ -992,7 +992,7 @@ var BasicModel = AbstractModel.extend({
                             });
                             record._changes[name] = rec.id;
                         }
-                    } else if (field.type === 'one2many') {
+                    } else if (field.type === 'one2many' || field.type === 'many2many') {
                         record._changes = record._changes || {};
                         var listId = record._changes[name] || record.data[name];
                         var list = self.localData[listId];
