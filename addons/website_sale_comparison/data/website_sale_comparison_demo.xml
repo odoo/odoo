@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_attribute_category_1" model="product.attribute.category">
+        <field name="name">Camera</field>
+        <field name="sequence">3</field>
+    </record>
+    <record id="product_attribute_category_2" model="product.attribute.category">
+        <field name="name">Dimensions</field>
+        <field name="sequence">7</field>
+    </record>
+    <record id="product_attribute_category_3" model="product.attribute.category">
+        <field name="name">Display</field>
+        <field name="sequence">6</field>
+    </record>
+    <record id="product_attribute_category_4" model="product.attribute.category">
+        <field name="name">Platform</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="product_attribute_category_5" model="product.attribute.category">
+        <field name="name">Battery</field>
+        <field name="sequence">8</field>
+    </record>
+    <record id="product_attribute_category_6" model="product.attribute.category">
+        <field name="name">Memory And Storage</field>
+        <field name="sequence">9</field>
+    </record>
+    <record id="product_attribute_category_8" model="product.attribute.category">
+        <field name="name">Internet And Connectivity</field>
+        <field name="sequence">4</field>
+    </record>
+    <record id="product_attribute_category_9" model="product.attribute.category">
+        <field name="name">Multimedia</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="product_attribute_category_10" model="product.attribute.category">
+        <field name="name">Other Features</field>
+        <field name="sequence">11</field>
+    </record>
+    <record id="product_attribute_category_11" model="product.attribute.category">
+        <field name="name">Warranty</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="product.product_attribute_1" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_6"/>
+    </record>
+    <record id="product.product_attribute_2" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_general_features"/>
+    </record>
+    <record id="product.product_attribute_3" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_8"/>
+    </record>
+
+    <record id="product_attribute_1" model="product.attribute">
+        <field name="name">Brand</field>
+        <field name="category_id" ref="product_attribute_category_general_features"/>
+    </record>
+    <record id="product_attribute_value_1" model="product.attribute.value">
+        <field name="name">Apple</field>
+        <field name="attribute_id" ref="product_attribute_1"/>
+    </record>
+
+    <record id="product_attribute_2" model="product.attribute">
+        <field name="name">Processor</field>
+        <field name="category_id" ref="product_attribute_category_general_features"/>
+    </record>
+    <record id="product_attribute_value_2" model="product.attribute.value">
+        <field name="name">Dual Core A5</field>
+        <field name="attribute_id" ref="product_attribute_2"/>
+    </record>
+
+    <record id="product_attribute_3" model="product.attribute">
+        <field name="name">Video Formats Supported</field>
+        <field name="category_id" ref="product_attribute_category_9"/>
+    </record>
+    <record id="product_attribute_value_3" model="product.attribute.value">
+        <field name="name">.mp4, .avi, .m4v, H.264, AAC-LC, .mov, MPEG-4, .m4v, .mp4, .mov, Motion JPEG (M-JPEG)</field>
+        <field name="attribute_id" ref="product_attribute_3"/>
+    </record>
+
+    <record id="product_attribute_4" model="product.attribute">
+        <field name="name">Audio Formats Supported</field>
+        <field name="category_id" ref="product_attribute_category_9"/>
+    </record>
+    <record id="product_attribute_value_4" model="product.attribute.value">
+        <field name="name">3, 4, Protected AAC, MP3, MP3 VBR, AAX and AAX), Apple Lossless, WAV, AAC, HE-AAC, Audible (Formats 2, Audible Enhanced Audio, AIFF</field>
+        <field name="attribute_id" ref="product_attribute_4"/>
+    </record>
+
+    <record id="product_attribute_5" model="product.attribute">
+        <field name="name">Primary Camera</field>
+        <field name="category_id" ref="product_attribute_category_1"/>
+    </record>
+    <record id="product_attribute_value_5" model="product.attribute.value">
+        <field name="name">5 megapixels</field>
+        <field name="attribute_id" ref="product_attribute_5"/>
+    </record>
+
+    <record id="product_attribute_6" model="product.attribute">
+        <field name="name">Secondary Camera</field>
+        <field name="category_id" ref="product_attribute_category_1"/>
+    </record>
+    <record id="product_attribute_value_6" model="product.attribute.value">
+        <field name="name">1.2 megapixels</field>
+        <field name="attribute_id" ref="product_attribute_6"/>
+    </record>
+
+    <record id="product_attribute_7" model="product.attribute">
+        <field name="name">Weight</field>
+        <field name="category_id" ref="product_attribute_category_2"/>
+    </record>
+    <record id="product_attribute_value_7" model="product.attribute.value">
+        <field name="name">308 g</field>
+        <field name="attribute_id" ref="product_attribute_7"/>
+    </record>
+
+    <record id="product_attribute_8" model="product.attribute">
+        <field name="name">Dimensions</field>
+        <field name="category_id" ref="product_attribute_category_2"/>
+    </record>
+    <record id="product_attribute_value_8" model="product.attribute.value">
+        <field name="name">134.7 x 200 x 7.2 mm</field>
+        <field name="attribute_id" ref="product_attribute_8"/>
+    </record>
+
+    <record id="product_attribute_9" model="product.attribute">
+        <field name="name">4G</field>
+        <field name="category_id" ref="product_attribute_category_8"/>
+    </record>
+    <record id="product_attribute_value_9" model="product.attribute.value">
+        <field name="name">No</field>
+        <field name="attribute_id" ref="product_attribute_9"/>
+    </record>
+
+    <record id="product_attribute_10" model="product.attribute">
+        <field name="name">3G</field>
+        <field name="category_id" ref="product_attribute_category_8"/>
+    </record>
+    <record id="product_attribute_value_10" model="product.attribute.value">
+        <field name="name">Yes</field>
+        <field name="attribute_id" ref="product_attribute_10"/>
+    </record>
+
+    <record id="product_attribute_11" model="product.attribute">
+        <field name="name">Display Type</field>
+        <field name="category_id" ref="product_attribute_category_3"/>
+    </record>
+    <record id="product_attribute_value_11" model="product.attribute.value">
+        <field name="name">7.9 inch LCD Assistive Touchscreen with 1024 x 768 pixels</field>
+        <field name="attribute_id" ref="product_attribute_11"/>
+    </record>
+
+    <record id="product_attribute_12" model="product.attribute">
+        <field name="name">Other Display Features</field>
+        <field name="category_id" ref="product_attribute_category_3"/>
+    </record>
+    <record id="product_attribute_value_12" model="product.attribute.value">
+        <field name="name">LED Backlit Multi-touch Display with IPS Technology, Fingerprint-resistant Oleophobic Coating</field>
+        <field name="attribute_id" ref="product_attribute_12"/>
+    </record>
+
+    <record id="product_attribute_13" model="product.attribute">
+        <field name="name">Warranty Summary</field>
+        <field name="category_id" ref="product_attribute_category_11"/>
+    </record>
+    <record id="product_attribute_value_13" model="product.attribute.value">
+        <field name="name">1 Year Warranty</field>
+        <field name="attribute_id" ref="product_attribute_13"/>
+    </record>
+
+    <record id="product_attribute_14" model="product.attribute">
+        <field name="name">Battery Type</field>
+        <field name="category_id" ref="product_attribute_category_5"/>
+    </record>
+    <record id="product_attribute_value_14" model="product.attribute.value">
+        <field name="name">Lithium - Polymer</field>
+        <field name="attribute_id" ref="product_attribute_14"/>
+    </record>
+
+    <record id="product_attribute_15" model="product.attribute">
+        <field name="name">Play Time</field>
+        <field name="category_id" ref="product_attribute_category_5"/>
+    </record>
+    <record id="product_attribute_value_15" model="product.attribute.value">
+        <field name="name">10 hrs</field>
+        <field name="attribute_id" ref="product_attribute_15"/>
+    </record>
+
+    <record id="product_attribute_16" model="product.attribute">
+        <field name="name">Operating System</field>
+        <field name="category_id" ref="product_attribute_category_4"/>
+    </record>
+    <record id="product_attribute_value_16" model="product.attribute.value">
+        <field name="name">iOS 6</field>
+        <field name="attribute_id" ref="product_attribute_16"/>
+    </record>
+
+    <record id="product_attribute_17" model="product.attribute">
+        <field name="name">Sensors</field>
+        <field name="category_id" ref="product_attribute_category_4"/>
+    </record>
+    <record id="product_attribute_value_17" model="product.attribute.value">
+        <field name="name">Accelerometer, Three-axis Gyro, Ambient Light Sensor, Digital Compass</field>
+        <field name="attribute_id" ref="product_attribute_17"/>
+    </record>
+
+    <record id="product_attribute_18" model="product.attribute">
+        <field name="name">Bluetooth</field>
+        <field name="category_id" ref="product_attribute_category_8"/>
+    </record>
+    <record id="product_attribute_value_18" model="product.attribute.value">
+        <field name="name">v4</field>
+        <field name="attribute_id" ref="product_attribute_18"/>
+    </record>
+
+    <record id="product_attribute_line_1" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_1"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_1')])]"/>
+    </record>
+     <record id="product_attribute_line_2" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_2"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_2')])]"/>
+    </record>
+     <record id="product_attribute_line_3" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_3"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_3')])]"/>
+    </record>
+     <record id="product_attribute_line_4" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_4"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_4')])]"/>
+    </record>
+     <record id="product_attribute_line_5" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_5"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_5')])]"/>
+    </record>
+    <record id="product_attribute_line_6" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_6"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_6')])]"/>
+    </record>
+    <record id="product_attribute_line_7" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_7"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_7')])]"/>
+    </record>
+    <record id="product_attribute_line_8" model="product.attribute.line">
+         <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_8"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_8')])]"/>
+    </record>
+    <record id="product_attribute_line_9" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_9"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_9')])]"/>
+    </record>
+    <record id="product_attribute_line_10" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_10"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_10')])]"/>
+    </record>
+    <record id="product_attribute_line_11" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_11"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_11')])]"/>
+    </record>
+    <record id="product_attribute_line_12" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_12"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_12')])]"/>
+    </record>
+    <record id="product_attribute_line_13" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_13"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_13')])]"/>
+    </record>
+    <record id="product_attribute_line_14" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_14"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_14')])]"/>
+    </record>
+    <record id="product_attribute_line_15" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_15"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_15')])]"/>
+    </record>
+    <record id="product_attribute_line_16" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_16"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_16')])]"/>
+    </record>
+    <record id="product_attribute_line_17" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_17"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_17')])]"/>
+    </record>
+    <record id="product_attribute_line_18" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product_attribute_18"/>
+        <field name="value_ids" eval="[(6,0,[ref('product_attribute_value_18')])]"/>
+    </record>
+    <record id="product_attribute_line_19" model="product.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product.product_attribute_2"/>
+        <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_3')])]"/>
+    </record>
+
+</odoo>
