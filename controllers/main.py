@@ -10,16 +10,6 @@ class WebsiteSale(WebsiteSale):
     def pricelist(self, promo, **post):
         order = request.website.sale_get_order()
         coupon_status = request.env['sale.coupon.apply.code'].sudo().apply_coupon(order, promo)
-        print coupon_status.get('error', False)
         if coupon_status.get('error', False):
             return super(WebsiteSale, self).pricelist(promo, **post)
-        return request.redirect("/shop/cart")
-
-    @http.route(['/shop/pricelist_payment'], type='http', auth="public", website=True)
-    def pricelist_payment(self, promo, **post):
-        order = request.website.sale_get_order()
-        coupon_status = request.env['sale.coupon.apply.code'].sudo().apply_coupon(order, promo)
-        print coupon_status.get('error', False)
-        if coupon_status.get('error', False):
-            return super(WebsiteSale, self).pricelist(promo, **post)
-        return request.redirect("/shop/payment")
+        return request.redirect(post.get('r', '/shop/cart'))
