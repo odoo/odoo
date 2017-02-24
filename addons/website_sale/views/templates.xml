@@ -1029,24 +1029,31 @@
         </xpath>
     </template>
 
+    <template id='coupon_form' name='Coupon form'>
+        <t t-if="request.params.get('code_not_available')" name="code_not_available">
+            <p class="bg-warning">This promo code is not available</p>
+        </t>
+        <form t-if="website_sale_order and website_sale_order.website_order_line" t-att-action="'/shop/pricelist%s' % (redirect and '?r=' + redirect or '')"
+            method="post" class="mb32" name="coupon_code">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+            <div class="input-group">
+                <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None" />
+                <div class="input-group-btn">
+                    <a class="btn btn-default a-submit">Apply</a>
+                </div>
+            </div>
+        </form>
+    </template>
+
     <template id="reduction_code" inherit_id="website_sale.cart" active="False" customize_show="True" name="Coupon Code">
         <xpath expr="//div[@id='right_column']" position="inside">
             <h4>Coupon Code</h4>
             <p>
               Have a coupon code? Fill in this field and apply.
             </p>
-            <t t-if="code_not_available" name="code_not_available">
-                <p class="bg-warning">This promo code is not available</p>
+            <t t-call='website_sale.coupon_form'>
+                <t t-set='redirect'>/shop/cart</t>
             </t>
-            <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist" method="post" class="mb32" name="coupon_code">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                <div class="input-group">
-                    <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None" />
-                    <div class="input-group-btn">
-                        <a class="btn btn-default a-submit">Apply</a>
-                    </div>
-                </div>
-            </form>
         </xpath>
     </template>
 
@@ -1350,15 +1357,24 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-5 col-sm-4 col-md-4 text-muted" id="coupon_box"/>
+                            <div class="col-md-12">
+                                <div class="col-lg-5 col-sm-6 col-xs-12 text-muted" id="coupon_box">
+                                    <t t-if="request.env.ref('website_sale.reduction_code').active">
+                                        <p>
+                                          Have a coupon code? Fill in this field and apply.
+                                        </p>
+                                        <t t-call='website_sale.coupon_form'>
+                                            <t t-set='redirect'>/shop/payment</t>
+                                        </t>
+                                    </t>
+                                </div>
                                 <t t-call="website_sale.total">
-                                    <t t-set='extra_class' t-value='"col-lg-7 col-sm-8 col-md-8"'/>
+                                    <t t-set='extra_class' t-value='"col-lg-7 col-sm-6 col-xs-12"'/>
                                 </t>
                             </div>
                             <div class="clearfix" />
                             <div class="oe_structure" />
-                            <div class="js_payment mb64 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
+                            <div class="js_payment mb64 col-md-12 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
                                 <div class="col-lg-5 col-sm-6">
                                     <h4>Payment Method:</h4>
                                     <ul class="list-unstyled">
@@ -1437,26 +1453,6 @@
                 <div class="oe_structure" />
             </div>
         </t>
-    </template>
-
-    <template id="reduction_code_payment" inherit_id="website_sale.payment" active="False" customize_show="True" name="Coupon Code">
-        <xpath expr="//div[@id='coupon_box']" position="inside">
-            <p>
-              Have a coupon code? Fill in this field and apply.
-            </p>
-            <t t-if="code_not_available" name="code_not_available">
-                <p class="bg-warning">This promo code is not available</p>
-            </t>
-            <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist_payment" method="post" class="mb32" name="coupon_code">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                <div class="input-group">
-                    <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None" />
-                    <div class="input-group-btn">
-                        <a class="btn btn-default a-submit">Apply</a>
-                    </div>
-                </div>
-            </form>
-        </xpath>
     </template>
 
     <template id="payment_sale_note" inherit_id="payment" name="Accept Terms &amp; Conditions" customize_show="True" active="False">
