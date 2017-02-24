@@ -1564,24 +1564,29 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {Object} element an element from the localData
      * @param {Object} [options]
-     * @param {string} [options.field] if given, the context of the field will
-     *   also be added (and evaluated) to the result
+     * @param {string} [options.fieldName]
+     *        the name of the field whose context needs to be added to the
+     *        result (and evaluated)
      * @returns {Object} the evaluated context
      */
     _getContext: function (element, options) {
         var context = new Context(session.user_context, element.context);
-        if (options && options.field) {
-            var attrs = element.fieldAttrs[options.field];
+        context.set_eval_context(element.data);
+        if (options && options.fieldName) {
+            var attrs = element.fieldAttrs[options.fieldName];
             if (attrs && attrs.context) {
                 context.add(attrs.context);
             }
         }
+
         if (element.rawContext) {
-            context.add(element.rawContext);
+            var rawContext = new Context(element.rawContext);
             var evalContext = this.get(element.parentID, {raw: true}).data;
             evalContext.id = evalContext.id || false;
-            context.set_eval_context(evalContext);
+            rawContext.set_eval_context(evalContext);
+            context.add(rawContext);
         }
+
         return context.eval();
     },
     /**
@@ -1701,7 +1706,7 @@ var BasicModel = AbstractModel.extend({
                 }).then(function (result) {
                     var ids = _.pluck(result.records, 'id');
                     return self.performModelRPC(field.relation, 'name_get', [ids], {
-                        context: self._getContext(record, {field: name}),
+                        context: self._getContext(record, {fieldName: name}),
                     }).then(function (name_gets) {
                         _.each(result.records, function (record) {
                             var name_get = _.find(name_gets, function (n) {
@@ -1717,7 +1722,7 @@ var BasicModel = AbstractModel.extend({
             if (field.__always_reload) {
                 if (record.data[name] instanceof Array) {
                     defs.push(self.performModelRPC(field.relation, 'name_get', [record.data[name][0]], {
-                        context: self._getContext(record, {field: name}),
+                        context: self._getContext(record, {fieldName: name}),
                     }).then(function (result) {
                         record.data[name] = result[0];
                     }));
