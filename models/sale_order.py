@@ -227,7 +227,11 @@ class SaleOrder(models.Model):
             if values['product_uom_qty'] and values['price_unit']:
                 order.write({'order_line': [(1, line.id, values) for line in lines]})
             else:
-                order.write({'order_line': [(2, line.id, False) for line in lines]})
+                if program.reward_type != 'free_shipping':
+                    order.write({'order_line': [(2, line.id, False) for line in lines]})
+                else:
+                    values.update(price_unit=0.0)
+                    order.write({'order_line': [(1, line.id, values) for line in lines]})
 
     def _remove_invalid_reward_lines(self):
         '''Unlink reward order lines that are not applicable anymore'''
@@ -252,7 +256,7 @@ class SaleOrderLine(models.Model):
     @api.model
     def create(self, vals):
         res = super(SaleOrderLine, self).create(vals)
-        self.order_id._recompute_coupon_lines()
+        res.order_id._recompute_coupon_lines()
         return res
 
     def write(self, vals):
