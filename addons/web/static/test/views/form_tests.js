@@ -30,7 +30,9 @@ QUnit.module('Views', {
                         selection: [[1, "Low"], [2, "Medium"], [3, "High"]],
                         default: 1,
                     },
-                    state: {string: "State", type: "selection", selection: [["ab", "AB"], ["cd", "CD"], ["ef", "EF"]]}
+                    state: {string: "State", type: "selection", selection: [["ab", "AB"], ["cd", "CD"], ["ef", "EF"]]},
+                    date: {string: "Some Date", type: "date"},
+                    datetime: {string: "Datetime Field", type: 'datetime'},
                 },
                 records: [{
                     id: 1,
@@ -43,6 +45,8 @@ QUnit.module('Views', {
                     timmy: [],
                     trululu: 4,
                     state: "ab",
+                    date: "2017-01-25",
+                    datetime: "2016-12-12 10:55:05",
                 }, {
                     id: 2,
                     display_name: "second record",

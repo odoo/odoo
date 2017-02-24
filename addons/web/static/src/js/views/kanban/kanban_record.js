@@ -178,7 +178,7 @@ var KanbanRecord = Widget.extend({
             var r = _.clone(self.fields[name] || {});
 
             if ((r.type === 'date' || r.type === 'datetime') && value) {
-                r.raw_value = time.auto_str_to_date(value);
+                r.raw_value = value.toDate();
             } else if (r.type === 'one2many' || r.type === 'many2one' || r.type === 'many2many') {
                 r.raw_value = value ? value.res_ids : [];
             } else {

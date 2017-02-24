@@ -28,6 +28,8 @@ QUnit.module('relational_fields', {
                         selection: [['red', "Red"], ['black', "Black"]],
                         default: 'red',
                     },
+                    date: {string: "Some Date", type: "date"},
+                    datetime: {string: "Datetime Field", type: 'datetime'},
                 },
                 records: [{
                     id: 1,
@@ -49,6 +51,8 @@ QUnit.module('relational_fields', {
                     p: [],
                     timmy: [],
                     trululu: 1,
+                    date: "2017-01-25",
+                    datetime: "2016-12-12 10:55:05",
                 }, {
                     id: 4,
                     display_name: "aaa",
@@ -458,7 +462,6 @@ QUnit.module('relational_fields', {
                     '</sheet>' +
                 '</form>',
             res_id: 1,
-            vel: 2,
         });
 
 
@@ -479,6 +482,37 @@ QUnit.module('relational_fields', {
 
         assert.ok(form.$('td.o_list_record_delete').length,
             "embedded one2many records should have a trash icon");
+    });
+
+    QUnit.test('one2many with date and datetime', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].p = [2];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="Partner page">' +
+                                '<field name="p">' +
+                                    '<tree>' +
+                                        '<field name="date"/>' +
+                                        '<field name="datetime"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+        // FIXME: this test is locale dependant. we need to do it right.
+        assert.strictEqual(form.$('td:contains(01/25/2017)').length, 1,
+            "should have formatted the date");
+        assert.strictEqual(form.$('td:contains(12/12/2016 10:55:05)').length, 1,
+            "should have formatted the datetime");
     });
 
     QUnit.test('rendering with embedded one2many', function (assert) {
