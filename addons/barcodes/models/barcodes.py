@@ -102,7 +102,7 @@ class BarcodeNomenclature(models.Model):
             decimal_part_match = re.search("[{N][D]*[}]", numerical_content.group()) # looks for decimal part
             whole_part = value_string[:whole_part_match.end()-2] # retrieve whole part of numerical content in barcode
             decimal_part = "0." + value_string[decimal_part_match.start():decimal_part_match.end()-1] # retrieve decimal part
-            if whole_part == '':
+            if whole_part == '' or not whole_part.isdigit():
                 whole_part = '0'
             match['value'] = int(whole_part) + float(decimal_part)
 
