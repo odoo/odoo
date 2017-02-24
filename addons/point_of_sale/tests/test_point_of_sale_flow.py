@@ -119,6 +119,46 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I test that the generated journal entry is attached to the PoS order
         self.assertTrue(self.pos_order_pos0.account_move, "Journal entry has not been attached to Pos order.")
 
+    def test_order_refund(self):
+        # I create a new PoS order with 2 lines
+        order = self.PosOrder.create({
+            'company_id': self.company_id,
+            'partner_id': self.partner1.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product3.id,
+                'price_unit': 450,
+                'discount': 5.0,
+                'qty': 2.0,
+                'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
+            }), (0, 0, {
+                'name': "OL/0002",
+                'product_id': self.product4.id,
+                'price_unit': 300,
+                'discount': 5.0,
+                'qty': 3.0,
+                'tax_ids': [(6, 0, self.product4.taxes_id.ids)],
+            })]
+        })
+
+        # I create a refund
+        refund_action = order.refund()
+        refund = self.PosOrder.browse(refund_action['res_id'])
+
+        self.assertEqual(order.amount_total, -1*refund.amount_total,
+            "The refund does not cancel the order (%s and %s)" % (order.amount_total, refund.amount_total))
+
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        refund_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': refund.amount_total
+        })
+
+        # I click on the validate button to register the payment.
+        refund_payment.with_context(**payment_context).check()
+
+        self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
+
     def test_order_to_picking(self):
         """
             In order to test the Point of Sale in module, I will do three orders from the sale to the payment,
