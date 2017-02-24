@@ -80,6 +80,14 @@ class WebsiteHrRecruitment(http.Controller):
             'main_object': job,
         })
 
+    @http.route('/jobs/thankyou/<model("hr.job"):job>', type='http', auth="public", website=True)
+    def jobs_thankyou(self, job, **kwargs):
+        responsible = job.user_id
+        return request.render("website_hr_recruitment.thankyou", {
+            'job': job,
+            'responsible': responsible,
+        })
+
     @http.route('/jobs/apply/<model("hr.job"):job>', type='http', auth="public", website=True)
     def jobs_apply(self, job, **kwargs):
         error = {}
