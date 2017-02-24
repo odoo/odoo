@@ -117,7 +117,7 @@ var PivotRenderer = AbstractRenderer.extend({
                 if (value !== undefined) {
                     name = this.state.measures[j % nbrMeasures];
                     measure = this.state.fields[name];
-                    value = field_utils['format_' + measureTypes[j % nbrMeasures]](value, measure);
+                    value = field_utils.format[measureTypes[j % nbrMeasures]](value, measure);
                 }
                 $cell = $('<td>')
                             .data('id', rows[i].id)

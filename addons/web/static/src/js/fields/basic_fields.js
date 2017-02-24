@@ -189,7 +189,7 @@ var FieldMonetary = InputField.extend({
     // types, such as float.
     _formatValue: function (value) {
         var options = _.extend({}, this.nodeOptions, { data: this.recordData });
-        return field_utils.format_monetary(value, this.field, options);
+        return field_utils.format.monetary(value, this.field, options);
     },
     isSet: function () {
         return this.value !== false;
@@ -319,10 +319,10 @@ var FieldFloatTime = FieldFloat.extend({
         }
         var float_time_pair = value.split(":");
         if (float_time_pair.length !== 2) {
-            return factor * field_utils.parse_float(value, this.field);
+            return factor * field_utils.parse.float(value, this.field);
         }
-        var hours = field_utils.parse_integer(float_time_pair[0]);
-        var minutes = field_utils.parse_integer(float_time_pair[1]);
+        var hours = field_utils.parse.integer(float_time_pair[0]);
+        var minutes = field_utils.parse.integer(float_time_pair[1]);
         return factor * (hours + (minutes / 60));
     },
 });

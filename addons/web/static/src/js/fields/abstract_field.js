@@ -221,7 +221,7 @@ var AbstractField = Widget.extend({
      */
     _formatValue: function (value) {
         var options = _.extend({}, this.nodeOptions, { data: this.recordData });
-        return field_utils.format_field(value, this.field, options);
+        return field_utils.format[this.field.type](value, this.field, options);
     },
     /**
      * convert a string representation to a valid value, depending on the field
@@ -232,7 +232,7 @@ var AbstractField = Widget.extend({
      * @returns {any}
      */
     _parseValue: function (value) {
-        return field_utils.parse_field(value, this.field);
+        return field_utils.parse[this.field.type](value, this.field);
     },
     /**
      * main rendering function.  Override this if your widget has the same render

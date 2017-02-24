@@ -322,11 +322,11 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
     },
     //converts hour value to float
     parse_client: function(value) {
-        return field_utils.parse_float_time(value);
+        return field_utils.parse.float_time(value);
     },
     //converts float value to hour
     format_client:function(value){
-        return field_utils.format_float_time(value);
+        return field_utils.format.float_time(value);
     },
     generate_o2m_value: function() {
         var ops = [];

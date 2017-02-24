@@ -1247,7 +1247,7 @@ exports.Orderline = Backbone.Model.extend({
                 if (unit.rounding) {
                     this.quantity    = round_pr(quant, unit.rounding);
                     var decimals = this.pos.dp['Product Unit of Measure'];
-                    this.quantityStr = field_utils.format_float(round_di(this.quantity, decimals), {digits: [69, decimals]});
+                    this.quantityStr = field_utils.format.float(round_di(this.quantity, decimals), {digits: [69, decimals]});
                 } else {
                     this.quantity    = round_pr(quant, 1);
                     this.quantityStr = this.quantity.toFixed(0);
@@ -1693,7 +1693,7 @@ exports.Paymentline = Backbone.Model.extend({
         return this.amount;
     },
     get_amount_str: function(){
-        return field_utils.format_float(this.amount, {digits: [69, this.pos.currency.decimals]});
+        return field_utils.format.float(this.amount, {digits: [69, this.pos.currency.decimals]});
     },
     set_selected: function(selected){
         if(this.selected !== selected){

@@ -216,10 +216,10 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
         }
     },
     toString: function () {
-        var str = field_utils.format_field(this.get_value(), {type: this.attributes.type});
+        var str = field_utils.format[this.attributes.type](this.get_value(), {type: this.attributes.type});
         var date_1_value = this.datewidget_1 && this.get_value(1);
         if (date_1_value) {
-            str += _lt(" and ") + field_utils.format_field(date_1_value, {type: this.attributes.type});
+            str += _lt(" and ") + field_utils.format[this.attributes.type](date_1_value, {type: this.attributes.type});
         }
         return str;
     },
@@ -271,7 +271,7 @@ ExtendedSearchProposition.Integer = ExtendedSearchProposition.Field.extend({
     get_value: function () {
         try {
             var val =this.$el.val();
-            return field_utils.parse_integer(val === "" ? 0 : val);
+            return field_utils.parse.integer(val === "" ? 0 : val);
         } catch (e) {
             return "";
         }
@@ -304,7 +304,7 @@ ExtendedSearchProposition.Float = ExtendedSearchProposition.Field.extend({
     get_value: function () {
         try {
             var val =this.$el.val();
-            return field_utils.parse_float(val === "" ? 0.0 : val);
+            return field_utils.parse.float(val === "" ? 0.0 : val);
         } catch (e) {
             return "";
         }

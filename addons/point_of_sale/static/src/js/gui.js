@@ -437,7 +437,7 @@ var Gui = core.Class.extend({
     numpad_input: function(buffer, input, options) { 
         var newbuf  = buffer.slice(0);
         options = options || {};
-        var newbuf_float  = field_utils.parse_float(newbuf);
+        var newbuf_float  = field_utils.parse.float(newbuf);
         var decimal_point = _t.database.parameters.decimal_point;
 
         if (input === decimal_point) {

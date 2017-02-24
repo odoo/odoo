@@ -130,7 +130,7 @@ var KanbanRecord = Widget.extend({
                 var recordData = self.state.data;
                 var value = recordData[field_name];
                 var options = { data: recordData };
-                var formatted_value = field_utils.format_field(value, field, options);
+                var formatted_value = field_utils.format[field.type](value, field, options);
                 $field.replaceWith(formatted_value);
             }
         });
@@ -186,7 +186,7 @@ var KanbanRecord = Widget.extend({
             }
 
             if (r.type) {
-                var formatter = field_utils['format_' + r.type];
+                var formatter = field_utils.format[r.type];
                 r.value = formatter(value, self.fields[name], record, self.state);
             } else {
                 r.value = value;

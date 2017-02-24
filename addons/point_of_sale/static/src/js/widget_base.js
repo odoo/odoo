@@ -44,7 +44,7 @@ var PosBaseWidget = Widget.extend({
 
         if (typeof amount === 'number') {
             amount = round_di(amount,decimals).toFixed(decimals);
-            amount = field_utils.format_float(round_di(amount, decimals), {digits: [69, decimals]});
+            amount = field_utils.format.float(round_di(amount, decimals), {digits: [69, decimals]});
         }
 
         return amount;

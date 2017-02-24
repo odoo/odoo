@@ -327,7 +327,7 @@ DebugManager.include({
                 size: 'medium',
                 $content: QWeb.render('WebClient.DebugViewLog', {
                     perm : result[0],
-                    format : field_utils.format_field
+                    format : field_utils.format
                 })
             }).open();
         });

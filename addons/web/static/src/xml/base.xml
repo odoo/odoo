@@ -177,19 +177,19 @@
         </tr>
         <tr>
             <th>Creation User:</th>
-            <td><t t-esc="format(perm.create_uid, { 'type' : 'many2one' }, '/')"/></td>
+            <td><t t-esc="format.many2one(perm.create_uid, { 'type' : 'many2one' }, '/')"/></td>
         </tr>
         <tr>
             <th>Creation Date:</th>
-            <td><t t-esc="format(perm.create_date, { 'type' : 'datetime' }, '/')"/></td>
+            <td><t t-esc="format.datetime(perm.create_date, { 'type' : 'datetime' }, '/')"/></td>
         </tr>
         <tr>
             <th>Latest Modification by:</th>
-            <td><t t-esc="format(perm.write_uid, { 'type' : 'many2one' }, '/')"/></td>
+            <td><t t-esc="format.many2one(perm.write_uid, { 'type' : 'many2one' }, '/')"/></td>
         </tr>
         <tr>
             <th>Latest Modification Date:</th>
-            <td><t t-esc="format(perm.write_date, { 'type' : 'datetime' }, '/')"/></td>
+            <td><t t-esc="format.datetime(perm.write_date, { 'type' : 'datetime' }, '/')"/></td>
         </tr>
     </table>
 </t>
