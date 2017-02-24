@@ -51,7 +51,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 this.notification_manager.warn(e.data.title, e.data.message, e.data.sticky);
             }
         },
-        load_views: function(event) {
+        load_views: function (event) {
             var params = {
                 model: event.data.modelName,
                 context: event.data.context,
@@ -61,13 +61,13 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 .load_views(params, event.data.options || {})
                 .then(event.data.on_success);
         },
-        load_filters: function(event) {
+        load_filters: function (event) {
             return data_manager
                 .load_filters(event.data.dataset, event.data.action_id)
                 .then(event.data.on_success);
         },
         // session
-        get_session: function(event) {
+        get_session: function (event) {
             if (event.data.callback) {
                 event.data.callback(session);
             }
@@ -80,7 +80,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
             });
         },
     },
-    init: function(parent) {
+    init: function (parent) {
         this.client_options = {};
         mixins.ServiceProvider.init.call(this);
         this._super(parent);
@@ -90,7 +90,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         this.action_mutex = new concurrency.Mutex();
         this.set('title_part', {"zopenerp": "Odoo"});
     },
-    start: function() {
+    start: function () {
         var self = this;
 
         this.on("change:title_part", this, this._title_changed);
@@ -118,20 +118,20 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 core.bus.trigger('web_client_ready');
             });
     },
-    bind_events: function() {
+    bind_events: function () {
         var self = this;
         $('.oe_systray').show();
-        this.$el.on('mouseenter', '.oe_systray > div:not([data-toggle=tooltip])', function() {
+        this.$el.on('mouseenter', '.oe_systray > div:not([data-toggle=tooltip])', function () {
             $(this).attr('data-toggle', 'tooltip').tooltip().trigger('mouseenter');
         });
-        this.$el.on('click', '.oe_dropdown_toggle', function(ev) {
+        this.$el.on('click', '.oe_dropdown_toggle', function (ev) {
             ev.preventDefault();
             var $toggle = $(this);
             var doc_width = $(document).width();
             var $menu = $toggle.siblings('.oe_dropdown_menu');
             $menu = $menu.size() >= 1 ? $menu : $toggle.find('.oe_dropdown_menu');
             var state = $menu.is('.oe_opened');
-            setTimeout(function() {
+            setTimeout(function () {
                 // Do not alter propagation
                 $toggle.add($menu).toggleClass('oe_opened', !state);
                 if (!state) {
@@ -145,7 +145,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 }
             }, 0);
         });
-        core.bus.on('click', this, function(ev) {
+        core.bus.on('click', this, function (ev) {
             $('.tooltip').remove();
             if (!$(ev.target).is('input[type=file]')) {
                 self.$('.oe_dropdown_menu.oe_opened, .oe_dropdown_toggle.oe_opened').removeClass('oe_opened');
@@ -165,29 +165,29 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
             });
         };
     },
-    set_action_manager: function() {
+    set_action_manager: function () {
         this.action_manager = new ActionManager(this, {webclient: this});
         return this.action_manager.appendTo(this.$('.o_main_content'));
     },
-    set_notification_manager: function() {
+    set_notification_manager: function () {
         this.notification_manager = new NotificationManager(this);
         return this.notification_manager.appendTo(this.$el);
     },
-    set_loading: function() {
+    set_loading: function () {
         this.loading = new Loading(this);
         return this.loading.appendTo(this.$el);
     },
-    show_application: function() {
+    show_application: function () {
     },
-    clear_uncommitted_changes: function() {
+    clear_uncommitted_changes: function () {
         var def = $.Deferred().resolve();
         core.bus.trigger('clear_uncommitted_changes', function chain_callbacks(callback) {
             def = def.then(callback);
         });
         return def;
     },
-    destroy_content: function() {
-        _.each(_.clone(this.getChildren()), function(el) {
+    destroy_content: function () {
+        _.each(_.clone(this.getChildren()), function (el) {
             el.destroy();
         });
         this.$el.children().remove();
@@ -198,7 +198,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     /**
        Sets the first part of the title of the window, dedicated to the current action.
     */
-    set_title: function(title) {
+    set_title: function (title) {
        this.set_title_part("action", title);
     },
     /**
@@ -206,15 +206,15 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
        a title part is changed, all parts are gathered, ordered by alphabetical order and displayed in the
        title of the window separated by '-'.
     */
-    set_title_part: function(part, title) {
+    set_title_part: function (part, title) {
         var tmp = _.clone(this.get("title_part"));
         tmp[part] = title;
         this.set("title_part", tmp);
     },
-    _title_changed: function() {
-        var parts = _.sortBy(_.keys(this.get("title_part")), function(x) { return x; });
+    _title_changed: function () {
+        var parts = _.sortBy(_.keys(this.get("title_part")), function (x) { return x; });
         var tmp = "";
-        _.each(parts, function(part) {
+        _.each(parts, function (part) {
             var str = this.get("title_part")[part];
             if (str) {
                 tmp = tmp ? tmp + " - " + str : str;
@@ -229,17 +229,17 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
      * When do_action is performed on the WebClient, forward it to the main ActionManager
      * This allows to widgets that are not inside the ActionManager to perform do_action
      */
-    do_action: function() {
+    do_action: function () {
         return this.action_manager.do_action.apply(this, arguments);
     },
-    do_reload: function() {
+    do_reload: function () {
         var self = this;
         return this.session.session_reload().then(function () {
             session.load_modules(true).then(
                 self.menu.proxy('do_reload'));
         });
     },
-    do_push_state: function(state) {
+    do_push_state: function (state) {
         if ('title' in state) {
             this.set_title(state.title);
             delete state.title;
@@ -281,7 +281,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     //--------------------------------------------------------------
     // Misc.
     //--------------------------------------------------------------
-    toggle_fullscreen: function(fullscreen) {
+    toggle_fullscreen: function (fullscreen) {
         this.$el.toggleClass('o_fullscreen', fullscreen);
     },
 });

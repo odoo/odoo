@@ -27,7 +27,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
           by this session object. Specifying this option automatically implies that the option
           "override_session" is set to true.
      */
-    init: function(parent, origin, options) {
+    init: function (parent, origin, options) {
         mixins.EventDispatcherMixin.init.call(this, parent);
         options = options || {};
         this.module_list = (options.modules && options.modules.slice()) || (window.odoo._modules && window.odoo._modules.slice()) || [];
@@ -49,7 +49,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         this.currencies = {};
         this._groups_def = {};
     },
-    setup: function(origin, options) {
+    setup: function (origin, options) {
         // must be able to customize server
         var window_origin = location.protocol + "//" + location.host;
         origin = origin ? origin.replace( /\/+$/, '') : window_origin;
@@ -68,7 +68,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     /**
      * Setup a session
      */
-    session_bind: function(origin) {
+    session_bind: function (origin) {
         var self = this;
         this.setup(origin);
         qweb.default_dict._s = this.origin;
@@ -91,21 +91,21 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         if (this.is_frontend) return def;
 
         var self = this;
-        return def.then(function() {
+        return def.then(function () {
             var modules = self.module_list.join(',');
             var deferred = self.load_qweb(modules);
             if(self.session_is_valid()) {
-                return deferred.then(function() { return self.load_modules(); });
+                return deferred.then(function () { return self.load_modules(); });
             }
             return $.when(
                     deferred,
-                    self.rpc('/web/webclient/bootstrap_translations', {mods: self.module_list}).then(function(trans) {
+                    self.rpc('/web/webclient/bootstrap_translations', {mods: self.module_list}).then(function (trans) {
                         _t.database.set_bundle(trans);
                     })
             );
         });
     },
-    session_is_valid: function() {
+    session_is_valid: function () {
         var db = $.deparam.querystring().db;
         if (db && this.db !== db) {
             return false;
@@ -115,19 +115,19 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     /**
      * The session is validated by restoration of a previous session
      */
-    session_authenticate: function() {
+    session_authenticate: function () {
         var self = this;
-        return $.when(this._session_authenticate.apply(this, arguments)).then(function() {
+        return $.when(this._session_authenticate.apply(this, arguments)).then(function () {
             return self.load_modules();
         });
     },
     /**
      * The session is validated either by login or by restoration of a previous session
      */
-    _session_authenticate: function(db, login, password) {
+    _session_authenticate: function (db, login, password) {
         var self = this;
         var params = {db: db, login: login, password: password};
-        return this.rpc("/web/session/authenticate", params).then(function(result) {
+        return this.rpc("/web/session/authenticate", params).then(function (result) {
             if (!result.uid) {
                 return $.Deferred().reject();
             }
@@ -135,11 +135,11 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             _.extend(self, result);
         });
     },
-    session_logout: function() {
+    session_logout: function () {
         $.bbq.removeState();
         return this.rpc("/web/session/destroy", {});
     },
-    user_has_group: function(group) {
+    user_has_group: function (group) {
         if (!this.uid) {
             return $.when(false);
         }
@@ -188,7 +188,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * Load additional web addons of that instance and init them
      *
      */
-    load_modules: function() {
+    load_modules: function () {
         var self = this;
         var modules = odoo._modules;
         var all_modules = _.uniq(self.module_list.concat(modules));
@@ -203,19 +203,19 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
                 loaded,
                 self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.load_css.bind(self)),
                 self.load_qweb(to_load),
-                self.rpc('/web/webclient/jslist', {mods: to_load}).done(function(files) {
+                self.rpc('/web/webclient/jslist', {mods: to_load}).done(function (files) {
                     file_list = file_list.concat(files);
                 })
             );
         }
         return loaded.then(function () {
             return self.load_js(file_list);
-        }).done(function() {
+        }).done(function () {
             self.on_modules_loaded();
             self.trigger('module_loaded');
        });
     },
-    load_translations: function() {
+    load_translations: function () {
         return _t.database.load_translations(this, this.module_list, this.user_context.lang);
     },
     load_css: function (files) {
@@ -224,7 +224,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             ajax.loadCSS(self.url(file, null));
         });
     },
-    load_js: function(files) {
+    load_js: function (files) {
         var self = this;
         var d = $.Deferred();
         if (files.length !== 0) {
@@ -236,7 +236,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         }
         return d;
     },
-    load_qweb: function(mods) {
+    load_qweb: function (mods) {
         this.qweb_mutex.exec(function () {
             return $.get('/web/webclient/qweb?mods=' + mods).then(function (doc) {
                 if (!doc) { return; }
@@ -245,7 +245,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         });
         return this.qweb_mutex.def;
     },
-    on_modules_loaded: function() {
+    on_modules_loaded: function () {
         var openerp = window.openerp;
         for(var j=0; j<this.module_list.length; j++) {
             var mod = this.module_list[j];
@@ -264,7 +264,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             this.module_loaded[mod] = true;
         }
     },
-    get_currency: function(currency_id) {
+    get_currency: function (currency_id) {
         return this.currencies[currency_id];
     },
     get_file: function (options) {
@@ -286,7 +286,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         _.extend(this, result);
         return $.when();
     },
-    check_session_id: function() {
+    check_session_id: function () {
         var self = this;
         if (this.avoid_recursion)
             return $.when();
@@ -297,9 +297,9 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             // Even if some browsers could support cookies when using jsonp that behavior is
             // not consistent and the browser creators are tending to removing that feature.
             this.avoid_recursion = true;
-            return this.rpc("/gen_session_id", {}).then(function(result) {
+            return this.rpc("/gen_session_id", {}).then(function (result) {
                 self.session_id = result;
-            }).always(function() {
+            }).always(function () {
                 self.avoid_recursion = false;
             });
         } else {
@@ -322,18 +322,18 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @param {Function} error_callback function to execute on RPC call failure
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
-    rpc: function(url, params, options) {
+    rpc: function (url, params, options) {
         var self = this;
         options = _.clone(options || {});
         var shadow = options.shadow || false;
-        options.headers = _.extend({}, options.headers)
+        options.headers = _.extend({}, options.headers);
         if (odoo.debug) {
             options.headers["X-Debug-Mode"] = $.deparam($.param.querystring()).debug;
         }
 
         delete options.shadow;
 
-        return self.check_session_id().then(function() {
+        return self.check_session_id().then(function () {
             // TODO: remove
             if (! _.isString(url)) {
                 _.extend(options, url);
@@ -365,7 +365,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
                 if (! shadow)
                     self.trigger('response');
                 return result;
-            }, function(type, error, textStatus, errorThrown) {
+            }, function (type, error, textStatus, errorThrown) {
                 if (type === "server") {
                     if (! shadow)
                         self.trigger('response');
@@ -384,8 +384,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
                     return $.Deferred().reject(nerror, $.Event());
                 }
             });
-            return p.fail(function() { // Allow deferred user to disable rpc_error call in fail
-                p.fail(function(error, event) {
+            return p.fail(function () { // Allow deferred user to disable rpc_error call in fail
+                p.fail(function (error, event) {
                     if (!event.isDefaultPrevented()) {
                         self.trigger('error', error, event);
                     }
@@ -393,14 +393,14 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             });
         });
     },
-    url: function(path, params) {
+    url: function (path, params) {
         params = _.extend(params || {});
         if (this.override_session || (! this.origin_server))
             params.session_id = this.session_id;
         var qs = $.param(params);
         if (qs.length > 0)
             qs = "?" + qs;
-        var prefix = _.any(['http://', 'https://', '//'], function(el) {
+        var prefix = _.any(['http://', 'https://', '//'], function (el) {
             return path.length >= el.length && path.slice(0, el.length) === el;
         }) ? '' : this.prefix;
         return prefix + path + qs;

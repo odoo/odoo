@@ -150,9 +150,9 @@ var AbstractField = Widget.extend({
      *
      * @returns {Deferred}
      */
-    start: function() {
+    start: function () {
         var self = this;
-        return this._super.apply(this, arguments).then(function() {
+        return this._super.apply(this, arguments).then(function () {
             self._render();
             if (self.required) {
                 self.$el.addClass('o_form_required');
