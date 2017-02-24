@@ -36,8 +36,9 @@ class WebsiteConfigSettings(models.TransientModel):
 
     module_website_sale_options = fields.Boolean("Optional Products", help='Installs *e-Commerce Optional Products*')
     module_website_sale_digital = fields.Boolean("Digital Content")
-
     module_website_sale_wishlist = fields.Boolean("Wishlists ", help='Installs *e-Commerce Wishlist*')
+    module_website_sale_comparison = fields.Boolean("Product Comparator", help='Installs *e-Commerce Comparator*')
+
     module_sale_stock = fields.Boolean("Delivery Orders")
     module_portal = fields.Boolean("Activate the customer portal", help="""Give your customers access to their documents.""")
 
