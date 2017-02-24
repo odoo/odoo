@@ -331,7 +331,7 @@ return AbstractModel.extend({
      */
     _getFullCalendarOptions: function () {
         return {
-            defaultView: (this.mode == "month")? "month" : ((this.mode === "week")? "agendaWeek" : ((this.mode === "day")? "agendaDay" : "agendaWeek")),
+            defaultView: (this.mode === "month")? "month" : ((this.mode === "week")? "agendaWeek" : ((this.mode === "day")? "agendaDay" : "agendaWeek")),
             header: false,
             selectable: this.editable && this.create_right,
             selectHelper: true,

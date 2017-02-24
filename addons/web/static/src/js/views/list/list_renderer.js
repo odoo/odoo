@@ -358,10 +358,10 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement} a <tr> element
      */
     _renderGroupRow: function (group) {
-        var aggregate_values = _.mapObject(group.aggregateValues, function (value) {
+        var aggregateValues = _.mapObject(group.aggregateValues, function (value) {
             return { value: value };
         });
-        var $cells = this._renderAggregateCells(aggregate_values);
+        var $cells = this._renderAggregateCells(aggregateValues);
         if (this.hasSelectors) {
             $cells.unshift($('<td>'));
         }

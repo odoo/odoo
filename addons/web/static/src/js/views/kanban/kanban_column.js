@@ -15,7 +15,6 @@ var RecordQuickCreate = quick_create.RecordQuickCreate;
 
 var KanbanColumn = Widget.extend({
     template: "KanbanView.Group",
-
     events: {
         'click .o_column_edit': 'edit_column',
         'click .o_column_delete': 'delete_column',
@@ -25,14 +24,18 @@ var KanbanColumn = Widget.extend({
         'click .o_kanban_load_more': 'load_more',
         'click .o_kanban_toggle_fold': 'toggle_fold',
     },
-
     custom_events: {
         'kanban_record_delete': 'delete_record',
         'cancel_quick_create': 'cancel_quick_create',
         'quick_create_add_record': 'quick_create_add_record',
     },
-
-    init: function (parent, data, options, record_options) {
+    /**
+     * @param {any} parent
+     * @param {any} data
+     * @param {any} options
+     * @param {any} recordOptions
+     */
+    init: function (parent, data, options, recordOptions) {
         this._super(parent);
         this.db_id = data.id;
         this.data_records = data.data;
@@ -56,14 +59,14 @@ var KanbanColumn = Widget.extend({
         this.grouped_by_m2o = options.grouped_by_m2o;
         this.editable = options.editable;
         this.deletable = options.deletable;
-        this.draggable = record_options.draggable;
+        this.draggable = recordOptions.draggable;
         this.records_editable = options.records_editable;
         this.records_deletable = options.records_deletable;
         this.relation = options.relation;
         this.offset = 0;
         this.remaining = this.size - this.data_records.length;
 
-        this.record_options = _.extend(_.clone(record_options), {
+        this.record_options = _.extend(_.clone(recordOptions), {
             group_info: this.values,
         });
 
@@ -76,7 +79,9 @@ var KanbanColumn = Widget.extend({
             this.tooltip_info = "";
         }
     },
-
+    /**
+     * @returns {Deferred}
+     */
     start: function () {
         var self = this;
         this.$header = this.$('.o_kanban_header');
