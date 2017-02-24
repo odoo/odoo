@@ -9,7 +9,10 @@ odoo.define('web.field_utils', function (require) {
  *
  * Each field type has to display in string form at some point, but it should be
  * stored in memory with the actual value.  For example, a float value of 0.5 is
- * represented as the string "0.5".
+ * represented as the string "0.5" but is kept in memory as a float.  A date
+ * (or datetime) value is always stored as a Moment.js object, but displayed as
+ * a string.  This file contains all sort of functions necessary to perform the
+ * conversions.
  */
 
 var core = require('web.core');
@@ -17,11 +20,19 @@ var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
 
-////////////////////////////////////////////////////////////////////////////////
-// Format
-////////////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
+// Formatting
+//------------------------------------------------------------------------------
 
-function format_boolean(value) {
+/**
+ * @todo Really? it returns a jqueryElement...  We should try to move this to a
+ * module with dom helpers functions, such as web.dom, maybe. And replace this
+ * with a function that returns a string
+ *
+ * @param {boolean} value
+ * @returns {jQueryElement}
+ */
+function formatBoolean (value) {
     var $input = $('<input type="checkbox">')
                 .prop('checked', value)
                 .prop('disabled', true);
@@ -31,15 +42,25 @@ function format_boolean(value) {
                 .append($('<span>'));
 }
 
-function format_char(value) {
+/**
+ * Returns a string representing a char.  If the value is false, then we return
+ * an empty string.
+ *
+ * @param {string|false} value
+ * @returns {string}
+ */
+function formatChar (value) {
     return typeof value === 'string' ? value : '';
 }
 
 /**
- * @params {Moment|false}
+ * Returns a string representing a date.  If the value is false, then we return
+ * an empty string. Note that this is dependant on the localization settings
+ *
+ * @param {Moment|false}
  * @returns {string}
  */
-function format_date(value) {
+function formatDate (value) {
     if (!value) {
         return "";
     }
@@ -49,10 +70,14 @@ function format_date(value) {
 }
 
 /**
+ * Returns a string representing a datetime.  If the value is false, then we
+ * return an empty string.  Note that this is dependant on the localization
+ * settings
+ *
  * @params {Moment|false}
  * @returns {string}
  */
-function format_datetime(value) {
+function formatDateTime (value) {
     if (!value) {
         return "";
     }
@@ -63,12 +88,17 @@ function format_datetime(value) {
     return value.format(datetime_format);
 }
 
-// Format a float, according to the local settings
-// Params:
-// * value: a number describing the raw value of the float
-// * field [optional]: a description of a field, that may contains extra
-//   information, such as a given precision
-function format_float(value, field) {
+/**
+ * Returns a string representing a float.  The result takes into account the
+ * user settings (to display the correct decimal separator).
+ *
+ * @param {float} value the value that should be formatted
+ * @param {Object} [field] a description of the field (returned by fields_get
+ *   for example).  It may contain a description of the number of digits that
+ *   should be used.
+ * @returns {string}
+ */
+function formatFloat (value, field) {
     var l10n = core._t.database.parameters;
     var precision = (field && field.digits) ? field.digits[1] : 2;
     var formatted = _.str.sprintf('%.' + precision + 'f', value || 0).split('.');
@@ -76,7 +106,15 @@ function format_float(value, field) {
     return formatted.join(l10n.decimal_point);
 }
 
-function format_float_time(value) {
+/**
+ * Returns a string representing a time value, from a float.  The idea is that
+ * we sometimes want to display something like 1:45 instead of 1.75, or 0:15
+ * instead of 0.25.
+ *
+ * @param {float} value
+ * @returns {string}
+ */
+function formatFloatTime (value) {
     var pattern = '%02d:%02d';
     if (value < 0) {
         value = Math.abs(value);
@@ -91,11 +129,25 @@ function format_float_time(value) {
     return _.str.sprintf(pattern, hour, min);
 }
 
-function format_id(value) {
-    return value ? value.toString() : false;
+/**
+ * Returns a string representing an ID.  If the value is false, then we
+ * return an empty string.
+ *
+ * @param {integer|false} value
+ * @returns {string}
+ */
+function formatID (value) {
+    return value ? value.toString() : '';
 }
 
-function format_integer(value) {
+/**
+ * Returns a string representing an integer.  If the value is false, then we
+ * return an empty string.
+ *
+ * @param {integer|false} value
+ * @returns {string}
+ */
+function formatInteger (value) {
     if (!value && value !== 0) {
         // previously, it returned 'false'. I don't know why.  But for the Pivot
         // view, I want to display the concept of 'no value' with an empty
@@ -105,18 +157,36 @@ function format_integer(value) {
     return utils.insert_thousand_seps(_.str.sprintf('%d', value));
 }
 
-function format_many2one(value) {
+/**
+ * Returns a string representing an many2one.  If the value is false, then we
+ * return an empty string.  Note that it accepts two types of input parameters:
+ * an array, in that case we assume that the many2one value is of the form
+ * [id, nameget], and we return the nameget, or it can be an object, and in that
+ * case, we assume that it is a record from a BasicModel.
+ *
+ * @param {Array|Object|false} value
+ * @returns {string}
+ */
+function formatMany2one (value) {
     return value && (_.isArray(value) ? value[1] : value.data.display_name) || '';
 }
 
-function format_many2many(value) {
+/**
+ * Returns a string representing an many2one.  That is a string containing all
+ * the display_name, concatenated.
+ *
+ * @param {Object} value a valid element from a BasicModel, that represents a
+ *   list of values
+ * @returns {string}
+ */
+function formatMany2Many (value) {
     var names = _.map(value.data, function(p) {
         return p.data.display_name;
     });
     return names.join(', ');
 }
 
-function format_monetary(value, field, options) {
+function formatMonetary (value, field, options) {
     options = options || {};
     var currency_id = options.currency_id;
     if (!currency_id && options.data) {
@@ -142,12 +212,7 @@ function format_monetary(value, field, options) {
     }
 }
 
-function format_field(value, field, options) {
-    var formatter = result['format_' + field.type];
-    return formatter(value, field, options);
-}
-
-function format_selection(value, field) {
+function formatSelection (value, field) {
     if (!value) {
         return '';
     }
@@ -168,7 +233,7 @@ function format_selection(value, field) {
  * @params {string}
  * @returns {Moment|false} Moment date object
  */
-function parse_date(value) {
+function parseDate (value) {
     if (!value) {
         return false;
     }
@@ -199,7 +264,7 @@ function parse_date(value) {
  * @params {string}
  * @returns {Moment|false} Moment date object
  */
-function parse_datetime(value) {
+function parseDateTime (value) {
     if (!value) {
         return false;
     }
@@ -227,12 +292,7 @@ function parse_datetime(value) {
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct datetime"), value));
 }
 
-function parse_field(value, field) {
-    var parser = result['parse_' + field.type];
-    return parser(value, field);
-}
-
-function parse_float(value) {
+function parseFloat (value) {
     value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
     value = value.replace(core._t.database.parameters.decimal_point, '.');
     var parsed = Number(value);
@@ -242,7 +302,7 @@ function parse_float(value) {
     return parsed;
 }
 
-function parse_float_time(value) {
+function parseFloatTime (value) {
     var factor = 1;
     if (value[0] === '-') {
         value = value.slice(1);
@@ -250,13 +310,13 @@ function parse_float_time(value) {
     }
     var float_time_pair = value.split(":");
     if (float_time_pair.length !== 2)
-        return factor * parse_float(value);
-    var hours = parse_integer(float_time_pair[0]);
-    var minutes = parse_integer(float_time_pair[1]);
+        return factor * parseFloat(value);
+    var hours = parseInteger(float_time_pair[0]);
+    var minutes = parseInteger(float_time_pair[1]);
     return factor * (hours + (minutes / 60));
 }
 
-function parse_integer(value) {
+function parseInteger (value) {
     value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
     var parsed = Number(value);
     // do not accept not numbers or float values
@@ -266,7 +326,7 @@ function parse_integer(value) {
     return parsed;
 }
 
-function parse_monetary(formatted_value) {
+function parseMonetary (formatted_value) {
     var l10n = core._t.database.parameters;
     var value = formatted_value.replace(l10n.thousands_sep, '')
         .replace(l10n.decimal_point, '.')
@@ -278,48 +338,46 @@ function identity(value) {
     return value;
 }
 
-var result = {
-    format_binary: identity, // todo
-    format_boolean: format_boolean,
-    format_char: format_char,
-    format_date: format_date,
-    format_datetime: format_datetime,
-    format_float: format_float,
-    format_float_time: format_float_time,
-    format_html: identity, // todo
-    format_id: format_id,
-    format_integer: format_integer,
-    format_many2many: format_many2many,
-    format_many2one: format_many2one,
-    format_monetary: format_monetary,
-    format_one2many: identity, // todo
-    format_reference: identity, // todo
-    format_selection: format_selection,
-    format_text: format_char,
 
-    format_field: format_field,
-
-    parse_binary: identity, // todo
-    parse_boolean: identity, // todo
-    parse_char: identity, // todo
-    parse_date: parse_date, // todo
-    parse_datetime: parse_datetime, // todo
-    parse_float: parse_float,
-    parse_float_time: parse_float_time,
-    parse_html: identity, // todo
-    parse_id: identity,
-    parse_integer: parse_integer,
-    parse_many2many: identity, // todo
-    parse_many2one: identity,
-    parse_monetary: parse_monetary,
-    parse_one2many: identity,
-    parse_reference: identity, // todo
-    parse_selection: identity, // todo
-    parse_text: identity, // todo
-
-    parse_field: parse_field,
+return {
+    format: {
+        binary: identity, // todo
+        boolean: formatBoolean,
+        char: formatChar,
+        date: formatDate,
+        datetime: formatDateTime,
+        float: formatFloat,
+        float_time: formatFloatTime,
+        html: identity, // todo
+        id: formatID,
+        integer: formatInteger,
+        many2many: formatMany2Many,
+        many2one: formatMany2one,
+        monetary: formatMonetary,
+        one2many: identity, // todo
+        reference: identity, // todo
+        selection: formatSelection,
+        text: formatChar,
+    },
+    parse: {
+        binary: identity,
+        boolean: identity, // todo
+        char: identity, // todo
+        date: parseDate, // todo
+        datetime: parseDateTime, // todo
+        float: parseFloat,
+        float_time: parseFloatTime,
+        html: identity, // todo
+        id: identity,
+        integer: parseInteger,
+        many2many: identity, // todo
+        many2one: identity,
+        monetary: parseMonetary,
+        one2many: identity,
+        reference: identity, // todo
+        selection: identity, // todo
+        text: identity, // todo
+    },
 };
-
-return result;
 
 });

@@ -537,10 +537,10 @@ var BasicModel = AbstractModel.extend({
                     });
                 } else if (field.type === 'date') {
                     // process date: convert into Date object
-                    record._changes[name] = fieldUtils.parse_date(result[name]);
+                    record._changes[name] = fieldUtils.parse.date(result[name]);
                 } else if (field.type === 'datetime') {
                     // process datetime: convert into Date object
-                    record._changes[name] = fieldUtils.parse_datetime(result[name]);
+                    record._changes[name] = fieldUtils.parse.datetime(result[name]);
                 } else {
                     record._changes[name] = result[name];
                 }
@@ -1278,10 +1278,10 @@ var BasicModel = AbstractModel.extend({
                     }
                 } else if (field.type === 'date') {
                     // process data: convert into Date object
-                    record.data[name] = fieldUtils.parse_date(val);
+                    record.data[name] = fieldUtils.parse.date(val);
                 } else if (field.type === 'datetime') {
                     // process datetime: convert into Date object
-                    record.data[name] = fieldUtils.parse_datetime(val);
+                    record.data[name] = fieldUtils.parse.datetime(val);
                 }
             });
         }).then(function () {
@@ -1927,10 +1927,10 @@ var BasicModel = AbstractModel.extend({
                         dataPoint.data[name] = r.id;
                     }
                     if (field.type === 'date') {
-                        dataPoint.data[name] = fieldUtils.parse_date(dataPoint.data[name]);
+                        dataPoint.data[name] = fieldUtils.parse.date(dataPoint.data[name]);
                     }
                     if (field.type === 'datetime') {
-                        dataPoint.data[name] = fieldUtils.parse_datetime(dataPoint.data[name]);
+                        dataPoint.data[name] = fieldUtils.parse.datetime(dataPoint.data[name]);
                     }
                 });
                 return dataPoint.id;

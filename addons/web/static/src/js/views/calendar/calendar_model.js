@@ -449,7 +449,7 @@ return AbstractModel.extend({
                 var _value = record[filter.write_field];
                 var value = _.isArray(_value) ? _value[0] : _value;
                 var f = _.find(filter.filters, function (f) {return f.value === value;});
-                var formater = field_utils['format_'+ (_.contains(['many2many', 'one2many'], field.type) ? 'many2one' : field.type)];
+                var formater = field_utils.format[_.contains(['many2many', 'one2many'], field.type) ? 'many2one' : field.type];
                 return {
                     'id': record.id,
                     'value': value,
@@ -528,7 +528,7 @@ return AbstractModel.extend({
                     fs.push({
                         'color': self.model_color === (field.relation || element.model) ? value : false,
                         'value': value,
-                        'label': field_utils['format_'+ field.type](_value, field),
+                        'label': field_utils.format[field.type](_value, field),
                         'avatar_model': field.relation || element.model,
                     });
                 });

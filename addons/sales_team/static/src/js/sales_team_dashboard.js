@@ -65,14 +65,14 @@ var SalesTeamDashboardRenderer = KanbanRenderer.extend({
     /**
      * Called from the template to format the monetary value.
      *
-     * @todo: use field_utils.format_monetary
+     * @todo: use field_utils.format.monetary
      * @private
      * @returns {string} formatted value
      */
     _renderMonetaryField: function (value, currency_id) {
         var currency = session.get_currency(currency_id);
         var digits_precision = currency && currency.digits;
-        value = field_utils.format_float(value || 0, {digits: digits_precision});
+        value = field_utils.format.float(value || 0, {digits: digits_precision});
         if (currency) {
             if (currency.position === "after") {
                 value += currency.symbol;

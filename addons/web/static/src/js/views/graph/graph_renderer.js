@@ -175,7 +175,7 @@ return AbstractRenderer.extend({
         });
         chart.yAxis.tickFormat(function (d) {
             var measure_field = self.state.fields[self.measure];
-            return field_utils.format_float(d, {
+            return field_utils.format.float(d, {
                 digits: measure_field && measure_field.digits || [69, 2],
             });
         });
@@ -319,7 +319,7 @@ return AbstractRenderer.extend({
         chart.xAxis.tickValues(tickValues)
             .tickFormat(tickFormat);
         chart.yAxis.tickFormat(function (d) {
-            return field_utils.format_float(d, {
+            return field_utils.format.float(d, {
                 digits : self.state.fields[self.state.measure] && self.state.fields[self.state.measure].digits || [69, 2],
             });
         });

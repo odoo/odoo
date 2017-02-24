@@ -20,7 +20,7 @@ var LunchPreviousOrdersWidget = FieldMany2Many.extend({
         this.fields_to_read = ['product_id', 'supplier', 'note', 'price', 'category_id', 'currency_id'];
         this.format_value = function (value) {
             var options = _.extend({}, this.nodeOptions, { data: this.recordData });
-            return field_utils.format_monetary(value, this.field, options);
+            return field_utils.format.monetary(value, this.field, options);
         };
     },
     get_line_value: function(id) {

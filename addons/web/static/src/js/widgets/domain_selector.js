@@ -384,7 +384,7 @@ var DomainLeaf = DomainNode.extend({
                 try {
                     var f = this.fieldSelector.selectedField;
                     if (!f.relation) { // TODO in this case, the value should be m2o input, etc...
-                        this.displayValue = field_utils.format_field(this.value, this.fieldSelector.selectedField);
+                        this.displayValue = field_utils.format[f.type](this.value, f);
                     }
                 } catch (err) {/**/}
                 this.displayOperator = this.operator;
@@ -470,9 +470,10 @@ var DomainLeaf = DomainNode.extend({
     /// @param silent - true if the method call should not trigger_up a domain_changed event
     /// @trigger_up domain_changed event to ask for a re-rendering
     onValueChange: function (value, silent) {
+        var field = this.fieldSelector.selectedField;
         var couldNotParse = false;
         try {
-            this.value = field_utils.parse_field(value, this.fieldSelector.selectedField);
+            this.value = field_utils.parse[field.type](value, field);
         } catch (err) {
             this.value = value;
             couldNotParse = true;
@@ -488,7 +489,7 @@ var DomainLeaf = DomainNode.extend({
             }
         } else if (_.contains(["date", "datetime"], this.fieldSelector.selectedField.type)) {
             if (couldNotParse || _.isBoolean(this.value)) {
-                this.value = field_utils.parse_field(field_utils.format_field(Date.now(), this.fieldSelector.selectedField), this.fieldSelector.selectedField);
+                this.value = field_utils.parse[field.type](field_utils.format[field.type](Date.now(), field), field);
             }
         } else {
             if (_.isBoolean(this.value)) { // Never display "true" or "false" strings from boolean value

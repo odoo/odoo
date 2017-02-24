@@ -232,7 +232,7 @@ var IntegerField = NumberField.extend(/** @lends instance.web.search.IntegerFiel
     error_message: _t("not a valid integer"),
     parse: function (value) {
         try {
-            return field_utils.parse_interger(value);
+            return field_utils.parse.interger(value);
         } catch (e) {
             return NaN;
         }
@@ -247,7 +247,7 @@ var FloatField = NumberField.extend(/** @lends instance.web.search.FloatField# *
     error_message: _t("not a valid number"),
     parse: function (value) {
         try {
-            return field_utils.parse_float(value);
+            return field_utils.parse.float(value);
         } catch (e) {
             return NaN;
         }
@@ -349,7 +349,7 @@ var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
         var t, v;
         try {
             t = (this.attrs && this.attrs.type === 'datetime') ? 'datetime' : 'date';
-            v = field_utils.parse_field(needle, {type: t});
+            v = field_utils.parse[t](needle, {type: t});
         } catch (e) {
             return $.when(null);
         }
@@ -357,7 +357,7 @@ var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
         var m = moment(v, t === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
         if (!m.isValid()) { return $.when(null); }
         var d = m.toDate();
-        var date_string = field_utils.format_field(d, {type: t.attrs.type});
+        var date_string = field_utils.format[this.attrs.type](d, {type: t.attrs.type});
         var label = _.str.sprintf(_.str.escapeHTML(
             _t("Search %(field)s at: %(value)s")), {
                 field: '<em>' + _.escape(this.attrs.string) + '</em>',

@@ -128,7 +128,7 @@ var FieldMany2One = AbstractRelationalField.extend(mixins.ServicesMixin, {
         this.nodeOptions = _.defaults(this.nodeOptions, {
             quick_create: true,
         });
-        this.m2o_value = field_utils.format_many2one(this.value);
+        this.m2o_value = field_utils.format.many2one(this.value);
     },
     start: function () {
         // what is 'this.floating' for? add a comment!
@@ -279,7 +279,7 @@ var FieldMany2One = AbstractRelationalField.extend(mixins.ServicesMixin, {
      */
     _reset: function () {
         this._super.apply(this, arguments);
-        this.m2o_value = field_utils.format_many2one(this.value);
+        this.m2o_value = field_utils.format.many2one(this.value);
     },
     /**
      * @private
@@ -502,7 +502,7 @@ var KanbanFieldMany2One = AbstractRelationalField.extend({
     tagName: 'span',
     init: function () {
         this._super.apply(this, arguments);
-        this.m2o_value = field_utils.format_many2one(this.value);
+        this.m2o_value = field_utils.format.many2one(this.value);
     },
 
     //--------------------------------------------------------------------------
@@ -1345,7 +1345,7 @@ var FieldSelection = AbstractField.extend({
     _formatValue: function (value) {
         if (this.field.type === 'many2one') {
             var options = _.extend({}, this.nodeOptions);
-            return field_utils.format_many2one(value, this.field, this.recordData, options);
+            return field_utils.format.many2one(value, this.field, this.recordData, options);
         } else {
             return this._super(value);
         }

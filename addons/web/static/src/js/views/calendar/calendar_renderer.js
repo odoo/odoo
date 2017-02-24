@@ -270,7 +270,7 @@ return AbstractRenderer.extend({
      */
     _format: function (record, fieldName) {
         var field = this.state.fields[fieldName];
-        return field_utils['format_'+field.type](record[fieldName], field);
+        return field_utils.format[field.type](record[fieldName], field);
     },
     /**
      * Initialize the main calendar

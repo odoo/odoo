@@ -544,10 +544,10 @@ var StatementModel = BasicModel.extend({
                     });
 
                     prop.amount = tax.base;
-                    prop.amount_str = field_utils.format_monetary(Math.abs(prop.amount), {}, format_options);
+                    prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, format_options);
                     prop.invalid = !self._isValid(prop);
 
-                    tax_prop.amount_str = field_utils.format_monetary(Math.abs(tax_prop.amount), {}, format_options);
+                    tax_prop.amount_str = field_utils.format.monetary(Math.abs(tax_prop.amount), {}, format_options);
                     tax_prop.invalid = prop.invalid;
 
                     reconciliation_proposition.push(tax_prop);
@@ -557,7 +557,7 @@ var StatementModel = BasicModel.extend({
                     currency_id: line.st_line.currency_id
                 };
 
-                prop.amount_str = field_utils.format_monetary(Math.abs(prop.amount), {}, currencyData);
+                prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, currencyData);
                 prop.display = self._isDisplay(prop);
                 prop.invalid = !self._isValid(prop);
             }
@@ -578,7 +578,7 @@ var StatementModel = BasicModel.extend({
             total = Math.round(total*1000)/1000 || 0;
             line.balance = {
                 'amount': total,
-                'amount_str': field_utils.format_monetary(Math.abs(total), {}, format_options),
+                'amount_str': field_utils.format.monetary(Math.abs(total), {}, format_options),
                 'account_code': self.accounts[line.st_line.open_balance_account_id],
             };
             line.balance.type = line.balance.amount ? (line.balance.amount > 0 && line.st_line.partner_id ? 0 : -1) : 1;
@@ -720,8 +720,8 @@ var StatementModel = BasicModel.extend({
             '__focus': '__focus' in values ? values.__focus : true,
         };
         prop.base_amount = Math.sign(prop.base_amount) *
-            field_utils.parse_monetary(
-                field_utils.format_monetary(Math.abs(prop.base_amount), {}, line)
+            field_utils.parse.monetary(
+                field_utils.format.monetary(Math.abs(prop.base_amount), {}, line)
             );
         prop.amount = prop.base_amount;
         return prop;
