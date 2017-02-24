@@ -479,6 +479,22 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldDate');
 
+    QUnit.test('date field is empty if no date is set', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="date"/></form>',
+            res_id: 4,
+        });
+        var $span = form.$('span.o_form_field');
+        assert.strictEqual($span.length, 1, "should have one span in the form view");
+        assert.strictEqual($span.text(), "", "and it should be empty");
+
+    });
+
     QUnit.test('date field in edit mode', function (assert) {
         assert.expect(7);
 
