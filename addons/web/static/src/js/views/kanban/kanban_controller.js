@@ -291,7 +291,7 @@ var KanbanController = BasicController.extend({
         var self = this;
         var column = event.target;
         var data = this.model.get(column.db_id);
-        function add_record (records) {
+        function add_record(records) {
             return self.model
                 .addRecordToGroup(data.id, records[0])
                 .then(function (db_id) {

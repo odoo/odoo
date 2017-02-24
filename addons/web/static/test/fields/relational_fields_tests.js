@@ -477,7 +477,6 @@ QUnit.module('relational_fields', {
             "embedded one2many should have a cell with relational value");
     });
 
-
     QUnit.test('embedded one2many with widget', function (assert) {
         assert.expect(1);
 
@@ -505,7 +504,6 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('span.o_row_handle').length, 1, "should have 1 handles");
     });
-
 
     QUnit.test('one2many field when using the pager', function (assert) {
         assert.expect(13);
@@ -1878,7 +1876,6 @@ QUnit.module('relational_fields', {
         assert.strictEqual($td.contents().length, 1, "select tag should be only child of td");
     });
 
-
     QUnit.test('widget selection on a many2one field', function (assert) {
         assert.expect(7);
 
@@ -2144,8 +2141,6 @@ QUnit.module('relational_fields', {
             "should have added the second element to the many2many");
 
     });
-
-
 });
 });
 });

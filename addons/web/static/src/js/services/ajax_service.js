@@ -6,7 +6,7 @@ var session = require('web.session');
 
 var AjaxService = AbstractService.extend({
     name: 'ajax',
-    rpc: function(route, args) {
+    rpc: function (route, args) {
         return session.rpc(route, args);
     },
 });

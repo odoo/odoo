@@ -13,7 +13,7 @@ var AbstractService = require('web.AbstractService');
  */
 var ParentedMixin = {
     __parentedMixin : true,
-    init: function() {
+    init: function () {
         this.__parentedDestroyed = false;
         this.__parentedChildren = [];
         this.__parentedParent = null;
@@ -26,7 +26,7 @@ var ParentedMixin = {
      * previous parent will not return the current object anymore when its
      * getChildren() method is called.
      */
-    setParent : function(parent) {
+    setParent : function (parent) {
         if (this.getParent()) {
             if (this.getParent().__parentedMixin) {
                 this.getParent().__parentedChildren = _.without(this
@@ -41,19 +41,19 @@ var ParentedMixin = {
     /**
      * Return the current parent of the object (or null).
      */
-    getParent : function() {
+    getParent : function () {
         return this.__parentedParent;
     },
     /**
      * Return a list of the children of the current object.
      */
-    getChildren : function() {
+    getChildren : function () {
         return _.clone(this.__parentedChildren);
     },
     /**
      * Returns true if destroy() was called on the current object.
      */
-    isDestroyed : function() {
+    isDestroyed : function () {
         return this.__parentedDestroyed;
     },
     /**
@@ -72,7 +72,7 @@ var ParentedMixin = {
                               with no arguments or never resolved if the
                               current object is destroyed.
     */
-    alive: function(promise, reject) {
+    alive: function (promise, reject) {
         var self = this;
         return $.Deferred(function (def) {
             promise.then(function () {
@@ -96,8 +96,8 @@ var ParentedMixin = {
      * Inform the object it should destroy itself, releasing any
      * resource it could have reserved.
      */
-    destroy : function() {
-        _.each(this.getChildren(), function(el) {
+    destroy : function () {
+        _.each(this.getChildren(), function (el) {
             el.destroy();
         });
         this.setParent(undefined);
@@ -115,7 +115,7 @@ var ParentedMixin = {
     },
 };
 
-function OdooEvent (target, name, data) {
+function OdooEvent(target, name, data) {
     this.target = target;
     this.name = name;
     this.data = Object.create(null);
@@ -147,7 +147,7 @@ OdooEvent.prototype.is_stopped = function () {
  *
  */
 var Events = Class.extend({
-    on : function(events, callback, context) {
+    on : function (events, callback, context) {
         var ev;
         events = events.split(/\s+/);
         var calls = this._callbacks || (this._callbacks = {});
@@ -161,7 +161,7 @@ var Events = Class.extend({
         return this;
     },
 
-    off : function(events, callback, context) {
+    off : function (events, callback, context) {
         var ev, calls, node;
         if (!events) {
             delete this._callbacks;
@@ -183,9 +183,9 @@ var Events = Class.extend({
         return this;
     },
 
-    callbackList: function() {
+    callbackList: function () {
         var lst = [];
-        _.each(this._callbacks || {}, function(el, eventName) {
+        _.each(this._callbacks || {}, function (el, eventName) {
             var node = el;
             while ((node = node.next) && node.next) {
                 lst.push([eventName, node.callback, node.context]);
@@ -194,7 +194,7 @@ var Events = Class.extend({
         return lst;
     },
 
-    trigger : function(events) {
+    trigger : function (events) {
         var event, node, calls, tail, args, all, rest;
         if (!(calls = this._callbacks))
             return this;
@@ -237,18 +237,18 @@ var Events = Class.extend({
 */
 var EventDispatcherMixin = _.extend({}, ParentedMixin, {
     __eventDispatcherMixin: true,
-    init: function() {
+    init: function () {
         ParentedMixin.init.call(this);
         this.__edispatcherEvents = new Events();
         this.__edispatcherRegisteredEvents = [];
     },
-    on: function(events, dest, func) {
+    on: function (events, dest, func) {
         var self = this;
         if (typeof func !== "function") {
             throw new Error("Event handler must be a function.");
         }
         events = events.split(/\s+/);
-        _.each(events, function(eventName) {
+        _.each(events, function (eventName) {
             self.__edispatcherEvents.on(eventName, func, dest);
             if (dest && dest.__eventDispatcherMixin) {
                 dest.__edispatcherRegisteredEvents.push({name: eventName, func: func, source: self});
@@ -256,20 +256,20 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
         });
         return this;
     },
-    off: function(events, dest, func) {
+    off: function (events, dest, func) {
         var self = this;
         events = events.split(/\s+/);
-        _.each(events, function(eventName) {
+        _.each(events, function (eventName) {
             self.__edispatcherEvents.off(eventName, func, dest);
             if (dest && dest.__eventDispatcherMixin) {
-                dest.__edispatcherRegisteredEvents = _.filter(dest.__edispatcherRegisteredEvents, function(el) {
+                dest.__edispatcherRegisteredEvents = _.filter(dest.__edispatcherRegisteredEvents, function (el) {
                     return !(el.name === eventName && el.func === func && el.source === self);
                 });
             }
         });
         return this;
     },
-    once: function(events, dest, func) {
+    once: function (events, dest, func) {
         // similar to this.on(), but func is executed only once
         var self = this;
         if (typeof func !== "function") {
@@ -280,28 +280,28 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
             self.off(events, dest, what);
         });
     },
-    trigger: function() {
+    trigger: function () {
         this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
         return this;
     },
-    trigger_up: function(name, info) {
+    trigger_up: function (name, info) {
         var event = new OdooEvent(this, name, info);
         this._trigger_up(event);
     },
-    _trigger_up: function(event) {
+    _trigger_up: function (event) {
         var parent;
         this.__edispatcherEvents.trigger(event.name, event);
         if (!event.is_stopped() && (parent = this.getParent())) {
             parent._trigger_up(event);
         }
     },
-    destroy: function() {
+    destroy: function () {
         var self = this;
-        _.each(this.__edispatcherRegisteredEvents, function(event) {
+        _.each(this.__edispatcherRegisteredEvents, function (event) {
             event.source.__edispatcherEvents.off(event.name, event.func, self);
         });
         this.__edispatcherRegisteredEvents = [];
-        _.each(this.__edispatcherEvents.callbackList(), function(cal) {
+        _.each(this.__edispatcherEvents.callbackList(), function (cal) {
             this.off(cal[0], cal[2], cal[1]);
         }, this);
         this.__edispatcherEvents.off();
@@ -310,11 +310,11 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
 });
 
 var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
-    init: function() {
+    init: function () {
         EventDispatcherMixin.init.call(this);
         this.__getterSetterInternalMap = {};
     },
-    set: function(arg1, arg2, arg3) {
+    set: function (arg1, arg2, arg3) {
         var map;
         var options;
         if (typeof arg1 === "string") {
@@ -327,7 +327,7 @@ var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
         }
         var self = this;
         var changed = false;
-        _.each(map, function(val, key) {
+        _.each(map, function (val, key) {
             var tmp = self.__getterSetterInternalMap[key];
             if (tmp === val)
                 return;
@@ -354,30 +354,30 @@ var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
         if (changed)
             self.trigger("change", self);
     },
-    get: function(key) {
+    get: function (key) {
         return this.__getterSetterInternalMap[key];
     }
 });
 
 var ServicesMixin = {
-    call: function(service, method) {
+    call: function (service, method) {
         var args = Array.prototype.slice.call(arguments, 2);
         var result;
         this.trigger_up('call_service', {
             service: service,
             method: method,
             args: args,
-            callback: function(r) {
+            callback: function (r) {
                 result = r;
             },
         });
         return result;
     },
     // AJAX calls
-    performRPC: function(route, args) {
+    performRPC: function (route, args) {
         return this.call('ajax', 'rpc', route, args);
     },
-    performModelRPC: function(model, method, args, kwargs) {
+    performModelRPC: function (model, method, args, kwargs) {
         return this.performRPC('/web/dataset/call_kw/' + model + '/' + method, {
             model: model,
             method: method,
@@ -385,12 +385,12 @@ var ServicesMixin = {
             kwargs: kwargs || {},
         });
     },
-    loadFieldView: function(dataset, view_id, view_type, options) {
+    loadFieldView: function (dataset, view_id, view_type, options) {
         return this.loadViews(dataset.model, dataset.get_context(), [[view_id, view_type]], options).then(function (result) {
             return result[view_type];
         });
     },
-    loadViews: function(modelName, context, views, options) {
+    loadViews: function (modelName, context, views, options) {
         var def = $.Deferred();
         this.trigger_up('load_views', {
             modelName: modelName,
@@ -401,7 +401,7 @@ var ServicesMixin = {
         });
         return def;
     },
-    loadFilters: function(dataset, action_id) {
+    loadFilters: function (dataset, action_id) {
         var def = $.Deferred();
         this.trigger_up('load_filters', {
             dataset: dataset,
@@ -411,10 +411,10 @@ var ServicesMixin = {
         return def;
     },
     // Session stuff
-    getSession: function() {
+    getSession: function () {
         var session;
         this.trigger_up('get_session', {
-            callback: function(result) {
+            callback: function (result) {
                 session = result;
             }
         });
@@ -429,32 +429,32 @@ var ServicesMixin = {
         var def = $.Deferred();
         options = options || {};
         var oldOnSuccess = options.on_success;
-        options.on_success = function(result) {
+        options.on_success = function (result) {
             oldOnSuccess(result);
             def.resolve(result);
         };
         this.trigger_up('do_action', {'action': action, options: options});
         return def;
     },
-    do_notify: function(title, message, sticky) {
+    do_notify: function (title, message, sticky) {
         this.trigger_up('notification', {title: title, message: message, sticky: sticky});
     },
-    do_warn: function(title, message, sticky) {
+    do_warn: function (title, message, sticky) {
         this.trigger_up('warning', {title: title, message: message, sticky: sticky});
     },
 };
 
 var ServiceProvider = {
     services: {},
-    init: function() {
+    init: function () {
         var self = this;
-        _.each(AbstractService.prototype.Services, function(Service) {
+        _.each(AbstractService.prototype.Services, function (Service) {
             var service = new Service();
             self.services[service.name] = service;
         });
         this.custom_events.call_service = this._call_service.bind(this);
     },
-    _call_service: function(event) {
+    _call_service: function (event) {
         var service = this.services[event.data.service];
         var result = service[event.data.method].apply(service, event.data.args);
         event.data.callback(result);
