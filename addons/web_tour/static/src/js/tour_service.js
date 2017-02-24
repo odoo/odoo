@@ -6,6 +6,7 @@ var Class = require('web.Class');
 var config = require('web.config');
 var core = require('web.core');
 var mixins = require('web.mixins');
+var rpc = require('web.rpc');
 var session = require('web.session');
 var TourManager = require('web_tour.TourManager');
 
@@ -28,12 +29,9 @@ return session.is_bound.then(function () {
     // tours being only available for the admin. For the backend, the list of consumed is directly
     // in the page source.
     if (session.is_frontend && session.is_superuser) {
-        defs.push(ajax.rpc('/web/dataset/call_kw/web_tour.tour/get_consumed_tours', {
-            model: 'web_tour.tour',
-            method: 'get_consumed_tours',
-            args: [],
-            kwargs: {}
-        }));
+        var def = rpc.query({model: 'web_tour.tour', method: 'get_consumed_tours'})
+                     .exec({callback: ajax.rpc.bind(ajax)});
+        defs.push(def);
     }
     return $.when.apply($, defs).then(function (consumed_tours) {
         consumed_tours = session.is_frontend ? consumed_tours : session.web_tours;
@@ -43,14 +41,14 @@ return session.is_bound.then(function () {
         var untracked_classnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overlay"];
         var check_tooltip = _.debounce(function (records) {
             var update = _.some(records, function (record) {
-                return !(is_untracked(record.target)
-                    || _.some(record.addedNodes, is_untracked)
-                    || _.some(record.removedNodes, is_untracked));
+                return !(is_untracked(record.target) ||
+                    _.some(record.addedNodes, is_untracked) ||
+                    _.some(record.removedNodes, is_untracked));
 
                 function is_untracked(node) {
                     var record_class = node.className;
-                    return (_.isString(record_class)
-                        && _.intersection(record_class.split(' '), untracked_classnames).length !== 0);
+                    return (_.isString(record_class) &&
+                        _.intersection(record_class.split(' '), untracked_classnames).length !== 0);
                 }
             });
             if (update) { // ignore mutations which concern the tooltips
