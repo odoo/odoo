@@ -24,7 +24,7 @@ class SaleOrder(models.Model):
         return {
             'name': "Discount: %s" % (program.name),
             'product_id': program.discount_line_product_id.id,
-            'price_unit': - delivery_line.price_unit,
+            'price_unit': delivery_line and - delivery_line.price_unit or 0.0,
             'product_uom_qty': 1.0,
             'product_uom': program.discount_line_product_id.uom_id.id,
             'order_id': self.id,
@@ -34,3 +34,23 @@ class SaleOrder(models.Model):
 
     def _get_lines_unit_prices(self):
         return [x.price_unit for x in self.order_line.filtered(lambda x: not x.is_delivery and not x.program_id)]
+
+class SalesOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    def unlink(self):
+        # Due to delivery_set and delivery_unset methods that are called everywhere, don't unlink
+        # reward lines if it's a free shipping
+        orders = self.mapped('order_id')
+        applied_programs = orders.mapped('no_code_promo_program_ids') + \
+                           orders.mapped('code_promo_program_id') + \
+                           orders.mapped('applied_coupon_ids').mapped('program_id')
+        free_shipping_products = applied_programs.filtered(
+            lambda program: program.reward_type == 'free_shipping'
+        ).mapped('discount_line_product_id')
+        lines_to_unlink = self.filtered(lambda line: line.product_id not in free_shipping_products)
+        # Unless these lines are the last ones
+        res = super(SalesOrderLine, lines_to_unlink).unlink()
+        only_free_shipping_line_orders = orders.filtered(lambda order: len(order.order_line.ids) == 1 and order.order_line.is_reward_line)
+        super(SalesOrderLine, only_free_shipping_line_orders.mapped('order_line')).unlink()
+        return res
