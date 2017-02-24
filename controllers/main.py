@@ -1,11 +1,25 @@
 # -*- coding: utf-8 -*-
 from odoo import http
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.http import request
 
-class Website_coupon(http.Controller):
 
-    @http.route(['/shop/apply_coupon'], type='json', auth="public", website=True)
-    def shop_apply_coupon(self, promo_code, **post):
+class WebsiteSale(WebsiteSale):
+
+    @http.route(['/shop/pricelist'])
+    def pricelist(self, promo, **post):
         order = request.website.sale_get_order()
-        coupon_status = request.env['sale.coupon.apply.code'].sudo().apply_coupon(order, promo_code)
-        return coupon_status
+        coupon_status = request.env['sale.coupon.apply.code'].sudo().apply_coupon(order, promo)
+        print coupon_status.get('error', False)
+        if coupon_status.get('error', False):
+            return super(WebsiteSale, self).pricelist(promo, **post)
+        return request.redirect("/shop/cart")
+
+    @http.route(['/shop/pricelist_payment'], type='http', auth="public", website=True)
+    def pricelist_payment(self, promo, **post):
+        order = request.website.sale_get_order()
+        coupon_status = request.env['sale.coupon.apply.code'].sudo().apply_coupon(order, promo)
+        print coupon_status.get('error', False)
+        if coupon_status.get('error', False):
+            return super(WebsiteSale, self).pricelist(promo, **post)
+        return request.redirect("/shop/payment")
