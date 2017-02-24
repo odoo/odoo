@@ -228,7 +228,8 @@ snippets_editor.Class.include({
         var theme = ($("#o_left_bar .o_panel_body > div:not(.hidden)").attr("class") || "").replace(/^\s*|\s*o_mail_block[^\s]+\s*|\s*oe_snippet\s*|\s*ui-draggable\s*|\s*$/g, '');
         var $theme = $("#editable_area [data-snippet-theme]").removeAttr("data-snippet-theme").removeData("snippet-theme");
         $editable.children().first().attr("data-snippet-theme", theme);
-        $editable.find(":not(br):hidden").remove();
+        // before jQuery 3, google chrome needs the `:not(:has(:visible))` part
+        $editable.find(":not(br):hidden:not(:has(:visible))").remove();
     },
 });
 
