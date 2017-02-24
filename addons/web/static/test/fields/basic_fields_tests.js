@@ -333,8 +333,8 @@ QUnit.module('basic_fields', {
 
         list.$buttons.find('.o_list_button_add').click();
 
-        assert.ok(list.$('textarea').first().is(':focus'),
-            "text area should have the focus (make sure the test window had the focus)");
+        assert.strictEqual(list.$('textarea').first().get(0), document.activeElement,
+            "text area should have the focus");
     });
 
 
@@ -538,8 +538,8 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('input.o_datepicker_input').length, 1,
             "the view should have a date input for editable mode");
 
-        assert.ok(list.$('input.o_datepicker_input').is(':focus'),
-            "date input should have the focus (make sure the test window had the focus)");
+        assert.strictEqual(list.$('input.o_datepicker_input').get(0), document.activeElement,
+            "date input should have the focus");
     });
 
     QUnit.module('FieldDomain');
@@ -581,7 +581,7 @@ QUnit.module('basic_fields', {
 
         // Focusing the field selector input should open the field selector
         // popover
-        $fieldSelector.find("> input").focus();
+        $fieldSelector.find("> input").trigger('focusin');
         var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
         assert.ok($fieldSelectorPopover.is(":visible"),
             "field selector popover should be visible");
@@ -646,7 +646,7 @@ QUnit.module('basic_fields', {
             "there should be a field selector");
 
         // Focusing its input should open the field selector popover
-        $fieldSelector.find("> input").focus();
+        $fieldSelector.find("> input").trigger('focusin');
         var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
         assert.ok($fieldSelectorPopover.is(":visible"),
             "field selector popover should be visible");
@@ -671,7 +671,7 @@ QUnit.module('basic_fields', {
 
         // Refocusing the field selector input should open the popover again
         $fieldSelector = form.$(".o_field_selector");
-        $fieldSelector.find("> input").focus();
+        $fieldSelector.find("> input").trigger('focusin');
         $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
         assert.ok($fieldSelectorPopover.is(":visible"),
             "field selector popover should be visible");

@@ -63,7 +63,7 @@ QUnit.module('ModelFieldSelector', {
 
         // Focusing the field selector input should open a field selector popover
         var $input = fieldSelector.$("> input");
-        $input.focus();
+        $input.trigger('focusin');
         var $fieldSelectorPopover = fieldSelector.$(".o_field_selector_popover:visible");
         assert.strictEqual($fieldSelectorPopover.length, 1,
             "field selector popover should be visible");
@@ -90,7 +90,7 @@ QUnit.module('ModelFieldSelector', {
             "field selector input value should be 'bar'");
 
         // Focusing the input again should open the same popover
-        $input.focus();
+        $input.trigger('focusin');
         assert.ok($fieldSelectorPopover.is(":visible"),
             "field selector popover should be visible");
 
