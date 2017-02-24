@@ -1858,6 +1858,10 @@ var BasicModel = AbstractModel.extend({
                             });
 
                             dataPoint.data[name] = r.id;
+                        } else if (field.type === 'date') {
+                            dataPoint.data[name] = fieldUtils.parse.date(dataPoint.data[name]);
+                        } else if (field.type === 'datetime') {
+                            dataPoint.data[name] = fieldUtils.parse.datetime(dataPoint.data[name]);
                         }
                     });
                     list._cache[id] = dataPoint.id;

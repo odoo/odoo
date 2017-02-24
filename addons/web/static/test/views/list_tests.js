@@ -22,10 +22,22 @@ QUnit.module('Views', {
                     amount: {string: "Monetary field", type: "monetary"},
                     currency_id: {string: "Currency", type: "many2one",
                                   relation: "res_currency", default: 1},
+                    datetime: {string: "Datetime Field", type: 'datetime'},
                 },
                 records: [
-                    {id: 1, bar: true, foo: "yop", int_field: 10, qux: 0.4,
-                     m2o: 1, m2m: [1, 2], amount: 1200, currency_id: 2},
+                    {
+                        id: 1,
+                        bar: true,
+                        foo: "yop",
+                        int_field: 10,
+                        qux: 0.4,
+                        m2o: 1,
+                        m2m: [1, 2],
+                        amount: 1200,
+                        currency_id: 2,
+                        date: "2017-01-25",
+                        datetime: "2016-12-12 10:55:05",
+                    },
                     {id: 2, bar: true, foo: "blip", int_field: 9, qux: 13,
                      m2o: 2, m2m: [1, 2, 3], amount: 500},
                     {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3,
@@ -909,6 +921,23 @@ QUnit.module('Views', {
             '$ 500.00', "currency_id column should not be in the table");
 
         list.destroy();
+    });
+
+    QUnit.test('simple list with date and datetime', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="date"/><field name="datetime"/></tree>',
+        });
+
+        // FIXME: this test is locale dependant. we need to do it right.
+        assert.strictEqual(list.$('td:contains(01/25/2017)').length, 1,
+            "should have formatted the date");
+        assert.strictEqual(list.$('td:contains(12/12/2016 10:55:05)').length, 1,
+            "should have formatted the datetime");
     });
 });
 

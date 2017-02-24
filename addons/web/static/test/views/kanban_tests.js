@@ -18,6 +18,8 @@ QUnit.module('Views', {
                     product_id: {string: "something_id", type: "many2one", relation: "product"},
                     category_ids: { string: "categories", type: "many2many", relation: 'category'},
                     state: { string: "State", type: "selection", selection: [["abc", "ABC"], ["def", "DEF"], ["ghi", "GHI"]]},
+                    date: {string: "Date Field", type: 'date'},
+                    datetime: {string: "Datetime Field", type: 'datetime'},
                 },
                 records: [
                     {id: 1, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc"},
@@ -794,6 +796,37 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$(".o_btn_test_2").length, 3,
             "kanban should have three buttons of type 2");
     });
+
+    QUnit.test('rendering date and datetime', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].date = "2017-01-25";
+        this.data.partner.records[1].datetime= "2016-12-12 10:55:05";
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<field name="date"/>' +
+                    '<field name="datetime"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<t t-esc="record.date.raw_value"/>' +
+                        '<t t-esc="record.datetime.raw_value"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+        });
+
+        // FIXME: this test is locale dependant. we need to do it right.
+        assert.strictEqual(kanban.$('div.o_kanban_record:contains(Wed Jan 25)').length, 1,
+            "should have formatted the date");
+        assert.strictEqual(kanban.$('div.o_kanban_record:contains(Mon Dec 12)').length, 1,
+            "should have formatted the datetime");
+    });
+
 });
+
 
 });
