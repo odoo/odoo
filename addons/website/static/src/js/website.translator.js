@@ -8,6 +8,7 @@ var base = require('web_editor.base');
 var translate = require('web_editor.translate');
 var website = require('website.website');
 var local_storage = require('web.local_storage');
+var utils = require('web.utils');
 
 var qweb = core.qweb;
 
@@ -31,17 +32,21 @@ website.TopBar.include({
     },
     edit_master: function (ev) {
         ev.preventDefault();
-        var $link = $('.js_language_selector a[data-default-lang]');
-        if (!$link.length) {
-            // Fallback for old website
-            var l = false;
-            _.each($('.js_language_selector a'), function(a) {
-               if (!l || a.href.length < l.href.length) { l = a; }
-            });
-            $link = $(l);
+
+        var lang = '/' + utils.get_cookie('website_lang');
+
+        var current = document.createElement('a');
+        current.href = window.location.toString();
+        current.search += (current.search ? '&' : '?') + 'enable_editor=1';
+        if (current.pathname.indexOf(lang) === 0) {
+            current.pathname = current.pathname.replace(lang, '');
         }
-        $link[0].search += ($link[0].search ? '&' : '?') + 'enable_editor=1';
-        $link.click();
+
+        var link = document.createElement('a');
+        link.href = '/website/lang/default';
+        link.search += (link.search ? '&' : '?') + 'r=' + encodeURIComponent(current.pathname + current.search + current.hash);
+
+        window.location = link.href;
     },
 });
 

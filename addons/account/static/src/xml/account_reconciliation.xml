@@ -224,7 +224,10 @@
         <t t-jquery=".action_buttons" t-operation="inner">
             <t t-if="single_statement or multiple_statements">
                 <button class="button_back_to_statement btn btn-default btn-sm">Go to bank statements</button>
-                <button class="button_close_statement btn btn-primary btn-sm">Close the statement<t t-if="multiple_statements">s</t></button>
+                <button class="button_close_statement btn btn-primary btn-sm">
+                    <t t-if="multiple_statements">Close the statements</t>
+                    <t t-else="">Close the statement</t>
+                </button>
             </t>
         </t>
     </t>
