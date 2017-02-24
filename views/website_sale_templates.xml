@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="assets_frontend" inherit_id="website.assets_frontend" name="Sale Coupon Assets">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_sale_coupon/static/src/js/sale_coupon.js"/>
-    </xpath>
-</template>
 
-<template id="sales_coupon_code_payment" inherit_id="website_sale.cart" active="True">
-    <xpath expr="//div[@id='right_column']" position="inside">
-        <t t-call="website_sale_coupon.sale_coupon_apply"/>
-    </xpath>
-</template>
 <template id="website_sale_coupon_cart_hide_qty" inherit_id="website_sale.cart_lines" active="True">
     <xpath expr="//td[hasclass('td-qty')]/div" position="attributes">
         <attribute name="t-if">not line.is_reward_line</attribute>
@@ -23,34 +13,78 @@
         </div>
     </xpath>
 </template>
-<template id="sale_coupon_apply">
-    <t t-att-class="hidden" t-if="website_sale_order and website_sale_order.order_line">
-        <div class="coupon_box">
-            <h4>Promo Code</h4>
-            <p>Have a promo code? Fill in this field and apply.</p>
-            <div class="input-group">
-                <input name="promo_code" class='form-control' type="text" placeholder="Promo Code..."/>
-                <div class="input-group-btn">
-                    <a class="btn btn-default a-submit check_coupon">Apply</a>
-                </div>
-            </div>
-            <t t-if="website_sale_order and website_sale_order.applied_coupon_ids">
-                <t t-foreach="website_sale_order.applied_coupon_ids" t-as="coupon">
-                    <div class="panel panel-success mt16">
-                        <div class="panel-heading clearfix">
-                        <span class="pull-left">You have successfully applied coupon: <b t-esc="coupon.code"/></span>
-                        </div>
-                    </div>
-                </t>
-            </t>
-            <t t-if="website_sale_order and website_sale_order.promo_code">
+<template id="sale_coupon_result" inherit_id="website_sale.reduction_code">
+    <xpath expr="//form[@name='coupon_code']" position="after">
+        <t t-if="website_sale_order and website_sale_order.applied_coupon_ids">
+            <t t-foreach="website_sale_order.applied_coupon_ids" t-as="coupon">
                 <div class="panel panel-success mt16">
                     <div class="panel-heading clearfix">
-                    <span class="pull-left">You have successfully applied coupon: <b t-esc="website_sale_order.promo_code"/></span>
+                    <span class="pull-left">You have successfully applied coupon: <b t-esc="coupon.code"/></span>
                     </div>
                 </div>
             </t>
-        </div>
-    </t>
+        </t>
+        <t t-if="website_sale_order and website_sale_order.promo_code">
+            <div class="panel panel-success mt16">
+                <div class="panel-heading clearfix">
+                <span class="pull-left">You have successfully applied coupon: <b t-esc="website_sale_order.promo_code"/></span>
+                </div>
+            </div>
+        </t>
+        <t t-if="website_sale_order and website_sale_order.generated_coupon_ids">
+            <t t-foreach="website_sale_order.generated_coupon_ids" t-as="coupon">
+                <div class="panel panel-success mt16">
+                    <div class="panel-heading clearfix">
+                        <span class="pull-left">Your reward <b t-esc="coupon.discount_line_product_id.name"/> is available on a next order with this coupon code: <b t-esc="coupon.code"/></span>
+                    </div>
+                </div>
+            </t>
+        </t>
+        <t t-if="code_not_available">
+            <div class="panel panel-danger mt16">
+                <div class="panel-heading clearfix">
+                    <span class="pull-left">Invalid or expired coupon code</span>
+                </div>
+            </div>
+        </t>
+    </xpath>
+    <xpath expr="//t[@name='code_not_available']" position="replace"/>
+</template>
+<template id="sale_coupon_result_payment" inherit_id="website_sale.reduction_code_payment">
+    <xpath expr="//form[@name='coupon_code']" position="after">
+        <t t-if="website_sale_order and website_sale_order.applied_coupon_ids">
+            <t t-foreach="website_sale_order.applied_coupon_ids" t-as="coupon">
+                <div class="panel panel-success mt16">
+                    <div class="panel-heading clearfix">
+                    <span class="pull-left">You have successfully applied coupon: <b t-esc="coupon.code"/></span>
+                    </div>
+                </div>
+            </t>
+        </t>
+        <t t-if="website_sale_order and website_sale_order.promo_code">
+            <div class="panel panel-success mt16">
+                <div class="panel-heading clearfix">
+                <span class="pull-left">You have successfully applied coupon: <b t-esc="website_sale_order.promo_code"/></span>
+                </div>
+            </div>
+        </t>
+        <t t-if="website_sale_order and website_sale_order.generated_coupon_ids">
+            <t t-foreach="website_sale_order.generated_coupon_ids" t-as="coupon">
+                <div class="panel panel-success mt16">
+                    <div class="panel-heading clearfix">
+                        <span class="pull-left">Your reward <b t-esc="coupon.discount_line_product_id.name"/> is available on a next order with this coupon code: <b t-esc="coupon.code"/></span>
+                    </div>
+                </div>
+            </t>
+        </t>
+        <t t-if="code_not_available">
+            <div class="panel panel-danger mt16">
+                <div class="panel-heading clearfix">
+                    <span class="pull-left">Invalid or expired coupon code</span>
+                </div>
+            </div>
+        </t>
+    </xpath>
+    <xpath expr="//t[@name='code_not_available']" position="replace"/>
 </template>
 </odoo>
