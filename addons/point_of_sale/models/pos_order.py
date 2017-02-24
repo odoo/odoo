@@ -725,12 +725,17 @@ class PosOrder(models.Model):
                 'session_id': current_session.id,
                 'date_order': fields.Datetime.now(),
                 'pos_reference': order.pos_reference,
+                'lines': False,
             })
+            for line in order.lines:
+                clone_line = line.copy({
+                    # required=True, copy=False
+                    'name': line.name + _(' REFUND'),
+                    'order_id': clone.id,
+                    'qty': -line.qty,
+                })
             PosOrder += clone
 
-        for clone in PosOrder:
-            for order_line in clone.lines:
-                order_line.write({'qty': -order_line.qty})
         return {
             'name': _('Return Products'),
             'view_type': 'form',
