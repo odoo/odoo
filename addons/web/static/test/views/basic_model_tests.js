@@ -23,7 +23,7 @@ QUnit.module('Views', {
                 },
                 records: [
                     {id: 1, foo: 'blip', bar: 1, product_id: 37, category: [12], display_name: "first partner", date: "2017-01-25"},
-                    {id: 2, foo: 'gnap', bar: 2, product_id: 41, display_name: "second partner", date: "2017-01-26"},
+                    {id: 2, foo: 'gnap', bar: 2, product_id: 41, display_name: "second partner"},
                 ],
                 onchanges: {},
             },
@@ -718,9 +718,38 @@ QUnit.module('Views', {
 
     });
 
-    QUnit.test('dates are properly loaded and parsed', function (assert) {
-        assert.expect(1);
+    QUnit.test('dates are properly loaded and parsed (record)', function (assert) {
+        assert.expect(2);
 
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        var params = {
+            fieldNames: ['date'],
+            fields: this.data.partner.fields,
+            modelName: 'partner',
+            res_id: 1,
+        };
+
+        model.load(params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.ok(record.data.date instanceof moment,
+                "fetched date field should have been formatted");
+        });
+
+        params.res_id = 2;
+
+        model.load(params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.date, false,
+                "unset date field should be false");
+        });
+    });
+
+    QUnit.test('dates are properly loaded and parsed (list)', function (assert) {
+        assert.expect(2);
 
         var model = createModel({
             Model: BasicModel,
@@ -737,8 +766,31 @@ QUnit.module('Views', {
         model.load(params).then(function (resultID) {
             var record = model.get(resultID);
             var firstRecord = record.data[0];
+            var secondRecord = record.data[1];
             assert.ok(firstRecord.data.date instanceof moment,
                 "fetched date field should have been formatted");
+            assert.strictEqual(secondRecord.data.date, false,
+                "if date is not set, it should be false");
+        });
+    });
+
+    QUnit.test('dates are properly loaded and parsed (default_get)', function (assert) {
+        assert.expect(1);
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        var params = {
+            fieldNames: ['date'],
+            fields: this.data.partner.fields,
+            modelName: 'partner',
+        };
+
+        model.makeDefaultRecord('partner', params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.date, false, "date default value should be false");
         });
     });
 

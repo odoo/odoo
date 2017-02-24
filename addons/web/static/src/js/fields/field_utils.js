@@ -36,20 +36,26 @@ function format_char(value) {
 }
 
 /**
- * @params {Moment}
+ * @params {Moment|false}
  * @returns {string}
  */
 function format_date(value) {
+    if (!value) {
+        return "";
+    }
     var l10n = core._t.database.parameters;
     var date_format = time.strftime_to_moment_format(l10n.date_format);
     return value.format(date_format);
 }
 
 /**
- * @params {Moment}
+ * @params {Moment|false}
  * @returns {string}
  */
 function format_datetime(value) {
+    if (!value) {
+        return "";
+    }
     var l10n = core._t.database.parameters;
     var date_format = time.strftime_to_moment_format(l10n.date_format);
     var time_format = time.strftime_to_moment_format(l10n.time_format);
@@ -160,9 +166,12 @@ function format_selection(value, field) {
  * The method toJSON return the formated value to send value server side
  *
  * @params {string}
- * @returns {Moment} Moment date object
+ * @returns {Moment|false} Moment date object
  */
 function parse_date(value) {
+    if (!value) {
+        return false;
+    }
     var date_pattern = time.strftime_to_moment_format(core._t.database.parameters.date_format);
     var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D');
     var date = moment(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601], true);
@@ -188,9 +197,12 @@ function parse_date(value) {
  * The method toJSON return the formated value to send value server side
  *
  * @params {string}
- * @returns {Moment} Moment date object
+ * @returns {Moment|false} Moment date object
  */
 function parse_datetime(value) {
+    if (!value) {
+        return false;
+    }
     var date_pattern = time.strftime_to_moment_format(core._t.database.parameters.date_format),
         time_pattern = time.strftime_to_moment_format(core._t.database.parameters.time_format);
     var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D'),
