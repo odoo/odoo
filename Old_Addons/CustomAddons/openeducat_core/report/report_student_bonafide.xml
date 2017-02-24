@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_student_bonafide">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <br></br>
+                            <div class="row" style="padding-left:10px">
+                                Phone: &#09;
+                                <span t-esc="res_company.phone" />
+                                <br>
+                                    <u>
+                                        Mail:
+                                        <span t-esc="res_company.email" />
+                                    </u>
+                                </br>
+                            </div>
+                            <div class="row text-center">
+                                <h4>
+                                    <strong>Bonafide Certificate</strong>
+                                </h4>
+                            </div>
+                            <br></br>
+                            <br></br>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            This is to certify that
+                                            <span t-raw="'%s &lt;&gt;' % o.title.name if o.title.name else ''" />
+                                            <strong>
+                                                <u>
+                                                    <span t-raw="'%s &lt;&gt;' % o.name if o.name else ''" />
+                                                    <span
+                                                        t-raw="'%s &lt;&gt;' % o.middle_name if o.middle_name else ''" />
+                                                    <span t-raw="'%s &lt;&gt;' % o.last_name if o.last_name else ''" />
+                                                </u>
+                                            </strong>
+                                            <font color="white">.</font>
+                                            is / was a bonafide student of this school / college
+                                            studying
+                                            in
+                                            <strong>
+                                                <u>
+                                                    <span
+                                                        t-raw="'%s &lt;&gt;' % o.course_id.name if o.course_id.name else ''" />
+                                                </u>
+                                            </strong>
+                                            Year
+                                            <strong>
+                                                (
+                                                <u>
+                                                    <span
+                                                        t-raw="'%s &lt;&gt;' % o.batch_id.name if o.batch_id.name else ''" />
+                                                </u>
+                                                ).
+                                            </strong>
+                                            His / Her birthday as recorded in the General Register of
+                                            the
+                                            school / collage is
+                                            <strong>
+                                                (
+                                                <u>
+                                                    <span t-esc="formatLang(o.birth_date, date=True)" />
+                                                </u>
+                                                ).
+                                            </strong>
+                                            To the best of my knowledge, he / she bears a Good Moral
+                                            character.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <table width="100%">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <b>DATE: </b>
+                                            <span t-esc="formatLang(time.strftime('%Y-%m-%d'), date=True)" />
+                                        </td>
+                                        <td class="text-center">
+                                            <b>PRINCIPAL</b>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

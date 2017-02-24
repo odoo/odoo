@@ -1,0 +1,109 @@
+<section>
+  <h2 id="ajax">
+    Can Select2 be connected to a remote data source?
+  </h2>
+
+  <p>
+    Select2 supports connecting to a remote data source using the <code>ajax</code> option.
+  </p>
+
+  <h3>
+    How can I set the initially selected options when using AJAX?
+  </h3>
+
+  <p>
+    You can refer to the following Stack Overflow answer if you want to set the initial value for AJAX requests: <a href="http://stackoverflow.com/q/30316586/359284#30328989">Select2 4.0.0 initial value with AJAX</a>
+  </p>
+
+  <h3>
+    What should the results returned to Select2 look like?
+  </h3>
+
+  {% include options/not-written.html %}
+
+  <h3>
+    Is there a way to modify the response before passing it back to Select2?
+  </h3>
+
+  <p>
+    You can use the <code>ajax.processResults</code> option to modify the data returned from the server before passing it to Select2.
+  </p>
+
+{% highlight js linenos %}
+$('select').select2({
+  ajax: {
+    url: '/example/api',
+    processResults: function (data) {
+      return {
+        results: data.items
+      };
+    }
+  }
+});
+{% endhighlight %}
+
+  <h3>
+    A request is being triggered on every key stroke, can I delay this?
+  </h3>
+
+  <p>
+    By default, Select2 will trigger a new AJAX request whenever the user changes their search term. You can set a time limit for debouncing requests using the <code>ajax.delay</code> option.
+  </p>
+
+{% highlight js linenos %}
+$('select').select2({
+  ajax: {
+    url: '/example/api',
+    delay: 250
+  }
+});
+{% endhighlight %}
+
+  <p>
+    This will tell Select2 to wait 250 milliseconds before sending the request out to your API.
+  </p>
+
+  <h3>
+    I want to add more query parameters to the request, where can this be done?
+  </h3>
+
+  <p>
+    By default, Select2 will send the query term as well as the pagination data as query parameters in requests. You can override the data that is sent to your API, or change any of the query paramters, by overriding the <code>ajax.data</codE> option.
+  </p>
+
+{% highlight js linenos %}
+$('select').select2({
+  ajax: {
+    data: function (params) {
+      var query = {
+        search: params.term,
+        page: params.page
+      }
+
+      // Query paramters will be ?search=[term]&page=[page]
+      return query;
+    }
+  }
+});
+{% endhighlight %}
+
+  <h3>
+    Can an AJAX plugin other than <code>jQuery.ajax</code> be used?
+  </h3>
+
+  <p>
+    Select2 uses the transport method defined in <code>ajax.transport</code> to send requests to your API. By default, this transport method is <code>jQuery.ajax</code> but this can be changed.
+  </p>
+
+{% highlight js linenos %}
+$('select').select2({
+  ajax: {
+    transport: function (params, success, failure) {
+      var request = new AjaxRequest(params.url, params);
+      request.on('success', success);
+      request.on('failure', failure);
+    }
+  }
+});
+{% endhighlight %}
+</section>

@@ -1,0 +1,49 @@
+// Animated hamburger icon
+//
+// Add an animation to Bootstrap's `.navbar-toggle` hamburger icon,
+// courtesy of Julien Melissas.
+//
+// @see http://codepen.io/JulienMelissas/pen/LEBGLj
+// @see http://julienmelissas.com/animated-x-icon-for-the-bootstrap-navbar-toggle/
+
+.navbar-toggle {
+  border: none;
+  background: transparent !important;
+
+  &:hover {
+    background: transparent !important;
+  }
+
+  .icon-bar {
+    width: 22px;
+    transition: all 0.2s;
+  }
+
+  .top-bar {
+    transform: rotate(45deg);
+    transform-origin: 10% 10%;
+  }
+
+  .middle-bar {
+    opacity: 0;
+  }
+
+  .bottom-bar {
+    transform: rotate(-45deg);
+    transform-origin: 10% 90%;
+  }
+
+  &.collapsed {
+    .top-bar {
+      transform: rotate(0);
+    }
+
+    .middle-bar {
+      opacity: 1;
+    }
+
+    .bottom-bar {
+      transform: rotate(0);
+    }
+  }
+}

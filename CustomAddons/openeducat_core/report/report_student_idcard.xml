@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_student_idcard">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <div class="center-block"
+                                style="height: 257px; width: 420px; border: 1px solid black;">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <img class="image"
+                                                    t-att-src="'data:image/png;base64,%s' % res_company.logo"
+                                                    style="max-height:2.5cm; max-width:4cm; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;" />
+                                            </td>
+                                            <td style="vertical-align: top;">
+                                                <div
+                                                    style="margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;">
+                                                    <b>
+                                                        <span
+                                                            t-raw="'%s &lt;&gt;' %  res_company.partner_id.name if  res_company.partner_id.name  else ''" />
+                                                    </b>
+                                                    <br></br>
+                                                    <span
+                                                        t-raw="'%s &lt;&gt;' %  res_company.partner_id.street if  res_company.partner_id.street  else ''" />
+                                                    <br></br>
+                                                    <span
+                                                        t-raw="'%s &lt;&gt;' %  res_company.partner_id.street2 if  res_company.partner_id.street2  else ''" />
+                                                    <br></br>
+                                                    <span
+                                                        t-raw="'%s &lt;&gt;' %  res_company.partner_id.city if  res_company.partner_id.city  else ''" />
+                                                    <span
+                                                        t-raw="'%s &lt;&gt;' %  res_company.partner_id.state_id.name if  res_company.partner_id.state_id.name  else ''" />
+                                                    <span
+                                                        t-raw="'%s &lt;&gt;' %  res_company.partner_id.zip if  res_company.partner_id.zip  else ''" />
+                                                    <br></br>
+                                                    Phone :
+                                                    <span
+                                                        t-raw="'%s &lt;&gt;' % res_company.partner_id.phone if  res_company.partner_id.phone  else ''" />
+                                                    <br></br>
+                                                    E-mail :
+                                                    <span
+                                                        t-raw="'%s &lt;&gt;' % res_company.partner_id.email if  res_company.partner_id.email  else ''" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <img class="image" t-att-src="'data:image/png;base64,%s' % o.photo"
+                                                    style="max-height:2.5cm; max-width:4cm; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;" />
+                                            </td>
+                                            <td style="vertical-align: top;">
+                                                <div
+                                                    style="margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;">
+                                                    <b>
+                                                        <span t-field='o.name' />
+                                                        <span t-field='o.middle_name' />
+                                                        <span t-field='o.last_name' />
+                                                    </b>
+                                                    <br></br>
+                                                    Roll No :
+                                                    <span t-field='o.roll_number' />
+                                                    <br></br>
+                                                    Course :
+                                                    <span t-field='o.course_id.name' />
+                                                    <br></br>
+                                                    Blood Group :
+                                                    <span t-field='o.blood_group' />
+                                                    <br></br>
+                                                    BirthDate :
+                                                    <span t-field='o.birth_date' />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

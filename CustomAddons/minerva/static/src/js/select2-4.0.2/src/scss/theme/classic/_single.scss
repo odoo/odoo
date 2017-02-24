@@ -1,0 +1,124 @@
+.select2-selection--single {
+  background-color: mix($selection-bg-top-color, $selection-bg-bottom-color);
+
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+
+  outline: 0;
+
+  @include gradient-vertical($selection-bg-top-color, $selection-bg-bottom-color, 50%, 100%);
+
+  &:focus {
+    border: 1px solid $focus-border-color;
+  }
+
+  .select2-selection__rendered {
+    color: #444;
+    line-height: 28px;
+  }
+
+  .select2-selection__clear {
+    cursor: pointer;
+    float: right;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+  .select2-selection__placeholder {
+    color: #999;
+  }
+
+  .select2-selection__arrow {
+    background-color: #ddd;
+
+    border: none;
+    border-left: 1px solid $border-color;
+    border-top-right-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+
+    height: 26px;
+
+    position: absolute;
+
+    top: 1px;
+    right: 1px;
+
+    width: 20px;
+
+    @include gradient-vertical(#eeeeee, #cccccc, 50%, 100%);
+
+    b {
+      border-color: #888 transparent transparent transparent;
+      border-style: solid;
+      border-width: 5px 4px 0 4px;
+
+      height: 0;
+      left: 50%;
+
+      margin-left: -4px;
+      margin-top: -2px;
+
+      position: absolute;
+
+      top: 50%;
+      width: 0;
+    }
+  }
+}
+
+&[dir="rtl"] {
+  .select2-selection--single {
+    .select2-selection__clear {
+      float: left;
+    }
+
+    .select2-selection__arrow {
+      border: none;
+      border-right: 1px solid $border-color;
+
+      border-radius: 0;
+      border-top-left-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
+
+      left: 1px;
+      right: auto;
+    }
+  }
+}
+
+&.select2-container--open {
+  .select2-selection--single {
+    border: 1px solid $focus-border-color;
+
+    .select2-selection__arrow {
+      background: transparent;
+
+      border: none;
+
+      b {
+        border-color: transparent transparent #888 transparent;
+        border-width: 0 4px 5px 4px;
+      }
+    }
+  }
+
+  &.select2-container--above {
+    .select2-selection--single {
+      border-top: none;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+
+      @include gradient-vertical($selection-opened-bg-bottom-color, $selection-opened-bg-top-color, 0%, 50%);
+    }
+  }
+
+  &.select2-container--below {
+    .select2-selection--single {
+      border-bottom: none;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+
+      @include gradient-vertical($selection-opened-bg-top-color, $selection-opened-bg-bottom-color, 50%, 100%);
+    }
+  }
+}

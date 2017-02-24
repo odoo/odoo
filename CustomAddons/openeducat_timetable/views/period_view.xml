@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_op_period_tree" model="ir.ui.view">
+            <field name="name">op.period.tree</field>
+            <field name="model">op.period</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Period" editable="bottom">
+                    <field name="name" />
+                    <field name="hour" />
+                    <field name="minute" />
+                    <field name="duration" widget="float_time" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_op_period_form" model="ir.ui.view">
+            <field name="name">op.period.form</field>
+            <field name="model">op.period</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Period">
+                    <sheet>
+                        <group col="4">
+                            <field name="name" select="1" />
+                            <field name="duration" widget="float_time" />
+                            <field name="hour" />
+                            <field name="minute" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_op_period_search" model="ir.ui.view">
+            <field name="name">op.period.search</field>
+            <field name="model">op.period</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Period">
+                    <field name="name" select="True" />
+                    <field name="duration" />
+                    <field name="hour" select="True" />
+                    <field name="minute" select="True" />
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_open_op_period_view">
+            <field name="name">Paskaitų laikas</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.period</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_op_period_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_period_view_form">
+            <field name="act_window_id" ref="act_open_op_period_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_period_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_period_view_tree">
+            <field name="act_window_id" ref="act_open_op_period_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_period_tree" />
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,23 @@
+<openerp>
+    <data>
+        <template id="assets_backend" name="vs assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/openeducat_core/static/src/js/chrome.js"></script>
+            </xpath>
+        </template>
+        
+        
+        <template id="fav_ico" name="educat Icon" inherit_id="web.layout">
+        	<xpath expr="//html/head/title" position="replace">
+        	 <title>OpenEduCat</title>
+        	</xpath>
+        </template>
+        
+        <template id="fav_ico" name="educat Icon" inherit_id="web.layout">
+        	<xpath expr="//html/head/link[1]" position="replace">
+        	 	<link rel="shortcut icon" href="/openeducat_core/static/src/img/openeducat_favicon.png" type="image/x-icon"/>
+        	</xpath>
+        </template>
+        
+    </data>
+</openerp>

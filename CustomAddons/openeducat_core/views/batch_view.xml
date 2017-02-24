@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_op_batch_tree" model="ir.ui.view">
+            <field name="name">op.batch.tree</field>
+            <field name="model">op.batch</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Batch">
+                    <field name="pavadinimas" />
+                    <field name="code" />
+                    <field name = "students" />
+                     <field name="course_id" />
+                    <field name="start_date" />
+                    <field name="end_date" />
+
+                </tree>
+            </field>
+        </record>
+        <record id="view_op_batch_form" model="ir.ui.view">
+            <field name="name">op.batch.form</field>
+            <field name="model">op.batch</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Batch">
+                    <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                        <group col="4" name="main">
+                            <field name="pavadinimas" />
+                            <field name="code" />
+                            <field name="start_date" />
+                            <field name="end_date" />
+                            <field name= "students"/>
+                            <field name="course_id" />
+                            <field name= "active"/>
+                        </group>
+                        <notebook colspan="4">
+                                
+                            <page name= "Pageidavimai" string = " Pageidavimai">
+                                 <field name="pageidavimai"/>
+                            </page> 
+                            <page string="Šio semestro grupės paskaitos" name="timetable">
+                                Paskaitos
+                            </page>
+                        </notebook>
+           <!--             <notebook colspan="4">
+                          <page string="Šio semestro grupės paskaitos" name="timetable">
+                                <field  name = "timetable_ids" colspan= "3" nolabel="1"> </field>
+                            </page>
+                            
+                        </notebook> -->
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_op_batch_search" model="ir.ui.view">
+            <field name="name">op.batch.search</field>
+            <field name="model">op.batch</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Batch">
+                    <field name="code" />
+                    <field name="pavadinimas" />
+                    <field name="start_date" />
+                    <field name="end_date" />
+                    <field name= "students"/>
+                    <field name="course_id" />
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter string="Start Date" domain="[]"
+                            context="{'group_by':'start_date'}" />
+                        <filter string="End Date" domain="[]" context="{'group_by':'end_date'}" />
+                        <filter string="Course" domain="[]" context="{'group_by':'course_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_open_op_batch_view">
+            <field name="name">Grupės</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.batch</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_op_batch_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_batch_view_form">
+            <field name="act_window_id" ref="act_open_op_batch_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_batch_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_batch_view_tree">
+            <field name="act_window_id" ref="act_open_op_batch_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_batch_tree" />
+        </record>
+    </data>
+</openerp>

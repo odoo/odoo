@@ -1,0 +1,159 @@
+<openerp>
+    <data>
+        <template id="report_timetable_student_generate">
+            <style>
+                .font{
+                font-size:18px;
+                font-family:"Helvetica"
+                }
+                @page{
+                size: A4;
+                }
+                table.center {
+                width:80%;
+                margin-left:10%;
+                }
+                td.spacer1{
+                padding-right:320px;
+                }
+                .table.gridtable {
+                font-size:11px;
+                border-width: 1px;
+                border-color: #cccccc;
+                border-collapse: collapse;
+                }
+                table.gridtable th {
+                border-width: 1px;
+                padding: 10px;
+                border-style: solid;
+                border-color: #cccccc;
+                }
+                table.gridtable td {
+                border-width: 1px;
+                padding: 10px;
+                border-style: solid;
+                border-color: #cccccc;
+                }
+            </style>
+
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                            <div class="page">
+
+                                    <img class="img img-responsive" src="/openeducat_timetable/static/img/logo.png" />
+                                    <h4 style="text-align : center; font-family:'Times New Roman'">
+                                        <strong>Paskaitų tvarkaraštis</strong>
+                                    </h4>
+                                <table class="table " border="0" style='font-size:11px;'>
+
+                                    <tbody>
+                                        <tr>
+                                            <td style=" border:0">
+                                                <b><t t-esc="data['xsemester_id'][1]" /></b>
+                                                <b>semestras: </b>
+                                            </td >
+                                            <td style=" border:0"></td>
+                                            <td style=" border:0">
+                                                <b>Grupė:</b>
+                                                <t t-esc="data['batch_id'][1]" />
+                                                <td style=" border:0"></td>
+                                            </td>
+                                        </tr>
+                                        
+                                        <th style=" border:0" > Pirmadienis</th><td style=" border:0"></td><td style=" border:0"></td><td style=" border:0"></td>
+                                        <t t-foreach="get_object(data)" t-as="a">
+                                            <t t-if="a['line'].get('1',{'day':''})['day'] == '1'">
+                                                <tr>
+                                                <td style=" border:0">
+                                                    <span t-esc="a['line'].get('1',{'period':''})['period']" />
+                                                </td>
+                                                <td style=" border:0">
+                                                    <span t-esc="a['line'].get('1',{'subject':''})['subject']"/>
+                                                     
+                                                </td>
+                                                <td style=" border:0">
+                                                    <span t-esc="a['line'].get('1',{'faculty':''})['faculty']" />
+                                                </td>
+                                                <td style=" border:0">
+                                                    <span t-esc="a['line'].get('1',{'classroom':''})['classroom']" />
+                                                </td> 
+                                                </tr>
+                                            </t>
+                                        </t>  
+                                            <th style=" border:0" > Antradienis</th><td style=" border:0"></td><td style=" border:0"></td><td style=" border:0"></td>
+                                            
+                                        <t t-foreach="get_object(data)" t-as="a">  
+                                            <t t-if="a['line'].get('2',{'day':''})['day'] == '2'"> 
+                                                <tr>
+                                                 <td style=" border:0">
+                                                    <span t-esc="a['line'].get('2',{'period':''})['period']" />
+                                                </td>
+                                                <td style=" border:0">
+                                                    <span t-esc="a['line'].get('2',{'subject':''})['subject']" />
+                                                     
+                                                </td>
+                                                <td style=" border:0">
+                                                    <span t-esc="a['line'].get('2',{'faculty':''})['faculty']" />
+                                                </td>
+                                                <td style=" border:0">
+                                                    <span t-esc="a['line'].get('2',{'classroom':''})['classroom']" />
+                                                </td> 
+                                                </tr>
+                                            </t>
+                                        </t>
+                                        
+                                        
+                                            <th style=" border:0" > Trečiadienis</th><td style=" border:0"></td><td style=" border:0"></td><td style=" border:0"></td>
+                                            
+                                         <t t-foreach="get_object(data)" t-as="a"> 
+                                            <t t-if="a['line'].get('3',{'day':''})['day'] == '3'">   
+                                                <tr>
+                                                 <td style=" border:0">
+                                                    <span t-esc="a['line'].get('3',{'period':''})['period']" />
+                                                </td>
+                                                <td style=" border:0">
+                                                    <span t-esc="a['line'].get('3',{'subject':''})['subject']" />
+                                                        
+                                                </td>
+                                                <td style=" border:0">
+                                                    <span t-esc="a['line'].get('3',{'faculty':''})['faculty']" />
+                                                </td>
+                                                <td style=" border:0">
+                                                    <span t-esc="a['line'].get('3',{'classroom':''})['classroom']" />
+                                                </td> 
+                                                </tr>
+                                            </t>
+                                        </t>
+                                            <th style=" border:0" > Ketvirtadienis</th><td style=" border:0"></td><td style=" border:0" ></td><td style=" border:0"></td>
+                                        
+                                        <t t-foreach="get_object(data)" t-as="a">   
+                                            <t t-if="a['line'].get('4',{'day':''})['day'] == '4'">  
+                                                <tr>
+                                                 <td style=" border:0">
+                                                    <span t-esc="a['line'].get('4',{'period':''})['period']" />
+                                                </td>
+                                                <td style=" border:0"> 
+                                                    <span t-esc="a['line'].get('4',{'subject':''})['subject']" />
+                                                        
+                                                </td>
+                                                <td style=" border:0">
+                                                    <span t-esc="a['line'].get('4',{'faculty':''})['faculty']" />
+                                                </td>
+                                                <td style=" border:0">
+                                                    <span t-esc="a['line'].get('4',{'classroom':''})['classroom']" />
+                                                </td> 
+                                                </tr>
+                                            </t>
+                                        </t>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

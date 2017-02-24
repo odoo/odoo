@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <menuitem id="menu_op_timetable_root" name="Tvarkaraščiai" sequence="11" groups="openeducat_core.group_op_back_office,openeducat_core.group_op_back_office_admin" />
+
+        <menuitem id="menu_op_timetable_main" parent="menu_op_timetable_root"
+            sequence="10" name="Tvarkaraščių valdymas" />
+        <menuitem id="menu_op_period" string="Paskaitų laikai" parent="openeducat_core.menu_op_school_config"
+            sequence="60" action="act_open_op_period_view" />
+        <menuitem id="menu_op_timetable" string="Paskaitos" parent="menu_op_timetable_main"
+            sequence="20" action="act_open_op_timetable_view" />
+        <menuitem id="menu_op_timetable_all" string="Paskaitos_visos" parent="menu_op_timetable_main"
+            sequence="22" action="act_open_op_timetable_view_all"/>
+        <menuitem id="menu_op_exam" string= "Egzaminai" parent= "menu_op_timetable_main"
+            sequence= "25" action="act_open_op_exam_view" />
+        <menuitem id="menu_generate_time_table" string="Tvarkaraščių sudarymas" parent="menu_op_timetable_main"
+            sequence="30" action="act_open_generate_time_table_view" />
+        <menuitem id="menu_generate_time_table_report" string="Spausdinti tvarkaraščius" parent="menu_op_timetable_main"
+            sequence="40" action="act_open_time_table_report_view" />
+         
+            
+    </data>
+</openerp>

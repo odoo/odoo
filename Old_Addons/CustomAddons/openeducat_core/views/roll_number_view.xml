@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_op_roll_number_tree" model="ir.ui.view">
+            <field name="name">op.roll.number.tree</field>
+            <field name="model">op.roll.number</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Roll Number">
+                    <field name="roll_number" />
+                    <field name="student_id" />
+                    <field name="course_id" />
+                    <field name="batch_id" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_op_roll_number_form" model="ir.ui.view">
+            <field name="name">op.roll.number.form</field>
+            <field name="model">op.roll.number</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Roll Number">
+                    <sheet>
+                        <group col="4">
+                            <field name="roll_number" />
+                            <field name="student_id" />
+                            <field name="course_id" />
+                            <field name="batch_id" context="{'course_id': course_id,'get_parent_batch':1}" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_op_roll_number_search" model="ir.ui.view">
+            <field name="name">op.roll.number.search</field>
+            <field name="model">op.roll.number</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Roll Number">
+                    <field name="roll_number" />
+                    <field name="course_id" />
+                    <field name="batch_id" />
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter string="Roll Number" domain="[]"
+                            context="{'group_by':'roll_number'}" />
+                        <filter string="Course" domain="[]" context="{'group_by':'course_id'}" />
+                        <filter string="Batch" domain="[]" context="{'group_by':'batch_id'}" />
+                        <filter string="Student" domain="[]" context="{'group_by':'student_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_open_op_roll_number_view">
+            <field name="name">Roll Numbers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.roll.number</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_op_roll_number_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_roll_number_view_form">
+            <field name="act_window_id" ref="act_open_op_roll_number_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_roll_number_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_roll_number_view_tree">
+            <field name="act_window_id" ref="act_open_op_roll_number_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_roll_number_tree" />
+        </record>
+    </data>
+</openerp>

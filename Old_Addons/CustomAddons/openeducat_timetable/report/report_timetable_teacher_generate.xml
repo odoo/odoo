@@ -1,0 +1,154 @@
+<openerp>
+    <data>
+        <template id="report_timetable_teacher_generate">
+            <style>
+                .font{
+                font-size:18px;
+                font-family:"Helvetica"
+                }
+                @page{
+                size: A4;
+                }
+            </style>
+
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="font">
+                            <div class="page">
+                                <div class="row text-center">
+                                    <h2>
+                                        <b>
+                                            <span t-field='res_company.name' />
+                                        </b>
+                                    </h2>
+                                </div>
+                                <div class="row text-center">
+                                    <h2>
+                                        <strong> Dėstytojo Tvarkaraštis</strong>
+                                    </h2>
+                                </div>
+                                <br></br>
+                                <div class="text-left">
+                                    <b>Faculty Name :</b>
+                                    <span t-esc="get_full_name(data)" />
+                                </div>
+                                <br></br>
+                                <div class="row text-center">
+                                    <b>From Date: </b>
+                                    <span t-esc="data['start_date']" />
+                                    <b>To Date:</b>
+                                    <span t-esc="data['end_date']" />
+                                </div>
+                                <br></br>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <th class="text-left">Laikas </th>
+                                        <th class="text-center"> Pr </th>
+                                        <th class="text-center"> A </th>
+                                        <th class="text-center"> T </th>
+                                        <th class="text-center"> K </th>
+                                        <th class="text-center"> Pn </th>
+                                        <th class="text-center"> Š </th>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="get_object(data)" t-as="a">
+                                            <td class="text-left">
+                                                <span t-esc="'%s' %  a['name'] if  a['name']  else ''" />
+                                            </td>
+                                            <td class="text-left">
+                                                <b>
+                                                    <span t-esc="a['line'].get('Monday',{'course':''})['course']" />
+                                                </b>
+                                                <br></br>
+                                                <span t-esc="a['line'].get('Monday',{'batch':''})['batch']" />
+                                                <br></br>
+                                                <b>
+                                                    <span t-esc="a['line'].get('Monday',{'subject':''})['subject']" />
+                                                </b>
+                                                <br></br>
+                                                <span
+                                                    t-esc="a['line'].get('Monday',{'start_datetime':''})['start_datetime']" />
+                                            </td>
+                                            <td class="text-left">
+                                                <b>
+                                                    <span t-esc="a['line'].get('Tuesday',{'course':''})['course']" />
+                                                </b>
+                                                <br></br>
+                                                <span t-esc="a['line'].get('Tuesday',{'batch':''})['batch']" />
+                                                <br></br>
+                                                <b>
+                                                    <span t-esc="a['line'].get('Tuesday',{'subject':''})['subject']" />
+                                                </b>
+                                                <br></br>
+                                                <span
+                                                    t-esc="a['line'].get('Tuesday',{'start_datetime':''})['start_datetime']" />
+                                            </td>
+                                            <td class="text-left">
+                                                <b>
+                                                    <span t-esc="a['line'].get('Wednesday',{'course':''})['course']" />
+                                                </b>
+                                                <br></br>
+                                                <span t-esc="a['line'].get('Wednesday',{'batch':''})['batch']" />
+                                                <br></br>
+                                                <b>
+                                                    <span
+                                                        t-esc="a['line'].get('Wednesday',{'subject':''})['subject']" />
+                                                </b>
+                                                <br></br>
+                                                <span
+                                                    t-esc="a['line'].get('Wednesday',{'start_datetime':''})['start_datetime']" />
+                                            </td>
+                                            <td class="text-left">
+                                                <b>
+                                                    <span t-esc="a['line'].get('Thursday',{'course':''})['course']" />
+                                                </b>
+                                                <br></br>
+                                                <span t-esc="a['line'].get('Thursday',{'batch':''})['batch']" />
+                                                <br></br>
+                                                <b>
+                                                    <span t-esc="a['line'].get('Thursday',{'subject':''})['subject']" />
+                                                </b>
+                                                <br></br>
+                                                <span
+                                                    t-esc="a['line'].get('Thursday',{'start_datetime':''})['start_datetime']" />
+                                            </td>
+                                            <td class="text-left">
+                                                <b>
+                                                    <span t-esc="a['line'].get('Friday',{'course':''})['course']" />
+                                                </b>
+                                                <br></br>
+                                                <span t-esc="a['line'].get('Friday',{'batch':''})['batch']" />
+                                                <br></br>
+                                                <b>
+                                                    <span t-esc="a['line'].get('Friday',{'subject':''})['subject']" />
+                                                </b>
+                                                <br></br>
+                                                <span
+                                                    t-esc="a['line'].get('Friday',{'start_datetime':''})['start_datetime']" />
+                                            </td>
+                                            <td class="text-left">
+                                                <b>
+                                                    <span t-esc="a['line'].get('Saturday',{'course':''})['course']" />
+                                                </b>
+                                                <br></br>
+                                                <span t-esc="a['line'].get('Saturday',{'batch':''})['batch']" />
+                                                <br></br>
+                                                <b>
+                                                    <span t-esc="a['line'].get('Saturday',{'subject':''})['subject']" />
+                                                </b>
+                                                <br></br>
+                                                <span
+                                                    t-esc="a['line'].get('Saturday',{'start_datetime':''})['start_datetime']" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

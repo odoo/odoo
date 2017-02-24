@@ -1,0 +1,91 @@
+// Examples
+//
+// Styles for the Select2 examples, largely copied
+// from Bootstrap's docs styles.
+//
+// @see https://github.com/twbs/bootstrap/blob/master/docs/assets/css/src/docs.css#L533
+
+.s2-example {
+  position: relative;
+  padding: 45px 15px 15px;
+  margin: 0 -15px 15px;
+  background-color: #fafafa;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.05);
+  border-color: #e5e5e5 #eee #eee;
+  border-style: solid;
+  border-width: 1px 0;
+
+  &:after {
+    content: "Example";
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #bbb;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  @media (min-width: 768px) {
+    margin-left: 0;
+    margin-right: 0;
+    background-color: #fff;
+    border-width: 1px;
+    border-color: #eee;
+    border-radius: 4px 4px 0 0;
+    box-shadow: none;
+  }
+}
+
+// styles for the event log in the "DOM events" section of the docs
+.s2-event-log {
+  background: #002451;
+  color: white;
+  font-family: Menlo, 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Consolas, monospace;
+  margin: 0 -15px 15px;
+  padding: 45px 15px 15px;
+  position: relative;
+
+  &:after {
+    content: "Event Log";
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #BBB;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  @media (min-width: 768px) {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: -15px;
+    border-width: 1px;
+    border-color: #eee;
+    box-shadow: none;
+  }
+}
+
+.s2-example + pre,
+.s2-example + figure,
+.s2-event-log + pre {
+  margin: -15px -15px 15px;
+  border-radius: 0;
+  border-width: 0 0 1px;
+
+  @media (min-width: 768px) {
+    margin-top: -16px;
+    margin-left: 0;
+    margin-right: 0;
+    border-width: 1px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+}
+
+.s2-example + .s2-event-log {
+  margin-top: -15px;
+}

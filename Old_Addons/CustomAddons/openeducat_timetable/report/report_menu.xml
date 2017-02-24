@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <report
+            id="report_student_timetable_generate"
+            string="TimeTable for Students"
+            model="op.timetable" report_type="qweb-pdf"
+            file="openeducat_timetable.report_timetable_student_generate"
+            name="openeducat_timetable.report_timetable_student_generate"
+            menu="False"
+            auto="False"
+        />
+
+        <report
+            id="report_teacher_timetable_generate"
+            string="TimeTable for Faculties"
+            model="op.timetable"
+            report_type="qweb-pdf"
+            file="openeducat_timetable.report_timetable_teacher_generate"
+            name="openeducat_timetable.report_timetable_teacher_generate"
+            menu="False"
+            auto="False"
+        />
+    </data>
+</openerp>

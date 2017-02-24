@@ -1,0 +1,304 @@
+<?xml version="1.0"?>
+<!--
+# #################################################################################
+#
+# Reservation Partner
+# Copyright (C) 2013-TODAY Reservation Partner, UAB
+# (<http://www.reservationpartner.lt>)
+#
+# Author: <Reservation Partner LT> : <info@reservationpartner.com>
+#
+# #################################################################################
+-->
+<templates id="template" xml:space="preserve">
+    
+    <t t-name="minerva.options">
+        <t t-if= "groups">
+            <option data-parameter="null">Grupės</option>
+            <t t-foreach="groups" t-as="group">
+                <option t-att-data-groups-id="group.id"> <t t-esc="group.code"/></option>
+            </t>
+        </t>
+        
+        <t t-if="faculties">
+            <option data-parameter="null">Dėstytojai</option>
+             <t t-foreach="faculties" t-as="group">
+                <option t-att-data-groups-id="group.id"> <t t-esc="group.name"/></option>
+            </t>
+        </t>
+        
+        <t t-if="subjects">
+            <option data-parameter="null">Dalykai</option>
+             <t t-foreach="subjects" t-as="group">
+                <option t-att-data-groups-id="group.id"> <t t-esc="group.name"/></option>
+            </t>
+        </t>
+        
+        <t t-if= "classrooms">
+            <option data-parameter="null">Auditorijos</option>
+             <t t-foreach="classrooms" t-as="group">
+                <option t-att-data-groups-id="group.id"> <t t-esc="group.code"/></option>
+            </t>
+        </t>
+        
+     <t t-if="days">
+            <option data-parameter="null">Dienos</option>
+             <t t-foreach="days" t-as="group">
+                <option t-att-data-groups-id="group[0]"> <t t-esc="group[1]"/></option>
+            </t>
+        </t> 
+    </t>
+    
+     <t t-name="minerva.exam-options">
+        <t t-if= "groups">
+            <option data-parameter="null">Grupės</option>
+            <t t-foreach="groups" t-as="group">
+                <option t-att-data-groups-id="group.id"> <t t-esc="group.code"/></option>
+            </t>
+        </t>
+        
+        <t t-if="faculties">
+            <option data-parameter="null">Dėstytojai</option>
+             <t t-foreach="faculties" t-as="group">
+                <option t-att-data-groups-id="group.id"> <t t-esc="group.name"/></option>
+            </t>
+        </t>
+        
+        <t t-if="subjects">
+            <option data-parameter="null">Dalykai</option>
+             <t t-foreach="subjects" t-as="group">
+                <option t-att-data-groups-id="group.id"> <t t-esc="group.name"/></option>
+            </t>
+        </t>
+        
+        <t t-if= "classrooms">
+            <option data-parameter="null">Auditorijos</option>
+             <t t-foreach="classrooms" t-as="group">
+                <option t-att-data-groups-id="group.id"> <t t-esc="group.code"/></option>
+            </t>
+        </t>
+        
+    
+    </t>
+    
+    
+    <!-- Tvarkarasciai -->
+    <t t-name="minerva.timetable_group">
+    <t t-if="timetables" >
+                    <thead>
+                        <tr>
+                            <th>
+                                Laikas
+                              <!--  <t t-if="timetables">
+                                    <br/>
+                                 <i id="period-asc" class="fa fa-sort-alpha-asc order-changeable"/> 
+                                </t> -->
+                            </th>
+                            <th>Dalykas</th>
+                            <th>Dėstytojas</th>
+                            <th>Grupė</th>
+                            <th>Auditorija</th>        
+                        </tr>    
+                    </thead>
+                    <t t-if="timetables" >
+                        <tbody id="main-table"> 
+                            <tr>
+                                <t t-if= "pirmadienis">
+                                    <th >Pirmadienis</th> <td></td><td></td><td></td><td></td>
+                                    <t t-foreach="pirmadienis" t-as="timetable_line">
+                                            <tr>
+                                                <td style=" border:0" > <t t-esc="timetable_line.period_id[1]"/> </td>
+                                                        
+                                                <td style=" border:0"> 
+                                                        <t t-if="timetable_line.week[0] != '0'">
+                                                            [<t t-esc="timetable_line.week"/>] 
+                                                        </t>  
+                                                        <t t-esc= "timetable_line.subject_id[1]"/> 
+                                                        <t t-if= "timetable_line.note">
+                                                            <t t-esc= "timetable_line.note"/> 
+                                                        </t>
+                                                        
+                                                </td>
+                                                <td style=" border:0"><t t-esc= "timetable_line.faculty_id[1]"/> </td>
+                                                <td style=" border:0"><t t-esc="timetable_line.batch_id[1]"/></td>
+                                                <td style=" border:0"> <t t-esc= "timetable_line.classroom_id[1]"/></td> 
+                                            </tr>
+                                        <tr></tr>
+                                    </t> 
+                                </t>     
+                                
+                                
+                                
+                                <t t-if= "antradienis">
+                                    <th >Antradienis</th> <td></td><td></td><td></td><td></td>
+                                        <t t-foreach="antradienis" t-as="timetable_line">
+                                                <tr>
+                                                    <td style=" border:0"> <t t-esc="timetable_line.period_id[1]"/> </td>
+                                                                                                  
+                                                    <td style=" border:0">
+                                                        <t t-if="timetable_line.week[0] != '0'">
+                                                            [<t t-esc="timetable_line.week"/>] 
+                                                        </t>   
+                                                        <t t-esc= "timetable_line.subject_id[1]"/> 
+                                                        <t t-if="timetable_line.note">
+                                                            <t t-esc= "timetable_line.note"/> 
+                                                        </t>
+                                                        
+                                                    </td>
+                                                    <td style=" border:0"><t t-esc= "timetable_line.faculty_id[1]"/> </td>
+                                                    <td style=" border:0"><t t-esc="timetable_line.batch_id[1]"/></td>
+                                                    <td style=" border:0"> <t t-esc= "timetable_line.classroom_id[1]"/></td> 
+                                                </tr>
+                                        <tr></tr>
+                                        </t>
+                                    </t>
+                                    <t t-if= "treciadienis">
+                                        <th >Trečiadienis</th> <td></td><td></td><td></td><td></td>
+                                        <t t-foreach="treciadienis" t-as="timetable_line">
+                                                <tr>
+                                                    <td style=" border:0"> <t t-esc="timetable_line.period_id[1]"/> </td>
+                                            
+                                                        
+                                                    <td style=" border:0">
+                                                        <t t-if="timetable_line.week[0] != '0'">
+                                                            [<t t-esc="timetable_line.week"/>] 
+                                                        </t>  
+                                                        <t t-esc="timetable_line.subject_id[1]"/> 
+                                                        <t t-if="timetable_line.note">
+                                                            <t t-esc="timetable_line.note"/> 
+                                                        </t>
+                                                        
+                                                    </td>
+                                                    <td style=" border:0"><t t-esc="timetable_line.faculty_id[1]"/> </td>
+                                                    <td style=" border:0"><t t-esc="timetable_line.batch_id[1]"/></td>
+                                                    <td style=" border:0"> <t t-esc="timetable_line.classroom_id[1]"/></td> 
+                                                </tr>
+                                        <tr></tr>
+    
+                                        </t>
+                                    </t>
+                                    
+                                    <t t-if= "ketvirtadienis">
+                                        <th >Ketvirtadienis</th> <td></td><td></td><td></td><td></td>
+                                        <t t-foreach="ketvirtadienis" t-as="timetable_line">
+                                                <tr>
+                                                    <td style=" border:0"> <t t-esc="timetable_line.period_id[1]"/> </td>
+                                                        
+                                                    <td style=" border:0"> 
+                                                        <t t-if="timetable_line.week[0] != '0'">
+                                                            [<t t-esc="timetable_line.week"/>] 
+                                                        </t>  
+                                                        <t t-esc= "timetable_line.subject_id[1]"/> 
+                                                        <t t-if= "timetable_line.note">
+                                                            <t t-esc= "timetable_line.note"/> 
+                                                        </t>
+                                                        
+                                                    </td>
+                                                    <td style=" border:0"><t t-esc= "timetable_line.faculty_id[1]"/> </td>
+                                                    <td style=" border:0"><t t-esc="timetable_line.batch_id[1]"/></td>
+                                                    <td style=" border:0"> <t t-esc= "timetable_line.classroom_id[1]"/></td> 
+                                                </tr>
+                                        <tr></tr>
+    
+                                        </t>
+                                   </t> 
+                                    <t t-if= "penktadienis">
+                                        <th >Penktadienis</th> <td></td><td></td><td></td><td></td>
+                                        <t t-foreach="penktadienis" t-as="timetable_line">
+                                                <tr>
+                                                    <td style=" border:0"> <t t-esc="timetable_line.period_id[1]"/> </td>
+    
+                                                    <td style=" border:0">
+                                                        <t t-if="timetable_line.week[0] != '0'">
+                                                            [<t t-esc="timetable_line.week"/>] 
+                                                        </t>   
+                                                        <t t-esc= "timetable_line.subject_id[1]"/> 
+                                                        <t t-if= "timetable_line.note">
+                                                            <t t-esc= "timetable_line.note"/> 
+                                                        </t>
+                                                        
+                                                    </td>
+                                                    <td style=" border:0"><t t-esc= "timetable_line.faculty_id[1]"/> </td>
+                                                    <td style=" border:0"><t t-esc="timetable_line.batch_id[1]"/></td>
+                                                    <td style=" border:0"> <t t-esc= "timetable_line.classroom_id[1]"/></td> 
+                                                </tr>
+                                        <tr></tr>
+    
+                                        </t>
+                                    </t>
+                                    <t t-if= "sestadienis">
+                                        <th >Šeštadienis</th> <td></td><td></td><td></td><td></td>
+                                        <t t-foreach="sestadienis" t-as="timetable_line">
+                                                <tr>
+                                                    <td style=" border:0"> <t t-esc="timetable_line.period_id[1]"/> </td>
+                                                        
+                                                    <td style=" border:0"> 
+                                                        <t t-if="timetable_line.week[0] != '0'">
+                                                            [<t t-esc="timetable_line.week"/>] 
+                                                        </t>  
+                                                        <t t-esc= "timetable_line.subject_id[1]"/> 
+                                                        <t t-if= "timetable_line.note">
+                                                            <t t-esc= "timetable_line.note"/> 
+                                                        </t>
+                                                        
+                                                    </td>
+                                                    <td style=" border:0"><t t-esc= "timetable_line.faculty_id[1]"/> </td>
+                                                    <td style=" border:0"><t t-esc="timetable_line.batch_id[1]"/></td>
+                                                    <td style=" border:0"> <t t-esc= "timetable_line.classroom_id[1]"/></td> 
+                                                </tr>
+                                        <tr></tr>
+    
+                                        </t>
+                                    
+                                    </t>
+                            </tr>
+                    </tbody>
+                </t>          
+     </t>
+
+    </t>
+    <t t-name="minerva.examtable_group">
+        <t t-if= "examtables">
+            <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Dalykas</th>
+                            <th>Dėstytojas</th>
+                            <th>Grupė</th>
+                            <th>Auditorija</th>        
+                        </tr>    
+                    </thead>
+                    <t t-if= "examtables">
+                        <tbody id="main-table">  
+                            <tr>
+                                <t t-foreach="examtables" t-as="examtable_line">
+                                        <tr>
+ 
+                                            <td >
+                                                
+                                                <t t-esc= "examtable_line.start_date"/> 
+                                                <t t-esc= "examtable_line.exam_time_name"/> 
+                                            </td>        
+                                            <td > 
+                                            
+                                                    <t t-esc= "examtable_line.subject_id[1]"/> 
+                                                    <t t-if= "examtable_line.notes">
+                                                        <t t-esc= "examtable_line.notes"/> 
+                                                    </t>
+                                                    
+                                            </td>
+                                            <td ><t t-esc= "examtable_line.faculty_id[1]"/> </td>
+                                            <td ><t t-esc="examtable_line.batch_id[1]"/></td>
+                                            <td > <t t-esc= "examtable_line.classroom_id[1]"/></td> 
+                                        </tr>
+                                    <tr></tr>
+                                        
+                                </t>
+                                 </tr>
+                    </tbody>
+                </t> 
+         </t>          
+    </t>
+    
+</templates>
+

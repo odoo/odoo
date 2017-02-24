@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_khf_project_tree" model="ir.ui.view">
+            <field name="name">khf.project.tree</field>
+            <field name="model">khf.project</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Projektas">
+                    <field name= "code"   />
+                    <field name= "akronimas" />
+                    <field name= "user_created"/>
+                    <field name= "cathedral"/>
+                    <field name= "create_date" />
+                    <field name= "status" />
+                    <field name= "aim" />
+                    <field name= "description" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_khf_project_form" model="ir.ui.view">
+            <field name="name">khf.project.form</field>
+            <field name="model">khf.project</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Projektas">
+                    <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_user" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                        <group col="4">
+                           <!-- <field name="name" /> -->
+                            <field name= "code" />
+                            <field name= "akronimas" />
+                            <field name= "user_created"/>
+                            <field name= "cathedral"/>
+                            <field name= "create_date" />
+                            <field name= "status" />
+                            <field name= "aim"  placeholder = "Tikslas turi atsakyti i klausima,kokio rezultato arba poveikio norima pasiekti" />
+                            <field name= "description" />
+                            <field name= "partners" />
+                            <field name= "start_date" />
+                            <field name= "end_date" />
+                            <field name= "budget" />
+                            <field name= "finanses" />
+                            <field name= "finanses_type" />
+                            <field name= "intensity" />
+                            <field name= "asset" />
+                            <field name= "documents" />
+
+
+                        </group>
+                       <!-- <notebook>
+                            <page name="facilities" string="Programinė įranga">
+                                <field name="facilities" colspan="4" nolabel="1" />
+                            </page>
+                            <page name="name" string="Kita įranga">
+
+                            </page>
+                        </notebook> -->
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_khf_project_search" model="ir.ui.view">
+            <field name="name">khf.project.search</field>
+            <field name="model">khf.project</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Projektas">
+                    <field name= "code" />
+                    <field name= "akronimas" />
+                    <field name= "user_created"/>
+                    <field name= "cathedral"/>
+                    <field name= "create_date" />
+                    <field name= "status" />
+                    <field name= "aim" />
+                    <field name= "description" />
+                    <newline />
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_open_khf_project_view">
+            <field name="name">Projektai</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">khf.project</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_khf_project_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_khf_project_view_form">
+            <field name="act_window_id" ref="act_open_khf_project_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_khf_project_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_khf_project_view_tree">
+            <field name="act_window_id" ref="act_open_khf_project_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_khf_project_tree" />
+        </record>
+    </data>
+</openerp>

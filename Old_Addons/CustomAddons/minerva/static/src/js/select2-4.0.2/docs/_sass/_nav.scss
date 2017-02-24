@@ -1,0 +1,59 @@
+// Main navigation
+//
+// Styles for the top `.navbar` and its dropdowns.
+
+.s2-docs-nav {
+  margin-bottom: 0;
+  border-color: #eee;
+  background-color: #f6f6f6;
+
+  .navbar-brand {
+    font-weight: 500;
+    > img {
+      display: inline;
+      margin-right: 4px;
+    }
+  }
+
+  .navbar-nav > .active > a,
+  .navbar-nav > .active > a:hover,
+  .navbar-nav > .active > a:focus {
+    background-color: #f0f0f0;
+    color: #000;
+  }
+
+  @media (min-width: 768px) {
+
+    .navbar-nav > li > .dropdown-menu:before {
+      position: absolute;
+      top: -21px;
+      left: 24px;
+      display: block;
+      width: 0;
+      height: 0;
+      border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.1);
+      border-style: solid;
+      border-width: 10px;
+      content: "";
+    }
+
+    .navbar-nav > li > .dropdown-menu:after {
+      position: absolute;
+      top: -20px;
+      left: 24px;
+      display: block;
+      width: 0;
+      height: 0;
+      border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #FFF;
+      border-style: solid;
+      border-width: 10px;
+      content: '';
+    }
+
+    .navbar-nav .dropdown-menu {
+      border-radius: 4px;
+      border-color: #ddd;
+      margin-top: -1px;
+    }
+  }
+}

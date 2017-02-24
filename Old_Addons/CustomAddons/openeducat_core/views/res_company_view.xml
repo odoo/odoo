@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_company_form_openeducat_core" model="ir.ui.view">
+            <field name="name">res.company.form.openeducat.core</field>
+            <field name="model">res.company</field>
+            <field name="priority">99</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="signature" widget="image" />
+                </xpath>
+                <notebook colspan="4" position="inside">
+                    <page name="institute_detail" string="Institute Detail">
+                        <separator string="Accreditation" colspan="4" />
+                        <field name="accreditation" colspna="4" nolabel="1" />
+                        <separator string="Approval Authority" colspan="4" />
+                        <field name="approval_authority" colspna="4" nolabel="1" />
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</openerp>

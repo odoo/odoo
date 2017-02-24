@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="kanban_view_student">
+            <field name="name">Student Kanban</field>
+            <field name="model">op.student</field>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <a type="open">
+                                        <img t-att-src="kanban_image('op.student', 'photo', record.id.value)" class="oe_employee_picture"/>
+                                    </a>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <h4>
+                                        <a type="open">
+                                            <field name="name" />
+                                            <t t-if="record.middle_name.raw_value">
+                                                <field name="middle_name" />
+                                            </t>
+                                            <t t-if="record.last_name.raw_value">
+                                                <field name="last_name" />
+                                            </t>
+                                        </a>
+                                    </h4>
+                                    <ul>
+                                        <li t-if="record.course_id.raw_value">
+                                            Course:
+                                            <field name="course_id" />
+                                        </li>
+                                        <li t-if="record.batch_id.raw_value">
+                                            Batch:
+                                            <field name="batch_id" />
+                                        </li>
+                                        <li t-if="record.roll_number.raw_value">
+                                            Roll Number:
+                                            <field name="roll_number" />
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <script> $('.oe_employee_picture').load(function() {
+                                if($(this).width() > $(this).height()) {
+                                $(this).addClass('oe_employee_picture_wide') } });
+                            </script>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_op_student_tree" model="ir.ui.view">
+            <field name="name">op.student.tree</field>
+            <field name="model">op.student</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Student">
+                    <field name="roll_number" />
+                    <field name="title" />
+                    <field name="name" />
+                    <field name="middle_name" />
+                    <field name="last_name" />
+                    <field name="blood_group" />
+                    <field name="emergency_contact" />
+                    <field name="course_id" />
+                    <field name="batch_id" />
+                    <field name="nationality" />
+                    <field name="blood_group" />
+                    <field name="lang" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_op_student_form" model="ir.ui.view">
+            <field name="name">op.student.form</field>
+            <field name="model">op.student</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Student">
+                    <sheet>
+                        <field name="photo" widget="image" class="oe_left oe_avatar" />
+                        <div name="title_name" class="oe_title">
+                            <h3><field name="title" placeholder="Title" style="width: 30%%" /></h3>
+                            <h1><table>
+                                <tr>
+                                <td><field name="name" required="1" placeholder="First Name" style="padding-right:10px" /></td>
+                                <td><field name="middle_name" placeholder="Middle Name" style="padding-right:10px" /></td>
+                                <td><field name="last_name" placeholder="Last Name" style="padding-right:10px" /></td>
+                                </tr>
+                                </table>
+                            </h1>
+                        </div>
+                        <notebook colspan="4">
+                            <page name="personal_information" string="Personal Information">
+                                <group col="4" colspan="4" name="personal_detail">
+                                    <field name="gender" />
+                                    <field name="birth_date" />
+                                    <field name="nationality" />
+                                    <field name="visa_info" />
+                                    <field name="lang" />
+                                    <field name="blood_group" />
+                                    <field name="user_id" string="User"/>
+                                    <field name="emergency_contact" context="{'show_address': 1}"
+                                        options='{"always_reload": True}' />
+                                </group>
+                                <group string="Address Detail" name="address">
+                                    <label for="type" />
+                                    <div name="div_type">
+                                        <field class="oe_inline" name="type" />
+                                    </div>
+                                    <label for="street" string="Address" />
+                                    <div name="div_address">
+                                        <field name="street" placeholder="Street..." />
+                                        <field name="street2" placeholder="Street2" />
+                                        <div class="address_format">
+                                            <field name="city" placeholder="City" style="width: 40%%" />
+                                            <field name="state_id" class="oe_no_button"
+                                                placeholder="State" style="width: 37%%" options='{"no_open": True}' />
+                                            <field name="zip" placeholder="ZIP" style="width: 20%%" />
+                                        </div>
+                                        <field name="country_id" placeholder="Country" class="oe_no_button"
+                                            options='{"no_open": True}' />
+                                    </div>
+                                </group>
+                            </page>
+                            <page name="educational" string="Educational">
+                                <group col="4" colspan="4">
+                                    <field name="course_id" />
+                                    <field name="batch_id" context="{'course_id': course_id,'get_parent_batch':1}" domain="[('course_id', '=', course_id)]"/>
+                                    <field name="gr_no" />
+                                    <field name="roll_number" />
+                                    <separator colspan="4" string="Assigned Roll Numbers" />
+                                    <field name="roll_number_line" colspan="4" nolabel="1"
+                                        context="{'default_course_id':course_id,
+                                     'default_batch_id':batch_id}" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_op_student_search" model="ir.ui.view">
+            <field name="name">op.student.search</field>
+            <field name="model">op.student</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <search string="Student">
+                    <field name="name" />
+                    <field name="blood_group" />
+                    <!-- <field name="id_number" /> -->
+                    <field name="course_id" />
+                    <field name="batch_id" />
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter name="blood_group" string="Blood Group" domain="[]"
+                            context="{'group_by':'blood_group'}" />
+                        <filter name="nationality" string="Nationality" domain="[]"
+                            context="{'group_by':'nationality'}" />
+                        <filter name="language" string="Language" domain="[]" context="{'group_by':'language'}" />
+                        <filter name="course" string="Course" domain="[]" context="{'group_by':'course_id'}" />
+                        <filter name="batch" string="Batch" domain="[]" context="{'group_by':'batch_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_open_op_student_view">
+            <field name="name">Students</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.student</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_op_student_search" />
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_student_view_form">
+            <field name="act_window_id" ref="act_open_op_student_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_student_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_student_view_tree">
+            <field name="act_window_id" ref="act_open_op_student_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_student_tree" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_student_view_kanban">
+            <field name="act_window_id" ref="act_open_op_student_view" />
+            <field name="sequence" eval="5" />
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="kanban_view_student" />
+        </record>
+    </data>
+</openerp>

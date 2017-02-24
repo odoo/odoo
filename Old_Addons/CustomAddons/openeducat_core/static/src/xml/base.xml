@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1: -->
+<templates id="template" xml:space="preserve">
+<t t-extend="Login">
+    <t t-jquery="img" t-operation="replace">
+    <img src='/openeducat_core/static/src/img/openeducat_logo.png' width="180px" />
+    </t>
+     <t t-jquery="div.oe_login_footer" t-operation="after">
+    		<div class="oe_login_footer" style="top:250px">
+	            <a href="http://www.openeducat.org/" target="_blank">Provided by <span>Tech Receptives</span></a>
+            </div>
+     </t>
+</t>
+<t t-extend="WebClient">
+    <t t-jquery="span.url" t-operation="replace">
+        <span class="url"><a id="support_link" href="http://www.openeducat.org/support" target="_blank"></a></span>
+    </t>
+</t>
+</templates>
