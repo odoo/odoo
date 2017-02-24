@@ -810,5 +810,30 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('default_get on x2many may return a list of ids', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.category.default = [12, 14];
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        var params = {
+            fieldNames: ['category'],
+            fields: this.data.partner.fields,
+            modelName: 'partner',
+        };
+
+        model.makeDefaultRecord('partner', params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.ok(_.isEqual(record.data.category.res_ids, [12, 14]),
+                "category field should have correct default value");
+        });
+
+        model.destroy();
+    });
+
 
 });});

@@ -500,38 +500,55 @@ var BasicModel = AbstractModel.extend({
                     });
                     record._changes[name] = x2manyList.id;
                     var many2ones = {};
-                    _.each(result[name], function (command) {
-                        if (command[0] === 0) {
-                            // CREATE
-                            var r = self._makeDataPoint({
+                    var r;
+                    _.each(result[name], function (value) {
+                        if (_.isArray(value)) {
+                            // value is a command
+                            if (value[0] === 0) {
+                                // CREATE
+                                r = self._makeDataPoint({
+                                    modelName: x2manyList.model,
+                                    context: x2manyList.context,
+                                    fields: field.relatedFields,
+                                    fieldAttrs: field.fieldAttrs,
+                                });
+                                x2manyList._changes.push(r.id);
+                                r._changes = value[2];
+
+                                // this is necessary so the fields are initialized
+                                for (var fieldName in value[2]) {
+                                    r.data[fieldName] = null;
+                                }
+
+                                for (var name in r._changes) {
+                                    if (r.fields[name].type === 'many2one') {
+                                        var rec = self._makeDataPoint({
+                                            context: r.context,
+                                            modelName: r.fields[name].relation,
+                                            data: {id: r._changes[name]}
+                                        });
+                                        r._changes[name] = rec.id;
+                                        many2ones[name] = true;
+                                    }
+                                }
+                            }
+                            if (value[0] === 6) {
+                                // REPLACE_WITH
+                                x2manyList._changes = [];
+                            }
+                        } else {
+                            // value is an id
+                            r = self._makeDataPoint({
                                 modelName: x2manyList.model,
                                 context: x2manyList.context,
                                 fields: field.relatedFields,
                                 fieldAttrs: field.fieldAttrs,
+                                res_id: value,
                             });
+                            if (!x2manyList._changes) {
+                                x2manyList._changes = [];
+                            }
                             x2manyList._changes.push(r.id);
-                            r._changes = command[2];
-
-                            // this is necessary so the fields are initialized
-                            for (var fieldName in command[2]) {
-                                r.data[fieldName] = null;
-                            }
-
-                            for (var name in r._changes) {
-                                if (r.fields[name].type === 'many2one') {
-                                    var rec = self._makeDataPoint({
-                                        context: r.context,
-                                        modelName: r.fields[name].relation,
-                                        data: {id: r._changes[name]}
-                                    });
-                                    r._changes[name] = rec.id;
-                                    many2ones[name] = true;
-                                }
-                            }
-                        }
-                        if (command[0] === 6) {
-                            // REPLACE_WITH
-                            x2manyList._changes = [];
                         }
                     });
 
