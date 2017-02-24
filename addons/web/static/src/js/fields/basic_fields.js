@@ -1314,7 +1314,7 @@ var FieldDomain = AbstractField.extend({
      * @private
      * @param {integer} [nbRecords=0] - The number of records the domain matches
      */
-    _replaceContent(nbRecords) {
+    _replaceContent: function (nbRecords) {
         if (this._$content) {
             this._$content.remove();
         }
