@@ -120,6 +120,20 @@ class WebsiteSaleForm(WebsiteForm):
 
 
 class WebsiteSale(http.Controller):
+    def _get_compute_currency_and_context(self):
+        pricelist_context = dict(request.env.context)
+        pricelist = False
+        if not pricelist_context.get('pricelist'):
+            pricelist = request.website.get_current_pricelist()
+            pricelist_context['pricelist'] = pricelist.id
+        else:
+            pricelist = request.env['product.pricelist'].browse(pricelist_context['pricelist'])
+
+        from_currency = request.env.user.company_id.currency_id
+        to_currency = pricelist.currency_id
+        compute_currency = lambda price: from_currency.compute(price, to_currency)
+
+        return compute_currency, pricelist_context, pricelist
 
     def get_attribute_value_ids(self, product):
         """ list of selectable attributes of a product
@@ -200,12 +214,8 @@ class WebsiteSale(http.Controller):
         domain = self._get_search_domain(search, category, attrib_values)
 
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, order=post.get('order'))
-        pricelist_context = dict(request.env.context)
-        if not pricelist_context.get('pricelist'):
-            pricelist = request.website.get_current_pricelist()
-            pricelist_context['pricelist'] = pricelist.id
-        else:
-            pricelist = request.env['product.pricelist'].browse(pricelist_context['pricelist'])
+
+        compute_currency, pricelist_context, pricelist = self._get_compute_currency_and_context()
 
         request.context = dict(request.context, pricelist=pricelist.id, partner=request.env.user.partner_id)
 
@@ -238,10 +248,6 @@ class WebsiteSale(http.Controller):
             attributes = ProductAttribute.search([('attribute_line_ids.product_tmpl_id', 'in', products.ids)])
         else:
             attributes = ProductAttribute.browse(attributes_ids)
-
-        from_currency = request.env.user.company_id.currency_id
-        to_currency = pricelist.currency_id
-        compute_currency = lambda price: from_currency.compute(price, to_currency)
 
         values = {
             'search': search,
