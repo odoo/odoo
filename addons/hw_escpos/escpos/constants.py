@@ -184,3 +184,14 @@ S_RASTER_N      = '\x1d\x76\x30\x00' # Set raster image normal size
 S_RASTER_2W     = '\x1d\x76\x30\x01' # Set raster image double width
 S_RASTER_2H     = '\x1d\x76\x30\x02' # Set raster image double height
 S_RASTER_Q      = '\x1d\x76\x30\x03' # Set raster image quadruple
+# QR Code
+QR_SELECT_MODEL = '\x1D\x28\x6B\x04\x00\x31\x41\x32\x00' # n1=50(hex 32) - model 2, n2=0
+QR_SET_SIZE_4   = '\x1D\x28\x6B\x03\x00\x31\x43\x04' # n=4 - size 4
+QR_SET_SIZE_6   = '\x1D\x28\x6B\x03\x00\x31\x43\x06' # n=6 - size 6
+QR_ERR_CORRECT_L= '\x1D\x28\x6B\x03\x00\x31\x45\x30' # dec=48, Level L
+QR_ERR_CORRECT_M= '\x1D\x28\x6B\x03\x00\x31\x45\x31' # dec=49, Level M
+QR_ERR_CORRECT_Q= '\x1D\x28\x6B\x03\x00\x31\x45\x32' # dec=50, Level Q
+QR_ERR_CORRECT_H= '\x1D\x28\x6B\x03\x00\x31\x45\x33' # dec=51, Level H
+QR_TEXT1        = '\x1D\x28\x6B'
+QR_TEXT2        = '\x31\x50\x30'
+QR_PRINT        = '\x1D\x28\x6B\x03\x00\x31\x51\x30'
