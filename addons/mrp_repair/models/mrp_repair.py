@@ -488,7 +488,7 @@ class RepairLine(models.Model):
         if not self.product_id or not self.product_uom_qty:
             return
         if partner and self.product_id:
-            self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id).ids
+            self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
         if self.product_id:
             self.name = self.product_id.display_name
             self.product_uom = self.product_id.uom_id.id
@@ -550,7 +550,7 @@ class RepairFee(models.Model):
         pricelist = self.repair_id.pricelist_id
 
         if partner and self.product_id:
-            self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id).ids
+            self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
         if self.product_id:
             self.name = self.product_id.display_name
             self.product_uom = self.product_id.uom_id.id
