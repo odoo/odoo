@@ -450,7 +450,7 @@ class Escpos:
                 img.paste(img_rgba)
 
             print 'convert image'
-        
+
             pix_line, img_size = self._convert_image(img)
 
             print 'print image'
@@ -464,13 +464,26 @@ class Escpos:
 
     def qr(self,text):
         """ Print QR Code for the provided string """
-        qr_code = qrcode.QRCode(version=4, box_size=4, border=1)
-        qr_code.add_data(text)
-        qr_code.make(fit=True)
-        qr_img = qr_code.make_image()
-        im = qr_img._img.convert("RGB")
-        # Convert the RGB image in printable image
-        self._convert_image(im)
+        # Select Model 2
+        self._raw(QR_SELECT_MODEL)
+        # QR Size 4
+        self._raw(QR_SET_SIZE_4)
+        # Error Correction H
+        self._raw(QR_ERR_CORRECT_M)
+        # Transmit Text
+        buffer = ""
+        raw = ""
+        raw += QR_TEXT1
+        size = len(text) + 3
+        lsb = (size % 256)
+        msb = (size / 256)
+        buffer = "%02X%02X" % (lsb, msb)
+        raw += buffer.decode('hex')
+        raw += QR_TEXT2
+        raw += text
+        self._raw(raw)
+        # Send Print Command
+        self._raw(QR_PRINT)
 
     def barcode(self, code, bc, width=255, height=2, pos='below', font='a'):
         """ Print Barcode """
@@ -678,6 +691,11 @@ class Escpos:
                 self.barcode(strclean(elem.text),elem.attrib['encoding'])
                 serializer.end_entity()
 
+            elif elem.tag == 'qrcode':
+                serializer.start_block(stylestack)
+                self.qr(strclean(elem.text))
+                serializer.end_entity()
+
             elif elem.tag == 'cut':
                 self.cut()
             elif elem.tag == 'partialcut':
@@ -792,7 +810,7 @@ class Escpos:
                     else:
                         encoding = 'cp437'
                         encoded  = '\xb1'    # could not encode, output error character
-                        break;
+                        break
 
             if encoding != self.encoding:
                 # if the encoding changed, remember it and prefix the character with
@@ -873,8 +891,13 @@ class Escpos:
     def cut(self, mode=''):
         """ Cut paper """
         # Fix the size between last line and cut
-        # TODO: handle this with a line feed
-        self._raw("\n\n\n\n\n\n")
+        self._raw(CTL_LF)
+        self._raw(CTL_LF)
+        self._raw(CTL_LF)
+        self._raw(CTL_LF)
+        self._raw(CTL_LF)
+        self._raw(CTL_LF)
+        self._raw(CTL_LF)
         if mode.upper() == "PART":
             self._raw(PAPER_PART_CUT)
         else: # DEFAULT MODE: FULL CUT
