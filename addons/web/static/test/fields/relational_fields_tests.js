@@ -345,6 +345,31 @@ QUnit.module('relational_fields', {
         form.$('input').click();
     });
 
+    QUnit.test('autocompletion in a many2one, in form view with a date field', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="bar"/>' +
+                    '<field name="date"/>' +
+                    '<field name="trululu" domain="[(\'bar\',\'=\',True)]"/>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method === 'name_search') {
+                    assert.deepEqual(args.kwargs.args, [["bar", "=", true]], "should not have a domain");
+                }
+                return this._super(route, args);
+            },
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        form.$('input:eq(2)').click();
+    });
+
     QUnit.test('creating record with many2one with option always_reload', function (assert) {
         assert.expect(2);
 
