@@ -760,6 +760,9 @@ function rawify (data) {
     // replaces the value of relational fields by their raw value (the id, if
     // any, for many2ones and an array of ids for x2manys), in turn
     return _.mapObject(data, function (value) {
+        if (value instanceof moment) {
+            return moment;
+        }
         if (_.isObject(value)) {
             return value.type === 'record' ? value.res_id : value.res_ids;
         }
