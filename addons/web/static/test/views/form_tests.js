@@ -1596,4 +1596,40 @@ QUnit.module('Views', {
             "should have rendered a modal dialog with correct content");
     });
 
+    QUnit.test('attrs are properly transmitted to new records', function (assert) {
+        assert.expect(2);
+
+        // this test checks that the fieldAttrs have been transmitted to the
+        // load function when creating a new record
+
+        var terminology = {
+            string_true: "Production Environment",
+            hover_true: "Switch to test environment",
+            string_false: "Test Environment",
+            hover_false: "Switch to production environment"
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<div name="button_box" class="oe_button_box">' +
+                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+                            '<field name="bar" widget="boolean_button" options=\'{"terminology": ' +
+                                JSON.stringify(terminology) + '}\'/>' +
+                        '</button>' +
+                    '</div>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$('.o_stat_text.o_not_hover:contains(Production Environment)').length, 1,
+            "button should contain correct string");
+
+        form.$buttons.find('.o_form_button_create').click();
+
+        assert.strictEqual(form.$('.o_stat_text.o_not_hover:contains(Test Environment)').length, 1,
+            "button should contain correct string");
+    });
+
 });});

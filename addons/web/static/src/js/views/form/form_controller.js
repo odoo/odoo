@@ -56,6 +56,7 @@ var FormController = BasicController.extend({
         var record = this.model.get(this.handle, {raw: true});
         return this.model.makeDefaultRecord(this.modelName, {
                 context: this.context,
+                fieldAttrs: record.fieldAttrs,
                 fieldNames: record.fieldNames,
                 fields: record.fields,
                 res_ids: record.res_ids,
