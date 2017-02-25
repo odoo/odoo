@@ -228,6 +228,7 @@ Execute the following commands to install Odoo 10.0 Community on your server:
     $ sudo postgresql-setup initdb
     $ sudo systemctl enable postgresql
     $ sudo systemctl start postgresql
+    $ sudo yum install yum-utils
     $ sudo yum-config-manager --add-repo=https://nightly.odoo.com/10.0/nightly/rpm/odoo.repo
     $ sudo yum install -y odoo
     $ sudo systemctl enable odoo
