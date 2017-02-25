@@ -241,7 +241,7 @@
                                         </group>
                                         <group>
                                             <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
-                                                attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
+                                                attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}" options="{'no_create': True}"/>
                                             <label for="customer_lead"/>
                                             <div>
                                                 <field name="customer_lead" class="oe_inline"/> days
@@ -285,7 +285,7 @@
                                     <field name="price_unit"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                     <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
-                                        attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
+                                        attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}" options="{'no_create': True}"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
                                     <field name="price_total" widget="monetary" groups="sale.group_show_price_total"/>
