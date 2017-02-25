@@ -7,24 +7,9 @@ from werkzeug.exceptions import NotFound
 from odoo import http
 from odoo.http import request
 
-
-def object_shasign(record=False, res_model='', res_id=None, **kw):
-    """ Generate a sha signature using the current time, database secret and the
-    record object or the res_model and res_id parameters
-        Return the sha signature and the time of generation in a tuple"""
-    secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
-    shasign = False
-    timestamp = int(time())
-    if record:
-        shasign = sha1('%s%s%s%s' % (record._name, record.id, secret, timestamp)).hexdigest()
-    elif res_model and res_id:
-        shasign = sha1('%s%s%s%s' % (res_model, res_id, secret, timestamp)).hexdigest()
-    return (shasign, timestamp)
-
-
-def _message_post_helper(res_model='', res_id=None, message='', token='', token_field='token', sha_in='', sha_time=None, nosubscribe=True, **kw):
+def _message_post_helper(res_model='', res_id=None, message='', token='', token_field='token', nosubscribe=True, **kw):
     """ Generic chatter function, allowing to write on *any* object that inherits mail.thread.
-        If a token or a shasign is specified, all logged in users will be able to write a message regardless
+        If a token is specified, all logged in users will be able to write a message regardless
         of access rights; if the user is the public user, the message will be posted under the name
         of the partner_id of the object (or the public user if there is no partner_id on the object).
 
@@ -36,12 +21,6 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
         :param string token: access token if the object's model uses some kind of public access
                              using tokens (usually a uuid4) to bypass access rules
         :param string token_field: name of the field that contains the token on the object (defaults to 'token')
-        :param string sha_in: sha1 hash of the string composed of res_model, res_id and the dabase secret in ir.config_parameter
-                               if you wish to allow public users to write on the object with some security but you don't want
-                               to add a token field on the object, the sha-sign prevents public users from writing to any other
-                               object that the one specified by res_model and res_id
-                               to generate the shasign, you can import the function object_shasign from this file in your controller
-        :param str sha_time: timestamp of sha signature generation (signatures are valid for 24h)
         :param bool nosubscribe: set False if you want the partner to be set as follower of the object when posting (default to True)
 
         The rest of the kwargs are passed on to message_post()
@@ -55,14 +34,6 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
         else:
             if not author_id:
                 raise NotFound()
-    elif sha_in:
-        timestamp = int(sha_time)
-        secret_sudo = request.env['ir.config_parameter'].sudo().get_param('database.secret')
-        shasign = sha1('%s%s%s%s' % (res_model, res_id, secret_sudo, timestamp))
-        if sha_in == shasign.hexdigest() and int(time()) < timestamp + 3600 * 24:
-            record = record.sudo()
-        else:
-            raise NotFound()
     return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(body=message,
                                                                                    message_type=kw.pop('message_type', "comment"),
                                                                                    subtype=kw.pop('subtype', "mt_comment"),

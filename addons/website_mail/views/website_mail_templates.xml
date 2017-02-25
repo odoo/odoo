@@ -34,14 +34,11 @@
                          you can use a token to verify the identity of the user;
                          the message will be posted with the identity of the partner_id of the object
                 :token_field string (optional): name of the field that contains the token on the object (default to 'token')
-                :sha_in string (optional): if you use the shasign to allow commenting by non-logged user, you need to set it in this variable using the
-                                 object_shasign function defined in the main controller of website_portal
-                :sha_time string (optional): timestamp of the shasign generation
                 :chatter_mode string: 'json' or 'post' depending on what kind of request you want
         -->
         <section id="discussion" class="hidden-print oe_website_portal o_website_mail_thread">
             <t t-set="is_user_public" t-value="website.env.user == request.website.user_id"/>
-            <t t-set="can_comment" t-value="sha_in or token or not is_user_public"/>
+            <t t-set="can_comment" t-value="token or not is_user_public"/>
             <section class="mb32 hidden-print" t-if="can_comment">
                 <form class="o_website_chatter_form" t-attf-action="/website_mail/post/#{chatter_mode}" method="POST">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -51,8 +48,6 @@
                         <input type='hidden' name="res_model" t-att-value="object._name"/>
                         <input type='hidden' name="res_id" t-att-value="object.id"/>
                         <input type='hidden' name="token" t-att-value="token" t-if="token"/>
-                        <input type='hidden' name="sha_in" t-att-value="sha_in" t-if="sha_in"/>
-                        <input type='hidden' name="sha_time" t-att-value="sha_time" t-if="sha_time"/>
                         <input type='hidden' name="token_field" t-att-value="token_field" t-if="token_field"/>
                         <div class="alert alert-danger mt8 mb0 o_website_chatter_error" style="display:none;">
                             Oops! Something went wrong. Try to reload the page and to log in.
