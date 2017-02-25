@@ -104,6 +104,39 @@ QUnit.module('basic_fields', {
             "should have 5 checkboxes");
     });
 
+    QUnit.module('FieldBooleanButton');
+
+    QUnit.test('use custom terminology in form view', function (assert) {
+        assert.expect(2);
+
+        var terminology = {
+            string_true: "Production Environment",
+            hover_true: "Switch to test environment",
+            string_false: "Test Environment",
+            hover_false: "Switch to production environment"
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<div name="button_box" class="oe_button_box">' +
+                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+                            '<field name="bar" widget="boolean_button" options=\'{"terminology": ' +
+                                JSON.stringify(terminology) + '}\'/>' +
+                        '</button>' +
+                    '</div>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$('.o_stat_text.o_not_hover:contains(Production Environment)').length, 1,
+            "button should contain correct string");
+        assert.strictEqual(form.$('.o_stat_text.o_hover:contains(Switch to test environment)').length, 1,
+            "button should display correct string when hovering");
+    });
+
+
     QUnit.module('FieldFloat');
 
     QUnit.test('float field rendering in list view', function (assert) {
