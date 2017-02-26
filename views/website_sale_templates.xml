@@ -50,4 +50,18 @@
     </xpath>
     <xpath expr="//t[@name='code_not_available']" position="replace"/>
 </template>
+
+<template id="cart_discount" name="Discount" inherit_id="website_sale.total">
+    <xpath expr="//div[@id='order_total']" position="before">
+        <div class="row" id="order_discounted" t-if="website_sale_order and website_sale_order.reward_amount">
+              <span class="col-xs-6 text-right text-muted" title="Discounted amount"> Discount:</span>
+              <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
+                  <span t-field="website_sale_order.reward_amount" style="white-space: nowrap;" t-options='{
+                          "widget": "monetary",
+                          "display_currency": website_sale_order.currency_id,
+                      }'/>
+              </span>
+        </div>
+    </xpath>
+</template>
 </odoo>
