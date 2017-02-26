@@ -18,13 +18,15 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2016
 # Daniel Forslund <daniel.forslund@gmail.com>, 2016
 # Zou Haojun <haojunzou84@gmail.com>, 2016
+# Frida E <frida.eddestal@gmail.com>, 2017
+# Lord Cobol <mattias@invaliddesign.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-14 10:20+0000\n"
 "PO-Revision-Date: 2017-02-14 10:20+0000\n"
-"Last-Translator: Zou Haojun <haojunzou84@gmail.com>, 2016\n"
+"Last-Translator: Lord Cobol <mattias@invaliddesign.com>, 2017\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,6 +84,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Statusen 'Utkast' används när en användare kodar en ny och obekräftad faktura.\n"
+" * Statusen 'Proforma' används när fakturan inte har något fakturanummer.\n"
+" * Statusen 'Öppen' används när användaren skapar en faktura och ett fakturanummer är genererad. Den förblir öppen tills användaren betalar fakturan.\n"
+" * Statusen 'Betald' sker automatiskt när fakturan är betald. Dess relaterade dagboksinlägg må eller må inte bli förlikad.\n"
+" * Statusen 'Makulerad' används när användaren makulerar en faktura."
 
 #. module: account
 #. openerp-web
@@ -2635,7 +2642,7 @@ msgstr "Klicka för att lägga till en journal."
 #. module: account
 #: model:ir.actions.act_window,help:account.account_tag_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "Klicka för att lägga till en ny tagg"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -2697,10 +2704,17 @@ msgstr "Stäng"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:227
+#: code:addons/account/static/src/xml/account_reconciliation.xml:229
 #, python-format
 msgid "Close the statement"
 msgstr "Stäng ner utdraget."
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:228
+#, python-format
+msgid "Close the statements"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_date_done

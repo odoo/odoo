@@ -50,13 +50,13 @@ msgstr "Anulează"
 #: code:addons/base_import/models/base_import.py:599
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "Coloana %s conține valori incorecte (valoare: %s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:619
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "Coloana %s conține valori incorecte. Eroare în linia %d: %s"
 
 #. module: base_import
 #. openerp-web
@@ -123,7 +123,7 @@ msgstr "Format dată:"
 #: code:addons/base_import/static/src/js/base_import.js:126
 #, python-format
 msgid "Datetime Format:"
-msgstr ""
+msgstr "Format datetimp:"
 
 #. module: base_import
 #. openerp-web
@@ -176,13 +176,13 @@ msgstr "Codificare:"
 #: code:addons/base_import/models/base_import.py:621
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "Eroare procesare Dată  [%s:L%d]: %s"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:234
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr ""
+msgstr "Eroare în celculă făsită la citirea fișierului XLS/XLSX : %s"
 
 #. module: base_import
 #. openerp-web
@@ -223,7 +223,7 @@ msgstr "Fisier de verificat si/sau importat, binar prim (nu baza64)"
 #: code:addons/base_import/static/src/xml/base_import.xml:115
 #, python-format
 msgid "For CSV files, the issue could be an incorrect encoding."
-msgstr ""
+msgstr "Pentru fișiere CSV, problema poate fi o codificare incorectă."
 
 #. module: base_import
 #. openerp-web
@@ -295,6 +295,9 @@ msgid ""
 "will set up subscriptions and send notifications"
 "                             during the import, but lead to a slower import."
 msgstr ""
+"Dacă modelul utilizează openchatter, urmărirea istoricului va seta "
+"subscrierea și va trimite notificări în timpul importului ce va duce la un "
+"import mai încet."
 
 #. module: base_import
 #. openerp-web
@@ -377,14 +380,14 @@ msgstr "Ultima actualizare în"
 #: code:addons/base_import/static/src/xml/base_import.xml:19
 #, python-format
 msgid "Load File"
-msgstr ""
+msgstr "Încarcă fișier"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:56
 #, python-format
 msgid "Map your columns to import"
-msgstr ""
+msgstr "Mapați coloane pentru import"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_res_model
@@ -401,14 +404,14 @@ msgstr "Nume"
 #: code:addons/base_import/static/src/xml/base_import.xml:15
 #, python-format
 msgid "No file chosen..."
-msgstr ""
+msgstr "Fără fișier ales..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/base_import.js:485
 #, python-format
 msgid "Normal Fields"
-msgstr "Campuri obișnuite"
+msgstr "Câmpuri obișnuite"
 
 #. module: base_import
 #. openerp-web
@@ -425,7 +428,7 @@ msgstr "Alte variabile"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_parent_id
 msgid "Parent id"
-msgstr ""
+msgstr "ID Părinte"
 
 #. module: base_import
 #. openerp-web
@@ -439,14 +442,14 @@ msgstr "Campuri de Legatura"
 #: code:addons/base_import/static/src/xml/base_import.xml:24
 #, python-format
 msgid "Reload File"
-msgstr ""
+msgstr "Reîncarcă fișierul"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:11
 #, python-format
 msgid "Select a CSV or Excel file to import."
-msgstr ""
+msgstr "Selectați un fișier CSV sau Excel pentru import."
 
 #. module: base_import
 #. openerp-web
@@ -467,7 +470,7 @@ msgstr "Separator:"
 #: code:addons/base_import/static/src/xml/base_import.xml:72
 #, python-format
 msgid "Show all fields for completion (advanced)"
-msgstr ""
+msgstr "Afișează toate câmpurile completate (avansat)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_somevalue
@@ -493,7 +496,7 @@ msgstr "Tab"
 #: code:addons/base_import/static/src/js/base_import.js:122
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "Delimitator text:"
 
 #. module: base_import
 #. openerp-web
@@ -511,20 +514,22 @@ msgstr ""
 #: code:addons/base_import/static/src/js/base_import.js:127
 #, python-format
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "Separator mii:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:62
 #, python-format
 msgid "Track history during import"
-msgstr ""
+msgstr "Urmărește istoric în timpul importului"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:199
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
+"Nu se poate încărca fișierul \"{extension}\": este necesar modulul Python "
+"\"{modname}\""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:200
@@ -532,6 +537,8 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
+"Format fișier nesuportat \"{}\", import suportat numai pentru  CSV, ODS, XLS"
+" și XLSX"
 
 #. module: base_import
 #. openerp-web

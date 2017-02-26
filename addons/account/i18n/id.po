@@ -23,13 +23,14 @@
 # Hendro Yulianto <hyulianto@gmail.com>, 2016
 # alfieqashwa <alfieqashwa@gmail.com>, 2016
 # Rizki Mudhar <mudharrizki@gmail.com>, 2017
+# aryge <gustanto.ary@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-14 10:20+0000\n"
 "PO-Revision-Date: 2017-02-14 10:20+0000\n"
-"Last-Translator: Rizki Mudhar <mudharrizki@gmail.com>, 2017\n"
+"Last-Translator: aryge <gustanto.ary@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -164,7 +165,7 @@ msgstr "-> Rekonsiliasi"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr ""
+msgstr "Lihat entri yang sebagian direkonsiliasi"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:468
@@ -474,6 +475,8 @@ msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
 msgstr ""
+"<span>(*) Konfigurasi berikut berkaitan dengan perusahaan di mana anda "
+"login.</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
@@ -560,6 +563,8 @@ msgid ""
 "<strong>Banking interface:</strong> with live bank feed synchronization and "
 "bank statement import."
 msgstr ""
+"<strong>Interface Perbankan:</strong> dengan live bank feed synchronization "
+"dan import bank statement."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -682,7 +687,7 @@ msgstr "<strong>Tanggal Jatuh Tempo:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr ""
+msgstr "<strong>Urutan Entri:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1045,7 +1050,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr ""
+msgstr "Peringatan bisa diset di partner (Akun)"
 
 #. module: account
 #. openerp-web
@@ -1452,7 +1457,7 @@ msgstr "Akun pemetaan"
 #: model:ir.actions.act_window,name:account.account_tag_action
 #: model:ir.ui.menu,name:account.account_tag_menu
 msgid "Accounts Tags"
-msgstr ""
+msgstr "Tag Akun"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1505,7 +1510,7 @@ msgstr "Alamat"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
 msgid "Adjustment Tax"
-msgstr ""
+msgstr "Penyesuaian Perpajakan"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -2809,10 +2814,17 @@ msgstr "Tutup"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:227
+#: code:addons/account/static/src/xml/account_reconciliation.xml:229
 #, python-format
 msgid "Close the statement"
 msgstr "Semua garis entri Akun harus diproses untuk menutup pernyataan."
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:228
+#, python-format
+msgid "Close the statements"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_date_done

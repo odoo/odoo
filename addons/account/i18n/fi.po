@@ -1488,7 +1488,7 @@ msgstr "Laskutuksen Dashboard"
 #: model:ir.model.fields,field_description:account.field_account_invoice_date
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date
 msgid "Accounting Date"
-msgstr ""
+msgstr "Kirjauspäivä"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -2880,10 +2880,17 @@ msgstr "Sulje"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:227
+#: code:addons/account/static/src/xml/account_reconciliation.xml:229
 #, python-format
 msgid "Close the statement"
 msgstr "Sulje tiliote"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:228
+#, python-format
+msgid "Close the statements"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_date_done
@@ -4234,6 +4241,9 @@ msgid ""
 "Finance</strong> or the <strong>European Central Bank</strong>. You can "
 "activate this feature in the bottom of the"
 msgstr ""
+"Valuuttakurssit voidaan päivittää automaattisesti kerran vuorokaudessa "
+"<strong>Yahoo Finance</strong>- tai <strong>Euroopan Keskuspankin</strong> "
+"-palvelusta. Voit aktivoida tämän toiminnon ala"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_expects_chart_of_accounts
@@ -5036,7 +5046,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "In Odoo,"
-msgstr ""
+msgstr "Odoossa"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:406
@@ -7913,12 +7923,12 @@ msgstr "Tavallinen"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_company_signed
 msgid "Remaining amount due in the currency of the company."
-msgstr ""
+msgstr "Jäljelläoleva erääntynyt summa yrityksen valuutassa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_signed
 msgid "Remaining amount due in the currency of the invoice."
-msgstr ""
+msgstr "Jäjelläoleva eräntynyt summa laskun valuutassa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual

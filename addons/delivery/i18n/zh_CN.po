@@ -632,7 +632,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"预测数量(计算为 在手数量 - 出货 + 进货) \n"
+"预测数量(计算为 在手数量 - 出向 + 入向) \n"
 "对于单一库存位置来说，这包括了存储在这个位置及其子位置的货物。\n"
 "对于单一仓库来说，这包括了存储在这个仓库的库存位置及其子位置的货物。\n"
 "否则，这包括存储在任何“内部”类型位置的货物。"
@@ -762,7 +762,7 @@ msgstr "收入科目"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_incoming_qty
 msgid "Incoming"
-msgstr "将要来的"
+msgstr "入向"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1057,7 +1057,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty
 msgid "Outgoing"
-msgstr "出局"
+msgstr "出向"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
@@ -1839,7 +1839,8 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr "在进行实时库存估值时，除非为源库位指定一个库存核算科目，否则所有的入库调拨日记账明细将登入这科目。当没在产品设定时，使用产品类别的设定。"
+msgstr ""
+"在进行实时库存估值时，除非为源库位指定一个库存核算科目，否则所有的入向库存移动日记账明细将登入这科目。当没在产品设定时，使用产品类别的设定。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
@@ -1848,7 +1849,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr "在进行实时估值时，除非对目标库位指定一个核算科目否则出库调拨日记账分录将登入这个科目。当产品没设定时，它默认继承产品的类别的设定。"
+msgstr "在进行实时估值时，除非对目标库位指定一个核算科目否则出向库存移动日记账分录将登入这个科目。当产品没设定时，它默认继承产品的类别的设定。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
