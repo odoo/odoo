@@ -1359,6 +1359,49 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_save').click();
     });
 
+    QUnit.test('one2many list with inline form view with context with parent key', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[0].product_id = 41;
+        this.data.partner.records[1].product_id = 37;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="product_id"/>' +
+                    '<field name="p">' +
+                        '<form string="Partner">' +
+                            '<field name="product_id" context="{\'partner_foo\':parent.foo, \'lalala\': parent.product_id}"/>' +
+                        '</form>' +
+                        '<tree>' +
+                            '<field name="product_id"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'name_search') {
+                    assert.strictEqual(args.kwargs.context.partner_foo, "yop",
+                        "should have correctly evaluated parent foo field");
+                    assert.strictEqual(args.kwargs.context.lalala, 41,
+                        "should have correctly evaluated parent product_id field");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        // open a modal
+        form.$('tr.o_data_row:eq(0) td:contains(xphone)').click();
+
+        // write in the many2one field
+        $('.modal .o_form_field_many2one input').click();
+    });
+
     QUnit.test('one2many list edition, some basic functionality', function (assert) {
         assert.expect(3);
 

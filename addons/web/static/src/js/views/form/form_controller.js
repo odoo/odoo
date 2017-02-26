@@ -419,6 +419,7 @@ var FormController = BasicController.extend({
             fields_view: field.views ? field.views.form : undefined,
             form_view_options: {'not_interactible_on_create': true},
             model: this.model,
+            parentID: this.handle,
         }).open();
     },
     /**
@@ -535,6 +536,8 @@ var FormController = BasicController.extend({
                 title: _t("Open: ") + event.data.string,
                 on_save: event.data.on_save,
                 on_saved: event.data.on_saved,
+                model: self.model,
+                parentID: self.handle,
             }).open();
         });
     },

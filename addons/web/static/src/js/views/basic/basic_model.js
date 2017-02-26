@@ -1233,7 +1233,10 @@ var BasicModel = AbstractModel.extend({
         }).then(function (result) {
             result = result[0];
             record.data = _.extend({}, record.data, result);
-            return self._postprocess(record);
+        }).then(function () {
+            return self._fetchX2Manys(record, oldData, fieldNames).then(function () {
+                return self._postprocess(record);
+            });
         }).then(function (record) {
             _.each(fieldNames, function (name) {
                 var field = record.fields[name];
@@ -1262,10 +1265,7 @@ var BasicModel = AbstractModel.extend({
                     record.data[name] = fieldUtils.parse.datetime(val);
                 }
             });
-        }).then(function () {
-            return self._fetchX2Manys(record, oldData, fieldNames).then(function () {
-                return record;
-            });
+            return record;
         });
     },
     /**
@@ -1549,7 +1549,12 @@ var BasicModel = AbstractModel.extend({
      */
     _getContext: function (element, options) {
         var context = new Context(session.user_context, element.context);
-        context.set_eval_context(element.data);
+        var evalContext = this.get(element.id, {raw: true}).data;
+        if (element.parentID) {
+            var parent = this.get(element.parentID, {raw: true});
+            _.extend(evalContext, {parent: parent.data});
+        }
+        context.set_eval_context(evalContext);
         if (options && options.fieldName) {
             var attrs = element.fieldAttrs[options.fieldName];
             if (attrs && attrs.context) {
