@@ -10,8 +10,8 @@ class AccountMove(models.Model):
 
     @api.multi
     def unlink(self):
-        for move in self:
-            expense_sheets = self.env['hr.expense.sheet'].search([('account_move_id', '=', move.id)])
-            if expense_sheets:
-                expense_sheets.write({'state': 'approve'})
-        return super(AccountMove, self).unlink()
+        expense_sheets = self.env['hr.expense.sheet'].search([('account_move_id', 'in', self.ids)])
+        res = super(AccountMove, self).unlink()
+        if expense_sheets:
+            expense_sheets.write({'state': 'approve'})
+        return res
