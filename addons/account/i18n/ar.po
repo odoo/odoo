@@ -12,15 +12,15 @@
 # Mahmoud M. Soliman <mahmoud_soliman4@alex-comm.edu.eg>, 2015
 # Mazen Abu Ghali <mabughali@yahoo.com>, 2015
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
-# Mustafa Rawi <mustafa@cubexco.com>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2015,2017
 # shaklawoon <shakla78@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-08-10 07:46+0000\n"
-"Last-Translator: shaklawoon <shakla78@gmail.com>\n"
+"PO-Revision-Date: 2017-02-20 16:40+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,7 +97,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hello ${object.partner_id.name},</p>\n\n    <p>هناك فاتورة جديدة لك: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;فاتورة رقم<strong>${object.number}</strong><br />\n       &nbsp;&nbsp;إجمالي الفاتورة <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;تاريخ الفاتورة ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;مرجع الطلب ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;معلومات الاتصال: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>يمكنك أيضا الدفع عن طريق Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>إذا كان لديك أي إستفسارات برجاء لا تتردد في الاتصال بنا</p>\n    <p>شكرا لإختياركم  ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>مرحباً ${object.partner_id.name},</p>\n\n    <p>صدرت فاتورة جديدة لك: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>البيانات</strong><br />\n       &nbsp;&nbsp;فاتورة رقم<strong>${object.number}</strong><br />\n       &nbsp;&nbsp;إجمالي الفاتورة <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;تاريخ الفاتورة ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;رقم الإشارة ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;معلومات الاتصال: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>يمكنك أيضا الدفع عن طريق Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>إذا كان لديك أي إستفسارات برجاء لا تتردد في الاتصال بنا</p>\n    <p>شكرا لإختياركم  ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                الهاتف:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                موقع ويب :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -305,7 +305,7 @@ msgid ""
 "                to disclose a certain amount of information.\n"
 "              </p>\n"
 "            "
-msgstr "<pفئة=\"oe_عرض_أى محتوى_إنشاء\"> \nأضغط لإضافة حساب\n</p><p>\nالحساب جزء من دفتر الأستاذ يسمح لشركتك \nبتسجيل جميع أنواع المعاملات الدائنة و المدينة .\nتقوم الشركات بتقديم الحسابات السنوية في جزئين رئيسيين: ال\nميزانية العمومية وقائمة الدخل (حساب الأرباح والخسائر).\nالحسابات السنوية للشركة تُطلب من خلال القانون \nلتكشف عن حدوث قدر من المعلومات.\n</p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء حساب جديد.\n</p><p>\nالحساب جزء من دفتر الأستاذ يسمح لمؤسستك بتسجيل جميع أنواع\nالمعاملات الدائنة و المدينة.\nتقوم المؤسسات بتقديم الحسابات السنوية في جزئين رئيسيين: الميزانية العمومية\nوقائمة الدخل (حساب الأرباح والخسائر).\nيجب تقديم هذه الحسابات السنوية للمؤسسة لقانوناً\nلأغراض الضرائب والزكاة وما شابهها.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_gain_loss
@@ -512,7 +512,7 @@ msgid ""
 "                account and the counterpart \"Account Payable\".\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Select the period and the journal you want to fill.\n              </p><p>\n                This view can be used by accountants in order to quickly record\n                entries in Odoo. If you want to record a supplier invoice,\n                start by recording the line of the expense account. Odoo\n                will propose to you automatically the Tax related to this\n                account and the counterpart \"Account Payable\".\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                اختر الفترة المالية لتسجيل القيود فيها.\n              </p><p>\n                يمكن للمحاسبين استخدام هذه الواجهة لتسجيل القيود بشكل بسيط\n                وسريع في أودو. إذا كنت ترغب في تسجيل فاتورة مورد، ابدأ بتسجيل\n                طرف القيد في حساب المصروفات. سيقترح أودو آلياً الطرف الثاني للقيد،\n                في حساب الدائنين أو الموردين بالإضافة إلى إنشاء طرف قيد الضريبة\n                المُعرفة في الحساب\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_tree
@@ -630,12 +630,12 @@ msgstr "نوع الحساب"
 #: view:website:account.report_trialbalance
 #, python-format
 msgid "Account"
-msgstr "حساب"
+msgstr "الحساب"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr "ميزان المراجعة للحسابات المعمرة"
+msgstr "تقرير ميزان المراجعة لأعمار الحساب"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
@@ -645,7 +645,7 @@ msgstr "رصيد الحساب التحليلي"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
 msgid "Account Analytic Chart"
-msgstr "حساب مخطط تحليلي"
+msgstr "شجرة الحسابات التحليلية"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger
@@ -665,7 +665,7 @@ msgstr "رصيد للحساب التحليلي المعكوس"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
 msgid "Account Analytic Journal"
-msgstr "يومية حساب تحليلي"
+msgstr "يومية الحسابات التحليلية"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
@@ -711,7 +711,7 @@ msgstr "تقرير مشترك للحساب"
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account Currency"
-msgstr "العملة للحساب"
+msgstr "عملة الحساب"
 
 #. module: account
 #: field:account.fiscal.position.account,account_dest_id:0
@@ -723,7 +723,7 @@ msgstr "وجهة الحساب"
 #: view:account.move:account.view_move_form
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
-msgstr "قيد الحساب"
+msgstr "القيد المحاسبي"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_journal
@@ -746,14 +746,14 @@ msgstr "أختر اليومية المحاسبية"
 #. module: account
 #: field:account.invoice.report,account_line_id:0
 msgid "Account Line"
-msgstr "سطر الحساب"
+msgstr "بند الحساب"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
 #: field:account.fiscal.position,account_ids:0
 #: field:account.fiscal.position.template,account_ids:0
 msgid "Account Mapping"
-msgstr "تخصيص الحساب"
+msgstr "ربط الحسابات"
 
 #. module: account
 #: field:account.use.model,model:0
@@ -764,7 +764,7 @@ msgstr "نموذج حساب"
 #. module: account
 #: model:ir.model,name:account.model_account_model_line
 msgid "Account Model Entries"
-msgstr "إدخالات نماذج الحسابات"
+msgstr "قيود النموذج المحاسبي"
 
 #. module: account
 #: view:website:account.report_analyticbalance
@@ -786,12 +786,12 @@ msgstr "حساب أستاذ الشريك"
 #. module: account
 #: field:res.partner,property_account_payable:0
 msgid "Account Payable"
-msgstr "دائن"
+msgstr "حساب الدائنون"
 
 #. module: account
 #: view:account.period:account.view_account_period_form
 msgid "Account Period"
-msgstr "فترة الحساب"
+msgstr "الفترة المحاسبية"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_journal
@@ -812,7 +812,7 @@ msgstr "المدينون"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
 msgid "Account Reconciliation"
-msgstr "حساب التسوية"
+msgstr "تسوية الحساب"
 
 #. module: account
 #: view:account.financial.report:account.view_account_financial_report_form
@@ -833,7 +833,7 @@ msgstr "تقارير الحساب"
 #: view:account.financial.report:account.view_account_report_tree_hierarchy
 #: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
 msgid "Account Reports Hierarchy"
-msgstr "المسلسل الهرمي لتقارير الحسابات"
+msgstr "هرم التقارير المحاسبية"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -1196,24 +1196,24 @@ msgid ""
 "Odoo then calculates a table of credit balance by period. So if you request "
 "an interval of 30 days Odoo generates an analysis of creditors for the past "
 "month, past two months, and so on."
-msgstr "رصيد الشريك المسنن هو تقرير أكثر تفصيلا للمستحقات عن طريق الفترات. عند فتح هذا التقرير، أوبنيرب يسأل عن اسم الشركة، للفترة المالية وحجم الفاصل الزمني ليتم تحليلها (بالأيام). ثم يحسب  أوبنيرب الرصيد الدائن الذى يخص الفتره . لذلك إذا قمت بطلب فاصل زمني من 30 يوما أوبنيرب يولد تحليل الدائنين للشهر الماضي، خلال الشهرين الماضيين، وهكذا."
+msgstr "تقرير عمر رصيد الشريك هو تقرير مفصل عن الحسابات المدينة موزعة على فترات زمنية. عند فتح هذا التقرير سيطلب منك أودو عن اسم المؤسسة، الفترة المالية وحجم الفترة الزمنية لإجراء التحليل عليها (بالأيام). سيقوم أودو عندها بحساب الأرصدة الدائنة حسب الفترة. بمعنى أنك إذا حددت فترة زمنية طولها 30 يوم، سيعرض أودو حسابات الدائنون خلال الشهر الماضي، ثم الشهرين الماضيين، وهكذا دواليك."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
 #: view:report.aged.receivable:account.view_aged_recv_graph
 #: view:report.aged.receivable:account.view_aged_recv_tree
 msgid "Aged Receivable"
-msgstr "الدين المشكوك في تحصيله"
+msgstr "أعمار الحسابات المدينة"
 
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr "مقبوضات مستحقة حتى اليوم"
+msgstr "أعمار الحسابات المدينة حتى اليوم"
 
 #. module: account
 #: view:website:account.report_agedpartnerbalance
 msgid "Aged Trial Balance"
-msgstr "ميزان المراجعة القديم"
+msgstr "ميزان مراجعة أعمار الديون"
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -1286,7 +1286,7 @@ msgstr "كل الحسابات"
 #. module: account
 #: field:account.bank.statement,all_lines_reconciled:0
 msgid "All lines reconciled"
-msgstr "ل السطور مربوطة"
+msgstr "كل القيود المسواة"
 
 #. module: account
 #: help:account.move,state:0
@@ -1399,7 +1399,7 @@ msgstr "مبلغ العملة"
 #: view:account.payment.term.line:account.view_payment_term_line_form
 #: field:account.payment.term.line,value_amount:0
 msgid "Amount To Pay"
-msgstr "المبلغ للدفع"
+msgstr "المبلغ المستحق"
 
 #. module: account
 #: field:account.statement.operation.template,amount_type:0
@@ -1642,13 +1642,13 @@ msgstr "Apply when the shipping or invoicing country matches. Takes precedence o
 #: view:validate.account.move:account.validate_account_move_view
 #: view:validate.account.move.lines:account.validate_account_move_line_view
 msgid "Approve"
-msgstr "تصديق"
+msgstr "اعتماد"
 
 #. module: account
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "April"
-msgstr "أبريل/ نيسان"
+msgstr "أبريل"
 
 #. module: account
 #: view:account.use.model:account.view_account_use_model_create_entry
@@ -1681,12 +1681,12 @@ msgstr "كمثال على ذلك، فإن الدقة العشرية من 2 تس�
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
 msgid "Ask Refund"
-msgstr "طلب استرداد"
+msgstr "إنشاء مرتجع"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_asset
 msgid "Asset"
-msgstr "أصل"
+msgstr "الأصل"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_asset_view1
@@ -1696,7 +1696,7 @@ msgstr "عرض الأصول"
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
 msgid "Assets"
-msgstr "أصول"
+msgstr "الأصول"
 
 #. module: account
 #: field:account.config.settings,module_account_asset:0
@@ -1711,7 +1711,7 @@ msgstr "شريك متحد"
 #. module: account
 #: selection:account.account,currency_mode:0
 msgid "At Date"
-msgstr "في تاريخ"
+msgstr "في تاريخه"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -1722,7 +1722,7 @@ msgstr "أغسطس"
 #. module: account
 #: field:account.fiscal.position,auto_apply:0
 msgid "Automatic"
-msgstr "تلقائي"
+msgstr "آلي"
 
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_reconcile
@@ -1732,7 +1732,7 @@ msgstr "تسوية آلية"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
 msgid "Automatic Reconciliation"
-msgstr "تسوية تلقائية"
+msgstr "تسوية آلية"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -1742,7 +1742,7 @@ msgstr "تنسيق تلقائي"
 #. module: account
 #: field:account.journal,entry_posted:0
 msgid "Autopost Created Moves"
-msgstr "ترحيل تلقائي للحركات"
+msgstr "ترحيل تلقائي للقيود"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -2594,7 +2594,7 @@ msgstr "اختار السنة المالية"
 #: code:addons/account/static/src/js/account_widgets.js:1297
 #, python-format
 msgid "Choose counterpart"
-msgstr " اختيار نظيره"
+msgstr "اختر الطرف المناظر"
 
 #. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
@@ -3004,7 +3004,7 @@ msgstr "نظير"
 #. module: account
 #: field:account.fiscal.position,country_id:0
 msgid "Country"
-msgstr "دولة"
+msgstr "الدولة"
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
@@ -3286,32 +3286,32 @@ msgstr "تاريخ الإنشاء"
 #: view:website:account.report_salepurchasejournal
 #: view:website:account.report_trialbalance view:website:account.report_vat
 msgid "Credit"
-msgstr "دائن"
+msgstr "الدائن"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Credit Centralisation"
-msgstr "تجميع المديونية"
+msgstr "مركزية الدائن"
 
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Credit Note"
-msgstr "اخطار بالرصيد"
+msgstr "إشعار دائن"
 
 #. module: account
 #: view:account.tax.template:account.view_account_tax_template_form
 msgid "Credit Notes"
-msgstr "أوراق دائنة"
+msgstr "إشعارات دائنة"
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
 msgid "Credit amount"
-msgstr "مبلغ الدائنون"
+msgstr "المبلغ الدائن"
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_prefix:0
 msgid "Credit note sequence"
-msgstr "تسلسل إشعار الرصيد"
+msgstr "مسلسل الإشعارات الدائنة"
 
 #. module: account
 #: field:account.bank.statement,currency:0
@@ -3538,7 +3538,7 @@ msgid ""
 "the last unreconciled debit/credit entry of this partner was reconciled, "
 "either the user pressed the button \"Nothing more to reconcile\" during the "
 "manual reconciliation process."
-msgstr "تاريخ التسوية للقيود المحاسبية الخاصة بالشريك قد تم تسويتها تماما فى وقت سابق . فهى تختلف عن التسوية الماضية التى تم عملها لهذا الشريك , و نحن هنا نتصور أنه لا يوجد ما هو أكثر ليتم تسويته فى هذا التاريخ . و يمكننا تحقيق هذا بطريقتين مختلفتين : إما أن يكون قد تم تسوية آخر ما لم تتم تسويته سواء دائن أو مدين لهذا الشريك , أو أن يقوم المستخدم بالضغط على زر \"لا يوجد ما هو أكثر للتسوية \" أثناء عملية التسوية اليدوية ."
+msgstr "هذا هو آخر تاريخ تم فيه إجراء تسوية كاملة للشريك. يختلف هذا التاريخ عن التواريخ التي تم إجراء تسويات جزئية على حسابات هذا الشريك. يتغير هذا التاريخ في حالتين 2 اثنتين، هما: إجراء تسوية كاملة لكافة المبالغ الدائنة على الشركة والمدينة لصالحه، أو أن يقوم المستخدم بنقر زر \"لا شيء للتسوية\" أثناء إجراء تسوية يدوية."
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -3603,12 +3603,12 @@ msgstr "يوم الشهر، إدخال -1 من أجل آخر يوم من الش�
 #: view:website:account.report_salepurchasejournal
 #: view:website:account.report_trialbalance view:website:account.report_vat
 msgid "Debit"
-msgstr "مدين"
+msgstr "المدين"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Debit Centralisation"
-msgstr "تمركز المدين"
+msgstr "مركزية المدين"
 
 #. module: account
 #: field:account.move.line.reconcile,debit:0
@@ -3619,7 +3619,7 @@ msgstr "المبلغ المدين"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "December"
-msgstr "ديسمبر/ كانون الأول"
+msgstr "ديسمبر"
 
 #. module: account
 #: field:account.config.settings,decimal_precision:0
@@ -3764,7 +3764,7 @@ msgstr "عرض الحسابات"
 #. module: account
 #: field:accounting.report,debit_credit:0
 msgid "Display Debit/Credit Columns"
-msgstr "عرض خانة الدائن/المدين"
+msgstr "عرض أعمدة الدائن والمدين"
 
 #. module: account
 #: field:account.vat.declaration,display_detail:0
@@ -4698,7 +4698,7 @@ msgid ""
 "From this view, have an analysis of your different financial accounts. The "
 "document shows your debit and credit taking in consideration some criteria "
 "you can choose by using the search tool."
-msgstr "من وجهة النظر هذه، يكون تحليلا لحساباتك المالية المختلفة. وتبين الوثيقة الخصم المباشر والقروض مع الأخذ في الاعتبار بعض المعايير التي يمكنك اختيارها باستخدام أداة بحث."
+msgstr "من هذه الواجهة، يمكنك تحليل حساباتك المالية المختلفة. يعرض هذا المستند المبالغ الدائنة والمدينة آخذاً في اعتباره الاشتراطات التي حددتها باستخدام شريط البحث."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_treasury_report_all
@@ -5141,7 +5141,7 @@ msgid ""
 "If you selected to filter by date or period, this field allow you to add a "
 "row to display the amount of debit/credit/balance that precedes the filter "
 "you've set."
-msgstr "إذا اخترت ترشيح علي حسب تاريخ أو فترة.هذا الحقل يتيح لك اضافة صف لعرض كمية حساب المدين/حساب الدائن/الميزانية التي سبق تعيينها بالترشيح"
+msgstr "إذا اخترت ترشيح حسب التاريخ أو الفترة المالية، فهذا الحقل يسمح لك بإضافة سطر تعرض فيه المبالغ الدائنة، المدينة والأرصدة الافتتاحية."
 
 #. module: account
 #: view:account.unreconcile.reconcile:account.account_unreconcile_reconcile_view
@@ -5610,7 +5610,7 @@ msgstr "وهي تعمل كحساب افتراضي لكمية بطاقة الائ
 #. module: account
 #: help:account.journal,default_debit_account_id:0
 msgid "It acts as a default account for debit amount"
-msgstr "وهي تمثل الحساب الافتراضي لكمية الخصم"
+msgstr "يستخدم كحساب افتراضي للمبالغ المدينة."
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -6566,7 +6566,7 @@ msgstr "الشريك التالي للتسوية"
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr "رقم السجل الإئتماني التالي"
+msgstr "رقم الإشعار الدائن التالي"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_next:0
@@ -6576,7 +6576,7 @@ msgstr "رقم الفاتورة التالية"
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_next:0
 msgid "Next supplier credit note number"
-msgstr "رقم إشعار رصيد المورد التالي"
+msgstr "رقم الإشعار الدائن التالي للمورد"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_next:0
@@ -7245,7 +7245,7 @@ msgstr "ادفع للمورد/ الشريك بالشيك"
 #: model:account.account.type,name:account.data_account_type_payable
 #: selection:account.entries.report,type:0
 msgid "Payable"
-msgstr "مدفوعات"
+msgstr "الدائنون"
 
 #. module: account
 #: view:account.chart.template:account.view_account_chart_template_seacrh
@@ -7270,7 +7270,7 @@ msgstr "حسابات الدائنون"
 #. module: account
 #: field:res.partner,debit_limit:0
 msgid "Payable Limit"
-msgstr "حد المدفوعات"
+msgstr "حد الإئتمان"
 
 #. module: account
 #: view:account.statement.from.invoice.lines:account.view_account_statement_from_invoice_lines
@@ -7326,7 +7326,7 @@ msgstr "تفاصيل شرط السداد للعميل..."
 #: view:account.invoice:account.invoice_supplier_form
 #: selection:account.vat.declaration,based_on:0
 msgid "Payments"
-msgstr "مدفوعات"
+msgstr "المدفوعات"
 
 #. module: account
 #: field:res.company,paypal_account:0
@@ -7930,13 +7930,13 @@ msgstr "السبب"
 #: model:account.account.type,name:account.data_account_type_receivable
 #: selection:account.entries.report,type:0
 msgid "Receivable"
-msgstr "الدائنون"
+msgstr "المدينون"
 
 #. module: account
 #: view:account.chart.template:account.view_account_chart_template_seacrh
 #: field:account.chart.template,property_account_receivable:0
 msgid "Receivable Account"
-msgstr "حساب المدينون"
+msgstr "الحساب المدين"
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -7950,12 +7950,12 @@ msgstr "حساب المدينون"
 #: view:website:account.report_agedpartnerbalance
 #, python-format
 msgid "Receivable Accounts"
-msgstr "حسابات مدينة"
+msgstr "الحسابات المدينة"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
 msgid "Receivable accounts"
-msgstr "حسابات مدينة"
+msgstr "الحسابات المدينة"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -9179,7 +9179,7 @@ msgstr "ضرائب المورد"
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_prefix:0
 msgid "Supplier credit note sequence"
-msgstr "تسلسل اشعار رصيد المورد"
+msgstr "مسلسل الإشعارات الدائنة للمورد"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_prefix:0
@@ -9195,7 +9195,7 @@ msgstr "المورّدون"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "TIN:"
-msgstr "TIN:"
+msgstr "ملف ضريبة الدخل:"
 
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
@@ -9561,7 +9561,7 @@ msgid ""
 "can have children accounts for multi-company consolidations, "
 "payable/receivable are for partners accounts (for debit/credit "
 "computations), closed for depreciated accounts."
-msgstr "'النوع المدخل' يُستخدم للمميزات المتاحة فى مختلف أنواع الحسابات  : العرض لا يمكن أن تحتوى على عناصر يومية , و توطيد هم حسابات يمكن أن تحتوى على حسابات صغيرة لتوطيد شركات متعددة , المدفوعات /المقبوضات هم الحسابات الرئيسية (لحسابات المدين/الدائن) , و تغلق لحسابات الإهلاك ."
+msgstr "يستخدم النوع الداخلي لتحديد متى يتم استخدام حساب معين: العرض هو حساب لا يمكن تسجيل قيود يومية فيه ويستخدم لأغراض التبويب فقط. التجميع هي حسابات تعرض إجماليات حسابات أخرى، ويمكن استخدامها في تجميع حسابات من مؤسسات متعددة في النظام. الحسابات الدائنة والمدينة تستخدم في حسابات العملاء والموردين (لحساب المبالغ المستحقة الدائنة والمدينة)، والحسابات المغلقة للحسابات التي لم تعد تستخدم في مؤسستك."
 
 #. module: account
 #: help:account.move.line,tax_code_id:0
@@ -9616,14 +9616,14 @@ msgstr "أُعربت الكمية في عملة الحساب المتعلق اذ
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
 " is debited and negative when account is credited."
-msgstr "The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited."
+msgstr "المبلغ معبراً عنه بعملة أخرى. يجب أن تكون القيمة موجبة إذا كانت مدينة وسالبة متى كانت دائنة."
 
 #. module: account
 #: help:account.statement.operation.template,amount:0
 msgid ""
 "The amount will count as a debit if it is negative, as a credit if it is "
 "positive (except if amount type is 'Percentage of open balance')."
-msgstr "The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance')."
+msgstr "يكون المبلغ مديناً إذا كان سالباً ودائناً إذا كان موجباً (عدا في حالة إذا كان نوع المبلغ \"نسبة مئوية لرصيد مفتوح\")."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:728
@@ -9643,7 +9643,7 @@ msgid ""
 "entries of all fiscal years. Note that you should define it with default "
 "debit/credit accounts, of type 'situation' and with a centralized "
 "counterpart."
-msgstr "افضل ممارسة هنا هو استخدام اليومية المكرسة لتحتوي المدخلات المفتوحة لكل السنوات المالية. لاحظ يجب عليك تعريفها مع الخصم/حسابات بطاقة الائتمان الافتراضية, لنوع ‘الموقف‘ و مع نسخة مطابقة متمركزة."
+msgstr "الأسلوب الأمثل في هذه الحالة هو استخدام دفتر يومية مخصص للقيود الافتتاحية لكافة السنوات المالية. لاحظ أنه يتوجب تحديد الحسابات الدائنة والمدينة، وطبط نوع اليومية إلى \"حالة\" وتحديد اختيار \"يومية مركزية\"."
 
 #. module: account
 #: sql_constraint:account.account:0
@@ -9752,7 +9752,7 @@ msgstr "يجب أن تكون اليومية نسخة (قانونية) مركزي
 #: code:addons/account/wizard/account_fiscalyear_close.py:101
 #, python-format
 msgid "The journal must have default credit and debit account."
-msgstr "اليومة يجب ان تحتوي على حساب الدائن والمدين."
+msgstr "يجب تحديد الحسابات الدائنة والمدينة الافتراضية في دفتر اليومية."
 
 #. module: account
 #: help:account.model.line,date_maturity:0
@@ -9904,7 +9904,7 @@ msgid ""
 "The validation of journal entries process is also called 'ledger posting' "
 "and is the process of transferring debit and credit amounts from a journal "
 "of original entry to a ledger book."
-msgstr "ويسمى أيضا التحقق من صحة عملية إدخالات دفتر اليومية \"دفتر نشر\" و هي عملية تحويل مبالغ الخصم والائتمان من اليومية من الدخول الأصلي لكتاب الأستاذ."
+msgstr "اعتماد قيود اليومية أو الترحيل هو عملية نقل المبالغ الدائنة والمدينة من دفتر اليومية إلى حساب الأستاذ."
 
 #. module: account
 #: code:addons/account/installer.py:114
@@ -9940,7 +9940,7 @@ msgstr "لايوجد حساب دائن إفتراضى محدد\n فى اليوم
 msgid ""
 "There is no default debit account defined \n"
 "on journal \"%s\"."
-msgstr "لا يوجد حساب مدين افتراضي معرف\nعلى يومية \"%s\"."
+msgstr "لا يوجد حساب مدين افتراضي معرف\nعلى دفتر اليومية \"%s\"."
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:96
@@ -10334,7 +10334,7 @@ msgid ""
 "accounts for multi-company consolidations, payable/receivable are for "
 "partners accounts (for debit/credit computations), closed for depreciated "
 "accounts."
-msgstr "This type is used to differentiate types with special effects in Odoo: view can not have entries, consolidation are accounts that can have children accounts for multi-company consolidations, payable/receivable are for partners accounts (for debit/credit computations), closed for depreciated accounts."
+msgstr "هذا النوع يستخدم للتمييز بين أنواع الحسابات وتأثيراتها في أودو: العرض لا يمكن تسجيل قيود فيه، التجميع يستخدم لتجميع الأرصدة بين حسابات المؤسسات المختلفة إذا تم استخدام تعدد المؤسسات في أودو، الحسابات الدائنة والمدينة تستخدم لحسابات العملاء والموردين (لحساب المبالغ الدائنة والمدينة المستحقة) والحسابات المغلقة للحسابات التي لن يتم استخدامها مجدداً."
 
 #. module: account
 #: help:account.account,currency_mode:0
@@ -10457,7 +10457,7 @@ msgstr "إجمالي الدائن"
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_tree
 msgid "Total Debit"
-msgstr "أجمالى المدين"
+msgstr "إجمالي المدين"
 
 #. module: account
 #: field:res.partner,total_invoiced:0
@@ -10533,12 +10533,12 @@ msgstr "إجمالي المبلغ الواجب دفعه لهذا المورد."
 #. module: account
 #: view:account.move.line:account.view_move_line_tree_reconcile
 msgid "Total credit"
-msgstr "إجمالي الإئتمان"
+msgstr "إجمالي الدائن"
 
 #. module: account
 #: view:account.move.line:account.view_move_line_tree_reconcile
 msgid "Total debit"
-msgstr "إجمالي الخصم"
+msgstr "إجمالي المدين"
 
 #. module: account
 #: help:account.bank.statement,total_entry_encoding:0
@@ -10826,7 +10826,7 @@ msgid ""
 "                                    one. The credit note will be created, validated and reconciled\n"
 "                                    with the current invoice. A new, draft, invoice will be created \n"
 "                                    so that you can edit it."
-msgstr "استخدام هذا الخيار إذا كنت ترغب في إلغاء فاتورة وإنشاء \nواحدة جديدة . مذكرة الائتمان سوف يتم إنشائها,و المُصادقة عليها و تسويتها \nمع الفاتورة الحالية . سيتم إنشاء جديد,مسودة,فاتورة \nبحيث يمكنك التعديل عليه ."
+msgstr "استخدم هذا الاختيار إذا كنت ترغب في إلغاء الفاتورة وإنشاء فاتورة\nجديدة. سيتم إنشاء الإشعار الدائن، وترحيل قيوده وتسويته مع الفاتورة\nالحالية آلياً. ثم سيتم إنشاء مسودة فاتورة جديدة بحيث يمكنك تحريرها بنفسك."
 
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
@@ -10834,7 +10834,7 @@ msgid ""
 "Use this option if you want to cancel an invoice you should not\n"
 "                                    have issued. The credit note will be created, validated and reconciled\n"
 "                                    with the invoice. You will not be able to modify the credit note."
-msgstr "استخدام هذا الخيار إذا كنت ترغب في إلغاء فاتورة يجب ألا\n تصدرها. سيتم إنشاء هذه المذكرة الائتمان، والتحقق من صحتها وتسويتها \nمع الفاتورة. فلن تكون قادرا على تعديل مذكرة الائتمان."
+msgstr "استخدم هذا الاختيار إذا كنت ترغب في إلغاء فاتورة خاطئة ولم يكن\nيفترض إصدارها. سيتم إنشاء الإشعار الدائن وترحيل قيوده وتسويته\nمع الفاتورة الحالية آلياً. لن تتمكن من تحرير الإشعار الدائن."
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -11006,7 +11006,7 @@ msgstr "عند انشاء قائمة تكون الحالة 'مسودة'\nو بع
 #: code:addons/account/static/src/js/account_widgets.js:533
 #, python-format
 msgid "Whew, that was fast !"
-msgstr "اووه، لقد كان هذا سريعاً!"
+msgstr "رائع، لقد كان هذا سريعاً!"
 
 #. module: account
 #: field:account.central.journal,amount_currency:0
@@ -11096,12 +11096,12 @@ msgstr "نموذج خاطئ!"
 #. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "قيمة دائنة أو مدينة خاطئة في القيد المحاسبي !"
+msgstr "المبلغ الدائن أو المدين خاطئ في قيد اليومية!"
 
 #. module: account
 #: sql_constraint:account.model.line:0
 msgid "Wrong credit or debit value in model, they must be positive!"
-msgstr "خطا في قيمة حساب المدين/الدائن في النموذج,يجب ان يكونوا ايجابيين"
+msgstr "قيمة دائنة أو مدينة خاطئة في النموذج، يجب أن تكون هذه القيم موجبة!"
 
 #. module: account
 #: view:report.account.sales:account.view_report_account_sales_search
@@ -11187,7 +11187,7 @@ msgid ""
 "You can select here the journal to use for the credit note that will be "
 "created. If you leave that field empty, it will use the same journal as the "
 "current invoice."
-msgstr "هنا يمكنك اختيار اليومية لاستخدامها في مذكرة الائتمان التي سيتم إنشاؤها. إذا تركت هذا الحقل فارغا، فإنه سيتم استخدام نفس المجلة كما الفاتورة الحالية."
+msgstr "يمكنك هنا اختيار دفتر اليومية الذي سيتم كتابة قيد الإشعار الدائن فيه. إذا تركت الحقل فارغاً فسيقوم النظام باستخدام دفتر اليومية الخاص بالفاتورة."
 
 #. module: account
 #: help:account.financial.report,style_overwrite:0
@@ -11426,7 +11426,7 @@ msgstr "لا يمكنك المُصادقة على مدخلات اليومية ه
 #: code:addons/account/account_cash_statement.py:271
 #, python-format
 msgid "You do not have rights to open this %s journal!"
-msgstr "لم يكن لديك حق فتح هذه اليوميه  %s"
+msgstr "لا تملك صلاحيات الوصول إلى دفتر اليومية %s!"
 
 #. module: account
 #: code:addons/account/account.py:2304
@@ -11487,7 +11487,7 @@ msgstr "يجب تحديد دفتر / يومية لقيود الاغلاق لهذ
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:68
 #, python-format
 msgid "You must balance the reconciliation"
-msgstr "يجيب تحقيق تسوية موزونة."
+msgstr "يجب أن تكون المبالغ موزونة لإجراء التسوية."
 
 #. module: account
 #. openerp-web
