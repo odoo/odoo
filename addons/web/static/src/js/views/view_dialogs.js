@@ -67,6 +67,10 @@ var FormViewDialog = ViewDialog.extend({
     /**
      * @param {Widget} parent
      * @param {Object} [options]
+     * @param {string} [options.parentID] the id of the parent record. It is
+     *   useful for situations such as a one2many opened in a form view dialog.
+     *   In that case, we want to be able to properly evaluate domains with the
+     *   'parent' key.
      * @param {integer} [options.res_id] the id of the record to open
      * @param {Object} [options.form_view_options] dict of options to pass to
      *   the Form View @todo: make it work
@@ -86,6 +90,7 @@ var FormViewDialog = ViewDialog.extend({
         this.on_saved = options.on_saved || (function () {});
         this.context = options.context;
         this.model = options.model;
+        this.parentID = options.parentID;
 
         var multi_select = !_.isNumber(options.res_id) && !options.disable_multiple_selection;
         var readonly = _.isNumber(options.res_id) && options.readonly;
@@ -158,6 +163,7 @@ var FormViewDialog = ViewDialog.extend({
                 footer_to_buttons: true,
                 default_buttons: false,
                 model: self.model,
+                parentID: self.parentID,
             });
             return formview.createController(self);
         }).then(function (formView) {

@@ -23,6 +23,7 @@ var FormView = BasicView.extend({
 
         var mode = params.mode || (params.currentId ? 'readonly' : 'edit');
         this.loadParams.type = 'record';
+        this.loadParams.parentID = params.parentID;
 
         this.controllerParams.hasSidebar = params.sidebar;
         this.controllerParams.toolbar = false;
