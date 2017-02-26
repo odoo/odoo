@@ -16,6 +16,7 @@ class PosSession(models.Model):
         ('closed', 'Closed & Posted'),
     ]
 
+    @api.multi
     def _confirm_orders(self):
         for session in self:
             company_id = session.config_id.journal_id.company_id.id
