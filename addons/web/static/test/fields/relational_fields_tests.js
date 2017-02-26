@@ -1025,7 +1025,7 @@ QUnit.module('relational_fields', {
             '"Add an item" should not visible in edit');
 
         // edit existing subrecord
-        form.$('.o_list_view tbody tr:first()').click();
+        form.$('.o_list_view tbody tr:first() td:eq(1)').click();
 
         $('.modal .o_form_view .o_form_input').val('new name').trigger('input');
         $('.modal .modal-footer .btn-primary').click(); // save
