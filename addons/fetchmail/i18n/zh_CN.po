@@ -27,7 +27,7 @@ msgstr "# 电子邮件"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
-msgstr "对进来的邮件要执行的动作"
+msgstr "对入向邮件要执行的动作"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_active
@@ -53,7 +53,7 @@ msgstr "配置"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
 msgid "Configure the incoming email gateway"
-msgstr "配置收信邮件网关"
+msgstr "配置入向邮件网关"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -137,13 +137,13 @@ msgstr "入局邮件服务器"
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
-msgstr "收信邮件服务器"
+msgstr "入向邮件服务器"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr "收信邮件服务器"
+msgstr "入向邮件服务器"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_attach
@@ -206,12 +206,12 @@ msgstr "未确认"
 msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
-msgstr "可选的自定义服务器动作，用于在收到邮件时自动触发，作用于此邮件建立或更新的记录。"
+msgstr "可选的自定义服务器动作，用于在入向自动触发，作用于此邮件建立或更新的记录。"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "出去的邮件"
+msgstr "出向邮件"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -249,7 +249,7 @@ msgid ""
 "Process each incoming mail as part of a conversation corresponding to this "
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
-msgstr "对于这种类型的单据，把收到的邮件作为会话的一部分。也就是说，为新会话创建新的单据，或把接下来的邮件附加到已有的会话中。"
+msgstr "对于这种类型的单据，把入向邮件作为会话的一部分。也就是说，为新会话创建新的单据，或把接下来的邮件附加到已有的会话中。"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -274,7 +274,7 @@ msgstr "脚本"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Search Incoming Mail Servers"
-msgstr "搜索收信邮件服务器"
+msgstr "搜索入向邮件服务器"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -344,4 +344,4 @@ msgstr "是不是把每个邮件的内容复制并附加到每次处理内容上
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr "是否应该下载附件。如果不勾这里，收到的邮件会在被处理前去掉附件。"
+msgstr "是否应该下载附件。如果不勾这里，入向邮件会在被处理前去掉附件。"

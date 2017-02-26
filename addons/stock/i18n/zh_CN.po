@@ -147,7 +147,7 @@ msgstr "<span class=\"label label-default text-center odoo_purple\">销售确认
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Find Incoming "
 "Shipments</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">查找入库送货</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">查找入向送货</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -580,7 +580,7 @@ msgid ""
 "delivery</strong>, assign a lot number or different lot numbers or serial "
 "numbers to a product by clicking on the <span class=\"fa fa-list\"/> icon"
 msgstr ""
-"<strong>当你在操作一个收货，内部调拨，或者交货</strong>, 通过点击 <span class=\"fa fa-list\"/> "
+"<strong>当你在操作一个入向送货，内部调拨，或者交货</strong>, 通过点击 <span class=\"fa fa-list\"/> "
 "图标，指派一个批次号，或者不同的批次号或序列号"
 
 #. module: stock
@@ -1724,12 +1724,12 @@ msgstr "所有库存作业的默认计量单位"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
 msgid "Default incoming route to follow"
-msgstr "要遵循的默认进货路线"
+msgstr "要遵循的默认入向路线"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_delivery_steps
 msgid "Default outgoing route to follow"
-msgstr "默认出货路线"
+msgstr "默认出向路线"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -2173,7 +2173,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"预测数量(计算为 在手数量 - 出货 + 进货) \n"
+"预测数量(计算为 在手数量 - 出向 + 入向) \n"
 "对于单一库存位置来说，这包括了存储在这个位置及其子位置的货物。\n"
 "对于单一仓库来说，这包括了存储在这个仓库的库存位置及其子位置的货物。\n"
 "否则，这包括存储在任何“内部”类型位置的货物。"
@@ -2664,22 +2664,22 @@ msgstr "包含短缺的产品"
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_incoming_qty
 msgid "Incoming"
-msgstr "进货"
+msgstr "入向"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_receipt_picking_move
 msgid "Incoming  Products"
-msgstr "进货的产品"
+msgstr "入向产品"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_in_date
 msgid "Incoming Date"
-msgstr "进货日期"
+msgstr "入向日期"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_reception_steps
 msgid "Incoming Shipments"
-msgstr "进来的送货"
+msgstr "入向送货"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_incoterms_code
@@ -3335,7 +3335,7 @@ msgid ""
 "                        The tracking can be configured on every product: not any tracing at\n"
 "                        all, tracking by lot, or tracking by unique serial number."
 msgstr ""
-"批次可以根据拣货类型被用在收货，内部调拨和发货\n"
+"批次可以根据拣货类型被用在收货，内部调拨和出向\n"
 "每个产品都可以配置跟踪：不是每一个踪迹，而是批次跟踪，\n"
 "或者通过特定的序列号跟踪"
 
@@ -4067,12 +4067,12 @@ msgstr "出库类型"
 #: model:ir.model.fields,field_description:stock.field_product_product_outgoing_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_outgoing_qty
 msgid "Outgoing"
-msgstr "出货"
+msgstr "出向"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_steps
 msgid "Outgoing Shippings"
-msgstr "出货的送货"
+msgstr "出向送货"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:95
