@@ -1522,6 +1522,38 @@ QUnit.module('relational_fields', {
         form.$('tbody td.o_form_field_x2many_list_row_add a').click();
     });
 
+    QUnit.test('sub form view with a required field', function (assert) {
+        assert.expect(2);
+        this.data.partner.fields.foo.required = true;
+        this.data.partner.fields.foo.default = null;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<form string="Partner">' +
+                            '<group><field name="foo"/></group>' +
+                        '</form>' +
+                        '<tree>' +
+                            '<field name="foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('tbody td.o_form_field_x2many_list_row_add a').click();
+        $('.modal-footer button.btn-primary').first().click();
+
+        assert.strictEqual($('.modal').length, 1, "should still have an open modal");
+        assert.strictEqual($('.modal tbody label.o_form_invalid').length, 1,
+            "should have displayed invalid fields");
+    });
+
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {

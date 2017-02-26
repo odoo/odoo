@@ -186,6 +186,9 @@ var FormViewDialog = ViewDialog.extend({
         var self = this;
         var def;
         if (this.options.on_save) {
+            if (this.form_view.checkInvalidFields()) {
+                return $.Deferred().reject();
+            }
             def = this.options.on_save(this.form_view.model.get(this.form_view.handle));
         } else {
             def = this.form_view.saveRecord({stayInEdit: true, reload: false});
