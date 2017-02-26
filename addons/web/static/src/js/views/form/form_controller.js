@@ -47,6 +47,16 @@ var FormController = BasicController.extend({
     autofocus: function () {
     },
     /**
+     * @returns {boolean}
+     */
+    checkInvalidFields: function () {
+        var invalidFields = this.renderer.checkInvalidFields();
+        if (invalidFields.length) {
+            this._notifyInvalidFields(invalidFields);
+        }
+        return !!invalidFields.length;
+    },
+    /**
      * This method switches the form view in edit mode, with a new record.
      *
      * @returns {Deferred}
@@ -186,9 +196,7 @@ var FormController = BasicController.extend({
             }
             return $.Deferred().resolve();
         } else {
-            var invalidFields = this.renderer.checkInvalidFields();
-            if (invalidFields.length) {
-                this._notifyInvalidFields(invalidFields);
+            if (this.checkInvalidFields()) {
                 return $.Deferred().reject();
             } else {
                 return this.model.save(this.handle, {reload: shouldReload})
