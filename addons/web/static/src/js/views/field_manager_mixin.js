@@ -137,7 +137,9 @@ var FieldManagerMixin = {
      *        appropriate context with the route arguments' one.
      */
     _onCallService: function (e) {
-        if (e.data.service !== "ajax" || e.data.method !== "rpc") return;
+        if (e.data.service !== "ajax" || e.data.method !== "rpc") {
+            return;
+        }
 
         var args = e.data.args[1];
         var options = e.data.args[2];
@@ -148,6 +150,8 @@ var FieldManagerMixin = {
                 }),
                 args.kwargs.context || {}
             );
+            // to prevent doing this work again, in some other widget with FMM.
+            delete options.dataPointID;
         }
     },
 };
