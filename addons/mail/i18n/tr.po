@@ -19,7 +19,6 @@
 # Saban Yildiz <sabany@projetgrup.com>, 2016
 # selim kartal <kartalselim37@gmail.com>, 2016
 # Mehmet Demirel <mdemirell@gmail.com>, 2016
-# Azar Huseynli <azerbay1984@gmail.com>, 2016
 # cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2016
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2016
@@ -1226,7 +1225,7 @@ msgstr "Tartışmalar"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_display_name
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract_display_name
 msgid "Display Name"
-msgstr "Adı Göstermek"
+msgstr "Ad Görünümü"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1389,11 +1388,13 @@ msgid ""
 "Error without exception. Probably due do sending an email without computed "
 "recipients."
 msgstr ""
+"Istisnasız bir hata. Muhtemelen, hesaplanan alıcılar olmadan bir e-posta "
+"göndermekten kaynaklanmaktadır."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a channel cannot follow twice the same object."
-msgstr ""
+msgstr "Hata, bir kanal iki kez aynı nesneyi takip edemez."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
@@ -2393,7 +2394,7 @@ msgstr "Dinleyeciler"
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Livechat Conversation"
-msgstr ""
+msgstr "Canlı Sohbetler"
 
 #. module: mail
 #. openerp-web
@@ -2407,7 +2408,7 @@ msgstr "Log"
 #: code:addons/mail/static/src/xml/chatter.xml:59
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr ""
+msgstr "Bir Not yazın. Takipçiler bilgilendirilmeyecektir."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_is_log
@@ -2469,14 +2470,14 @@ msgstr "Hepsini okundu olarak işaretle"
 #: code:addons/mail/static/src/xml/client_action.xml:135
 #, python-format
 msgid "Mark all read"
-msgstr ""
+msgstr "Hepsini okundu işaretle"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:121
 #, python-format
 msgid "Mark as Read"
-msgstr ""
+msgstr "Hepsini Okundu İşaretle"
 
 #. module: mail
 #. openerp-web
@@ -2484,7 +2485,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:115
 #, python-format
 msgid "Mark as Todo"
-msgstr "Yapılacak olarak işaretle"
+msgstr "Yapılacak olarak İşaretle"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_medium
@@ -2887,14 +2888,14 @@ msgstr "Cevaplar için hiçbir iş parçacığı yok"
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_note
 msgid "Note"
-msgstr "Not"
+msgstr "Bilgi"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:72
 #, python-format
 msgid "Note by"
-msgstr ""
+msgstr "Bilgilendiren"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -4756,7 +4757,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "modified"
-msgstr ""
+msgstr "değiştirildi"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain

@@ -3,10 +3,10 @@
 # * account_check_printing
 # 
 # Translators:
+# Paweł Michoń <michon.pawel@wp.pl>, 2016
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
-# Bartosz Wapniewski <bartosz.wapniewski@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 #: code:addons/account_check_printing/models/account_journal.py:57
 #, python-format
 msgid " : Check Number Sequence"
-msgstr ": Sprawdź Sekwencję Numeru"
+msgstr ": Kolejność numerów czeków"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:37
@@ -39,7 +39,7 @@ msgstr "i %s/100"
 #: code:addons/account_check_printing/models/account_payment.py:83
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
-msgstr "Notatka wyboru nie może przekroczyć 60 znaków."
+msgstr "Notatka do czeku nie może przekroczyć 60 znaków."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_amount_in_words
@@ -56,22 +56,22 @@ msgstr "Anuluj"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_number
 #: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments_check_number
 msgid "Check Number"
-msgstr "Sprawdź numer"
+msgstr "Numer czeku"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Check Printing"
-msgstr "sprawdź drukowanie"
+msgstr "Drukowanie czeku"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_sequence_id
 msgid "Check Sequence"
-msgstr "sprawdź sekwencję"
+msgstr "Kolejność czeku"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_printing_payment_method_selected
 msgid "Check printing payment method selected"
-msgstr "sprawdź wydruki wybranych metod płatności"
+msgstr "Drukowanie czeku wybranych metod płatności"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_manual_sequencing
@@ -79,37 +79,39 @@ msgstr "sprawdź wydruki wybranych metod płatności"
 #: model:ir.model.fields,help:account_check_printing.field_account_register_payments_check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
 msgstr ""
+"Zaznacz tę opcję, jeśli twoje wstępnie wydrukowane czeki nie są "
+"ponumerowane."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Check to print"
-msgstr "sprawdź do druku"
+msgstr "Zaznacz do druku"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
 msgid "Checks To Print"
-msgstr "sprawdzonedo wydruku"
+msgstr "Czeki do druku"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_sequence_id
 msgid "Checks numbering sequence."
-msgstr "Sprawdź sekwencję numeru."
+msgstr "Kolejność numeracji czeków."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:96
 #, python-format
 msgid "Checks to Print"
-msgstr "sprawdzone do wydruku"
+msgstr "Czeki do druku"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Checks to print"
-msgstr "sprawdź do druku"
+msgstr "Czeki do druku"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzone przez"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_create_date
@@ -133,6 +135,8 @@ msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
 " journal."
 msgstr ""
+"W celu wydrukowania za jednym razem kilku czeków, muszą one należeć do tego "
+"samego dziennika bankowego."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -152,20 +156,20 @@ msgstr "Ostatnio aktualizowane przez"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_write_date
 msgid "Last Updated on"
-msgstr "Data ostatniej aktualizacji"
+msgstr "Ostatnia aktualizacja"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments_check_manual_sequencing
 msgid "Manual Numbering"
-msgstr "ręczne numerowanie"
+msgstr "Ręczne numerowanie"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_next_number
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_next_check_number
 msgid "Next Check Number"
-msgstr "sprawdź następny numer"
+msgstr "Numer następnego czeku"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_register_payments_check_number
@@ -174,11 +178,14 @@ msgid ""
 " are not already numbered, you can manage the numbering in the journal "
 "configuration page."
 msgstr ""
+"Numer czeku właściwego dla tej płatności. Jeżeli twój wstępnie wydrukowany "
+"czek nie ma nadanego numeru, możesz zarządzać numeracją poprzez stronę "
+"konfiguracji dziennika."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
-msgstr "Zapłaty"
+msgstr "Wpłaty"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:100
@@ -187,6 +194,8 @@ msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
+"Płatności drukowane jako czeki muszą mieć zaznaczony \"Czek\" jako metoda "
+"płatności i nie mogły zostać pogodzone"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -194,6 +203,8 @@ msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
 msgstr ""
+"Wpisz numer pierwszego wstępnie wydrukowanego czeku, który chcesz "
+"wydrukować."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -203,12 +214,12 @@ msgstr "Drukuj"
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Print Check"
-msgstr "sprawdź druk"
+msgstr "Drukuj czek"
 
 #. module: account_check_printing
 #: model:ir.actions.server,name:account_check_printing.action_account_print_checks
 msgid "Print Checks"
-msgstr ""
+msgstr "Drukuj czeki"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:116
@@ -216,7 +227,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr "sprawdź wydruk prenumerowany"
+msgstr "Drukuj przenumerowane czeki"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_register_payments
@@ -226,7 +237,7 @@ msgstr "Rejestruj płatności za kilka faktur"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_next_number
 msgid "Sequence number of the next printed check."
-msgstr ""
+msgstr "Kolejny numer następnie wydrukowanego czeku"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_printing_payment_method_selected
@@ -234,6 +245,8 @@ msgid ""
 "Technical feature used to know whether check printing was enabled as payment"
 " method."
 msgstr ""
+"Funkcja techniczna używana aby wiedzieć, czy wydruk czeku był włączony jako "
+"metoda płatności."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:26
@@ -242,6 +255,8 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
+"Ostatnim numerem czeku był %s. W celu uniknięcia odrzucenia czeku przez bank"
+" użyj wyższego numeru."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment_check_number
@@ -250,6 +265,9 @@ msgid ""
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
 msgstr ""
+"Wybrany dziennik jest skonfigurowany, aby drukować numery czeków. Jeżeli "
+"wstępnie wydrukowane czeki mają numery lub aktualna numeracja jest zła, "
+"możesz zmienić ją na stronie konfiguracyjnej dziennika."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:137
@@ -258,12 +276,14 @@ msgid ""
 "There is no check layout configured.\n"
 "Make sure the proper check printing module is installed and its configuration (in company settings > 'Configuration' tab) is correct."
 msgstr ""
+"Nie jest skonfigurowany wygląd czeku.\n"
+"Upewnij się, czy właściwy moduł drukowania czeków jest zainstalowany i jego konfiguracja (w ustawieniach firmy > karta 'Konfiguracja') jest prawidłowa."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
-msgstr ""
+msgstr "To pozwoli zapisać na płatnościach numer właściwego czeku."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
