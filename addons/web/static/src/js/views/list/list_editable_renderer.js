@@ -56,6 +56,8 @@ ListRenderer.include({
         // of each line, so the user can delete a record.
         this.addTrashIcon = params.addTrashIcon;
 
+        this.editable = this.arch.attrs.editable;
+
         this.currentRow = null;
         this.currentCol = null;
     },
@@ -485,6 +487,9 @@ ListRenderer.include({
      * @param {MouseEvent} event
      */
     _onCellClick: function (event) {
+        if (this.mode === 'readonly' || !this.editable) {
+            return;
+        }
         var $td = $(event.currentTarget);
         var rowIndex = $td.parent().data('index');
         var colIndex = $td.data('index');
@@ -492,13 +497,6 @@ ListRenderer.include({
             this._selectCell(rowIndex, colIndex);
             event.stopPropagation();
         }
-        // FIXME: this seems like dead code
-        // if (this.state.groupedBy.length) {
-        //     var id = $td.parent().data('id');
-        //     if (id) {
-        //         this.trigger_up('record_selected', {id:id});
-        //     }
-        // }
     },
     /**
      * We need to manually unselect row, because noone else would do it
