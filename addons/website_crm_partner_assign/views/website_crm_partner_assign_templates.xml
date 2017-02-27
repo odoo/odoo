@@ -215,7 +215,7 @@
                                 <span class='badge'><t t-esc="lead_count"/></span>
                             </t>
                             <t t-if="not lead_count">
-                                There are currently no leads.
+                                There are currently no leads for your account.
                             </t>
                         </small>
                     </a>
@@ -227,7 +227,7 @@
                                 <span class='badge'><t t-esc="opp_count"/></span>
                             </t>
                             <t t-if="not opp_count">
-                                There are currently no opportunities.
+                                There are currently no opportunities for your account.
                             </t>
                         </small>
                     </a>
@@ -242,9 +242,9 @@
                 Your Leads
                 <t t-call="website_portal.portal_searchbar"/>
             </h3>
-            <div t-if="not leads" class="alert alert-warning mt8" role="alert">
-                There are no leads.
-            </div>
+            <t t-if="not leads">
+                <p>There are currently no leads for your account.</p>
+            </t>
             <div t-if="leads" class="panel panel-default">
                 <table class="table table-hover">
                     <thead>
@@ -308,9 +308,7 @@
                 </div>
             </div>
             <t t-if="not opportunities">
-                <div class="alert alert-warning mt8" role="alert">
-                    There are no opportunities.
-                </div>
+                <p>There are currently no opportunities for your account.</p>
             </t>
             <div class="panel panel-default" t-if="opportunities">
                 <table class="table table-hover">
