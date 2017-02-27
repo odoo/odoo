@@ -51,7 +51,7 @@ class PosMakePayment(models.TransientModel):
         order = self.env['pos.order'].browse(self.env.context.get('active_id', False))
         amount = order.amount_total - order.amount_paid
         data = self.read()[0]
-        # this is probably a problem of osv_memory as it's not compatible with normal OSV's
+        # add_payment expect a journal key
         data['journal'] = data['journal_id'][0]
         if amount != 0.0:
             order.add_payment(data)
