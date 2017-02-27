@@ -970,6 +970,44 @@ QUnit.module('Views', {
             "should have formatted the datetime");
         list.destroy();
     });
+
+    QUnit.test('edit a row by clicking on a readonly field', function (assert) {
+        assert.expect(8);
+
+        this.data.foo.fields.foo.readonly = true;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/><field name="int_field"/></tree>',
+        });
+
+        assert.ok(list.$('.o_data_row:first td:nth(1)').hasClass('o_readonly'),
+            "foo field cells should have class 'o_readonly'");
+
+        // edit the first row
+        list.$('.o_data_row:first td:nth(1)').click();
+        assert.ok(list.$('.o_data_row:first').hasClass('o_selected_row'),
+            "first row should be selected");
+        assert.ok(list.$('.o_data_row:first td:nth(1)').hasClass('o_readonly'),
+            "foo field cells should have class 'o_readonly'");
+        assert.strictEqual(list.$('.o_data_row:first td:nth(1)').text(), 'yop',
+            "no widget should be rendered for readonly fields");
+        assert.ok(list.$('.o_data_row:first td:nth(2)').hasClass('o_edit_mode'),
+            "field 'int_field' should be in edition");
+        assert.strictEqual(list.$('.o_data_row:first td:nth(2) input').length, 1,
+            "a widget for field 'int_field should have been rendered'");
+
+        // click again on readonly cell of first line: nothing should have changed
+        list.$('.o_data_row:first td:nth(1)').click();
+        assert.ok(list.$('.o_data_row:first').hasClass('o_selected_row'),
+            "first row should be selected");
+        assert.strictEqual(list.$('.o_data_row:first td:nth(2) input').length, 1,
+            "a widget for field 'int_field' should have been rendered (only once)");
+
+        list.destroy();
+    });
 });
 
 });

@@ -366,7 +366,7 @@ ListRenderer.include({
 
         // if we are just changing active cell in the same row, activate the
         // corresponding widget and return
-        if (rowIndex === this.currentRow && colIndex !== this.currentCol) {
+        if (rowIndex === this.currentRow) {
             var w = _.findWhere(this.widgets, {
                 __rowIndex: rowIndex,
                 __colIndex: colIndex
