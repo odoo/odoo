@@ -356,7 +356,7 @@ class MaintenanceTeam(models.Model):
 
     name = fields.Char(required=True)
     partner_id = fields.Many2one('res.partner', string='Subcontracting Partner')
-    color = fields.Integer(default=0)
+    color = fields.Integer("Color Index", default=1)
     request_ids = fields.One2many('maintenance.request', 'maintenance_team_id', copy=False)
     equipment_ids = fields.One2many('maintenance.equipment', 'maintenance_team_id', copy=False)
 

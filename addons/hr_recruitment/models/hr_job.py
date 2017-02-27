@@ -25,7 +25,7 @@ class Job(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', "Alias", ondelete="restrict", required=True,
         help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
-    color = fields.Integer("Color Index")
+    color = fields.Integer("Color Index", default=1)
 
     def _compute_document_ids(self):
         applicants = self.mapped('application_ids').filtered(lambda self: not self.emp_id)

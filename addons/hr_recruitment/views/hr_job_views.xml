@@ -25,8 +25,8 @@
                 <field name="user_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
-                            <div class="o_kanban_card_header">
+                        <div>
+                            <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary"><t t-esc="record.name.value"/></div>
                                     <div t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'" class="o_secondary o_job_alias">
