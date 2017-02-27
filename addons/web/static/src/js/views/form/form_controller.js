@@ -183,6 +183,9 @@ var FormController = BasicController.extend({
      *   readonly mode after saving the record
      * @param {boolean} [options.reload=true] if true, reload the record after
      *   saving
+     * @param {boolean} [options.localSave=false] if true, the record will only
+     *   be 'locally' saved: its changes will move from the _changes key to the
+     *   data key
      * @returns {Deferred}
      */
     saveRecord: function (options) {
@@ -199,12 +202,11 @@ var FormController = BasicController.extend({
             if (this.checkInvalidFields()) {
                 return $.Deferred().reject();
             } else {
-                return this.model.save(this.handle, {reload: shouldReload})
-                    .then(function (element) {
+                return this.model.save(this.handle, {reload: shouldReload, localSave: options.localSave})
+                    .then(function () {
                         if (!stayInEdit) {
                             self._toReadOnlyMode();
                         }
-                        self.trigger_up('saved', _.clone(element.data));
                     });
             }
         }
@@ -411,6 +413,7 @@ var FormController = BasicController.extend({
         var field = event.data.field;
         new dialogs.FormViewDialog(this, {
             res_model: field.relation,
+            shouldSaveLocally: true,
             domain: event.data.domain,
             context: event.data.context,
             on_save: event.data.on_save,
@@ -539,6 +542,8 @@ var FormController = BasicController.extend({
                 on_saved: event.data.on_saved,
                 model: self.model,
                 parentID: self.handle,
+                recordID: record.id,
+                shouldSaveLocally: event.data.shouldSaveLocally,
             }).open();
         });
     },

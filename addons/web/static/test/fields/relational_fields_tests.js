@@ -1326,7 +1326,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many list with inline form view', function (assert) {
-        assert.expect(2);
+        assert.expect(5);
 
         this.data.partner.records[0].p = [];
 
@@ -1367,16 +1367,46 @@ QUnit.module('relational_fields', {
 
         form.$('tbody td.o_form_field_x2many_list_row_add a').click();
 
-        // write in the many2one field
+        // write in the many2one field, value = 37 (xphone)
         $('.modal .o_form_field_many2one input').click();
         var $dropdown = $('.modal .o_form_field_many2one input').autocomplete('widget');
-        $dropdown.find('li:eq(1) a').mouseenter();
-        $dropdown.find('li:eq(1) a').click();
+        $dropdown.find('li:eq(0) a').mouseenter();
+        $dropdown.find('li:eq(0) a').click();
 
         // write in the integer field
         $('.modal .modal-body input.o_field_widget').val('123').trigger('input');
 
-        $('.modal .modal-footer button:eq(0)').click(); // save and close
+        // save and close
+        $('.modal .modal-footer button:eq(0)').click();
+
+        assert.strictEqual(form.$('tbody td:contains(xphone)').length, 1,
+            "should display 'xphone' in a td");
+
+        // reopen the record in form view
+        form.$('tbody td:contains(xphone)').click();
+
+        assert.strictEqual($('.modal .modal-body input').val(), "xphone",
+            "should display 'xphone' in an input");
+
+        $('.modal .modal-body input.o_field_widget').val('456').trigger('input');
+
+        // discard
+        $('.modal .modal-footer span:contains(Discard)').click();
+
+        // reopen the record in form view
+        form.$('tbody td:contains(xphone)').click();
+
+        assert.strictEqual($('.modal .modal-body input.o_field_widget').val(), "123",
+            "should display 123 (previous change has been discarded)");
+
+        // write in the many2one field, value = 41 (xpad)
+        $('.modal .o_form_field_many2one input').click();
+        $dropdown = $('.modal .o_form_field_many2one input').autocomplete('widget');
+        $dropdown.find('li:eq(1) a').mouseenter();
+        $dropdown.find('li:eq(1) a').click();
+
+        // save and close
+        $('.modal .modal-footer button:eq(0)').click();
 
         assert.strictEqual(form.$('tbody td:contains(xpad)').length, 1,
             "should display 'xpad' in a td");
