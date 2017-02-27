@@ -98,12 +98,26 @@ ActionManager.include({
 
                 if (state === 'upgrade' || state === 'ok') {
                     // Trigger the download of the PDF report.
-                    var response = [
-                        report_urls['qweb-pdf'],
-                        action.report_type,
-                    ];
+                    var response;
                     var c = crash_manager;
-                    return trigger_download(self.session, response, c, action, options);
+
+                    var treated_actions = [];
+                    var current_action = action;
+                    do {
+                        report_urls = make_report_url(current_action);
+                        response = [
+                            report_urls['qweb-pdf'],
+                            action.report_type, //The 'root' report is considered the maine one, so we use its type for all the others.
+                        ];
+                        trigger_download(self.session, response, c, current_action, options);
+
+                        treated_actions.push(current_action)
+                        current_action = current_action.next_report_to_generate;
+                    } while (current_action != null && !treated_actions.includes(current_action))
+                    //Second part of the condition for security reasons (avoids infinite loop possibilty).
+
+                    return;
+
                 } else {
                     // Open the report in the client action if generating the PDF is not possible.
                     var client_action_options = _.extend({}, options, {
@@ -127,7 +141,8 @@ ActionManager.include({
             ];
             var c = crash_manager;
             return trigger_download(self.session, response, c, action, options);
-        } else {
+        }
+        else {
             return self._super(action, options);
         }
     }
