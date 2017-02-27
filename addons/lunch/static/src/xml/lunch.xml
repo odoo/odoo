@@ -15,12 +15,12 @@
                     <span>Add</span>
                 </button>
                 <div>
-                    <t t-esc="order.product_name"/>
-                    <span class="badge">
+                    <div class="badge pull-right">
                         <t t-if="order.position === 'before'"><t t-esc="order.currency"/></t>
                         <span class="o_lunch_price"><t t-esc="order.price_format"></t></span>
                         <t t-if="order.position === 'after'"><t t-esc="order.currency"/></t>
-                    </span>
+                    </div>
+                    <t t-esc="order.product_name"/>
                 </div>
                 <div class="text-muted">
                     <t t-if="order.note != false" t-esc="order.note"/>
