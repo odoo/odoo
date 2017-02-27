@@ -33,6 +33,7 @@ return AbstractController.extend(FieldManagerMixin, {
         this.hasButtons = params.hasButtons;
         FieldManagerMixin.init.call(this, this.model);
         this.handle = params.initialState.id;
+        this.isDirty = false;
     },
     /**
      * @override
@@ -148,6 +149,18 @@ return AbstractController.extend(FieldManagerMixin, {
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * We need to keep manually track of the isDirty property.  Note that it is
+     * not the same as the one from the basic model.  A new record from the
+     * basic model is considered dirty, but from the controller point of view,
+     * there was no user interaction and should not be dirty.
+     *
+     * @private
+     */
+    _onFieldChanged: function () {
+        this.isDirty = true;
+        FieldManagerMixin._onFieldChanged.apply(this, arguments);
+    },
     /**
      * When a reload event triggers up, we need to reload the full view.
      * For example, after a form view dialog saved some data.

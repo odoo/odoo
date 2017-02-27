@@ -1228,6 +1228,58 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('discard changes on a new (non dirty, except for defaults) form view', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.foo.default = "ABC";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners"><field name="foo"></field></form>',
+        });
+
+        // switch to edit mode and edit the foo field
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_form_input').val(), 'ABC', 'input should contain ABC');
+
+        form.$buttons.find('.o_form_button_cancel').click();
+
+        assert.strictEqual($('.modal').length, 0,
+            'there should not be a confirm modal');
+
+        form.destroy();
+    });
+
+    QUnit.test('discard changes on a duplicated record', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners"><field name="foo"></field></form>',
+            res_id: 1,
+            viewOptions: {sidebar: true},
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input').val("tralala").trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.sidebar.$('a:contains(Duplicate)').click();
+
+        assert.strictEqual(form.$('.o_form_input').val(), 'tralala', 'input should contain ABC');
+
+        form.$buttons.find('.o_form_button_cancel').click();
+
+        assert.strictEqual($('.modal').length, 0,
+            'there should not be a confirm modal');
+
+        form.destroy();
+    });
+
     QUnit.test('switching to another record from a dirty one', function (assert) {
         assert.expect(11);
 
