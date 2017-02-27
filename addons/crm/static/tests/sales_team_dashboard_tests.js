@@ -130,6 +130,7 @@ QUnit.test('dashboard: click on a button to execute an action', function (assert
     });
 
     kanban.$('.my_button:first()').click(); // click on the button of the first card
+    kanban.destroy();
 });
 
 });

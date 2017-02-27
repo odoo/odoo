@@ -146,6 +146,7 @@ QUnit.module('DomainSelector', {
             '["&",["bar","=",True],["foo","=","hello"]]',
             "the domain input should contain a domain with 'bar' and 'foo'"
         );
+        domainSelector.destroy();
     });
 });
 });

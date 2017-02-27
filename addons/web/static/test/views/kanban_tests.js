@@ -79,6 +79,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_ghost').length, 6, "should have 6 ghosts");
         assert.strictEqual(kanban.$('.o_kanban_record:contains(gnap)').length, 1,
                         "should contain gnap");
+        kanban.destroy();
     });
 
     QUnit.test('basic grouped rendering', function (assert) {
@@ -131,6 +132,7 @@ QUnit.module('Views', {
         kanban.reload();
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 3,
                         "column should contain " + 3 + " record(s)");
+        kanban.destroy();
     });
 
     QUnit.test('basic grouped rendering with active field', function (assert) {
@@ -164,6 +166,7 @@ QUnit.module('Views', {
         kanban.$('.o_kanban_group:last .o_column_archive').click(); // click on 'Archive'
         assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 0,
             "last column should contain no record");
+        kanban.destroy();
     });
 
     QUnit.test('pager should be hidden in grouped mode', function (assert) {
@@ -184,6 +187,7 @@ QUnit.module('Views', {
 
         assert.ok(kanban.pager.$el.hasClass('o_hidden'),
                         "pager should be hidden in grouped kanban");
+        kanban.destroy();
     });
 
     QUnit.test('pager, ungrouped, with default limit', function (assert) {
@@ -206,6 +210,7 @@ QUnit.module('Views', {
         assert.ok(!kanban.pager.$el.hasClass('o_hidden'),
                         "pager should be visible in ungrouped kanban");
         assert.strictEqual(kanban.pager.state.size, 4, "pager's size should be 4");
+        kanban.destroy();
     });
 
     QUnit.test('pager, ungrouped, with limit given in options', function (assert) {
@@ -230,6 +235,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(kanban.pager.state.limit, 2, "pager's limit should be 2");
         assert.strictEqual(kanban.pager.state.size, 4, "pager's size should be 4");
+        kanban.destroy();
     });
 
     QUnit.test('pager, ungrouped, with limit set on arch and given in options', function (assert) {
@@ -255,6 +261,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(kanban.pager.state.limit, 3, "pager's limit should be 3");
         assert.strictEqual(kanban.pager.state.size, 4, "pager's size should be 4");
+        kanban.destroy();
     });
 
     QUnit.test('create in grouped on m2o', function (assert) {
@@ -285,6 +292,7 @@ QUnit.module('Views', {
 
         assert.ok(kanban.$('span.o_column_title:contains(hello)').length,
             "should have a column title with a value from the many2one");
+        kanban.destroy();
     });
 
     QUnit.test('create in grouped on char', function (assert) {
@@ -307,6 +315,7 @@ QUnit.module('Views', {
             "'yop' column should be the first column");
         assert.ok(!kanban.$('.o_kanban_view > div:last').hasClass('o_column_quick_create'),
             "column quick create should be disabled when not grouped by a many2one field)");
+        kanban.destroy();
     });
 
     QUnit.test('quick create in grouped mode', function (assert) {
@@ -337,6 +346,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(_.last(this.data.partner.records).name, "new partner",
             "should have correct name");
+        kanban.destroy();
     });
 
     QUnit.test('many2manytags are correctly fetched and displayed', function (assert) {
@@ -371,6 +381,7 @@ QUnit.module('Views', {
             'first tag should have color 2');
         assert.strictEqual(count, 2,
             'two RPC should have been done(one search read and one read for the m2m');
+        kanban.destroy();
     });
 
     QUnit.test('can drag and drop a record from one column to the next', function (assert) {
@@ -413,6 +424,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 3,
                         "column should contain 3 record(s)");
         assert.strictEqual(kanban.$('.thisiseditable').length, 4, "all records should be editable");
+        kanban.destroy();
     });
 
     QUnit.test('kanban view with default_group_by', function (assert) {
@@ -458,6 +470,7 @@ QUnit.module('Views', {
         // simulate an update coming from the searchview, removing the previously set groupby
         kanban.update({groupBy: []});
         assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have " + 2 + " columns again");
+        kanban.destroy();
     });
 
     QUnit.test('kanban view with create=False', function (assert) {
@@ -475,6 +488,7 @@ QUnit.module('Views', {
 
         assert.ok(!kanban.$buttons || !kanban.$buttons.find('.o-kanban-button-new').length,
             "Create button shouldn't be there");
+        kanban.destroy();
     });
 
     QUnit.test('clicking on a link triggers correct event', function (assert) {
@@ -497,6 +511,7 @@ QUnit.module('Views', {
             });
         });
         kanban.$('a').first().click();
+        kanban.destroy();
     });
 
     QUnit.test('create a column in grouped on m2o', function (assert) {
@@ -550,6 +565,7 @@ QUnit.module('Views', {
         assert.ok(!kanban.$('.o_kanban_group:last').hasClass('o_column_folded'),
             'the created column should not be folded');
         assert.strictEqual(nbRPCs, 0, 'no rpc should have been done when folding/unfolding');
+        kanban.destroy();
     });
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
@@ -621,6 +637,7 @@ QUnit.module('Views', {
                         "should not be able to archive the records");
         assert.ok(!kanban.$('.o_kanban_header:first .o_kanban_config .o_column_unarchive').length,
                         "should not be able to restore the records");
+        kanban.destroy();
     });
 
     QUnit.test('edit a column in grouped on m2o', function (assert) {
@@ -681,6 +698,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group[data-id=5] .o_column_title').text(), 'ged',
             'title of the column should be "ged"');
         assert.strictEqual(nbRPCs, 4, 'should have done 1 write, 1 read_group and 2 search_read');
+        kanban.destroy();
     });
 
     QUnit.test('if view was grouped at start, it stays grouped', function (assert) {
@@ -701,6 +719,7 @@ QUnit.module('Views', {
         kanban.update({groupBy: []});
 
         assert.ok(kanban.$('.o_kanban_view').hasClass('o_kanban_grouped'));
+        kanban.destroy();
     });
 
     QUnit.test('if view was not grouped at start, it can be grouped and ungrouped', function (assert) {
@@ -722,6 +741,7 @@ QUnit.module('Views', {
         assert.ok(kanban.$('.o_kanban_view').hasClass('o_kanban_grouped'), "should be grouped");
         kanban.update({groupBy: []});
         assert.notOk(kanban.$('.o_kanban_view').hasClass('o_kanban_grouped'), "should not be grouped");
+        kanban.destroy();
     });
 
     QUnit.test('no content helper when no data', function (assert) {
@@ -765,6 +785,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(kanban.$('.oe_view_nocontent').length, 0,
             "should not display the no content helper");
+        kanban.destroy();
     });
 
     QUnit.test('buttons with modifiers', function (assert) {
@@ -795,6 +816,7 @@ QUnit.module('Views', {
             "kanban should have one buttons of type 1");
         assert.strictEqual(kanban.$(".o_btn_test_2").length, 3,
             "kanban should have three buttons of type 2");
+        kanban.destroy();
     });
 
     QUnit.test('rendering date and datetime', function (assert) {
@@ -824,6 +846,7 @@ QUnit.module('Views', {
             "should have formatted the date");
         assert.strictEqual(kanban.$('div.o_kanban_record:contains(Mon Dec 12)').length, 1,
             "should have formatted the datetime");
+        kanban.destroy();
     });
 
 });

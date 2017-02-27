@@ -140,6 +140,7 @@ QUnit.module('relational_fields', {
 
         // TODO: test that we can edit the record in the dialog, and that the value is correctly
         // updated on close
+        form.destroy();
     });
 
     QUnit.test('many2one readonly fields with option "no_open"', function (assert) {
@@ -160,6 +161,7 @@ QUnit.module('relational_fields', {
         });
 
         assert.strictEqual(form.$('a.o_form_uri').length, 0, "should not have an anchor");
+        form.destroy();
     });
 
     QUnit.test('many2one in edit mode', function (assert) {
@@ -251,6 +253,8 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.$('a.o_form_uri').text(), 'Partner 20',
             "should display correct value after save");
+
+        form.destroy();
     });
 
     QUnit.test('many2one field with option always_reload', function (assert) {
@@ -286,6 +290,7 @@ QUnit.module('relational_fields', {
 
         assert.ok(form.$('a:contains(and some address)').length,
             "should still display additional result");
+        form.destroy();
     });
 
     // QUnit.test('onchange on a many2one to a different model', function (assert) {
@@ -343,6 +348,7 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_edit').click();
 
         form.$('input').click();
+        form.destroy();
     });
 
     QUnit.test('autocompletion in a many2one, in form view with a date field', function (assert) {
@@ -368,6 +374,7 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_edit').click();
 
         form.$('input:eq(2)').click();
+        form.destroy();
     });
 
     QUnit.test('creating record with many2one with option always_reload', function (assert) {
@@ -401,6 +408,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(count, 3, "should have done 3 rpcs (default_get, onchange, name_get)");
         assert.strictEqual(form.$('input').val(), 'hello world',
             "should have taken the correct display name");
+        form.destroy();
     });
 
     QUnit.test('selecting a many2one, then discarding', function (assert) {
@@ -426,6 +434,7 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_cancel').click();
         assert.strictEqual(form.$('a').text(), '', 'the tag a should be empty');
+        form.destroy();
     });
 
     QUnit.test('check that the field context is used when doing a name_search in a m2o', function (assert) {
@@ -442,7 +451,6 @@ QUnit.module('relational_fields', {
                 '</form>',
             res_id: 1,
             session: {user_context: {hey: "ho"}},
-            manualDestroy: true,
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/product/name_search') {
                     var context = args.kwargs.context;
@@ -507,6 +515,7 @@ QUnit.module('relational_fields', {
 
         assert.ok(form.$('td.o_list_record_delete').length,
             "embedded one2many records should have a trash icon");
+        form.destroy();
     });
 
     QUnit.test('one2many with date and datetime', function (assert) {
@@ -538,6 +547,7 @@ QUnit.module('relational_fields', {
             "should have formatted the date");
         assert.strictEqual(form.$('td:contains(12/12/2016 10:55:05)').length, 1,
             "should have formatted the datetime");
+        form.destroy();
     });
 
     QUnit.test('rendering with embedded one2many', function (assert) {
@@ -569,6 +579,7 @@ QUnit.module('relational_fields', {
             "embedded one2many should have a column titled according to foo");
         assert.strictEqual(form.$('td:contains(blip)').length, 1,
             "embedded one2many should have a cell with relational value");
+        form.destroy();
     });
 
     QUnit.test('embedded one2many with widget', function (assert) {
@@ -597,6 +608,7 @@ QUnit.module('relational_fields', {
         });
 
         assert.strictEqual(form.$('span.o_row_handle').length, 1, "should have 1 handles");
+        form.destroy();
     });
 
     QUnit.test('one2many field when using the pager', function (assert) {
@@ -687,6 +699,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(count, 8, 'no more RPC should have been done');
         assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 2,
             'one2many kanban should contain 2 cards for record 1 at page 2');
+        form.destroy();
     });
 
     QUnit.test('sorting one2many fields', function (assert) {
@@ -734,6 +747,7 @@ QUnit.module('relational_fields', {
         assert.ok(form.$('table tbody tr:eq(2) td:contains(abc)').length,
             "the 3rd record is the one with 'abc' value");
 
+        form.destroy();
     });
 
     QUnit.test('one2many list field edition', function (assert) {
@@ -794,6 +808,7 @@ QUnit.module('relational_fields', {
         // data isn't reloaded when clicking on save (it doesn't work for now actually)
         assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'new value',
             "display name of first record in o2m list should be 'new value'");
+        form.destroy();
     });
 
     QUnit.test('one2many list: create action disabled', function (assert) {
@@ -819,6 +834,7 @@ QUnit.module('relational_fields', {
 
         assert.ok(!form.$('.o_form_field_x2many_list_row_add').length,
             '"Add an item" link should not be available in readonly');
+        form.destroy();
     });
 
     QUnit.test('one2many list: deleting one record', function (assert) {
@@ -865,6 +881,7 @@ QUnit.module('relational_fields', {
         // FIXME: it would be nice to test that the view is re-rendered correctly,
         // but as the relational data isn't re-fetched, the rendering is ok even
         // if the changes haven't been saved
+        form.destroy();
     });
 
     QUnit.test('one2many kanban: edition', function (assert) {
@@ -948,6 +965,7 @@ QUnit.module('relational_fields', {
             'should contain 1 records');
         assert.strictEqual(form.$('.o_kanban_record span').text(), 'new subrecord 3',
             'the remaining subrecord should be "new subrecord 3"');
+        form.destroy();
     });
 
     QUnit.test('one2many kanban: create action disabled', function (assert) {
@@ -985,6 +1003,7 @@ QUnit.module('relational_fields', {
             '"Add" button should not be available in edit');
         assert.ok(form.$('.o_kanban_view .delete_icon').length,
             'delete icon should be visible in edit');
+        form.destroy();
     });
 
     QUnit.test('one2many list (non editable): edition', function (assert) {
@@ -1041,6 +1060,7 @@ QUnit.module('relational_fields', {
             'should contain 1 subrecord');
         assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'aaa',
             'the remaining subrecord should be "aaa"');
+        form.destroy();
     });
 
     QUnit.test('one2many list (editable): edition', function (assert) {
@@ -1093,6 +1113,7 @@ QUnit.module('relational_fields', {
 
         // create new subrecords
         // TODO when 'Add an item' will be implemented
+        form.destroy();
     });
 
     QUnit.test('onchange in a one2many', function (assert) {
@@ -1135,6 +1156,7 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'from onchange',
             "display name of first record in o2m list should be 'new value'");
+        form.destroy();
     });
 
     QUnit.test('one2many, default_get and onchange (basic)', function (assert) {
@@ -1169,6 +1191,7 @@ QUnit.module('relational_fields', {
 
         assert.ok(form.$('td:contains(from onchange)').length,
             "should have 'from onchange' value in one2many");
+        form.destroy();
     });
 
     QUnit.test('one2many list (editable): readonly domain is evaluated', function (assert) {
@@ -1200,6 +1223,7 @@ QUnit.module('relational_fields', {
 
         assert.notOk(form.$('.o_list_view tbody tr:eq(1) td:first').hasClass('o_readonly'),
             "second record should not have display_name in readonly mode");
+        form.destroy();
     });
 
     QUnit.test('pager of one2many field in new record', function (assert) {
@@ -1234,6 +1258,7 @@ QUnit.module('relational_fields', {
 
         assert.ok(!form.$('.o_x2m_control_panel .o_cp_pager div').is(':visible'),
             'o2m pager should be hidden');
+        form.destroy();
     });
 
     QUnit.test('one2many list with a many2one', function (assert) {
@@ -1297,6 +1322,7 @@ QUnit.module('relational_fields', {
             "should display 'xpad' on a td");
         assert.strictEqual(form.$('tbody td:contains(xphone)').length, 1,
             "should still display xphone");
+        form.destroy();
     });
 
     QUnit.test('one2many list with inline form view', function (assert) {
@@ -1357,6 +1383,7 @@ QUnit.module('relational_fields', {
 
         // save the record
         form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
     });
 
     QUnit.test('one2many list with inline form view with context with parent key', function (assert) {
@@ -1400,6 +1427,8 @@ QUnit.module('relational_fields', {
 
         // write in the many2one field
         $('.modal .o_form_field_many2one input').click();
+
+        form.destroy();
     });
 
     QUnit.test('one2many list edition, some basic functionality', function (assert) {
@@ -1437,6 +1466,7 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('td:contains(abc)').length, 1,
             "should have a row with the correct value");
+        form.destroy();
     });
 
     QUnit.test('one2many list, the context is properly evaluated and sent', function (assert) {
@@ -1467,6 +1497,7 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_edit').click();
         form.$('tbody td.o_form_field_x2many_list_row_add a').click();
+        form.destroy();
     });
 
     QUnit.test('new record, the context is properly evaluated and sent', function (assert) {
@@ -1502,6 +1533,7 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_edit').click();
         form.$('tbody td.o_form_field_x2many_list_row_add a').click();
+        form.destroy();
     });
 
     QUnit.test('parent data is properly sent on an onchange rpc', function (assert) {
@@ -1533,6 +1565,7 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_edit').click();
         form.$('tbody td.o_form_field_x2many_list_row_add a').click();
+        form.destroy();
     });
 
     QUnit.test('parent data is properly sent on an onchange rpc, new record', function (assert) {
@@ -1563,6 +1596,7 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_edit').click();
         form.$('tbody td.o_form_field_x2many_list_row_add a').click();
+        form.destroy();
     });
 
     QUnit.test('sub form view with a required field', function (assert) {
@@ -1594,6 +1628,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual($('.modal').length, 1, "should still have an open modal");
         assert.strictEqual($('.modal tbody label.o_form_invalid').length, 1,
             "should have displayed invalid fields");
+        form.destroy();
     });
 
 
@@ -1736,6 +1771,7 @@ QUnit.module('relational_fields', {
 
         // save the record
         form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
     });
 
     QUnit.test('many2many kanban: create action disabled', function (assert) {
@@ -1769,7 +1805,6 @@ QUnit.module('relational_fields', {
             },
             res_id: 1,
             session: {user_context: {}},
-            manualDestroy: true,
         });
 
         assert.ok(!form.$('.o-kanban-button-new').length,
@@ -1844,6 +1879,7 @@ QUnit.module('relational_fields', {
             'should contain 1 subrecord');
         assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'silver',
             'the remaining subrecord should be "aaa"');
+        form.destroy();
     });
 
     QUnit.test('many2many list (editable): edition', function (assert) {
@@ -1907,6 +1943,7 @@ QUnit.module('relational_fields', {
             'should contain 1 subrecord');
         assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'silver',
             'the remaining subrecord should be "aaa"');
+        form.destroy();
     });
 
     QUnit.test('many2many list: create action disabled', function (assert) {
@@ -1935,6 +1972,7 @@ QUnit.module('relational_fields', {
 
         // TODO: click on add an item and test that the select create dialog has no 'Create' button
         // form.$('.o_form_field_x2many_list_row_add').click();
+        form.destroy();
     });
 
     QUnit.module('FieldStatus');
@@ -1976,6 +2014,7 @@ QUnit.module('relational_fields', {
         assert.ok(form.$('.o_statusbar_status button[data-value="4"]').hasClass('btn-primary'),
             "selected status should be btn-primary");
         // TODO: add a test to check that we can change the status
+        form.destroy();
     });
 
     QUnit.test('clickable statusbar widget on many2one field', function (assert) {
@@ -1995,6 +2034,7 @@ QUnit.module('relational_fields', {
             "selected status should be btn-primary and disabled");
         assert.strictEqual(form.$('.o_statusbar_status button.btn-default:not(.disabled)').length, 2,
             "other status should be btn-default and not disabled");
+        form.destroy();
     });
 
     QUnit.test('statusbar with no status', function (assert) {
@@ -2015,6 +2055,7 @@ QUnit.module('relational_fields', {
             'statusbar widget should have class o_form_field_empty');
         assert.strictEqual(form.$('.o_statusbar_status').children().length, 0,
             'statusbar widget should be empty');
+        form.destroy();
     });
 
     QUnit.module('FieldSelection');
@@ -2043,6 +2084,7 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual($td.find('select').length, 1, "td should have a child 'select'");
         assert.strictEqual($td.contents().length, 1, "select tag should be only child of td");
+        list.destroy();
     });
 
     QUnit.test('widget selection on a many2one field', function (assert) {
@@ -2077,6 +2119,7 @@ QUnit.module('relational_fields', {
         count = 0;
         form.reload();
         assert.strictEqual(count, 1, "should not reload product_id relation");
+        form.destroy();
     });
 
     QUnit.module('FieldMany2ManyTags');
@@ -2151,6 +2194,7 @@ QUnit.module('relational_fields', {
         // TODO: it would be nice to test the behaviors of the autocomplete dropdown
         // (like refining the research, creating new tags...), but ui-autocomplete
         // makes it difficult to test
+        form.destroy();
     });
 
     QUnit.test('fieldmany2many tags in a new record', function (assert) {
@@ -2187,6 +2231,7 @@ QUnit.module('relational_fields', {
 
         // save the record (should do the write RPC with the correct commands)
         form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
     });
 
     QUnit.test('fieldmany2many tags: update color', function (assert) {
@@ -2215,6 +2260,7 @@ QUnit.module('relational_fields', {
         $('.o_colorpicker span[data-color="6"]').trigger('mousedown'); // choose color 6
         assert.strictEqual(form.$('span:first()').data('color'), 6,
             'should have correctly updated the color (in edit)');
+        form.destroy();
     });
 
     QUnit.module('FieldRadio');
@@ -2244,6 +2290,7 @@ QUnit.module('relational_fields', {
 
         var newRecord = _.last(this.data.partner.records);
         assert.strictEqual(newRecord.product_id, 37, "should have saved record with correct value");
+        form.destroy();
     });
 
     QUnit.test('fieldradio widget on a selection in a new record', function (assert) {
@@ -2270,6 +2317,7 @@ QUnit.module('relational_fields', {
 
         var newRecord = _.last(this.data.partner.records);
         assert.strictEqual(newRecord.color, 'black', "should have saved record with correct value");
+        form.destroy();
     });
 
     QUnit.module('FieldMany2ManyCheckBoxes');
@@ -2309,6 +2357,7 @@ QUnit.module('relational_fields', {
         assert.deepEqual(this.data.partner.records[0].timmy, [12, 14],
             "should have added the second element to the many2many");
 
+        form.destroy();
     });
 });
 });

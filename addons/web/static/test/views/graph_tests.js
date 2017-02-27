@@ -75,6 +75,7 @@ QUnit.module('Views', {
                         "should contain a div with a svg element");
 
             assert.strictEqual(graph.renderer.state.mode, "bar", "should be in bar chart mode by default");
+            graph.destroy();
             done();
         });
     });
@@ -92,6 +93,7 @@ QUnit.module('Views', {
                 '</graph>',
         });
         assert.strictEqual(graph.renderer.state.mode, "pie", "should be in pie chart mode by default");
+        graph.destroy();
     });
 
 
@@ -117,6 +119,7 @@ QUnit.module('Views', {
             'line type button should not be active');
         assert.ok(graph.$buttons.find('button[data-mode="bar"]').hasClass('active'),
             'bar type button should be active');
+        graph.destroy();
     });
 
     QUnit.test('displaying line chart with only 1 data point', function (assert) {
@@ -138,6 +141,7 @@ QUnit.module('Views', {
         return concurrency.delay(0).then(function () {
             assert.ok(!graph.$('svg').length, "should not have a svg");
             assert.ok(graph.$('.oe_view_nocontent').length, "should have an error message");
+            graph.destroy();
             done();
         });
     });
@@ -159,7 +163,6 @@ QUnit.module('Views', {
                 rpcCount++;
                 return this._super(route, args);
             },
-            manualDestroy: true,
         });
         return concurrency.delay(0).then(function () {
             assert.ok(graph.$('text.nv-legend-text:contains(Count)').length,
@@ -190,7 +193,6 @@ QUnit.module('Views', {
             arch: '<graph string="Gloups">' +
                         '<field name="product_id"/>' +
                 '</graph>',
-            manualDestroy: true,
         });
         return concurrency.delay(0).then(function () {
             assert.ok(graph.$('div.o_graph_svg_container svg.nvd3-svg').length,
@@ -219,7 +221,6 @@ QUnit.module('Views', {
             arch: '<graph string="Gloups">' +
                         '<field name="product_id"/>' +
                 '</graph>',
-            manualDestroy: true,
         });
         return concurrency.delay(0).then(function () {
             assert.ok(graph.$('text:contains(xphone)').length,

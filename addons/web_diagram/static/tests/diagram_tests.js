@@ -127,6 +127,7 @@ QUnit.module('Views', {
                 "diagram should contain 2 header rows");
             assert.strictEqual(diagram.$('.o_diagram_header span:eq(0)').text(), 'A first label',
                 "diagram label is correctly inserted");
+            diagram.destroy();
             done();
         });
     });
@@ -160,6 +161,7 @@ QUnit.module('Views', {
             assert.strictEqual(diagram.$('text:contains(a new node)').length, 1,
                 "diagram should only have the default nodes at start");
 
+            diagram.destroy();
             done();
         });
     });
@@ -188,6 +190,7 @@ QUnit.module('Views', {
             assert.strictEqual(diagram.$('text').first().text(), 'An edited node',
                 "diagram first node should now have new name");
 
+            diagram.destroy();
             done();
         });
     });
@@ -214,6 +217,7 @@ QUnit.module('Views', {
             assert.strictEqual(diagram.$('.o_diagram ellipse').length, 1,
                 "diagram should contain 1 'ellipse' nodes (node 2)");
 
+            diagram.destroy();
             done();
         });
     });
@@ -249,6 +253,7 @@ QUnit.module('Views', {
             assert.strictEqual(diagram.$('text:contains(a transition from 1 to 3)').length, 1,
                 "diagram should now have a transition from 1 to 3");
 
+            diagram.destroy();
             done();
         });
     });
@@ -281,6 +286,7 @@ QUnit.module('Views', {
             assert.strictEqual(diagram.$('text:contains(An edited edge)').length, 1,
                 "diagram should now have the new edge");
 
+            diagram.destroy();
             done();
         });
     });
@@ -311,6 +317,7 @@ QUnit.module('Views', {
             assert.strictEqual(diagram.$('text:contains(a transition from 2 to 1)').length, 0,
                 "diagram edge label should have been deleted");
 
+            diagram.destroy();
             done();
         });
     });

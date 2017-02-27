@@ -82,6 +82,7 @@ QUnit.module('Views', {
             assert.strictEqual(record.data.foo, "gnap", "should correctly read value");
             assert.strictEqual(record.data.bar, undefined, "should not fetch the field 'bar'");
         });
+        model.destroy();
     });
 
     QUnit.test('notify change with many2one', function (assert) {
@@ -102,6 +103,7 @@ QUnit.module('Views', {
             record = model.get(resultID);
             assert.strictEqual(record.data.qux.data.id, 1, "qux field should be 1");
         });
+        model.destroy();
     });
 
     QUnit.test('write on a many2one', function (assert) {
@@ -138,6 +140,7 @@ QUnit.module('Views', {
                 "should have really saved the data");
             assert.strictEqual(rpcCount, 3, "should have done 3 rpc: 1 read, 1 write, 1 read");
         });
+        model.destroy();
     });
 
     QUnit.test('basic onchange', function (assert) {
@@ -174,6 +177,7 @@ QUnit.module('Views', {
             assert.strictEqual(record.data.foo, 'mary poppins', "onchange has been applied");
             assert.strictEqual(record.data.bar, 12, "onchange has been applied");
         });
+        model.destroy();
     });
 
     QUnit.test('onchange with a many2one', function (assert) {
@@ -213,7 +217,7 @@ QUnit.module('Views', {
             assert.strictEqual(record.data.foo, 'space lollipop', "onchange has been applied");
             assert.strictEqual(rpcCount, 2, "should have done 2 rpc: 1 read and 1 onchange");
         });
-
+        model.destroy();
     });
 
     QUnit.test('notifyChange on a many2one, without display_name', function (assert) {
@@ -243,7 +247,7 @@ QUnit.module('Views', {
             assert.strictEqual(record.data.product_id.data.display_name, 'xphone',
                 "display_name should have been fetched");
         });
-
+        model.destroy();
     });
 
     QUnit.test('onchange on a char with an unchanged many2one', function (assert) {
@@ -271,6 +275,7 @@ QUnit.module('Views', {
             var record = model.get(resultID);
             assert.strictEqual(record.data.foo, 'cookie alligator', "onchange has been applied");
         });
+        model.destroy();
     });
 
     QUnit.test('onchange on a char with another many2one not set to a value', function (assert) {
@@ -296,6 +301,7 @@ QUnit.module('Views', {
             record = model.get(resultID);
             assert.strictEqual(record.data.foo, 'cookie alligator', "onchange has been applied");
         });
+        model.destroy();
     });
 
     QUnit.test('can get a many2many', function (assert) {
@@ -319,6 +325,7 @@ QUnit.module('Views', {
             assert.deepEqual(record.data.category, [12],
                 "with option raw, category should only return ids");
         });
+        model.destroy();
     });
 
     QUnit.test('can fetch a list', function (assert) {
@@ -347,6 +354,7 @@ QUnit.module('Views', {
             assert.strictEqual(record.data[0].data.foo, 'blip', "first record should have 'blip' in foo field");
             assert.strictEqual(rpcCount, 1, "should have done 1 rpc (searchread)");
         });
+        model.destroy();
     });
 
     QUnit.test('fetch x2manys in list, with not too many rpcs', function (assert) {
@@ -377,8 +385,7 @@ QUnit.module('Views', {
                 "first record should have 2 categories loaded");
             assert.strictEqual(rpcCount, 2, "should have done 2 rpc (searchread and read category)");
         });
-
-
+        model.destroy();
     });
 
     QUnit.test('can make a default_record, no onchange', function (assert) {
@@ -399,6 +406,7 @@ QUnit.module('Views', {
             assert.deepEqual(record.data.product_ids.data, [], "o2m default should be []");
             assert.deepEqual(record.data.category.data, [], "m2m default should be []");
         });
+        model.destroy();
     });
 
     QUnit.test('default_record, with onchange on many2one', function (assert) {
@@ -427,6 +435,7 @@ QUnit.module('Views', {
             var record = model.get(resultID);
             assert.strictEqual(record.data.product_id, false, "m2o default value should be false");
         });
+        model.destroy();
     });
 
     QUnit.test('default record: batch namegets on same model and res_id', function (assert) {
@@ -461,7 +470,7 @@ QUnit.module('Views', {
                 "should have fetched correct name");
             assert.strictEqual(rpcCount, 2, "should have done 2 rpcs: default_get and 1 name_get");
         });
-
+        model.destroy();
     });
 
     QUnit.test('undoing a change makes the record not dirty', function (assert) {
@@ -483,6 +492,7 @@ QUnit.module('Views', {
             model.notifyChanges(resultID, {foo: "gnap"});
             assert.ok(!model.isDirty(resultID), "record should not be dirty");
         });
+        model.destroy();
     });
 
     QUnit.test('isDirty works correctly on list made empty', function (assert) {
@@ -507,6 +517,7 @@ QUnit.module('Views', {
             }});
             assert.ok(model.isDirty(resultID), "record should be considered dirty");
         });
+        model.destroy();
     });
 
     QUnit.test('can duplicate a record', function (assert) {
@@ -530,8 +541,8 @@ QUnit.module('Views', {
                     "record should have been duplicated");
                 assert.strictEqual(duplicate.data.foo, "gnap", "foo should be set to correct value");
             });
-
         });
+        model.destroy();
     });
 
     QUnit.test('record with many2one set to some value, then set it to none', function (assert) {
@@ -558,6 +569,7 @@ QUnit.module('Views', {
             assert.strictEqual(self.data.partner.records[1].product_id, false,
                 "should have saved the new product_id value");
         });
+        model.destroy();
     });
 
     QUnit.test('groups stay open when reloading', function (assert) {
@@ -588,6 +600,7 @@ QUnit.module('Views', {
             assert.ok(record.data[0].isOpen, "first group should still be open");
             assert.strictEqual(record.data[0].data.length, 1, "first group should still have one record");
         });
+        model.destroy();
     });
 
     QUnit.test('create record, then save', function (assert) {
@@ -622,7 +635,7 @@ QUnit.module('Views', {
             assert.strictEqual(record.res_id, id, "should have correct id from server");
             assert.strictEqual(record.data.id, id, "should have correct id from server");
         });
-
+        model.destroy();
     });
 
 
@@ -667,7 +680,7 @@ QUnit.module('Views', {
 
             model.save(record.id);
         });
-
+        model.destroy();
     });
 
     QUnit.test('onchange with a one2many on a new record', function (assert) {
@@ -715,7 +728,7 @@ QUnit.module('Views', {
             assert.strictEqual(record.data.product_ids.data[0].data.name, "xpod",
                 "one2many should have correct data");
         });
-
+        model.destroy();
     });
 
     QUnit.test('dates are properly loaded and parsed (record)', function (assert) {
@@ -746,6 +759,7 @@ QUnit.module('Views', {
             assert.strictEqual(record.data.date, false,
                 "unset date field should be false");
         });
+        model.destroy();
     });
 
     QUnit.test('dates are properly loaded and parsed (list)', function (assert) {
@@ -772,6 +786,7 @@ QUnit.module('Views', {
             assert.strictEqual(secondRecord.data.date, false,
                 "if date is not set, it should be false");
         });
+        model.destroy();
     });
 
     QUnit.test('dates are properly loaded and parsed (default_get)', function (assert) {
@@ -792,6 +807,7 @@ QUnit.module('Views', {
             var record = model.get(resultID);
             assert.strictEqual(record.data.date, false, "date default value should be false");
         });
+        model.destroy();
     });
 
 

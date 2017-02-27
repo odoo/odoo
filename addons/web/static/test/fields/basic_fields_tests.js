@@ -102,6 +102,8 @@ QUnit.module('basic_fields', {
             "should have 4 checked input");
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input').length, 5,
             "should have 5 checkboxes");
+
+        list.destroy();
     });
 
     QUnit.module('FieldBooleanButton');
@@ -134,6 +136,7 @@ QUnit.module('basic_fields', {
             "button should contain correct string");
         assert.strictEqual(form.$('.o_stat_text.o_hover:contains(Switch to test environment)').length, 1,
             "button should display correct string when hovering");
+        form.destroy();
     });
 
 
@@ -150,6 +153,7 @@ QUnit.module('basic_fields', {
         });
 
         assert.strictEqual(list.$('.o_list_number').length, 5, "should have 5 cells with .o_list_number");
+        list.destroy();
     });
 
     QUnit.test('float fields use correct digit precision', function (assert) {
@@ -170,6 +174,7 @@ QUnit.module('basic_fields', {
         });
         assert.strictEqual(form.$('span.o_form_field_number:contains(0.4)').length, 1,
                             "should contain a number rounded to 1 decimal");
+        form.destroy();
     });
 
     QUnit.module('EmailWidget');
@@ -194,6 +199,7 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(form.$('a.o_form_uri.o_form_field.o_text_overflow').length, 1,
                         "should have a anchor with correct classes");
+        form.destroy();
     });
 
     QUnit.module('FieldChar');
@@ -215,6 +221,7 @@ QUnit.module('basic_fields', {
 
         var charField = form.renderer.widgets[0];
         assert.strictEqual(charField.isValid(), true);
+        form.destroy();
     });
 
     QUnit.test('char fields in edit mode', function (assert) {
@@ -237,6 +244,7 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('input[type="text"].o_form_input.o_form_field').length, 1,
                     "should have an input for the char field foo");
+        form.destroy();
     });
 
     QUnit.module('UrlWidget');
@@ -260,6 +268,7 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(form.$('a.o_form_uri.o_form_field.o_text_overflow').length, 1,
                         "should have a anchor with correct classes");
+        form.destroy();
     });
 
     QUnit.module('FieldText');
@@ -298,6 +307,7 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(form.$('div.o_form_textarea').text(), 'hello world',
             'should be "hello world" after save');
+        form.destroy();
     });
 
     QUnit.test('text fields in edit mode have correct height', function (assert) {
@@ -327,6 +337,7 @@ QUnit.module('basic_fields', {
         // the difference is to take small calculation errors into account
         assert.strictEqual($textarea.innerHeight(), $textarea[0].scrollHeight,
             "textarea should not have a scroll bar");
+        form.destroy();
     });
 
 
@@ -348,6 +359,7 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(list.$('tbody td.o_list_text:contains(some text)').length, 1,
             "should have a td with the .o_list_text class");
+        list.destroy();
     });
 
     QUnit.test('field text in editable list view', function (assert) {
@@ -368,6 +380,7 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(list.$('textarea').first().get(0), document.activeElement,
             "text area should have the focus");
+        list.destroy();
     });
 
 
@@ -418,7 +431,6 @@ QUnit.module('basic_fields', {
                     '</t>' +
                 '</templates></kanban>',
             domain: [['id', 'in', [1, 2]]],
-            manualDestroy: true,
         });
 
         // nvd3 seems to do a setTimeout(0) each time the addGraph function is
@@ -461,6 +473,7 @@ QUnit.module('basic_fields', {
             assert.ok(form.$('div.ace_content').length, "should have rendered something with ace editor");
             delete window.require;
             delete window.ace;
+            form.destroy();
             done();
         });
     });
@@ -508,6 +521,7 @@ QUnit.module('basic_fields', {
         form.$('td').eq(1).click();
         assert.strictEqual(form.$('td:first span.o_row_handle').length, 1,
             "content of the cell should have been replaced");
+        form.destroy();
     });
 
     QUnit.module('FieldDate');
@@ -525,7 +539,7 @@ QUnit.module('basic_fields', {
         var $span = form.$('span.o_form_field');
         assert.strictEqual($span.length, 1, "should have one span in the form view");
         assert.strictEqual($span.text(), "", "and it should be empty");
-
+        form.destroy();
     });
 
     QUnit.test('date field in edit mode', function (assert) {
@@ -565,6 +579,7 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.$('.o_form_field_date').text(), '02/22/2017',
             'the selected date should be displayed after saving');
+        form.destroy();
     });
 
     QUnit.test('field date in editable list view', function (assert) {
@@ -589,6 +604,7 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(list.$('input.o_datepicker_input').get(0), document.activeElement,
             "date input should have the focus");
+        list.destroy();
     });
 
     QUnit.module('FieldDomain');
@@ -661,6 +677,7 @@ QUnit.module('basic_fields', {
         $domain = form.$(".o_form_field_domain");
         assert.ok($domain.html().indexOf("color") >= 0,
             "field selector readonly value should now contain 'color'");
+        form.destroy();
     });
 
     QUnit.test('domain field is correctly reset on every view change', function (assert) {
@@ -738,6 +755,7 @@ QUnit.module('basic_fields', {
             "field selector popover should contain two fields");
         assert.strictEqual($sampleLi.length, 1,
             "field selector popover should contain 'Color index' field");
+        form.destroy();
     });
 });
 });

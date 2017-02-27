@@ -151,12 +151,13 @@ QUnit.module('Views', {
                         "title should be display_name of record");
         assert.strictEqual(form.$('label.o_form_label_empty:contains(timmy)').length, 0,
                         "the many2many label shouldn't be marked as empty");
+        form.destroy();
     });
 
     QUnit.test('only necessary fields are fetched', function (assert) {
         assert.expect(1);
 
-        createView({
+        var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -172,6 +173,7 @@ QUnit.module('Views', {
                 return this._super(route, args);
             }
         });
+        form.destroy();
     });
 
     QUnit.test('group rendering', function (assert) {
@@ -193,6 +195,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('table.o_inner_group').length, 1,
                         "should contain an inner group");
+        form.destroy();
     });
 
     QUnit.test('invisible fields are not rendered', function (assert) {
@@ -220,6 +223,7 @@ QUnit.module('Views', {
                         "should not contain span with field value");
         assert.strictEqual(form.$('.o_form_field.o_form_invisible:contains(0.4)').length, 1,
                         "field qux should be invisible");
+        form.destroy();
     });
 
     QUnit.test('invisible elements are properly hidden', function (assert) {
@@ -251,6 +255,7 @@ QUnit.module('Views', {
                         "should not display tab invisible");
         assert.strictEqual(form.$('table.o_inner_group.o_form_invisible td:contains(invgroup)').length, 1,
                         "should not display invisible groups");
+        form.destroy();
     });
 
     QUnit.test('invisible attrs are re-evaluated on field changed', function (assert) {
@@ -284,6 +289,7 @@ QUnit.module('Views', {
         form.$('.o_form_field_many2one input').click();
         $dropdown.find('li:first()').click();
         assert.ok(!form.$('.foo_field').hasClass('o_form_invisible'), 'should not display foo field');
+        form.destroy();
     });
 
     QUnit.test('invisible attrs on first notebook page', function (assert) {
@@ -327,6 +333,7 @@ QUnit.module('Views', {
             'second tab should be active');
         assert.ok(form.$('.o_notebook .tab-content .tab-pane:nth(1)').hasClass('active'),
             'second page should be active');
+        form.destroy();
     });
 
     QUnit.test('rendering stat buttons', function (assert) {
@@ -365,6 +372,7 @@ QUnit.module('Views', {
         });
         form.$('.oe_stat_button').first().click();
         assert.strictEqual(count, 1, "should have triggered a execute action");
+        form.destroy();
     });
 
 
@@ -388,6 +396,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('label.o_form_label:contains(customstring)').length, 1,
                         "should have 1 label with correct string");
+        form.destroy();
     });
 
 
@@ -426,6 +435,7 @@ QUnit.module('Views', {
                 "in edit mode, only readonly fields should have .o_form_field_empty class");
         assert.strictEqual(form.$('.o_form_label_empty').length, 1,
                 "in edit mode, only readonly fields should have .o_form_label_empty class");
+        form.destroy();
     });
 
     QUnit.test('empty inner readonly fields don\'t have o_form_empty class in "create" mode', function (assert) {
@@ -450,6 +460,7 @@ QUnit.module('Views', {
                 "no empty class on label");
         assert.strictEqual(form.$('.o_form_field_empty').length, 0,
                 "no empty class on field");
+        form.destroy();
     });
 
     QUnit.test('form view can switch to edit mode', function (assert) {
@@ -486,6 +497,7 @@ QUnit.module('Views', {
             'readonly buttons should not be visible');
         assert.ok(form.$buttons.find('.o_form_buttons_edit').is(':visible'),
             'edit buttons should be visible');
+        form.destroy();
     });
 
     QUnit.test('required fields should have o_form_required in readonly mode', function (assert) {
@@ -512,6 +524,7 @@ QUnit.module('Views', {
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('input.o_form_required').length, 1,
                             "in edit mode, should have 1 input with o_form_required");
+        form.destroy();
     });
 
     QUnit.test('separators', function (assert) {
@@ -534,6 +547,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('div.o_horizontal_separator').length, 1,
                         "should contain a separator div");
+        form.destroy();
     });
 
     QUnit.test('buttons in form view', function (assert) {
@@ -589,6 +603,7 @@ QUnit.module('Views', {
         form.$('.o_form_statusbar button.s').click();
 
         assert.strictEqual(rpcCount, 2, "should have done 1 rpcs to reload");
+        form.destroy();
     });
 
 
@@ -627,6 +642,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(rpcCount, 3,
             "should have done 3 rpcs: 1 create, 1 read (before _callButtonAction, and 1 read (after)");
+        form.destroy();
     });
 
     QUnit.test('change and save char', function (assert) {
@@ -660,6 +676,7 @@ QUnit.module('Views', {
         assert.strictEqual(form.mode, 'readonly', 'form view should be in readonly mode');
         assert.strictEqual(form.$('span:contains(tralala)').length, 1,
                         "should contain span with field value");
+        form.destroy();
     });
 
     QUnit.test('properly reload data from server', function (assert) {
@@ -686,6 +703,7 @@ QUnit.module('Views', {
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.$('span:contains(apple)').length, 1,
                         "should contain span with field value");
+        form.destroy();
     });
 
     QUnit.test('properly apply onchange in simple case', function (assert) {
@@ -715,6 +733,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('input').eq(1).val(), "1007",
                         "should contain input with onchange applied");
+        form.destroy();
     });
 
     QUnit.test('evaluate in python field options', function (assert) {
@@ -728,7 +747,7 @@ QUnit.module('Views', {
             }
             return tmp.apply(tmp, arguments);
         };
-        createView({
+        var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -741,6 +760,7 @@ QUnit.module('Views', {
         py.eval = tmp;
 
         assert.ok(isOk, "should have evaluated the field options");
+        form.destroy();
     });
 
     QUnit.test('can create a record with default values', function (assert) {
@@ -770,6 +790,7 @@ QUnit.module('Views', {
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.mode, 'readonly', 'form view should be in readonly mode');
         assert.strictEqual(this.data.partner.records.length, n + 1, "should have created a record");
+        form.destroy();
     });
 
     QUnit.test('sidebar is hidden when switching to edit mode', function (assert) {
@@ -793,6 +814,7 @@ QUnit.module('Views', {
         assert.ok(form.sidebar.$el.hasClass('o_hidden'), 'sidebar should be invisible');
         form.$buttons.find('.o_form_button_cancel').click();
         assert.ok(!form.sidebar.$el.hasClass('o_hidden'), 'sidebar should be visible');
+        form.destroy();
     });
 
     QUnit.test('basic default record', function (assert) {
@@ -816,6 +838,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('input').val(), "default foo value", "should have correct default");
         assert.strictEqual(count, 1, "should do only one rpc");
+        form.destroy();
     });
 
 
@@ -856,6 +879,7 @@ QUnit.module('Views', {
         assert.ok(form.$('td:contains(xphone)').length,
             "should have a cell with the name field 'product_id', set to xphone");
         assert.strictEqual(nameGetCount, 1, "should have done only 1 nameget");
+        form.destroy();
     });
 
     QUnit.test('make default record with non empty many2one', function (assert) {
@@ -885,6 +909,7 @@ QUnit.module('Views', {
             assert.ok(form.$('.o_form_input').val(), 'aaa',
             'default value should be correctly displayed');
             assert.strictEqual(nameGetCount, 1, 'should have done one name_get');
+            form.destroy();
             done();
         });
     });
@@ -907,6 +932,7 @@ QUnit.module('Views', {
         form.$buttons.find('.o_form_button_create').click();
         assert.strictEqual(form.get('title'), _t("New"),
             "should have the display name of the record as  title");
+        form.destroy();
     });
 
     QUnit.test('can duplicate a record', function (assert) {
@@ -931,6 +957,7 @@ QUnit.module('Views', {
             "should have duplicated the record");
 
         assert.strictEqual(form.mode, "edit", 'should be in edit mode');
+        form.destroy();
     });
 
     QUnit.test('buttons in footer are moved to $buttons if required', function (assert) {
@@ -953,6 +980,7 @@ QUnit.module('Views', {
 
         assert.ok(form.$buttons.find('button.infooter').length, "footer button should be in footer");
         assert.ok(!form.$('button.infooter').length, "footer button should not be in form");
+        form.destroy();
     });
 
     QUnit.test('clicking on stat buttons in edit mode', function (assert) {
@@ -1001,6 +1029,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.mode, "readonly", "form view should be in readonly mode");
         assert.strictEqual(count, 2, "should have triggered a execute action");
+        form.destroy();
     });
 
     QUnit.test('buttons with attr "special" do not trigger a save', function (assert) {
@@ -1046,6 +1075,7 @@ QUnit.module('Views', {
         form.$('button').eq(1).click();
         assert.strictEqual(writeCount, 1, "should not have triggered a write");
         assert.strictEqual(executeActionCount, 2, "should have triggered a execute action");
+        form.destroy();
     });
 
     QUnit.test('missing widgets do not crash', function (assert) {
@@ -1062,6 +1092,7 @@ QUnit.module('Views', {
             res_id: 1,
         });
         assert.strictEqual(form.$('.o_field_widget').length, 1, "should have rendered an abstract field");
+        form.destroy();
     });
 
     QUnit.test('nolabel', function (assert) {
@@ -1099,6 +1130,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('.secondgroup tr:first td').length, 2,
             "product_id field should be on its own tr");
+        form.destroy();
     });
 
     QUnit.test('many2one in a one2many', function (assert) {
@@ -1122,6 +1154,7 @@ QUnit.module('Views', {
         });
         assert.strictEqual(form.$('td:contains(xphone)').length, 1,
             "should display the name of the many2one");
+        form.destroy();
     });
 
     QUnit.test('discard changes on a non dirty form view', function (assert) {
@@ -1152,6 +1185,7 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('.o_form_field').text(), 'yop', 'field in readonly should display yop');
 
         assert.strictEqual(nbWrite, 0, 'no write RPC should have been done');
+        form.destroy();
     });
 
     QUnit.test('discard changes on a dirty form view', function (assert) {
@@ -1191,6 +1225,7 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('.o_form_field').text(), 'yop', 'field in readonly should display yop');
 
         assert.strictEqual(nbWrite, 0, 'no write RPC should have been done');
+        form.destroy();
     });
 
     QUnit.test('switching to another record from a dirty one', function (assert) {
@@ -1241,6 +1276,7 @@ QUnit.module('Views', {
         assert.strictEqual(form.pager.$el.find('.o_pager_value').text(), "2", 'pager value should be 2');
 
         assert.strictEqual(nbWrite, 0, 'no write RPC should have been done');
+        form.destroy();
     });
 
     QUnit.test('restore local state when switching to another record', function (assert) {
@@ -1282,6 +1318,7 @@ QUnit.module('Views', {
             "first tab should not be active");
         assert.ok(form.$('.o_notebook li:eq(1)').hasClass('active'),
             "second tab should be active");
+        form.destroy();
     });
 
     QUnit.test('pager is hidden in create mode', function (assert) {
@@ -1316,6 +1353,7 @@ QUnit.module('Views', {
             "current pager value should be 3");
         assert.strictEqual(form.pager.$('.o_pager_limit').text(), "3",
             "current pager limit should be 3");
+        form.destroy();
     });
 
     QUnit.test('switching to another record, in readonly mode', function (assert) {
@@ -1348,6 +1386,7 @@ QUnit.module('Views', {
         assert.strictEqual(form.mode, 'readonly', 'form view should be in readonly mode');
 
         assert.strictEqual(pushStateCount, 2, "should have triggered 2 push_state");
+        form.destroy();
     });
 
     QUnit.test('modifiers are reevaluated when creating new record', function (assert) {
@@ -1378,6 +1417,7 @@ QUnit.module('Views', {
 
         assert.ok(form.$('input.foo_field').is(':visible'),
                         "foo field should be visible");
+        form.destroy();
     });
 
     QUnit.test('empty readonly fields are visible on new records', function (assert) {
@@ -1406,6 +1446,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('.o_form_field_empty').length, 0,
             'readonly field should be visible on a new record');
+        form.destroy();
     });
 
 
@@ -1433,6 +1474,7 @@ QUnit.module('Views', {
             "inner groups should have classname 'o_group_col_6'");
         assert.ok(form.$('.inner_div').hasClass('o_group_col_6'),
             "divs inside groups should have classname 'o_group_col_6'");
+        form.destroy();
     });
 
     QUnit.test('deleting a record', function (assert) {
@@ -1470,6 +1512,7 @@ QUnit.module('Views', {
         assert.strictEqual(form.pager.$('.o_pager_limit').text(), "2", 'pager limit should be 2');
         assert.strictEqual(form.$('span:contains(blip)').length, 1,
             'should have a field with foo value for record 2');
+        form.destroy();
     });
 
     QUnit.test('empty required fields cannot be saved', function (assert) {
@@ -1505,6 +1548,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('.o_form_invalid').length, 0,
             "nothing should be marked as invalid");
+        form.destroy();
     });
 
     QUnit.test('changes in a readonly form view are saved directly', function (assert) {
@@ -1557,6 +1601,7 @@ QUnit.module('Views', {
         assert.strictEqual(nbWrite, 2, 'should not have saved directly');
         assert.strictEqual(form.$('.o_priority .fa-star').length, 2,
             'priority widget should have correct value');
+        form.destroy();
     });
 
     QUnit.test('display a dialog if onchange result is a warning', function (assert) {
@@ -1594,6 +1639,7 @@ QUnit.module('Views', {
             "should have rendered a modal dialog with correct title");
         assert.strictEqual($('.modal .modal-body:contains(You must first select a partner)').length, 1,
             "should have rendered a modal dialog with correct content");
+        form.destroy();
     });
 
     QUnit.test('attrs are properly transmitted to new records', function (assert) {
@@ -1630,6 +1676,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('.o_stat_text.o_not_hover:contains(Test Environment)').length, 1,
             "button should contain correct string");
+        form.destroy();
     });
 
 });});
