@@ -138,17 +138,10 @@
         <menuitem action="action_account_form" id="menu_action_account_form" parent="menu_finance_entries" sequence="20"/>
 
         <act_window
-            id="act_account_partner_ledger_payable"
-            name="Partner Ledger: Payable"
-            res_model="account.move.line"
-            context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_payable':1}"
-            src_model="res.partner"/>
-
-        <act_window
-            id="act_account_partner_ledger_receivable"
-            name="Partner Ledger: Receivable"
-            res_model="account.move.line"
-            context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_receivable':1}"
+            id="account.action_all_partner_invoices"
+            name="All Invoices"
+            res_model="account.invoice"
+            domain="[('partner_id', '=', active_id)]"
             src_model="res.partner"/>
 
         <act_window
