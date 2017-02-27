@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.exceptions import Warning
-from openerp import fields, models, api
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
+from odoo.exceptions import Warning
+
 
 class l10n_eu_service(models.TransientModel):
-
     """Create fiscal positions for EU Service VAT"""
-
     _name = "l10n_eu_service.wizard"
     _description = __doc__
 
@@ -19,10 +17,8 @@ class l10n_eu_service(models.TransientModel):
                             'Please update the base module.'))
         return eu_group
 
-    def _default_chart_id(self):
-        user = self.env.user
-        return self.env['account.account'].search(
-            [('company_id', '=', user.company_id.id), ('parent_id', '=', False)], limit=1)
+    def _get_default_company_id(self):
+        return self.env.user.company_id.id
 
     def _default_fiscal_position_id(self):
         user = self.env.user
@@ -35,8 +31,7 @@ class l10n_eu_service(models.TransientModel):
         user = self.env.user
         return self.env['account.tax'].search(
             [('company_id', '=', user.company_id.id), ('type_tax_use', '=', 'sale'),
-             ('type', '=', 'percent'), ('account_collected_id', '!=', False),
-             ('tax_code_id', '!=', False)], limit=1, order='amount desc')
+             ('amount_type', '=', 'percent'), ('account_id', '!=', False)], limit=1, order='amount desc')
 
     def _default_done_country_ids(self):
         user = self.env.user
@@ -51,12 +46,9 @@ class l10n_eu_service(models.TransientModel):
              ('vat_required', '=', False), ('auto_apply', '=', True),
              ('company_id', '=', user.company_id.id)])
         return eu_country_group.country_ids - eu_fiscal.mapped('country_id') - user.company_id.country_id
-    
-    chart_id = fields.Many2one(
-        "account.account", string="Chart of Accounts", required=True, default=_default_chart_id)
+
     company_id = fields.Many2one(
-        'res.company', string='Company', required=True, 
-        related='chart_id.company_id', readonly=True)
+        'res.company', string='Company', required=True, default=_get_default_company_id)
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position', string='Fiscal Position', default=_default_fiscal_position_id,
         help="Optional fiscal position to use as template for general account mapping. "
@@ -80,59 +72,19 @@ class l10n_eu_service(models.TransientModel):
 
     @api.multi
     def generate_eu_service(self):
-        imd = self.env['ir.model.data']
-        tax_code = self.env['account.tax.code']
         tax_rate = self.env["l10n_eu_service.service_tax_rate"]
         account_tax = self.env['account.tax']
         fpos = self.env['account.fiscal.position']
-        chart_xid = 'l10n_eu_service.tax_chart_service_eu_company_%s' % self.company_id.name
-        chart = self.env.ref(chart_xid, raise_if_not_found=False)
-        if not chart:
-            vals = {
-                'name': _("EU MOSS VAT Chart - %(company)s") % {'company': self.company_id.name},
-                'company_id': self.company_id.id,
-                'parent_id': False
-            }
-            chart_id = tax_code.create(vals).id
-            vals_data = {
-                'name': 'tax_chart_service_eu_company_%s'%(self.company_id.name),
-                'model': 'account.tax.code',
-                'module': 'l10n_eu_service',
-                'res_id': chart_id,
-                'noupdate': True, # Don't drop it when module is updated
-            }
-            imd.create(vals_data)
-        else:
-            chart_id = chart.id
         for country in self.todo_country_ids:
             format_params = {'country_name': country.name}
-            tx_base_code_data = {
-                'name': _("Base - VAT for EU Services to %(country_name)s") % format_params,
-                'code': "BASE-EU-VAT-%s" % country.code,
-                'parent_id': chart_id,
-            }
             tax_name = _("VAT for EU Services to %(country_name)s") % format_params
-            tx_code_data = {
-                'name': tax_name,
-                'code': "EU-VAT-%s" % country.code,
-                'parent_id': chart_id,
-            }
-            tx_base_code = tax_code.create(tx_base_code_data)
-            tx_code = tax_code.create(tx_code_data)
             #create a new tax based on the selected service tax
             data_tax = {
                 'name': tax_name,
                 'amount': tax_rate.search([('country_id', '=', country.id)]).rate,
-                'base_code_id': self.tax_id.base_code_id.id,
-                'account_collected_id': self.account_collected_id.id or self.tax_id.account_collected_id.id,
-                'account_paid_id': self.account_collected_id.id or self.tax_id.account_collected_id.id,
+                'account_id': self.account_collected_id.id or self.tax_id.account_id.id,
+                'refund_account_id': self.account_collected_id.id or self.tax_id.refund_account_id.id,
                 'type_tax_use': 'sale',
-                'base_code_id': tx_base_code.id,
-                'ref_base_code_id': tx_base_code.id,
-                'tax_code_id': tx_code.id,
-                'ref_tax_code_id': tx_code.id,
-                'ref_base_sign': -1,
-                'ref_tax_sign': -1,
                 'description': "EU-VAT-%s-S" % country.code,
                 'sequence': 1000,
             }
@@ -146,7 +98,7 @@ class l10n_eu_service(models.TransientModel):
             fiscal_pos_name += " (EU-VAT-%s)" % country.code
             data_fiscal = {
                 'name': fiscal_pos_name,
-                'company_id': self.chart_id.company_id.id,
+                'company_id': self.company_id.id,
                 'vat_required': False,
                 'auto_apply': True,
                 'country_id': country.id,
@@ -156,5 +108,3 @@ class l10n_eu_service(models.TransientModel):
             fpos.create(data_fiscal)
 
         return {'type': 'ir.actions.act_window_close'}
-
-

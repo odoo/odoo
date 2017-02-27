@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
-        <record id="view_general_configuration_mail_alias_domain" model="ir.ui.view">
-            <field name="name">base.config.settings.mail.alias</field>
+        <record id="base_config_settings_view_form_inherit_mail" model="ir.ui.view">
+            <field name="name">base.config.settings.form.inherit.mail</field>
             <field name="model">base.config.settings</field>
-            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="inherit_id" ref="base_setup.base_config_settings_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='email.outgoing_server']/button[1]" position='after'>
-                    <button class="oe_inline oe_link" style="display: inline-block;" name= "%(action_view_mail_mail)d" type="action" 
-                        context="{'search_default_exception': 1, 'search_default_outgoing': 0}"
-                        attrs="{'invisible': [('fail_counter','=',0)]}">
-                        <span> -- </span>
-                        <i class="fa fa-exclamation-triangle"></i> <field class="oe_inline" name="fail_counter"/>
-                        <span>failed emails</span>
-                    </button>
-                </xpath>
-                <xpath expr="//div[@name='email']" position='inside'>
-                    <div>
-                        <label for="alias_domain" class="oe_inline"/>
-                        <field name="alias_domain" placeholder="mycompany.odoo.com" class="oe_inline"/>
+                <div id="emails" position='replace'>
+                    <h2>Emails</h2>
+                    <div class="row mt16 o_settings_container" id="emails">
+                        <div class="col-xs-12 col-md-6 o_setting_box" title="Using your own email server is required to send/receive emails in Community and Enterprise versions. Online users already benefit from a ready-to-use email server (@mycompany.odoo.com).">
+                            <div class="o_setting_left_pane">
+                                <field name="default_external_email_server"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="default_external_email_server"/>
+                                <div class="text-muted" id="default_external_email_server">
+                                    Use your own email servers
+                                </div>
+                                <div class="content-group"  attrs="{'invisible': [('default_external_email_server', '=', False)]}">
+                                    <div class="row mt16" id="mail_alias_domain">
+                                        <label for="alias_domain" class="col-md-3 o_light_label"/>
+                                        <field name="alias_domain" placeholder="mycompany.odoo.com"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </xpath>
+                </div>
             </field>
         </record>
     </data>
-</openerp>
+</odoo>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <menuitem name="Slides" id="menu_website_slides_root" sequence="32" parent="website.menu_website_configuration"/>
 
@@ -45,9 +45,12 @@
                                     type="object" icon="fa-globe">
                                 <field name="website_published" widget="website_button"/>
                             </button>
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
                         </div>
-                        <field name="image" widget="image" class="oe_left oe_avatar" options='{"preview_image": "image_thumb"}'/>
-                        <div class="oe_title oe_left">
+                        <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_thumb"}' readonly="1"/>
+                        <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" string="Name"/>
                             </div>
@@ -67,7 +70,7 @@
                             </page>
                             <page string="Document">
                                 <group>
-                                    <field name="url"/>
+                                    <field name="url" attrs="{'required': [('image', '=', False)]}"/>
                                     <field name="slide_type" readonly="1"/>
                                     <field name="document_id" readonly="1"/>
                                     <field name="mime_type" readonly="1"/>
@@ -107,6 +110,7 @@
             <field name="arch" type="xml">
                 <tree string="Slides">
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                     <field name="slide_type"/>
                     <field name="channel_id"/>
                     <field name="category_id"/>
@@ -123,6 +127,8 @@
                     <field name="name"/>
                     <filter name="published" string="Published" domain="[('website_published', '=', True)]"/>
                     <filter name="not_published" string="Waiting for validation" domain="[('website_published', '=', False)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Channel" domain="[]" context="{'group_by': 'channel_id'}"/>
                         <filter string="Category" domain="[]" context="{'group_by': 'category_id'}"/>
@@ -199,8 +205,11 @@
                                     type="object" icon="fa-globe">
                                 <field name="website_published" widget="website_button"/>
                             </button>
+                            <button name="toggle_active" type="object" confirm="(Un)archiving a channel automatically (un)archives its slides. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
                         </div>
-                        <div class="oe_title oe_left">
+                        <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" string="Name"/>
                             </div>
@@ -254,9 +263,20 @@
                 <tree string="Channel">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                     <field name="visibility"/>
                     <field name="promote_strategy"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="slide_channel_view_search" model="ir.ui.view">
+            <field name="name">slide.channel.search</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <search string="Channel">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
 
@@ -270,4 +290,4 @@
             parent="menu_website_slides_root" sequence="1"/>
 
     </data>
-</openerp>
+</odoo>

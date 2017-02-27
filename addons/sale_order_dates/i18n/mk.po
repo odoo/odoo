@@ -1,29 +1,30 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_order_dates
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-11-07 11:52+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2015-09-08 08:03+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-08 06:22+0000\n"
-"X-Generator: Launchpad (build 17231)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: sale_order_dates
-#: field:sale.order,commitment_date:0
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
 msgid "Commitment Date"
 msgstr "Датум на обврска"
 
 #. module: sale_order_dates
-#: help:sale.order,requested_date:0
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
 msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
 "When this Order gets confirmed, the Delivery Order's expected date will be "
@@ -33,36 +34,42 @@ msgid ""
 "default method: based on the Product Lead Times and the Company's Security "
 "Delay."
 msgstr ""
+"Датум со кој заклучно клиентот побарал производите да му бидат доставени.\n"
+"Кога оваа нарачка ќе биде потврдена, очекуваниот датум на испорака ќе биде "
+"оформен според датумот кој што клиентот го побарал и можен датум од страна "
+"на компанијата.\n"
+"Оставете го ова поле празно доколку сакате налогот за испорака да биде "
+"процесуиран што е можно побрзо. Во тој случај, очекуваниот датум ќе биде "
+"оформен користејќи го стандардниот метод:според Product Lead Times и "
+"Company's Security Delay."
 
 #. module: sale_order_dates
-#: help:sale.order,commitment_date:0
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
 msgid ""
 "Date by which the products are sure to be delivered. This is a date that you "
 "can promise to the customer, based on the Product Lead Times."
 msgstr ""
+"Датум со кој заклучно производите ќе бидат со сигурност доставени. Ова е "
+"датум кој што можете да му го ветите на вашиот клиент, според Product Lead "
+"Times."
 
 #. module: sale_order_dates
-#: help:sale.order,effective_date:0
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
 msgid "Date on which the first Delivery Order was created."
 msgstr "Датум на кој првата испратница е креирана."
 
 #. module: sale_order_dates
-#: view:sale.order:sale_order_dates.view_sale_orderfor
-msgid "Dates"
-msgstr "Датуми"
-
-#. module: sale_order_dates
-#: field:sale.order,effective_date:0
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
 msgid "Effective Date"
 msgstr "Ефективен датум"
 
 #. module: sale_order_dates
-#: field:sale.order,requested_date:0
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
 msgstr "Баран датум"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:76
+#: code:addons/sale_order_dates/sale_order_dates.py:51
 #, python-format
 msgid "Requested date is too soon!"
 msgstr "Побараниот датум е премногу рано!"
@@ -73,7 +80,12 @@ msgid "Sales Order"
 msgstr "Налог за продажба"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:77
+#: model:ir.model,name:sale_order_dates.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ставка од налог за продажба"
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/sale_order_dates.py:52
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "

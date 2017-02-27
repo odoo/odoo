@@ -7,10 +7,8 @@ var core = require('web.core');
 var base = require('web_editor.base');
 var web_editor = require('web_editor.editor');
 var options = require('web_editor.snippets.options');
-var snippet_editor = require('web_editor.snippet.editor');
 var website = require('website.website');
 var _t = core._t;
-
 
 var mass_mailing_common = options.Class.extend({
     popup_template_id: "editor_new_mailing_list_subscribe_button",
@@ -18,16 +16,18 @@ var mass_mailing_common = options.Class.extend({
     select_mailing_list: function (type, value) {
         var self = this;
         if (type !== "click") return;
-        return website.prompt({
+        var def = website.prompt({
             'id': this.popup_template_id,
             'window_title': this.popup_title,
             'select': _t("Newsletter"),
             'init': function (field) {
                 return new Model('mail.mass_mailing.list').call('name_search', ['', []], { context: base.get_context() });
             },
-        }).then(function (mailing_list_id) {
+        });
+        def.then(function (mailing_list_id) {
             self.$target.attr("data-list-id", mailing_list_id);
         });
+        return def;
     },
     drop_and_build_snippet: function() {
         var self = this;
@@ -48,25 +48,27 @@ options.registry.newsletter_popup = mass_mailing_common.extend({
     popup_template_id: "editor_new_mailing_list_subscribe_popup",
     popup_title: _t("Add a Newsletter Subscribe Popup"),
     select_mailing_list: function (type, value) {
+        var self = this;
+        if (type !== "click") return;
         return this._super(type, value).then(function (mailing_list_id) {
-                ajax.jsonRpc('/web/dataset/call', 'call', {
-                    model: 'mail.mass_mailing.list',
-                    method: 'read',
-                    args: [[parseInt(mailing_list_id)], ['popup_content'], base.get_context()],
-                }).then(function (data) {
-                    self.$target.find(".o_popup_content_dev").empty();
-                    if (data && data[0].popup_content) {
-                        $(data[0].popup_content).appendTo(self.$target.find(".o_popup_content_dev"));
-                    }
-                });
+            ajax.jsonRpc('/web/dataset/call', 'call', {
+                model: 'mail.mass_mailing.list',
+                method: 'read',
+                args: [[parseInt(mailing_list_id)], ['popup_content'], base.get_context()],
+            }).then(function (data) {
+                self.$target.find(".o_popup_content_dev").empty();
+                if (data && data[0].popup_content) {
+                    $(data[0].popup_content).appendTo(self.$target.find(".o_popup_content_dev"));
+                }
             });
+        });
     },
 });
 
 web_editor.Class.include({
-    edit: function () {
-        this._super();
+    start: function () {
         $('body').on('click','#edit_dialog',_.bind(this.edit_dialog, this.rte.editor));
+        return this._super();
     },
     save : function() {
         var $target = $('#wrapwrap').find('#o_newsletter_popup');
@@ -82,9 +84,11 @@ web_editor.Class.include({
             ajax.jsonRpc('/web/dataset/call', 'call', {
                 model: 'mail.mass_mailing.list',
                 method: 'write',
-                args: [parseInt(newsletter_id),
-                   {'popup_content':content},
-                   base.get_context()],
+                args: [
+                    parseInt(newsletter_id),
+                    {'popup_content':content},
+                    base.get_context()
+                ],
             });
         }
         return this._super();
@@ -95,7 +99,4 @@ web_editor.Class.include({
         $('.modal-backdrop').css("z-index", "0");
     },
 });
-
 });
-
-

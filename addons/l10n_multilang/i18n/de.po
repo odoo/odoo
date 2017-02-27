@@ -1,83 +1,22 @@
-# German translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_multilang
 #
+# Translators:
+# Ermin Trevisan <trevi@twanda.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:06+0000\n"
-"PO-Revision-Date: 2014-10-02 17:42+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
-"Language-Team: German <de@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:20+0000\n"
+"PO-Revision-Date: 2015-12-13 11:24+0000\n"
+"Last-Translator: Ermin Trevisan <trevi@twanda.com>\n"
+"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-03 06:26+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
-msgstr "Steuerzuordnung Vorlage"
-
-#. module: l10n_multilang
-#: sql_constraint:account.account:0
-msgid "The code of the account must be unique per company !"
-msgstr ""
-"Die Kurzbezeichnung muss innerhalb eines Unternehmens eindeutig sein!"
-
-#. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid ""
-"Configuration Error!\n"
-"You can not define children to an account with internal type different of "
-"\"View\"! "
-msgstr ""
-"Konfigurationsfehler!\n"
-"Ein untergeordnetes Konto muss den Typ \"Sicht\" haben! "
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_journal
-msgid "Analytic Journal"
-msgstr "Kostenstellen Journal"
-
-#. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
-msgstr "Fehler! Rekursive Finanzkontenvorlagen sind nicht erlaubt."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_journal
-msgid "Journal"
-msgstr "Journal"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "Vorlage Kontenplan"
-
-#. module: l10n_multilang
-#: sql_constraint:account.tax:0
-msgid "The description must be unique per company!"
-msgstr "Die Beschreibung muss je Unternehmen eindeutig sein."
-
-#. module: l10n_multilang
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr "Fehler! Sie können keine rekursiven Steuern definieren"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_template
-msgid "account.tax.template"
-msgstr "account.tax.template"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax
-msgid "account.tax"
-msgstr "account.tax"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account
@@ -85,70 +24,9 @@ msgid "Account"
 msgstr "Konto"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr "wizard.multi.charts.accounts"
-
-#. module: l10n_multilang
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
-msgstr ""
-"Konfigurationsfehler! Die gewählte Währung muss auch bei den Standardkonten "
-"verwendet werden."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_account_template
-msgid "Templates for Accounts"
-msgstr "Finanzkontenvorlagen"
-
-#. module: l10n_multilang
-#: help:account.chart.template,spoken_languages:0
-msgid ""
-"State here the languages for which the translations of templates could be "
-"loaded at the time of installation of this localization module and copied in "
-"the final object when generating them from templates. You must provide the "
-"language codes separated by ';'"
-msgstr ""
-"Geben Sie hier an, für welche Sprachen Vorlagenübersetzungen bei der "
-"Installation der Sprachanpassungsmodule geladen und von der Vorlage in das "
-"endgültige Objekt kopiert werden sollen. Sie müssen die Landeskennungen "
-"durch ';' getrennt angeben."
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid "Error ! You can not create recursive accounts."
-msgstr "Fehler ! Es können keine rekursiven Konten erstellt werden."
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not select an account type with a deferral method different of "
-"\"Unreconciled\" for accounts with internal type \"Payable/Receivable\"! "
-msgstr ""
-"Konfigurationsfehler!\n"
-"Forderungen und Verbindlichkeiten müssen als Vortragsmethode "
-"\"unausgegleichen\" haben ! "
-
-#. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr ""
-"Die Journalbezeichnung muss innerhalb eines Unternehmens eindeutig sein!"
-
-#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Kostenstelle"
-
-#. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr ""
-"Die Kurzbezeichnung des Berichts muss je Unternehmen (Mandant) eindeutig "
-"sein ."
+msgstr "Analysekonto"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position
@@ -156,28 +34,54 @@ msgid "Fiscal Position"
 msgstr "Steuerzuordnung"
 
 #. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not define children to an account with internal type different of "
-"\"View\"! "
-msgstr ""
-"Konfigurationsfehler!\n"
-"Das übergeordnete Konto muss den Typ \"Sicht\" haben. "
+#: model:ir.model,name:l10n_multilang.model_account_journal
+msgid "Journal"
+msgstr "Journal"
 
 #. module: l10n_multilang
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
-"Fehler ! Analytische Konten dürfen sich nicht auf sich selbst beziehen, also "
-"nicht rekursiv definiert sein."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_code_template
-msgid "Tax Code Template"
-msgstr "Vorlagen für Steuerschlüssel"
-
-#. module: l10n_multilang
-#: field:account.chart.template,spoken_languages:0
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template_spoken_languages
 msgid "Spoken Languages"
 msgstr "Gesprochene Sprachen"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template_spoken_languages
+msgid ""
+"State here the languages for which the translations of templates could be "
+"loaded at the time of installation of this localization module and copied in "
+"the final object when generating them from templates. You must provide the "
+"language codes separated by ';'"
+msgstr ""
+"Hier führen Sie die Sprachen an, für die die Übersetzungen der Vorlagen zur "
+"Zeit der Installation dieses Lokalisierungsmoduls geladen werden können und "
+"dann bei der Generierung aus den Vorlagen in die endgültigen Objekte kopiert "
+"werden. Sie müssen die Sprachcodes mit Semikolons ';' separieren"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_tax
+msgid "Tax"
+msgstr "Steuer"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
+msgid "Template for Fiscal Position"
+msgstr "Vorlage für die Steuerzuordnung"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_chart_template
+msgid "Templates for Account Chart"
+msgstr "Vorlagen für den Kontenrahmen"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_account_template
+msgid "Templates for Accounts"
+msgstr "Vorlagen für Konti"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr "Vorlagen für Steuern"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
+msgid "wizard.multi.charts.accounts"
+msgstr "wizard.multi.charts.accounts"

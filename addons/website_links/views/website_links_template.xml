@@ -3,7 +3,7 @@
 
         <template id="assets_website_links" inherit_id="website.assets_frontend">
             <xpath expr="." position="inside">
-                <script type="text/javascript" src="/web/static/lib/zeroclipboard/ZeroClipboard.js"/>
+                <script type="text/javascript" src="/website_links/static/lib/zeroclipboard/ZeroClipboard.js"/>
                 <script type="text/javascript" src="/website_links/static/src/js/website_links.js"/>
                 <script type="text/javascript" src="/website_links/static/src/js/website_links_code_editor.js"/>
                 <script type="text/javascript" src="/website_links/static/src/js/website_links_charts.js"/>
@@ -12,13 +12,14 @@
         </template>
 
         <template id="share_page_menu" inherit_id="website.user_navbar">
-            <xpath expr="//li[@groups='base.group_website_designer']//ul" position="inside">
+            <xpath expr="//li/a[@data-action='promote-current-page']/.." position="after">
                 <li>
                     <a href="/r" id="o_website_links_share_page">
-                        <span title="Track this page to count clicks">Share this Page</span>
+                        <span title="Track this page to count clicks">Track this Page</span>
                     </a>
                 </li>
             </xpath>
+
         </template>
 
         <template id="asset_website_links_menu" inherit_id="website.assets_editor">
@@ -83,7 +84,7 @@
 
                         <div class="col-sm-offset-1 col-sm-3 hidden-xs">
                             <p class="text-muted text-justify">Share this page with a <strong>short link</strong> that includes <strong>analytics trackers</strong>.</p>
-                            <p class="text-muted text-justify">Thoses trackers can be used in Google Analytics to track clicks and visitors, or in Odoo reports to track opportunities and related revenues.</p>
+                            <p class="text-muted text-justify">Those trackers can be used in Google Analytics to track clicks and visitors, or in Odoo reports to track opportunities and related revenues.</p>
                         </div>
                     </div>
          

@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import KARMA, TestForumCommon
 from ..models.forum import KarmaError
-from openerp.exceptions import UserError, AccessError
-from openerp.tools import mute_logger
+from odoo.exceptions import UserError, AccessError
+from odoo.tools import mute_logger
 
 
 class TestForum(TestForumCommon):
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_ask(self):
         Post = self.env['forum.post']
 
@@ -28,15 +29,23 @@ class TestForum(TestForumCommon):
             })
 
         # Portal user asks a question with tags: ok if enough karma
-        self.user_portal.karma = KARMA['ask']
+        self.user_portal.karma = KARMA['tag_create']
         Post.sudo(self.user_portal).create({
             'name': " Q0",
             'forum_id': self.forum.id,
-            'tag_ids': [(0, 0, {'name': 'Tag0', 'forum_id': self.forum.id})]
+            'tag_ids': [(0, 0, {'name': 'Tag1', 'forum_id': self.forum.id})]
         })
-        self.assertEqual(self.user_portal.karma, KARMA['ask'] + KARMA['gen_que_new'], 'website_forum: wrong karma generation when asking question')
+        self.assertEqual(self.user_portal.karma, KARMA['tag_create'], 'website_forum: wrong karma generation when asking question')
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+        self.user_portal.karma = KARMA['post']
+        Post.sudo(self.user_portal).create({
+            'name': " Q0",
+            'forum_id': self.forum.id,
+            'tag_ids': [(0, 0, {'name': 'Tag42', 'forum_id': self.forum.id})]
+        })
+        self.assertEqual(self.user_portal.karma, KARMA['post'] + KARMA['gen_que_new'], 'website_forum: wrong karma generation when asking question')
+
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_answer(self):
         Post = self.env['forum.post']
 
@@ -57,7 +66,7 @@ class TestForum(TestForumCommon):
         })
         self.assertEqual(self.user_employee.karma, KARMA['ans'], 'website_forum: wrong karma generation when answering question')
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_vote_crash(self):
         Post = self.env['forum.post']
         self.user_employee.karma = KARMA['ans']
@@ -80,7 +89,7 @@ class TestForum(TestForumCommon):
         self.post.sudo(self.user_portal).vote(upvote=True)
         self.assertEqual(self.post.create_uid.karma, KARMA['ask'] + KARMA['gen_que_upv'], 'website_forum: wrong karma generation of upvoted question author')
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_downvote_crash(self):
         Post = self.env['forum.post']
         self.user_employee.karma = KARMA['ans']
@@ -113,12 +122,103 @@ class TestForum(TestForumCommon):
         self.post.sudo(self.user_employee).message_post(body='Test1', message_type='comment')
         self.assertEqual(len(self.post.message_ids), 4, 'website_forum: wrong behavior of message_post')
 
+    def test_flag_a_post(self):
+        Post = self.env['forum.post']
+        self.user_portal.karma = KARMA['ask']
+        post = Post.sudo(self.user_portal).create({
+            'name': "Q0",
+            'forum_id': self.forum.id,
+        })
+
+        # portal user flags a post: not allowed, unsufficient karma
+        with self.assertRaises(KarmaError):
+            post.sudo(self.user_portal).flag()
+
+        # portal user flags a post: ok if enough karma
+        self.user_portal.karma = KARMA['flag']
+        post.state = 'active'
+        post.sudo(self.user_portal).flag()
+        self.assertEqual(post.state, 'flagged', 'website_forum: wrong state when flagging a post')
+
+    def test_validate_a_post(self):
+        Post = self.env['forum.post']
+        self.user_portal.karma = KARMA['ask']
+        post = Post.sudo(self.user_portal).create({
+            'name': "Q0",
+            'forum_id': self.forum.id,
+        })
+
+        # portal user validate a post: not allowed, unsufficient karma
+        with self.assertRaises(KarmaError):
+            post.sudo(self.user_portal).validate()
+
+        # portal user validate a pending post
+        self.user_portal.karma = KARMA['moderate']
+        post.state = 'pending'
+        init_karma = post.create_uid.karma
+        post.sudo(self.user_portal).validate()
+        self.assertEqual(post.state, 'active', 'website_forum: wrong state when validate a post after pending')
+        self.assertEqual(post.create_uid.karma, init_karma + KARMA['gen_que_new'], 'website_forum: wrong karma when validate a post after pending')
+
+        # portal user validate a flagged post: ok if enough karma
+        self.user_portal.karma = KARMA['moderate']
+        post.state = 'flagged'
+        post.sudo(self.user_portal).validate()
+        self.assertEqual(post.state, 'active', 'website_forum: wrong state when validate a post after flagged')
+
+        # portal user validate an offensive post: ok if enough karma
+        self.user_portal.karma = KARMA['moderate']
+        post.state = 'offensive'
+        init_karma = post.create_uid.karma
+        post.sudo(self.user_portal).validate()
+        self.assertEqual(post.state, 'active', 'website_forum: wrong state when validate a post after offensive')
+
+    def test_refuse_a_post(self):
+        Post = self.env['forum.post']
+        self.user_portal.karma = KARMA['ask']
+        post = Post.sudo(self.user_portal).create({
+            'name': "Q0",
+            'forum_id': self.forum.id,
+        })
+
+        # portal user validate a post: not allowed, unsufficient karma
+        with self.assertRaises(KarmaError):
+            post.sudo(self.user_portal).refuse()
+
+        # portal user validate a pending post
+        self.user_portal.karma = KARMA['moderate']
+        post.state = 'pending'
+        init_karma = post.create_uid.karma
+        post.sudo(self.user_portal).refuse()
+        self.assertEqual(post.moderator_id, self.user_portal, 'website_forum: wrong moderator_id when refusing')
+        self.assertEqual(post.create_uid.karma, init_karma, 'website_forum: wrong karma when refusing a post')
+
+    def test_mark_a_post_as_offensive(self):
+        Post = self.env['forum.post']
+        self.user_portal.karma = KARMA['ask']
+        post = Post.sudo(self.user_portal).create({
+            'name': "Q0",
+            'forum_id': self.forum.id,
+        })
+
+        # portal user mark a post as offensive: not allowed, unsufficient karma
+        with self.assertRaises(KarmaError):
+            post.sudo(self.user_portal).mark_as_offensive(12)
+
+        # portal user mark a post as offensive
+        self.user_portal.karma = KARMA['moderate']
+        post.state = 'flagged'
+        init_karma = post.create_uid.karma
+        post.sudo(self.user_portal).mark_as_offensive(12)
+        self.assertEqual(post.state, 'offensive', 'website_forum: wrong state when marking a post as offensive')
+        self.assertEqual(post.create_uid.karma, init_karma + KARMA['gen_ans_flag'], 'website_forum: wrong karma when marking a post as offensive')
+
     def test_convert_answer_to_comment_crash(self):
         Post = self.env['forum.post']
 
         # converting a question does nothing
-        msg_ids = self.post.sudo(self.user_portal).convert_answer_to_comment()
-        self.assertEqual(msg_ids[0], False, 'website_forum: question to comment conversion failed')
+        new_msg = self.post.sudo(self.user_portal).convert_answer_to_comment()
+        self.assertEqual(new_msg.id, False, 'website_forum: question to comment conversion failed')
         self.assertEqual(Post.search([('name', '=', 'TestQuestion')])[0].forum_id.name, 'TestForum', 'website_forum: question to comment conversion failed')
 
         with self.assertRaises(KarmaError):
@@ -127,11 +227,10 @@ class TestForum(TestForumCommon):
     def test_convert_answer_to_comment(self):
         self.user_portal.karma = KARMA['com_conv_all']
         post_author = self.answer.create_uid.partner_id
-        msg_ids = self.answer.sudo(self.user_portal).convert_answer_to_comment()
-        self.assertEqual(len(msg_ids), 1, 'website_forum: wrong answer to comment conversion')
-        msg = self.env['mail.message'].browse(msg_ids[0])
-        self.assertEqual(msg.author_id, post_author, 'website_forum: wrong answer to comment conversion')
-        self.assertIn('I am an anteater', msg.body, 'website_forum: wrong answer to comment conversion')
+        new_msg = self.answer.sudo(self.user_portal).convert_answer_to_comment()
+        self.assertEqual(len(new_msg), 1, 'website_forum: wrong answer to comment conversion')
+        self.assertEqual(new_msg.author_id, post_author, 'website_forum: wrong answer to comment conversion')
+        self.assertIn('I am an anteater', new_msg.body, 'website_forum: wrong answer to comment conversion')
 
     def test_edit_post_crash(self):
         with self.assertRaises(KarmaError):

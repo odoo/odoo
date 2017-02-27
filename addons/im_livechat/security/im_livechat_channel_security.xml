@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <odoo>
-    <data>
 
         <record id="module_category_im_livechat" model="ir.module.category">
             <field name="name">Live Support</field>
@@ -21,27 +20,10 @@
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
 
-        <record id="im_chat_message_rule_manager" model="ir.rule">
-            <field name="name">Live Support Managers can read messages from live support</field>
-            <field name="model_id" ref="im_chat.model_im_chat_message"/>
-            <field name="groups" eval="[(6,0,[ref('im_livechat.im_livechat_group_manager')])]"/>
-            <field name="domain_force">[('to_id.channel_id', '!=', None)]</field>
-            <field name="perm_unlink" eval="0"/>
-            <field name="perm_write" eval="0"/>
-            <field name="perm_read" eval="1"/>
-            <field name="perm_create" eval="0"/>
-        </record>
 
-        <record id="im_chat_session_rule_manager" model="ir.rule">
-            <field name="name">Live Support Managers can see all session from live support</field>
-            <field name="model_id" ref="im_chat.model_im_chat_session"/>
-            <field name="groups" eval="[(6,0,[ref('im_livechat.im_livechat_group_manager')])]"/>
-            <field name="domain_force">[('to_id.channel_id', '!=', None)]</field>
-            <field name="perm_unlink" eval="1"/>
-            <field name="perm_write" eval="0"/>
-            <field name="perm_read" eval="1"/>
-            <field name="perm_create" eval="0"/>
+    <data noupdate="1">
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('im_livechat.im_livechat_group_manager'))]"/>
         </record>
-
     </data>
 </odoo>

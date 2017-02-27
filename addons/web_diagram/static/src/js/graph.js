@@ -88,12 +88,10 @@
 
             if(entity_type == "node"){
                 $.when(GraphNode.destruction_callback(entity)).done(function () {
-                    //console.log("remove node",entity);
                     entity.remove();
                 });
             }else if(entity_type == "edge"){
                 $.when(GraphEdge.destruction_callback(entity)).done(function () {
-                    //console.log("remove edge",entity);
                     entity.remove();
                 });
             }

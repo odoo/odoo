@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Account Tax Tags -->
+    <record id="tag_ventas_22" model="account.account.tag">
+        <field name="name">IVA Ventas (22%)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ventas_10" model="account.account.tag">
+        <field name="name">IVA Ventas (10%)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ventas_exentos" model="account.account.tag">
+        <field name="name">Ventas Exentos IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_compras_22" model="account.account.tag">
+        <field name="name">IVA Compras (22%)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_compras_10" model="account.account.tag">
+        <field name="name">IVA Compras (10%)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_compras_exento" model="account.account.tag">
+        <field name="name">Compras Exentos IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <!-- Account Tax Template -->
+    <record id="vat1" model="account.tax.template">
+      <field name="chart_template_id" ref="uy_chart_template"/>
+      <field name="name">IVA Ventas (22%)</field>
+      <field name="description">IVA Ventas (22%)</field>
+      <field name="amount">22</field>
+      <field name="amount_type">percent</field>
+      <field name="account_id" ref="uy_code_5202"/>
+      <field name="refund_account_id" ref="uy_code_5202"/>
+      <field name="type_tax_use">sale</field>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_ventas_22')])]"/>
+    </record>
+
+    <record id="vat2" model="account.tax.template">
+      <field name="chart_template_id" ref="uy_chart_template"/>
+      <field name="name">IVA Ventas (10%)</field>
+      <field name="description">IVA Ventas (10%)</field>
+      <field name="amount">10</field>
+      <field name="amount_type">percent</field>
+      <field name="account_id" ref="uy_code_5201"/>
+      <field name="refund_account_id" ref="uy_code_5201"/>
+      <field name="type_tax_use">sale</field>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_ventas_10')])]"/>
+    </record>
+
+    <record id="vat3" model="account.tax.template">
+      <field name="chart_template_id" ref="uy_chart_template"/>
+      <field name="name">Ventas Exentos IVA</field>
+      <field name="description">Ventas Exentos IVA</field>
+      <field name="amount">0</field>
+      <field name="amount_type">fixed</field>
+      <field name="type_tax_use">sale</field>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_ventas_exentos')])]"/>
+    </record>
+
+    <record id="vat4" model="account.tax.template">
+      <field name="chart_template_id" ref="uy_chart_template"/>
+      <field name="name">IVA Compras (22%)</field>
+      <field name="description">IVA Compras (22%)</field>
+      <field name="amount">22</field>
+      <field name="amount_type">percent</field>
+      <field name="account_id" ref="uy_code_11502"/>
+      <field name="refund_account_id" ref="uy_code_11502"/>
+      <field name="type_tax_use">purchase</field>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_compras_22')])]"/>
+    </record>
+
+    <record id="vat5" model="account.tax.template">
+      <field name="chart_template_id" ref="uy_chart_template"/>
+      <field name="name">IVA Compras (10%)</field>
+      <field name="description">IVA Compras (10%)</field>
+      <field name="amount">10</field>
+      <field name="amount_type">percent</field>
+      <field name="account_id" ref="uy_code_11501"/>
+      <field name="refund_account_id" ref="uy_code_11501"/>
+      <field name="type_tax_use">purchase</field>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_compras_10')])]"/>
+    </record>
+
+    <record id="vat6" model="account.tax.template">
+      <field name="chart_template_id" ref="uy_chart_template"/>
+      <field name="name">Compras Exentos IVA</field>
+      <field name="description">Compras Exentos IVA</field>
+      <field name="amount">0</field>
+      <field name="amount_type">fixed</field>
+      <field name="type_tax_use">purchase</field>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_compras_exento')])]"/>
+    </record>
+</odoo>

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 
 class website_config_settings(models.TransientModel):
@@ -10,7 +11,7 @@ class website_config_settings(models.TransientModel):
     website_slide_google_app_key = fields.Char(string='Google Doc Key')
 
     @api.model
-    def get_website_slide_google_app_key(self, fields):
+    def get_default_website_slide_google_app_key(self, fields):
         website_slide_google_app_key = False
         if 'website_slide_google_app_key' in fields:
             website_slide_google_app_key = self.env['ir.config_parameter'].sudo().get_param('website_slides.google_app_key')

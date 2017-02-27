@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import hashlib
 
 from datetime import datetime
-import hashlib
 from urllib import urlencode
 
-from openerp import models, fields, api
+from odoo import api, fields, models
 
 
 class Users(models.Model):
@@ -12,36 +14,50 @@ class Users(models.Model):
 
     def __init__(self, pool, cr):
         init_res = super(Users, self).__init__(pool, cr)
-        self.SELF_WRITEABLE_FIELDS = list(
+        type(self).SELF_WRITEABLE_FIELDS = list(
             set(
                 self.SELF_WRITEABLE_FIELDS +
                 ['country_id', 'city', 'website', 'website_description', 'website_published']))
         return init_res
 
-    create_date = fields.Datetime('Create Date', readonly=True, copy=False, select=True)
+    create_date = fields.Datetime('Create Date', readonly=True, copy=False, index=True)
     karma = fields.Integer('Karma', default=0)
     badge_ids = fields.One2many('gamification.badge.user', 'user_id', string='Badges', copy=False)
     gold_badge = fields.Integer('Gold badges count', compute="_get_user_badge_level")
     silver_badge = fields.Integer('Silver badges count', compute="_get_user_badge_level")
     bronze_badge = fields.Integer('Bronze badges count', compute="_get_user_badge_level")
+    forum_waiting_posts_count = fields.Integer('Waiting post', compute="_get_user_waiting_post")
 
     @api.multi
     @api.depends('badge_ids')
     def _get_user_badge_level(self):
         """ Return total badge per level of users
         TDE CLEANME: shouldn't check type is forum ? """
-        badge_groups = self.env['gamification.badge.user'].read_group(
-            [('level', 'in', ['gold', 'silver', 'bronze'])],
-            ['user_id', 'level', 'badge_id'],
-            ['user_id', 'level'],
-            lazy=False)
-        badge_data = dict()
-        for group in badge_groups:
-            badge_data.setdefault(group['user_id'][0], dict())[group['level']] = group['__count']
         for user in self:
-            user.gold_badge = badge_data.get(user.id) and badge_data[user.id].get('gold', 0) or 0
-            user.silver_badge = badge_data.get(user.id) and badge_data[user.id].get('silver', 0) or 0
-            user.bronze_badge = badge_data.get(user.id) and badge_data[user.id].get('bronze', 0) or 0
+            user.gold_badge = 0
+            user.silver_badge = 0
+            user.bronze_badge = 0
+
+        self.env.cr.execute("""
+            SELECT bu.user_id, b.level, count(1)
+            FROM gamification_badge_user bu, gamification_badge b
+            WHERE bu.user_id IN %s
+              AND bu.badge_id = b.id
+              AND b.level IS NOT NULL
+            GROUP BY bu.user_id, b.level
+            ORDER BY bu.user_id;
+        """, [tuple(self.ids)])
+
+        for (user_id, level, count) in self.env.cr.fetchall():
+            # levels are gold, silver, bronze but fields have _badge postfix
+            self.browse(user_id)['{}_badge'.format(level)] = count
+
+    @api.multi
+    def _get_user_waiting_post(self):
+        for user in self:
+            Post = self.env['forum.post']
+            domain = [('parent_id', '=', False), ('state', '=', 'pending'), ('create_uid', '=', user.id)]
+            user.forum_waiting_posts_count = Post.search_count(domain)
 
     @api.model
     def _generate_forum_token(self, user_id, email):
@@ -68,7 +84,7 @@ class Users(models.Model):
                 'email': self.email}
             if forum_id:
                 params['forum_id'] = forum_id
-            base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             token_url = base_url + '/forum/validate_email?%s' % urlencode(params)
             activation_template.sudo().with_context(token_url=token_url).send_mail(self.id, force_send=True)
         return True
@@ -96,15 +112,6 @@ class Users(models.Model):
         for user in self:
             user.karma += karma
         return True
-
-    @api.model
-    def get_serialised_gamification_summary(self, excluded_categories=None):
-        if isinstance(excluded_categories, list):
-            if 'forum' not in excluded_categories:
-                excluded_categories.append('forum')
-        else:
-            excluded_categories = ['forum']
-        return super(Users, self).get_serialised_gamification_summary(excluded_categories=excluded_categories)
 
     # Wrapper for call_kw with inherits
     @api.multi

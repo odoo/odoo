@@ -1,20 +1,13 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import commands
 import logging
-import simplejson
+import math
 import os
 import os.path
-import io
-import base64
-import openerp
-import time
-import random
-import math
-import md5
-import openerp.addons.hw_proxy.controllers.main as hw_proxy
-import pickle
-import re
 import subprocess
+import time
 import traceback
 
 try: 
@@ -24,22 +17,24 @@ try:
 except ImportError:
     escpos = printer = None
 
+from Queue import Queue
 from threading import Thread, Lock
-from Queue import Queue, Empty
 
 try:
     import usb.core
 except ImportError:
     usb = None
 
-from PIL import Image
+from odoo import http, _
 
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+import odoo.addons.hw_proxy.controllers.main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 
+# workaround https://bugs.launchpad.net/openobject-server/+bug/947231
+# related to http://bugs.python.org/issue7980
+from datetime import datetime
+datetime.strptime('2012-01-01', '%Y-%m-%d')
 
 class EscposDriver(Thread):
     def __init__(self):
@@ -48,60 +43,51 @@ class EscposDriver(Thread):
         self.lock  = Lock()
         self.status = {'status':'connecting', 'messages':[]}
 
-    def supported_devices(self):
-        if not os.path.isfile('escpos_devices.pickle'):
-            return supported_devices.device_list
-        else:
-            try:
-                f = open('escpos_devices.pickle','r')
-                return pickle.load(f)
-                f.close()
-            except Exception as e:
-                self.set_status('error',str(e))
-                return supported_devices.device_list
-
-    def add_supported_device(self,device_string):
-        r = re.compile('[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}');
-        match = r.search(device_string)
-        if match:
-            match = match.group().split(':')
-            vendor = int(match[0],16)
-            product = int(match[1],16)
-            name = device_string.split('ID')
-            if len(name) >= 2:
-                name = name[1]
-            else:
-                name = name[0]
-            _logger.info('ESC/POS: adding support for device: '+match[0]+':'+match[1]+' '+name)
-            
-            device_list = supported_devices.device_list[:]
-            if os.path.isfile('escpos_devices.pickle'):
-                try:
-                    f = open('escpos_devices.pickle','r')
-                    device_list = pickle.load(f)
-                    f.close()
-                except Exception as e:
-                    self.set_status('error',str(e))
-            device_list.append({
-                'vendor': vendor,
-                'product': product,
-                'name': name,
-            })
-
-            try:
-                f = open('escpos_devices.pickle','w+')
-                f.seek(0)
-                pickle.dump(device_list,f)
-                f.close()
-            except Exception as e:
-                self.set_status('error',str(e))
-
     def connected_usb_devices(self):
         connected = []
-        
-        for device in self.supported_devices():
-            if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
-                connected.append(device)
+
+        # printers can either define bDeviceClass=7, or they can define one of
+        # their interfaces with bInterfaceClass=7. This class checks for both.
+        class FindUsbClass(object):
+            def __init__(self, usb_class):
+                self._class = usb_class
+            def __call__(self, device):
+                # first, let's check the device
+                if device.bDeviceClass == self._class:
+                    return True
+                # transverse all devices and look through their interfaces to
+                # find a matching class
+                for cfg in device:
+                    intf = usb.util.find_descriptor(cfg, bInterfaceClass=self._class)
+
+                    if intf is not None:
+                        return True
+
+                return False
+
+        printers = usb.core.find(find_all=True, custom_match=FindUsbClass(7))
+
+        # if no printers are found after this step we will take the
+        # first epson or star device we can find.
+        # epson
+        if not printers:
+            printers = usb.core.find(find_all=True, idVendor=0x04b8)
+        # star
+        if not printers:
+            printers = usb.core.find(find_all=True, idVendor=0x0519)
+
+        for printer in printers:
+            try:
+                description = usb.util.get_string(printer, 256, printer.iManufacturer) + " " + usb.util.get_string(printer, 256, printer.iProduct)
+            except Exception as e:
+                _logger.error("Can not get printer description: %s" % (e.message or repr(e)))
+                description = 'Unknown printer'
+            connected.append({
+                'vendor': printer.idVendor,
+                'product': printer.idProduct,
+                'name': description
+            })
+
         return connected
 
     def lockedstart(self):
@@ -114,8 +100,12 @@ class EscposDriver(Thread):
   
         printers = self.connected_usb_devices()
         if len(printers) > 0:
-            self.set_status('connected','Connected to '+printers[0]['name'])
-            return Usb(printers[0]['vendor'], printers[0]['product'])
+            print_dev = Usb(printers[0]['vendor'], printers[0]['product'])
+            self.set_status(
+                'connected',
+                "Connected to %s (in=0x%02x,out=0x%02x)" % (printers[0]['name'], print_dev.in_ep, print_dev.out_ep)
+            )
+            return print_dev
         else:
             self.set_status('disconnected','Printer Not Found')
             return None
@@ -146,7 +136,7 @@ class EscposDriver(Thread):
             _logger.warning('ESC/POS Device Disconnected: '+message)
 
     def run(self):
-
+        printer = None
         if not escpos:
             _logger.error('ESC/POS cannot initialize, please verify system dependencies.')
             return
@@ -192,7 +182,7 @@ class EscposDriver(Thread):
                 errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc() + '-'*60 + '\n'
                 _logger.error(errmsg);
             finally:
-                if error: 
+                if error:
                     self.queue.put((timestamp, task, data))
                 if printer:
                     printer.close()
@@ -203,6 +193,9 @@ class EscposDriver(Thread):
 
     def print_status(self,eprint):
         localips = ['0.0.0.0','127.0.0.1','127.0.1.1']
+        hosting_ap = os.system('pgrep hostapd') == 0
+        ssid = subprocess.check_output('iwconfig 2>&1 | grep \'ESSID:"\' | sed \'s/.*"\\(.*\\)"/\\1/\'', shell=True).rstrip()
+        mac = subprocess.check_output('ifconfig | grep -B 1 \'inet addr\' | grep -o \'HWaddr .*\' | sed \'s/HWaddr //\'', shell=True).rstrip()
         ips =  [ c.split(':')[1].split(' ')[0] for c in commands.getoutput("/sbin/ifconfig").split('\n') if 'inet addr' in c ]
         ips =  [ ip for ip in ips if ip not in localips ] 
         eprint.text('\n\n')
@@ -210,6 +203,11 @@ class EscposDriver(Thread):
         eprint.text('PosBox Status\n')
         eprint.text('\n')
         eprint.set(align='center')
+
+        if hosting_ap:
+            eprint.text('Wireless network:\nPosbox\n\n')
+        elif ssid:
+            eprint.text('Wireless network:\n' + ssid + '\n\n')
 
         if len(ips) == 0:
             eprint.text('ERROR: Could not connect to LAN\n\nPlease check that the PosBox is correc-\ntly connected with a network cable,\n that the LAN is setup with DHCP, and\nthat network addresses are available')
@@ -221,6 +219,7 @@ class EscposDriver(Thread):
                 eprint.text(ip+'\n')
 
         if len(ips) >= 1:
+            eprint.text('\nMAC Address:\n' + mac + '\n')
             eprint.text('\nHomepage:\nhttp://'+ips[0]+':8069\n')
 
         eprint.text('\n\n')
@@ -372,19 +371,3 @@ class EscposProxy(hw_proxy.Proxy):
     def print_xml_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT XML RECEIPT') 
         driver.push_task('xml_receipt',receipt)
-
-    @http.route('/hw_proxy/escpos/add_supported_device', type='http', auth='none', cors='*')
-    def add_supported_device(self, device_string):
-        _logger.info('ESC/POS: ADDED NEW DEVICE:'+device_string) 
-        driver.add_supported_device(device_string)
-        return "The device:\n"+device_string+"\n has been added to the list of supported devices.<br/><a href='/hw_proxy/status'>Ok</a>"
-
-    @http.route('/hw_proxy/escpos/reset_supported_devices', type='http', auth='none', cors='*')
-    def reset_supported_devices(self):
-        try:
-            os.remove('escpos_devices.pickle')
-        except Exception as e:
-            pass
-        return 'The list of supported devices has been reset to factory defaults.<br/><a href="/hw_proxy/status">Ok</a>'
-
-    

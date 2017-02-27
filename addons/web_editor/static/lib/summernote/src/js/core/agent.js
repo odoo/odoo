@@ -1,51 +1,54 @@
 define(['jquery'], function ($) {
-  if ('function' !== typeof Array.prototype.reduce) {
+  if (!Array.prototype.reduce) {
     /**
-     * Array.prototype.reduce fallback
+     * Array.prototype.reduce polyfill
      *
-     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+     * @param {Function} callback
+     * @param {Value} [initialValue]
+     * @return {Value}
+     *
+     * @see http://goo.gl/WNriQD
      */
-    Array.prototype.reduce = function (callback, optInitialValue) {
-      var idx, value, length = this.length >>> 0, isValueSet = false;
-      if (1 < arguments.length) {
-        value = optInitialValue;
-        isValueSet = true;
-      }
-      for (idx = 0; length > idx; ++idx) {
-        if (this.hasOwnProperty(idx)) {
-          if (isValueSet) {
-            value = callback(value, this[idx], idx, this);
-          } else {
-            value = this[idx];
-            isValueSet = true;
-          }
+    Array.prototype.reduce = function (callback) {
+      var t = Object(this), len = t.length >>> 0, k = 0, value;
+      if (arguments.length === 2) {
+        value = arguments[1];
+      } else {
+        while (k < len && !(k in t)) {
+          k++;
         }
+        if (k >= len) {
+          throw new TypeError('Reduce of empty array with no initial value');
+        }
+        value = t[k++];
       }
-      if (!isValueSet) {
-        throw new TypeError('Reduce of empty array with no initial value');
+      for (; k < len; k++) {
+        if (k in t) {
+          value = callback(value, t[k], k, t);
+        }
       }
       return value;
     };
   }
 
   if ('function' !== typeof Array.prototype.filter) {
-    Array.prototype.filter = function (fun/*, thisArg*/) {
-      if (this === void 0 || this === null) {
-        throw new TypeError();
-      }
-  
-      var t = Object(this);
-      var len = t.length >>> 0;
-      if (typeof fun !== 'function') {
-        throw new TypeError();
-      }
-  
+    /**
+     * Array.prototype.filter polyfill
+     *
+     * @param {Function} func
+     * @return {Array}
+     *
+     * @see http://goo.gl/T1KFnq
+     */
+    Array.prototype.filter = function (func) {
+      var t = Object(this), len = t.length >>> 0;
+
       var res = [];
       var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
       for (var i = 0; i < len; i++) {
         if (i in t) {
           var val = t[i];
-          if (fun.call(thisArg, val, i, t)) {
+          if (func.call(thisArg, val, i, t)) {
             res.push(val);
           }
         }
@@ -55,10 +58,52 @@ define(['jquery'], function ($) {
     };
   }
 
+  if (!Array.prototype.map) {
+    /**
+     * Array.prototype.map polyfill
+     *
+     * @param {Function} callback
+     * @return {Array}
+     *
+     * @see https://goo.gl/SMWaMK
+     */
+    Array.prototype.map = function (callback, thisArg) {
+      var T, A, k;
+      if (this === null) {
+        throw new TypeError(' this is null or not defined');
+      }
+
+      var O = Object(this);
+      var len = O.length >>> 0;
+      if (typeof callback !== 'function') {
+        throw new TypeError(callback + ' is not a function');
+      }
+  
+      if (arguments.length > 1) {
+        T = thisArg;
+      }
+  
+      A = new Array(len);
+      k = 0;
+  
+      while (k < len) {
+        var kValue, mappedValue;
+        if (k in O) {
+          kValue = O[k];
+          mappedValue = callback.call(T, kValue, k, O);
+          A[k] = mappedValue;
+        }
+        k++;
+      }
+      return A;
+    };
+  }
+
   var isSupportAmd = typeof define === 'function' && define.amd;
 
   /**
    * returns whether font is installed or not.
+   *
    * @param {String} fontName
    * @return {Boolean}
    */
@@ -79,13 +124,41 @@ define(['jquery'], function ($) {
     return originalWidth !== width;
   };
 
+  var userAgent = navigator.userAgent;
+  var isMSIE = /MSIE|Trident/i.test(userAgent);
+  var browserVersion;
+  if (isMSIE) {
+    var matches = /MSIE (\d+[.]\d+)/.exec(userAgent);
+    if (matches) {
+      browserVersion = parseFloat(matches[1]);
+    }
+    matches = /Trident\/.*rv:([0-9]{1,}[\.0-9]{0,})/.exec(userAgent);
+    if (matches) {
+      browserVersion = parseFloat(matches[1]);
+    }
+  }
+
   /**
+   * @class core.agent
+   *
    * Object which check platform and agent
+   *
+   * @singleton
+   * @alternateClassName agent
    */
   var agent = {
+    /** @property {Boolean} [isMac=false] true if this agent is Mac  */
     isMac: navigator.appVersion.indexOf('Mac') > -1,
-    isMSIE: navigator.userAgent.indexOf('MSIE') > -1 || navigator.userAgent.indexOf('Trident') > -1,
-    isFF: navigator.userAgent.indexOf('Firefox') > -1,
+    /** @property {Boolean} [isMSIE=false] true if this agent is a Internet Explorer  */
+    isMSIE: isMSIE,
+    /** @property {Boolean} [isFF=false] true if this agent is a Firefox  */
+    isFF: /firefox/i.test(userAgent),
+    isWebkit: /webkit/i.test(userAgent),
+    /** @property {Boolean} [isSafari=false] true if this agent is a Safari  */
+    isSafari: /safari/i.test(userAgent),
+    /** @property {Float} browserVersion current browser version  */
+    browserVersion: browserVersion,
+    /** @property {String} jqueryVersion current jQuery version string  */
     jqueryVersion: parseFloat($.fn.jquery),
     isSupportAmd: isSupportAmd,
     hasCodeMirror: isSupportAmd ? require.specified('CodeMirror') : !!window.CodeMirror,

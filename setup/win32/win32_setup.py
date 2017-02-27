@@ -6,7 +6,7 @@ import py2exe
 from distutils.core import setup
 
 
-execfile(os.path.join(os.path.dirname(__file__), '..', '..', 'openerp', 'release.py'))
+execfile(os.path.join(os.path.dirname(__file__), '..', '..', 'odoo', 'release.py'))
 
 
 def generate_files():

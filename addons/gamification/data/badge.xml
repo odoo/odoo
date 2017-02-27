@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <record id="badge_good_job" model="gamification.badge">
             <field name="name">Good Job</field>
@@ -41,22 +40,44 @@
             <field name="description">Badge Granted</field>
         </record>
 
-
         <record id="email_template_badge_received" model="mail.template">
             <field name="name">Received Badge</field>
+            <field name="subject">New badge ${object.badge_id.name} granted</field>
             <field name="model_id" ref="gamification.model_gamification_badge_user"/>
+            <field name="partner_to">${object.user_id.partner_id.id}</field>
             <field name="lang">${object.user_id.lang}</field>
-            <field name="body_html"><![CDATA[
-        <p>Congratulation, you have received the badge <strong>${object.badge_id.name}</strong> !
-            % if object.sender_id
-                This badge was granted by <strong>${object.sender_id.name}</strong>.
-            % endif
-        </p>
-
-        % if object.comment
-            <p><em>${object.comment}</em></p>
-        % endif
-        ]]></field>
+            <field name="body_html" type="xml">
+<div>
+    <p>Congratulations ${object.user_id.name} !</p>
+    <p>You just received badge <strong>${object.badge_id.name}</strong> !</p>
+</div>
+<div>
+% if object.badge_id.description
+<table cellspacing="0" cellpadding="0" border="0" style="width: 600px; margin-top: 5px;">
+<tbody><tr>
+    <td valign="center">
+        <img src="/web/image/gamification.badge/${object.badge_id.id}/image/80x80" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}"/>
+    </td>
+    <td valign="center">
+        <cite>${object.badge_id.description}</cite>
+    </td>
+</tr></tbody>
+</table>
+% endif
+</div>
+<div>
+    <p>
+% if object.sender_id
+        This badge was granted by <strong>${object.sender_id.name}</strong>.
+% endif
+    </p>
+    <p>
+% if object.comment
+        <em>${object.comment}</em>
+% endif
+    </p>
+</div>
+</field>
         </record>
     </data>
-</openerp>
+</odoo>

@@ -1,39 +1,38 @@
 # HG changeset patch
 # Parent 8c721171aa16a41e94059f53d6780c67b5ef2dfc
+# Parent  8d2ca42b5be2031ea9624896df53f09f7ca131be
 
-Index: addons/openacademy/models.py
-===================================================================
---- addons.orig/openacademy/models.py	2014-08-28 14:22:01.371015565 +0200
-+++ addons/openacademy/models.py	2014-08-28 14:22:01.367015565 +0200
-@@ -66,6 +66,24 @@
+diff --git a/openacademy/models.py b/openacademy/models.py
+--- a/openacademy/models.py
++++ b/openacademy/models.py
+@@ -66,6 +66,24 @@ class Session(models.Model):
      attendees_count = fields.Integer(
          string="Attendees count", compute='_get_attendees_count', store=True)
  
 +    state = fields.Selection([
-+         ('draft', "Draft"),
-+         ('confirmed', "Confirmed"),
-+         ('done', "Done"),
++        ('draft', "Draft"),
++        ('confirmed', "Confirmed"),
++        ('done', "Done"),
 +    ], default='draft')
 +
-+    @api.one
++    @api.multi
 +    def action_draft(self):
 +        self.state = 'draft'
 +
-+    @api.one
++    @api.multi
 +    def action_confirm(self):
 +        self.state = 'confirmed'
 +
-+    @api.one
++    @api.multi
 +    def action_done(self):
 +        self.state = 'done'
 +
-     @api.one
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
-Index: addons/openacademy/views/openacademy.xml
-===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:22:01.371015565 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-28 14:22:01.367015565 +0200
+         for r in self:
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
 @@ -96,6 +96,19 @@
              <field name="model">openacademy.session</field>
              <field name="arch" type="xml">

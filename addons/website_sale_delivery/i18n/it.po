@@ -1,56 +1,199 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_sale_delivery
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-09-22 14:51+0000\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-04-01 14:56+0000\n"
 "Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
-"Language-Team: Italian <it@li.org>\n"
+"Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-23 07:27+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_delivery
-#: field:delivery.carrier,website_published:0
-msgid "Available in the website"
+#: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
+msgid ""
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
+"updated after choosing a new delivery method\"> Delivery:</span>"
 msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
+msgid "Accessory Products"
+msgstr "Prodotti accessori"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_alternative_product_ids
+msgid "Appear on the product page"
+msgstr "Appare sulla pagina del prodotto"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
+msgid "Appear on the shopping cart"
+msgstr "Appare all'interno del carrello"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_available_in_pos
+msgid "Available in the Point of Sale"
+msgstr "Disponibile nel Point of Sale"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
 msgid "Carrier"
-msgstr ""
+msgstr "Trasportatore"
 
 #. module: website_sale_delivery
-#: view:website:website_sale.payment
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_to_weight
+msgid ""
+"Check if the product should be weighted using the hardware scale integration"
+msgstr "Seleziona se il prodotto deve essere pesato con la bilancia integrata"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_available_in_pos
+msgid "Check if you want this product to appear in the Point of Sale"
+msgstr "Seleziona se vuoi che questo prodotto appaia all'interno del POS"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose your Delivery Method"
 msgstr "Seleziona il Metodo di Consegna"
 
 #. module: website_sale_delivery
-#: field:sale.order,amount_delivery:0
+#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
+msgid "Country..."
+msgstr "Nazione..."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_project_id
+msgid "Create a task under this project on sale order validation."
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
+msgstr "Spese di trasporto"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
+msgid "Description"
+msgstr "Descrizione"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
+msgid "Description displayed on the eCommerce and on the Online Quotations."
 msgstr ""
 
 #. module: website_sale_delivery
-#: view:website:website_sale.total
-msgid "Delivery will be updated after choosing a new delivery method"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
+msgid "Description for Online Quotations"
 msgstr ""
 
 #. module: website_sale_delivery
-#: view:website:website_sale.total
-msgid "Delivery:"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_quote_description
+msgid "Description for the quote"
+msgstr "Descrizione per il preventivo"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_sequence
+msgid "Determine the display order in the Website E-commerce"
+msgstr "Determina l'ordine di visualizzazione all'interno dell'E-Commerce"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_split_method
+msgid ""
+"Equal : Cost will be equally divided.\n"
+"By Quantity : Cost will be divided according to product's quantity.\n"
+"By Current cost : Cost will be divided according to product's current cost.\n"
+"By Weight : Cost will be divided depending on its weight.\n"
+"By Volume : Cost will be divided depending on its volume."
 msgstr ""
 
 #. module: website_sale_delivery
-#: field:delivery.carrier,website_description:0
-msgid "Description for the website"
-msgstr "Descrizione per il sito web"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
+msgid "File"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
+msgid "Has an order line set for delivery"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
+msgid "Has delivery"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_intrastat_id
+msgid "Intrastat code"
+msgstr "Codice Intrastat"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_landed_cost_ok
+msgid "Landed Costs"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr "Messaggio per Riga Ordine di Acquisto"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr "Messaggio per riga ordine di vendita"
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/models/sale_order.py:138
+#, python-format
+msgid ""
+"No shipping method is available for your current order and shipping address. "
+"Please contact us for more information."
+msgstr ""
+"Nessun metodo di spedizione disponibile per l'indirizzo selezionato per "
+"questo ordine. Contattaci per maggiori informazioni."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_optional_product_ids
+msgid "Optional Products"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_pos_categ_id
+msgid "Point of Sale Category"
+msgstr "Categoria POS"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_requisition
+msgid "Procurement"
+msgstr "Approvvigionamento"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
+msgid "Products to propose when add to cart."
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
+msgid "Project"
+msgstr "Progetto"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn
+msgid "Purchase Order Line"
+msgstr "Riga Ordine d'Acquisto"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
+msgid "Rating"
+msgstr "Valutazione"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
@@ -58,6 +201,119 @@ msgid "Sales Order"
 msgstr "Ordine di vendita"
 
 #. module: website_sale_delivery
-#: help:sale.order,amount_delivery:0
-msgid "The amount without tax."
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn
+msgid "Sales Order Line"
+msgstr "Linea ordine di vendita"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
+msgid "Select..."
 msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_line_warn
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_sale_line_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Scegliendo l'opzione \"Avvisi\" si notificherà all'utente con il messaggio, "
+"Scegliendo \"Messaggio bloccante\" lancerà una eccezione con il messaggio e "
+"bloccherà il flusso. Il messaggio deve essere scritto nel campo successivo."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
+msgid "Sequence"
+msgstr "Sequenza"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_x
+msgid "Size X"
+msgstr "Dimensione X"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_y
+msgid "Size Y"
+msgstr "Dimensione Y"
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/models/sale_order.py:137
+#, python-format
+msgid "Sorry, we are unable to ship your order"
+msgstr "Spiacenti, non siamo in grado di spedire il tuo ordine"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_split_method
+msgid "Split Method"
+msgstr "Metodo Divisione"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_style_ids
+msgid "Styles"
+msgstr "Stili"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_alternative_product_ids
+msgid "Suggested Products"
+msgstr "Prodotti consigliati"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
+msgid "The amount without tax."
+msgstr "Totale senza la tassazione"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
+msgid "Those categories are used to group similar products for e-commerce."
+msgstr ""
+"Queste categorie servono per raggruppare prodotti simili per l'e-commerce."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_pos_categ_id
+msgid "Those categories are used to group similar products for point of sale."
+msgstr ""
+"Quelle categorie sono usate per raggruppare prodotti simili per punto di "
+"vendita."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_to_weight
+msgid "To Weigh With Scale"
+msgstr "Da pesare con Bilancia"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.shipping_tracking
+msgid "Tracking:"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
+msgid "Website Product Category"
+msgstr "Categoria di Prodotto Sito Web"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
+msgid "Website meta description"
+msgstr "Descrizioni meta del sito"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Meta parole chiave del sito"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_title
+msgid "Website meta title"
+msgstr "Website meta title"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "L'URL completo per accedere al documento attraverso il Sito Web "
+
+#~ msgid "Visible in Website"
+#~ msgstr "Visibile sul sito"
+
+#~ msgid "Website Comments"
+#~ msgstr "Commenti Sito Web"
+
+#~ msgid "Website URL"
+#~ msgstr "URL sito web"

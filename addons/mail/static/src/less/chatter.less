@@ -1,0 +1,33 @@
+.o_chatter {
+    width: 100%;
+
+    .o_chat_composer {
+        margin-top: 10px;
+
+        .o_chatter_composer_info {
+            display: inline-block;
+            margin-bottom: 5px;
+            color: @odoo-main-color-muted;
+            font-style: italic;
+        }
+
+        .o_composer {
+            margin-top: 10px;
+            .o_composer_input {
+                width: 100%;
+                .box-sizing(content-box);
+                resize: vertical;
+                margin-bottom: 5px;
+            }
+        }
+    }
+
+    .o_mail_thread {
+        margin-top: 10px;
+
+        .o_spinner {
+            text-align: center;
+            font-size: large;
+        }
+    }
+}

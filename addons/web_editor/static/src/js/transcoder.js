@@ -3,30 +3,38 @@ odoo.define('web_editor.transcoder', function (require) {
 
 var widget = require('web_editor.widget');
 
-var cache = {};
 var rulesCache = [];
 var getMatchedCSSRules = function (a) {
-    if(cache[a.tagName + "." +a.className]) {
-        return cache[a.tagName + "." +a.className];
-    }
     if (!rulesCache.length) {
         var sheets = document.styleSheets;
         for(var i = sheets.length-1; i >= 0 ; i--) {
-            var rules = sheets[i].rules || sheets[i].cssRules;
+            var rules;
+            if (sheets[i].rules) {
+                rules = sheets[i].rules;
+            } else {
+                //try...catch because Firefox not able to enumerate document.styleSheets[].cssRules[] for cross-domain stylesheets.
+                try {
+                    rules = sheets[i].cssRules;
+                } catch(e) {
+                    console.warn("Can't read the css rules of: " + sheets[i].href, e);
+                    continue;
+                }
+                rules = sheets[i].cssRules;
+            }
             if (rules) {
                 for(var r = rules.length-1; r >= 0; r--) {
                     var selectorText = rules[r].selectorText;
                     if (selectorText &&
                             rules[r].cssText &&
-                            selectorText.indexOf(".") !== -1 &&
-                            selectorText.indexOf(".note-") === -1 &&
-
+                            selectorText !== "*" &&
                             selectorText.indexOf(":hover") === -1 &&
                             selectorText.indexOf(":before") === -1 &&
                             selectorText.indexOf(":after") === -1 &&
                             selectorText.indexOf(":active") === -1 &&
                             selectorText.indexOf(":link") === -1 &&
-                            selectorText.indexOf("::") === -1) {
+                            selectorText.indexOf("::") === -1 &&
+                            selectorText.indexOf("\"") === -1 &&
+                            selectorText.indexOf("'") === -1) {
                         var st = selectorText.split(/\s*,\s*/);
                         for (var k=0; k<st.length; k++) {
                             rulesCache.push({ 'selector': st[k], 'style': rules[r].style });
@@ -46,7 +54,13 @@ var getMatchedCSSRules = function (a) {
             if (style.parentRule) {
                 var style_obj = {};
                 for (var k=0, len=style.length; k<len; k++) {
-                    style_obj[style[k]] = style[style[k]];
+                    if (style[k].indexOf('animation') !== -1) {
+                        continue;
+                    }
+                    style_obj[style[k]] = style[style[k].replace(/-(.)/g, function (a, b) { return b.toUpperCase(); })];
+                    if (new RegExp(style[k] + '\s*:[^:;]+!important' ).test(style.cssText)) {
+                        style_obj[style[k]] += ' !important';
+                    }
                 }
                 rulesCache[r].style = style = style_obj;
             }
@@ -57,11 +71,11 @@ var getMatchedCSSRules = function (a) {
     function specificity (selector) {
         // http://www.w3.org/TR/css3-selectors/#specificity
         var a = 0;
-        selector.replace(/#[a-z0-9_-]+/gi, function () { a++; return ""; });
+        selector = selector.replace(/#[a-z0-9_-]+/gi, function () { a++; return ""; });
         var b = 0;
-        selector.replace(/(\.[a-z0-9_-]+)|(\[.*?\])/gi, function () { b++; return ""; });
+        selector = selector.replace(/(\.[a-z0-9_-]+)|(\[.*?\])/gi, function () { b++; return ""; });
         var c = 0;
-        selector.replace(/(\s+|:+)[a-z0-9_-]+/gi, function (a) { if(a.indexOf(':not(')===-1) c++; return ""; });
+        selector = selector.replace(/(^|\s+|:+)[a-z0-9_-]+/gi, function (a) { if(a.indexOf(':not(')===-1) c++; return ""; });
         return a*100 + b*10 + c;
     }
     css.sort(function (a, b) { return specificity(a[0]) - specificity(b[0]); });
@@ -69,35 +83,62 @@ var getMatchedCSSRules = function (a) {
     var style = {};
     _.each(css, function (v,k) {
         _.each(v[1], function (v,k) {
-            if (!style[k] || style[k].indexOf('important') === -1 || v.indexOf('important') !== -1) {
+            if (v && _.isString(v) && k.indexOf('-webkit') === -1 && (!style[k] || style[k].indexOf('important') === -1 || v.indexOf('important') !== -1)) {
                 style[k] = v;
             }
         });
     });
-    return cache[a.tagName + "." +a.className] = style;
+
+    _.each(style, function (v,k) {
+        if (v.indexOf('important') !== -1) {
+            style[k] = v.slice(0, v.length-11);
+        }
+    });
+
+    if (style.display === 'block') {
+        delete style.display;
+    }
+    if (style['margin-top']) {
+        style.margin = (style['margin-top'] || 0) + ' ' + (style['margin-right'] || 0) + ' ' + (style['margin-bottom'] || 0) + ' ' + (style['margin-left'] || 0);
+        delete style['margin-top'];
+        delete style['margin-right'];
+        delete style['margin-bottom'];
+        delete style['margin-left'];
+    }
+    if (style['padding-top']) {
+        style.padding = (style['padding-top'] || 0) + ' ' + (style['padding-right'] || 0) + ' ' + (style['padding-bottom'] || 0) + ' ' + (style['padding-left'] || 0);
+        delete style['padding-top'];
+        delete style['padding-right'];
+        delete style['padding-bottom'];
+        delete style['padding-left'];
+    }
+
+    return style;
 };
 
 // convert font awsome into image
 var font_to_img = function ($editable) {
-    $(".fa", $editable).each(function () {
+    $editable.find(".fa").each(function () {
         var $font = $(this);
-        var content;
+        var icon, content;
         _.find(widget.fontIcons, function (font) {
             return _.find(widget.getCssSelectors(font.parser), function (css) {
                 if ($font.is(css[0].replace(/::?before$/, ''))) {
+                    icon = css[2].split("-").shift();
                     content = css[1].match(/content:\s*['"]?(.)['"]?/)[1];
                     return true;
                 }
             });
         });
         if (content) {
-            var size = parseInt(parseFloat($font.css("font-size"))/parseFloat($font.parent().css("font-size")),10);
             var color = $font.css("color").replace(/\s/g, '');
-            var src = _.str.sprintf('/web_editor/font_to_img/%s/%s/'+$font.width(), window.encodeURI(content), window.encodeURI(color));
-            var style = $font.attr("style");
-            style = (style ? style.replace(/\s/g, '').replace(/(^|;)height:[^;]*/, '$1').replace(/(^|;)font-size:[^;]*/, '$1') : "") + "height:"+size+"em;";
-            var $img = $("<img/>").attr("src", src).attr("data-class", $font.attr("class")).attr("style", style);
-            $font.replaceWith($img);
+            $font.replaceWith($("<img/>", {
+                "src": _.str.sprintf('/web_editor/font_to_img/%s/%s/%s', content.charCodeAt(0), window.encodeURI(color), Math.max(1, $font.height())),
+                "data-class": $font.attr("class"),
+                "data-style": $font.attr("style"),
+                "class": $font.attr("class").replace(new RegExp("(^|\\s+)" + icon + "(-[^\\s]+)?", "gi"), ''), // remove inline font-awsome style
+                "style": $font.attr("style")
+            }).css({height: "auto", width: "auto"}));
         } else {
             $font.remove();
         }
@@ -105,10 +146,12 @@ var font_to_img = function ($editable) {
 };
 // convert image into font awsome
 var img_to_font = function ($editable) {
-    $("img[src*='/web_editor/font_to_img/']", $editable).each(function () {
+    $editable.find("img[src*='/web_editor/font_to_img/']").each(function () {
         var $img = $(this);
-        var $font = $("<span/>").attr("class", $img.data("class")).attr("style", $img.attr("style")).css("height", "");
-        $img.replaceWith($font);
+        $img.replaceWith($("<span/>", {
+            "class": $img.data("class"),
+            "style": $img.data("style")
+        }));
     });
 };
 
@@ -117,47 +160,48 @@ var class_to_style = function ($editable) {
     if (!rulesCache.length) {
         getMatchedCSSRules($editable[0]);
     }
-    var selector = _.map(rulesCache, function (a) { return a.selector;}).join(",");
-    $editable.find(selector).each(function () {
+    $editable.find('*').each(function () {
         var $target = $(this);
         var css = getMatchedCSSRules(this);
         var style = $target.attr("style") || "";
         _.each(css, function (v,k) {
-            if (style.indexOf(k) === -1) {
+            if (!(new RegExp('(^|;)\s*' + k).test(style))) {
                 style = k+":"+v+";"+style;
             }
         });
-        $target.attr("style", style);
+        if (_.isEmpty(style)) {
+            $target.removeAttr("style");
+        } else {
+            $target.attr("style", style);
+        }
     });
 };
 // convert style into inline class from mail
 var style_to_class = function ($editable) {
     getMatchedCSSRules($editable[0]);
-    var classes = [];
-    $editable.find("[class]").each(function () {
-        classes = classes.concat(this.className.split(/\s+/));
-    });
-
-    var maybe_selector = _.filter(rulesCache, function (a) { return !!_.find(classes, function (b) { return a.selector.indexOf("."+b) !== -1; } ); });
-    var selector = _.map(maybe_selector, function (a) { return a.selector;}).join(",");
 
     var $c = $('<span/>').appendTo("body");
 
-    $editable.find(selector).each(function () {
+    $editable.find('*').each(function () {
         var $target = $(this);
         var css = getMatchedCSSRules(this);
         var style = "";
         _.each(css, function (v,k) {
-            if (style.indexOf(k) === -1) {
+            if (!(new RegExp('(^|;)\s*' + k).test(style))) {
                 style = k+":"+v+";"+style;
             }
         });
-        css = $c.attr("style", style).attr("style").split(/\s*;\s*/);
+        css = ($c.attr("style", style).attr("style") || "").split(/\s*;\s*/);
         style = $target.attr("style") || "";
         _.each(css, function (v) {
             style = style.replace(v, '');
         });
-        $target.attr("style", style.replace(/;+(\s;)*/g, ';').replace(/^;/g, ''));
+        style = style.replace(/;+(\s;)*/g, ';').replace(/^;/g, '');
+        if (style !== '') {
+            $target.attr("style", style);
+        } else {
+            $target.removeAttr("style");
+        }
     });
     $c.remove();
 };

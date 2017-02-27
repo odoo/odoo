@@ -16,6 +16,13 @@
 .question-block
   margin-left: 50px
 
+.o_forum_tag_follow_box
+  display: none
+  position: absolute
+  z-index: 1
+  text-align: center
+  opacity: 0.9
+
 .question
   clear: left
 
@@ -36,8 +43,12 @@
     max-width: 600px
     height: auto !important
 
-img.img-avatar
+img.o_forum_avatar
   max-height: 40px
+  margin-right: 10px
+
+img.o_forum_avatar_big
+  max-width: 75px
   margin-right: 10px
 
 .oe_grey
@@ -54,15 +65,13 @@ img.img-avatar
 
 .oe_answer_true
   color: #3c763d
-  &:hover {
-    color: #4D964E;
-  }
+  &:hover 
+    color: #4D964E
 
 .oe_answer_false
   color: #bbbbbb
-  &:hover {
-    color: #9E9C9C;
-  }
+  &:hover
+    color: #9E9C9C
 
 .favourite_question
   color: #bbbbbb !important
@@ -112,3 +121,28 @@ a.no-decoration
 
 button.btn-link.text-muted
   color: #999
+
+.o_forum_user_bio_expand
+  position: absolute
+  z-index: 200
+  display: none
+
+.o_forum_tooltip_heading
+  padding: 0px
+  margin: 0px
+  font-size: 18px
+
+.o_forum_user_bio
+  color: black
+  width: 318px
+  min-height: 100px
+  cursor: auto
+  border: 1px solid darkgray
+  background-color: whitesmoke
+  line-height: 13px
+  font-size: 11px
+  word-wrap: break-word
+  .o_forum_tooltip_line
+    min-height: 13px
+  .o_forum_tooltip_header
+    min-height: 75px

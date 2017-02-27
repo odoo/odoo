@@ -29,6 +29,7 @@ var DashBoard = form_common.FormWidget.extend({
         this.form_template = 'DashBoard';
         this.actions_attrs = {};
         this.action_managers = [];
+        this.set_title = _t('My Dashboard');
     },
     start: function() {
         var self = this;
@@ -42,6 +43,7 @@ var DashBoard = form_common.FormWidget.extend({
         }).bind('sortstop', self.do_save_dashboard);
 
         var old_title = this.__parentedParent.get('title');
+        self.__parentedParent.set({ 'title': this.set_title});
         this.__parentedParent.on('load_record', self, function(){
             self.__parentedParent.set({ 'title': old_title});
         });
@@ -137,7 +139,11 @@ var DashBoard = form_common.FormWidget.extend({
     },
     on_close_action: function(e) {
         if (confirm(_t("Are you sure you want to remove this item ?"))) {
-            $(e.currentTarget).parents('.oe_action:first').remove();
+            var $container = $(e.currentTarget).parents('.oe_action:first');
+            var am = _.findWhere(this.action_managers, { am_id: $container.data('am_id') });
+            am.destroy();
+            this.action_managers.splice(_.indexOf(this.action_managers, am), 1);
+            $container.remove();
             this.do_save_dashboard();
         }
     },
@@ -213,6 +219,7 @@ var DashBoard = form_common.FormWidget.extend({
             headless: true,
             low_profile: true,
             display_title: false,
+            search_disable_custom_filters: true,
             list: {
                 selectable: false
             }
@@ -220,48 +227,55 @@ var DashBoard = form_common.FormWidget.extend({
         var am = new ActionManager(this),
             // FIXME: ideally the dashboard view shall be refactored like kanban.
             $action = $('#' + this.view.element_id + '_action_' + index);
-        $action.parent().data('action_attrs', action_attrs);
+        var $action_container = $action.closest('.oe_action');
+        var am_id = _.uniqueId('action_manager_');
+        am.am_id = am_id;
+        $action_container.data({
+            action_attrs: action_attrs,
+            am_id: am_id,
+        });
         this.action_managers.push(am);
-        am.appendTo($action);
-        am.do_action(action);
-        am.do_action = function (action) {
-            self.do_action(action);
-        };
-        if (am.inner_widget) {
-            var new_form_action = function(id, editable) {
-                var new_views = [];
-                _.each(action_orig.views, function(view) {
-                    new_views[view[1] === 'form' ? 'unshift' : 'push'](view);
-                });
-                if (!new_views.length || new_views[0][1] !== 'form') {
-                    new_views.unshift([false, 'form']);
-                }
-                action_orig.views = new_views;
-                action_orig.res_id = id;
-                action_orig.flags = {
-                    form: {
-                        "initial_mode": editable ? "edit" : "view",
-                    }
-                };
-                self.do_action(action_orig);
-            };
-            var list = am.inner_widget.views.list;
-            if (list) {
-                list.created.done(function() {
-                    $(list.controller.groups).off('row_link').on('row_link', function(e, id) {
-                        new_form_action(id);
-                    });
-                });
-            }
-            var kanban = am.inner_widget.views.kanban;
-            if (kanban) {
-                kanban.created.done(function() {
-                    kanban.controller.open_record = function(id, editable) {
-                        new_form_action(id, editable);
+        am.appendTo($action).then(function () {
+            am.do_action(action).then(function () {
+                if (am.inner_widget) {
+                    var new_form_action = function(id, editable) {
+                        var new_views = [];
+                        _.each(action_orig.views, function(view) {
+                            new_views[view[1] === 'form' ? 'unshift' : 'push'](view);
+                        });
+                        if (!new_views.length || new_views[0][1] !== 'form') {
+                            new_views.unshift([false, 'form']);
+                        }
+                        action_orig.views = new_views;
+                        action_orig.res_id = id;
+                        action_orig.flags = {
+                            form: {
+                                "initial_mode": editable ? "edit" : "view",
+                            }
+                        };
+                        self.do_action(action_orig);
                     };
-                });
-            }
-        }
+                    var list = am.inner_widget.views.list;
+                    if (list) {
+                        list.loaded.done(function() {
+                            $(list.controller.groups).off('row_link').on('row_link', function(e, id) {
+                                new_form_action(id);
+                            });
+                        });
+                    }
+                    var kanban = am.inner_widget.views.kanban;
+                    if (kanban) {
+                        kanban.loaded.done(function() {
+                            kanban.controller.open_record = function(event, editable) {
+                                new_form_action(event.data.id, editable);
+                            };
+                        });
+                    }
+                }
+            });
+            am.do_action = self.do_action.bind(self);
+            am.current_action_updated = function() {};
+        });
     },
     renderElement: function() {
         this._super();
@@ -332,9 +346,11 @@ core.form_tag_registry
 
 
 FavoriteMenu.include({
-    prepare_dropdown_menu: function (filters) {
+    start: function () {
         var self = this;
-        this._super(filters);
+        if(this.action_id === undefined) {
+            return this._super();
+        }
         var am = this.findAncestor(function (a) {
             return a instanceof ActionManager;
         });
@@ -348,16 +364,17 @@ FavoriteMenu.include({
             this.$add_dashboard_link = this.$('.o_add_to_dashboard_link');
             var title = this.searchview.get_title();
             this.$add_dashboard_input.val(title);
-            this.$add_dashboard_link.click(function () {
-                event.preventDefault();
+            this.$add_dashboard_link.click(function (e) {
+                e.preventDefault();
                 self.toggle_dashboard_menu();
             });
             this.$add_dashboard_btn.click(this.proxy('add_dashboard'));
         }
+        return this._super();
     },
     toggle_dashboard_menu: function (is_open) {
         this.$add_dashboard_link
-             .toggleClass('o-closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
+            .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
             .toggleClass('o_open_menu', is_open);
         this.$add_to_dashboard.toggle(is_open);
         if (this.$add_dashboard_link.hasClass('o_open_menu')) {
@@ -395,23 +412,19 @@ FavoriteMenu.include({
             board = new Model('board.board'),
             name = self.$add_dashboard_input.val();
         
-        board.call('list', [board.context()])
-            .then(function (board_list) {
-                return self.rpc('/board/add_to_dashboard', {
-                    menu_id: board_list[0].id,                    
-                    action_id: self.action_id,
-                    context_to_save: c,
-                    domain: d,
-                    view_mode: self.view_manager.active_view.type,
-                    name: name,
-                });
-            }).then(function (r) {
-                if (r) {
-                    self.do_notify(_.str.sprintf(_t("'%s' added to dashboard"), name), '');
-                } else {
-                    self.do_warn(_t("Could not add filter to dashboard"));
-                }
-            });
+        return self.rpc('/board/add_to_dashboard', {
+            action_id: self.action_id || false,
+            context_to_save: c,
+            domain: d,
+            view_mode: self.view_manager.active_view.type,
+            name: name,
+        }).then(function (r) {
+            if (r) {
+                self.do_notify(_.str.sprintf(_t("'%s' added to dashboard"), name), '');
+            } else {
+                self.do_warn(_t("Could not add filter to dashboard"));
+            }
+        });
     },
 });
 

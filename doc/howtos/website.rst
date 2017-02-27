@@ -1,3 +1,5 @@
+:banner: banners/build_a_website.jpg
+
 .. queue:: website/series
 
 ==================
@@ -20,15 +22,15 @@ behaviors or by altering existing ones (including behaviors added by other
 modules).
 
 :ref:`Odoo's scaffolding <reference/cmdline/scaffold>` can setup a basic
-module to quickly get started, simply invoke:
+module. To quickly get started simply invoke:
 
 .. code-block:: console
 
-    $ ./odoo.py scaffold Academy my-modules
+    $ ./odoo-bin scaffold Academy my-modules
 
 This will automatically create a ``my-modules`` *module directory* with an
 ``academy`` module inside. The directory can be an existing module directory
-if you want, but the module name must be unique for the directory.
+if you want, but the module name must be unique within the directory.
 
 .. patch::
     :hidden:
@@ -38,17 +40,17 @@ A demonstration module
 
 We have a "complete" module ready for installation.
 
-Although it does absolutely nothing yet we can install it:
+Although it does absolutely nothing we can install it:
 
 * start the Odoo server
 
   .. code-block:: console
 
-      $ ./odoo.py --addons-path addons,my-modules
+      $ ./odoo-bin --addons-path addons,my-modules
 
 * go to http://localhost:8069
 * create a new database including demonstration data
-* to go :menuselection:`Settings --> Modules --> Local Modules`
+* to go :menuselection:`Settings --> Modules --> Modules`
 * in the top-right corner remove the *Installed* filter and search for
   *academy*
 * click the :guilabel:`Install` button for the *Academy* module
@@ -68,7 +70,7 @@ Shut down your server (:kbd:`^C`) then restart it:
 
 .. code-block:: console
 
-    $ ./odoo.py --addons-path addons,my-modules
+    $ ./odoo-bin --addons-path addons,my-modules
 
 and open a page to http://localhost:8069/academy/academy/, you should see your
 "page" appear:
@@ -83,10 +85,10 @@ Generating HTML in Python isn't very pleasant.
 The usual solution is templates_, pseudo-documents with placeholders and
 display logic. Odoo allows any Python templating system, but provides its
 own :ref:`QWeb <reference/qweb>` templating system which integrates with other
-Odoo features.
+features.
 
 Create a template and ensure the template file is registered in the
-``__openerp__.py`` manifest, and alter the controller to use our template:
+``__manifest__.py`` manifest, and alter the controller to use our template:
 
 .. patch::
 
@@ -94,17 +96,17 @@ The templates iterates (``t-foreach``) on all the teachers (passed through the
 *template context*), and prints each teacher in its own paragraph.
 
 Finally restart Odoo and update the module's data (to install the template)
-by going to :menuselection:`Settings --> Modules --> Local Modules -->
+by going to :menuselection:`Settings --> Modules --> Modules -->
 Academy` and clicking :guilabel:`Upgrade`.
 
 .. tip::
 
     Alternatively, Odoo can be restarted :option:`and update modules at
-    the same time<odoo.py -u>`:
+    the same time<odoo-bin -u>`:
 
     .. code-block:: console
 
-        $ odoo.py --addons-path addons,my-modules -d academy -u academy
+        $ odoo-bin --addons-path addons,my-modules -d academy -u academy
 
 Going to http://localhost:8069/academy/academy/ should now result in:
 
@@ -116,8 +118,8 @@ Storing data in Odoo
 :ref:`Odoo models <reference/orm/model>` map to database tables.
 
 In the previous section we just displayed a list of string entered statically
-in the Python code. This doesn't allow modifications and persistent storage
-thereof, so we're now going to move our data to the database.
+in the Python code. This doesn't allow modifications or persistent storage
+so we'll now move our data to the database.
 
 Defining the data model
 -----------------------
@@ -137,13 +139,13 @@ left empty).
 
 .. note::
 
-    :ref:`Data files <reference/data>` (XML or CSV) have to be added to the
+    :ref:`Data files <reference/data>` (XML or CSV) must be added to the
     module manifest, Python files (models or controllers) don't but have to
     be imported from ``__init__.py`` (directly or indirectly)
 
 .. warning::
 
-    the administrator user bypasses access control, he has access to all
+    the administrator user bypasses access control, they have access to all
     models even if not given access
 
 Demonstration data
@@ -172,7 +174,7 @@ Accessing the data
 The last step is to alter model and template to use our demonstration data:
 
 #. fetch the records from the database instead of having a static list
-#. Because :meth:`~openerp.models.Model.search` returns a set of records
+#. Because :meth:`~odoo.models.Model.search` returns a set of records
    matching the filter ("all records" here), alter the template to print each
    teacher's ``name``
 
@@ -180,9 +182,9 @@ The last step is to alter model and template to use our demonstration data:
 
 Restart the server and update the module (in order to update the manifest
 and templates and load the demo file) then navigate to
-http://localhost:8069/academy/academy/. The page should look little different:
-names should simply be prefixed by a number (the database identifier for the
-teacher).
+http://localhost:8069/academy/academy/. The page should look slightly
+different: names should simply be prefixed by a number (the database
+identifier for the teacher).
 
 Website support
 ===============
@@ -229,7 +231,7 @@ URLs and routing
 ================
 
 Controller methods are associated with *routes* via the
-:func:`~openerp.http.route` decorator which takes a routing string and a
+:func:`~odoo.http.route` decorator which takes a routing string and a
 number of attributes to customise its behavior or security.
 
 We've seen a "literal" routing string, which matches a URL section exactly,
@@ -319,7 +321,7 @@ Administration and ERP integration
 A brief and incomplete introduction to the Odoo administration
 --------------------------------------------------------------
 
-The Odoo administration was briefly seen during the `website support` section.
+The Odoo administration was briefly seen during the `website support`_ section.
 We can go back to it using :menuselection:`Administrator --> Administrator` in
 the menu (or :guilabel:`Sign In` if you're signed out).
 
@@ -381,8 +383,8 @@ let's also add views so we can see and edit a course's teacher:
 .. patch::
 
 It should also be possible to create new courses directly from a teacher's
-page, or to see all the courses a teacher gives, so add
-:class:`the inverse relationship <openerp.fields.One2many>` to the *teachers*
+page, or to see all the courses they teach, so add
+:class:`the inverse relationship <odoo.fields.One2many>` to the *teachers*
 model:
 
 .. patch::
@@ -390,13 +392,13 @@ model:
 Discussions and notifications
 -----------------------------
 
-Odoo provides technical models, which don't fulfill business needs in and of
-themselves but add capabilities to business objects without having to build
+Odoo provides technical models, which don't directly fulfill business needs
+but which add capabilities to business objects without having to build
 them by hand.
 
 One of these is the *Chatter* system, part of Odoo's email and messaging
 system, which can add notifications and discussion threads to any model.
-The model simply has to :attr:`~openerp.models.Model._inherit`
+The model simply has to :attr:`~odoo.models.Model._inherit`
 ``mail.thread``, and add the ``message_ids`` field to its form view to display
 the discussion thread. Discussion threads are per-record.
 
@@ -441,8 +443,8 @@ though they may have to be looked for.
 .. note::
 
     * to extend a model in-place, it's :attr:`inherited
-      <openerp.models.Model._inherit>` without giving it a new
-      :attr:`~openerp.models.Model._name`
+      <odoo.models.Model._inherit>` without giving it a new
+      :attr:`~odoo.models.Model._name`
     * ``product.template`` already uses the discussions system, so we can
       remove it from our extension model
     * we're creating our courses as *published* by default so they can be

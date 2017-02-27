@@ -9,7 +9,13 @@
     @navbar-default-link-color: #777;
     @navbar-default-link-hover-color: #333;
     @navbar-default-bg: #f8f8f8;
+    @MAX-Z-INDEX : 2147483647;
 } .define-color-if-not-defined();
+
+.top_covered_image {
+    object-fit: cover;
+    object-position: top;
+}
 
 .oe_slides_panel_footer {
     background-color: @navbar-default-bg;
@@ -44,6 +50,7 @@ section.oe_slides_promote_box {
 }
 
 img.oe_slides_channel_thumbnail {
+    .top_covered_image();
     height: 250px;
     width: 100%
 }
@@ -53,6 +60,7 @@ img.oe_slides_opacity {
 }
 
 img.oe_slides_promote_image {
+    .top_covered_image();
     max-height: 300px;
     width: 100%;
     overflow: hidden;
@@ -64,6 +72,7 @@ img.oe_slides_promote_image {
 }
 
 .oe_slides_apart_small {
+    .top_covered_image();
     height: 60px;
     width: 90px;
 }
@@ -86,12 +95,17 @@ img.oe_slides_promote_image {
     color: @link-color;
 }
 
+textarea.o_slides_comment {
+    resize: vertical;
+}
+
 // Thumbnails
 .oe_slides_thumbnail_container{
     height: 300px
 }
 
 .oe_slides_grid_thumbnail {
+    .top_covered_image();
     height: 200px;
     width: 100%;
     overflow: hidden;
@@ -101,6 +115,11 @@ img.oe_slides_promote_image {
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis
+}
+
+.o_slide_preview {
+    max-height: 160px;
+    overflow: hidden;
 }
 
 // Suggested slides grid
@@ -153,4 +172,22 @@ img.oe_slides_promote_image {
 // PDF Viewer Share bar
 .oe_slides_share_bar{
     padding: 10px 0;
+}
+
+.oe_slides_panel_footer #page_number {
+    width: 45px;
+}
+
+.oe_show_footer {
+    z-index: @MAX-Z-INDEX; // Looks terrible but seems necessary due to fullscreen & canvas in PDFSlidesViewer
+}
+// Display Slide Navigation Footer bit clear on mobile preview
+@media screen and (max-width: 300px) {
+    .o_slide_navigation_buttons {
+        margin-left: 15px;
+        margin-right: -15px;
+        .col-xs-4 {
+            display: none;
+        }
+    }
 }

@@ -1,0 +1,768 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_account
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-01-25 08:56+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
+msgid "# of Products"
+msgstr "# 상품"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "Account Stock Properties"
+msgstr "재고 계정 속성"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Accounting"
+msgstr "회계"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
+msgid "Accounting Information"
+msgstr "회계 정보"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_change_standard_price.py:62
+#, python-format
+msgid "Active ID is not set in Context."
+msgstr "활성 ID가 문맥에 설정되지 않았습니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
+msgid ""
+"Allows to configure inventory valuations on products and product categories."
+msgstr "상품과 상품 분류에 재고 평가를 구성하도록 합니다."
+
+#. module: stock_account
+#: selection:product.category,property_cost_method:0
+#: selection:product.template,property_cost_method:0
+msgid "Average Price"
+msgstr "평균 가격"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
+msgid "Can be expensed"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Cancel"
+msgstr "취소"
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:278
+#, python-format
+msgid ""
+"Cannot find a stock input account for the product %s. You must define one on "
+"the product category, or on the location, before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:280
+#, python-format
+msgid ""
+"Cannot find a stock output account for the product %s. You must define one "
+"on the product category, or on the location, before processing this "
+"operation."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+msgid "Change Price"
+msgstr "가격 변경"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_view_change_standard_price
+#: model:ir.model,name:stock_account.model_stock_change_standard_price
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+msgid "Change Standard Price"
+msgstr "표준 가격 변경"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Choose a date in the past to get the inventory at that date."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
+msgid ""
+"Choose the accounting date at which you want to value the stock moves "
+"created by the inventory instead of the default one (the inventory end date)"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Choose your date"
+msgstr "날짜를 선택하세요"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
+msgid ""
+"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
+"coeff"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Company"
+msgstr "회사"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Compute from average price"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:351
+#, python-format
+msgid ""
+"Configuration error. Please configure the price difference account on the "
+"product or its category to process this operation."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+msgid "Cost"
+msgstr "비용"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
+msgid "Costing Method"
+msgstr "원가계산 방법"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
+#, fuzzy
+msgid "Counter-Part Account"
+msgstr "재고 출고 계정"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_date
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_create_date
+msgid "Created on"
+msgstr "작성일"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
+msgid "Date"
+msgstr "날짜"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_display_name
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_display_name
+msgid "Display Name"
+msgstr "표시 이름"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
+msgid "Force Accounting Date"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Group By"
+msgstr "그룹화"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_id
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
+msgid ""
+"If cost price is increased, stock variation account will be debited and "
+"stock output account will be credited with the value = (difference of amount "
+"* quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and "
+"stock input account will be debited."
+msgstr ""
+"원가가 상승하면 재고 변동 계정의 차변에 기입하고 재고 출고 계정에 (금액*가능 "
+"수량의 차이)=값으로 대변에 기입됩니다.\n"
+"원가가 하락하면 재고 변동 계정의 대변에 기입하고 재고 입고 계정의 차변에 기입"
+"됩니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
+msgid ""
+"If perpetual valuation is enabled for a product, the system will "
+"automatically create journal entries corresponding to stock moves, with "
+"product price as specified by the 'Costing Method'. The inventory variation "
+"account set on the product category will represent the current inventory "
+"value, and the stock input and stock output account will hold the "
+"counterpart moves for incoming and outgoing products."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
+#: model:ir.model.fields,help:stock_account.field_product_template_property_valuation
+msgid ""
+"If perpetual valuation is enabled for a product, the system will "
+"automatically create journal entries corresponding to stock moves, with "
+"product price as specified by the 'Costing Method'The inventory variation "
+"account set on the product category will represent the current inventory "
+"value, and the stock input and stock output account will hold the "
+"counterpart moves for incoming and outgoing products."
+msgstr ""
+
+#. module: stock_account
+#: selection:stock.config.settings,module_stock_landed_costs:0
+msgid "Include landed costs in product costing computation"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
+msgid ""
+"Install the module that allows to affect landed costs on pickings, and split "
+"them onto the different products."
+msgstr ""
+"선택이 운송비에 영향을 미치는 것을 허용하려면 모듈을 설치하고 다른 상품 상에 "
+"분배해야 합니다."
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_inventory
+msgid "Inventory"
+msgstr "목록"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_location
+msgid "Inventory Locations"
+msgstr "재고 위치"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_group_stock_inventory_valuation
+#: model:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "Inventory Valuation"
+msgstr "재고 평가"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_inventory_value
+msgid "Inventory Value"
+msgstr "재고 값"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
+#: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
+msgid "Inventory at Date"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_invoice
+msgid "Invoice"
+msgstr "송장"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "송장 명세"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_module_stock_landed_costs
+msgid "Landed Costs"
+msgstr "하차 비용"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
+#: model:ir.model.fields,field_description:stock_account.field_stock_history___last_update
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history___last_update
+msgid "Last Modified on"
+msgstr "최근 수정"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_uid
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_date
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_location_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Location"
+msgstr "차고"
+
+#. module: stock_account
+#: model:res.groups,name:stock_account.group_inventory_valuation
+msgid "Manage Inventory Valuation and Costing Methods"
+msgstr "재고 평가와 원가계산 방법 관리"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Move"
+msgstr "이동"
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:125
+#: code:addons/stock_account/product.py:187
+#, python-format
+msgid "No difference between standard price and new price!"
+msgstr "표준 가격과 새 가격이 다르지 않습니다!"
+
+#. module: stock_account
+#: selection:stock.config.settings,module_stock_landed_costs:0
+msgid "No landed costs"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_date
+msgid "Operation Date"
+msgstr "작업 일자"
+
+#. module: stock_account
+#: selection:product.category,property_valuation:0
+#: selection:product.template,property_valuation:0
+msgid "Periodic (manual)"
+msgstr ""
+
+#. module: stock_account
+#: selection:stock.config.settings,group_stock_inventory_valuation:0
+msgid "Periodic inventory valuation (recommended)"
+msgstr ""
+
+#. module: stock_account
+#: selection:product.category,property_valuation:0
+#: selection:product.template,property_valuation:0
+msgid "Perpetual (automated)"
+msgstr ""
+
+#. module: stock_account
+#: selection:stock.config.settings,group_stock_inventory_valuation:0
+msgid "Perpetual inventory valuation (stock move generates accounting entries)"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
+msgid "Price"
+msgstr "가격"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_product
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_product_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Product"
+msgstr "제품"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
+msgid "Product Alert Time"
+msgstr "상품 경고 시간"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_category
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_product_categ_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Product Category"
+msgstr "제품 범주"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
+msgid "Product Life Time"
+msgstr "상품 유통기한"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
+msgid "Product Quantity"
+msgstr "상품 수량"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
+msgid "Product Removal Time"
+msgstr "상품 제거 시간"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_template
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_product_template_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Product Template"
+msgstr "제품 양식"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
+msgid "Product Use Time"
+msgstr "상품 사용 시간"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_quant
+msgid "Quants"
+msgstr "양"
+
+#. module: stock_account
+#: selection:product.category,property_cost_method:0
+#: selection:product.template,property_cost_method:0
+msgid "Real Price"
+msgstr "실제 가격"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Retrieve the Inventory Value"
+msgstr "재고 값 가져오기"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Retrieve the curent stock valuation."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Serial Number"
+msgstr "일련 번호"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+#, fuzzy
+msgid "Set standard price"
+msgstr "표준 가격"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_source
+msgid "Source"
+msgstr "자재"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
+msgid ""
+"Specify a unit of measure here if invoicing is made in another unit of "
+"measure than inventory. Keep empty to use the default unit of measure."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
+msgid "Specify whether the product can be selected in an HR expense."
+msgstr ""
+
+#. module: stock_account
+#: selection:product.category,property_cost_method:0
+#: selection:product.template,property_cost_method:0
+msgid "Standard Price"
+msgstr "표준 가격"
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:138
+#: code:addons/stock_account/product.py:145
+#: code:addons/stock_account/product.py:199
+#: code:addons/stock_account/product.py:205
+#, python-format
+msgid "Standard Price changed"
+msgstr "표준 가격이 변경되었습니다"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
+#: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
+msgid ""
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"                    Average Price: The cost price is recomputed at each "
+"incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the "
+"last outgoing product (will be use in case of inventory loss for example)."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
+msgid ""
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and "
+"used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing "
+"product (will be used in case of inventory loss for example)."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
+msgid "Stock Input Account"
+msgstr "재고 입고 계정"
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:464
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
+#, python-format
+msgid "Stock Journal"
+msgstr "재고 분개 항목"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_move
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
+msgid "Stock Move"
+msgstr "재고 이동"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_output_categ_id
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_output
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_output
+msgid "Stock Output Account"
+msgstr "재고 출고 계정"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_valuation_account_id
+msgid "Stock Valuation Account"
+msgstr "재고 평가 계정"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_in_account_id
+msgid "Stock Valuation Account (Incoming)"
+msgstr "재고 평가 계정 (입고)"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_out_account_id
+msgid "Stock Valuation Account (Outgoing)"
+msgstr "재고 평가 계정 (출고)"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_valuation_history.py:31
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_graph
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_pivot
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
+#, python-format
+msgid "Stock Value At Date"
+msgstr "해당 날짜까지 재고 값"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_chart_template
+msgid "Templates for Account Chart"
+msgstr "계정 도표 서식"
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:306
+#, python-format
+msgid ""
+"The found valuation amount for product %s is zero. Which means there is "
+"probably a configuration error. Check the costing method and the standard "
+"price"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
+msgid "Total Value"
+msgstr "총계"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
+msgid "Unit of Measure -> UOS Coeff"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
+msgid "Unit of Sale"
+msgstr "판매 단위"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved from an internal location into this location, instead of the "
+"generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr ""
+"실시간 재고 평가 사용하기. 가상 위치(비 내부 유형)를 설정하면 제품에 설정된 "
+"일반 재고 출고 계정 대신에 이 계정을 내부 위치에서 이 위치로 이동하는 상품의 "
+"값을 유지하는데 사용합니다. 이것은 내부 위치에 영향을 주지 않습니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved out of this location and into an internal location, instead of "
+"the generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr ""
+"실시간 재고 평가 사용하기. 가상 위치(비 내부 유형)를 설정하면 제품에 설정된 "
+"일반 재고 출고 계정 대신에 이 계정을 이 위치에서 내부 위치로 이동하는 상품의 "
+"값을 유지하는데 사용합니다. 이것은 내부 위치에 영향을 주지 않습니다."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
+msgid "Value"
+msgstr "값"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr "새 일련번호를 발행하면 이것은 경고를 통지하기 이전의 일 수입니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_life_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
+"새 일련번호를 발행하면 이것은 상품이 위험해질 수 있거나 사용해서는 안되는 이"
+"전의 일 수입니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
+"새 일련번호를 발행하면 이것은 상품이 재고에서 제거되기 이전의 일 수입니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_use_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""
+"새 일련번호를 발행하면 이것은 상품이 아직 위험하진 않지만 악화되기 시작하기 "
+"이전의 일 수입니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. This is the default "
+"value for all products in this category. It can also directly be set on each "
+"product"
+msgstr ""
+"실시간 재고 평가를 할 때 원본이 설정된 특정 평가 계정을 제외하고 전체 입고 재"
+"고 이동에 대한 상대 분개 항목이 이 계정에 게시됩니다. 이것은 해당 분류의 모"
+"든 상품에 대한 기본값입니다. 또한 각 상품에 직접적으로 설정 될 수 있습니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
+#: model:ir.model.fields,help:stock_account.field_product_template_property_stock_account_input
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. When not set on the "
+"product, the one from the product category is used."
+msgstr ""
+"실시간 재고 평가를 할 때 원본이 설정된 특정 평가 계정을 제외하고 전체 입고 재"
+"고 이동에 대한 상대 분개 항목이 이 계정에 게시됩니다. 상품을 설정하지 않으면 "
+"상품 분류 중 하나가 사용됩니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. This is the "
+"default value for all products in this category. It can also directly be set "
+"on each product"
+msgstr ""
+"실시간 재고 평가를 할 때 대상지가 설정된 특정 평가 계정을 제외하고 전체 출고 "
+"재고 이동에 대한 상대 분개 항목이 이 계정에 게시됩니다. 이것은 해당 분류의 모"
+"든 상품에 대한 기본값입니다. 또한 각 상품에 직접적으로 설정 될 수 있습니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
+#: model:ir.model.fields,help:stock_account.field_product_template_property_stock_account_output
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. When not set on "
+"the product, the one from the product category is used."
+msgstr ""
+"실시간 재고 평가를 할 때 대상지가 설정된 특정 평가 계정을 제외하고 전체 출고 "
+"재고 이동에 대한 상대 분개 항목이 이 계정에 게시됩니다. 상품을 설정하지 않으"
+"면 상품 분류 중 하나가 사용됩니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
+msgid ""
+"When doing real-time inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
+msgstr ""
+"실시간 재고평가를 할 때 재고 이동이 처리되면 자동으로 회계 분개 항목이 게시됩"
+"니다."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
+msgid ""
+"When real-time inventory valuation is enabled on a product, this account "
+"will hold the current value of the products."
+msgstr ""
+"상품에 대해 실시간 재고평가를 하면 이 계정은 상품의 현재 값을 유지합니다."
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_wizard_valuation_history
+msgid "Wizard that opens the stock valuation history table"
+msgstr "재고평가 기록 테이블을 열기 위한 마법사"
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:276
+#, python-format
+msgid ""
+"You don't have any stock journal defined on your product category, check if "
+"you have installed a chart of accounts"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:282
+#, python-format
+msgid ""
+"You don't have any stock valuation account defined on your product category. "
+"You must define one before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+msgid "_Apply"
+msgstr "_적용"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_config_settings
+msgid "stock.config.settings"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_history
+msgid "stock.history"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
+msgid "unknown"
+msgstr "알 수 없음"

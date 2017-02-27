@@ -1,13 +1,11 @@
 <template>
 
 <t t-name="KanbanView.buttons">
-    <t t-if="display">
-        <div>
-            <button type="button" class="btn btn-primary btn-sm o-kanban-button-new">
-                <t t-esc="widget.options.create_text || _t('Create')"/>
-            </button>
-        </div>
-    </t>
+    <div>
+        <button type="button" class="btn btn-primary btn-sm o-kanban-button-new" accesskey="c">
+            <t t-esc="widget.options.create_text || _t('Create')"/>
+        </button>
+    </div>
 </t>
 
 <t t-name="KanbanView.Group">
@@ -20,8 +18,12 @@
                 <ul class="dropdown-menu" role="menu">
                     <li><a class="o_kanban_toggle_fold" href="#">Fold</a></li>
                     <t t-if="widget.grouped_by_m2o">
-                        <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit</a></li>
+                        <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit Stage</a></li>
                         <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
+                    </t>
+                    <t t-if="widget.has_active_field">
+                        <li><a class="o_column_archive" href="#">Archive Records</a></li>
+                        <li><a class="o_column_unarchive" href="#">Restore Records</a></li>
                     </t>
                 </ul>
             </span>
@@ -47,8 +49,8 @@
         </div>
         <div class="o_kanban_quick_create">
             <input type="text" placeholder="Add"/>
-            <button class="btn btn-primary o_kanban_add">Add</button>
-            <button class="btn btn-default o_kanban_cancel">Discard</button>
+            <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
+            <button class="btn btn-sm btn-default o_kanban_cancel">Discard</button>
         </div>
     </div>
 </t>
@@ -60,8 +62,8 @@
 <t t-name="KanbanView.QuickCreate">
     <div class="o_kanban_quick_create">
         <input type="text" placeholder="Add"/>
-        <button class="btn btn-primary o_kanban_add">Add</button>
-        <button class="btn btn-default o_kanban_cancel">Discard</button>
+        <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
+        <button class="btn btn-sm btn-default o_kanban_cancel">Discard</button>
     </div>
 </t>
 
@@ -77,7 +79,24 @@
 </t>
 <t t-name="KanbanAttachmentImage">
     <div class="o_kanban_attachment_image">
-        <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + widget.field.raw_value[0]"/>
+        <img t-att-src="'/web/image/' + widget.field.raw_value[0] + '?unique=1'"/>
     </div>
 </t>
+
+<t t-name="KanbanSelection">
+    <div class="btn-group o_kanban_selection">
+        <a href="#" data-toggle="dropdown">
+            <span t-att-class="'oe_kanban_status ' + (current_state_class &amp;&amp; current_state_class || '')"/>
+        </a>
+        <ul class="dropdown-menu state" role="menu">
+            <li t-foreach="states" t-as="rec" t-att-data-value="rec.name">
+                <a href="#">
+                    <span t-att-class="'oe_kanban_status ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
+                    <t t-raw="rec.state_name"/>
+                </a>
+            </li>
+        </ul>
+    </div>
+</t>
+
 </template>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('group_purchase_user'))]" name="groups_id"/>
+        </record>
+
+        <record id="stock.res_company_1" model="res.company">
+            <field eval="1.0" name="po_lead"/>
+        </record>
+
+        <record id="product.product_delivery_01" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_delivery_02" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_product_20" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+    </data>
+</odoo>
+

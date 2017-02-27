@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_config_settings_view_form_inherit_website_quote" model="ir.ui.view">
+        <field name="name">sale.config.settings.inherit.website.quote</field>
+        <field name="model">sale.config.settings</field>
+        <field name="inherit_id" ref="sale.sale_config_settings_view_form_inherit_sale"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='website_quote']" position="replace">
+                <div class="mt16" attrs="{'invisible': [('module_website_quote','=',False)]}">
+                    <button name="%(website_quote.action_sale_quotation_template)d" icon="fa-arrow-right" type="action" string="Quotation Templates" class="btn-link"/>
+                </div>
+                <div attrs="{'invisible': [('module_website_quote','=',False)]}">
+                    <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

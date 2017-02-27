@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
-from openerp.osv import osv
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo import api, fields, models
 
-class HrHolidaySummaryReport(osv.AbstractModel):
+
+class HrHolidaySummaryReport(models.AbstractModel):
     _name = 'report.hr_holidays.report_holidayssummary'
 
     def _get_header_info(self, start_date, holiday_type):
+        st_date = fields.Date.from_string(start_date)
         return {
-            'start_date': datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT).strftime('%Y-%m-%d'),
-            'end_date': (datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=59)).strftime('%Y-%m-%d'),
+            'start_date': fields.Date.to_string(st_date),
+            'end_date': fields.Date.to_string(st_date + relativedelta(days=59)),
             'holiday_type': 'Confirmed and Approved' if holiday_type == 'both' else holiday_type
         }
 
     def _get_day(self, start_date):
         res = []
-        start_date = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT)
+        start_date = fields.Date.from_string(start_date)
         for x in range(0, 60):
             color = '#ababab' if start_date.strftime('%a') == 'Sat' or start_date.strftime('%a') == 'Sun' else ''
             res.append({'day_str': start_date.strftime('%a'), 'day': start_date.day , 'color': color})
@@ -29,7 +29,7 @@ class HrHolidaySummaryReport(osv.AbstractModel):
     def _get_months(self, start_date):
         # it works for geting month name between two dates.
         res = []
-        start_date = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT)
+        start_date = fields.Date.from_string(start_date)
         end_date = start_date + relativedelta(days=59)
         while start_date <= end_date:
             last_date = start_date + relativedelta(day=1, months=+1, days=-1)
@@ -40,10 +40,10 @@ class HrHolidaySummaryReport(osv.AbstractModel):
             start_date += relativedelta(day=1, months=+1)
         return res
 
-    def _get_leaves_summary(self, cr, uid, ids, start_date, empid, holiday_type, context=None):
+    def _get_leaves_summary(self, start_date, empid, holiday_type):
         res = []
         count = 0
-        start_date = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT)
+        start_date = fields.Date.from_string(start_date)
         end_date = start_date + relativedelta(days=59)
         for index in range(0, 60):
             current = start_date + timedelta(index)
@@ -51,12 +51,19 @@ class HrHolidaySummaryReport(osv.AbstractModel):
             if current.strftime('%a') == 'Sat' or current.strftime('%a') == 'Sun':
                 res[index]['color'] = '#ababab'
         # count and get leave summary details.
-        holidays_obj = self.pool['hr.holidays']
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
-        holidays_ids = holidays_obj.search(cr, uid, [('employee_id', '=', empid), ('state', 'in', holiday_type), ('type', '=', 'remove'), ('date_from', '<=', str(end_date)), ('date_to', '>=', str(start_date))], context=context)
-        for holiday in holidays_obj.browse(cr, uid, holidays_ids, context=context):
-            date_from = datetime.strptime(holiday.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_to = datetime.strptime(holiday.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
+        holidays = self.env['hr.holidays'].search([
+            ('employee_id', '=', empid), ('state', 'in', holiday_type),
+            ('type', '=', 'remove'), ('date_from', '<=', str(end_date)),
+            ('date_to', '>=', str(start_date))
+        ])
+        for holiday in holidays:
+            # Convert date to user timezone, otherwise the report will not be consistent with the
+            # value displayed in the interface.
+            date_from = fields.Datetime.from_string(holiday.date_from)
+            date_from = fields.Datetime.context_timestamp(holiday, date_from).date()
+            date_to = fields.Datetime.from_string(holiday.date_to)
+            date_to = fields.Datetime.context_timestamp(holiday, date_to).date()
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:
                     res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
@@ -65,53 +72,47 @@ class HrHolidaySummaryReport(osv.AbstractModel):
         self.sum = count
         return res
 
-    def _get_data_from_report(self, cr, uid, ids, data, context=None):
+    def _get_data_from_report(self, data):
         res = []
-        emp_obj = self.pool['hr.employee']
-        department_obj = self.pool['hr.department']
+        Employee = self.env['hr.employee']
         if 'depts' in data:
-            for department in department_obj.browse(cr, uid, data['depts'], context=context):
+            for department in self.env['hr.department'].browse(data['depts']):
                 res.append({'dept' : department.name, 'data': [], 'color': self._get_day(data['date_from'])})
-                employee_ids = emp_obj.search(cr, uid, [('department_id', '=', department.id)], context=context)
-                employees = emp_obj.browse(cr, uid, employee_ids, context=context)
-                for emp in employees:
+                for emp in Employee.search([('department_id', '=', department.id)]):
                     res[len(res)-1]['data'].append({
                         'emp': emp.name,
-                        'display': self._get_leaves_summary(cr, uid, ids, data['date_from'], emp.id, data['holiday_type'], context=context),
+                        'display': self._get_leaves_summary(data['date_from'], emp.id, data['holiday_type']),
                         'sum': self.sum
                     })
         elif 'emp' in data:
-            employees = emp_obj.browse(cr, uid, data['emp'], context=context)
             res.append({'data':[]})
-            for emp in employees:
+            for emp in Employee.browse(data['emp']):
                 res[0]['data'].append({
                     'emp': emp.name,
-                    'display': self._get_leaves_summary(cr, uid, ids, data['date_from'], emp.id, data['holiday_type'], context=context),
+                    'display': self._get_leaves_summary(data['date_from'], emp.id, data['holiday_type']),
                     'sum': self.sum
                 })
         return res
 
-    def _get_holidays_status(self, cr, uid, ids, context=None):
+    def _get_holidays_status(self):
         res = []
-        holiday_obj = self.pool['hr.holidays.status']
-        holiday_ids = holiday_obj.search(cr, uid, [], context=context)
-        holiday_datas = holiday_obj.browse(cr, uid, holiday_ids, context=context)
-        for holiday in holiday_datas:
+        for holiday in self.env['hr.holidays.status'].search([]):
             res.append({'color': holiday.color_name, 'name': holiday.name})
         return res
 
-    def render_html(self, cr, uid, ids, data=None, context=None):
-        report_obj = self.pool['report']
-        holidays_report = report_obj._get_report_from_name(cr, uid, 'hr_holidays.report_holidayssummary')
-        selected_records = self.pool['hr.holidays'].browse(cr, uid, ids, context=context)
+    @api.model
+    def render_html(self, docids, data=None):
+        Report = self.env['report']
+        holidays_report = Report._get_report_from_name('hr_holidays.report_holidayssummary')
+        holidays = self.env['hr.holidays'].browse(self.ids)
         docargs = {
-            'doc_ids': ids,
+            'doc_ids': self.ids,
             'doc_model': holidays_report.model,
-            'docs': selected_records,
+            'docs': holidays,
             'get_header_info': self._get_header_info(data['form']['date_from'], data['form']['holiday_type']),
             'get_day': self._get_day(data['form']['date_from']),
             'get_months': self._get_months(data['form']['date_from']),
-            'get_data_from_report': self._get_data_from_report(cr, uid, ids, data['form'], context=context),
-            'get_holidays_status': self._get_holidays_status(cr, uid, ids, context=context),
+            'get_data_from_report': self._get_data_from_report(data['form']),
+            'get_holidays_status': self._get_holidays_status(),
         }
-        return report_obj.render(cr, uid, ids, 'hr_holidays.report_holidayssummary', docargs, context=context)
+        return Report.render('hr_holidays.report_holidayssummary', docargs)

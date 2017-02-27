@@ -1,110 +1,91 @@
 # -*- coding: utf-8 -*-
-import base64
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
-import werkzeug.urls
+import babel
+from datetime import datetime, timedelta
 
-from openerp import http, SUPERUSER_ID
-from openerp.http import request
-from openerp.tools.translate import _
+from odoo import http
+from odoo.http import request
+
+from odoo.addons.website.controllers.backend import WebsiteBackend
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 
 
-class contactus(http.Controller):
+class WebsiteCrmBackend(WebsiteBackend):
 
-    def generate_google_map_url(self, street, city, city_zip, country_name):
-        url = "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=8&size=298x298" % werkzeug.url_quote_plus(
-            '%s, %s %s, %s' % (street, city, city_zip, country_name)
-        )
-        return url
+    @http.route()
+    def fetch_dashboard_data(self, date_from, date_to):
 
-    @http.route(['/page/website.contactus', '/page/contactus'], type='http', auth="public", website=True)
-    def contact(self, **kwargs):
-        values = {}
-        for field in ['description', 'partner_name', 'phone', 'contact_name', 'email_from', 'name']:
-            if kwargs.get(field):
-                values[field] = kwargs.pop(field)
-        values.update(kwargs=kwargs.items())
-        return request.website.render("website.contactus", values)
+        results = super(WebsiteCrmBackend, self).fetch_dashboard_data(date_from, date_to)
+        results['groups']['sale_salesman'] = request.env['res.users'].has_group('sales_team.group_sale_salesman')
+        if not results['groups']['sale_salesman']:
+            return results
 
-    def create_lead(self, request, values, kwargs):
-        """ Allow to be overrided """
-        cr, context = request.cr, request.context
-        return request.registry['crm.lead'].create(cr, SUPERUSER_ID, values, context=dict(context, mail_create_nosubscribe=True))
+        date_from = datetime.strptime(date_from, DEFAULT_SERVER_DATE_FORMAT)
+        date_to = datetime.strptime(date_to, DEFAULT_SERVER_DATE_FORMAT)
 
-    def preRenderThanks(self, values, kwargs):
-        """ Allow to be overrided """
-        company = request.website.company_id
-        return {
-            'google_map_url': self.generate_google_map_url(company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or ''),
-            '_values': values,
-            '_kwargs': kwargs,
+        lead_domain = []
+
+        website_utm = request.env['ir.model.data'].xmlid_to_res_id('utm.utm_medium_website')
+        if website_utm:
+            lead_domain += [('medium_id', '=', website_utm)]
+
+        lead_ids = request.env['crm.lead'].search(
+            lead_domain + [
+                ('create_date', '>=', date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)),
+                ('create_date', '<=', date_to.strftime(DEFAULT_SERVER_DATE_FORMAT))],
+            )
+
+        leads = [{
+            'create_date': datetime.strptime(lead.create_date, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT),
+            'campaign_id': lead.campaign_id.name,
+            'medium_id': lead.medium_id.name,
+            'source_id': lead.source_id.name,
+        } for lead in lead_ids]
+
+        leads_graph = self._compute_lead_graph(date_from, date_to, lead_domain)
+        previous_leads_graph = self._compute_lead_graph(date_from - timedelta(days=(date_to - date_from).days), date_from, lead_domain, previous=True)
+
+        results['dashboards']['leads'] = {
+            'graph': [
+                {
+                    'values': leads_graph,
+                    'key': 'Leads',
+                },
+                {
+                    'values': previous_leads_graph,
+                    'key': 'Previous Leads',
+                },
+            ],
+            'leads': leads,
+            'lead_fields': {
+                'create_date': 'Create Date',
+                'campaign_id': 'Campaign',
+                'medium_id': 'Medium',
+                'source_id': 'Source',
+            },
         }
 
-    def get_contactus_response(self, values, kwargs):
-        values = self.preRenderThanks(values, kwargs)
-        return request.website.render(kwargs.get("view_callback", "website_crm.contactus_thanks"), values)
+        return results
 
-    @http.route(['/crm/contactus'], type='http', auth="public", website=True)
-    def contactus(self, **kwargs):
-        def dict_to_str(title, dictvar):
-            ret = "\n\n%s" % title
-            for field in dictvar:
-                ret += "\n%s" % field
-            return ret
+    def _compute_lead_graph(self, date_from, date_to, lead_domain, previous=False):
 
-        _TECHNICAL = ['show_info', 'view_from', 'view_callback']  # Only use for behavior, don't stock it
-        _BLACKLIST = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date', 'user_id', 'active']  # Allow in description
-        _REQUIRED = ['name', 'contact_name', 'email_from', 'description']  # Could be improved including required from model
+        days_between = (date_to - date_from).days
+        date_list = [(date_from + timedelta(days=x)) for x in range(0, days_between + 1)]
 
-        post_file = []  # List of file to add to ir_attachment once we have the ID
-        post_description = []  # Info to add after the message
-        values = {}
+        daily_leads = request.env['crm.lead'].read_group(
+            domain=lead_domain + [
+                ('create_date', '>=', date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)),
+                ('create_date', '<=', date_to.strftime(DEFAULT_SERVER_DATE_FORMAT))],
+            fields=['create_date'],
+            groupby='create_date:day')
 
-        values['medium_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'crm.crm_medium_website')
-        values['team_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'website.salesteam_website_sales')
+        daily_leads_dict = {l['create_date:day']: l['create_date_count'] for l in daily_leads}
 
-        for field_name, field_value in kwargs.items():
-            if hasattr(field_value, 'filename'):
-                post_file.append(field_value)
-            elif field_name in request.registry['crm.lead']._fields and field_name not in _BLACKLIST:
-                values[field_name] = field_value
-            elif field_name not in _TECHNICAL:  # allow to add some free fields or blacklisted field like ID
-                post_description.append("%s: %s" % (field_name, field_value))
+        leads_graph = [{
+            '0': d.strftime(DEFAULT_SERVER_DATE_FORMAT) if not previous else (d + timedelta(days=days_between)).strftime(DEFAULT_SERVER_DATE_FORMAT),
+            # Respect read_group format in models.py
+            '1': daily_leads_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang', 'en_US')), 0)
+        } for d in date_list]
 
-        if "name" not in kwargs and values.get("contact_name"):  # if kwarg.name is empty, it's an error, we cannot copy the contact_name
-            values["name"] = values.get("contact_name")
-        # fields validation : Check that required field from model crm_lead exists
-        error = set(field for field in _REQUIRED if not values.get(field))
-
-        if error:
-            values = dict(values, error=error, kwargs=kwargs.items())
-            return request.website.render(kwargs.get("view_from", "website.contactus"), values)
-
-        # description is required, so it is always already initialized
-        if post_description:
-            values['description'] += dict_to_str(_("Custom Fields: "), post_description)
-
-        if kwargs.get("show_info"):
-            post_description = []
-            environ = request.httprequest.headers.environ
-            post_description.append("%s: %s" % ("IP", environ.get("REMOTE_ADDR")))
-            post_description.append("%s: %s" % ("USER_AGENT", environ.get("HTTP_USER_AGENT")))
-            post_description.append("%s: %s" % ("ACCEPT_LANGUAGE", environ.get("HTTP_ACCEPT_LANGUAGE")))
-            post_description.append("%s: %s" % ("REFERER", environ.get("HTTP_REFERER")))
-            values['description'] += dict_to_str(_("Environ Fields: "), post_description)
-
-        lead_id = self.create_lead(request, dict(values, user_id=False), kwargs)
-        values.update(lead_id=lead_id)
-        if lead_id:
-            for field_value in post_file:
-                attachment_value = {
-                    'name': field_value.filename,
-                    'res_name': field_value.filename,
-                    'res_model': 'crm.lead',
-                    'res_id': lead_id,
-                    'datas': base64.encodestring(field_value.read()),
-                    'datas_fname': field_value.filename,
-                }
-                request.registry['ir.attachment'].create(request.cr, SUPERUSER_ID, attachment_value, context=request.context)
-
-        return self.get_contactus_response(values, kwargs)
+        return leads_graph

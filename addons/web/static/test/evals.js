@@ -1,3 +1,10 @@
+odoo.define_section('eval.basics', ['web.pyeval'], function(test, mock) {
+    test('not prefix', function (assert) {
+        assert.ok(py.eval('not False'));
+        assert.ok(py.eval('not foo', {foo: false}));
+        assert.ok(py.eval('not a in b', {a: 3, b: [1, 2, 4, 8]}));
+    });
+});
 odoo.define_section('eval.types', ['web.pyeval'], function (test, mock) {
 
     function makeTimeCheck (assert, pyeval) {
@@ -343,22 +350,20 @@ odoo.define_section('eval.edc', ['web.pyeval', 'web.session'], function (test, m
         mock.add('res.lang:load_lang', function () { return true; });
 
         mock.add('res.users:write', function (args) {
-            _.extend(user, args[1]);
+            _.extend(session.user_context, args[1]);
             return true;
         });
 
-        mock.add('/web/session/get_session_info', function () {
-            return {
-                session_id: 'foobar',
-                db: '3',
-                login: user.login,
+        _.extend(session, {
+            session_id: 'foobar',
+            db: '3',
+            login: user.login,
+            uid: user.id,
+            user_context: {
                 uid: user.id,
-                user_context: {
-                    uid: user.id,
-                    lang: user.lang,
-                    tz: user.tz
-                }
-            };
+                lang: user.lang,
+                tz: user.tz
+            }
         });
         return session.session_reload();
     }
@@ -784,7 +789,7 @@ odoo.define_section('eval.contexts', ['web.pyeval'], function (test) {
                     "product_id": 4,
                     "name": "[PC1] Basic PC",
                     "quantity": 1,
-                    "uos_id": 1,
+                    "uom_id": 1,
                     "price_unit": 100,
                     "account_id": 853,
                     "discount": 0,

@@ -1,1486 +1,1254 @@
-# Korean translation for openerp-web
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openerp-web package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * web
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openerp-web\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-09-22 07:35+0000\n"
-"Last-Translator: Josh Kim <joshkkim@gmail.com>\n"
-"Language-Team: Korean <ko@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-04-26 05:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 10:05+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2122
-#: code:addons/web/static/src/js/search.js:2289
+#: code:addons/web/static/src/js/views/form_common.js:866
+#, python-format
+msgid " & Close"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:467
+#, python-format
+msgid " selected records"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/view_manager.js:168
+#, python-format
+msgid " view couldn't be loaded"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:115
+#: code:addons/web/static/src/js/views/search_filters.js:290
 #, python-format
 msgid "%(field)s %(operator)s"
 msgstr "%(field)s %(operator)s"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2123
+#: code:addons/web/static/src/js/views/search_filters.js:116
 #, python-format
 msgid "%(field)s %(operator)s \"%(value)s\""
 msgstr "%(field)s %(operator)s \"%(value)s\""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:1515
+#: code:addons/web/static/src/js/views/list_view.js:1587
 #, python-format
 msgid "%(page)d/%(page_count)d"
 msgstr "%(page)d/%(page_count)d"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:595
+#: code:addons/web/static/src/js/view_manager.js:66
 #, python-format
 msgid "%(view_type)s view"
 msgstr "%(view_type)s 화면"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:433
+#: code:addons/web/static/src/js/views/form_view.js:450
 #, python-format
 msgid "%d / %d"
 msgstr "%d / %d"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:679
+#: code:addons/web/static/src/js/framework/core.js:134
 #, python-format
 msgid "%d days ago"
-msgstr "%d일 전"
+msgstr "%d 일 전"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:677
+#: code:addons/web/static/src/js/framework/core.js:132
 #, python-format
 msgid "%d hours ago"
-msgstr "%d시간 전"
+msgstr "%d 시간 전"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:675
+#: code:addons/web/static/src/js/framework/core.js:130
 #, python-format
 msgid "%d minutes ago"
 msgstr "%d분 전"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:681
+#: code:addons/web/static/src/js/framework/core.js:136
 #, python-format
 msgid "%d months ago"
-msgstr "%d개월 전"
+msgstr "%d달 전"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:683
+#: code:addons/web/static/src/js/framework/core.js:138
 #, python-format
 msgid "%d years ago"
 msgstr "%d년 전"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:423
+#: code:addons/web/static/src/js/views/list_view.js:440
 #, python-format
 msgid "%d-%d of %d"
 msgstr "%d의 %d-%d"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:1424
+#: code:addons/web/static/src/js/views/list_view.js:1496
 #, python-format
 msgid "%s (%d)"
 msgstr "%s (%d)"
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/formats.js:295
-#, python-format
-msgid "'%s' is not a correct date"
-msgstr "'%s'은(는) 올바른 날짜가 아닙니다"
+#: model:ir.ui.view,arch_db:web.webclient_bootstrap
+msgid "&lt;!--[if lte IE 9]&gt;"
+msgstr ""
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.webclient_bootstrap
+msgid "&lt;![endif]--&gt;"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/formats.js:318
+#: code:addons/web/static/src/js/framework/formats.js:177
+#, python-format
+msgid "'%s' is not a correct date"
+msgstr "'%s'은(는) 올바르지 않은 날짜입니다"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/time.js:193
 #, python-format
 msgid "'%s' is not a correct date, datetime nor time"
 msgstr "'%s'은(는) 올바른 날짜, 일시 또는 시간이 아닙니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/formats.js:282
+#: code:addons/web/static/src/js/framework/formats.js:169
 #, python-format
 msgid "'%s' is not a correct datetime"
-msgstr "'%s'은(는) 올바른 일시가 아닙니다"
+msgstr "'%s'은(는) 올바른 datetime이 아닙니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/formats.js:253
+#: code:addons/web/static/src/js/framework/formats.js:146
 #, python-format
 msgid "'%s' is not a correct float"
-msgstr "'%s' 은(는) 올바른 float 유형이 아닙니다."
+msgstr "'%s'은(는) 올바른 float 유형이 아닙니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/formats.js:238
+#: code:addons/web/static/src/js/framework/formats.js:134
 #, python-format
 msgid "'%s' is not a correct integer"
 msgstr "'%s'은(는) 올바른 정수가 아닙니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/formats.js:303
+#: code:addons/web/static/src/js/framework/formats.js:182
 #, python-format
 msgid "'%s' is not a correct time"
-msgstr "'%s' 은(는) 올바른 시간이 아닙니다."
+msgstr "'%s'은(는) 올바른 시간이 아닙니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/formats.js:330
+#: code:addons/web/static/src/js/framework/time.js:205
 #, python-format
 msgid "'%s' is not convertible to date, datetime nor time"
 msgstr "'%s'은(는) 날짜, 일시 또는 시간으로 변환할 수 없습니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/formats.js:190
+#: code:addons/web/static/src/js/framework/formats.js:77
 #, python-format
 msgid "(%d records)"
 msgstr "(%d개의 기록)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1602
+#: code:addons/web/static/src/xml/base.xml:106
 #, python-format
-msgid "(Any existing filter with the same name will be replaced)"
-msgstr "(동일한 이름의 모든 기존 필터는 교체됩니다)"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:381
-#, python-format
-msgid "(Formerly OpenERP)"
+msgid "(Community Edition)"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1449
+#: code:addons/web/static/src/xml/base_common.xml:100
 #, python-format
 msgid "(no string)"
 msgstr "(문자열 없음)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:947
+#: code:addons/web/static/src/xml/base_common.xml:34
 #, python-format
 msgid "(nolabel)"
 msgstr "(nolabel)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1592
-#, python-format
-msgid "-- Actions --"
-msgstr "-- 동작 --"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1583
-#, python-format
-msgid "-- Filters --"
-msgstr "-- 필터 --"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1959
-#, python-format
-msgid "--- Don't Import ---"
-msgstr "--- 가져오지 않기 ---"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1390
+#: code:addons/web/static/src/xml/base.xml:1059
 #, python-format
 msgid "...Upload in progress..."
 msgstr "...업로드가 진행 중입니다..."
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1909
-#, python-format
-msgid "1. Import a .CSV file"
-msgstr "1. .CSV 파일을 불러오세요"
+#: model:ir.ui.view,arch_db:web.menu_secondary
+msgid "<span class=\"oe_logo_edit\">Edit Company data</span>"
+msgstr ""
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:418
-#, python-format
-msgid "1367 Grand-Rosière"
+#: model:ir.ui.view,arch_db:web.menu_secondary
+msgid "<span>Odoo</span>"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1917
-#, python-format
-msgid "2. Check your file format"
-msgstr "2. 파일 형식을 확인하세요"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2629
-#, python-format
-msgid "<Prev"
-msgstr "<이전으로"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:1099
+#: code:addons/web/static/src/js/widgets/user_menu.js:79
+#: code:addons/web/static/src/xml/base.xml:84
 #, python-format
 msgid "About"
-msgstr "정보"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:360
-#, python-format
-msgid "About Odoo"
-msgstr "Odoo 정보"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:583
+#: code:addons/web/static/src/js/framework/crash_manager.js:25
 #, python-format
 msgid "Access Denied"
 msgstr "접근이 거부됨"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:4463
+#: code:addons/web/static/src/js/framework/crash_manager.js:21
+#, python-format
+msgid "Access Error"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1515
+#, python-format
+msgid "Access to all Enterprise Apps"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/sidebar.js:24
+#, python-format
+msgid "Action"
+msgstr "동작"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1125
 #, python-format
 msgid "Action Button"
-msgstr "동작 버튼"
+msgstr "액션 버튼"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1469
+#: code:addons/web/static/src/xml/base_common.xml:120
 #, python-format
 msgid "Action ID:"
-msgstr "동작 ID:"
+msgstr "동작 ID :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:372
+#: code:addons/web/static/src/js/views/form_widgets.js:685
+#, python-format
+msgid "Activate"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:96
 #, python-format
 msgid "Activate the developer mode"
-msgstr "개발자 모드 활성화"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:4999
-#: code:addons/web/static/src/xml/base.xml:1533
-#: code:addons/web/static/src/xml/base.xml:1832
+#: code:addons/web/static/src/js/views/form_widgets.js:682
+#, python-format
+msgid "Active"
+msgstr "활성"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1384
+#: code:addons/web/static/src/xml/base.xml:1106
+#: code:addons/web/static/src/xml/base.xml:1339
 #, python-format
 msgid "Add"
 msgstr "추가"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1593
+#: code:addons/web/static/src/xml/base.xml:1212
 #, python-format
-msgid "Add Advanced Filter"
-msgstr "고급 필터 추가"
+msgid "Add Custom Filter"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1747
+#: code:addons/web/static/src/xml/base.xml:1213
 #, python-format
 msgid "Add a condition"
 msgstr "조건 추가"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3927
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1024
 #, python-format
 msgid "Add an item"
 msgstr "항목 추가"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:646
+#: code:addons/web/static/src/xml/base.xml:1223
+#, python-format
+msgid "Add custom group"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:325
 #, python-format
 msgid "Add..."
 msgstr "추가..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:4892
-#: code:addons/web/static/src/js/view_form.js:5041
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1325
 #, python-format
 msgid "Add: "
-msgstr "추가: "
+msgstr "추가 : "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2003
-#, python-format
-msgid "Advanced"
-msgstr "고급"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1742
-#, python-format
-msgid "Advanced Search"
-msgstr "고급 검색"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1552
+#: code:addons/web/static/src/xml/base.xml:1119
 #, python-format
 msgid "Advanced Search..."
 msgstr "고급 검색..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:892
+#: code:addons/web/static/src/js/framework/dialog.js:169
+#, python-format
+msgid "Alert"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:562
 #, python-format
 msgid "All users"
 msgstr "모든 사용자"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1748
+#: code:addons/web/static/src/xml/base.xml:1520
+#, python-format
+msgid "And more"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1213
+#: code:addons/web/static/src/xml/base.xml:1233
 #, python-format
 msgid "Apply"
 msgstr "적용"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:620
+#: code:addons/web/static/src/js/views/form_widgets.js:689
+#: code:addons/web/static/src/js/views/list_view.js:307
 #, python-format
-msgid "Attachment :"
-msgstr "첨부파일 :"
+msgid "Archive"
+msgstr "보존"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1816
+#: code:addons/web/static/src/js/views/form_widgets.js:690
+#, python-format
+msgid "Archived"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_menus.js:243
+#, python-format
+msgid "Are you sure that you want to remove this filter?"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:297
+#, python-format
+msgid "Attachment :"
+msgstr "첨부 파일 :"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1323
 #, python-format
 msgid "Available fields"
 msgstr "사용 가능한 필드"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:298
+#: code:addons/web/static/src/xml/base.xml:614
 #, python-format
-msgid "Back to Login"
-msgstr "로그인 화면으로 돌아가기"
+msgid "Bar Chart"
+msgstr "막대 차트"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:555
+#: code:addons/web/static/src/js/views/list_view.js:1955
 #, python-format
-msgid "Backed"
-msgstr "백업됨"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:209
-#: code:addons/web/static/src/xml/base.xml:307
-#, python-format
-msgid "Backup"
-msgstr "백업"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/controllers/main.py:738
-#: code:addons/web/static/src/js/chrome.js:560
-#: code:addons/web/static/src/xml/base.xml:207
-#, python-format
-msgid "Backup Database"
-msgstr "데이터베이스 백업"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:261
-#, python-format
-msgid "Backup Restore"
-msgstr "백업 복구"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:419
-#, python-format
-msgid "Belgium"
+msgid "Binary file"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:452
+#: code:addons/web/static/src/xml/base.xml:1519
 #, python-format
-msgid "Browser's timezone"
-msgstr "브라우저의 시간대"
+msgid "Bugfixes guarantee"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1446
+#: code:addons/web/static/src/xml/base_common.xml:97
 #, python-format
 msgid "Button"
 msgstr "버튼"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1461
+#: code:addons/web/static/src/xml/base_common.xml:112
 #, python-format
 msgid "Button Type:"
-msgstr "버튼 유형:"
+msgstr "버튼 유형 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:93
-#, python-format
-msgid ""
-"By default, the master password is 'admin'. This password\n"
-"                    is required to created, delete dump or restore databases."
-msgstr ""
-"기본값으로, 마스터 비밀번호는 'admin' 입니다. \n"
-"이 비밀번호는 데이터베이스를 생성및 복구하거나 덤프를 삭제할때 필요합니다."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/formats.js:117
+#: code:addons/web/static/src/js/framework/utils.js:285
 #, python-format
 msgid "Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
-msgstr "바이트,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
+msgstr "바이트, Kb, Mb, Gb, Tb, Pb, Eb, Zb, Yb"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1914
-#, python-format
-msgid "CSV File:"
-msgstr "CSV 파일:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:1868
+#: code:addons/web/static/src/js/views/list_common.js:134
 #, python-format
 msgid "Can't convert value %s to context"
-msgstr "%s 값을 문맥으로 변환할 수 없음"
+msgstr "문맥의 %s 값을 변환할 수 없습니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2467
+#: code:addons/web/static/src/js/views/form_widgets.js:359
 #, python-format
 msgid "Can't send email to invalid e-mail address"
-msgstr "잘못된 이메일 주소로 이메일을 전송할 수 없음"
+msgstr "이메일 주소가 잘못되어 이메일을 전송할 수 없습니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1942
-#: code:addons/web/static/src/xml/base.xml:336
-#: code:addons/web/static/src/xml/base.xml:1503
-#: code:addons/web/static/src/xml/base.xml:1996
+#: code:addons/web/static/src/js/framework/crash_manager.js:182
+#: code:addons/web/static/src/js/framework/dialog.js:183
+#: code:addons/web/static/src/js/views/form_common.js:1031
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:44
+#: code:addons/web/static/src/js/views/form_widgets.js:1706
+#: code:addons/web/static/src/xml/base.xml:60
 #, python-format
 msgid "Cancel"
 msgstr "취소"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:272
-#, python-format
-msgid "Change Master Password"
-msgstr "마스터 암호 변경"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/controllers/main.py:758
-#: code:addons/web/controllers/main.py:760
-#: code:addons/web/controllers/main.py:791
-#: code:addons/web/controllers/main.py:793
-#: code:addons/web/controllers/main.py:799
-#: code:addons/web/controllers/main.py:800
-#: code:addons/web/static/src/js/chrome.js:726
-#: code:addons/web/static/src/xml/base.xml:274
-#: code:addons/web/static/src/xml/base.xml:334
+#: code:addons/web/controllers/main.py:748
+#: code:addons/web/controllers/main.py:750
+#: code:addons/web/controllers/main.py:756
+#: code:addons/web/controllers/main.py:757
+#: code:addons/web/static/src/js/widgets/change_password.js:15
+#: code:addons/web/static/src/xml/base.xml:59
 #, python-format
 msgid "Change Password"
-msgstr "암호 변경"
+msgstr "비밀번호 변경"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:984
+#: code:addons/web/static/src/xml/base_common.xml:71
 #, python-format
 msgid "Change default:"
-msgstr "기본 값 변경:"
+msgstr "기본 값 변경 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:609
+#: code:addons/web/static/src/js/views/form_widgets.js:472
 #, python-format
-msgid "Changed Password"
-msgstr "암호를 변경함"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:417
-#, python-format
-msgid "Chaussée de Namur 40"
+msgid "Change selection "
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:114
-#, python-format
-msgid "Check this box to evaluate Odoo."
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2651
-#, python-format
-msgid "Choose Time"
-msgstr "시간 선택"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:132
-#, python-format
-msgid "Choose a password:"
-msgstr "비빌번호를 선택하세요:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2625
-#: code:addons/web/static/src/xml/base.xml:1295
-#: code:addons/web/static/src/xml/base.xml:1349
-#: code:addons/web/static/src/xml/base.xml:1351
+#: code:addons/web/static/src/xml/base.xml:963
+#: code:addons/web/static/src/xml/base.xml:1017
+#: code:addons/web/static/src/xml/base.xml:1019
 #, python-format
 msgid "Clear"
-msgstr "삭제"
+msgstr "제거"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:456
-#, python-format
-msgid "Click here to change your user's timezone."
-msgstr "사용자의 시간대를 변경하려면 여기를 클릭하세요."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:298
-#: code:addons/web/static/src/js/chrome.js:1262
+#: code:addons/web/static/src/js/framework/crash_manager.js:135
+#: code:addons/web/static/src/js/web_client.js:132
 #, python-format
 msgid "Client Error"
 msgstr "클라이언트 오류"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/data_export.js:35
-#: code:addons/web/static/src/js/view_form.js:1073
-#: code:addons/web/static/src/xml/base.xml:1520
+#: code:addons/web/static/src/js/views/form_common.js:860
+#: code:addons/web/static/src/js/views/form_view.js:1194
+#: code:addons/web/static/src/js/widgets/data_export.js:41
 #, python-format
 msgid "Close"
-msgstr "닫기"
+msgstr "마감"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2628
-#, python-format
-msgid "Close without change"
-msgstr "변경사항 없이 닫기"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:866
+#: code:addons/web/static/src/xml/base.xml:536
 #, python-format
 msgid "Condition:"
-msgstr "조건:"
+msgstr "조건 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1940
+#: code:addons/web/static/src/xml/base.xml:53
 #, python-format
-msgid "Confirm"
+msgid "Confirm New Password:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/dialog.js:194
+#, python-format
+msgid "Confirmation"
 msgstr "확인"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:328
-#, python-format
-msgid "Confirm New Password:"
-msgstr "새로운 암호 확인 :"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:288
-#, python-format
-msgid "Confirm new master password:"
-msgstr "새로운 마스터 암호 확인:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:136
-#, python-format
-msgid "Confirm password:"
-msgstr "암호 확인:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:972
+#: code:addons/web/static/src/xml/base_common.xml:59
 #, python-format
 msgid "Context:"
-msgstr "문맥:"
+msgstr "문맥 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:262
+#: code:addons/web/static/src/xml/base.xml:116
 #, python-format
-msgid "Copy of an existing database"
-msgstr "기존 데이터베이스의 사본"
+msgid "Copyright © 2004-2015 Odoo S.A."
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:410
-#, python-format
-msgid "Copyright © 2004-TODAY OpenERP SA. All Rights Reserved."
-msgstr "Copyright © 2004-TODAY OpenERP SA. 모든 권리 보유."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5727
+#: code:addons/web/static/src/js/views/form_widgets.js:1379
 #, python-format
 msgid "Could not display the selected image."
-msgstr "선택한 이미지를 표시할 수 없었습니다."
-
-#. module: web
-#: code:addons/web/controllers/main.py:720
-#, python-format
-msgid "Could not drop database !"
-msgstr "데이터베이스를 삭제할 수 없음!"
+msgstr "선택한 이미지를 표시할 수 없습니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:1049
+#: code:addons/web/static/src/js/views/list_view.js:1109
 #, python-format
 msgid "Could not find id in dataset"
-msgstr "데이터 세트에서 id를 찾을 수 없음"
+msgstr "데이터 세트에서 id를 찾을 수 없습니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:589
-#, python-format
-msgid "Could not restore the database"
-msgstr "데이터베이스를 복구할 수 없음"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:1702
+#: code:addons/web/static/src/js/framework/utils.js:180
 #, python-format
 msgid "Could not serialize XML"
-msgstr "XML을 직렬화할 수 없음"
+msgstr "XML을 직렬화할 수 없습니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:20
-#: code:addons/web/static/src/js/view_list.js:2367
-#: code:addons/web/static/src/xml/base.xml:304
-#: code:addons/web/static/src/xml/base.xml:827
-#: code:addons/web/static/src/xml/base.xml:1502
-#: code:addons/web/static/src/xml/base.xml:1994
+#: code:addons/web/static/src/js/views/graph_view.js:90
+#: code:addons/web/static/src/js/views/graph_widget.js:21
+#: code:addons/web/static/src/js/views/pivot_view.js:186
+#: code:addons/web/static/src/xml/base.xml:627
+#: code:addons/web/static/src/xml/base.xml:659
+#, python-format
+msgid "Count"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:1034
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:30
+#: code:addons/web/static/src/js/views/list_view.js:48
+#: code:addons/web/static/src/js/views/list_view.js:2033
+#: code:addons/web/static/src/xml/base.xml:501
 #, python-format
 msgid "Create"
-msgstr "생성"
+msgstr "작성"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3363
+#: code:addons/web/static/src/js/views/form_common.js:225
 #, python-format
 msgid "Create \"<strong>%s</strong>\""
-msgstr "\"<strong>%s</strong>\" 생성"
+msgstr "\"<strong>%s</strong>\" 작성"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:141
-#, python-format
-msgid "Create Database"
-msgstr "데이터데이스 생성"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3451
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:27
 #, python-format
 msgid "Create a %s"
-msgstr "%s 생성"
+msgstr "%s 작성"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:82
-#, python-format
-msgid "Create a New Database"
-msgstr "새로운 데이터베이스 생성"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3374
+#: code:addons/web/static/src/js/views/form_common.js:236
 #, python-format
 msgid "Create and Edit..."
-msgstr "생성 및 편집..."
+msgstr "작성 및 편집..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1995
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:40
 #, python-format
 msgid "Create and edit"
-msgstr "생성 및 편집"
+msgstr "직상 및 편집"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3418
-#: code:addons/web/static/src/js/view_form.js:4416
+#: code:addons/web/static/src/js/views/form_common.js:281
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1083
 #, python-format
 msgid "Create: "
-msgstr "생성: "
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:625
-#, python-format
-msgid "Created by :"
-msgstr "생성자 :"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:564
-#, python-format
-msgid "Creation Date:"
-msgstr "생성일:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:560
-#, python-format
-msgid "Creation User:"
-msgstr "생성 사용자:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1762
-#, python-format
-msgid "Custom Filter"
-msgstr "사용자 지정 필터"
-
-#. module: web
-#: view:website:web.database_select
-msgid "Database"
-msgstr "데이터베이스"
+msgstr "작성 : "
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:302
 #, python-format
-msgid "Database Management"
-msgstr "데이터베이스 관리"
+msgid "Created by :"
+msgstr "작성자 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:555
+#: code:addons/web/static/src/xml/base.xml:248
 #, python-format
-msgid "Database backed up successfully"
-msgstr "데이터베이스를 성공적으로 백업함"
+msgid "Creation Date:"
+msgstr "작성일 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:595
+#: code:addons/web/static/src/xml/base.xml:244
 #, python-format
-msgid "Database restored successfully"
-msgstr "데이터베이스를 성공적으로 복구함"
+msgid "Creation User:"
+msgstr "작성자 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:184
-#: code:addons/web/static/src/xml/base.xml:216
+#: code:addons/web/static/src/js/views/form_common.js:1067
+#: code:addons/web/static/src/js/views/search_menus.js:175
 #, python-format
-msgid "Database:"
-msgstr "데이터베이스:"
+msgid "Custom Filter"
+msgstr "사용자 지정 필터"
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.login
+msgid "Database"
+msgstr "데이터베이스"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:528
+#: code:addons/web/static/src/xml/base.xml:110
 #, python-format
-msgid "Debug View#"
-msgstr "디버깅 화면#"
+msgid "Database expiration:"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:120
+#: code:addons/web/static/src/xml/base.xml:673
 #, python-format
-msgid "Default language:"
-msgstr "기본 언어:"
+msgid "Day"
+msgstr "일"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:849
+#: code:addons/web/static/src/js/views/form_widgets.js:683
+#, python-format
+msgid "Deactivate"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:519
 #, python-format
 msgid "Default:"
 msgstr "기본 값:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:203
-#: code:addons/web/static/src/js/view_list.js:351
-#: code:addons/web/static/src/xml/base.xml:1899
+#: code:addons/web/static/src/js/views/form_view.js:214
+#: code:addons/web/static/src/js/views/list_view.js:309
+#: code:addons/web/static/src/xml/base.xml:1408
 #, python-format
 msgid "Delete"
 msgstr "삭제"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:637
+#: code:addons/web/static/src/xml/base.xml:313
 #, python-format
 msgid "Delete this attachment"
-msgstr "이 첨부파일을 삭제"
+msgstr "해당 첨부파일 삭제"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1397
+#: code:addons/web/static/src/xml/base.xml:1066
 #, python-format
 msgid "Delete this file"
-msgstr "이 파일을 삭제"
+msgstr "해당 파일 삭제"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1932
-#, python-format
-msgid "Delimiter:"
-msgstr "구분자:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:788
-#: code:addons/web/static/src/xml/base.xml:832
-#: code:addons/web/static/src/xml/base.xml:1517
+#: code:addons/web/static/src/js/views/form_common.js:860
+#: code:addons/web/static/src/xml/base.xml:425
+#: code:addons/web/static/src/xml/base.xml:507
 #, python-format
 msgid "Discard"
-msgstr "무시"
+msgstr "폐기"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:426
-#, python-format
-msgid "Discover Events of Odoo around the world..."
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:537
-#, python-format
-msgid "Do you really want to delete the database: %s ?"
-msgstr "정말로 데이터베이스: %s를 삭제하시겠습니까?"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:1351
+#: code:addons/web/static/src/js/widgets/sidebar.js:205
 #, python-format
 msgid "Do you really want to delete this attachment ?"
 msgstr "해당 첨부 파일을 정말로 삭제하시겠습니까?"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:767
+#: code:addons/web/static/src/js/views/form_view.js:803
 #, python-format
 msgid "Do you really want to delete this record?"
-msgstr "정말로 이 기록을 삭제하시겠습니까?"
+msgstr "정말로 해당 기록을 삭제하시겠습니까?"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:607
+#: code:addons/web/static/src/js/views/list_view.js:629
 #, python-format
 msgid "Do you really want to remove these records?"
-msgstr "정말로 이 기록을 제거하시겠습니까?"
+msgstr "정말로 해당 기록을 제거하시겠습니까?"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1924
+#: code:addons/web/static/src/xml/base.xml:82
 #, python-format
-msgid "Does your file have titles?"
-msgstr "파일에 제목이 있습니까?"
+msgid "Documentation"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:976
+#: code:addons/web/static/src/xml/base_common.xml:63
 #, python-format
 msgid "Domain:"
-msgstr "도메인:"
+msgstr "도메인 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:704
+#: code:addons/web/static/src/js/framework/misc.js:16
 #, python-format
 msgid "Don't leave yet,<br />it's still loading..."
-msgstr "잠시만 기다리세요.<br />아직 불러오는 중입니다..."
+msgstr "잠시만 기다리세요. <br />아직 불러오는 중입니다..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2627
-#: code:addons/web/static/src/js/view_form.js:2657
-#, python-format
-msgid "Done"
-msgstr "완료"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5666
-#: code:addons/web/static/src/js/view_list.js:2299
+#: code:addons/web/static/src/js/views/form_widgets.js:1305
+#: code:addons/web/static/src/js/views/list_view.js:1955
 #, python-format
 msgid "Download"
 msgstr "다운로드"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:2311
+#: code:addons/web/static/src/js/views/list_view.js:1971
 #, python-format
 msgid "Download \"%s\""
 msgstr "\"%s\" 다운로드"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:178
-#: code:addons/web/static/src/xml/base.xml:306
+#: code:addons/web/static/src/js/views/pivot_view.js:122
 #, python-format
-msgid "Drop"
-msgstr "삭제"
+msgid "Download xls"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/controllers/main.py:720
-#: code:addons/web/static/src/xml/base.xml:176
-#, python-format
-msgid "Drop Database"
-msgstr "데이터베이스 삭제"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:545
-#, python-format
-msgid "Dropping database"
-msgstr "데이터 베이스를 삭제하는 중"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:204
-#: code:addons/web/static/src/xml/base.xml:152
-#: code:addons/web/static/src/xml/base.xml:305
+#: code:addons/web/static/src/js/views/form_view.js:215
 #, python-format
 msgid "Duplicate"
-msgstr "복제"
+msgstr "사본 생성"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:150
-#, python-format
-msgid "Duplicate Database"
-msgstr "데이터베이스 복제"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:527
-#, python-format
-msgid "Duplicating database"
-msgstr "데이터베이스를 복제하는 중"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2467
+#: code:addons/web/static/src/js/views/form_widgets.js:359
 #, python-format
 msgid "E-mail Error"
-msgstr "이메일 오류"
+msgstr "이메일 에러"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:541
-#: code:addons/web/static/src/xml/base.xml:824
-#: code:addons/web/static/src/xml/base.xml:1294
+#: code:addons/web/static/src/xml/base.xml:219
+#: code:addons/web/static/src/xml/base.xml:496
+#: code:addons/web/static/src/xml/base.xml:962
 #, python-format
 msgid "Edit"
 msgstr "편집"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:543
+#: code:addons/web/static/src/xml/base.xml:221
 #, python-format
 msgid "Edit Action"
-msgstr "액션 편집"
-
-#. module: web
-#: view:website:web.menu_secondary
-msgid "Edit Company data"
-msgstr "업체 데이터 편집"
+msgstr "동작 편집"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:542
+#: code:addons/web/static/src/xml/base.xml:220
 #, python-format
 msgid "Edit SearchView"
 msgstr "검색 화면 편집"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:544
+#: code:addons/web/static/src/js/widgets/debug_manager.js:179
+#: code:addons/web/static/src/xml/base.xml:222
 #, python-format
 msgid "Edit Workflow"
-msgstr "작업 흐름 편집"
+msgstr "업무 흐름 편집"
 
 #. module: web
-#: view:website:web.login
+#: model:ir.ui.view,arch_db:web.login
 msgid "Email"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1936
-#, python-format
-msgid "Encoding:"
-msgstr "암호화:"
+msgstr "이메일"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/website.tour.xml:25
 #, python-format
 msgid "End This Tutorial"
-msgstr ""
+msgstr "안내서 끝내기"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2626
-#, python-format
-msgid "Erase the current date"
-msgstr "현재날짜 지우기"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1870
+#: code:addons/web/static/src/js/view_manager.js:168
+#: code:addons/web/static/src/js/views/search_menus.js:83
+#: code:addons/web/static/src/js/views/search_menus.js:90
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "오류"
 
 #. module: web
-#: code:addons/web/controllers/main.py:760
-#: code:addons/web/controllers/main.py:800
+#: code:addons/web/controllers/main.py:757
 #, python-format
 msgid "Error, password not changed !"
-msgstr "오류, 암호가 변경되지 않음!"
+msgstr "오류, 암호가 변경되지 않았습니다!"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/pyeval.js:896
+#: code:addons/web/static/src/js/views/form_widgets.js:462
+#, python-format
+msgid "Error: Bad domain"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/pyeval.js:993
 #, python-format
 msgid "Evaluation Error"
 msgstr "평가 오류"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:350
-#: code:addons/web/static/src/xml/base.xml:1792
+#: code:addons/web/static/src/xml/base.xml:648
+#, python-format
+msgid "Expand all"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:306
+#: code:addons/web/static/src/xml/base.xml:1299
 #, python-format
 msgid "Export"
 msgstr "내보내기"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/data_export.js:11
+#: code:addons/web/static/src/js/widgets/data_export.js:51
 #, python-format
 msgid "Export Data"
 msgstr "데이터 내보내기"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1810
+#: code:addons/web/static/src/xml/base.xml:1317
 #, python-format
 msgid "Export Formats"
 msgstr "내보내기 형식"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/data_export.js:36
+#: code:addons/web/static/src/js/widgets/data_export.js:42
 #, python-format
 msgid "Export To File"
 msgstr "파일로 내보내기"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1804
+#: code:addons/web/static/src/xml/base.xml:1311
 #, python-format
 msgid "Export Type:"
-msgstr "내보내기 유형:"
+msgstr "내보내기 유형 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1807
+#: code:addons/web/static/src/xml/base.xml:1314
 #, python-format
 msgid "Export all Data"
 msgstr "모든 데이터 내보내기"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:853
+#: code:addons/web/static/src/js/view_manager.js:381
 #, python-format
 msgid "Failed to evaluate search criterions"
-msgstr ""
+msgstr "검색 조건을 평가할 수 없습니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1722
+#: code:addons/web/static/src/xml/base.xml:1237
 #, python-format
 msgid "Favorites"
-msgstr ""
+msgstr "즐겨찾기"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1233
+#: code:addons/web/static/src/js/views/form_view.js:1358
 #, python-format
 msgid "Field '%s' specified in view could not be found."
 msgstr "화면에서 지정된 '%s' 필드를 찾을 수 없습니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:952
+#: code:addons/web/static/src/xml/base_common.xml:39
 #, python-format
 msgid "Field:"
-msgstr "필드:"
+msgstr "필드 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:975
-#: code:addons/web/static/src/xml/base.xml:536
+#: code:addons/web/static/src/js/widgets/debug_manager.js:140
+#: code:addons/web/static/src/xml/base.xml:215
 #, python-format
 msgid "Fields View Get"
 msgstr "필드 화면 얻기"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1818
+#: code:addons/web/static/src/xml/base.xml:1325
 #, python-format
 msgid "Fields to export"
 msgstr "내보낼 필드"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5586
+#: code:addons/web/static/src/js/views/form_widgets.js:1220
 #, python-format
 msgid "File Upload"
 msgstr "파일 업로드"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5566
+#: code:addons/web/static/src/js/views/form_widgets.js:1200
 #, python-format
 msgid "File upload"
 msgstr "파일 업로드"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:251
-#, python-format
-msgid "File:"
-msgstr "파일:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:87
-#, python-format
-msgid ""
-"Fill in this form to create an Odoo database. You can\n"
-"                    create databases for different companies or for "
-"different\n"
-"                    goals (testing, production). Once the database is "
-"created,\n"
-"                    you will be able to install your first application."
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1147
+#: code:addons/web/static/src/js/views/search_inputs.js:550
 #, python-format
 msgid "Filter"
 msgstr "필터"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1600
-#, python-format
-msgid "Filter Name:"
-msgstr "필터명:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1730
-#, python-format
-msgid "Filter name"
-msgstr "필터명"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1870
+#: code:addons/web/static/src/js/views/search_menus.js:83
 #, python-format
 msgid "Filter name is required."
+msgstr "필터 이름이 필요합니다."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:494
+#, python-format
+msgid "Filter on: %s"
+msgstr "다음에 필터 적용 : %s"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_menus.js:90
+#, python-format
+msgid "Filter with same name already exists."
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:1092
-#, python-format
-msgid "Filter on: %s"
-msgstr "다음에 필터 적용: %s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:832
-#: code:addons/web/static/src/xml/base.xml:1582
+#: code:addons/web/static/src/xml/base.xml:1209
 #, python-format
 msgid "Filters"
 msgstr "필터"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:430
+#: code:addons/web/static/src/xml/base.xml:647
 #, python-format
-msgid "Follow Us..."
+msgid "Flip axis"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:413
-#, python-format
-msgid "For more information visit"
-msgstr "더 많은 정보를 원하시면 다음을 방문하세요 :"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1943
+#: code:addons/web/static/src/js/views/pivot_view.js:808
 #, python-format
 msgid ""
-"For use if CSV files have titles on multiple lines, skips more than a single "
-"line during import"
-msgstr "CSV 파일이 다중 입력줄을 보유하고 있을 경우에 사용됨, 가져오기 작업 시 한 줄 이상 건너뜀."
+"For Excel compatibility, data cannot be exported if there is more than 256 "
+"columns.\n"
+"\n"
+"Tip: try to flip axis, filter further or reduce the number of measures."
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:79
-#: code:addons/web/static/src/js/view_form.js:324
+#: code:addons/web/static/src/xml/base.xml:119
+#, python-format
+msgid "For more information visit"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:34
+#: code:addons/web/static/src/js/views/form_view.js:361
 #, python-format
 msgid "Form"
-msgstr "폼"
+msgstr "양식"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:412
+#: code:addons/web/static/src/xml/base.xml:118
 #, python-format
-msgid "GNU Affero General Public License"
-msgstr "GNU Affero 일반 공개 라이선스"
+msgid "GNU Lesser General Public License"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:446
+#: code:addons/web/static/src/xml/base.xml:1512
+#, python-format
+msgid "Get this feature and much more with Odoo Enterprise!"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/crash_manager.js:24
+#, python-format
+msgid "Global Business Error"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph_view.js:18
+#, python-format
+msgid "Graph"
+msgstr "그래프"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:464
 #, python-format
 msgid "Group"
 msgstr "그룹"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:1260
+#: code:addons/web/static/src/js/views/search_inputs.js:695
+#: code:addons/web/static/src/xml/base.xml:1219
+#, python-format
+msgid "Group By"
+msgstr "그룹화"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:670
 #, python-format
 msgid "Group by: %s"
-msgstr "분류 기준: %s"
+msgstr "그룹화 : %s"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:1284
+#: code:addons/web/static/src/js/widgets/priority.js:50
 #, python-format
-msgid "GroupBy"
-msgstr "GroupBy"
+msgid "High"
+msgstr "높음"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:361
-#, python-format
-msgid "Help"
-msgstr "도움말"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1972
-#, python-format
-msgid "Here is a preview of the file we could not import:"
-msgstr "다음은 불러올 수 없는 파일의 미리보기입니다:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2653
-#, python-format
-msgid "Hour"
-msgstr "시간"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:552
+#: code:addons/web/static/src/xml/base.xml:232
 #, python-format
 msgid "ID:"
-msgstr "ID:"
+msgstr "ID :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5727
+#: code:addons/web/static/src/js/views/form_widgets.js:1379
 #, python-format
 msgid "Image"
 msgstr "이미지"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1903
-#, python-format
-msgid "Import"
-msgstr "가져오기"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1920
-#, python-format
-msgid "Import Options"
-msgstr "가져오기 옵션"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1806
+#: code:addons/web/static/src/xml/base.xml:1313
 #, python-format
 msgid "Import-Compatible Export"
 msgstr "가져오기-호환 파일 내보내기"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:584
+#: code:addons/web/static/src/js/views/form_widgets.js:684
 #, python-format
-msgid "Incorrect super-administrator password"
-msgstr "잘못된 슈퍼 관리자 암호"
+msgid "Inactive"
+msgstr "비활성"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:951
+#: code:addons/web/static/src/js/views/graph_widget.js:198
+#: code:addons/web/static/src/js/views/graph_widget.js:205
 #, python-format
-msgid "Incorrect value for field %(fieldname)s: [%(value)s] is %(message)s"
-msgstr "%(fieldname)s 필드에 대한 잘못된 값: [%(value)s]은(는) %(message)s임"
+msgid "Invalid data"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:742
-#, python-format
-msgid "Invalid Search"
-msgstr "유효하지 않은 검색"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:418
-#, python-format
-msgid "Invalid database name"
-msgstr "유효하지 않은 데이터베이스명"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:980
-#: code:addons/web/static/src/xml/base.xml:534
+#: code:addons/web/static/src/js/widgets/debug_manager.js:111
+#: code:addons/web/static/src/xml/base.xml:213
 #, python-format
 msgid "JS Tests"
 msgstr "JS 시험"
 
 #. module: web
-#: code:addons/web/controllers/main.py:807
+#: code:addons/web/controllers/main.py:764
 #, python-format
 msgid "Languages"
 msgstr "언어"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:572
+#: code:addons/web/static/src/xml/base.xml:256
 #, python-format
 msgid "Latest Modification Date:"
-msgstr "최종 수정일:"
+msgstr "최종 수정일 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:568
+#: code:addons/web/static/src/xml/base.xml:252
 #, python-format
 msgid "Latest Modification by:"
-msgstr "최근 수정자:"
+msgstr "최근 수정자 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1940
+#: code:addons/web/static/src/xml/base.xml:225
 #, python-format
-msgid "Latin 1"
-msgstr "라틴어 1"
+msgid "Leave Debug Mode"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:412
+#: code:addons/web/static/src/xml/base.xml:118
 #, python-format
 msgid "Licenced under the terms of"
-msgstr "다음 조건에 따라 허가됨:"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1943
+#: code:addons/web/static/src/xml/base.xml:615
 #, python-format
-msgid "Lines to skip"
-msgstr "건너뛸 입력줄"
+msgid "Line Chart"
+msgstr "선 차트"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:11
+#: code:addons/web/static/src/js/views/list_view.js:39
 #, python-format
 msgid "List"
 msgstr "목록"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:111
-#, python-format
-msgid "Load demonstration data:"
-msgstr "데모 데이터 로드하기"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:360
-#: code:addons/web/static/src/js/chrome.js:394
+#: code:addons/web/static/src/js/widgets/loading.js:12
+#: code:addons/web/static/src/js/widgets/loading.js:46
 #, python-format
 msgid "Loading"
 msgstr "불러오는 중"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:392
+#: code:addons/web/static/src/js/widgets/loading.js:44
 #, python-format
 msgid "Loading (%d)"
 msgstr "(%d)을(를) 불러오는 중"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:701
-#: code:addons/web/static/src/xml/base.xml:9
+#: code:addons/web/static/src/js/framework/misc.js:13
+#: code:addons/web/static/src/xml/base.xml:5
 #, python-format
 msgid "Loading..."
 msgstr "불러오는 중..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/pyeval.js:900
+#: code:addons/web/static/src/js/framework/pyeval.js:997
 #, python-format
 msgid ""
 "Local evaluation failure\n"
@@ -1494,942 +1262,979 @@ msgstr ""
 "%s"
 
 #. module: web
-#: view:website:web.login
+#: model:ir.ui.view,arch_db:web.login
 msgid "Log in"
 msgstr "로그인"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:362
+#: code:addons/web/static/src/xml/base.xml:88
 #, python-format
 msgid "Log out"
 msgstr "로그아웃"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:1659
+#: code:addons/web/static/src/js/widgets/priority.js:49
+#, python-format
+msgid "Low"
+msgstr "낮음"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:450
 #, python-format
 msgid "M2O search fields do not currently handle multiple default values"
 msgstr "M2O 검색 필드는 현재 다중 기본값을 처리하지 않습니다"
 
 #. module: web
-#: view:website:web.login_layout
+#: model:ir.ui.view,arch_db:web.login_layout
 msgid "Manage Databases"
 msgstr "데이터베이스 관리"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:537
-#: code:addons/web/static/src/xml/base.xml:1595
+#: code:addons/web/static/src/js/widgets/debug_manager.js:146
+#: code:addons/web/static/src/xml/base.xml:216
 #, python-format
 msgid "Manage Filters"
 msgstr "필터 관리"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:540
-#, python-format
-msgid "Manage Views"
-msgstr "화면 관리"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:197
-#: code:addons/web/static/src/xml/base.xml:229
-#: code:addons/web/static/src/xml/base.xml:247
-#, python-format
-msgid "Master Password:"
-msgstr "마스터 비밀번호"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:99
-#: code:addons/web/static/src/xml/base.xml:158
-#: code:addons/web/static/src/xml/base.xml:280
-#, python-format
-msgid "Master password:"
-msgstr "마스터 비밀번호"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/core.js:707
+#: code:addons/web/static/src/js/framework/misc.js:19
 #, python-format
 msgid "Maybe you should consider reloading the application by pressing F5..."
-msgstr "F5를 눌러 응용 프로그램을 다시 불러오는 것을 고려해보세요..."
+msgstr "F5를 눌러 응용 프로그램을 다시 불러오는 것을 고려해보십시오..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:991
+#: code:addons/web/static/src/xml/base.xml:619
+#, python-format
+msgid "Measure"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:651
+#, python-format
+msgid "Measures"
+msgstr "단위"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/debug_manager.js:94
 #, python-format
 msgid "Metadata (%s)"
-msgstr ""
+msgstr "메타데이타 (%s)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1465
+#: code:addons/web/static/src/xml/base_common.xml:116
 #, python-format
 msgid "Method:"
-msgstr "방식:"
+msgstr "방법 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2654
+#: code:addons/web/static/src/js/framework/crash_manager.js:22
 #, python-format
-msgid "Minute"
-msgstr "분"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:259
-#, python-format
-msgid "Mode:"
+msgid "Missing Record"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:1033
+#: code:addons/web/static/src/xml/base.xml:1517
 #, python-format
-msgid "Model %s fields"
-msgstr "%s 모델 필드"
+msgid "Mobile support"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:630
+#: code:addons/web/static/src/js/widgets/debug_manager.js:134
+#, python-format
+msgid "Model %s fields"
+msgstr "%s 필드 모델"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:307
 #, python-format
 msgid "Modified by :"
 msgstr "수정자 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:980
+#: code:addons/web/static/src/xml/base_common.xml:67
 #, python-format
 msgid "Modifiers:"
-msgstr "수정자:"
+msgstr "수정자 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:1167
-#: code:addons/web/static/src/xml/base.xml:1279
-#: view:website:web.menu
+#: code:addons/web/static/src/xml/base.xml:675
+#, python-format
+msgid "Month"
+msgstr "월"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:947
 #, python-format
 msgid "More"
 msgstr "더 보기"
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:359
-#, python-format
-msgid "My Odoo.com account"
+#: model:ir.ui.view,arch_db:web.menu
+msgid "More <b class=\"caret\"/>"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1853
+#: code:addons/web/static/src/xml/base.xml:1343
+#, python-format
+msgid "Move Down"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1342
+#, python-format
+msgid "Move Up"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:87
+#, python-format
+msgid "My Odoo.com account"
+msgstr "내 Odoo.com 계정"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1362
 #, python-format
 msgid "Name"
-msgstr "명칭"
+msgstr "이름"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1989
+#: code:addons/web/static/src/xml/base.xml:1422
 #, python-format
 msgid "Name:"
-msgstr "명칭:"
+msgstr "명칭 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:329
+#: code:addons/web/static/src/js/views/form_view.js:366
 #, python-format
 msgid "New"
-msgstr "새로 만들기"
+msgstr "신규"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:323
+#: code:addons/web/static/src/xml/base.xml:48
 #, python-format
 msgid "New Password:"
-msgstr "새 비밀번호:"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:166
-#: code:addons/web/static/src/xml/base.xml:255
+#: code:addons/web/static/src/xml/base.xml:1516
 #, python-format
-msgid "New database name:"
-msgstr "신규 데이터베이스명:"
+msgid "New design"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:284
-#, python-format
-msgid "New master password:"
-msgstr "새로운 마스터 암호:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2631
-#, python-format
-msgid "Next>"
-msgstr "다음으로>"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1562
+#: code:addons/web/static/src/js/views/search_inputs.js:330
 #, python-format
 msgid "No"
 msgstr "아니오"
 
 #. module: web
-#: code:addons/web/controllers/main.py:1127
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:240
 #, python-format
-msgid "No content found for field '%s' on '%s:%s'"
-msgstr "'%s:%s'의 '%s' 필드에서 내용을 찾을 수 없음"
+msgid "No Update:"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:158
+#: code:addons/web/static/src/js/views/graph_widget.js:95
+#, python-format
+msgid ""
+"No data available for this chart. Try to add some records, or make sure that "
+"there is no active filter in the search bar."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:691
+#, python-format
+msgid ""
+"No data available for this pivot table.  Try to add some records, or make "
+"sure\n"
+"                that there is at least one measure and no active filter in "
+"the search bar."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:124
 #, python-format
 msgid "No data provided."
-msgstr "데이터가 제공되지 않음."
+msgstr "데이터가 제공되지 않습니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3383
+#: code:addons/web/static/src/js/views/graph_widget.js:94
+#, python-format
+msgid "No data to display"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:690
+#, python-format
+msgid "No data to display."
+msgstr "표시할 데이타가 없습니다."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/debug_manager.js:89
+#, python-format
+msgid "No metadata available"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:245
 #, python-format
 msgid "No results to show..."
-msgstr ""
+msgstr "표시할 결과가 없습니다..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3752
+#: code:addons/web/static/src/js/views/form_widgets.js:481
 #, python-format
-msgid "No value found for the field  for value "
+msgid "No selected record"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:1667
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:329
+#, fuzzy, python-format
+msgid "No value found for the field %s for value %s"
+msgstr "이 필드용 값을 찾을 수 없습니다. "
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/utils.js:144
 #, python-format
 msgid "Node [%s] is not a JSONified XML node"
 msgstr "[%s] 노드는 JSON 처리된 XML 노드가 아닙니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2656
+#: code:addons/web/static/src/js/widgets/priority.js:48
 #, python-format
-msgid "Now"
-msgstr "지금"
+msgid "Normal"
+msgstr "보통"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:956
+#: code:addons/web/static/src/js/views/form_widgets.js:688
 #, python-format
-msgid "Object:"
-msgstr "객체:"
-
-#. module: web
-#: view:website:web.layout
-#: view:website:web.login_layout
-#: view:website:web.menu_secondary
-msgid "Odoo"
+msgid "Not Archived"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:377
+#: code:addons/web/static/src/js/views/graph_widget.js:238
+#, python-format
+msgid "Not enough data points"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:885
+#, python-format
+msgid "Not shown in kanban"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:43
+#, python-format
+msgid "Object:"
+msgstr "객체 :"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/dialog.js:37
+#: model:ir.ui.view,arch_db:web.layout
+#, python-format
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:101
 #, python-format
 msgid "Odoo (Formerly OpenERP)"
 msgstr ""
 
 #. module: web
-#: view:website:web.qunit_suite
-msgid "Odoo Web Tests"
-msgstr ""
-
-#. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:411
+#: code:addons/web/static/src/js/apps.js:189
 #, python-format
-msgid "Odoo is a trademark of the"
+msgid "Odoo Apps will be available soon"
+msgstr "Odoo 앱이 곧 사용가능해 질 것입니다"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1717
+#, python-format
+msgid "Odoo Enterprise"
+msgstr "Odoo Enterprise"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:117
+#, python-format
+msgid "Odoo S.A."
+msgstr ""
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.qunit_suite
+msgid "Odoo Web Tests"
+msgstr "Odoo 웹 시험"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:117
+#, python-format
+msgid "Odoo is a trademark of"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:413
+#: code:addons/web/static/src/xml/base.xml:119
 #, python-format
 msgid "Odoo.com"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:279
-#: code:addons/web/static/src/js/chrome.js:288
-#: code:addons/web/static/src/js/chrome.js:346
-#: code:addons/web/static/src/js/chrome.js:504
-#: code:addons/web/static/src/js/chrome.js:750
-#: code:addons/web/static/src/js/view_form.js:573
-#: code:addons/web/static/src/js/view_form.js:1946
-#: code:addons/web/static/src/xml/base.xml:1887
+#: code:addons/web/static/src/js/views/form_widgets.js:702
+#, python-format
+msgid "Off"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/dialog.js:41
+#: code:addons/web/static/src/js/framework/dialog.js:159
+#: code:addons/web/static/src/js/framework/dialog.js:177
+#: code:addons/web/static/src/xml/base.xml:1396
 #, python-format
 msgid "Ok"
-msgstr "Ok"
+msgstr "OK"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:318
+#: code:addons/web/static/src/xml/base.xml:43
 #, python-format
 msgid "Old Password:"
-msgstr "기존 암호:"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:988
+#: code:addons/web/static/src/js/views/form_widgets.js:700
+#, python-format
+msgid "On"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:75
 #, python-format
 msgid "On change:"
-msgstr "변경 시:"
+msgstr "변경 시 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:885
+#: code:addons/web/static/src/js/widgets/progress_bar.js:79
+#, python-format
+msgid "Only Integer Value should be valid."
+msgstr "오직 정수 값만이 유효합니다."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:555
 #, python-format
 msgid "Only you"
-msgstr "Only you"
+msgstr "개인용"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3579
-#: code:addons/web/static/src/js/view_form.js:4324
-#: code:addons/web/static/src/js/view_form.js:4444
-#: code:addons/web/static/src/js/view_form.js:4917
-#: code:addons/web/static/src/js/view_form.js:5059
+#: code:addons/web/static/src/xml/base.xml:198
+#, python-format
+msgid "Open Debug Menu"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:153
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:936
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1107
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1341
 #, python-format
 msgid "Open: "
-msgstr "열기: "
+msgstr "열기 : "
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:416
-#, python-format
-msgid "OpenERP S.A."
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:411
-#, python-format
-msgid "OpenERP SA Company"
-msgstr "OpenERP SA Company"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:162
-#, python-format
-msgid "Original database name:"
-msgstr "원본 데이터베이스명:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:427
-#, python-format
-msgid "Our next Events"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:423
-#, python-format
-msgid "Our website"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:309
-#: view:website:web.login
-#, python-format
+#: model:ir.ui.view,arch_db:web.login
 msgid "Password"
-msgstr "암호"
+msgstr "비밀번호"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:609
+#: code:addons/web/static/src/xml/base.xml:616
 #, python-format
-msgid "Password has been changed successfully"
-msgstr "암호가 성공적으로 변경되었습니다"
+msgid "Pie Chart"
+msgstr "원그래프"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:464
+#: code:addons/web/static/src/js/views/graph_widget.js:206
 #, python-format
-msgid "Please confirm your new password"
-msgstr "새 암호를 확정해 주세요."
+msgid ""
+"Pie chart cannot display all zero numbers.. Try to change your domain to "
+"display positive results"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/data_export.js:145
+#: code:addons/web/static/src/js/views/graph_widget.js:199
+#, python-format
+msgid ""
+"Pie chart cannot mix positive and negative numbers. Try to change your "
+"domain to only display positive results"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/pivot_view.js:24
+#, python-format
+msgid "Pivot"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/data_export.js:166
 #, python-format
 msgid "Please enter save field list name"
-msgstr "저장 필드 목록명을 입력하세요"
+msgstr "저장 필드 목록명을 입력하십시오"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:462
-#, python-format
-msgid "Please enter your new password"
-msgstr "새 암호를 입력해주세요."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:461
-#, python-format
-msgid "Please enter your previous password"
-msgstr "기존 암호를 입력해 주세요."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1847
+#: code:addons/web/static/src/xml/base.xml:1356
 #, python-format
 msgid "Please note that only the selected ids will be exported."
-msgstr ""
+msgstr "선택한 ID만 내보내기함에 유의하십시오."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1844
+#: code:addons/web/static/src/xml/base.xml:1353
 #, python-format
 msgid ""
 "Please pay attention that all records matching your search filter will be "
 "exported. Not only the selected ids."
 msgstr ""
+"선택한 ID뿐만이 아니라 검색 필터와 일치하는 모든 결과를 내보내는 것에 주의하"
+"십시오."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/data_export.js:394
+#: code:addons/web/static/src/js/widgets/data_export.js:416
 #, python-format
 msgid "Please select fields to export..."
-msgstr "내보낼 필드를 선택하세요..."
+msgstr "내보낼 필드를 선택하십시오..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/data_export.js:381
+#: code:addons/web/static/src/js/widgets/data_export.js:403
 #, python-format
 msgid "Please select fields to save export list..."
-msgstr "내보내기 목록을 저장할 필드를 선택하세요..."
+msgstr "내보내기 목록을 저장할 필드를 선택하십시오..."
 
 #. module: web
-#: view:website:web.login_layout
-#: view:website:web.menu_secondary
+#: model:ir.ui.view,arch_db:web.menu_secondary
 msgid "Powered by"
-msgstr "Powered by"
+msgstr ""
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.login_layout
+msgid "Powered by <span>Odoo</span>"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:358
+#: code:addons/web/static/src/xml/base.xml:86
 #, python-format
 msgid "Preferences"
-msgstr "환경 설정"
+msgstr "기본 설정"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:1166
+#: code:addons/web/static/src/js/widgets/sidebar.js:23
 #, python-format
 msgid "Print"
 msgstr "인쇄"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:545
+#: code:addons/web/static/src/xml/base.xml:223
 #, python-format
 msgid "Print Workflow"
 msgstr "업무 흐름 인쇄"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:992
+#: code:addons/web/static/src/js/views/form_widgets.js:694
 #, python-format
-msgid "Relation:"
-msgstr "관계:"
+msgid "Production Environment"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1833
+#: code:addons/web/static/src/xml/base.xml:676
+#, python-format
+msgid "Quarter"
+msgstr "분기"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:79
+#, python-format
+msgid "Relation:"
+msgstr "관계 :"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1340
 #, python-format
 msgid "Remove"
 msgstr "제거"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1834
+#: code:addons/web/static/src/xml/base.xml:1341
 #, python-format
 msgid "Remove All"
 msgstr "모두 삭제"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3752
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
 msgid "Render"
-msgstr ""
+msgstr "화면 생성"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2497
+#: code:addons/web/static/src/js/views/form_widgets.js:389
 #, python-format
 msgid "Resource Error"
 msgstr "리소스 에러"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:241
-#: code:addons/web/static/src/xml/base.xml:308
-#, python-format
-msgid "Restore"
-msgstr "복원"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:588
-#: code:addons/web/static/src/xml/base.xml:239
-#, python-format
-msgid "Restore Database"
-msgstr "데이터베이스 복원"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:595
-#, python-format
-msgid "Restored"
-msgstr "복구됨"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:785
-#: code:addons/web/static/src/xml/base.xml:830
-#: code:addons/web/static/src/xml/base.xml:1508
-#: code:addons/web/static/src/xml/base.xml:1737
+#: code:addons/web/static/src/js/views/form_common.js:866
+#: code:addons/web/static/src/xml/base.xml:422
+#: code:addons/web/static/src/xml/base.xml:506
+#: code:addons/web/static/src/xml/base.xml:1249
 #, python-format
 msgid "Save"
 msgstr "저장"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1511
-#, python-format
-msgid "Save & Close"
-msgstr "저장 & 닫기"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1512
+#: code:addons/web/static/src/js/views/form_common.js:881
 #, python-format
 msgid "Save & New"
-msgstr "저장 & 신규 생성"
+msgstr "저장 및 신규 작성"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1342
-#: code:addons/web/static/src/xml/base.xml:1344
+#: code:addons/web/static/src/xml/base.xml:1010
+#: code:addons/web/static/src/xml/base.xml:1012
 #, python-format
 msgid "Save As"
-msgstr "다른 이름으로"
+msgstr "다른 이름으로 저장"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5601
+#: code:addons/web/static/src/js/views/form_widgets.js:1235
 #, python-format
 msgid "Save As..."
 msgstr "다른 이름으로 저장..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1594
-#, python-format
-msgid "Save Filter"
-msgstr "필터 저장"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1885
+#: code:addons/web/static/src/xml/base.xml:1394
 #, python-format
 msgid "Save as:"
-msgstr "다른 이름으로 저장:"
+msgstr "다른 이름으로 저장 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1728
+#: code:addons/web/static/src/xml/base.xml:1241
 #, python-format
-msgid "Save current filter"
-msgstr "현재 필터 저장"
+msgid "Save current search"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1074
+#: code:addons/web/static/src/js/views/form_view.js:1195
 #, python-format
 msgid "Save default"
 msgstr "기본 값 저장"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1820
+#: code:addons/web/static/src/xml/base.xml:1327
 #, python-format
 msgid "Save fields list"
 msgstr "필드 목록 저장"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1891
+#: code:addons/web/static/src/xml/base.xml:1400
 #, python-format
 msgid "Saved exports:"
-msgstr "저장된 내보내기 파일:"
+msgstr "저장된 내보내기 파일 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1554
-#, python-format
-msgid "Search"
-msgstr "찾기"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1579
+#: code:addons/web/static/src/js/views/search_inputs.js:359
 #, python-format
 msgid "Search %(field)s at: %(value)s"
 msgstr "다음 위치에서 %(field)s 검색: %(value)s"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:1428
-#: code:addons/web/static/src/js/search.js:1446
-#: code:addons/web/static/src/js/search.js:1618
+#: code:addons/web/static/src/js/views/search_inputs.js:191
+#: code:addons/web/static/src/js/views/search_inputs.js:210
+#: code:addons/web/static/src/js/views/search_inputs.js:401
 #, python-format
 msgid "Search %(field)s for: %(value)s"
 msgstr "%(field)s에서 다음 검색: %(value)s"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1554
+#: code:addons/web/static/src/xml/base.xml:1117
 #, python-format
 msgid "Search Again"
 msgstr "다시 검색"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3349
+#: code:addons/web/static/src/js/views/form_common.js:211
 #, python-format
 msgid "Search More..."
 msgstr "추가 검색..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3418
+#: code:addons/web/static/src/js/views/form_common.js:281
 #, python-format
 msgid "Search: "
-msgstr "찾기: "
+msgstr "검색 : "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2655
+#: code:addons/web/static/src/js/views/form_widgets.js:469
 #, python-format
-msgid "Second"
-msgstr "Second"
+msgid "See selection "
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1336
-#: code:addons/web/static/src/xml/base.xml:1499
+#: code:addons/web/static/src/js/views/form_common.js:1039
+#: code:addons/web/static/src/xml/base.xml:1004
 #, python-format
 msgid "Select"
 msgstr "선택하기"
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2645
-#, python-format
-msgid "Select D, M d"
-msgstr "D, M d 를 선택해주세요"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1910
-#, python-format
-msgid ""
-"Select a .CSV file to import. If you need a sample of file to import,\n"
-"       you should use the export tool with the \"Import Compatible\" option."
+#: model:ir.ui.view,arch_db:web.login
+msgid "Select <i class=\"fa fa-database\"/>"
 msgstr ""
-"불러올 .CSV 파일을 선택하세요. 불러올 파일 샘플이 필요할 경우,\n"
-"       내보내기 도구에서 \"호환 파일 불러오기\" 옵션을 사용해야 합니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:105
+#: code:addons/web/static/src/js/views/form_widgets.js:493
 #, python-format
-msgid "Select a database name:"
-msgstr "데이터베이스명을 선택해주세요"
+msgid "Select records..."
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2647
+#: code:addons/web/static/src/js/views/form_common.js:1074
 #, python-format
-msgid "Select a date"
-msgstr "날짜를 선택해주세요"
+msgid "Selected domain"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1125
+#: code:addons/web/static/src/js/views/form_widgets.js:493
 #, python-format
-msgid "Select date"
-msgstr "날짜 선택"
+msgid "Selected records"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:996
+#: code:addons/web/static/src/xml/base_common.xml:83
 #, python-format
 msgid "Selection:"
-msgstr "선택:"
+msgstr "선택 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1930
-#, python-format
-msgid "Separator:"
-msgstr "구분자:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2644
-#, python-format
-msgid "Set DD as first week day"
-msgstr "첫번째 주의 일(日)자로 DD를 설정하기"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1067
+#: code:addons/web/static/src/js/views/form_view.js:1192
 #, python-format
 msgid "Set Default"
 msgstr "기본 값 설정"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:532
+#: code:addons/web/static/src/xml/base.xml:211
 #, python-format
 msgid "Set Defaults"
 msgstr "기본 값 설정"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:964
+#: code:addons/web/static/src/js/views/list_view.js:1017
 #, python-format
 msgid "Setting 'id' attribute on existing record %s"
 msgstr "기존 %s 기록에 'id' 속성 설정"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1733
+#: code:addons/web/static/src/xml/base.xml:1247
 #, python-format
 msgid "Share with all users"
 msgstr "모든 사용자들과 공유"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2637
+#: code:addons/web/static/src/js/apps.js:189
 #, python-format
-msgid "Show a different month"
-msgstr "다른 달(月 ) 보이기"
+msgid "Showing locally available modules"
+msgstr "로컬로 사용 가능한 모듈 보기"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2638
-#, python-format
-msgid "Show a different year"
-msgstr "다른 년도 보이기"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2634
-#, python-format
-msgid "Show the current month"
-msgstr "현재 월 보이기"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2632
-#, python-format
-msgid "Show the next month"
-msgstr "다음달 보기"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2630
-#, python-format
-msgid "Show the previous month"
-msgstr "이전 달(月 ) 보이기"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:968
+#: code:addons/web/static/src/xml/base_common.xml:55
 #, python-format
 msgid "Size:"
-msgstr "크기:"
+msgstr "크기 :"
+
+#. module: web
+#: code:addons/web/controllers/main.py:1062
+#, python-format
+msgid "Something horrible happened"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1456
+#: code:addons/web/static/src/xml/base_common.xml:107
 #, python-format
 msgid "Special:"
-msgstr "특별:"
+msgstr "특별 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:702
+#: code:addons/web/static/src/js/framework/misc.js:14
 #, python-format
 msgid "Still loading..."
 msgstr "아직 불러오는 중..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:703
+#: code:addons/web/static/src/js/framework/misc.js:15
 #, python-format
 msgid "Still loading...<br />Please be patient."
 msgstr "로딩 중입니다...<br />기다려 주세요."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:706
+#: code:addons/web/static/src/xml/base.xml:83
+#, python-format
+msgid "Support"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:701
+#, python-format
+msgid "Switch Off"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:703
+#, python-format
+msgid "Switch On"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:697
+#, python-format
+msgid "Switch to production environment"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:695
+#, python-format
+msgid "Switch to test environment"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/misc.js:18
 #, python-format
 msgid "Take a minute to get a coffee,<br />because it's loading..."
-msgstr "불러오는 중이오니<br />커피 한 잔 하시면서 기다려 주세요."
+msgstr "불러오는 중이오니<br />커피 한 잔 하시면서 기다려 주십시오."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:1008
+#: code:addons/web/static/src/xml/base.xml:218
 #, python-format
 msgid "Technical Translation"
-msgstr "기술적 번역"
+msgstr "기술 번역"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:539
+#: code:addons/web/static/src/js/views/form_widgets.js:696
 #, python-format
-msgid "Technical translation"
-msgstr "기술적 번역"
+msgid "Test Environment"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:465
+#: code:addons/web/static/src/js/views/form_widgets.js:462
 #, python-format
-msgid "The confirmation does not match the password"
-msgstr "확정 암호가 일치하지 않음"
+msgid "The domain is wrong."
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:545
-#, python-format
-msgid "The database %s has been dropped"
-msgstr "%s 데이터베이스를 삭제하였습니다"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:527
-#, python-format
-msgid "The database has been duplicated."
-msgstr "데이터베이스 사본이 생성되었습니다."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5601
+#: code:addons/web/static/src/js/views/form_widgets.js:1235
 #, python-format
 msgid "The field is empty, there's nothing to save !"
-msgstr "필드가 비어있을 경우, 저장할 것이 없습니다 !"
+msgstr "필드가 비어 있어 저장할 것이 없습니다 !"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:879
+#: code:addons/web/static/src/js/views/form_view.js:954
 #, python-format
 msgid "The following fields are invalid:"
-msgstr "다음 필드는 유효하지 않습니다:"
+msgstr "다음 필드는 유효하지 않습니다 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list_editable.js:780
+#: code:addons/web/static/src/js/views/list_view_editable.js:124
 #, python-format
-msgid "The form's data can not be discarded"
-msgstr "양식의 데이터는 폐기될 수 없습니다"
+msgid ""
+"The line has been modified, your changes will be discarded. Are you sure you "
+"want to discard the changes ?"
+msgstr ""
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1970
-#, python-format
-msgid "The import failed due to:"
-msgstr "다음 사유로 인해 가져오기를 실패함:"
-
-#. module: web
-#: code:addons/web/controllers/main.py:793
+#: code:addons/web/controllers/main.py:750
 #, python-format
 msgid "The new password and its confirmation must be identical."
-msgstr "새 암호와 확정 암호는 동일해야 합니다."
+msgstr "새 비밀번호와 확인 비밀번호가 동일해야 합니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:4464
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1126
 #, python-format
 msgid "The o2m record must be saved before an action can be used"
-msgstr "o2m 기록은 액션을 사용하기 전에 저장되어야 합니다."
+msgstr "o2m 기록은 동작을 사용하기 전에 저장되어야 합니다."
 
 #. module: web
-#: code:addons/web/controllers/main.py:799
+#: code:addons/web/controllers/main.py:756
 #, python-format
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
-msgstr "제공된 오래된 암호가 잘못되었습니다, 암호가 변경되지 않았습니다."
+msgstr "이전 암호를 틀렸습니다. 암호가 변경되지 않습니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:324
+#: code:addons/web/static/src/js/views/form_view.js:361
 #, python-format
 msgid "The record could not be found in the database."
-msgstr "데이터베이스에서 기록을 찾을 수 없습니다."
+msgstr "데이터베이스에서 레코드를 찾을 수 없습니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5565
+#: code:addons/web/static/src/js/views/form_view.js:825
+#, python-format
+msgid ""
+"The record has been modified, your changes will be discarded. Are you sure "
+"you want to leave this page ?"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1199
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "선택된 파일은 %s인 최대 파일 크기를 초과했습니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5770
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1550
 #, python-format
 msgid ""
-"The type of the field '%s' must be a many2many field with a relation to "
-"'ir.attachment' model."
+"The type of the field '%s' must be a many2many field with a relation to 'ir."
+"attachment' model."
 msgstr ""
-"The type of the field '%s' 필드의 유형은 'ir.attachment' 모델과 관련된 many2many 필드여야 "
-"합니다."
+"'%s' 필드의 유형은 'ir.attachment' 모델과 관련된 many2many 필드여야 합니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5586
+#: code:addons/web/static/src/js/views/form_widgets.js:1220
 #, python-format
 msgid "There was a problem while uploading your file"
 msgstr "파일 업로드 중 문제가 발생했습니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:1780
+#: code:addons/web/static/src/js/views/search_menus.js:242
 #, python-format
 msgid ""
 "This filter is global and will be removed for everybody if you continue."
-msgstr "이 필터는 글로벌이며, 만약 계속한다면 모두에게 제거됩니다."
+msgstr "이 필터는 글로벌이며 만약 계속한다면 모두에게 제거됩니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2497
+#: code:addons/web/static/src/js/views/form_widgets.js:389
 #, python-format
 msgid "This resource is empty"
 msgstr "해당 리소스는 비어있습니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1797
+#: code:addons/web/static/src/xml/base.xml:1304
 #, python-format
 msgid ""
 "This wizard will export all data that matches the current search criteria to "
@@ -2437,521 +2242,560 @@ msgid ""
 "            You can export all data or only the fields that can be "
 "reimported after modification."
 msgstr ""
-"해당 마법사는 현재 검색 조건과 일치하는 모든 데이터를 CSV 파일로 내보냅니다.\n"
-"            전체 데이터 또는 수정 후 다시 가져올 수 있는 필드만 내보낼 수 있습니다."
+"해당 마법사는 현재 검색 조건과 일치하는 모든 데이터를 CSV 파일로 내보냅니"
+"다.\n"
+"            전체 데이터 또는 수정 후 다시 가져올 수 있는 필드만 내보낼 수 있"
+"습니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2652
+#: code:addons/web/static/src/js/views/form_widgets.js:971
 #, python-format
-msgid "Time"
-msgstr "시간"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:1333
-#, python-format
-msgid "Timezone Mismatch"
-msgstr "시간대 불일치"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:460
-#, python-format
-msgid "Timezone mismatch"
-msgstr "시간대 불일치"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2633
-#, python-format
-msgid "Today"
-msgstr "오늘"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1029
-#, python-format
-msgid "Toggle Dropdown"
+msgid ""
+"Timezone Mismatch : The timezone of your browser doesn't match the selected "
+"one. The time in Odoo is displayed according to your field timezone."
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:531
+#: code:addons/web/static/src/xml/base.xml:210
 #, python-format
 msgid "Toggle Form Layout Outline"
-msgstr "양식 레이아웃 개요 토글"
+msgstr "양식 배치 표식 전환"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_tree.js:14
+#: code:addons/web/static/src/js/views/pivot_view.js:516
+#: code:addons/web/static/src/js/views/pivot_view.js:545
+#, python-format
+msgid "Total"
+msgstr "총계"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/web_client.js:134
+#, python-format
+msgid "Traceback:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/tree_view.js:18
 #, python-format
 msgid "Tree"
 msgstr "트리"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:960
+#: code:addons/web/static/src/js/framework/crash_manager.js:48
+#, python-format
+msgid "Trying to reconnect... "
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:47
 #, python-format
 msgid "Type:"
-msgstr "유형:"
+msgstr "유형 :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1939
+#: code:addons/web/static/src/js/views/form_widgets.js:691
+#: code:addons/web/static/src/js/views/list_view.js:308
 #, python-format
-msgid "UTF-8"
-msgstr "UTF-8"
+msgid "Unarchive"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:1399
-#: code:addons/web/static/src/js/view_list.js:1405
-#: code:addons/web/static/src/js/view_list.js:1417
+#: code:addons/web/static/src/js/views/graph_widget.js:79
+#: code:addons/web/static/src/js/views/list_view.js:1471
+#: code:addons/web/static/src/js/views/list_view.js:1477
+#: code:addons/web/static/src/js/views/list_view.js:1489
+#: code:addons/web/static/src/js/views/pivot_view.js:498
 #, python-format
 msgid "Undefined"
 msgstr "정의되지 않음"
 
 #. module: web
+#: code:addons/web/controllers/main.py:877
+#, python-format
+msgid "Underscore prefixed methods cannot be remotely called"
+msgstr ""
+
+#. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:941
+#: code:addons/web/static/src/xml/base.xml:699
 #, python-format
 msgid "Unhandled widget"
 msgstr "처리되지 않은 위젯"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3157
+#: code:addons/web/static/src/js/views/form_widgets.js:911
 #, python-format
 msgid "Unknown"
-msgstr ""
+msgstr "알 수 없음"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1677
+#: code:addons/web/static/src/js/framework/data.js:1082
 #, python-format
 msgid "Unknown field %s in domain %s"
-msgstr "알 수 없는 %s 필드가 %s 도메인에 존재함"
+msgstr "알 수 없는 %s 필드가 %s 도메인에 존재합니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:1109
+#: code:addons/web/static/src/js/views/list_view.js:1171
 #, python-format
 msgid "Unknown m2m command %s"
 msgstr "알 수 없는 %s m2m 명령"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/pyeval.js:866
+#: code:addons/web/static/src/js/framework/pyeval.js:961
 #, python-format
 msgid "Unknown nonliteral type "
 msgstr "알 수 없는 비문자 유형 "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1669
+#: code:addons/web/static/src/js/framework/data.js:1074
 #, python-format
 msgid "Unknown operator %s in domain %s"
-msgstr "알 수 없는 %s 작업자가 %s 도메인에 존재함"
+msgstr "알 수 없는 %s 작업자가 %s 도메인에 존재합니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:332
+#: code:addons/web/static/src/js/views/list_view.js:367
 #, python-format
 msgid "Unlimited"
 msgstr "무한"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1715
+#: code:addons/web/static/src/js/framework/data.js:1120
 #, python-format
 msgid "Unsupported operator %s in domain %s"
-msgstr "지원되지 않는 %s 작업자가  %s 도메인에 있음"
+msgstr "지원되지 않는 %s 작업자가  %s 도메인에 있습니다"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1298
-#: code:addons/web/static/src/xml/base.xml:1359
+#: code:addons/web/static/src/xml/base.xml:1505
+#, fuzzy, python-format
+msgid "Update translations"
+msgstr "기술 번역"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1700
+#, python-format
+msgid "Upgrade now"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1518
+#, python-format
+msgid "Upgrade to future versions"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:966
+#: code:addons/web/static/src/xml/base.xml:1027
 #, python-format
 msgid "Uploading ..."
 msgstr "업로드 중 ..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5886
-#: code:addons/web/static/src/js/views.js:1311
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1650
+#: code:addons/web/static/src/js/widgets/sidebar.js:168
 #, python-format
 msgid "Uploading Error"
 msgstr "업로드 에러"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:1342
+#: code:addons/web/static/src/js/widgets/sidebar.js:196
 #, python-format
 msgid "Uploading..."
-msgstr "올려주기…"
+msgstr "업로드 중…"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1735
+#: code:addons/web/static/src/xml/base.xml:1244
 #, python-format
 msgid "Use by default"
 msgstr "기본으로 사용"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:450
+#: code:addons/web/static/src/js/framework/crash_manager.js:23
 #, python-format
-msgid "User's timezone"
-msgstr "사용자의 시간대"
+msgid "Validation Error"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:382
+#: code:addons/web/static/src/xml/base.xml:105
 #, python-format
 msgid "Version"
-msgstr "버전"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:2367
-#: code:addons/web/static/src/xml/base.xml:541
+#: code:addons/web/static/src/js/widgets/priority.js:51
+#, python-format
+msgid "Very High"
+msgstr "매우 높음"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:2033
+#: code:addons/web/static/src/xml/base.xml:219
 #, python-format
 msgid "View"
 msgstr "화면"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:535
+#: code:addons/web/static/src/xml/base.xml:214
 #, python-format
 msgid "View Fields"
-msgstr "필드 보기"
+msgstr "필드 화면"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:530
+#: code:addons/web/static/src/xml/base.xml:208
 #, python-format
 msgid "View Metadata"
+msgstr "메타데이타 보기"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:757
+#, python-format
+msgid "View type '%s' is not supported in X2Many."
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:4054
-#, python-format
-msgid "View type '%s' is not supported in One2Many."
-msgstr "'%s' 화면 유형은 One2Many에서 지원되지 않습니다."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:734
-#: code:addons/web/static/src/js/views.js:1270
+#: code:addons/web/static/src/js/framework/crash_manager.js:19
+#: code:addons/web/static/src/js/framework/crash_manager.js:20
+#: code:addons/web/static/src/js/framework/crash_manager.js:119
+#: code:addons/web/static/src/js/views/form_view.js:830
+#: code:addons/web/static/src/js/views/list_view.js:760
+#: code:addons/web/static/src/js/widgets/sidebar.js:126
 #, python-format
 msgid "Warning"
 msgstr "경고"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:786
+#: code:addons/web/static/src/xml/base.xml:674
 #, python-format
-msgid ""
-"Warning, the record has been modified, your changes will be discarded.\n"
-"\n"
-"Are you sure you want to leave this page ?"
-msgstr "경고, 기록이 수정되었으며 변경사항이 제거됩니다."
+msgid "Week"
+msgstr "주"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2640
-#, python-format
-msgid "Week of the year"
-msgstr "Week of the year"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1237
+#: code:addons/web/static/src/js/views/form_view.js:1362
 #, python-format
 msgid "Widget type '%s' is not implemented"
 msgstr "'%s' 위젯 유형은 구현되지 않습니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:964
+#: code:addons/web/static/src/xml/base_common.xml:51
 #, python-format
 msgid "Widget:"
-msgstr "위젯:"
+msgstr "위젯 :"
 
 #. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2639
+#: code:addons/web/controllers/main.py:491
 #, python-format
-msgid "Wk"
-msgstr "Wk"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:556
-#, python-format
-msgid "XML ID:"
-msgstr "XML ID:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1561
-#: code:addons/web/static/src/xml/base.xml:984
-#, python-format
-msgid "Yes"
-msgstr "예"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3457
-#, python-format
-msgid "You are creating a new %s, are you sure it does not exist yet?"
+msgid "Wrong login/password"
 msgstr ""
 
 #. module: web
-#: code:addons/web/controllers/main.py:791
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/progress_bar.js:79
+#, python-format
+msgid "Wrong value entered!"
+msgstr "잘못된 값을 입력!"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:236
+#, python-format
+msgid "XML ID:"
+msgstr "XML ID :"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:677
+#, python-format
+msgid "Year"
+msgstr "년"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:329
+#: code:addons/web/static/src/xml/base_common.xml:71
+#, python-format
+msgid "Yes"
+msgstr "네"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/crash_manager.js:53
+#, python-format
+msgid "You are back online"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:49
+#, python-format
+msgid "You are creating a new %s, are you sure it does not exist yet?"
+msgstr "새 %s를 생성하려고 합니다. 아직 없는 것이 확실한가요?"
+
+#. module: web
+#: code:addons/web/controllers/main.py:748
 #, python-format
 msgid "You cannot leave any password empty."
 msgstr "비밀번호는 비워둘 수 없습니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:705
+#: code:addons/web/static/src/xml/base.xml:1503
 #, python-format
-msgid ""
-"You may not believe it,<br />but the application is actually loading..."
+msgid "You have updated"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/misc.js:17
+#, python-format
+msgid "You may not believe it,<br />but the application is actually loading..."
 msgstr "믿기시지 않겠지만<br />응용 프로그램을 실제로 불러오는 중입니다..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:1270
+#: code:addons/web/static/src/js/widgets/sidebar.js:126
 #, python-format
 msgid "You must choose at least one record."
 msgstr "최소 한 개의 기록을 선택해야 합니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:734
+#: code:addons/web/static/src/js/views/list_view.js:760
 #, python-format
 msgid "You must select at least one record."
 msgstr "최소한 하나의 기록을 선택해야 합니다."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:259
+#: code:addons/web/static/src/js/framework/crash_manager.js:69
 #, python-format
 msgid "Your Odoo session expired. Please refresh the current web page."
 msgstr ""
+"사용자의 Odoo 세션이 만료되었습니다. 현재 웹 페이지를 새로 고침하십시오."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:447
-#, python-format
-msgid "Your user's preference timezone does not match your browser timezone:"
-msgstr "기본 설정의 시간대가 브라우저 시간대와 일치하지 않습니다 :"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/core.js:678
+#: code:addons/web/static/src/js/framework/core.js:133
 #, python-format
 msgid "a day ago"
 msgstr "1일 전"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:674
+#: code:addons/web/static/src/js/framework/core.js:129
 #, python-format
 msgid "about a minute ago"
 msgstr "약 1분 전"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:680
+#: code:addons/web/static/src/js/framework/core.js:135
 #, python-format
 msgid "about a month ago"
 msgstr "약 한 달 전"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:682
+#: code:addons/web/static/src/js/framework/core.js:137
 #, python-format
 msgid "about a year ago"
 msgstr "약 1년 전"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:676
+#: code:addons/web/static/src/js/framework/core.js:131
 #, python-format
 msgid "about an hour ago"
 msgstr "약 1시간 전"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2166
+#: code:addons/web/static/src/js/views/search_filters.js:160
 #, python-format
 msgid "contains"
 msgstr "포함"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2167
+#: code:addons/web/static/src/js/views/search_filters.js:161
 #, python-format
 msgid "doesn't contain"
-msgstr "포함하지 않음"
+msgstr "포함안함"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:107
-#, python-format
-msgid "e.g. mycompany"
-msgstr "예) mycompany"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:2184
-#: code:addons/web/static/src/js/search.js:2220
-#: code:addons/web/static/src/js/search.js:2247
-#, python-format
-msgid "greater or equal than"
-msgstr "이상"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:2182
-#: code:addons/web/static/src/js/search.js:2218
-#: code:addons/web/static/src/js/search.js:2245
+#: code:addons/web/static/src/js/views/search_filters.js:177
+#: code:addons/web/static/src/js/views/search_filters.js:211
+#: code:addons/web/static/src/js/views/search_filters.js:240
 #, python-format
 msgid "greater than"
-msgstr "다음보다 큼"
+msgstr "보다 큼"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2238
-#: code:addons/web/static/src/js/search.js:2267
+#: code:addons/web/static/src/js/views/search_filters.js:179
+#: code:addons/web/static/src/js/views/search_filters.js:213
+#: code:addons/web/static/src/js/views/search_filters.js:242
+#, python-format
+msgid "greater than or equal to"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:232
+#: code:addons/web/static/src/js/views/search_filters.js:267
 #, python-format
 msgid "is"
 msgstr "같음"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2168
-#: code:addons/web/static/src/js/search.js:2180
-#: code:addons/web/static/src/js/search.js:2216
-#: code:addons/web/static/src/js/search.js:2243
+#: code:addons/web/static/src/js/views/search_filters.js:162
+#: code:addons/web/static/src/js/views/search_filters.js:175
+#: code:addons/web/static/src/js/views/search_filters.js:209
+#: code:addons/web/static/src/js/views/search_filters.js:238
 #, python-format
 msgid "is equal to"
-msgstr "와 동일함"
+msgstr "같음"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2285
+#: code:addons/web/static/src/js/views/search_filters.js:286
 #, python-format
 msgid "is false"
 msgstr "거짓"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2268
+#: code:addons/web/static/src/js/views/search_filters.js:268
 #, python-format
 msgid "is not"
 msgstr "일치하지 않음"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2169
-#: code:addons/web/static/src/js/search.js:2181
-#: code:addons/web/static/src/js/search.js:2217
-#: code:addons/web/static/src/js/search.js:2244
+#: code:addons/web/static/src/js/views/search_filters.js:163
+#: code:addons/web/static/src/js/views/search_filters.js:176
+#: code:addons/web/static/src/js/views/search_filters.js:210
+#: code:addons/web/static/src/js/views/search_filters.js:239
 #, python-format
 msgid "is not equal to"
-msgstr "동일하지 않음"
+msgstr "같지 않음"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2171
-#: code:addons/web/static/src/js/search.js:2187
-#: code:addons/web/static/src/js/search.js:2223
-#: code:addons/web/static/src/js/search.js:2250
-#: code:addons/web/static/src/js/search.js:2270
+#: code:addons/web/static/src/js/views/search_filters.js:165
+#: code:addons/web/static/src/js/views/search_filters.js:182
+#: code:addons/web/static/src/js/views/search_filters.js:216
+#: code:addons/web/static/src/js/views/search_filters.js:245
+#: code:addons/web/static/src/js/views/search_filters.js:270
 #, python-format
 msgid "is not set"
 msgstr "설정되지 않음"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2170
-#: code:addons/web/static/src/js/search.js:2186
-#: code:addons/web/static/src/js/search.js:2222
-#: code:addons/web/static/src/js/search.js:2249
-#: code:addons/web/static/src/js/search.js:2269
+#: code:addons/web/static/src/js/views/search_filters.js:164
+#: code:addons/web/static/src/js/views/search_filters.js:181
+#: code:addons/web/static/src/js/views/search_filters.js:215
+#: code:addons/web/static/src/js/views/search_filters.js:244
+#: code:addons/web/static/src/js/views/search_filters.js:269
 #, python-format
 msgid "is set"
 msgstr "설정됨"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2284
+#: code:addons/web/static/src/js/views/search_filters.js:285
 #, python-format
 msgid "is true"
 msgstr "참"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2185
-#: code:addons/web/static/src/js/search.js:2221
-#: code:addons/web/static/src/js/search.js:2248
+#: code:addons/web/static/src/js/framework/utils.js:303
 #, python-format
-msgid "less or equal than"
-msgstr "다음보다 작거나 같음"
+msgid "kMGTPE"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2183
-#: code:addons/web/static/src/js/search.js:2219
-#: code:addons/web/static/src/js/search.js:2246
+#: code:addons/web/static/src/js/views/search_filters.js:178
+#: code:addons/web/static/src/js/views/search_filters.js:212
+#: code:addons/web/static/src/js/views/search_filters.js:241
 #, python-format
 msgid "less than"
-msgstr "미만"
+msgstr "보다 작음"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/core.js:673
+#: code:addons/web/static/src/js/framework/core.js:128
 #, python-format
 msgid "less than a minute ago"
 msgstr "1분 전"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:1464
+#: code:addons/web/static/src/js/views/search_filters.js:180
+#: code:addons/web/static/src/js/views/search_filters.js:214
+#: code:addons/web/static/src/js/views/search_filters.js:243
+#, python-format
+msgid "less than or equal to"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:229
 #, python-format
 msgid "not a valid integer"
 msgstr "유효하지 않은 정수"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:1478
+#: code:addons/web/static/src/js/views/search_inputs.js:244
 #, python-format
 msgid "not a valid number"
 msgstr "유효한 숫자가 아님"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:335
-#: code:addons/web/static/src/xml/base.xml:787
-#: code:addons/web/static/src/xml/base.xml:831
-#: code:addons/web/static/src/xml/base.xml:1502
-#: code:addons/web/static/src/xml/base.xml:1510
-#: code:addons/web/static/src/xml/base.xml:1753
-#: code:addons/web/static/src/xml/base.xml:1995
+#: code:addons/web/static/src/xml/base.xml:1254
 #: code:addons/web/static/src/xml/website.tour.xml:14
 #, python-format
 msgid "or"
 msgstr "또는"
 
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:742
-#, python-format
-msgid "triggered from search view"
-msgstr "검색 화면에서 촉발됨"
+#~ msgid "Quantity"
+#~ msgstr "수량"

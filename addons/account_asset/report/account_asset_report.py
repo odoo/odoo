@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from openerp import fields, models, tools
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import api, fields, models, tools
 
 class AssetAssetReport(models.Model):
     _name = "asset.asset.report"
@@ -24,18 +25,17 @@ class AssetAssetReport(models.Model):
     unposted_value = fields.Float(string='Unposted Amount', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'asset_asset_report')
-        cr.execute("""
+    @api.model_cr
+    def init(self):
+        tools.drop_view_if_exists(self._cr, 'asset_asset_report')
+        self._cr.execute("""
             create or replace view asset_asset_report as (
                 select
                     min(dl.id) as id,
                     dl.name as name,
                     dl.depreciation_date as depreciation_date,
                     a.date as date,
-                    (CASE WHEN (select min(d.id) from account_asset_depreciation_line as d
-                                left join account_asset_asset as ac ON (ac.id=d.asset_id)
-                                where a.id=ac.id) = min(dl.id)
+                    (CASE WHEN dlmin.id = min(dl.id)
                       THEN a.value
                       ELSE 0
                       END) as gross_value,
@@ -59,8 +59,9 @@ class AssetAssetReport(models.Model):
                     a.company_id as company_id
                 from account_asset_depreciation_line dl
                     left join account_asset_asset a on (dl.asset_id=a.id)
+                    left join (select min(d.id) as id,ac.id as ac_id from account_asset_depreciation_line as d inner join account_asset_asset as ac ON (ac.id=d.asset_id) group by ac_id) as dlmin on dlmin.ac_id=a.id
                 group by
                     dl.amount,dl.asset_id,dl.depreciation_date,dl.name,
                     a.date, dl.move_check, a.state, a.category_id, a.partner_id, a.company_id,
-                    a.value, a.id, a.salvage_value
+                    a.value, a.id, a.salvage_value, dlmin.id
         )""")

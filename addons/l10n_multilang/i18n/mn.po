@@ -1,81 +1,23 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_multilang
 #
+# Translators:
+# Otgonbayar Agvaan <gobi.mn@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:06+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Mongolian <mn@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:20+0000\n"
+"PO-Revision-Date: 2015-11-21 09:41+0000\n"
+"Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
+"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
+"mn/)\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:23+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
-msgstr "Санхүүгийн харгалзааны үлгэр"
-
-#. module: l10n_multilang
-#: sql_constraint:account.account:0
-msgid "The code of the account must be unique per company !"
-msgstr "Дансны код нь компаний хэмжээнд үл давхцах байх ёстой !"
-
-#. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid ""
-"Configuration Error!\n"
-"You can not define children to an account with internal type different of "
-"\"View\"! "
-msgstr ""
-"Тохиргооны Алдаа!\n"
-"\"Харагдац\" төрлөөс өөр дотоод төрөлтэй дансанд дэд данс үүсгэж болохгүй! "
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_journal
-msgid "Analytic Journal"
-msgstr "Шинжилгээний журнал"
-
-#. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
-msgstr "Алдаа ! Тойрог хамааралтай дансны үлгэр үүсгэж болохгүй."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_journal
-msgid "Journal"
-msgstr "Журнал"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "Дансны модны үлгэр"
-
-#. module: l10n_multilang
-#: sql_constraint:account.tax:0
-msgid "The description must be unique per company!"
-msgstr "Тайлбар компаний хэмжээнд үл давхцах байх ёстой!"
-
-#. module: l10n_multilang
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr "Алдаа ! Тойрог хамааралтай татварын код үүсгэж болохгүй."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_template
-msgid "account.tax.template"
-msgstr "account.tax.template"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax
-msgid "account.tax"
-msgstr "account.tax"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account
@@ -83,26 +25,27 @@ msgid "Account"
 msgstr "Данс"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr "wizard.multi.charts.accounts"
+#: model:ir.model,name:l10n_multilang.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Шинжилгээний данс"
 
 #. module: l10n_multilang
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position
+msgid "Fiscal Position"
 msgstr ""
-"Тохиргооны алдаа! Сонгосон валют нь анхны утга болох дансдад бас хуваалцсан "
-"байх хэрэгтэй"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_account_template
-msgid "Templates for Accounts"
-msgstr "Дансдын үлгэрүүд"
+#: model:ir.model,name:l10n_multilang.model_account_journal
+msgid "Journal"
+msgstr "Журналь"
 
 #. module: l10n_multilang
-#: help:account.chart.template,spoken_languages:0
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template_spoken_languages
+msgid "Spoken Languages"
+msgstr "Ярианы хэлүүд"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template_spoken_languages
 msgid ""
 "State here the languages for which the translations of templates could be "
 "loaded at the time of installation of this localization module and copied in "
@@ -110,66 +53,35 @@ msgid ""
 "language codes separated by ';'"
 msgstr ""
 "Энэ орон нутагийн модулийг суулгах үедорчуулгын үлгэрүүдийн ачаалж улмаар "
-"эцсийн обьектуудыг үүсгэхдээ үлгэрүүдээс хуулах хэлийг энд "
-"дурьдана.Хэлүүдийн кодыг ';'-с тусгаарлан бичнэ."
+"эцсийн обьектуудыг үүсгэхдээ үлгэрүүдээс хуулах хэлийг энд дурьдана."
+"Хэлүүдийн кодыг ';'-с тусгаарлан бичнэ."
 
 #. module: l10n_multilang
-#: constraint:account.account:0
-msgid "Error ! You can not create recursive accounts."
-msgstr "Алдаа ! Та цикл хэлбэрийн данс үүсгэх боломжтой."
+#: model:ir.model,name:l10n_multilang.model_account_tax
+msgid "Tax"
+msgstr "Татвар"
 
 #. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not select an account type with a deferral method different of "
-"\"Unreconciled\" for accounts with internal type \"Payable/Receivable\"! "
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
+msgid "Template for Fiscal Position"
 msgstr ""
-"Тохиргооны алдаа! \n"
-"Дотоод төрөл нь \"Өглөг/Авлага\" төрөлтэй дансдын хувьд хойшлогдсон аргатай "
-"дансанд \"Тулгахгүй\"-с өөр төрлийг сонгож болохгүй! "
 
 #. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "Журналын нэр компанийн хэмжээнд үл давхцах байх ёстой !"
+#: model:ir.model,name:l10n_multilang.model_account_chart_template
+msgid "Templates for Account Chart"
+msgstr "Дансны төлөвлөгөөний үлгэрүүд"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Шинжилгээний Данс"
+#: model:ir.model,name:l10n_multilang.model_account_account_template
+msgid "Templates for Accounts"
+msgstr "Данснуудын үлгэрүүд"
 
 #. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "Журналын код компанийн хэмжээнд үл давтагдах байх ёстой !"
+#: model:ir.model,name:l10n_multilang.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr "Татваруудын үлгэрүүд"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position
-msgid "Fiscal Position"
-msgstr "Санхүүгийн харгалзаа"
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not define children to an account with internal type different of "
-"\"View\"! "
-msgstr ""
-"Тохиргооны Алдаа! \n"
-"\"Харагдац\" дотоод төрөлтэй дансдууд дээр дэд данс үүсгэх боломжгүй! "
-
-#. module: l10n_multilang
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "Алдаа! Та тойрог хамааралтай шинжилгээний данс үүсгэх боломжгүй."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_code_template
-msgid "Tax Code Template"
-msgstr "Татварын кодны үлгэр"
-
-#. module: l10n_multilang
-#: field:account.chart.template,spoken_languages:0
-msgid "Spoken Languages"
-msgstr "Яригддаг хэлүүд"
+#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
+msgid "wizard.multi.charts.accounts"
+msgstr "wizard.multi.charts.accounts"

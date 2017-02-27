@@ -94,7 +94,6 @@ var QuickAddListView = ListView.extend({
         else self.last_context["period_id"] =  self.current_period;
         self.last_context["journal_type"] = self.current_journal_type;
         self.last_context["currency"] = self.current_journal_currency;
-        self.last_context["analytic_journal_id"] = self.current_journal_analytic;
         var compound_domain = new data.CompoundDomain(self.last_domain, domain);
         self.dataset.domain = compound_domain.eval();
         return self.old_search(compound_domain, self.last_context, self.last_group_by);

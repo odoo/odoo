@@ -1,3 +1,5 @@
+:banner: banners/build_a_module.jpg
+
 .. queue:: backend/series
 
 =================
@@ -18,13 +20,13 @@ Business logic and extension is generally performed on the server side,
 although supporting client features (e.g. new data representation such as
 interactive maps) can be added to the client.
 
-In order to start the server, simply invoke the command :ref:`odoo.py
+In order to start the server, simply invoke the command :ref:`odoo-bin
 <reference/cmdline>` in the shell, adding the full path to the file if
 necessary:
 
 .. code:: bash
 
-    odoo.py
+    odoo-bin
 
 The server is stopped by hitting ``Ctrl-C`` twice from the terminal, or by
 killing the corresponding OS process.
@@ -52,7 +54,7 @@ Business objects
     by Odoo based on their configuration
 
 Data files
-    XML or CSV files declaring metadata (views or workflows), configuration
+    XML or CSV files declaring metadata (views or reports), configuration
     data (modules parameterization), demonstration data and more
 
 Web controllers
@@ -65,7 +67,7 @@ Module structure
 ----------------
 
 Each module is a directory within a *module directory*. Module directories
-are specified by using the :option:`--addons-path <odoo.py --addons-path>`
+are specified by using the :option:`--addons-path <odoo-bin --addons-path>`
 option.
 
 .. tip::
@@ -88,13 +90,13 @@ might contain::
 
     from . import mymodule
 
-Odoo provides a mechanism to help set up a new module, :ref:`odoo.py
+Odoo provides a mechanism to help set up a new module, :ref:`odoo-bin
 <reference/cmdline/server>` has a subcommand :ref:`scaffold
 <reference/cmdline/scaffold>` to create an empty module:
 
 .. code-block:: console
 
-    $ odoo.py scaffold <module name> <where to put it>
+    $ odoo-bin scaffold <module name> <where to put it>
 
 The command creates a subdirectory for your module, and automatically creates a
 bunch of standard files for a module. Most of them simply contain commented code
@@ -107,7 +109,7 @@ or XML. The usage of most of those files will be explained along this tutorial.
 
     .. only:: solutions
 
-        #. Invoke the command ``odoo.py scaffold openacademy addons``.
+        #. Invoke the command ``odoo-bin scaffold openacademy addons``.
         #. Adapt the manifest file to your module.
         #. Don't bother about the other files.
 
@@ -121,16 +123,16 @@ This layer avoids having to write most :abbr:`SQL (Structured Query Language)`
 by hand and provides extensibility and security services\ [#rawsql]_.
 
 Business objects are declared as Python classes extending
-:class:`~openerp.models.Model` which integrates them into the automated
+:class:`~odoo.models.Model` which integrates them into the automated
 persistence system.
 
 Models can be configured by setting a number of attributes at their
 definition. The most important attribute is
-:attr:`~openerp.models.Model._name` which is required and defines the name for
+:attr:`~odoo.models.Model._name` which is required and defines the name for
 the model in the Odoo system. Here is a minimally complete definition of a
 model::
 
-    from openerp import models
+    from odoo import models
     class MinimalModel(models.Model):
         _name = 'test.model'
 
@@ -140,7 +142,7 @@ Model fields
 Fields are used to define what the model can store and where. Fields are
 defined as attributes on the model class::
 
-    from openerp import models, fields
+    from odoo import models, fields
 
     class LessMinimalModel(models.Model):
         _name = 'test.model2'
@@ -157,14 +159,14 @@ configuration attributes as parameters::
 
 Some attributes are available on all fields, here are the most common ones:
 
-:attr:`~openerp.fields.Field.string` (``unicode``, default: field's name)
+:attr:`~odoo.fields.Field.string` (``unicode``, default: field's name)
     The label of the field in UI (visible by users).
-:attr:`~openerp.fields.Field.required` (``bool``, default: ``False``)
+:attr:`~odoo.fields.Field.required` (``bool``, default: ``False``)
     If ``True``, the field can not be empty, it must either have a default
     value or always be given a value when creating a record.
-:attr:`~openerp.fields.Field.help` (``unicode``, default: ``''``)
+:attr:`~odoo.fields.Field.help` (``unicode``, default: ``''``)
     Long-form, provides a help tooltip to users in the UI.
-:attr:`~openerp.fields.Field.index` (``bool``, default: ``False``)
+:attr:`~odoo.fields.Field.index` (``bool``, default: ``False``)
     Requests that Odoo create a `database index`_ on the column
 
 Simple fields
@@ -174,8 +176,8 @@ There are two broad categories of fields: "simple" fields which are atomic
 values stored directly in the model's table and "relational" fields linking
 records (of the same model or of different models).
 
-Example of simple fields are :class:`~openerp.fields.Boolean`,
-:class:`~openerp.fields.Date`, :class:`~openerp.fields.Char`.
+Example of simple fields are :class:`~odoo.fields.Boolean`,
+:class:`~odoo.fields.Date`, :class:`~odoo.fields.Char`.
 
 Reserved fields
 ###############
@@ -184,15 +186,15 @@ Odoo creates a few fields in all models\ [#autofields]_. These fields are
 managed by the system and shouldn't be written to. They can be read if
 useful or necessary:
 
-:attr:`~openerp.fields.Model.id` (:class:`~openerp.fields.Id`)
+:attr:`~odoo.fields.Model.id` (:class:`~odoo.fields.Id`)
     the unique identifier for a record in its model
-:attr:`~openerp.fields.Model.create_date` (:class:`~openerp.fields.Datetime`)
+:attr:`~odoo.fields.Model.create_date` (:class:`~odoo.fields.Datetime`)
     creation date of the record
-:attr:`~openerp.fields.Model.create_uid` (:class:`~openerp.fields.Many2one`)
+:attr:`~odoo.fields.Model.create_uid` (:class:`~odoo.fields.Many2one`)
     user who created the record
-:attr:`~openerp.fields.Model.write_date` (:class:`~openerp.fields.Datetime`)
+:attr:`~odoo.fields.Model.write_date` (:class:`~odoo.fields.Datetime`)
     last modification date of the record
-:attr:`~openerp.fields.Model.write_uid` (:class:`~openerp.fields.Many2one`)
+:attr:`~odoo.fields.Model.write_uid` (:class:`~odoo.fields.Many2one`)
     user who last modified the record
 
 Special fields
@@ -200,7 +202,7 @@ Special fields
 
 By default, Odoo also requires a ``name`` field on all models for various
 display and search behaviors. The field used for these purposes can be
-overridden by setting :attr:`~openerp.models.Model._rec_name`.
+overridden by setting :attr:`~odoo.models.Model._rec_name`.
 
 .. exercise:: Define a model
 
@@ -209,7 +211,7 @@ overridden by setting :attr:`~openerp.models.Model._rec_name`.
 
     .. only:: solutions
 
-        Edit the file ``openacademy/models.py`` to include a *Course* class.
+        Edit the file ``openacademy/models/models.py`` to include a *Course* class.
 
         .. patch::
 
@@ -228,13 +230,13 @@ record.
 
 .. code-block:: xml
 
-    <openerp>
+    <odoo>
         <data>
             <record model="{model name}" id="{record identifier}">
                 <field name="{a field name}">{a value}</field>
             </record>
         </data>
-    <openerp>
+    </odoo>
 
 * ``model`` is the name of the Odoo model for the record
 * ``id`` is an :term:`external identifier`, it allows referring to the record
@@ -253,7 +255,7 @@ be declared in the ``'data'`` list (always loaded) or in the ``'demo'`` list
 
     .. only:: solutions
 
-        Edit the file ``openacademy/demo.xml`` to include some data.
+        Edit the file ``openacademy/demo/demo.xml`` to include some data.
 
         .. patch::
 
@@ -291,7 +293,7 @@ action more easily.
 
 .. exercise:: Define new menu entries
 
-    Define new menu entries to access courses and sessions under the
+    Define new menu entries to access courses under the
     OpenAcademy menu entry. A user should be able to
 
     - display a list of all the courses
@@ -301,7 +303,7 @@ action more easily.
 
         #. Create ``openacademy/views/openacademy.xml`` with an action and
            the menus triggering the action
-        #. Add it to the ``data`` list of ``openacademy/__openerp__.py``
+        #. Add it to the ``data`` list of ``openacademy/__manifest__.py``
 
         .. patch::
 
@@ -482,7 +484,7 @@ client data; it is also related to its sale order line records.
 
     .. only:: solutions
 
-        #. Create the class *Session* in ``openacademy/models.py``.
+        #. Create the class *Session* in ``openacademy/models/models.py``.
         #. Add access to the session object in ``openacademy/view/openacademy.xml``.
 
         .. patch::
@@ -500,16 +502,16 @@ between different models.
 
 Relational field types are:
 
-:class:`Many2one(other_model, ondelete='set null') <openerp.fields.Many2one>`
+:class:`Many2one(other_model, ondelete='set null') <odoo.fields.Many2one>`
     A simple link to an other object::
 
         print foo.other_id.name
 
     .. seealso:: `foreign keys <http://www.postgresql.org/docs/9.3/static/tutorial-fk.html>`_
 
-:class:`One2many(other_model, related_field) <openerp.fields.One2many>`
-    A virtual relationship, inverse of a :class:`~openerp.fields.Many2one`.
-    A :class:`~openerp.fields.One2many` behaves as a container of records,
+:class:`One2many(other_model, related_field) <odoo.fields.One2many>`
+    A virtual relationship, inverse of a :class:`~odoo.fields.Many2one`.
+    A :class:`~odoo.fields.One2many` behaves as a container of records,
     accessing it results in a (possibly empty) set of records::
 
         for other in foo.other_ids:
@@ -517,11 +519,11 @@ Relational field types are:
 
     .. danger::
 
-        Because a :class:`~openerp.fields.One2many` is a virtual relationship,
-        there *must* be a :class:`~openerp.fields.Many2one` field in the
+        Because a :class:`~odoo.fields.One2many` is a virtual relationship,
+        there *must* be a :class:`~odoo.fields.Many2one` field in the
         :samp:`{other_model}`, and its name *must* be :samp:`{related_field}`
 
-:class:`Many2many(other_model) <openerp.fields.Many2many>`
+:class:`Many2many(other_model) <odoo.fields.Many2many>`
     Bidirectional multiple relationship, any record on one side can be related
     to any number of records on the other side. Behaves as a container of
     records, accessing it also results in a possibly empty set of records::
@@ -602,8 +604,8 @@ fields of the parent record.
 
 .. seealso::
 
-    * :attr:`~openerp.models.Model._inherit`
-    * :attr:`~openerp.models.Model._inherits`
+    * :attr:`~odoo.models.Model._inherit`
+    * :attr:`~odoo.models.Model._inherits`
 
 View inheritance
 ----------------
@@ -621,12 +623,12 @@ instead of a single view its ``arch`` field is composed of any number of
     <!-- improved idea categories list -->
     <record id="idea_category_list2" model="ir.ui.view">
         <field name="name">id.category.list2</field>
-        <field name="model">idea.category/field>
+        <field name="model">idea.category</field>
         <field name="inherit_id" ref="id_category_list"/>
         <field name="arch" type="xml">
-            <!-- find field description inside tree, and add the field
+            <!-- find field description and add the field
                  idea_ids after it -->
-            <xpath expr="/tree/field[@name='description']" position="after">
+            <xpath expr="//field[@name='description']" position="after">
               <field name="idea_ids" string="Number of ideas"/>
             </xpath>
         </field>
@@ -641,7 +643,8 @@ instead of a single view its ``arch`` field is composed of any number of
     ``inside``
         appends ``xpath``'s body at the end of the matched element
     ``replace``
-        replaces the matched element by the ``xpath``'s body
+        replaces the matched element with the ``xpath``'s body, replacing any `$0` node occurrence
+        in the new body with the original element
     ``before``
         inserts the ``xpath``'s body as a sibling before the matched element
     ``after``
@@ -649,6 +652,22 @@ instead of a single view its ``arch`` field is composed of any number of
     ``attributes``
         alters the attributes of the matched element using special
         ``attribute`` elements in the ``xpath``'s body
+
+.. tip::
+
+    When matching a single element, the ``position`` attribute can be set directly
+    on the element to be found. Both inheritances below will give the same result.
+
+    .. code-block:: xml
+
+        <xpath expr="//field[@name='description']" position="after">
+            <field name="idea_ids" />
+        </xpath>
+
+        <field name="description" position="after">
+            <field name="idea_ids" />
+        </field>
+
 
 .. exercise:: Alter existing content
 
@@ -665,10 +684,10 @@ instead of a single view its ``arch`` field is composed of any number of
            inspect the view, find its external ID and the place to put the
            new field.
 
-       #. Create a file ``openacademy/partner.py`` and import it in
+       #. Create a file ``openacademy/models/partner.py`` and import it in
           ``__init__.py``
        #. Create a file ``openacademy/views/partner.xml`` and add it to
-          ``__openerp__.py``
+          ``__manifest__.py``
 
        .. patch::
 
@@ -738,7 +757,7 @@ retrieved from the database but computed on-the-fly by calling a method of the
 model.
 
 To create a computed field, create a field and set its attribute
-:attr:`~openerp.fields.Field.compute` to the name of a method. The computation
+:attr:`~odoo.fields.Field.compute` to the name of a method. The computation
 method should simply set the value of the field to compute on every record in
 ``self``.
 
@@ -757,7 +776,7 @@ method should simply set the value of the field to compute on every record in
 .. code-block:: python
 
     import random
-    from openerp import models, fields
+    from odoo import models, fields, api
 
     class ComputedModel(models.Model):
         _name = 'test.computed'
@@ -769,24 +788,17 @@ method should simply set the value of the field to compute on every record in
             for record in self:
                 record.name = str(random.randint(1, 1e6))
 
-Our compute method is very simple: it loops over ``self`` and performs the same
-operation on every record. We can make it slightly simpler by using the
-decorator :func:`~openerp.api.one` to automatically loop on the collection::
-
-        @api.one
-        def _compute_name(self):
-            self.name = str(random.randint(1, 1e6))
 
 Dependencies
 ------------
 
 The value of a computed field usually depends on the values of other fields on
 the computed record. The ORM expects the developer to specify those dependencies
-on the compute method with the decorator :func:`~openerp.api.depends`.
+on the compute method with the decorator :func:`~odoo.api.depends`.
 The given dependencies are used by the ORM to trigger the recomputation of the
 field whenever some of its dependencies have been modified::
 
-    from openerp import models, fields, api
+    from odoo import models, fields, api
 
     class ComputedModel(models.Model):
         _name = 'test.computed'
@@ -794,10 +806,10 @@ field whenever some of its dependencies have been modified::
         name = fields.Char(compute='_compute_name')
         value = fields.Integer()
 
-        @api.one
         @api.depends('value')
         def _compute_name(self):
-            self.name = "Record with value %s" % self.value
+            for record in self:
+                record.name = "Record with value %s" % record.value
 
 .. exercise:: Computed fields
 
@@ -838,7 +850,7 @@ float, string), or a function taking a recordset and returning a value::
 .. exercise:: Active objects – Default values
 
     * Define the start_date default value as today (see
-      :class:`~openerp.fields.Date`).
+      :class:`~odoo.fields.Date`).
     * Add a field ``active`` in the class Session, and set sessions as active by
       default.
 
@@ -861,7 +873,7 @@ to the database.
 For instance, suppose a model has three fields ``amount``, ``unit_price`` and
 ``price``, and you want to update the price on the form when any of the other
 fields is modified. To achieve this, define a method where ``self`` represents
-the record in the form view, and decorate it with :func:`~openerp.api.onchange`
+the record in the form view, and decorate it with :func:`~odoo.api.onchange`
 to specify on which field it has to be triggered. Any change you make on
 ``self`` will be reflected on the form.
 
@@ -904,16 +916,16 @@ Model constraints
 =================
 
 Odoo provides two ways to set up automatically verified invariants:
-:func:`Python constraints <openerp.api.constrains>` and
-:attr:`SQL constraints <openerp.models.Model._sql_constraints>`.
+:func:`Python constraints <odoo.api.constrains>` and
+:attr:`SQL constraints <odoo.models.Model._sql_constraints>`.
 
 A Python constraint is defined as a method decorated with
-:func:`~openerp.api.constrains`, and invoked on a recordset. The decorator
+:func:`~odoo.api.constrains`, and invoked on a recordset. The decorator
 specifies which fields are involved in the constraint, so that the constraint is
 automatically evaluated when one of them is modified. The method is expected to
 raise an exception if its invariant is not satisfied::
 
-    from openerp.exceptions import ValidationError
+    from odoo.exceptions import ValidationError
 
     @api.constrains('age')
     def _check_something(self):
@@ -932,7 +944,7 @@ raise an exception if its invariant is not satisfied::
         .. patch::
 
 SQL constraints are defined through the model attribute
-:attr:`~openerp.models.Model._sql_constraints`. The latter is assigned to a list
+:attr:`~odoo.models.Model._sql_constraints`. The latter is assigned to a list
 of triples of strings ``(name, sql_definition, message)``, where ``name`` is a
 valid SQL constraint name, ``sql_definition`` is a table_constraint_ expression,
 and ``message`` is the error message.
@@ -971,19 +983,28 @@ Tree views
 Tree views can take supplementary attributes to further customize their
 behavior:
 
-``colors``
-    mappings of colors to conditions. If the condition evaluates to ``True``,
-    the corresponding color is applied to the row:
+``decoration-{$name}``
+    allow changing the style of a row's text based on the corresponding
+    record's attributes.
+
+    Values are Python expressions. For each record, the expression is evaluated
+    with the record's attributes as context values and if ``true``, the
+    corresponding style is applied to the row. Other context values are
+    ``uid`` (the id of the current user) and ``current_date`` (the current date
+    as a string of the form ``yyyy-MM-dd``).
+
+    ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
+    (``font-style: italic``), or any `bootstrap contextual color
+    <http://getbootstrap.com/components/#available-variations>`_ (``danger``,
+    ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 
     .. code-block:: xml
 
-        <tree string="Idea Categories" colors="blue:state=='draft';red:state=='trashed'">
+        <tree string="Idea Categories" decoration-info="state=='draft'"
+            decoration-danger="state=='trashed'">
             <field name="name"/>
             <field name="state"/>
         </tree>
-
-    Clauses are separated by ``;``, the color and condition are separated by
-    ``:``.
 
 ``editable``
     Either ``"top"`` or ``"bottom"``. Makes the tree view editable in-place
@@ -1105,11 +1126,11 @@ their root element is ``<gantt>``.
 
 .. code-block:: xml
 
-    <gantt string="Ideas" date_start="invent_date" color="inventor_id">
-        <level object="idea.idea" link="id" domain="[]">
-            <field name="inventor_id"/>
-        </level>
-    </gantt>
+    <gantt string="Ideas"
+           date_start="invent_date"
+           date_stop="date_finished"
+           progress="progress"
+           default_group_by="inventor_id" />
 
 .. exercise:: Gantt charts
 
@@ -1130,13 +1151,15 @@ Graph views
 Graph views allow aggregated overview and analysis of models, their root
 element is ``<graph>``.
 
+.. note::
+    Pivot views (element ``<pivot>``) a multidimensional table, allows the
+    selection of filers and dimensions to get the right aggregated dataset
+    before moving to a more graphical overview. The pivot view shares the same
+    content definition as graph views.
+
 Graph views have 4 display modes, the default mode is selected using the
 ``@type`` attribute.
 
-Pivot
-    a multidimensional table, allows the selection of filers and dimensions
-    to get the right aggregated dataset before moving to a more graphical
-    overview
 Bar (default)
     a bar chart, the first dimension is used to define groups on the
     horizontal axis, other dimensions define aggregated bars within each group.
@@ -1207,90 +1230,6 @@ Kanban views define the structure of each card as a mix of form elements
 
         .. patch::
 
-Workflows
-=========
-
-Workflows are models associated to business objects describing their dynamics.
-Workflows are also used to track processes that evolve over time.
-
-.. exercise:: Almost a workflow
-
-    Add a ``state`` field to the *Session* model. It will be used to define
-    a workflow-ish.
-
-    A sesion can have three possible states: Draft (default), Confirmed and
-    Done.
-
-    In the session form, add a (read-only) field to
-    visualize the state, and buttons to change it. The valid transitions are:
-
-    * Draft -> Confirmed
-    * Confirmed -> Draft
-    * Confirmed -> Done
-    * Done -> Draft
-
-    .. only:: solutions
-
-        #. Add a new ``state`` field
-        #. Add state-transitioning methods, those can be called from view
-           buttons to change the record's state
-        #. And add the relevant buttons to the session's form view
-
-        .. patch::
-
-Workflows may be associated with any object in Odoo, and are entirely
-customizable. Workflows are used to structure and manage the lifecycles of
-business objects and documents, and define transitions, triggers, etc. with
-graphical tools. Workflows, activities (nodes or actions) and transitions
-(conditions) are declared as XML records, as usual. The tokens that navigate
-in workflows are called workitems.
-
-.. warning::
-
-    A workflow associated with a model is only created when the
-    model's records are created. Thus there is no workflow instance
-    associated with session instances created before the workflow's
-    definition
-
-.. exercise:: Workflow
-
-    Replace the ad-hoc *Session* workflow by a real workflow. Transform the
-    *Session* form view so its buttons call the workflow instead of the
-    model's methods.
-
-    .. only:: solutions
-
-        .. patch::
-
-        .. tip::
-
-            In order to check if instances of the workflow are correctly
-            created alongside sessions, go to :menuselection:`Settings -->
-            Technical --> Workflows --> Instances`
-
-
-
-.. exercise:: Automatic transitions
-
-    Automatically transition sessions from *Draft* to *Confirmed* when more
-    than half the session's seats are reserved.
-
-    .. only:: solutions
-
-        .. patch::
-
-.. exercise:: Server actions
-
-    Replace the Python methods for synchronizing session state by
-    server actions.
-
-    Both the workflow and the server actions could have been created entirely
-    from the UI.
-
-    .. only:: solutions
-
-        .. patch::
-
 Security
 ========
 
@@ -1351,7 +1290,7 @@ rights are usually created by a CSV file named after its model:
            hold the OpenAcademy Manager group
         #. Edit the file ``openacademy/security/ir.model.access.csv`` with
            the access rights to the models
-        #. Finally update ``openacademy/__openerp__.py`` to add the new data
+        #. Finally update ``openacademy/__manifest__.py`` to add the new data
            files to it
 
         .. patch::
@@ -1367,14 +1306,14 @@ access rights are limited.
 
 Here is an example of a rule that prevents the deletion of leads that are not
 in state ``cancel``. Notice that the value of the field ``groups`` must follow
-the same convention as the method :meth:`~openerp.models.Model.write` of the ORM.
+the same convention as the method :meth:`~odoo.models.Model.write` of the ORM.
 
 .. code-block:: xml
 
     <record id="delete_cancelled_only" model="ir.rule">
         <field name="name">Only cancelled leads may be deleted</field>
         <field name="model_id" ref="crm.model_crm_lead"/>
-        <field name="groups" eval="[(4, ref('base.group_sale_manager'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
         <field name="perm_read" eval="0"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
@@ -1400,9 +1339,9 @@ Wizards
 
 Wizards describe interactive sessions with the user (or dialog boxes) through
 dynamic forms. A wizard is simply a model that extends the class
-:class:`~openerp.models.TransientModel` instead of
-:class:`~openerp.models.Model`. The class
-:class:`~openerp.models.TransientModel` extends :class:`~openerp.models.Model`
+:class:`~odoo.models.TransientModel` instead of
+:class:`~odoo.models.Model`. The class
+:class:`~odoo.models.TransientModel` extends :class:`~odoo.models.Model`
 and reuse all its existing mechanisms, with the following particularities:
 
 - Wizard records are not meant to be persistent; they are automatically deleted
@@ -1445,8 +1384,8 @@ hooks in the ORM, such an action is declared in XML with the tag ``act_window``.
 
     <act_window id="launch_the_wizard"
                 name="Launch the Wizard"
-                src_model="context_model_name"
-                res_model="wizard_model_name"
+                src_model="context.model.name"
+                res_model="wizard.model.name"
                 view_mode="form"
                 target="new"
                 key2="client_action_multi"/>
@@ -1497,9 +1436,9 @@ Translation` without specifying a language), to create the module template POT
 file, and then derive the translated PO files. Many IDE's have plugins or modes
 for editing and merging PO/POT files.
 
-.. tip:: The GNU gettext format (Portable Object) used by Odoo is
-         integrated into LaunchPad, making it an online collaborative
-         translation platform.
+.. tip:: The Portable Object files generated by Odoo are published on
+         `Transifex <https://www.transifex.com/odoo/public/>`__, making it
+         easy to translate the software.
 
 .. code-block:: text
 
@@ -1514,7 +1453,7 @@ for editing and merging PO/POT files.
 
    By default Odoo's POT export only extracts labels inside XML files or
    inside field definitions in Python code, but any Python string can be
-   translated this way by surrounding it with the function :func:`openerp._`
+   translated this way by surrounding it with the function :func:`odoo._`
    (e.g. ``_("Label")``)
 
 .. exercise:: Translate a module
@@ -1543,7 +1482,7 @@ for editing and merging PO/POT files.
            terms
 
         #. In ``models.py``, add an import statement for the function
-           ``openerp._`` and mark missing strings as translatable
+           ``odoo._`` and mark missing strings as translatable
 
         #. Repeat steps 3-6
 
@@ -1611,6 +1550,30 @@ http://localhost:8069/report/html/account.report_invoice/1 (if ``account`` is
 installed) and the PDF version through
 http://localhost:8069/report/pdf/account.report_invoice/1.
 
+.. _reference/backend/reporting/printed-reports/pdf-without-styles:
+
+.. danger::
+
+    If it appears that your PDF report is missing the styles (i.e. the text
+    appears but the style/layout is different from the html version), probably
+    your wkhtmltopdf_ process cannot reach your web server to download them.
+
+    If you check your server logs and see that the CSS styles are not being
+    downloaded when generating a PDF report, most surely this is the problem.
+
+    The wkhtmltopdf_ process will use the ``web.base.url`` system parameter as
+    the *root path* to all linked files, but this parameter is automatically
+    updated each time the Administrator is logged in. If your server resides
+    behind some kind of proxy, that could not be reachable. You can fix this by
+    adding one of these system parameters:
+
+    - ``report.url``, pointing to an URL reachable from your server
+      (probably ``http://localhost:8069`` or something similar). It will be
+      used for this particular purpose only.
+
+    - ``web.base.url.freeze``, when set to ``True``, will stop the
+      automatic updates to ``web.base.url``.
+
 .. exercise:: Create a report for the Session model
 
    For each session, it should display session's name, its start and end,
@@ -1641,7 +1604,7 @@ Dashboards
            .. note:: Available dashboard styles are ``1``, ``1-1``, ``1-2``,
                      ``2-1`` and ``1-1-1``
 
-        #. Update ``openacademy/__openerp__.py`` to reference the new data
+        #. Update ``openacademy/__manifest__.py`` to reference the new data
            file
 
         .. patch::
@@ -1772,7 +1735,7 @@ with the standard Python libraries ``urllib2`` and ``json``::
     note_id = call(url, "object", "execute", DB, uid, PASS, 'note.note', 'create', args)
 
 Here is the same program, using the library
-`jsonrpclib <https://pypi.python.org/pypi/jsonrpclib>`::
+`jsonrpclib <https://pypi.python.org/pypi/jsonrpclib>`_::
 
     import jsonrpclib
 
@@ -1805,12 +1768,12 @@ Examples can be easily adapted from XML-RPC to JSON-RPC.
 
     * https://github.com/akretion/ooor
     * https://github.com/syleam/openobject-library
-    * https://github.com/nicolas-van/openerp-client-lib
+    * https://github.com/nicolas-van/odoo-client-lib
     * https://pypi.python.org/pypi/oersted/
-    * https://github.com/abhishek-jaiswal/php-openerp-lib
+    * https://github.com/abhishek-jaiswal/php-odoo-lib
 
 .. [#autofields] it is possible to :attr:`disable the automatic creation of some
-                 fields <openerp.models.Model._log_access>`
+                 fields <odoo.models.Model._log_access>`
 .. [#rawsql] writing raw SQL queries is possible, but requires care as it
              bypasses all Odoo authentication and security mechanisms.
 

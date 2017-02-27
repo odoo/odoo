@@ -72,6 +72,9 @@ var ProgressBar = Widget.extend({
 
     on_change_input: function(e) {
         var $input = $(e.target);
+        if(e.type === 'change' && !$input.is(':focus')) {
+            return;
+        }
         if(isNaN($input.val())) {
             this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
         } else {
@@ -84,13 +87,18 @@ var ProgressBar = Widget.extend({
                 if(this.edit_max_value) {
                     this.max_value = $(e.target).val();
                 } else {
-                    this.value = $(e.target).val();
+                    this.value = $(e.target).val() || 0;
                 }
 
                 this._render_value();
                 this.trigger('update', {value: this.value, max_value: this.max_value, changed_value: (this.edit_max_value)? this.max_value : this.value});
             }
         }
+    },
+
+    set_value: function(v) {
+        this.value = v;
+        this._render_value();
     },
 
     _render_value: function(v) {
@@ -110,7 +118,7 @@ var ProgressBar = Widget.extend({
         if(value <= max_value) {
             widthComplete = value/max_value * 100;
         } else {
-            widthComplete = max_value/value * 100;
+            widthComplete = 100;
         }
 
         this.$('.o_progress').toggleClass('o_progress_overflow', value > max_value);

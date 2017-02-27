@@ -1,17 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <template id="assets_backend" name="mail assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <link rel="stylesheet" href="/mail/static/src/css/mail.css"/>
-                <link rel="stylesheet" href="/mail/static/src/css/mail_channel.css"/>
-                <link rel="stylesheet" href="/mail/static/src/css/announcement.css"/>
-                <script type="text/javascript" src="/mail/static/src/js/mail.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/mail_utils.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/mail_followers.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/many2many_tags_email.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/announcement.js"></script>
+
+                <script type="text/javascript" src="/mail/static/src/js/client_action.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/extended_chat_window.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/composer.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/chat_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/chatter.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/followers.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/systray.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/window_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/activity.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/web_kanban_activity.js"></script>
+
+                <link rel="stylesheet" href="/mail/static/src/less/announcement.less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/client_action.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/chat_window.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/extended_chat_window.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/composer.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/chatter.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/followers.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/thread.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/systray.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/mail_activity.less"/>
             </xpath>
         </template>
+
+        <template id="message_origin_link">
+            <p>This <t t-esc="self._description.lower()"/> has been <span t-if="edit">modified</span><span t-if="not edit">created</span> from:
+                <t t-foreach="origin" t-as="o">
+                    <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
+                </t>
+            </p>
+        </template>
+
+        <template id="message_user_assigned">
+            <p>Dear <t t-esc="object.user_id.name"/>,</p>
+            <p>You have been assigned to the <t t-esc="object._description.lower()"/> <t t-esc="object.name_get()[0][1]"/>.</p>
+            <p>
+                <a t-att-href="'/mail/view?model=%s&amp;res_id=%s' % (object._name, object.id)"
+                        style="background-color: #9E588B; margin-top: 10px; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;">
+                    View <t t-esc="object._description.lower()"/>
+                </a>
+            </p>
+            <p style="color:#9E588B;">Powered by <a target="_blank" href="https://www.odoo.com">Odoo</a>.</p>
+        </template>
+
+        <template id="message_activity_done">
+<div>
+    <p>
+        <strong><span t-attf-class="fa #{activity.activity_type_id.icon}"/></strong> <span t-field="activity.activity_type_id.name"/> done
+        by <span t-field="activity.user_id.name"/>:
+        <span t-if="activity.summary" t-field="activity.summary"/>
+    </p>
+    <div t-field="activity.note"/>
+</div>
+        </template>
+
+        <template id="message_activity_assigned">
+<div>
+    <p>
+        Planned <span t-field="activity.activity_type_id.name"/> related to <t t-esc="object.name_get()[0][1]"/>:
+        <soan t-if="activity.summary" t-field="activity.summary"/>
+    </p>
+    <ul>
+        <li>Scheduled for: <span t-field="activity.date_deadline"/></li>
+        <li>Assigned to: <span t-field="activity.user_id.name"/></li>
+    </ul>
+    <div t-if="activity.note" t-field="activity.note"/>
+</div>
+        </template>
+
     </data>
-</openerp>
+</odoo>

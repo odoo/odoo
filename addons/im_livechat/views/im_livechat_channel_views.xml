@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
 
         <record id="im_livechat_channel_action" model="ir.actions.act_window">
-            <field name="name">Live Chat Channels</field>
+            <field name="name">Website Live Chat Channels</field>
             <field name="res_model">im_livechat.channel</field>
             <field name="view_mode">kanban,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to define a new live chat channel.
+                Click to define a new website live chat channel.
               </p><p>
                 You can create channels for each website on which you want
-                to integrate the live chat widget, allowing you website
+                to integrate the website live chat widget, allowing your website
                 visitors to talk in real time with your operators.
               </p><p>
                 Each channel has it's own URL that you can send by email to
@@ -29,10 +29,10 @@
                     <field name="web_page" widget="url"/>
                     <field name="are_you_inside"/>
                     <field name="user_ids"/>
-                    <field name="nbr_session"/>
+                    <field name="nbr_channel"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="o_kanban_two_column oe_kanban_global_click">
+                            <div class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
                                     <img t-att-src="kanban_image('im_livechat.channel', 'image_medium', record.id.value)" class="img-responsive"/>
                                 </div>
@@ -44,11 +44,11 @@
                                             <t t-esc="(record.user_ids.raw_value || []).length"/> Operators
                                             <br/>
                                             <i class="fa fa-comments"></i>
-                                            <t t-esc="record.nbr_session.raw_value"/> Sessions
+                                            <t t-esc="record.nbr_channel.raw_value"/> Sessions
                                         </p>
                                     </div>
                                     <div class="o_kanban_button">
-                                        <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-sm btn-primary">Quit</button>
+                                        <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-sm btn-primary">Leave</button>
                                         <button t-if="!record.are_you_inside.raw_value" name="action_join" type="object" class="btn btn-sm btn-primary">Join</button>
                                     </div>
                                 </div>
@@ -66,14 +66,14 @@
                 <form>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_session','=', 0)]}" name="%(im_chat_session_action_from_channel)d" icon="fa-comments">
-                            <field string="Sessions" name="nbr_session" widget="statinfo"/>
+                        <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_channel','=', 0)]}" name="%(mail_channel_action_from_livechat_channel)d" icon="fa-comments">
+                            <field string="Sessions" name="nbr_channel" widget="statinfo"/>
                         </button>
                         <button name="action_view_rating" attrs="{'invisible':[('rating_percentage_satisfaction','=', -1)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
                             <field string="% Happy" name="rating_percentage_satisfaction" widget="statinfo"/>
                         </button>
                     </div>
-                    <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -104,6 +104,9 @@
                                     </templates>
                                 </kanban>
                             </field>
+                            <p class="text-muted">
+                                Operators that do not show any activity In Odoo for more than 30 minutes will be considered as disconnected.
+                            </p>
                         </group>
                         <group string="Options">
                             <field name="button_text"/>
@@ -113,22 +116,22 @@
                     </group>
 
                     <div attrs='{"invisible": [["web_page", "=", False]]}'>
-                        <separator string="How to use the Live Chat widget?"/>
+                        <separator string="How to use the Website Live Chat widget?"/>
                         <p>
-                            Copy and paste this code into your website, within the &amp;lt;head&amp;gt; tag:
+                            Copy and paste this code into your website, within the &lt;head&gt; tag:
                         </p>
                         <field name="script_external" readonly="1" class="badge"/>
                         <p>
                             or copy this url and send it by email to your customers or suppliers:
                         </p>
-                        <field name="web_page" readonly="1" class="badge" widget="url"/>
-                        <p>For website built with Odoo CMS, please install the website_livechat module. Then go to Settings > Website Settings and select the Live Chat Channel you want to add on your website.</p>
+                        <field name="web_page" readonly="1" class="badge"/>
+                        <p>For website built with Odoo CMS, please install the website_livechat module. Then go to Website Admin > Configuration > Settings and select the Website Live Chat Channel you want to add on your website.</p>
                     </div>
 
                     <group string="Channel Rules">
                         <field name="rule_ids" nolabel="1"/>
                     </group>
-                    <span>Define rules for your live support channel. You can apply an action (disable the support, automatically open your support, or just make the button available) for the given URL, and per country.<br />To identify the country, GeoIP must be install on your server, otherwise, the countries of the rule will not be taken into account.</span>
+                    <span>Define rules for your live support channel. You can apply an action (disable the support, automatically open your support, or just make the button available) for the given URL, and per country.<br />To identify the country, GeoIP must be installed on your server, otherwise, the countries of the rule will not be taken into account.</span>
                 </sheet>
                 </form>
             </field>
@@ -171,6 +174,35 @@
             </field>
         </record>
 
+        <!-- Canned responses -->
+        <record id="im_livechat_canned_response_view_tree" model="ir.ui.view">
+            <field name="name">im_livechat.canned_response.tree</field>
+            <field name="model">mail.shortcode</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="source"/>
+                    <field name="substitution"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="im_livechat_canned_response_action" model="ir.actions.act_window">
+            <field name="name">Canned Responses</field>
+            <field name="res_model">mail.shortcode</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="im_livechat_canned_response_view_tree"/>
+            <field name="domain">[('shortcode_type','=','text')]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new canned response.
+              </p><p>
+                Canned responses allow you to insert prewritten responses in
+                your messages by typing <i>:shortcut</i>. The shortcut is
+                replaced directly in your message, so that you can still edit
+                it before sending.
+              </p>
+            </field>
+        </record>
 
         <!-- Menu items -->
         <menuitem
@@ -189,12 +221,34 @@
             sequence="5"/>
 
         <menuitem
-            id="session_history"
-            name="History"
+            id="menu_reporting_livechat"
+            name="Report"
             parent="menu_livechat_root"
-            action="im_chat_session_action"
+            sequence="50"
+            groups="im_livechat_group_manager"/>
+
+
+        <menuitem
+            id="session_history"
+            name="Sessions History"
+            parent="menu_reporting_livechat"
+            action="mail_channel_action"
             groups="im_livechat_group_user"
-            sequence="10"/>
+            sequence="1"/>
+
+        <menuitem
+            id="livechat_config"
+            name="Configuration"
+            parent="menu_livechat_root"
+            sequence="55"/>
+
+        <menuitem
+            id="canned_responses"
+            name="Canned Responses"
+            parent="livechat_config"
+            action="im_livechat_canned_response_action"
+            groups="im_livechat_group_user"
+            sequence="15"/>
 
     </data>
-</openerp>
+</odoo>

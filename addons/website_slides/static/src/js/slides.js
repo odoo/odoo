@@ -6,6 +6,7 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var time = require('web.time');
 var Widget = require('web.Widget');
+var local_storage = require('web.local_storage');
 
 var _t = core._t;
 var page_widgets = {};
@@ -24,9 +25,17 @@ $(document).ready(function () {
         if (datetime_obj && new Date().getTime() - datetime_obj.getTime() > 7 * 24 * 60 * 60 * 1000) {
             display_str = datetime_obj.toDateString();
         } else {
-            display_str = $.timeago(datetime_obj);
+            display_str = moment(datetime_obj).fromNow();
         }
         $(el).text(display_str);
+    });
+
+    // To prevent showing channel settings alert box once user closed it.
+    $('.o_slides_hide_channel_settings').on('click', function(ev) {
+        var channel_id = $(this).data("channelId");
+        ev.preventDefault();
+        document.cookie = "slides_channel_" + channel_id + " = closed";
+        return true;
     });
 
     /*
@@ -47,10 +56,10 @@ $(document).ready(function () {
                 this.popover_alert(button, _.str.sprintf(_t('Please <a href="/web?redirect=%s">login</a> to vote this slide'), (document.URL)));
             }else{
                 var target = button.find('.fa');
-                if (localStorage['slide_vote_' + slide_id] !== user_id.toString()) {
+                if (local_storage.getItem('slide_vote_' + slide_id) !== user_id.toString()) {
                     ajax.jsonRpc(href, 'call', {slide_id: slide_id}).then(function (data) {
                         target.text(data);
-                        localStorage['slide_vote_' + slide_id] = user_id;
+                        local_storage.setItem('slide_vote_' + slide_id, user_id);
                     });
                 } else {
                     this.popover_alert(button, _t('You have already voted for this slide'));
@@ -140,50 +149,71 @@ $(document).ready(function () {
      * Social Sharing Statistics Widget
      */
     if ($('div#statistic').length) {
-        var socialgatter = function (app_url, url, callback) {
-            $.ajax({
-                url: app_url + url,
-                dataType: 'jsonp',
-                success: callback
-            });
+        var slide_url = $("div#statistic").attr('slide-url');
+        var social_urls = {
+            'linkedin': 'https://www.linkedin.com/countserv/count/share?url=',
+            'twitter': 'https://cdn.api.twitter.com/1/urls/count.json?url=',
+            'facebook': 'https://graph.facebook.com/?id=',
+            'gplus': 'https://clients6.google.com/rpc'
+        }
+
+        var update_statistics = function(social_site, slide_url) {
+            if (social_site == 'gplus') {
+                $.ajax({
+                    url: social_urls['gplus'],
+                    type: "POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify([{
+                        "method": "pos.plusones.get",
+                        "id": "p",
+                        "params": {
+                            "nolog": true,
+                            "id": slide_url,
+                            "source": "widget",
+                            "userId": "@viewer",
+                            "groupId": "@self"
+                        },
+                        // TDE NOTE: should there be a key here ?
+                        "jsonrpc": "2.0",
+                        "apiVersion": "v1"
+                    }]),
+                    success: function(data) {
+                        $('#google-badge').text(data[0].result.metadata.globalCounts.count || 0);
+                        $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#google-badge').text()));
+                    },
+                });
+            } else {
+                $.ajax({
+                    url: social_urls[social_site] + slide_url,
+                    dataType: 'jsonp',
+                    success: function(data) {
+                        var shareCount = (social_site === 'facebook' ? data.shares : data.count) || 0;
+                        $('#' + social_site + '-badge').text(shareCount);
+                        $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#' + social_site+ '-badge').text()));
+                    },
+                });
+            }
         };
-        var current_url = window.location.origin + window.location.pathname;
-        socialgatter('https://www.linkedin.com/countserv/count/share?url=', current_url, function (data) {
-            $('#linkedin-badge').text(data.count || 0);
-            $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#linkedin-badge').text()));
-        });
-        socialgatter('https://cdn.api.twitter.com/1/urls/count.json?url=', current_url, function (data) {
-            $('#twitter-badge').text(data.count || 0);
-            $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#twitter-badge').text()));
-        });
-        socialgatter('https://graph.facebook.com/?id=', current_url, function (data) {
-            $('#facebook-badge').text(data.shares || 0);
-            $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#facebook-badge').text()));
+
+        $.each(social_urls, function(key, value) {
+            update_statistics(key, slide_url);
         });
 
-        $.ajax({
-            url: 'https://clients6.google.com/rpc',
-            type: "POST",
-            dataType: 'json',
-            contentType: 'application/json',
-            data: JSON.stringify([{
-                "method": "pos.plusones.get",
-                "id": "p",
-                "params": {
-                    "nolog": true,
-                    "id": current_url,
-                    "source": "widget",
-                    "userId": "@viewer",
-                    "groupId": "@self"
-                },
-                // TDE NOTE: should there be a key here ?
-                "jsonrpc": "2.0",
-                "apiVersion": "v1"
-            }]),
-            success: function (data) {
-                $('#google-badge').text(data[0].result.metadata.globalCounts.count || 0);
-                $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#google-badge').text()));
-            },
+        $("a.o_slides_social_share").on('click', function(ev) {
+            ev.preventDefault();
+            var key = $(ev.currentTarget).attr('social-key');
+            var popUpURL = $(ev.currentTarget).attr('href');
+            var popUp = window.open(
+                popUpURL,
+                'Share Dialog',
+                'width=626,height=436');
+            $(window).on('focus', function() {
+                if (popUp.closed) {
+                    update_statistics(key, slide_url);
+                    $(window).off('focus');
+                }
+            });
         });
     }
 });

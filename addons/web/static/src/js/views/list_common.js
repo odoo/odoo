@@ -270,9 +270,10 @@ var Collection = Class.extend(/** @lends Collection# */{
      * Removes the provided record from the collection
      *
      * @param {Record} record
+     * @param {Boolean} [options.silent=false]
      * @returns this
      */
-    remove: function (record) {
+    remove: function (record, options) {
         var index = this.indexOf(record);
         if (index === -1) {
             _(this._proxies).each(function (proxy) {
@@ -285,7 +286,9 @@ var Collection = Class.extend(/** @lends Collection# */{
         this.records.splice(index, 1);
         delete this._byId[record.get('id')];
         this.length--;
-        this.trigger('remove', record, this);
+        if (!options || !options.silent) {
+            this.trigger('remove', record, this);
+        }
         return this;
     },
 

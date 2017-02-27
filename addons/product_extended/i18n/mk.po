@@ -1,28 +1,29 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product_extended
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-11-08 11:34+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-10-22 12:09+0000\n"
+"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-09 07:35+0000\n"
-"X-Generator: Launchpad (build 17231)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:43
-#: code:addons/product_extended/wizard/wizard_price.py:52
+#: code:addons/product_extended/wizard/wizard_price.py:24
+#: code:addons/product_extended/wizard/wizard_price.py:40
 #, python-format
 msgid "Active ID is not set in Context."
-msgstr "Активниот ID не е подесен во Контекстот."
+msgstr "Активниот идентификациски број не е подесен во Контекстот."
 
 #. module: product_extended
 #: model:ir.model,name:product_extended.model_mrp_bom
@@ -30,86 +31,126 @@ msgid "Bill of Material"
 msgstr "Норматив"
 
 #. module: product_extended
-#: view:wizard.price:product_extended.view_compute_price_wizard
+#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
 msgid "Cancel"
 msgstr "Откажи"
 
 #. module: product_extended
-#: view:wizard.price:product_extended.view_compute_price_wizard
+#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
 msgid "Change Price"
 msgstr "Промени цена"
 
 #. module: product_extended
-#: view:wizard.price:product_extended.view_compute_price_wizard
+#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
 msgid "Change Standard Price"
 msgstr "Промени стандардна цена"
 
 #. module: product_extended
-#: field:wizard.price,recursive:0
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_recursive
 msgid "Change prices of child BoMs too"
 msgstr "Промени ги цените на под нормативите исто така"
 
 #. module: product_extended
 #: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
+#: model:ir.model,name:product_extended.model_wizard_price
 msgid "Compute Price Wizard"
 msgstr "Волшебник за пресметка на цени"
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute price wizard"
-msgstr "Волшебник за пресметка на цени"
+#: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+msgid "Compute from BOM"
+msgstr ""
 
 #. module: product_extended
-#: field:wizard.price,create_uid:0
+#: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+msgid ""
+"Compute the price of the product using products and operations of related "
+"bill of materials, for manufactured products only."
+msgstr ""
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_uid
 msgid "Created by"
 msgstr "Креирано од"
 
 #. module: product_extended
-#: field:wizard.price,create_date:0
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_date
 msgid "Created on"
 msgstr "Креирано на"
 
 #. module: product_extended
-#: field:wizard.price,real_time_accounting:0
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_display_name
+msgid "Display Name"
+msgstr "Прикажи име"
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_real_time_accounting
 msgid "Generate accounting entries when real-time"
 msgstr "Генерирај сметководствени внесови кога реално"
 
 #. module: product_extended
-#: field:wizard.price,id:0
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_id
 msgid "ID"
 msgstr "ID"
 
 #. module: product_extended
-#: field:wizard.price,info_field:0
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_info_field
 msgid "Info"
-msgstr "Информации"
+msgstr "Информација"
 
 #. module: product_extended
-#: field:wizard.price,write_uid:0
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price___last_update
+msgid "Last Modified on"
+msgstr "Последна промена на"
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_uid
 msgid "Last Updated by"
 msgstr "Последно ажурирање од"
 
 #. module: product_extended
-#: field:wizard.price,write_date:0
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_date
 msgid "Last Updated on"
 msgstr "Последно ажурирање на"
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_product_product
-msgid "Product"
-msgstr "Производ"
+#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_get_variant_count
+msgid "Number of variant for the product"
+msgstr ""
 
 #. module: product_extended
-#: view:product.product:product_extended.product_product_ext_form_view2
-msgid "Recompute price from BoM"
-msgstr "Повторно пресметај цена од норматив"
+#: model:ir.model,name:product_extended.model_product_template
+msgid "Product Template"
+msgstr "Урнек на производ"
 
 #. module: product_extended
-#: view:wizard.price:product_extended.view_compute_price_wizard
+#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
 msgid "Set price on BoM"
 msgstr "Подеси цена на норматив"
 
 #. module: product_extended
-#: field:mrp.bom,standard_price:0
+#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_standard_price
 msgid "Standard Price"
 msgstr "Стандардна цена"
+
+#. module: product_extended
+#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
+msgid ""
+"The price is computed from the bill of material lines which are not variant "
+"specific"
+msgstr ""
+"Цената се оформува според сметката од ставките на материјалот кои што не се "
+"варијантно специфични"
+
+#. module: product_extended
+#: code:addons/product_extended/wizard/wizard_price.py:38
+#, fuzzy, python-format
+msgid ""
+"This wizard is built for product templates, while you are currently running "
+"it from a product variant."
+msgstr ""
+"Овој волшебник е направен за урнеци на производи, додека моментално го "
+"користите од варијанта на производ."
+
+#~ msgid "Compute price wizard"
+#~ msgstr "Волшебник за пресметка на цени"

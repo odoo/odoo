@@ -17,17 +17,17 @@ A stock move is the elementary model in OpenERP that can move stock between 2 lo
 
 In order to make it easy to move multiple products at once and pass that as an assignment to a warehouse operator, we use pickings that group these stock moves.  
 
-We want to categorize the pickings in picking types.  As a warehouse manager you want to follow up the progress of the operations between the same (kind of) locations.  E.g. in the standard warehouse, not configuring anything, you will have 3 picking types: the incoming, internal and outgoing, but it is possible to create a picking type for all the packing operations that need to happen at the packing table.  The Warehouse > All Operations dashboard allows to see the progress of the pickings for each picking type.  
+We want to categorize the pickings in operation types.  As a warehouse manager you want to follow up the progress of the operations between the same (kind of) locations.  E.g. in the standard warehouse, not configuring anything, you will have 3 picking types: the incoming, internal and outgoing, but it is possible to create a picking type for all the packing operations that need to happen at the packing table.  The Warehouse > All Operations dashboard allows to see the progress of the pickings for each picking type.
 
 You might have a weird feeling talking about moving from location A to location B, even for deliveries and incoming shipments.  That is because OpenERP uses a double-entry concept similar to double-entry accounting.  In OpenERP you do not talk of disappearance, consumption or loss of products: instead you speak only about stock moves from one place to another.
 
 To satisfy the need for a counterpart to each stock movement, the software supports different types of stock locations:
 
 * Physical stock locations,
-* Partner locations (suppliers and customers),
+* Partner locations (vendors and customers),
 * Virtual locations as counterparts for production, inventory and scrap.
 
-Partner locations represent your customers' and suppliers' stocks. To reconcile them with your accounts, these stores play the role of third-party accounts. Receipt from a supplier can be shown by the movement of goods from a partner location to a physical location in your own company. As you see, supplier locations usually show negative stocks and customer locations usually show positive stocks.
+Partner locations represent your customers' and vendors' stocks. To reconcile them with your accounts, these stores play the role of third-party accounts. Receipt from a vendor can be shown by the movement of goods from a partner location to a physical location in your own company. As you see, vendor locations usually show negative stocks and customer locations usually show positive stocks.
 
 Virtual locations as counterparts for production are used in manufacturing operations. Manufacturing is characterized by the consumption of raw materials and the production of finished products. Virtual locations are used for the counterparts of these two operations.
 
@@ -45,7 +45,7 @@ A warehouse represents the building where we stock our goods.  In case of multip
 
 A warehouse corresponds also to a location.  As the locations are hierarchical, OpenERP will create one parent location for the warehouse that contains all the different locations in it.  
 
-When you create a warehouse, the system will create the necessary picking types and main child locations for this main location in the background.
+When you create a warehouse, the system will create the necessary operation types and main child locations for this main location in the background.
 
 
 ===========================================
@@ -112,7 +112,7 @@ Suppose we have a little Apple Store.  The warehouse will be Apple Store and we 
 We will create a reordering rule for every product with minimum stock.  These orders could also be created by the point of sale.  The maximum of the orderpoint, we will take 15 and 10 and .  This orderpoint will need to be created in the Stock location.  
 
 
-<<Show where we put supplier info>>
+<<Show where we put vendor info>>
 <<Show where we configure buy and mto>>
 <<Show how to configure orderpoints>>
 
@@ -127,11 +127,11 @@ Assigning stock moves to pickings
 
 When you want to give an assignment to a warehouse operator manually, you will create a picking and create the moves in it by specifying the different products and quantities.   When confirming a sale order however, Odoo will create procurements which will be solved bt creating moves.  First, these stock moves will be created without picking.  In a second step, they will be attributed to an existing picking or a picking will be created.
 
-In order to assign the move to a picking, Odoo will check if the move was assigned a picking type (e.g. Your Company: Delivery Orders) and if it does, it will search for a picking to assign the move to.  This picking should be in the correct state, picking type, procurement group (=group of procurements related to e.g. the same sale order) and source and destination locations.  If no picking can be found, it will create a new one.
+In order to assign the move to a picking, Odoo will check if the move was assigned an operation type (e.g. My Company: Delivery Orders) and if it does, it will search for a picking to assign the move to.  This picking should be in the correct state, picking type, procurement group (=group of procurements related to e.g. the same sale order) and source and destination locations.  If no picking can be found, it will create a new one.
 
 This mechanism allows for a lot of flexibility when for example some products have to go through the Packing zone for packing and some don't.  That way, the packing order will still group the moves that need packing from the sale order and the direct moves will be grouped in a separate picking also.  For the delivery order, everything will be together in one picking again.  
 
-A picking is almost entirely determined by the moves in it.  The state depends on the moves and the picking type, the source and destination location are those of the moves.  The scheduled date is calculated as a minimum date for the stock moves.  
+A picking is almost entirely determined by the moves in it.  The state depends on the moves and the operation type, the source and destination location are those of the moves.  The scheduled date is calculated as a minimum date for the stock moves.
 
 The state of a picking depends primarily on its moves: 
 
@@ -142,7 +142,7 @@ The other states depend however also on the move type. The move type determines 
 
 In case of partial, a special state exists: partial availability.  It is possible that a move is in the confirmed / waiting state, but has partially some stock reserved.  This move will still be in the waiting/confirmed state, but have a flag partially available.  In that case, the picking will not stay in the confirmed/waiting state but go to the partially available state, which makes it possible to deliver the goods partially.  A picking is also partially available when some moves are assigned and others have no stock at all reserved.  
 
-Sometimes a move does not have a picking type.  This means it will not be assigned to a picking.  This is the case for inventory corrections and moves in and out of production. 
+Sometimes a move does not have an operation type.  This means it will not be assigned to a picking.  This is the case for inventory corrections and moves in and out of production.
 
 
 ================================================================
@@ -155,7 +155,7 @@ A rule that triggers another stock move based on the destination location of the
 
 Example: When products arrive manually in the “Input” location, you want to move them to “Stock” with a push rule afterwards.  
 
-So, when a stock move “Supplier → Input” is confirmed, this rule will create another stock move: “Input → Stock”. It allows for 3 modes: automatic (the second operation will be validated automatically), manual (the second operation must be validated manually), manual no step added. (the destination of the first move is replaced instead of creating another stock move.
+So, when a stock move “Vendor → Input” is confirmed, this rule will create another stock move: “Input → Stock”. It allows for 3 modes: automatic (the second operation will be validated automatically), manual (the second operation must be validated manually), manual no step added. (the destination of the first move is replaced instead of creating another stock move.
 
 Push rules should typically only be used on incoming side when a purchase order is created manually and the goods need to be transferred to stock.  
 
@@ -173,7 +173,7 @@ Procurements will pass through the following states when everything goes well:
 - Running: A procurement rule has been applied successfully (=> created a move or quotation or manufacturing order)
 - Done: The procurement rule has been applied and the products have passed or are in the procurement's location
 
-It is however possible that the procurement goes into Exception when no procurement rule can be found or when it is not possible to apply the rule (e.g. no supplier defined for the product).  When the products are no longer necessary, it is possible to Cancel the procurement.  
+It is however possible that the procurement goes into Exception when no procurement rule can be found or when it is not possible to apply the rule (e.g. no vendor defined for the product).  When the products are no longer necessary, it is possible to Cancel the procurement.  
 
 By default, the JIT scheduler is installed and the system will try to check the procurement immediately when it is confirmed.  If this would give performance issues, it is possible to uninstall this and then it will only run the procurements immediately generated by the sales order.  This will result in a delivery order, but the procurements generated by the stock moves in the delivery order, will not be run.  This will however be done by the Scheduler.  
 
@@ -261,7 +261,7 @@ Bill of Materials for 2 SIDEPAN Units
 The SIDEPAN is made from an order using the workflow shown. The WOOD002 is purchased on order and the other products are all found in stock. An order for the product SHE100 will then generate two production orders (SHE100 and SIDEPAN) then produce two purchase orders for the product WOOD002. Product WOOD002 is used in the production of both SHE100 and SIDEPAN. Set the lead times on the product forms to the following:
 
 +--------------+--------------------+-------------------------+--------------------+
-| Product Code | Customer Lead Time | Manufacturing Lead Time | Supplier Lead Time |
+| Product Code | Customer Lead Time | Manufacturing Lead Time | Vendor Lead Time   |
 +=============+=====================+=========================+====================+
 | SHE100       | 30 days            | 5 days                  |                    |
 +--------------+--------------------+-------------------------+--------------------+
@@ -282,7 +282,7 @@ Purchase WOOD002 (for SHE100): 21 January (=26 January – 5 days),
 
 Purchase WOOD002 (for SIDEPAN): 11 January (=16 January – 5 days).
 
-In this example, OpenERP will propose placing two orders with the supplier of product WOOD002. Each of these orders can be for a different planned date. Before confirming these orders, the purchasing manager could group (merge) these orders into a single order.
+In this example, OpenERP will propose placing two orders with the vendor of product WOOD002. Each of these orders can be for a different planned date. Before confirming these orders, the purchasing manager could group (merge) these orders into a single order.
 
 Security Days
 
@@ -292,7 +292,7 @@ Scheduler Range Days: all the procurement requests that are not between today an
 
 Manufacturing Lead Time: number of additional days needed for manufacturing,
 
-Purchase Lead Time: additional days to include for all purchase orders with this supplier,
+Purchase Lead Time: additional days to include for all purchase orders with this vendor,
 
 Security Days: number of days to deduct from a system order to cope with any problems of procurement, 
 
@@ -356,7 +356,7 @@ For the inter-warehouse configurations, there is also a possibility to put a war
 How does the system choose the correct push rule
 ================================================
 
-Searching for a push rule is quite similar as for the pull rule.  It will however just search for the routes in the product and product category, then on those of the warehouse passed to the move or of the picking type of the move and then it will search a rule that is not in a route.
+Searching for a push rule is quite similar as for the pull rule.  It will however just search for the routes in the product and product category, then on those of the warehouse passed to the move or of the operation type of the move and then it will search a rule that is not in a route.
 
 
 =======================
@@ -378,7 +378,7 @@ You can choose multiple resupply warehouses.  These are selectable on the produc
 What happens behind simple warehouse config
 ===========================================
 
-The wizard will create all the necessary locations and picking types to support the selected settings.  
+The wizard will create all the necessary locations and operation types to support the selected settings.
 
 The Incoming shipments and Outgoing shipments routes are bundled into routes that are on the warehouse.  So, if you choose that warehouse, it will choose the route by default.  The incoming routes will also have the push rules associated with them.  
 
@@ -573,13 +573,13 @@ Description
 
 AllStore wants to implement a small warehouse for 5 nearby shops.  These shops will be using the Point of Sale.  1 shop is rather big, the 4 others are really small.  Everyday a truck will go to the 5 shops as the fresh products need to be delivered every day.  Also a separate compartment in the truck is foreseen for the frozen products.  
 
-In the warehouse itself, we have docks for Input and Output.  The fresh goods will be crossdocked as much as possible as they will arrive early in the morning from the supplier and will then be processed and transferred to the stores on the same day.  
+In the warehouse itself, we have docks for Input and Output.  The fresh goods will be crossdocked as much as possible as they will arrive early in the morning from the vendor and will then be processed and transferred to the stores on the same day.  
 
 The frozen goods will be received at the docks, but not far from the fresh products as it is a little colder over there.  Once processed, they will go into the freezer, where they will be taken from their pallets.  
 
-The frozen and fresh goods will be delivered from the supplier.  The frozen goods have a lot and expiry date on their individual packages and we won't enter them in the system as they expire that fast, but for the fresh goods, we need to supply the dates.  
+The frozen and fresh goods will be delivered from the vendor.  The frozen goods have a lot and expiry date on their individual packages and we won't enter them in the system as they expire that fast, but for the fresh goods, we need to supply the dates.  
 
-There also a lot of dry products, that are sometimes bought from a supplier and will sometimes arrive weekly from a truck from the main warehouse of AllStore.  
+There also a lot of dry products, that are sometimes bought from a vendor and will sometimes arrive weekly from a truck from the main warehouse of AllStore.  
 
 For outbound, the dry products will be packaged before being shipped.  Also the frozen goods need to be picked for that.  The consolidation zone for frozen goods is however different than that for the normal dry goods.  
 
@@ -595,7 +595,7 @@ As modules, it is clear we need stock, point of sale, purchase, sale and manufac
 
 When we want to configure this in OpenERP, we will typically start by configuring the warehouses.  The logic for choosing the routes in OpenERP, is to first check those of the warehouse and then those of the product and product categories.  So, the logic for configuring, is to put the generic routes on the warehouses and to put exceptions on these general rules on product and product categories.  
 
-The default “Your Company” warehouse can be the main warehouse.  We skip this configuration as it is not our goal.  The only thing we know is that the coffee might be supplied from our distribution centre. 
+The default “My Company” warehouse can be the main warehouse.  We skip this configuration as it is not our goal.  The only thing we know is that the coffee might be supplied from our distribution centre. 
  
 Then we configure the “Distribution Centre”.  As products always pass through the docks, by default it will be two step input and 3-step output (pick-pack-ship).  Dry products will follow this simple flow.  
 

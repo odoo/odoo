@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
     <template id="report_shop_saleorder_document" inherit_id="sale.report_saleorder_document">
         <xpath expr="//div[@name='total']" position="after">
             <t t-if="doc.payment_acquirer_id.name">
@@ -19,11 +18,11 @@
                                 <t t-if="doc.payment_acquirer_id.auto_confirm == 'none'">
                                     <t t-raw="doc.payment_acquirer_id.pending_msg"/>
                                 </t>
-                                <t t-if="doc.payment_acquirer_id.auto_confirm == 'at_pay_confirm'">
+                                <t t-if="doc.payment_acquirer_id.auto_confirm in ['confirm_so', 'generate_and_pay_invoice']">
                                     <t t-if="doc.payment_tx_id.state == 'pending'">
                                         <t t-raw="doc.payment_acquirer_id.pending_msg"/>
                                     </t>
-                                    <t t-if="doc.payment_tx_id.state == 'done'">
+                                    <t t-if="doc.payment_tx_id.state in ['done', 'authorized']">
                                         <t t-raw="doc.payment_acquirer_id.done_msg"/>
                                     </t>
                                     <t t-if="doc.payment_tx_id.state == 'cancel'">
@@ -36,7 +35,7 @@
                             </td>
                             <td class="text-right">
                                 <span t-field="doc.amount_total"
-                                    t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                             </td>
                         </tr>
                     </tbody>
@@ -44,5 +43,4 @@
             </t>
         </xpath>
     </template>
-</data>
-</openerp>
+</odoo>

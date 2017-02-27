@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 
 <template id="subscribe" inherit_id="website.snippets" name="Snippet Subscribe">
 
     <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
         <div>
             <div class="oe_snippet_thumbnail">
-                <img class="oe_snippet_thumbnail_img" src="/website_mail_channel/static/src/img/blocks/button_group_subscribe.png"/>
+                <img class="oe_snippet_thumbnail_img" src="/website_mail_channel/static/src/img/blocks/button_channel_subscribe.png"/>
                 <span class="oe_snippet_thumbnail_title">Discussion Group</span>
             </div>
 
@@ -30,6 +29,10 @@
                     <i class="fa fa-file-o"/><a href="#" class="js_mg_link"> archives</a> -
                     <i class="fa fa-times"/><a href="#" class="js_unfollow_btn"> unsubscribe</a>
                 </p>
+                <p class="js_mg_confirmation hidden well well-sm">
+                    a confirmation email has been sent.
+                </p>
+
             </div>
 
         </div>
@@ -46,6 +49,4 @@
     </xpath>
 
 </template>
-
-</data>
-</openerp>
+</odoo>

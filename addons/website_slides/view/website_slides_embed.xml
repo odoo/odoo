@@ -1,16 +1,12 @@
 <?xml version="1.0" ?>
-<openerp>
+<odoo>
     <data>
-
         <!-- Bundle (minimal) for embedded slide iframe -->
         <template id="website_slides.slide_embed_assets" name="Website slides embed assets">
-            <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-            <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+            <link type="text/less" rel='stylesheet' href='/web/static/src/less/import_bootstrap.less'/>
             <link type="text/less" href="/website_slides/static/src/less/website_slides.less" rel="stylesheet" t-ignore="true"/>
 
-            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
-            <t t-call="web.bootstrap"/>
-            <t t-call="website.pdf_js_lib"></t>
+            <t t-call="web.pdf_js_lib"></t>
             <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
             <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
         </template>
@@ -23,8 +19,10 @@
             <html>
                 <head t-if="not private">
                     <title><t t-esc="slide.name"/></title>
-                    <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
-                    <t t-call-assets="website_slides.slide_embed_assets"/>
+                    <t t-call-assets="web.assets_common" t-js="false"/>
+                    <t t-call-assets="website_slides.slide_embed_assets" t-js="false"/>
+                    <t t-call-assets="web.assets_common" t-css="false"/>
+                    <t t-call-assets="website_slides.slide_embed_assets" t-css="false"/>
                 </head>
                 <body t-if="private" style="position: inherit;">
                     <title><t t-esc="slide.name"/></title>
@@ -83,7 +81,7 @@
                                             <h4><t t-esc="suggest_slide.name"/></h4>
                                         </div>
                                         <span class="oe-image-thumbnail">
-                                            <img class="img-responsive" t-attf-src="/web_editor/image/slide.slide/#{suggest_slide.id}/image_thumb" alt="suggest_slide.name"/>
+                                            <img class="img-responsive" t-attf-src="/web/image/slide.slide/#{suggest_slide.id}/image_thumb" alt="suggest_slide.name"/>
                                         </span>
                                     </a>
 
@@ -92,7 +90,7 @@
                         </div>
                         <t t-if="slide.slide_type in ('presentation', 'document')">
                             <div id="PDFViewerLoader" class="oe_slides_loader">
-                                <img class="img-responsive" t-attf-src="/web_editor/image/slide.slide/#{slide.id}/image_medium" style="margin:auto;height:100%"/>
+                                <img class="img-responsive" t-attf-src="/web/image/slide.slide/#{slide.id}/image_medium" style="margin:auto;height:100%"/>
                                 <h4 class="text-center">
                                     <i class="fa fa-spinner fa-spin"></i> Loading ...
                                 </h4>
@@ -100,7 +98,7 @@
                             <canvas id="PDFViewerCanvas" class="img-responsive" style="margin:auto;height:100%;display:none;"></canvas>
                         </t>
                         <t t-if="slide.slide_type in ('infographic')">
-                            <img t-attf-src="/web_editor/image/slide.slide/#{slide.id}/datas" class="img-responsive" style="width:100%"/>
+                            <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-responsive" style="width:100%"/>
                         </t>
                     </div>
                     <!-- Fixed bottom navbar -->
@@ -108,7 +106,7 @@
                         <div class="container-fluid oe_slides_panel_footer">
                             <div class="row" style="padding-top:15px;">
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-left">
-                                    <input type="number" class="text-center slide-img-border" style="width: 45px;" id="page_number"></input> / <span id="page_count"></span>
+                                    <input type="number" class="text-center" id="page_number"></input> / <span id="page_count"></span>
                                 </div>
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 hide o_slide_navigation_buttons">
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center"></div>
@@ -135,7 +133,7 @@
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center"></div>
                                 </div>
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 pull-right text-right">
-                                    <a t-if="slide.download_security and not is_embedded" t-attf-href="/slides/slide/#{slide.id}/download" title="Download" id="download">
+                                    <a t-if="slide.download_security and not is_embedded" target="_top" t-attf-href="/slides/slide/#{slide.id}/download" title="Download" id="download">
                                         <i class="fa fa-download fa-2x"></i>
                                     </a>
                                     <span id="fullscreen" title="View fullscreen">
@@ -170,4 +168,4 @@
             </html>
         </template>
     </data>
-</openerp>
+</odoo>

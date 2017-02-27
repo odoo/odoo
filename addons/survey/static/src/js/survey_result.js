@@ -3,7 +3,10 @@ odoo.define('survey.result', function (require) {
 
 var website = require('website.website');
 
-website.if_dom_contains('.js_surveyresult', function () {
+if(!$('.js_surveyresult').length) {
+    return $.Deferred().reject("DOM doesn't contain '.js_surveyresult'");
+}
+
     console.debug("[survey] Survey Result JS is loading...");
 
     //Script For Pagination
@@ -47,12 +50,14 @@ website.if_dom_contains('.js_surveyresult', function () {
 
     //initialize discreteBar Chart
     function init_bar_chart(){
-        return nv.models.discreteBarChart()
+        var chart = nv.models.discreteBarChart()
             .x(function(d) { return d.text; })
             .y(function(d) { return d.count; })
             .staggerLabels(true)
-            .tooltips(false)
             .showValues(true);
+
+        chart.tooltip.enabled(false);
+        return chart;
     }
 
     //initialize Pie Chart
@@ -160,6 +165,5 @@ website.if_dom_contains('.js_surveyresult', function () {
     });
 
     console.debug("[survey] Survey Result JS loaded!");
-});
 
 });

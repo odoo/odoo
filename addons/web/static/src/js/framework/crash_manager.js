@@ -1,15 +1,9 @@
-odoo.define('web.crash_manager', function (require) {
-    var CrashManager = require('web.CrashManager');
-    return new CrashManager();
-});
-
 odoo.define('web.CrashManager', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var session = require('web.session');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -40,22 +34,17 @@ var CrashManager = core.Class.extend({
         if (!this.active) {
             return;
         }
-        if (this.$indicator){
+        if (this.connection_lost) {
             return;
         }
-        if (error.code == -32098) {
-            $.blockUI({ message: '' , overlayCSS: {'z-index': 9999, backgroundColor: '#FFFFFF', opacity: 0.0, cursor: 'wait'}});
-            this.$indicator = $('<div class="oe_indicator">' + _t("Trying to reconnect... ") + '<i class="fa fa-refresh"></i></div>');
-            this.$indicator.prependTo("body");
-            var timeinterval = setInterval(function(){
+        if (error.code === -32098) {
+            core.bus.trigger('connection_lost');
+            this.connection_lost = true;
+            var timeinterval = setInterval(function() {
                 ajax.jsonRpc('/web/webclient/version_info').then(function() {
                     clearInterval(timeinterval);
-                    self.$indicator.html(_t("You are back online"));
-                    self.$indicator.delay(2000).fadeOut('slow',function(){
-                        $(this).remove();
-                        self.$indicator.remove();
-                    });
-                    $.unblockUI();
+                    core.bus.trigger('connection_restored');
+                    self.connection_lost = false;
                 });
             }, 2000);
             return;
@@ -66,11 +55,11 @@ var CrashManager = core.Class.extend({
             return;
         }
         if (error.data.name === "openerp.http.SessionExpiredException" || error.data.name === "werkzeug.exceptions.Forbidden") {
-            this.show_warning({type: "Session Expired", data: { message: _t("Your Odoo session expired. Please refresh the current web page.") }});
+            this.show_warning({type: _t("Odoo Session Expired"), data: {message: _t("Your Odoo session expired. Please refresh the current web page.")}});
             return;
         }
         if (_.has(map_title, error.data.exception_type)) {
-            if(error.data.exception_type == 'except_orm'){
+            if(error.data.exception_type === 'except_orm'){
                 if(error.data.arguments[1]) {
                     error = _.extend({}, error,
                                 {
@@ -104,7 +93,7 @@ var CrashManager = core.Class.extend({
             }
 
             this.show_warning(error);
-        //InternalError    
+        //InternalError
 
         } else {
             this.show_error(error);
@@ -116,23 +105,53 @@ var CrashManager = core.Class.extend({
         }
         new Dialog(this, {
             size: 'medium',
-            title: "Odoo " + (_.str.capitalize(error.type) || _t("Warning")),
+            title: _.str.capitalize(error.type || error.message) || _t("Odoo Warning"),
             subtitle: error.data.title,
-            $content: $('<div>').html(QWeb.render('CrashManager.warning', {error: error}))
+            $content: $(QWeb.render('CrashManager.warning', {error: error}))
         }).open();
     },
     show_error: function(error) {
         if (!this.active) {
             return;
         }
-        new Dialog(this, {
-            title: "Odoo " + _.str.capitalize(error.type),
-            $content: QWeb.render('CrashManager.error', {session: session, error: error})
+        var dialog = new Dialog(this, {
+            title: _.str.capitalize(error.type || error.message) || _t("Odoo Error"),
+            $content: $(QWeb.render('CrashManager.error', {error: error}))
         }).open();
+
+        // When the dialog opens, initialize the copy feature and destroy it when the dialog is closed
+        var $clipboardBtn;
+        var clipboard;
+        dialog.opened(function () {
+            $clipboardBtn = dialog.$(".o_clipboard_button");
+            $clipboardBtn.tooltip({title: _t("Copied !"), trigger: "manual", placement: "left"});
+            clipboard = new window.Clipboard($clipboardBtn[0], {
+                text: function () {
+                    return (_t("Error") + ":\n" + error.message + "\n\n" + error.data.debug).trim();
+                }
+            });
+            clipboard.on("success", function (e) {
+                _.defer(function () {
+                    $clipboardBtn.tooltip("show");
+                    _.delay(function () {
+                        $clipboardBtn.tooltip("hide");
+                    }, 800);
+                });
+            });
+        });
+        dialog.on("closed", this, function () {
+            $clipboardBtn.tooltip("destroy");
+            clipboard.destroy();
+        });
+
+        // When the full traceback is shown, scroll it to the end (useful for better python error reporting)
+        dialog.$(".o_error_detail").on("shown.bs.collapse", function (e) {
+            e.target.scrollTop = e.target.scrollHeight;
+        });
     },
     show_message: function(exception) {
         this.show_error({
-            type: _t("Client Error"),
+            type: _t("Odoo Client Error"),
             message: exception,
             data: {debug: ""}
         });
@@ -173,7 +192,7 @@ var RedirectWarningHandler = Dialog.extend(ExceptionHandler, {
 
         new Dialog(this, {
             size: 'medium',
-            title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
+            title: _.str.capitalize(error.type) || _t("Odoo Warning"),
             buttons: [
                 {text: error.data.arguments[2], classes : "btn-primary", click: function() {
                     window.location.href = '#action='+error.data.arguments[1];
@@ -181,7 +200,7 @@ var RedirectWarningHandler = Dialog.extend(ExceptionHandler, {
                 }},
                 {text: _t("Cancel"), click: function() { self.destroy(); }, close: true}
             ],
-            $content: QWeb.render('CrashManager.warning', {error: error})
+            $content: QWeb.render('CrashManager.warning', {error: error}),
         }).open();
     }
 });

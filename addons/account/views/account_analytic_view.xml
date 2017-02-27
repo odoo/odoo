@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="view_account_analytic_line_form_inherit_account" model="ir.ui.view">
             <field name="name">account.analytic.line.form.inherit.account</field>
@@ -8,33 +8,17 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='account_id']" position="after">
-                        <field name="journal_id"/>
-                    </xpath>
-                    <xpath expr="//field[@name='date']" position="after">
+                        <field name="general_account_id"/>
                         <field name="ref"/>
-                    </xpath>
-                    <xpath expr="//field[@name='company_id']" position="after">
                         <field name="partner_id"/>
+                        <field name="move_id" readonly="1"/>
                     </xpath>
                     <xpath expr="//field[@name='amount']" position="after">
-                        <label for="amount_currency" groups="base.group_multi_currency"/>
-                        <div groups="base.group_multi_currency">
-                            <field name="amount_currency" class="oe_inline"/>
-                            <field name="currency_id" class="oe_inline"/>
-                        </div>
-                        <field invisible="1" name="general_account_id"/>
-                    </xpath>
-                    <xpath expr="//label[@for='unit_amount']" position="before">
+                        <field name="company_currency_id" invisible="1"/>
+                        <field name="amount_currency" invisible="1"/>
+                        <field name="analytic_amount_currency"/>
                         <field name="product_id"/>
-                    </xpath>
-                    <xpath expr="//field[@name='unit_amount']" position="after">
                         <field name="product_uom_id" class="oe_inline"/>
-                    </xpath>
-                    <xpath expr="//group[@name='product_info']" position="after">
-                        <group string="General Accounting">
-                            <field name="general_account_id"/>
-                            <field name="move_id" readonly="1"/>
-                        </group>
                     </xpath>
                 </data>
             </field>
@@ -59,28 +43,16 @@
                 <data>
                     <xpath expr="//field[@name='date']" position="after">
                         <field name="product_id"/>
-                        <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" help="Analytic Journal Items related to a sale journal."/>
-                        <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" help="Analytic Journal Items related to a purchase journal."/>
-                        <filter name="others" string="Others" domain="[('journal_id.type','not in',('sale', 'purchase'))]"/>
-                    </xpath>
-                    <xpath expr="//field[@name='account_id']" position="after">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     </xpath>
-                    <xpath expr="//filter[@name='user_id']" position="after">
+                    <xpath expr="//group[@name='groupby']" position="after">
                         <filter string="Financial Account" context="{'group_by':'general_account_id'}"/>
-                        <filter string="Journal" context="{'group_by':'journal_id'}" name="group_journal"/>
                         <filter string="Product" context="{'group_by':'product_id'}"/>
                         <filter string="Partner" context="{'group_by':'partner_id'}"/>
                     </xpath>
                 </data>
             </field>
         </record>
-        
-        <menuitem groups="analytic.group_analytic_accounting"
-            action="analytic.action_account_analytic_journal_open_form"
-            id="account_analytic_journal_entries"
-            parent="menu_finance_entries"
-            sequence="40"/>
 
         <record id="view_account_analytic_line_pivot" model="ir.ui.view">
             <field name="name">account.analytic.line.pivot</field>
@@ -96,15 +68,45 @@
         <menuitem
             name="Analytic Accounts"
             parent="menu_finance_entries"
-            action="analytic.action_account_analytic_chart"
+            action="analytic.action_analytic_account_form"
             id="menu_action_analytic_account_tree2"
-            icon="STOCK_INDENT"
             sequence="30"
+            groups="analytic.group_analytic_accounting"/>
+        <menuitem
+            name="Analytic Entries"
+            parent="menu_finance_entries"
+            action="analytic.account_analytic_line_action_entries"
+            id="menu_action_analytic_lines_tree"
+            sequence="35"
             groups="analytic.group_analytic_accounting"/>
         <menuitem action="analytic.action_account_analytic_account_form" id="account_analytic_def_account"
             parent="menu_analytic_accounting"
             groups="analytic.group_analytic_accounting" sequence="0"/>
-            
-        <menuitem groups="analytic.group_analytic_accounting" action="analytic.action_account_analytic_journal_form" id="account_def_analytic_journal" parent="menu_analytic_accounting" sequence="5"/>
+
+
+        <record model="ir.actions.act_window" id="analytic_line_reporting_pivot">
+            <field name="name">Analytic Entries</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="analytic.view_account_analytic_line_pivot"/>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="analytic.view_account_analytic_line_filter"/>
+        </record>
+
+        <menuitem
+            name="Analytic Entries"
+            parent="account_reports_business_intelligence_menu"
+            action="analytic_line_reporting_pivot"
+            id="menu_action_analytic_lines_reporting"
+            sequence="35"
+            groups="analytic.group_analytic_accounting"/>
+
+        <menuitem
+            id="account_analytic_tag_menu"
+            name="Analytic Accounts Tags"
+            parent="menu_analytic_accounting"
+            action="analytic.account_analytic_tag_action"
+            groups="base.group_no_one"/>
+
     </data>
-</openerp>
+</odoo>

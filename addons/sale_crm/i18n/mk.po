@@ -1,169 +1,341 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_crm
 #
+# Translators:
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-10-21 11:22+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-05-31 13:43+0000\n"
+"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-22 06:41+0000\n"
-"X-Generator: Launchpad (build 17203)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: sale_crm
-#: field:sale.order,campaign_id:0
-msgid "Campaign"
-msgstr "Кампања"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
+msgid "# Issues"
+msgstr "# Проблеми"
 
 #. module: sale_crm
-#: view:crm.make.sale:sale_crm.view_crm_make_sale
-msgid "Cancel"
-msgstr "Откажи"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
+msgid "# Tasks"
+msgstr "# Задачи"
 
 #. module: sale_crm
-#: field:sale.order,medium_id:0
-msgid "Channel"
-msgstr "Канал"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
+msgid "# of Sales Order"
+msgstr "# од налогот за продажба"
 
 #. module: sale_crm
-#: help:crm.make.sale,close:0
-msgid ""
-"Check this to close the opportunity after having created the sales order."
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "<span class=\"o_stat_text\"> Orders</span>"
 msgstr ""
-"Штиклирај за затварање на можностите по креирањето на налогот за продажба."
 
 #. module: sale_crm
-#: view:crm.lead:sale_crm.crm_case_form_view_oppor
-#: view:crm.make.sale:sale_crm.view_crm_make_sale
-msgid "Convert to Quotation"
-msgstr "Претвори во Понуда"
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "<span class=\"o_stat_text\"> Quote(s) </span>"
+msgstr ""
 
 #. module: sale_crm
-#: view:crm.lead:sale_crm.crm_case_form_view_oppor
-msgid "Create Quotation"
-msgstr "Креирај цитат"
+#: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr ""
+"Член со кој сакате да го поврзете членството. Ќе се смета состојбата на "
+"членството на здружениот член."
 
 #. module: sale_crm
-#: field:crm.make.sale,create_uid:0
-msgid "Created by"
-msgstr "Креирано од"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
+#, fuzzy
+msgid "Activation"
+msgstr "Цитат"
 
 #. module: sale_crm
-#: field:crm.make.sale,create_date:0
-msgid "Created on"
-msgstr "Креирано на"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
+msgid "Associate Member"
+msgstr "Здружен член"
 
 #. module: sale_crm
-#: field:crm.make.sale,partner_id:0
-msgid "Customer"
-msgstr "Купувач"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
+msgid "Cancel Membership Date"
+msgstr "Откажи датум на членство"
 
 #. module: sale_crm
-#: field:crm.make.sale,id:0
-msgid "ID"
-msgstr "ID"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
+msgid "Count Payment Method"
+msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:91
-#, python-format
-msgid "Insufficient Data!"
-msgstr "Недоволно податоци!"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
+msgid "Current Membership Status"
+msgstr "Моментален статус на членство"
 
 #. module: sale_crm
-#: field:crm.make.sale,write_uid:0
-msgid "Last Updated by"
-msgstr "Последно ажурирање од"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_customer
+msgid "Customer Location"
+msgstr "Локација на купувач"
 
 #. module: sale_crm
-#: field:crm.make.sale,write_date:0
-msgid "Last Updated on"
-msgstr "Последно ажурирање на"
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_start
+msgid "Date from which membership becomes active."
+msgstr "Датум од кој членството станува активно"
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
-msgid "Make Quotation"
-msgstr "Направи понуда"
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_cancel
+msgid "Date on which membership has been cancelled"
+msgstr "Датум на кој членството е откажано"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Направи продажби"
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_stop
+msgid "Date until which membership remains active."
+msgstr "Датум до кој членството останува активно."
 
 #. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr "Mark Won"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
+msgid "Free Member"
+msgstr "Слободен член"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:91
-#, python-format
-msgid "No address(es) defined for this customer."
-msgstr "Нема дефинирано адреса(и) за овој клиент."
+#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
+msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:111
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr "Можноста е <b>конвертирана</b> во цитатот <em>%s</em>."
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
+msgid "Implementation References"
+msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:94
-#, python-format
-msgid "Opportunity: %s"
-msgstr "Можност: %s"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
+msgid "Implemented by"
+msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:125
-#: code:addons/sale_crm/wizard/crm_make_sale.py:136
-#, python-format
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
+msgid "Invoiced in Sale Orders Target"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
+msgid ""
+"It indicates the membership state.\n"
+"-Non Member: A partner who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paying member: A member who has paid the membership fee."
+msgstr ""
+"Го индицира статусот на членството.\n"
+"-Не е член: Партнер кој не аплицирал за членство.\n"
+"-Откажан член: Член што го откажал неговото членство.\n"
+"-Стар член: Член чиј што датум на членство истекол.\n"
+"-Член на чекање: Член којшто аплицирал за членство и чија што фактура ќе се "
+"креира.\n"
+"-Фактуриран член: Член чија што фактура е креирана.\n"
+"-Член што плаќа: Член што ја платил таксата за членство."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
+msgid "Latest Partner Review"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Lead/Можност"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
+msgid "Level"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
+msgid "Level Weight"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+msgid "Log in the chatter from which opportunity the order originates"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
+msgid "Membership"
+msgstr "Членство"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_amount
+msgid "Membership Amount"
+msgstr "Износ за членство"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_stop
+msgid "Membership End Date"
+msgstr "Крајна дата на членство"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_start
+msgid "Membership Start Date"
+msgstr "Почетен датум на членство"
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "New Quotation"
+msgstr "Нова понуда"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
+msgid "Next Partner Review"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
+msgid "Number of Quotations"
+msgstr "Број на понуди"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
+msgid "Opportunity"
+msgstr "Можност"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
+msgid "Orders"
+msgstr "Налози"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+#, fuzzy
+msgid "Partnership Date"
+msgstr "Откажи датум на членство"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
+msgid "Payment Methods"
+msgstr "Методи на плаќање"
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
 msgid "Quotation"
 msgstr "Цитат"
 
 #. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
+msgid "Quotations"
+msgstr "Понуди"
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
 msgid "Sales Order"
 msgstr "Налог за продажба"
 
 #. module: sale_crm
-#: field:sale.order,source_id:0
-msgid "Source"
-msgstr "Извор"
+#: model:ir.model.fields,help:sale_crm.field_res_users_free_member
+msgid "Select if you want to give free membership."
+msgstr "Означете доколку сакате да дадетебесплатно членство."
 
 #. module: sale_crm
-#: field:sale.order,categ_ids:0
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
+msgid "Sum of Orders"
+msgstr "Сума на нарачки"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
 msgid "Tags"
-msgstr "Ознаки"
+msgstr "Етикети"
 
 #. module: sale_crm
-#: help:sale.order,campaign_id:0
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
+msgid "Tasks"
+msgstr "Задачи"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
+msgid "The price negotiated by the partner"
+msgstr "Цената нагодена од партнерот"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
+"This stock location will be used, instead of the default one, as the "
+"destination location for goods you send to this partner"
 msgstr ""
-"Ова е име што ви помага да следите резултати од различни кампањи пр. : "
-"Fall_Drive, Christmas_Special"
+"Оваа локација на залихата ќе биде употребена наместо стандардната, како "
+"дестинација на добрата кои ги испраќате на овој партнер"
 
 #. module: sale_crm
-#: help:sale.order,medium_id:0
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Ова е начин на испорака. Пр. Честитка, Е-маил или онлајн реклама"
-
-#. module: sale_crm
-#: help:sale.order,source_id:0
+#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
 msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of "
-"email list"
+"This stock location will be used, instead of the default one, as the source "
+"location for goods you receive from the current partner"
 msgstr ""
-"ова е извор на врската пр. : пребарувач, друг домен или име од е-маил листа"
+"Оваа локација на залихата ќе биде употребена наместо стандардната, како "
+"изворна локација на добрата кои ги примате од тековниот партнер"
 
 #. module: sale_crm
-#: view:crm.make.sale:sale_crm.view_crm_make_sale
-msgid "_Create"
-msgstr "_Креирај"
+#: model:ir.model,name:sale_crm.model_res_users
+msgid "Users"
+msgstr "Корисници"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
+msgid "Vendor Location"
+msgstr "Локација на добавувач"
+
+#~ msgid "# Claims"
+#~ msgstr "#Рекламации"
+
+#~ msgid "Campaign"
+#~ msgstr "Кампања"
+
+#~ msgid "Geo Latitude"
+#~ msgstr "Гео ширина"
+
+#~ msgid "Geo Localization Date"
+#~ msgstr "Датум на Гео Локализација"
+
+#~ msgid "Geo Longitude"
+#~ msgstr "Гео должина"
+
+#~ msgid "Medium"
+#~ msgstr "Средно"
+
+#~ msgid "Source"
+#~ msgstr "Извор"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Ова е име што ви помага да следите резултати од различни кампањи пр. : "
+#~ "Fall_Drive, Christmas_Special"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr "Ова е начин на испорака. Пр. Честитка, Е-маил или онлајн реклама"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "ова е извор на врската пр. : пребарувач, друг домен или име од е-маил "
+#~ "листа"

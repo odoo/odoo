@@ -1,0 +1,122 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_transfer
+#
+# Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-03-08 06:30+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
+"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:68
+#, python-format
+msgid "; multiple order found"
+msgstr "; viacnásobná objednávka nájdená"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:66
+#, python-format
+msgid "; no order found"
+msgstr "; žiadna objednávka nájdená"
+
+#. module: payment_transfer
+#: model:payment.acquirer,cancel_msg:payment_transfer.payment_acquirer_transfer
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>Zruśiť,</i> Vaša platba bola zrušená.</span>"
+
+#. module: payment_transfer
+#: model:payment.acquirer,done_msg:payment_transfer.payment_acquirer_transfer
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr ""
+"<span><i>Hotovo,</i> Vaša online platba bola úspešne spracovaná. Ďakujeme za "
+"objednávku.</span>"
+
+#. module: payment_transfer
+#: model:payment.acquirer,error_msg:payment_transfer.payment_acquirer_transfer
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr ""
+"<span><i>Chyba,</i> Upozorňujeme, že počas transakcie došlo k chybe. "
+"Objednávka bola potvrdená ale nebude zaplatená. Neváhajte nás kontaktovať ak "
+"máte otázky ohľadom stavu vašej objednávky.</span>"
+
+#. module: payment_transfer
+#: model:payment.acquirer,pending_msg:payment_transfer.payment_acquirer_transfer
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr ""
+"<span><i>Čakajúce,</i> Vaša online platba bola úspešne spracovaná. Ale vaša "
+"objednávka nebola ešte potvrdená.</span>"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:30
+#: model:payment.acquirer,post_msg:payment_transfer.payment_acquirer_transfer
+#, python-format
+msgid "Bank Account"
+msgstr "Bankový účet"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:30
+#, python-format
+msgid "Bank Accounts"
+msgstr "Bankové účty"
+
+#. module: payment_transfer
+#: model:payment.acquirer,post_msg:payment_transfer.payment_acquirer_transfer
+msgid "Communication"
+msgstr ""
+
+#. module: payment_transfer
+#: model:ir.model,name:payment_transfer.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Príjemca platby "
+
+#. module: payment_transfer
+#: model:ir.model,name:payment_transfer.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Platobná transakcia"
+
+#. module: payment_transfer
+#: model:payment.acquirer,post_msg:payment_transfer.payment_acquirer_transfer
+msgid "Please use the following transfer details"
+msgstr ""
+
+#. module: payment_transfer
+#: model:payment.acquirer,post_msg:payment_transfer.payment_acquirer_transfer
+msgid "Please use the order name as communication reference."
+msgstr ""
+
+#. module: payment_transfer
+#: model:payment.acquirer,pre_msg:payment_transfer.payment_acquirer_transfer
+msgid "Transfer information will be provided after choosing the payment mode."
+msgstr "Prevodné informácie budú poskytnuté po výbere módu platby."
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:19
+#: model:payment.acquirer,name:payment_transfer.payment_acquirer_transfer
+#, python-format
+msgid "Wire Transfer"
+msgstr "Drôtový prenos"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:64
+#, python-format
+msgid "received data for reference %s"
+msgstr "prijaté dáta pre referenciu %s"

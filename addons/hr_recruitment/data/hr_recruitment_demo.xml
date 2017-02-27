@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<odoo>
+  <data noupdate="1">
+
+    <record model="hr.recruitment.stage" id="stage_job1">
+        <field name="name">Initial Qualification</field>
+        <field name="sequence">1</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job2">
+        <field name="name">First Interview</field>
+        <field name="template_id" ref="email_template_data_applicant_interest"/>
+        <field name="sequence">2</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job3">
+        <field name="name">Second Interview</field>
+        <field name="sequence">3</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job4">
+        <field name="name">Contract Proposal</field>
+        <field name="sequence">4</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job5">
+        <field name="name">Contract Signed</field>
+        <field name="sequence">5</field>
+        <field name="fold" eval="True"/>
+    </record>
+
+    <!--Manage the job_id to get in hr.applicant-->
+    <record id="hr.job_developer" model="hr.job">
+        <field name="state">recruit</field>
+        <field name="no_of_recruitment">4</field>
+    </record>
+    <record id="hr.job_consultant" model="hr.job">
+        <field name="state">recruit</field>
+        <field name="no_of_recruitment">1</field>
+    </record>
+    <record id="hr.job_hrm" model="hr.job">
+        <field name="no_of_recruitment">1</field>
+        <field name="state">recruit</field>
+    </record>
+    <record id="hr.job_marketing" model="hr.job">
+        <field name="state">recruit</field>
+        <field name="no_of_recruitment">3</field>
+    </record>
+    <record id="hr.job_trainee" model="hr.job">
+        <field name="state">recruit</field>
+        <field name="no_of_recruitment">6</field>
+    </record>
+
+    <record id="hr_case_salesman0" model="hr.applicant">
+        <field name="name">Sales Manager</field>
+        <field name="job_id" ref="hr.job_marketing"/>
+        <field name="department_id" ref="hr.dep_sales"/>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="priority">1</field>
+        <field name="partner_name">Enrique Jones</field>
+        <field name="partner_mobile">9963214587</field>
+        <field name="stage_id" ref="stage_job1"/>
+    </record>
+    <record id="hr_case_traineemca0" model="hr.applicant">
+        <field name="name">Trainee - MCA</field>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="priority">2</field>
+        <field name="partner_name">Marie Justine</field>
+        <field name="partner_mobile">9988774455</field>
+        <field name="stage_id" ref="stage_job4"/>
+        <field name="partner_phone">6633225</field>
+    </record>
+    <record id="hr_case_fresher0" model="hr.applicant">
+        <field name="name">Fresher</field>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_administration"/>
+        <field name="type_id" ref="degree_bachelor"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="priority">0</field>
+        <field name="partner_name">Jose</field>
+        <field name="stage_id" ref="stage_job3"/>
+        <field name="partner_phone">999666735</field>
+    </record>
+    <record id="hr_case_yrsexperienceinphp0" model="hr.applicant">
+        <field name="name">Marketing Job</field>
+        <field name="job_id" ref="hr.job_marketing"/>
+        <field name="department_id" ref="hr.dep_sales"/>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="partner_name">John Bruno</field>
+        <field name="stage_id" ref="stage_job5"/>
+    </record>
+    <record id="hr_case_marketingjob0" model="hr.applicant">
+        <field name="name">More than 5 yrs Experience in PHP</field>
+        <field name="job_id" ref="hr.job_developer"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="partner_name">Sandra Elvis</field>
+        <field name="stage_id" ref="stage_job5"/>
+    </record>
+    <record id="hr_case_financejob0" model="hr.applicant">
+        <field name="name">Finance Manager</field>
+        <field name="job_id" ref="hr.job_hrm"/>
+        <field name="department_id" ref="hr.dep_administration"/>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="priority">1</field>
+        <field name="partner_name">David Armstrong</field>
+        <field name="stage_id" ref="stage_job2"/>
+        <field name="partner_phone">33968745</field>
+    </record>
+    <record id="hr_case_traineemca1" model="hr.applicant">
+        <field name="name">Trainee - MCA</field>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
+        <field name="partner_name">Tina Augustie</field>
+        <field name="partner_mobile">9898745745</field>
+        <field name="stage_id" ref="stage_job4"/>
+        <field name="partner_phone">6630125</field>
+    </record>
+    <record id="hr_case_programmer" model="hr.applicant">
+        <field name="name">Programmer</field>
+        <field name="job_id" ref="hr.job_developer"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="partner_name">Shane Williams</field>
+        <field name="partner_mobile">9812398524</field>
+        <field name="stage_id" ref="stage_job4"/>
+        <field name="partner_phone">6630125</field>
+        <field name="salary_expected">11000.0</field>
+    </record>
+    <record id="hr_case_advertisement" model="hr.applicant">
+        <field name="name">Advertisement</field>
+        <field name="job_id" ref="hr.job_consultant"/>
+        <field name="department_id" ref="hr.dep_ps"/>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="partner_name">David Armstrong</field>
+        <field name="partner_mobile">9988774455</field>
+        <field name="stage_id" ref="stage_job2"/>
+        <field name="salary_expected">11000.0</field>
+    </record>
+
+    <record id="hr_case_salesman0_cv" model="ir.attachment">
+        <field name="name">Jones_CV.pdf</field>
+        <field name="datas_fname">Jones_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/data/hr_recruitment_demo_jones_cv.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_salesman0"/>
+    </record>
+    <record id="hr_case_fresher0_cv" model="ir.attachment">
+        <field name="name">Jose_CV.txt</field>
+        <field name="datas_fname">Jose_CV.txt</field>
+        <field name="datas" type="base64" file="hr_recruitment/data/hr_recruitment_demo_jose_cv.txt"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_fresher0"/>
+    </record>
+    <record id="hr_case_programmer_cv" model="ir.attachment">
+        <field name="name">Williams_CV.doc</field>
+        <field name="datas_fname">Williams_CV.doc</field>
+        <field name="datas" type="base64" file="hr_recruitment/data/hr_recruitment_demo_williams_cv.doc"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_programmer"/>
+    </record>
+
+    <record id="message_application_demo" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_case_advertisement"/>
+        <field name="body">Please do refer to this application for sure.</field>
+        <field name="message_type">comment</field>
+        <field name="author_id" ref="base.res_partner_2"/>
+    </record>
+    <record id="msg_case18_aplicant" model="mail.message">
+        <field name="subject">Regarding reference</field>
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_case_advertisement"/>
+        <field name="body"><![CDATA[<p>Hello!<br />
+            I will surely refer to this application as it is by your reference and <br />
+            will try to conduct an interview within a very short time<br />
+            Thanks,</p>]]></field>
+        <field name="message_type">comment</field>
+        <field name="subtype_id" ref="mail.mt_comment"/>
+        <field name="author_id" ref="base.partner_demo"/>
+    </record>
+    <function model="mail.message" name="toggle_message_starred"
+            eval="[ref('msg_case18_aplicant')]"
+    />
+    <record id="msg_case_salesman0_aplicant" model="mail.message">
+        <field name="subject">Refuse Application</field>
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_case_salesman0"/>
+        <field name="body"><![CDATA[<p>Hello,</p>
+        <p>I have checked this application but It's not match with our requirement. so no need to process further and we should refuse this application.</p>
+        <p>Kind regards,</p>]]></field>
+        <field name="message_type">comment</field>
+        <field name="subtype_id" ref="mail.mt_comment"/>
+        <field name="author_id" ref="base.partner_demo"/>
+    </record>
+    <record id="msg_case_fresher0_aplicant" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_case_fresher0"/>
+        <field name="body"><![CDATA[<p>Hello,</p>
+        <p>We should move further for this application as early as possible..</p>
+        <p>Kind regards,</p>]]></field>
+        <field name="message_type">comment</field>
+        <field name="subtype_id" ref="mail.mt_comment"/>
+        <field name="author_id" ref="base.partner_demo"/>
+    </record>
+
+    <record id="mail_activity_0" model="mail.activity">
+        <field name="res_id" ref="hr_recruitment.hr_case_salesman0" />
+        <field name="res_model_id" ref="model_hr_applicant"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_email" />
+        <field name="date_deadline" eval="time.strftime('%Y-%m-15 18:15:00')"/>
+        <field name="summary">Send mail regarding our interview</field>
+    </record>
+    <record id="mail_activity_1" model="mail.activity">
+        <field name="res_id" ref="hr_recruitment.hr_case_traineemca0" />
+        <field name="res_model_id" ref="model_hr_applicant"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_call" />
+        <field name="date_deadline" eval="time.strftime('%Y-%m-10 18:15:00')"/>
+        <field name="summary">Call to define real needs about training</field>
+    </record>
+    <record id="mail_activity_2" model="mail.activity">
+        <field name="res_id" ref="hr_recruitment.hr_case_yrsexperienceinphp0" />
+        <field name="res_model_id" ref="model_hr_applicant"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_call" />
+        <field name="date_deadline" eval="time.strftime('%Y-%m-24 18:15:00')"/>
+        <field name="summary">Call to define real needs about training</field>
+    </record>
+
+  </data>
+</odoo>

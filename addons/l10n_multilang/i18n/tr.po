@@ -1,81 +1,23 @@
-# Turkish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_multilang
 #
+# Translators:
+# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:06+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Turkish <tr@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:20+0000\n"
+"PO-Revision-Date: 2016-04-23 19:13+0000\n"
+"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
+"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:23+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
-msgstr "Mali Durum Şablonu"
-
-#. module: l10n_multilang
-#: sql_constraint:account.account:0
-msgid "The code of the account must be unique per company !"
-msgstr "Hesap Kodu her şirket için eşsiz olmalı !"
-
-#. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid ""
-"Configuration Error!\n"
-"You can not define children to an account with internal type different of "
-"\"View\"! "
-msgstr ""
-"Yapılandırma Hatası!\n"
-"İç türü \"Görünüm\" den farklı olan bir hesaba alt hesap tanımlayamazsınız! "
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_journal
-msgid "Analytic Journal"
-msgstr "Analitik Günlük"
-
-#. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
-msgstr "Hata! Özyinelemeli hesap şablonları kullanamazsınız."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_journal
-msgid "Journal"
-msgstr "Günlük"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "Hesap Planı Şablonu"
-
-#. module: l10n_multilang
-#: sql_constraint:account.tax:0
-msgid "The description must be unique per company!"
-msgstr "Her firma için açıklama eşsiz olmalı!"
-
-#. module: l10n_multilang
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr "Hata! Özyinelemeli Vergi Kodları oluşturmazsınız."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_template
-msgid "account.tax.template"
-msgstr "account.tax.template"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax
-msgid "account.tax"
-msgstr "account.tax"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account
@@ -83,17 +25,51 @@ msgid "Account"
 msgstr "Hesap"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr "wizard.multi.charts.accounts"
+#: model:ir.model,name:l10n_multilang.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Analitik Hesap"
 
 #. module: l10n_multilang
-#: constraint:account.journal:0
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "Mali Koşul"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_journal
+msgid "Journal"
+msgstr "Yevmiye"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template_spoken_languages
+msgid "Spoken Languages"
+msgstr "Konuşulan Diller"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template_spoken_languages
 msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
+"State here the languages for which the translations of templates could be "
+"loaded at the time of installation of this localization module and copied in "
+"the final object when generating them from templates. You must provide the "
+"language codes separated by ';'"
 msgstr ""
-"Yapılandırma hatası! Seçilen para birimi öntanımlı hesaplarla aynı olmalı."
+"Bu yerelleştirme modülünün kurulumu sırasında şablonlar için hangi dilin "
+"yükleneceğini ve şablonlardan nesneleri oluştururken son nesneye "
+"kopyalanacak dilleri burada belirtin. Dil kodlarını ';' ile ayırarak belirtin"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_tax
+msgid "Tax"
+msgstr "Vergi"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
+msgid "Template for Fiscal Position"
+msgstr "Mali Koşul Şablonu"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_chart_template
+msgid "Templates for Account Chart"
+msgstr "Hesap Planı Şablonu"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_template
@@ -101,74 +77,11 @@ msgid "Templates for Accounts"
 msgstr "Hesap Şablonları"
 
 #. module: l10n_multilang
-#: help:account.chart.template,spoken_languages:0
-msgid ""
-"State here the languages for which the translations of templates could be "
-"loaded at the time of installation of this localization module and copied in "
-"the final object when generating them from templates. You must provide the "
-"language codes separated by ';'"
-msgstr ""
-"Bu yerelleştirme modülünün kurulumu sırasında yüklenebilecek ve şablonlardan "
-"oluşturulan son nesneye kopyalanacak çeviri şablonu dillerini burada "
-"belirtin. Dil kodlarını ';' ile ayırın."
+#: model:ir.model,name:l10n_multilang.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr "Vergi Şablonları"
 
 #. module: l10n_multilang
-#: constraint:account.account:0
-msgid "Error ! You can not create recursive accounts."
-msgstr "Hata! Özyinelemeli hesap oluşturamazsınız."
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not select an account type with a deferral method different of "
-"\"Unreconciled\" for accounts with internal type \"Payable/Receivable\"! "
-msgstr ""
-"Yapılandırma Hatası! \n"
-"\"Borç/Alacak\" iç türündeki hesapların \"Uzalaştırılmamış\" tan farklı "
-"erteleme yöntemli bir hesap türünü seçemezsiniz! "
-
-#. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "Günlük adı her firmada eşsiz olmalı!"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Analitik Hesap"
-
-#. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "Günlük kodu her firma için eşsiz olmalı!"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position
-msgid "Fiscal Position"
-msgstr "Mali Durum"
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not define children to an account with internal type different of "
-"\"View\"! "
-msgstr ""
-"Yapılandırma Hatası! \n"
-"\"Görünüm\" den farklı iç tipli hesaba alt hesap tanımlayamazsınız ! "
-
-#. module: l10n_multilang
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "Hata! Özyinelemeli analitik hesap oluşturamazsınız."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_code_template
-msgid "Tax Code Template"
-msgstr "Vergi Kodu Şablonu"
-
-#. module: l10n_multilang
-#: field:account.chart.template,spoken_languages:0
-msgid "Spoken Languages"
-msgstr "Konuşulan Diller"
+#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
+msgid "wizard.multi.charts.accounts"
+msgstr "wizard.multi.charts.accounts"

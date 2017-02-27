@@ -16,6 +16,7 @@
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
 
+
         <record id="lunch_mind_your_own_food_money" model="ir.rule">
             <field name="name">lunch.cashmove: do not see other people's cashmove</field>
             <field name="model_id" ref="model_lunch_cashmove"/>
@@ -28,4 +29,20 @@
             <field name="groups" eval="[(4, ref('group_lunch_manager'))]"/>
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
+        <record id="lunch_order_line_rule_delete" model="ir.rule">
+            <field name="name">lunch.order.line: Only new and cancelled order lines deleted.</field>
+            <field name="model_id" ref="lunch.model_lunch_order_line"/>
+            <field name="domain_force">[('state', 'in', ('new', 'cancelled'))]</field>
+            <field name="perm_read" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="1" />
+            <field name="groups" eval="[(4,ref('lunch.group_lunch_user'))]"/>
+        </record>
+
+    <data noupdate="1">
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('lunch.group_lunch_manager'))]"/>
+        </record>
+    </data>
 </odoo>

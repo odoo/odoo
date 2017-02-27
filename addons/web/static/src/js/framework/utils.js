@@ -279,7 +279,7 @@ function binary_to_binsize (value) {
 /**
  * Returns a human readable size
  *
- * @param {Number} numner of bytes
+ * @param {Number} number of bytes
  */
 function human_size (size) {
     var units = _t("Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb").split(',');
@@ -292,18 +292,56 @@ function human_size (size) {
 }
 
 /**
+ * Naive and unlocalized human size parser.
+ * Returns the numeric amount specified in the given human formatted string.
+ *
+ * Eg:
+ *
+ *     parse_human_size('4 Kb') === 4096
+ *     parse_human_size('10m') === 10485760
+ *     parse_human_size('340.99') === 340.99
+ *
+ * @param {String} input human formatted string
+ */
+function parse_human_size(size) {
+    var units = "bkmgtpezy".split('');
+    var parsed = size.toString().match(/^([0-9\.,]*)(\s*)?([a-z]{1,2})?$/i);
+    if (parsed === null) {
+        throw("Could not parse: " + size);
+    }
+    var amount = parseFloat(parsed[1].replace(',', '.'));
+    if (isNaN(amount) || !isFinite(amount)) {
+        throw("Invalid amount: " + size);
+    }
+    var unit = parsed[3] ? parsed[3][0].toLowerCase() : '';
+    var index = units.indexOf(unit);
+    if (unit && index === -1) {
+        throw("Invalid unit: " + size);
+    }
+    if (index > 0) {
+        amount = amount * Math.pow(1024, index);
+    }
+    return amount;
+}
+
+/**
  * Returns a human readable number
  *
  * @param {Number} number
  */
-function human_number (number) {
-    var units = _t(",k,M").split(',');
-    var i = 0;
-    while (number >= 1000) {
-        number /= 1000;
-        ++i;
+function human_number (number, decimals) {
+    var decimals = decimals | 0;
+    var number = Math.round(number);
+    var d2 = Math.pow(10, decimals);
+    var val = _t("kMGTPE");
+    var i = val.length-1, s;
+    while( i ) {
+        s = Math.pow(10,i--*3);
+        if( s <= number ) {
+            number = Math.round(number*d2/s)/d2 + val[i];
+        }
     }
-    return parseInt(number) + units[i];
+    return number;
 }
 
 /**
@@ -322,7 +360,16 @@ function round_precision (value, precision) {
     var epsilon_magnitude = Math.log(Math.abs(normalized_value))/Math.log(2);
     var epsilon = Math.pow(2, epsilon_magnitude - 53);
     normalized_value += normalized_value >= 0 ? epsilon : -epsilon;
-    var rounded_value = Math.round(normalized_value);
+
+    /**
+     * Javascript performs strictly the round half up method, which is asymmetric. However, in
+     * Python, the method is symmetric. For example:
+     * - In JS, Math.round(-0.5) is equal to -0.
+     * - In Python, round(-0.5) is equal to -1.
+     * We want to keep the Python behavior for consistency.
+     */
+    var sign = normalized_value < 0 ? -1.0 : 1.0;
+    var rounded_value = sign * Math.round(Math.abs(normalized_value));
     return rounded_value * precision;
 }
 
@@ -402,6 +449,85 @@ var DropMisordered = Class.extend({
     },
 });
 
+var DropPrevious = Class.extend({
+    /**
+     * Registers a new deferred and rejects the previous one
+     * @param {$.Deferred} the new deferred
+     * @returns {$.Promise}
+     */
+    add: function (deferred) {
+        if (this.current_def) { this.current_def.reject(); }
+        var res = $.Deferred();
+        deferred.then(res.resolve, res.reject);
+        this.current_def = res;
+        return res.promise();
+    }
+});
+
+/**
+ * Rejects a deferred as soon as a reference deferred is either resolved or rejected
+ * @param {$.Deferred} [target_def] the deferred to potentially reject
+ * @param {$.Deferred} [reference_def] the reference target
+ * @returns {$.Deferred}
+ */
+function reject_after(target_def, reference_def) {
+    var res = $.Deferred();
+    target_def.then(res.resolve, res.reject);
+    reference_def.always(res.reject);
+    return res.promise();
+}
+
+/**
+ * Returns a deferred resolved after 'wait' milliseconds
+ * @param {int} [wait] the delay in ms
+ * @return {$.Deferred}
+ */
+function delay (wait) {
+    var def = $.Deferred();
+    setTimeout(def.resolve, wait);
+    return def;
+}
+
+function swap(array, elem1, elem2) {
+    var i1 = array.indexOf(elem1);
+    var i2 = array.indexOf(elem2);
+    array[i2] = elem1;
+    array[i1] = elem2;
+}
+
+function toBoolElse (str, elseValues, trueValues, falseValues) {
+    var ret = _.str.toBool(str, trueValues, falseValues);
+    if (_.isUndefined(ret)) {
+        return elseValues;
+    }
+    return ret;
+}
+
+function async_when() {
+    var async = false;
+    var def = $.Deferred();
+    $.when.apply($, arguments).done(function() {
+        var args = arguments;
+        var action = function() {
+            def.resolve.apply(def, args);
+        };
+        if (async)
+            action();
+        else
+            setTimeout(action, 0);
+    }).fail(function() {
+        var args = arguments;
+        var action = function() {
+            def.reject.apply(def, args);
+        };
+        if (async)
+            action();
+        else
+            setTimeout(action, 0);
+    });
+    async = true;
+    return def;
+}
 
 return {
     divmod: divmod,
@@ -420,6 +546,7 @@ return {
     is_bin_size: is_bin_size,
     binary_to_binsize: binary_to_binsize,
     human_size: human_size,
+    parse_human_size: parse_human_size,
     human_number: human_number,
     round_precision: round_precision,
     round_decimals: round_decimals,
@@ -428,7 +555,12 @@ return {
     assert: assert,
     xor: xor,
     DropMisordered: DropMisordered,
+    DropPrevious: DropPrevious,
+    reject_after: reject_after,
+    delay: delay,
+    swap: swap,
+    toBoolElse: toBoolElse,
+    async_when: async_when,
 };
 
 });
-

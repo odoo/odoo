@@ -1,26 +1,21 @@
-# Gujarati translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_vat
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Gujarati <gu@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-09-07 16:40+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Gujarati (http://www.transifex.com/odoo/odoo-9/language/gu/)\n"
+"Language: gu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:58+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
-
-#. module: base_vat
-#: view:res.partner:base_vat.view_partner_form
-msgid "Check Validity"
-msgstr ""
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -28,22 +23,10 @@ msgid "Companies"
 msgstr "કંપનીઓ"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:114
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: base_vat
-#: help:res.company,vat_check_vies:0
+#: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
 msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
-msgstr ""
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:130
-#, python-format
-msgid "Importing VAT Number [%s] is not valid !"
 msgstr ""
 
 #. module: base_vat
@@ -52,7 +35,7 @@ msgid "Partner"
 msgstr "ભાગીદાર"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:153
+#: code:addons/base_vat/base_vat.py:128
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
@@ -60,7 +43,7 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:152
+#: code:addons/base_vat/base_vat.py:127
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
@@ -68,11 +51,11 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: field:res.company,vat_check_vies:0
+#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 msgid "VIES VAT Check"
 msgstr ""
 
 #. module: base_vat
-#: view:res.partner:base_vat.view_partner_form
+#: model:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "e.g. BE0477472701"
 msgstr ""

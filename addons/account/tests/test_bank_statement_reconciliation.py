@@ -1,4 +1,4 @@
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 
 class TestBankStatementReconciliation(AccountingTestCase):
 
@@ -31,10 +31,9 @@ class TestBankStatementReconciliation(AccountingTestCase):
         }])
 
         # check everything went as expected
-        rec_move = st_line.journal_entry_ids[0]
-        self.assertTrue(rec_move)
+        self.assertTrue(st_line.journal_entry_ids)
         counterpart_mv_line = None
-        for l in rec_move.line_ids:
+        for l in st_line.journal_entry_ids:
             if l.account_id.user_type_id.type == 'receivable':
                 counterpart_mv_line = l
                 break
@@ -66,7 +65,7 @@ class TestBankStatementReconciliation(AccountingTestCase):
             'name': '.',
             'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
         })
-        invoice.signal_workflow('invoice_open')
+        invoice.action_invoice_open()
 
         mv_line = None
         for l in invoice.move_id.line_ids:

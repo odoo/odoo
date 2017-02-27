@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data noupdate="1">
+<odoo noupdate="1">
 
 
         <record id="product.product_attribute_2" model="product.attribute">
@@ -171,7 +170,7 @@
 Capacity: 16GB
 Connectivity: Wifi
 Beautiful 7.9-inch display
-Over 375,000 apps3
+Over 375,000 apps
 Ultrafast wireless
 iOS7
             </field>
@@ -284,7 +283,7 @@ Impedance: 23 ohms
 Sensitivity: 109 dB SPL/mW
 Drivers: two-way balanced armature
 Cable length: 1065 mm
-Weight: 0.4 ounce
+Weight: 10.2 grams
             </field>
             <field name="website_description" type="html">
                 <section class="mt32">
@@ -339,7 +338,7 @@ Weight: 0.4 ounce
             <field name="description_sale">2.7GHz quad-core Intel Core i5
                 Turbo Boost up to 3.2GHz
                 8GB (two 4GB) memory
-                1TB hard drive1
+                1TB hard drive
                 Intel Iris Pro graphics
             </field>
             <field name="website_description" type="html">
@@ -437,10 +436,10 @@ Weight: 0.4 ounce
 
         <record id="product.product_product_11" model="product.product">
             <field name="website_published" eval="True"/>
-            <field name="description_sale">Height: 3.01 inches
-Width:  1.56 inches
-Depth:  0.21 inch
-Weight: 1.1 ounces</field>
+            <field name="description_sale">Height: 76.5 mm
+Width:  39.6 mm
+Depth:  5.4 mm
+Weight: 31 grams</field>
             <field name="website_description" type="html">
                 <section class="mt16 mb16">
                     <div class="container">
@@ -541,281 +540,184 @@ Weight: 1.1 ounces</field>
         </record>
 
         <record id="item1" model="product.pricelist.item">
-            <field name="price_version_id" ref="product.ver0"/>
-            <field name="base" ref="product.list_price"/>
+            <field name="base">list_price</field>
+            <field name="applied_on">1_product</field>
+            <field name="pricelist_id" ref="product.list0"/>
             <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
-            <field name="name">Demo Discount</field>
-            <field name="price_discount">-0.2000</field>
+            <field name="price_discount">20</field>
+            <field name="compute_price">formula</field>
             <field name="sequence">1</field>
-        </record>
-        
-        <record model="crm.team" id="website.salesteam_website_sales">
-            <field name="member_ids" eval="[(4, ref('base.user_root'), ref('base.user_demo'))]"/>
         </record>
 
     <!-- product.public.category -->
-        
-        <record id="product.Components" model="product.public.category">
+
+        <record id="Components" model="product.public.category">
           <field name="name">Components</field>
           <field name="sequence">15</field>
         </record>
 
-        <record id="product.devices" model="product.public.category">
+        <record id="devices" model="product.public.category">
           <field name="name">Devices</field>
           <field name="sequence">5</field>
         </record>
 
-        <record id="product.Screen" model="product.public.category">
-          <field name="parent_id" ref="product.devices"/>
+        <record id="Screen" model="product.public.category">
+          <field name="parent_id" ref="devices"/>
           <field name="name">Screen</field>
           <field name="sequence">11</field>
         </record>
-        <record id="product.Pen_Drive" model="product.public.category">
-          <field name="parent_id" ref="product.devices"/>
+        <record id="Pen_Drive" model="product.public.category">
+          <field name="parent_id" ref="devices"/>
           <field name="name">Pen Drive</field>
           <field name="sequence">9</field>
         </record>
-        <record id="product.External_Hard_Drive" model="product.public.category">
-          <field name="parent_id" ref="product.devices"/>
+        <record id="External_Hard_Drive" model="product.public.category">
+          <field name="parent_id" ref="devices"/>
           <field name="name">External Hard Drive</field>
           <field name="sequence">6</field>
         </record>
-        <record id="product.Keyboard_Mouse" model="product.public.category">
-          <field name="parent_id" ref="product.devices"/>
+        <record id="Keyboard_Mouse" model="product.public.category">
+          <field name="parent_id" ref="devices"/>
           <field name="name">Keyboard / Mouse</field>
           <field name="sequence">8</field>
         </record>
-        <record id="product.printer" model="product.public.category">
-          <field name="parent_id" ref="product.devices"/>
+        <record id="printer" model="product.public.category">
+          <field name="parent_id" ref="devices"/>
           <field name="name">Printer</field>
           <field name="sequence">10</field>
         </record>
-        <record id="product.Speakers" model="product.public.category">
-          <field name="parent_id" ref="product.devices"/>
+        <record id="Speakers" model="product.public.category">
+          <field name="parent_id" ref="devices"/>
           <field name="name">Speakers</field>
           <field name="sequence">13</field>
         </record>
-        <record id="product.Headset" model="product.public.category">
-          <field name="parent_id" ref="product.devices"/>
+        <record id="Headset" model="product.public.category">
+          <field name="parent_id" ref="devices"/>
           <field name="name">Headset</field>
           <field name="sequence">7</field>
         </record>
-        <record id="product.Software" model="product.public.category">
-          <field name="parent_id" ref="product.devices"/>
+        <record id="Software" model="product.public.category">
+          <field name="parent_id" ref="devices"/>
           <field name="name">Software</field>
           <field name="sequence">12</field>
         </record>
 
-        <record id="product.laptops" model="product.public.category">
+        <record id="laptops" model="product.public.category">
           <field name="name">Laptops</field>
           <field name="sequence">1</field>
         </record>
 
-        <record id="product.sub_computers" model="product.public.category">
+        <record id="sub_computers" model="product.public.category">
           <field name="name">Computers</field>
           <field name="sequence">2</field>
         </record>
 
-        <record id="product.Computer_all_in_one" model="product.public.category">
-          <field name="parent_id" ref="product.sub_computers"/>
+        <record id="Computer_all_in_one" model="product.public.category">
+          <field name="parent_id" ref="sub_computers"/>
           <field name="name">Computer all-in-one</field>
           <field name="sequence">3</field>
         </record>
-        <record id="product.server" model="product.public.category">
-          <field name="parent_id" ref="product.sub_computers"/>
+        <record id="server" model="product.public.category">
+          <field name="parent_id" ref="sub_computers"/>
           <field name="name">Server</field>
           <field name="sequence">4</field>
         </record>
 
-        <record id="product.network" model="product.public.category">
+        <record id="network" model="product.public.category">
           <field name="name">Network</field>
           <field name="sequence">14</field>
         </record>
-        
-        <record id="product.services" model="product.public.category">
+
+        <record id="services" model="product.public.category">
           <field name="name">Services</field>
           <field name="sequence">16</field>
         </record>
 
         <record id="product.product_product_1_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.services')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('services')])]"/>
         </record>
         <record id="product.product_product_2_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.services')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('services')])]"/>
         </record>
         <record id="product.product_product_3_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Computer_all_in_one')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Computer_all_in_one')])]"/>
         </record>
         <record id="product.product_product_4_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Computer_all_in_one')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Computer_all_in_one')])]"/>
         </record>
         <record id="product.product_product_5_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Computer_all_in_one')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Computer_all_in_one')])]"/>
         </record>
         <record id="product.product_product_5b_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Speakers')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Speakers')])]"/>
         </record>
         <record id="product.product_product_6_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Screen')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Screen')])]"/>
         </record>
         <record id="product.product_product_7_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Headset')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Headset')])]"/>
         </record>
         <record id="product.product_product_8_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Computer_all_in_one')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Computer_all_in_one')])]"/>
         </record>
         <record id="product.product_product_9_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Keyboard_Mouse')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Keyboard_Mouse')])]"/>
         </record>
         <record id="product.product_product_10_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Keyboard_Mouse')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Keyboard_Mouse')])]"/>
         </record>
         <record id="product.product_product_11_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Computer_all_in_one')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Computer_all_in_one')])]"/>
         </record>
         <record id="product.product_product_12_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Keyboard_Mouse')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Keyboard_Mouse')])]"/>
         </record>
         <record id="product.product_product_13_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
-        </record>
-        <record id="product.product_product_14_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
-        </record>
-        <record id="product.product_product_15_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Components')])]"/>
         </record>
         <record id="product.product_product_16_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Components')])]"/>
         </record>
         <record id="product.product_product_17_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
-        </record>
-        <record id="product.product_product_18_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
-        </record>
-        <record id="product.product_product_19_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Components')])]"/>
         </record>
         <record id="product.product_product_20_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
-        </record>
-        <record id="product.product_product_21_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Components')])]"/>
         </record>
         <record id="product.product_product_22_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
-        </record>
-        <record id="product.product_product_23_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Components')])]"/>
         </record>
         <record id="product.product_product_24_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('Components')])]"/>
         </record>
         <record id="product.product_product_25_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.laptops')])]"/>
-        </record>
-        <record id="product.product_product_26_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.laptops')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('laptops')])]"/>
         </record>
         <record id="product.product_product_27_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.laptops')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('laptops')])]"/>
         </record>
-        <record id="product.product_product_28_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.External_Hard_Drive')])]"/>
+        <record id="product.product_delivery_02_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('External_Hard_Drive')])]"/>
         </record>
-        <record id="product.product_product_29_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Pen_Drive')])]"/>
+        <record id="product.product_order_01_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('Software')])]"/>
         </record>
-        <record id="product.product_product_30_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Pen_Drive')])]"/>
+        <record id="product.product_delivery_01_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('Components')])]"/>
         </record>
-        <record id="product.product_product_31_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Speakers')])]"/>
+        <record id="product.product_attribute_value_3" model="product.attribute.value">
+            <field name="html_color">#FFFFFF</field>
         </record>
-        <record id="product.product_product_32_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Headset')])]"/>
-        </record>
-        <record id="product.product_product_33_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Headset')])]"/>
-        </record>
-        <record id="product.product_product_34_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
-        </record>
-        <record id="product.product_product_35_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
-        </record>
-        <record id="product.product_product_36_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
-        </record>
-        <record id="product.product_product_37_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.printer')])]"/>
-        </record>
-        <record id="product.product_product_38_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.printer')])]"/>
-        </record>
-        <record id="product.product_product_39_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.printer')])]"/>
-        </record>
-        <record id="product.product_product_40_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Software')])]"/>
-        </record>
-        <record id="product.product_product_41_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Software')])]"/>
-        </record>
-        <record id="product.product_product_42_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Software')])]"/>
-        </record>
-        <record id="product.product_product_43_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Software')])]"/>
-        </record>
-        <record id="product.product_product_44_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Software')])]"/>
-        </record>
-        <record id="product.product_product_45_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.network')])]"/>
-        </record>
-        <record id="product.product_product_46_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Pen_Drive')])]"/>
-        </record>
-        <record id="product.product_product_47_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.network')])]"/>
-        </record>
-        <record id="product.product_product_48_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('product.Components')])]"/>
+        <record id="product.product_attribute_value_4" model="product.attribute.value">
+            <field name="html_color">#000000</field>
         </record>
 
-
-        <record id="list_christmas" model="product.pricelist">
-            <field name="name">Christmas Pricelist</field>
-            <field name="type">sale</field>
-        </record>
-        <record id="ver_christmas" model="product.pricelist.version">
-            <field name="pricelist_id" ref="list_christmas"/>
-            <field name="name">Christmas Pricelist Version</field>
-        </record>
-        <record id="item_christmas" model="product.pricelist.item">
-            <field name="price_version_id" ref="ver_christmas"/>
-            <field name="base" ref="product.list_price"/>
-            <field name="price_discount">-0.2</field>
-            <field name="sequence">10</field>
-            <field name="name">Christmas Pricelist Line</field>
-        </record>
-
-        <record id="list_benelux" model="product.pricelist">
-            <field name="name">Benelux Pricelist</field>
-            <field name="type">sale</field>
-        </record>
-        <record id="ver_benelux" model="product.pricelist.version">
-            <field name="pricelist_id" ref="list_benelux"/>
-            <field name="name">Benelux Pricelist Version</field>
-        </record>
-        <record id="item_benelux" model="product.pricelist.item">
-            <field name="price_version_id" ref="ver_benelux"/>
-            <field name="base" ref="product.list_price"/>
-            <field name="price_discount">-0.1</field>
-            <field name="sequence">10</field>
-            <field name="name">Benelux Pricelist Line</field>
+        <record model="product.pricelist" id="product.list0">
+            <field name="name">USD</field>
+            <field name="selectable" eval="True" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="sequence">3</field>
+            <field name="currency_id" ref="base.USD"/>
         </record>
 
         <record id="benelux" model="res.country.group">
@@ -824,31 +726,322 @@ Weight: 1.1 ounces</field>
                 ref('base.be'),ref('base.lu'),ref('base.nl')])]"/>
         </record>
 
-        <record id="US_CA" model="res.country.group">
-            <field name="name">US-CA</field>
-            <field name="country_ids" eval="[(6,0,[
-                ref('base.us'),ref('base.ca')])]"/>
-        </record>
-
-        <record id="wlist-US" model="website_pricelist">
-            <field name="selectable" eval="True" />
-            <field name="website_id" ref="website.default_website" />
-            <field name="pricelist_id" ref='product.list0' />
-            <field name="country_group_ids" eval="[(6,0,[ref('US_CA')])]" />
-        </record>
-
-        <record id="wlist-CHRISTMAS" model="website_pricelist">
+        <record id="list_christmas" model="product.pricelist">
+            <field name="name">Christmas</field>
             <field name="selectable" eval="False" />
             <field name="website_id" ref="website.default_website" />
-            <field name="pricelist_id" ref='list_christmas' />
-            <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
+            <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
+            <field name="sequence">20</field>
+        </record>
+        <record id="item_christmas" model="product.pricelist.item">
+            <field name="pricelist_id" ref="list_christmas"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">20</field>
+            <field name="sequence">10</field>
         </record>
 
-        <record id="wlist-BENELUX" model="website_pricelist">
+        <record id="list_benelux" model="product.pricelist">
+            <field name="name">Benelux</field>
+            <field name="selectable" eval="False" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
+            <field name="sequence">2</field>
+        </record>
+        <record id="item_benelux" model="product.pricelist.item">
+            <field name="pricelist_id" ref="list_benelux"/>
+            <field name="compute_price">percentage</field>
+            <field name="base">list_price</field>
+            <field name="percent_price">10</field>
+            <field name="sequence">10</field>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+
+
+        <record id="list_europe" model="product.pricelist">
+            <field name="name">EUR</field>
             <field name="selectable" eval="True" />
             <field name="website_id" ref="website.default_website" />
-            <field name="pricelist_id" ref='list_benelux' />
-            <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
+            <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
+            <field name="sequence">3</field>
+            <field name="currency_id" ref="base.EUR"/>
         </record>
-    </data>
-</openerp>
+        <record id="item_europe" model="product.pricelist.item">
+            <field name="pricelist_id" ref="list_europe"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="item_us" model="product.pricelist.item">
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Add demo-data for pretty website sales graph (for the sales dashboard) -->
+
+        <record id="website_sale_order_1" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="website_sale_order_line_1" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_1"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2950.00</field>
+        </record>
+
+        <record id="website_sale_order_line_2" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_1"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="website_sale_order_2" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="website_sale_order_line_3" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_2"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">3150.00</field>
+        </record>
+
+        <record id="website_sale_order_line_4" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_2"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="website_sale_order_3" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="website_sale_order_line_5" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_3"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">3300.00</field>
+        </record>
+
+        <record id="website_sale_order_line_6" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_3"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="website_sale_order_4" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="website_sale_order_line_7" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_4"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2750.00</field>
+        </record>
+
+        <record id="website_sale_order_line_8" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_4"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="website_sale_order_5" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="website_sale_order_line_9" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_5"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2950.00</field>
+        </record>
+
+        <record id="website_sale_order_line_10" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_5"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="website_sale_order_6" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="website_sale_order_line_11" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_6"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">3250.00</field>
+        </record>
+
+        <record id="website_sale_order_line_12" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_6"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="website_sale_order_7" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="website_sale_order_line_12" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_7"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2850.00</field>
+        </record>
+
+        <record id="website_sale_order_line_13" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_7"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="website_sale_order_8" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()"/>
+        </record>
+
+        <record id="website_sale_order_line_14" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_8"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">4</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">3050.00</field>
+        </record>
+
+        <record id="website_sale_order_line_15" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_8"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">4</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <record id="website_sale_order_9" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="website_sale_order_line_16" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_9"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2950.00</field>
+        </record>
+
+        <record id="website_sale_order_line_17" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_9"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <!-- Confirm the sales orders -->
+
+        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_1')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_2')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_3')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_4')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_5')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_6')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_7')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_8')]]"/>
+</odoo>

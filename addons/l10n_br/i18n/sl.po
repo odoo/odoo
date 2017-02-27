@@ -1,196 +1,73 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_br
 #
+# Translators:
+# Dejan Sraka <dejan.sraka@picolabs.si>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Slovenian <sl@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:19+0000\n"
+"PO-Revision-Date: 2016-03-27 21:02+0000\n"
+"Last-Translator: Dejan Sraka <dejan.sraka@picolabs.si>\n"
+"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
+"sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:21+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3);\n"
 
 #. module: l10n_br
-#: field:account.tax,tax_discount:0
-#: field:account.tax.code,tax_discount:0
-#: field:account.tax.code.template,tax_discount:0
-#: field:account.tax.template,tax_discount:0
+#: model:ir.ui.menu,name:l10n_br.account_reports_br_statements_menu
+msgid "Brazilian Statements"
+msgstr "Brazilski izrazi"
+
+#. module: l10n_br
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax_tax_discount
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax_template_tax_discount
 msgid "Discount this Tax in Prince"
 msgstr "Discount this Tax in Prince"
 
 #. module: l10n_br
-#: model:ir.actions.act_window,name:l10n_br.action_l10n_br_cst_form
-#: model:ir.model,name:l10n_br.model_l10n_br_account_cst
-#: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst
-#: view:l10n_br_account.cst:0
-msgid "Tax Situation Code"
-msgstr "Tax Situation Code"
-
-#. module: l10n_br
-#: model:account.account.type,name:l10n_br.despesa
-msgid "Despesas"
-msgstr "Despesas"
-
-#. module: l10n_br
-#: model:ir.model,name:l10n_br.model_account_tax_code
-#: field:l10n_br_account.cst,tax_code_id:0
-msgid "Tax Code"
-msgstr "Tax Code"
-
-#. module: l10n_br
-#: help:account.tax.code,domain:0
-#: help:account.tax.code.template,domain:0
-msgid ""
-"This field is only used if you develop your own module allowing developers "
-"to create specific taxes in a custom domain."
-msgstr ""
-"This field is only used if you develop your own module allowing developers "
-"to create specific taxes in a custom domain."
-
-#. module: l10n_br
-#: model:account.account.type,name:l10n_br.resultado
-msgid "Resultado"
-msgstr "Resultado"
-
-#. module: l10n_br
-#: model:ir.model,name:l10n_br.model_account_tax_template
-msgid "account.tax.template"
-msgstr "account.tax.template"
-
-#. module: l10n_br
-#: model:account.account.type,name:l10n_br.passivo
-msgid "Passivo"
-msgstr "Passivo"
-
-#. module: l10n_br
-#: field:l10n_br_account.cst,name:0
-#: field:l10n_br_account.cst.template,name:0
-msgid "Description"
-msgstr "Description"
-
-#. module: l10n_br
-#: constraint:account.tax.code:0
-msgid ""
-"Error!\n"
-"You cannot create recursive accounts."
-msgstr ""
-"Error!\n"
-"You cannot create recursive accounts."
-
-#. module: l10n_br
-#: field:account.tax,amount_mva:0
-#: field:account.tax.template,amount_mva:0
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax_amount_mva
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax_template_amount_mva
 msgid "MVA Percent"
 msgstr "MVA Percent"
 
 #. module: l10n_br
-#: help:account.tax.template,amount_mva:0
-#: help:account.tax.template,base_reduction:0
-msgid "For taxes of type percentage, enter % ratio between 0-1."
-msgstr "For taxes of type percentage, enter % ratio between 0-1."
-
-#. module: l10n_br
-#: field:account.tax,base_reduction:0
-#: field:account.tax.template,base_reduction:0
-msgid "Redution"
-msgstr "Redution"
-
-#. module: l10n_br
-#: sql_constraint:account.tax:0
-msgid "Tax Name must be unique per company!"
-msgstr "Tax Name must be unique per company!"
-
-#. module: l10n_br
-#: model:ir.model,name:l10n_br.model_account_tax
-msgid "account.tax"
-msgstr "account.tax"
-
-#. module: l10n_br
-#: model:account.account.type,name:l10n_br.receita
-msgid "Receita"
-msgstr "Receita"
-
-#. module: l10n_br
-#: model:ir.actions.act_window,name:l10n_br.action_l10n_br_cst_template_form
-#: model:ir.model,name:l10n_br.model_l10n_br_account_cst_template
-#: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst_template
-#: view:l10n_br_account.cst.template:0
-msgid "Tax Situation Code Template"
-msgstr "Tax Situation Code Template"
-
-#. module: l10n_br
-#: model:ir.model,name:l10n_br.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr "wizard.multi.charts.accounts"
-
-#. module: l10n_br
-#: model:ir.actions.todo,note:l10n_br.config_call_account_template_brazilian_localization
-msgid ""
-"Generate Chart of Accounts from a Chart Template. You will be asked to pass "
-"the name of the company, the chart template to follow, the no. of digits to "
-"generate the code for your accounts and Bank account, currency to create "
-"Journals. Thus,the pure copy of chart Template is generated.\n"
-"    This is the same wizard that runs from Financial "
-"Management/Configuration/Financial Accounting/Financial Accounts/Generate "
-"Chart of Accounts from a Chart Template."
-msgstr ""
-"Generate Chart of Accounts from a Chart Template. You will be asked to pass "
-"the name of the company, the chart template to follow, the no. of digits to "
-"generate the code for your accounts and Bank account, currency to create "
-"Journals. Thus,the pure copy of chart Template is generated.\n"
-"    This is the same wizard that runs from Financial "
-"Management/Configuration/Financial Accounting/Financial Accounts/Generate "
-"Chart of Accounts from a Chart Template."
-
-#. module: l10n_br
-#: constraint:account.tax.code.template:0
-msgid ""
-"Error!\n"
-"You cannot create recursive Tax Codes."
-msgstr ""
-"Error!\n"
-"You cannot create recursive Tax Codes."
-
-#. module: l10n_br
-#: help:account.tax,tax_discount:0
-#: help:account.tax.code,tax_discount:0
-#: help:account.tax.code.template,tax_discount:0
-#: help:account.tax.template,tax_discount:0
+#: model:ir.model.fields,help:l10n_br.field_account_tax_tax_discount
+#: model:ir.model.fields,help:l10n_br.field_account_tax_template_tax_discount
 msgid "Mark it for (ICMS, PIS e etc.)."
 msgstr "Mark it for (ICMS, PIS e etc.)."
 
 #. module: l10n_br
-#: model:account.account.type,name:l10n_br.ativo
-msgid "Ativo"
-msgstr "Ativo"
+#: model:ir.actions.client,name:l10n_br.action_client_l10n_br_menu
+msgid "Open Account Dashboard Menu"
+msgstr "Open Account Dashboard Menu"
 
 #. module: l10n_br
-#: field:account.tax.code,domain:0
-#: field:account.tax.code.template,domain:0
-msgid "Domain"
-msgstr "Domain"
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax_base_reduction
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax_template_base_reduction
+msgid "Redution"
+msgstr "Redution"
 
 #. module: l10n_br
-#: field:l10n_br_account.cst,code:0
-#: field:l10n_br_account.cst.template,code:0
-msgid "Code"
-msgstr "Code"
+#: model:ir.model,name:l10n_br.model_account_tax
+msgid "Tax"
+msgstr "Davek"
 
 #. module: l10n_br
-#: help:account.tax,amount_mva:0
-#: help:account.tax,base_reduction:0
+#: model:ir.model,name:l10n_br.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr "Predloge za davke"
+
+#. module: l10n_br
+#: model:ir.model.fields,help:l10n_br.field_account_tax_amount_mva
+#: model:ir.model.fields,help:l10n_br.field_account_tax_base_reduction
+#: model:ir.model.fields,help:l10n_br.field_account_tax_template_amount_mva
+#: model:ir.model.fields,help:l10n_br.field_account_tax_template_base_reduction
 msgid "Um percentual decimal em % entre 0-1."
 msgstr "Um percentual decimal em % entre 0-1."
-
-#. module: l10n_br
-#: model:ir.model,name:l10n_br.model_account_tax_code_template
-#: field:l10n_br_account.cst.template,tax_code_template_id:0
-msgid "Tax Code Template"
-msgstr "Tax Code Template"

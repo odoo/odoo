@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <report 
+            string="Purchase Order" 
+            id="action_report_purchase_order" 
+            model="purchase.order" 
+            report_type="qweb-pdf"
+            name="purchase.report_purchaseorder" 
+            file="purchase.report_purchaseorder" 
+        />
+        <record id="action_report_purchase_order" model="ir.actions.report.xml">
+            <field name="print_report_name">(object.state in ('draft', 'sent') and 'Request for Quotation'+'-'+(object.name) or 'Purchase Order'+'-'+(object.name))</field>
+        </record>
+
+        <report 
+            string="Request for Quotation" 
+            id="report_purchase_quotation" 
+            model="purchase.order" 
+            report_type="qweb-pdf"
+            name="purchase.report_purchasequotation" 
+            file="purchase.report_purchasequotation"
+        />
+        <record id="report_purchase_quotation" model="ir.actions.report.xml">
+            <field name="print_report_name">'Request for Quotation'+'-'+(object.name)</field>
+        </record>
+</odoo>

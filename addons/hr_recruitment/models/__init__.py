@@ -1,0 +1,6 @@
+import hr_department
+import hr_recruitment
+import hr_employee
+import hr_job
+import hr_recruitment_config_settings
+import calendar

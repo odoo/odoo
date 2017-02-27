@@ -1,0 +1,568 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_bank_statement_import
+#
+# Translators:
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2015-2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-04-27 13:30+0000\n"
+"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#, python-format
+msgid "%d transactions had already been imported and were ignored."
+msgstr "%d трансакциите веќе биле импортирани и беа игнорирани."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#, python-format
+msgid "1 transaction had already been imported and was ignored."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: sql_constraint:account.bank.statement.line:0
+msgid "A bank account transactions can be imported only once !"
+msgstr "Трансакција на банкарската сметка може да се импортира само еднаш !"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_acc_number
+msgid "Account Number"
+msgstr "Број на сметка"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type_control_ids
+msgid "Account Types Allowed"
+msgstr "Дозволени типови на сметки"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_control_ids
+msgid "Accounts Allowed"
+msgstr "Дозволени сметки"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
+msgid "Allow Cancelling Entries"
+msgstr "Дозволи откажување на внесови"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
+#, python-format
+msgid "Already imported items"
+msgstr "Веќе импортирани ставки"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
+msgid "At least one inbound"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_outbound
+msgid "At least one outbound"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:76
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_id
+#, python-format
+msgid "Bank"
+msgstr "Банка"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_account_id
+msgid "Bank Account"
+msgstr "Банкарска сметка"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_statements_source
+msgid "Bank Feeds"
+msgstr "Банкарски информации"
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+msgid "Bank Journal Name"
+msgstr "Име на дневник од банка"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_data_file
+msgid "Bank Statement File"
+msgstr "Датотека на извод од банка"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Ставка од Банкарски извод"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
+msgid "Belong to the user's current company"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "Cancel"
+msgstr "Откажи"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:165
+#, python-format
+msgid ""
+"Cannot find in which journal import this statement. Please manually select a "
+"journal."
+msgstr ""
+"Не може да се пронајде во кој дневник да се импортира овој извод. Ве молиме "
+"селектирајте дневник рачно."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
+msgid ""
+"Check this box if you don't want to share the same sequence for invoices and "
+"refunds made from this journal"
+msgstr ""
+"Чекирајте го ова поле доколку не сакате да ја користите истата секвенца за "
+"фактури и поврати направени од овој дневник."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
+msgid ""
+"Check this box if you want to allow the cancellation the entries related to "
+"this journal or of the invoice related to this journal"
+msgstr ""
+"Означете го ова поле доколку сакате да дозволите откажување на внесовите "
+"поврзани со овој дневник или откажување на фактурата поврзана со овој дневник"
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "Choose a file to import..."
+msgstr "Избери датотека за импортирање"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
+msgid "Company"
+msgstr "Компанија"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
+msgid "Company related to this journal"
+msgstr "Компанија поврзана со овој дневник"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:106
+#, python-format
+msgid ""
+"Could not make sense of the given file.\n"
+"Did you install the module to support this type of file ?"
+msgstr ""
+"Датотеката за жал не може да биде вчитана.\n"
+"Дали го инсталиравте модулот потребен за поддршка на ваков вид на датотека ?"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_create_uid
+msgid "Created by"
+msgstr "Креирано од"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_date
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_create_date
+msgid "Created on"
+msgstr "Креирано на"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
+msgid "Currency"
+msgstr "Валута"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_inbound_payment_method_ids
+msgid "Debit Methods"
+msgstr "Методи на задолжувања"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
+msgid "Dedicated Refund Sequence"
+msgstr "Посветена секвенца на поврат"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
+msgid "Default Credit Account"
+msgstr "Стандардна сметка Побарува"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_debit_account_id
+msgid "Default Debit Account"
+msgstr "Стандарда сметка Должи"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_display_name
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_name
+msgid "Display Name"
+msgstr "Прикажи име"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_on_footer
+msgid ""
+"Display this bank account on the footer of printed documents like invoices "
+"and sales orders."
+msgstr ""
+"Прикажи ја банкарската сметка во подножјето на печатените документи како "
+"фактури и налози за продажба."
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid ""
+"Download a bank statement from your bank and import it here. Supported "
+"formats:"
+msgstr ""
+"Спушти банкарски извод од својата банка и импортирај го овде. Поддржани "
+"формати:"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
+msgid "Entry Sequence"
+msgstr "Внес Секвенца"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_filename
+msgid "Filename"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_data_file
+msgid ""
+"Get you bank statements in electronic format from your bank and select them "
+"here."
+msgstr ""
+"Превземете ги вашите банкарски изводи во електронска форма од вашата банка и "
+"потоа селектирајте ги тука."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
+msgid "Group Invoice Lines"
+msgstr "Групирај ставки од фактура"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_id
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
+msgid ""
+"If this box is checked, the system will try to group the accounting lines "
+"when generating them from invoices."
+msgstr ""
+"Доколку ова поле е означено, системот ќе проба да ги групира "
+"сметководствените ставки кога ги генерира од фактурите."
+
+#. module: account_bank_statement_import
+#: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
+msgid "Import"
+msgstr "Увези"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import
+msgid "Import Bank Statement"
+msgstr "Импортирај банкарски извод"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
+msgid "Import Bank Statement Journal Creation Wizard"
+msgstr "Волшебник за креација на импортирање банкарски извод во дневник"
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "Import Bank Statements"
+msgstr "Импортирај банкарски изводи"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line_unique_import_id
+msgid "Import ID"
+msgstr "Импортирај ИБ"
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+msgid "Import Statement"
+msgstr "Импортирај извод"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
+msgid "It acts as a default account for credit amount"
+msgstr "Дејствува како стандардна сметка за износот Побарувања"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_debit_account_id
+msgid "It acts as a default account for debit amount"
+msgstr "Дејствува како стандардна сметка за задолжениот износ"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_journal
+msgid "Journal"
+msgstr "Дневник"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:67
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#, python-format
+msgid "Journal Creation"
+msgstr "Креирање на дневник"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_name
+msgid "Journal Name"
+msgstr "Име на картица"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_journal_id
+msgid "Journal id"
+msgstr "ИБ на дневник"
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+msgid ""
+"Just click OK to create the account/journal and finish the import. If this "
+"was a mistake, hit cancel to abort the import."
+msgstr ""
+"Кликнете ОК за креирање на сметката/дневник и завршете го импортирањето. Ако "
+"ова ви било грешка, притиснете откажи за откажување на импортирањето."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
+msgid "Kanban dashboard"
+msgstr "Канбан командна табла"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard_graph
+msgid "Kanban dashboard graph"
+msgstr "Графикон на канбан командната табла"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import___last_update
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation___last_update
+msgid "Last Modified on"
+msgstr "Последна промена на"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_write_uid
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_write_uid
+msgid "Last Updated by"
+msgstr "Последно ажурирање од"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_write_date
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_write_date
+msgid "Last Updated on"
+msgstr "Последно ажурирање на"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_loss_account_id
+msgid "Loss Account"
+msgstr "Сметка Загуба"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_inbound_payment_method_ids
+msgid ""
+"Means of payment for collecting money. Odoo modules offer various payments "
+"handling facilities, but you can always use the 'Manual' payment method in "
+"order to manage payments outside of the software."
+msgstr ""
+"Начини на плаќање за собирање на парични средства. Odoo модулите нудат "
+"разновидни плаќачко раководни опции, но секогаш можете да го користите "
+"'рачниот' плаќачки метод со цел да управувате со плаќања надвор од софтверот."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
+msgid ""
+"Means of payment for sending money. Odoo modules offer various payments "
+"handling facilities, but you can always use the 'Manual' payment method in "
+"order to manage payments outside of the software."
+msgstr ""
+"Начини на плаќање за собирање на парични средства. Odoo модулите нудат "
+"разновидни плаќачко раководни опции, но секогаш можете да го користите "
+"'рачниот' плаќачки метод со цел да управувате со плаќања надвор од софтверот."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:136
+#, python-format
+msgid "No currency found matching '%s'."
+msgstr "Нема валута пронајдена што се совпаѓа '%s'."
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+msgid "OK"
+msgstr "Во ред"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
+msgid "Payment Methods"
+msgstr "Методи на плаќање"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
+msgid "Profit Account"
+msgstr "Сметка Добивка"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
+msgid "Refund Entry Sequence"
+msgstr "Внес за секвенца на поврат"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
+#, fuzzy
+msgid ""
+"Select 'Sale' for customer invoices journals.\n"
+"Select 'Purchase' for vendor bills journals.\n"
+"Select 'Cash' or 'Bank' for journals that are used in customer or vendor "
+"payments.\n"
+"Select 'General' for miscellaneous operations journals."
+msgstr ""
+"Избери 'Продажба' за дневникот Излезни фактури. Избери 'Набавка' за "
+"дневникот Влезни фактури. Избери 'Готовина' или 'Банка' за дневници кои се "
+"користат за плаќањата на купувач или добавувач. Ивбери 'Општо' за дневници "
+"за разни набавки. Избери 'Ситуација при отварање/затварање' за внесови "
+"генерирани за нови фискални години."
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "Select a bank statement file to import"
+msgstr "Селектирај банкарски извод, датотека за импортирање"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
+msgid "Sequence"
+msgstr "Секвенца"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
+msgid "Short Code"
+msgstr "Кратка шифра"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_on_footer
+msgid "Show in Invoices Footer"
+msgstr "Прикажи на дното\"Footer\" на фактурата"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
+msgid "Show journal on dashboard"
+msgstr "Прикажи дневник на командна табла"
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+msgid ""
+"The account of the statement you are importing is not yet recorded in Odoo. "
+"In order to proceed with the import, you need to create a bank journal for "
+"this account."
+msgstr ""
+"Сметката од изводот кој што го импортирате сеуште не е вчитана во Odoo. За "
+"да продолжете со импортирањето, треба да креирате банкарски дневник за оваа "
+"сметка."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
+#, python-format
+msgid "The account of this statement (%s) is not the same as the journal (%s)."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:161
+#, python-format
+msgid ""
+"The currency of the bank statement (%s) is not the same as the currency of "
+"the journal (%s) !"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
+msgid "The currency used to enter statement"
+msgstr "Валута која се користи за да се внесе извод"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
+msgid "The journal entries of this journal will be named using this prefix."
+msgstr "Внесовите од овој дневник ќе бидат именувани со овој префикс."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
+msgid ""
+"This field contains the information related to the numbering of the journal "
+"entries of this journal."
+msgstr ""
+"Ова поле содржи информација поврзана со нумерирањето на внесовите на овој "
+"дневник."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
+msgid ""
+"This field contains the information related to the numbering of the refund "
+"entries of this journal."
+msgstr ""
+"Ова поле содржи информација поврзана со нумерирањето на внесовите на овој "
+"дневник."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:111
+#, python-format
+msgid "This file doesn't contain any statement."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:119
+#, python-format
+msgid "This file doesn't contain any transaction."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
+msgid "Type"
+msgstr "Тип"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
+msgid "Used to order Journals in the dashboard view"
+msgstr "Се користи за да се подредат дневници во командната табла"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_loss_account_id
+msgid ""
+"Used to register a loss when the ending balance of a cash register differs "
+"from what the system computes"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
+msgid ""
+"Used to register a profit when the ending balance of a cash register differs "
+"from what the system computes"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
+msgid "Whether this journal should be displayed on the dashboard or not"
+msgstr ""
+"Дали овој дневник би требал да биде прикажен на командната табла или не"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
+#, python-format
+msgid "You have already imported that file."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "_Import"
+msgstr "_Увези"

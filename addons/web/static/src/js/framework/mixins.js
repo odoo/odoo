@@ -268,6 +268,17 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
         });
         return this;
     },
+    once: function(events, dest, func) {
+        // similar to this.on(), but func is executed only once
+        var self = this
+        if (typeof func !== "function") {
+            throw new Error("Event handler must be a function.");
+        }
+        self.on(events, dest, function what() {
+            func.apply(this, arguments);
+            self.off(events, dest, what);
+        });
+    },
     trigger: function() {
         this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
         return this;
@@ -277,6 +288,7 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
         this._trigger_up(event);
     },
     _trigger_up: function(event) {
+        var parent;
         this.__edispatcherEvents.trigger(event.name, event);
         if (!event.is_stopped() && (parent = this.getParent())) {
             parent._trigger_up(event);
@@ -324,9 +336,8 @@ var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
             // remove this, or move it elsewhere.  Also, learn OO programming.
             if (key === 'value' && self.field && self.field.type === 'float' && tmp && val){
                 var digits = self.field.digits;
-                if (digits !== 0){
-                    digits = digits ? digits[1] : 2;
-                    if (utils.float_is_zero(tmp - val, digits)) {
+                if (_.isArray(digits)) {
+                    if (utils.float_is_zero(tmp - val, digits[1])) {
                         return;
                     }
                 }
@@ -354,4 +365,3 @@ return {
 };
 
 });
-

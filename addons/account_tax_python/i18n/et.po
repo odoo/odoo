@@ -1,0 +1,90 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_python
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-03-12 13:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_applicable
+msgid "Applicable Code"
+msgstr ""
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_compute
+msgid ""
+"Compute the amount of the tax by setting the variable 'result'.\n"
+"\n"
+":param base_amount: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
+msgid ""
+"Compute the amount of the tax by setting the variable 'result'.\n"
+"\n"
+":param base_amount: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
+msgid ""
+"Determine if the tax will be applied by setting the variable 'result' to "
+"True or False.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
+msgid ""
+"Determine if the tax will be applied by setting the variable 'result' to "
+"True or False.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
+msgstr ""
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_compute
+msgid "Python Code"
+msgstr "Python kood"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+msgid "Tax"
+msgstr "KM"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr "Maksude šabloon"

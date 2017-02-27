@@ -1,7 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <!-- DOCUMENTATION TOC VIEWS -->
         <record id="view_documentation_toc_list" model="ir.ui.view">
             <field name="name">forum.documentation.toc.list</field>
@@ -27,7 +25,7 @@
 
 
         <!-- Project Task Kanban View -->
-        <record model="ir.ui.view" id="view_forum_post_kanban">
+        <record id="view_forum_post_kanban" model="ir.ui.view">
             <field name="name">forum.post.kanban</field>
             <field name="model">forum.post</field>
             <field name="arch" type="xml">
@@ -68,7 +66,7 @@
             <field name="res_model">forum.post</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('documentation_toc_id','&lt;&gt;', False)]</field>
+            <field name="domain">[('documentation_toc_id','!=', False)]</field>
         </record>
         <menuitem id="menu_forum_doc_posts"
             parent="website_forum.menu_website_forum" name="Documentation Posts"
@@ -100,6 +98,4 @@
                 </xpath>
             </field>
         </record>
-
-    </data>
-</openerp>
+</odoo>

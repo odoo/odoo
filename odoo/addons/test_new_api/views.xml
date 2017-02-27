@@ -1,0 +1,250 @@
+<odoo>
+    <data>
+        <menuitem id="menu_main" name="Discussions" sequence="20" parent="base.menu_tests"/>
+
+        <menuitem id="menu_sub" name="Discussions" parent="menu_main" sequence="10"/>
+
+        <record id="action_discussions" model="ir.actions.act_window">
+            <field name="name">Discussions</field>
+            <field name="res_model">test_new_api.discussion</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_discussions" action="action_discussions" parent="menu_sub" sequence="10"/>
+
+        <record id="action_messages" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">test_new_api.message</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_messages" action="action_messages" parent="menu_sub" sequence="20"/>
+
+        <record id="action_multi" model="ir.actions.act_window">
+            <field name="name">Multi</field>
+            <field name="res_model">test_new_api.multi</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_multi" action="action_multi" parent="menu_sub"/>
+
+        <menuitem id="menu_config" name="Configuration" parent="menu_main" sequence="20"/>
+
+        <record id="action_categories" model="ir.actions.act_window">
+            <field name="name">Categories</field>
+            <field name="res_model">test_new_api.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_categories" action="action_categories" parent="menu_config"/>
+
+        <!-- Discussion form view -->
+        <record id="discussion_form" model="ir.ui.view">
+            <field name="name">discussion form view</field>
+            <field name="model">test_new_api.discussion</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Discussion" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <!--
+                                Bug if the view contains at least 5 fields.
+                                The order of the dic values changes and the _check_author constraint raise.
+                                <field name="categories" widget="many2many_tags"/>
+                            -->
+                            <field name="moderator"/>
+                        </group>
+                        <notebook>
+                            <page string="Messages">
+                                <field name="messages">
+                                    <tree string="Messages">
+                                        <field name="name"/>
+                                        <field name="body"/>
+                                        <field name="important"/>
+                                    </tree>
+                                    <form string="Message" version="7.0">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="author"/>
+                                            <field name="size"/>
+                                            <field name="important"/>
+                                        </group>
+                                        <label for="body"/>
+                                        <field name="body"/>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Emails">
+                                <field name="important_emails">
+                                    <tree name="Important Messages">
+                                        <field name="name"/>
+                                        <field name="body"/>
+                                        <field name="important"/>
+                                        <field name="email_to"/>
+                                    </tree>
+                                    <form string="Important Message" version="7.0">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="author"/>
+                                            <field name="size"/>
+                                            <field name="important"/>
+                                            <field name="email_to"/>
+                                        </group>
+                                        <label for="body"/>
+                                        <field name="body"/>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Participants">
+                                <field name="participants">
+                                    <tree string="Participants">
+                                        <field name="display_name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="message_concat"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Discussion form view with editable list -->
+        <record id="discussion_form_2" model="ir.ui.view">
+            <field name="name">discussion form view</field>
+            <field name="model">test_new_api.discussion</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Discussion" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="categories" widget="many2many_tags"/>
+                        </group>
+                        <notebook>
+                            <page string="Messages">
+                                <field name="messages">
+                                    <tree name="Messages" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="author"/>
+                                        <field name="body" required="1"/>
+                                        <field name="size"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Participants">
+                                <field name="participants"/>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="message_concat"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_discussions_2" model="ir.actions.act_window">
+            <field name="name">Discussions 2</field>
+            <field name="res_model">test_new_api.discussion</field>
+            <field name="view_ids" eval="[(5,0,0),
+                          (0,0,{'view_mode':'tree'}),
+                          (0,0,{'view_mode':'form', 'view_id': ref('discussion_form_2')})]"/>
+        </record>
+        <menuitem id="menu_discussions_2" action="action_discussions_2" parent="menu_sub" sequence="10"/>
+
+
+        <!-- Message tree view -->
+        <record id="message_tree" model="ir.ui.view">
+            <field name="name">message tree view</field>
+            <field name="model">test_new_api.message</field>
+            <field name="arch" type="xml">
+                <tree string="Messages">
+                    <field name="display_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Message form view -->
+        <record id="message_form" model="ir.ui.view">
+            <field name="name">message form view</field>
+            <field name="model">test_new_api.message</field>
+            <field name="arch" type="xml">
+                <form string="Message" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="discussion"/>
+                            <field name="name"/>
+                            <field name="author"/>
+                            <field name="size"/>
+                        </group>
+                        <label for="body"/>
+                        <field name="body"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Category tree view -->
+        <record id="category_tree" model="ir.ui.view">
+            <field name="name">category tree view</field>
+            <field name="model">test_new_api.category</field>
+            <field name="arch" type="xml">
+                <tree string="Categories">
+                    <field name="display_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Category form view -->
+        <record id="category_form" model="ir.ui.view">
+            <field name="name">category form view</field>
+            <field name="model">test_new_api.category</field>
+            <field name="arch" type="xml">
+                <form string="Category" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent"/>
+                            <field name="root_categ"/>
+                            <field name="dummy"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Multi tree view -->
+        <record id="multi_tree" model="ir.ui.view">
+            <field name="name">multi tree view</field>
+            <field name="model">test_new_api.multi</field>
+            <field name="arch" type="xml">
+                <tree string="Multi">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Multi form view -->
+        <record id="multi_form" model="ir.ui.view">
+            <field name="name">multi form view</field>
+            <field name="model">test_new_api.multi</field>
+            <field name="arch" type="xml">
+                <form string="Multi" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner"/>
+                        </group>
+                        <label for="lines"/>
+                        <field name="lines">
+                            <tree string="Lines" editable="1">
+                                <field name="name"/>
+                                <field name="partner"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

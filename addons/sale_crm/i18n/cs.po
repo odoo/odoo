@@ -1,165 +1,319 @@
-# Czech translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_crm
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-09-19 08:21+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: sale_crm
-#: field:sale.order,campaign_id:0
-msgid "Campaign"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
+msgid "# Issues"
 msgstr ""
 
 #. module: sale_crm
-#: view:crm.make.sale:sale_crm.view_crm_make_sale
-msgid "Cancel"
-msgstr "Zrušit"
-
-#. module: sale_crm
-#: field:sale.order,medium_id:0
-msgid "Channel"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
+msgid "# Tasks"
 msgstr ""
 
 #. module: sale_crm
-#: help:crm.make.sale,close:0
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
+msgid "# of Sales Order"
+msgstr "# zakázek"
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "<span class=\"o_stat_text\"> Orders</span>"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "<span class=\"o_stat_text\"> Quote(s) </span>"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
 msgid ""
-"Check this to close the opportunity after having created the sales order."
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr ""
+"Člen, s kterým chcete asociovat vaše členství. Vezme v úvahu stav členství "
+"asociovaného člena."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
+#, fuzzy
+msgid "Activation"
+msgstr "Nabídka"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
+msgid "Associate Member"
+msgstr "Přiřadit člena"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
+msgid "Cancel Membership Date"
 msgstr ""
 
 #. module: sale_crm
-#: view:crm.lead:sale_crm.crm_case_form_view_oppor
-#: view:crm.make.sale:sale_crm.view_crm_make_sale
-msgid "Convert to Quotation"
-msgstr "Převést na cenovou nabídku"
-
-#. module: sale_crm
-#: view:crm.lead:sale_crm.crm_case_form_view_oppor
-msgid "Create Quotation"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
+msgid "Count Payment Method"
 msgstr ""
 
 #. module: sale_crm
-#: field:crm.make.sale,create_uid:0
-msgid "Created by"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
+msgid "Current Membership Status"
 msgstr ""
 
 #. module: sale_crm
-#: field:crm.make.sale,create_date:0
-msgid "Created on"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_customer
+msgid "Customer Location"
+msgstr "Umístění zákazníka"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_start
+msgid "Date from which membership becomes active."
+msgstr "Datum, od kterého se stává členství aktivním."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_cancel
+msgid "Date on which membership has been cancelled"
+msgstr "Datum, kdy bylo zrušeno členství"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_stop
+msgid "Date until which membership remains active."
+msgstr "Datum, do kterého členství zůstává aktivní."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
+msgid "Free Member"
+msgstr "Volný člen"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
 msgstr ""
 
 #. module: sale_crm
-#: field:crm.make.sale,partner_id:0
-msgid "Customer"
-msgstr "Zákazník"
-
-#. module: sale_crm
-#: field:crm.make.sale,id:0
-msgid "ID"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
+msgid "Implementation References"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:91
-#, python-format
-msgid "Insufficient Data!"
-msgstr "Nedostatečná data"
-
-#. module: sale_crm
-#: field:crm.make.sale,write_uid:0
-msgid "Last Updated by"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
+msgid "Implemented by"
 msgstr ""
 
 #. module: sale_crm
-#: field:crm.make.sale,write_date:0
-msgid "Last Updated on"
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
-msgid "Make Quotation"
-msgstr "Vytvořit cenovou nabídku"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Provést prodej"
-
-#. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr "Označit 'získáno'"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:91
-#, python-format
-msgid "No address(es) defined for this customer."
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
+msgid "Invoiced in Sale Orders Target"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:111
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr "Příležitost byla <b>převedena</b> na nabídku <em>%s</em>."
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
+msgid ""
+"It indicates the membership state.\n"
+"-Non Member: A partner who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paying member: A member who has paid the membership fee."
+msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:94
-#, python-format
-msgid "Opportunity: %s"
-msgstr "Příležitost: %s"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
+msgid "Latest Partner Review"
+msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:125
-#: code:addons/sale_crm/wizard/crm_make_sale.py:136
-#, python-format
+#: model:ir.model,name:sale_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Zájemce/příležitost"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
+msgid "Level"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
+msgid "Level Weight"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+msgid "Log in the chatter from which opportunity the order originates"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
+msgid "Membership"
+msgstr "Členství"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_amount
+msgid "Membership Amount"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_stop
+msgid "Membership End Date"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_start
+msgid "Membership Start Date"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "New Quotation"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
+msgid "Next Partner Review"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
+msgid "Number of Quotations"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
+msgid "Opportunity"
+msgstr "Příležitost"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
+msgid "Orders"
+msgstr "Objednávky"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+msgid "Partnership Date"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
+msgid "Payment Methods"
+msgstr "Způsoby platby"
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
 msgid "Quotation"
-msgstr ""
+msgstr "Nabídka"
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
+msgid "Quotations"
+msgstr "Nabídky"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
 msgid "Sales Order"
 msgstr "Prodejní objednávka"
 
 #. module: sale_crm
-#: field:sale.order,source_id:0
-msgid "Source"
+#: model:ir.model.fields,help:sale_crm.field_res_users_free_member
+msgid "Select if you want to give free membership."
 msgstr ""
 
 #. module: sale_crm
-#: field:sale.order,categ_ids:0
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
+msgid "Sum of Orders"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
 msgid "Tags"
+msgstr "Značky"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
+msgid "Tasks"
 msgstr ""
 
 #. module: sale_crm
-#: help:sale.order,campaign_id:0
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
+msgid "The price negotiated by the partner"
+msgstr "Cena vyjednaná partnerem"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
+"This stock location will be used, instead of the default one, as the "
+"destination location for goods you send to this partner"
 msgstr ""
+"Toto umístění bude použito místo výchozího jako cílové umístění pro zboží "
+"odeslané tomuto partnerovi"
 
 #. module: sale_crm
-#: help:sale.order,medium_id:0
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr ""
-
-#. module: sale_crm
-#: help:sale.order,source_id:0
+#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
 msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of "
-"email list"
+"This stock location will be used, instead of the default one, as the source "
+"location for goods you receive from the current partner"
 msgstr ""
+"Toto umístění zásob bude použito místo výchozího jako zdrojové umístění pro "
+"zboží přijaté od aktuálního partnera"
 
 #. module: sale_crm
-#: view:crm.make.sale:sale_crm.view_crm_make_sale
-msgid "_Create"
-msgstr "_Vytvořit"
+#: model:ir.model,name:sale_crm.model_res_users
+msgid "Users"
+msgstr "Uživatelé"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
+msgid "Vendor Location"
+msgstr ""
+
+#~ msgid "Campaign"
+#~ msgstr "Kampaň"
+
+#~ msgid "Medium"
+#~ msgstr "Střední"
+
+#~ msgid "Source"
+#~ msgstr "Zdroj"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Toto jméno vám pomůže rozlišit kampaně a sledovat, jak se jim daří (např. "
+#~ "Vánoční_speciál, Sezonní_výprodej)"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr ""
+#~ "Toto je metoda dodání, např. korespondenční lístek, email či inzerát"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "Toto je zdroj odkazu (např. vyhledávač, jiná stránka či jméno na "
+#~ "emailovém seznamu)"

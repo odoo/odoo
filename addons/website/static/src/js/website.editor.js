@@ -22,80 +22,80 @@ website.TopBar.include({
         'click [data-action="edit"]': 'edit',
     },
     start: function () {
-        var self = this;
-        $("#wrapwrap").on('click', '.o_editable, [data-oe-model]', function (event) {
-            var $this = $(event.srcElement);
-            var tag = $this[0] && $this[0].tagName.toLowerCase();
-            if (!(tag === 'a' || tag === "button") && !$this.parents("a, button").length) {
-                self.$('[data-action="edit"]').parent().effect('bounce', {distance: 18, times: 5}, 250);
-            }
-        });
-
         $("#wrapwrap").find("[data-oe-model] .oe_structure.oe_empty, [data-oe-model].oe_structure.oe_empty, [data-oe-type=html]:empty")
-            .addClass("oe_empty")
-            .attr("data-oe-placeholder", _t("Press The Top-Left Edit Button"));
+            .filter(".oe_not_editable")
+            .filter(".oe_no_empty")
+            .addClass("oe_empty");
 
-        if (location.search.indexOf("enable_editor") >= 0 && $('html').attr('lang') === "en_US") {
-            this.$el.hide();
+        if (location.search.indexOf("enable_editor") >= 0 && $('html').attr('lang').match(/en[-_]US/)) {
+            this.$el.addClass('editing_mode');
+            this.delayed_hide();
         }
 
-        return this._super();
+        return this._super.apply(this, arguments);
     },
     edit: function () {
         this.$('button[data-action=edit]').prop('disabled', true);
-        this.$el.hide();
+        this.$el.addClass('editing_mode');
         editor.editor_bar = new editor.Class(this);
         editor.editor_bar.prependTo(document.body);
-    }
+        $('.o_homepage_editor_welcome_message').remove();
+
+        this.delayed_hide();
+    },
+    delayed_hide: function () {
+        _.delay((function () {
+            this.do_hide();
+        }).bind(this), 800);
+    },
 });
 
 /* ----- Customize Template ---- */
 
 website.TopBarCustomize = Widget.extend({
     events: {
-        'mousedown a.dropdown-toggle': 'load_menu',
-        'click ul a[data-view-id]': 'do_customize',
+        'click > ul a[data-view-id]': 'do_customize',
     },
-    start: function() {
-        var self = this;
-        this.$menu = self.$el.find('ul');
+    start: function () {
         this.view_name = $(document.documentElement).data('view-xmlid');
         if (!this.view_name) {
             this.$el.hide();
         }
-        this.loaded = false;
+
+        if (this.$el.is(".open")) {
+            this.load_menu();
+        } else {
+            this.$el.one("mousedown", "> a.dropdown-toggle", this.load_menu.bind(this));
+        }
     },
     load_menu: function () {
-        var self = this;
-        if(this.loaded) {
-            return;
-        }
-        ajax.jsonRpc('/website/customize_template_get', 'call', { 'key': this.view_name }).then(
-            function(result) {
-                _.each(result, function (item) {
-                    if (item.key === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
-                    if (item.header) {
-                        self.$menu.append('<li class="dropdown-header">' + item.name + '</li>');
-                    } else {
-                        self.$menu.append(_.str.sprintf('<li role="presentation"><a href="#" data-view-id="%s" role="menuitem"><strong class="fa fa%s-square-o"></strong> %s</a></li>',
-                            item.id, item.active ? '-check' : '', item.name));
-                    }
-                });
-                self.loaded = true;
-            }
-        );
+        var $menu = this.$el.children("ul");
+        ajax.jsonRpc('/website/get_switchable_related_views', 'call', {
+            key: this.view_name,
+        }).then(function (result) {
+            var current_group = "";
+            _.each(result, function (item) {
+                if (current_group !== item.inherit_id[1]) {
+                    current_group = item.inherit_id[1];
+                    $menu.append("<li class=\"dropdown-header\">" + current_group + "</li>");
+                }
+                var $li = $('<li/>', {role: 'presentation'})
+                            .append($('<a/>', {href: '#', 'data-view-id': item.id, role: 'menuitem'})
+                                .append(qweb.render('web_editor.components.switch', {id: 'switch-' + item.id, label: item.name})));
+                $li.find('input').prop('checked', !!item.active);
+                $menu.append($li);
+            });
+        });
     },
-    do_customize: function (event) {
-        var view_id = $(event.currentTarget).data('view-id');
+    do_customize: function (e) {
+        e.preventDefault();
+        var view_id = $(e.currentTarget).data('view-id');
         return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
             model: 'ir.ui.view',
             method: 'toggle',
-            args: [],
-            kwargs: {
-                ids: [parseInt(view_id, 10)],
-                context: base.get_context()
-            }
-        }).then( function() {
+            args: [[parseInt(view_id, 10)]],
+            kwargs: {context: base.get_context()}
+        }).then(function () {
             window.location.reload();
         });
     },
@@ -112,100 +112,40 @@ website.TopBar.include({
 
 widget.LinkDialog.include({
     bind_data: function () {
-        var self = this;
-        var href = this.data.url;
-        var last;
-        
-        this.$('#link-page').select2({
-            minimumInputLength: 1,
-            placeholder: _t("New or existing page"),
-            query: function (q) {
-                if (q.term == last) return;
-                last = q.term;
-                $.when(
-                    self.page_exists(q.term),
-                    self.fetch_pages(q.term)
-                ).then(function (exists, results) {
-                    var rs = _.map(results, function (r) {
-                        return { id: r.loc, text: r.loc, };
+        this.$( "#o_link_dialog_url_input" ).autocomplete({
+            source: function (request, response) {
+                return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+                    model: 'website',
+                    method: 'search_pages',
+                    args: [null, request.term],
+                    kwargs: {
+                            limit: 15,
+                            context: base.get_context(),
+                        },
+                }).then(function (exists) {
+                    var rs=_.map(exists, function (r) {
+                        return r.loc;
                     });
-                    if (!exists) {
-                        rs.push({
-                            create: true,
-                            id: q.term,
-                            text: _.str.sprintf(_t("Create page '%s'"), q.term),
-                        });
-                    }
-                    q.callback({
-                        more: false,
-                        results: rs
-                    });
-                }, function () {
-                    q.callback({more: false, results: []});
+                    response(rs);
                 });
-            },
-        });
-
-        if (href) {
-            this.page_exists(href).then(function (exist) {
-                if (exist) {
-                    self.$('#link-page').select2('data', {'id': href, 'text': href}).change();
-                } else {
-                    self.$('input.url').val(href).change();
-                    self.$('input.window-new').closest("div").show();
-                }
-            });
-        }
-        return this._super();
-    },
-    get_data_buy_url: function (def, $e, isNewWindow, label, classes) {
-        var val = $e.val();
-        if (val && val.length && $e.hasClass('page')) {
-            var data = $e.select2('data');
-            if (!data.create) {
-                def.resolve(data.id, isNewWindow, label || data.text, classes);
-            } else {
-                // Create the page, get the URL back
-                $.get(_.str.sprintf(
-                        '/website/add/%s?noredirect=1', encodeURI(data.id)))
-                    .then(function (response) {
-                        def.resolve(response, isNewWindow, label, classes);
-                    });
             }
-        } else {
-            def.resolve(val, isNewWindow, label, classes);
+        });
+        return this._super();
+    }
+});
+
+/**
+ * Display a welcome message on the homepage when it is empty and that the user is connected.
+ */
+base.ready().then(function () {
+    if (location.search.indexOf("enable_editor") < 0 && $(".editor_enable").length === 0) {
+        var $wrap = $("#wrapwrap.homepage #wrap");
+        if ($wrap.length && $wrap.html().trim() === "") {
+            var $welcome_message = $(qweb.render("website.homepage_editor_welcome_message"));
+            $welcome_message.css("min-height", $wrap.parent("main").height() - ($wrap.outerHeight(true) - $wrap.height()));
+            $wrap.empty().append($welcome_message);
         }
-    },
-    changed: function (e) {
-        this.$('.url-source').filter(':input').not($(e.target)).val('')
-                .filter(function () { return !!$(this).data('select2'); })
-                .select2('data', null);
-        this._super(e);
-    },
-    call: function (method, args, kwargs) {
-        var self = this;
-        var req = method + '_req';
-        if (this[req]) { this[req].abort(); }
-        return this[req] = ajax.jsonRpc('/web/dataset/call_kw', 'call', {
-            model: 'website',
-            method: method,
-            args: args,
-            kwargs: kwargs,
-        }).always(function () {
-            self[req] = null;
-        });
-    },
-    page_exists: function (term) {
-        return this.call('page_exists', [null, term], {
-            context: base.get_context(),
-        });
-    },
-    fetch_pages: function (term) {
-        return this.call('search_pages', [null, term], {
-            limit: 9,
-            context: base.get_context(),
-        });
-    },
+    }
 });
 
 });

@@ -1,50 +1,63 @@
-# German translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_hr_recruitment
 #
+# Translators:
+# Fabian Liesch <fabian.liesch@gmail.com>, 2015
+# Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-10-03 09:00+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
-"Language-Team: German <de@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-01-17 09:46+0000\n"
+"Last-Translator: Wolfgang Taferner\n"
+"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-10-04 06:50+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Submit</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.job_countries
 msgid "All Countries"
 msgstr "Alle Länder"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.job_departments
 msgid "All Departments"
 msgstr "Alle Abteilungen"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.job_offices
 msgid "All Offices"
 msgstr "Alle Büros"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.detail
-msgid "Apply"
-msgstr "Bewerben"
+#: model:ir.model,name:website_hr_recruitment.model_hr_applicant
+msgid "Applicant"
+msgstr "Bewerber"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.apply
+#: model:ir.ui.view,arch_db:website_hr_recruitment.detail
+msgid "Apply"
+msgstr "Anwenden"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Apply Job"
 msgstr "Auf die Stelle bewerben"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "Click on \"Content\" to define a new job offer or \"Help\" for more "
 "informations."
@@ -53,38 +66,38 @@ msgstr ""
 "auf \"Hilfe\" für weitere Infos."
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
 msgid "Continue To Our Website"
 msgstr "Fortfahren auf unserer Webseite"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.apply
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Job Application Form"
 msgstr "Bewerbungsformular"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.detail
+#: model:ir.ui.view,arch_db:website_hr_recruitment.detail
 msgid "Job Detail"
 msgstr "Stellenangaben"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_job
 msgid "Job Position"
-msgstr "Arbeitsstelle"
+msgstr "Position"
 
 #. module: website_hr_recruitment
-#: view:website:website.layout
+#: model:ir.ui.view,arch_db:website_hr_recruitment.job_footer_custom
 #: model:website.menu,name:website_hr_recruitment.menu_jobs
 msgid "Jobs"
-msgstr "Stellenangebote"
+msgstr "Stellen"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Join us and help disrupt the enterprise market!"
 msgstr "Helfen Sie uns, Marktführer für Unternehmenssoftware zu werden !"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "Join us, we offer you an extraordinary chance to learn, to\n"
 "                                    develop and to be part of an exciting "
@@ -96,61 +109,56 @@ msgstr ""
 "inspirierende Erfahrung zu machen."
 
 #. module: website_hr_recruitment
-#: code:addons/website_hr_recruitment/controllers/main.py:69
-#: view:website:website.layout
+#: code:addons/website_hr_recruitment/controllers/main.py:74
+#: model:ir.ui.view,arch_db:website_hr_recruitment.content_new_job_offer
 #, python-format
 msgid "New Job Offer"
 msgstr "Neues Stellenangebot"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "No job offer found"
 msgstr "Keine Stellenangebote gefunden"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Our Job Offers"
 msgstr "Unsere Stellenangebote"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.detail
+#: model:ir.ui.view,arch_db:website_hr_recruitment.detail
 msgid "Our Jobs"
-msgstr "Unsere Arbeitsstellen"
+msgstr "Offene Stellen"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.apply
-msgid "Please send again your resume."
-msgstr "Bitte senden Sie nochmals Ihren Lebenslauf."
-
-#. module: website_hr_recruitment
-#: field:hr.job,website_published:0
-msgid "Published"
-msgstr "Veröffentlicht"
-
-#. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.apply
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Resume"
-msgstr "Lebenslauf"
+msgstr "Fortsetzen"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.apply
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Short Introduction"
 msgstr "Kurzer Überblick"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.apply
-msgid "Submit"
-msgstr "Absenden"
+#: model:ir.model,name:website_hr_recruitment.model_hr_recruitment_source
+msgid "Source of Applicants"
+msgstr "Herkunft der ABewerber"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
 msgid "Thank you!"
 msgstr "Vielen Dank!"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "There isn't job offer published now, click"
 msgstr "Es gibt aktuell kein veröffentlichtes Stellenangebot, klicken Sie"
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source_url
+msgid "Url Parameters"
+msgstr "URL Parameter"
 
 #. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
@@ -158,32 +166,12 @@ msgid "Website Recruitment Form"
 msgstr "Webseite Bewerbungsformular"
 
 #. module: website_hr_recruitment
-#: field:hr.job,website_url:0
-msgid "Website URL"
-msgstr "Webseite URL"
-
-#. module: website_hr_recruitment
-#: field:hr.job,website_description:0
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_description
 msgid "Website description"
 msgstr "Webseite Beschreibung"
 
 #. module: website_hr_recruitment
-#: field:hr.job,website_meta_description:0
-msgid "Website meta description"
-msgstr "Webseite Metabeschreibung"
-
-#. module: website_hr_recruitment
-#: field:hr.job,website_meta_keywords:0
-msgid "Website meta keywords"
-msgstr "Webseite Metasuchwörter"
-
-#. module: website_hr_recruitment
-#: field:hr.job,website_meta_title:0
-msgid "Website meta title"
-msgstr "Webseite Metaüberschrift"
-
-#. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "With a small team of smart people, we released the most\n"
 "                                    disruptive enterprise management "
@@ -206,22 +194,22 @@ msgstr ""
 "Wettbewerb wie SAP oder MS Dynamics."
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.apply
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Your Email"
 msgstr "Ihre E-Mail"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.apply
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Your Name"
 msgstr "Ihr Name"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.apply
-msgid "Your Phone"
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid "Your Phone Number"
 msgstr "Ihre Telefonnummer"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
 msgid ""
 "Your job application has been successfully registered,\n"
 "                        we will get back to you soon."
@@ -230,31 +218,43 @@ msgstr ""
 "                          wir kommen in Kürze auf Sie zu."
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
-msgid "col-md-3"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
-msgid "col-md-9"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "here"
 msgstr "Hier"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "not published"
 msgstr "Nicht Veröffentlicht"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "open positions"
 msgstr "offene Arbeitsstellen"
 
 #. module: website_hr_recruitment
-#: view:website:website_hr_recruitment.index
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "to contact us"
 msgstr "um uns zu kontaktieren"
+
+#~ msgid "Submit"
+#~ msgstr "Absenden"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr ""
+#~ "Die vollständige URL mit der das Dokument überall aufgerufen werden kann."
+
+#~ msgid "Visible in Website"
+#~ msgstr "Sichtbar in Webseite"
+
+#~ msgid "Website URL"
+#~ msgstr "Webseite URL"
+
+#~ msgid "Website meta description"
+#~ msgstr "Webseite Meta Beschreibung"
+
+#~ msgid "Website meta keywords"
+#~ msgstr "Webseite Metasuchwörter"
+
+#~ msgid "Website meta title"
+#~ msgstr "Webseite Meta Titel"

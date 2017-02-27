@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Top menu item -->
+        <menuitem id="menu_mrp_root"
+            name="Manufacturing"
+            groups="group_mrp_user,group_mrp_manager"
+            icon="fa-wrench"
+            web_icon="mrp,static/description/icon.png"
+            sequence="35"/>
+
+        <menuitem id="menu_mrp_manufacturing"
+            name="Operations"
+            parent="menu_mrp_root"
+            sequence="10"/>
+
+        <menuitem id="menu_mrp_bom"
+            name="Master Data"
+            parent="menu_mrp_root"
+            sequence="20"/>
+
+        <menuitem id="menu_mrp_reporting"
+              name="Reporting"
+              parent="menu_mrp_root"
+              sequence="25"/>
+
+        <menuitem id="menu_mrp_configuration"
+            name="Configuration"
+            parent="menu_mrp_root"
+            groups="group_mrp_manager"
+            sequence="100"/>
+
+        <menuitem id="menu_pm_resources_config"
+            name="Resources"
+            parent="menu_mrp_configuration"
+            sequence="100"/>
+
+        <menuitem id="menu_view_resource_calendar_search_mrp"
+            action="resource.action_resource_calendar_form"
+            parent="menu_pm_resources_config"
+            sequence="10"
+            groups="base.group_no_one"/>
+
+        <menuitem id="menu_view_resource_calendar_leaves_search_mrp"
+            action="resource.action_resource_calendar_leave_tree"
+            parent="menu_pm_resources_config"
+            sequence="20"
+            groups="base.group_no_one"/>
+    </data>
+</odoo>

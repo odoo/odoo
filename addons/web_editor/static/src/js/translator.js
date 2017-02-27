@@ -4,17 +4,12 @@ odoo.define('web_editor.translate', function (require) {
 var core = require('web.core');
 var Model = require('web.Model');
 var ajax = require('web.ajax');
-var Class = require('web.Class');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var rte = require('web_editor.rte');
 var editor_widget = require('web_editor.widget');
 
-var qweb = core.qweb;
 var _t = core._t;
-
-ajax.loadXML('/web_editor/static/src/xml/translator.xml', qweb);
-
 
 var translatable = !!$('html').data('translatable');
 var edit_translations = !!$('html').data('edit_translations');
@@ -37,38 +32,56 @@ $.fn.extend({
 var RTE_Translate = rte.Class.extend({
     saveElement: function ($el, context) {
         // remove multi edition
+        var key = $el.data('oe-translation-id') ? 'translation:'+$el.data('oe-translation-id') :
+                ($el.data('oe-model') ? $el.data('oe-model')+":"+$el.data('oe-id')+":"+$el.data('oe-field')+":"+$el.data('oe-type')+":"+$el.data('oe-expression') : false);
+        if (!key || this.__saved[key]) return true;
+        this.__saved[key] = true;
+
         if ($el.data('oe-translation-id')) {
-            var key =  'translation:'+$el.data('oe-translation-id');
-            if (this.__saved[key]) return true;
-            this.__saved[key] = true;
+            var translation_content = this.getEscapedElement($el).html();
 
             return ajax.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.translation',
-                method: 'write',
+                method: 'save_html',
                 args: [
                     [+$el.data('oe-translation-id')],
-                    {value: $el.html(), state: 'translated'},
+                    translation_content,
+                    context || base.get_context()
+                ],
+            });
+        } else {
+            var markup = this.getEscapedElement($el).prop('outerHTML');
+
+            return ajax.jsonRpc('/web/dataset/call', 'call', {
+                model: 'ir.ui.view',
+                method: 'save',
+                args: [
+                    $el.data('oe-id'),
+                    markup,
+                    $el.data('oe-xpath') || null,
                     context || base.get_context()
                 ],
             });
         }
-
-        return this._super.apply(this, arguments);
     },
 });
 
 var Translate_Modal = editor_widget.Dialog.extend({
-    template: 'web_editor.translator.attributes',
-    init: function (parent, node) {
-        this._super();
+    init: function (p, options, parent, node) {
+        this._super(p, _.extend({}, {
+            title: _t("Translate Attribute"),
+            buttons: [
+                {text:  _t("Close"), classes: "btn-primary o_save_button", close: true, click: this.save}
+            ]
+        }, options || {}));
         this.parent = parent;
         this.$target = $(node);
         this.translation = $(node).data('translation');
     },
     start: function () {
         var self = this;
-        this._super();
-        var $group = this.$el.find('.form-group');
+        var def = this._super.apply(this, arguments);
+        var $group = $("<div/>", {"class": "form-group"}).appendTo(this.$el);
         _.each(this.translation, function (node, attr) {
             var $node = $(node);
             var $label = $('<label class="control-label"></label>').text(attr);
@@ -81,6 +94,7 @@ var Translate_Modal = editor_widget.Dialog.extend({
             });
             $group.append($label).append($input);
         });
+        return def;
     }
 });
 
@@ -89,30 +103,33 @@ var Translate = Widget.extend({
         'click [data-action="save"]': 'save_and_reload',
         'click [data-action="cancel"]': 'cancel',
     },
-    template: 'web_editor.translator',
+    template: 'web_editor.editorbar',
     init: function (parent, $target, lang) {
         this.parent = parent;
         this.ir_translation = new Model('ir.translation');
         this.lang = lang || base.get_context().lang;
         this.setTarget($target);
-        this._super();
+        this._super.apply(this, arguments);
 
         this.rte = new RTE_Translate(this, this.config);
         this.rte.on('change', this, this.rte_changed);
     },
     start: function () {
-        this._super();
-        this.$('button[data-action=save]').prop('disabled', true);
+        this._super.apply(this, arguments);
+        this.$('#web_editor-toolbars').remove();
         return this.edit();
     },
     setTarget: function ($target) {
-        this.$target = $target.find('[data-oe-translation-id], [data-oe-model][data-oe-id][data-oe-field]');
+        var $edit = $target.find('[data-oe-translation-id], [data-oe-model][data-oe-id][data-oe-field]');
+        $edit.filter(':has([data-oe-translation-id], [data-oe-model][data-oe-id][data-oe-field])').attr('data-oe-readonly', true);
+
+        this.$target = $edit.not('[data-oe-readonly]');
 
         // attributes
 
         var attrs = ['placeholder', 'title', 'alt'];
         _.each(attrs, function (attr) {
-            $target.find('['+attr+'*="data-oe-translation-id="]').each(function () {
+            $target.find('['+attr+'*="data-oe-translation-id="]').filter(':empty, input, select, textarea, img').each(function () {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
                 var trans = $node.attr(attr);
@@ -141,7 +158,7 @@ var Translate = Widget.extend({
     },
     edit: function () {
         var flag = false;
-        window.onbeforeunload = function(event) {
+        window.onbeforeunload = function (event) {
             if ($('.o_editable.o_dirty').length && !flag) {
                 flag = true;
                 setTimeout(function () {flag=false;},0);
@@ -160,9 +177,12 @@ var Translate = Widget.extend({
     },
     rte_changed: function (node) {
         var $node = $(node);
+        $node.find("p").each(function () { // remove <p/> element which might have been inserted because of copy-paste
+            var $p = $(this);
+            $p.after($p.html()).remove();
+        });
         var trans = this.getTranlationObject($node[0]);
         $node.toggleClass('o_dirty', trans.value !== $node.html().replace(/[ \t\n\r]+/, ' '));
-        this.$('button[data-action=save]').prop('disabled', !$('.o_editable.o_dirty').length);
     },
     getTranlationObject: function (node) {
         var $node = $(node);
@@ -191,11 +211,11 @@ var Translate = Widget.extend({
         }
         event.preventDefault();
         event.stopPropagation();
-        if (event.type !== 'click') {
+        if (event.type !== 'mousedown') {
             return;
         }
 
-        new Translate_Modal(event.data, event.target).appendTo('body');
+        new Translate_Modal(null, {}, event.data, event.target).open();
     },
     markTranslatableNodes: function (node) {
         var self = this;
@@ -251,7 +271,7 @@ var Translate = Widget.extend({
     destroy: function () {
         this.cancel();
         this.$el.remove();
-        this._super();
+        this._super.apply(this, arguments);
     },
 
     config: function ($editable) {
@@ -301,6 +321,8 @@ if (edit_translations) {
         $('form[action*=edit_translations]').each(function () {
             this.action = this.action.replace(/[$?]edit_translations[^&?]+/, '');
         });
+
+        $('title').html($('title').html().replace(/&lt;span data-oe-model.+?&gt;(.+?)&lt;\/span&gt;/, '\$1'));
     });
 }
 

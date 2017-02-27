@@ -18,7 +18,6 @@ var Widget = require('web.Widget');
 
 var _t = core._t;
 
-
 var Editor = Widget.extend({
     /**
      * @constructs instance.web.list.Editor
@@ -36,90 +35,73 @@ var Editor = Widget.extend({
         this.options = options || {};
         _.defaults(this.options, {
             formView: FormView,
-            delegate: this.getParent()
+            delegate: this.getParent(),
         });
         this.delegate = this.options.delegate;
-
         this.record = null;
-
-        this.form = new (this.options.formView)(
-            this, this.delegate.dataset, false, {
-                initial_mode: 'edit',
-                is_list_editable: true,
-                disable_autofocus: true,
-                $buttons: $(),
-                $pager: $()
-        });
     },
     start: function () {
         var self = this;
-        var _super = this._super();            
-        this.form.embedded_view = this._validate_view(
-                this.delegate.edition_view(this));
-        var form_ready = this.form.appendTo(this.$el).done(
-            self.form.proxy('do_hide'));
-        return $.when(_super, form_ready);
+        var form_fields_view = this._validate_view(this.delegate.edition_view(this));
+        this.form = new (this.options.formView)(this, this.delegate.dataset, form_fields_view, {
+            initial_mode: 'edit',
+            is_list_editable: true,
+            disable_autofocus: true,
+            $buttons: $(),
+            $pager: $(),
+        });
+        return $.when(this._super(), this.form.appendTo($('<div/>')).then(function() {
+            self.form.$el.addClass(self.$el.attr('class'));
+            self.replaceElement(self.form.$el);
+        }).done(this.proxy('do_hide')));
     },
     _validate_view: function (edition_view) {
         if (!edition_view) {
-            throw new Error("editor delegate's #edition_view must return "
-                          + "a view descriptor");
+            throw new Error("editor delegate's #edition_view must return a view descriptor");
         }
         var arch = edition_view.arch;
         if (!(arch && arch.children instanceof Array)) {
-            throw new Error("Editor delegate's #edition_view must have a" +
-                            " non-empty arch");
+            throw new Error("Editor delegate's #edition_view must have a non-empty arch");
         }
         if (arch.tag !== "form") {
-            throw new Error("Editor delegate's #edition_view must have a" +
-                            " 'form' root node");
+            throw new Error("Editor delegate's #edition_view must have a 'form' root node");
         }
         if (!(arch.attrs && arch.attrs.version === "7.0")) {
-            throw new Error("Editor delegate's #edition_view must be a" +
-                            " version 7 view");
+            throw new Error("Editor delegate's #edition_view must be a version 7 view");
         }
-        if (!/\boe_form_container\b/.test(arch.attrs['class'])) {
-            throw new Error("Editor delegate's #edition_view must have the" +
-                            " class 'oe_form_container' on its root" +
-                            " element");
+        if (!/\bo_list_editable_form\b/.test(arch.attrs['class'])) {
+            throw new Error("Editor delegate's #edition_view must have the class " +
+                            "'o_list_editable_form' on its root element");
         }
-
         return edition_view;
     },
-
-    /**
-     *
-     * @param {String} [state] either ``new`` or ``edit``
-     * @return {Boolean}
-     */
-    is_editing: function (state) {
-        if (!this.record) {
-            return false;
-        }
-        switch(state) {
-        case null: case undefined:
-            return true;
-        case 'new': return !this.record.id;
-        case 'edit': return !!this.record.id;
-        }
-        throw new Error("is_editing's state filter must be either `new` or" +
-                        " `edit` if provided");
+    is_editing: function () {
+        return !!this.record;
     },
-    edit: function (record, configureField, options) {
-        // TODO: specify sequence of edit calls
+    is_creating: function () {
+        return (this.is_editing() && !this.record.id);
+    },
+    edit: function (record, configureField) {
         var self = this;
-        var form = self.form;
-        var loaded = record
-            ? form.trigger('load_record', _.extend({}, record))
-            : form.load_defaults();
-        return $.when(loaded).then(function () {
-            return form.do_show({reload: false});
+        // TODO: specify sequence of edit calls
+        var loaded;
+        if(record) {
+            this.form.trigger('load_record', _.extend({}, record));
+            loaded = this.form.record_loaded;
+        } else {
+            loaded = this.form.load_defaults().then(function() {
+                return self.form.record_loaded;
+            });
+        }
+
+        return loaded.then(function () {
+            return self.do_show({reload: false});
         }).then(function () {
-            self.record = form.datarecord;
-            _(form.fields).each(function (field, name) {
+            self.record = self.form.datarecord;
+            _(self.form.fields).each(function (field, name) {
                 configureField(name, field);
             });
-            return form;
+            return self.form;
         });
     },
     save: function () {
@@ -127,22 +109,33 @@ var Editor = Widget.extend({
         return this.form
             .save(this.delegate.prepends_on_create())
             .then(function (result) {
-                var created = result.created && !self.record.id;
-                if (created) {
+                if(result.created && !self.record.id) {
                     self.record.id = result.result;
                 }
-                return self.cancel();
+                return self.record;
             });
     },
     cancel: function (force) {
-        if (!(force || this.form.can_be_discarded())) {
-            return $.Deferred().reject({
-                message: _t("The form's data can not be discarded")}).promise();
+        var self = this;
+        if(force) {
+            return do_cancel();
         }
-        var record = this.record;
-        this.record = null;
-        this.form.do_hide();
-        return $.when(record);
+        var message = _t("The line has been modified, your changes will be discarded. Are you sure you want to discard the changes ?");
+        return this.form.can_be_discarded(message).then(do_cancel);
+
+        function do_cancel() {
+            var record = self.record;
+            self.record = null;
+            self.do_hide();
+            return $.when(record);
+        }
+    },
+    do_hide: function() {
+        this.form.do_hide.apply(this.form, arguments);
+        this.form.set({display_invalid_fields: false});
+    },
+    do_show: function() {
+        this.form.do_show.apply(this.form, arguments);
     },
 });
 
@@ -159,7 +152,7 @@ ListView.include(/** @lends instance.web.ListView# */{
 
         this._force_editability = null;
         this._context_editable = false;
-        this.editor = this.make_editor();
+        this.editor = new Editor(this);
         // Stores records of {field, cell}, allows for re-rendering fields
         // depending on cell state during and after resize events
         this.fields_for_resize = [];
@@ -190,12 +183,12 @@ ListView.include(/** @lends instance.web.ListView# */{
             }
         });
         this.on('edit:after', this, function () {
-            self.$el.add(self.$buttons).addClass('oe_editing');
+            self.$el.add(self.$buttons).addClass('o-editing');
             self.$('.ui-sortable').sortable('disable');
         });
         this.on('save:after cancel:after', this, function () {
             self.$('.ui-sortable').sortable('enable');
-            self.$el.add(self.$buttons).removeClass('oe_editing');
+            self.$el.add(self.$buttons).removeClass('o-editing');
         });
     },
     destroy: function () {
@@ -231,9 +224,7 @@ ListView.include(/** @lends instance.web.ListView# */{
     do_delete: function (ids) {
         var nonfalse = _.compact(ids);
         var _super = this._super.bind(this);
-        var next = this.editor.is_editing()
-                ? this.cancel_edition(true)
-                : $.when();
+        var next = (this.editor.is_editing())? this.cancel_edition(true) : $.when();
         return next.then(function () {
             return _super(nonfalse);
         });
@@ -241,19 +232,16 @@ ListView.include(/** @lends instance.web.ListView# */{
     editable: function () {
         return !this.grouped
             && !this.options.disable_editable_mode
-            && (this.fields_view.arch.attrs.editable
-            || this._context_editable
-            || this.options.editable);
+            && (this.fields_view.arch.attrs.editable || this._context_editable || this.options.editable);
     },
     /**
      * Replace do_search to handle editability process
      */
     do_search: function(domain, context, group_by) {
-        var self=this, _super = self._super, args=arguments;
-        var ready = this.editor.is_editing()
-                ? this.cancel_edition(true)
-                : $.when();
-
+        var self = this;
+        var _super = this._super;
+        var args = arguments;
+        var ready = (this.editor.is_editing())? this.cancel_edition(true) : $.when();
         return ready.then(function () {
             self._context_editable = !!context.set_editable;
             return _super.apply(self, args);
@@ -264,38 +252,30 @@ ListView.include(/** @lends instance.web.ListView# */{
      * as an editable row at the top or bottom of the list)
      */
     do_add_record: function () {
-        var self = this;
         if (this.editable()) {
-            this.$el.find('table:first').show();
-            this.$el.find('.oe_view_nocontent').remove();
+            this.$('table:first').show();
+            this.$('.oe_view_nocontent').remove();
             this.start_edition();
         } else {
-            this._super();
+            this._super.apply(this, arguments);
         }
     },
     load_list: function (data, grouped) {
-        var self = this;
         // tree/@editable takes priority on everything else if present.
-        var result = this._super(data, grouped);
+        var result = this._super.apply(this, arguments);
 
         // In case current editor was started previously, also has to run
         // when toggling from editable to non-editable in case form widgets
-        // have setup global behaviors expecting themselves to exist
-        // somehow.
+        // have setup global behaviors expecting themselves to exist somehow.
         this.editor.destroy();
-        // Editor is not restartable due to formview not being restartable
-        this.editor = this.make_editor();
+        this.editor = new Editor(this); // Editor is not restartable due to formview not being restartable
 
-        if (this.editable()) {
-            this.$el.addClass('oe_list_editable');
-            var editor_ready = this.editor.prependTo(this.$el)
-                .done(this.proxy('setup_events'));
-
-            return $.when(result, editor_ready);
+        if(this.editable()) {
+            this.$el.addClass('o_list_editable');
+            return $.when(result, this.editor.prependTo(this.$el).done(this.proxy('setup_events')));
         } else {
-            this.$el.removeClass('oe_list_editable');
+            this.$el.removeClass('o_list_editable');
         }
-
         return result;
     },
     /**
@@ -304,51 +284,30 @@ ListView.include(/** @lends instance.web.ListView# */{
      * @return {jQuery} the rendered buttons
      */
     render_buttons: function() {
-        var self = this;
-        var add_button = false;
-        if (!this.$buttons) { // Ensures that this is only done once
-            add_button = true;
-        }
-        this._super.apply(this, arguments); // Sets this.$buttons
-        if (add_button && this.editable()) {
+        var add_button = !this.$buttons; // Ensures that this is only done once
+        var result = this._super.apply(this, arguments); // Sets this.$buttons
+
+        if (add_button && (this.editable() || this.grouped)) {
+            var self = this;
             this.$buttons
-                .off('click', '.oe_list_save')
-                .on('click', '.oe_list_save', this.proxy('save_edition'))
-                .off('click', '.oe_list_discard')
-                .on('click', '.oe_list_discard', function (e) {
+                .off('click', '.o_list_button_save')
+                .on('click', '.o_list_button_save', this.proxy('save_edition'))
+                .off('click', '.o_list_button_discard')
+                .on('click', '.o_list_button_discard', function (e) {
                     e.preventDefault();
                     self.cancel_edition();
                 });
         }
-        return this.$buttons;
-    },
-    /**
-     * Builds a new editor object
-     *
-     * @return {instance.web.list.Editor}
-     */
-    make_editor: function () {
-        return new Editor(this);
+        return result;
     },
     do_button_action: function (name, id, callback) {
-        var self = this, args = arguments;
-        this.ensure_saved().done(function (done) {
-            if (!id && done.created) {
-                id = done.record.get('id');
+        var self = this;
+        this.save_edition().done(function (data) {
+            if(!id && data.created) {
+                id = data.record.get('id');
             }
             self.handle_button(name, id, callback);
         });
-    },
-    /**
-     * Ensures the editable list is saved (saves any pending edition if
-     * needed, or tries to)
-     *
-     * Returns a deferred to the end of the saving.
-     *
-     * @returns {$.Deferred}
-     */
-    ensure_saved: function () {
-        return this.save_edition();
     },
     /**
      * Builds a record with the provided id (``false`` for a creation),
@@ -361,7 +320,7 @@ ListView.include(/** @lends instance.web.ListView# */{
     make_empty_record: function (id) {
         var attrs = {id: id};
         _(this.columns).chain()
-            .filter(function (x) { return x.tag === 'field';})
+            .filter(function (x) { return x.tag === 'field'; })
             .pluck('name')
             .each(function (field) { attrs[field] = false; });
         return new common.Record(attrs);
@@ -382,19 +341,19 @@ ListView.include(/** @lends instance.web.ListView# */{
             this.dataset.select_id(record.get('id'));
         } else {
             record = this.make_empty_record(false);
-            this.records.add(record, {
-                at: this.prepends_on_create() ? 0 : null});
+            this.records.add(record, {at: (this.prepends_on_create())? 0 : null});
         }
-        return this.ensure_saved().then(function(){
-            return $.when.apply(null, self.editor.form.render_value_defs);
+
+        return this.save_edition().then(function() {
+            return $.when.apply($, self.editor.form.render_value_defs);
         }).then(function () {
             var $recordRow = self.groups.get_row_for(record);
             var cells = self.get_cells_for($recordRow);
             var fields = {};
-            self.fields_for_resize.splice(0, self.fields_for_resize.length);
+            self.fields_for_resize.splice(0, self.fields_for_resize.length); // Empty array
             return self.with_event('edit', {
                 record: record.attributes,
-                cancel: false
+                cancel: false,
             }, function () {
                 return self.editor.edit(item, function (field_name, field) {
                     var cell = cells[field_name];
@@ -407,22 +366,31 @@ ListView.include(/** @lends instance.web.ListView# */{
                     fields[field_name] = field;
                     self.fields_for_resize.push({field: field, cell: cell});
                 }, options).then(function () {
-                    $recordRow.addClass('oe_edition');
+                    $recordRow.addClass('o_row_edition');
                     self.resize_fields();
+                    // Local function that returns true if field is visible and editable
+                    var is_focusable = function(field) {
+                        return field && field.$el.is(':visible:not(.o_readonly)');
+                    };
                     var focus_field = options && options.focus_field ? options.focus_field : undefined;
-                    if (!focus_field || !fields[focus_field]){
-                        focus_field = _.find(self.editor.form.fields_order, function(field){ return fields[field] && fields[field].$el.is(':visible:has(input)'); });
+                    if (!is_focusable(fields[focus_field])) {
+                        focus_field = _.find(self.editor.form.fields_order, function(field) {
+                            return is_focusable(fields[field]);
+                        });
                     }
-                    if (focus_field  && fields[focus_field]) fields[focus_field].$el.find('input').select();
+                    if (fields[focus_field]) {
+                        fields[focus_field].$el.find('input, textarea').andSelf().filter('input, textarea').select();
+                    }
                     return record.attributes;
                 });
             }).fail(function () {
-                // if the start_edition event is cancelled and it was a
-                // creation, remove the newly-created empty record
-                if (!record.get('id')) {
+                // if the start_edition event is cancelled and it was a creation, remove the newly-created empty record
+                if(!record.get('id')) {
                     self.records.remove(record);
                 }
             });
+        }, function() {
+            return $.Deferred().resolve(); // Here the save/cancel edition failed so the start_edition is considered as done and succeeded
         });
     },
     get_cells_for: function ($row) {
@@ -437,8 +405,10 @@ ListView.include(/** @lends instance.web.ListView# */{
      * on the corresponding row cell
      */
     resize_fields: function () {
-        if (!this.editor.is_editing()) { return; }
-        for(var i=0, len=this.fields_for_resize.length; i<len; ++i) {
+        if (!this.editor.is_editing()) {
+            return;
+        }
+        for(var i = 0, len = this.fields_for_resize.length ; i < len ; i++) {
             var item = this.fields_for_resize[i];
             this.resize_field(item.field, item.cell);
         }
@@ -452,23 +422,33 @@ ListView.include(/** @lends instance.web.ListView# */{
      */
     resize_field: function (field, cell) {
         var $cell = $(cell);
-
         field.set_dimensions($cell.outerHeight(), $cell.outerWidth());
-        field.$el.position({
-            my: 'left top',
-            at: 'left top',
-            of: $cell
-        });
-        if (field.get('effective_readonly')) {
-            field.$el.addClass('oe_readonly');
+        position_element(field.$el, 'left top');
+        position_element(field.$translate, 'right top');
+        if(field.get('effective_readonly')) {
+            field.$el.addClass('o_readonly');
         }
-        if(field.widget == "handle")
-            field.$el.addClass('oe_list_field_handle');
+        if(field.widget == "handle") {
+            field.$el.addClass('o_row_handle');
+        }
+
+        // Workaround a bug in safari mobile where the inputs are not displayed correctly.
+        if (window.getComputedStyle(field.el.parentElement).webkitOverflowScrolling) {
+            field.el.style.zIndex = 1;
+        }
+
+        function position_element($el, pos) {
+            $el.addClass('o_temp_visible').css({top: 0, left: 0}).position({
+                my: pos,
+                at: pos,
+                of: $cell,
+            }).removeClass('o_temp_visible');
+        }
     },
     /**
      * @return {jQuery.Deferred}
      */
-    save_edition: function () {
+    save_edition: function (cancel_onfail) {
         var self = this;
         return self.saving_mutex.exec(function() {
             if (!self.editor.is_editing()) {
@@ -477,7 +457,7 @@ ListView.include(/** @lends instance.web.ListView# */{
             return self.with_event('save', {
                 editor: self.editor,
                 form: self.editor.form,
-                cancel: false
+                cancel: false,
             }, function () {
                 return self.editor.save().then(function (attrs) {
                     var created = false;
@@ -492,17 +472,26 @@ ListView.include(/** @lends instance.web.ListView# */{
                     // onwrite callback could be altering & reloading the
                     // record which has *just* been saved, so first perform all
                     // onwrites then do a final reload of the record
-                    return self.handle_onwrite(record)
+                    return self.cancel_edition(true)
+                        .then(function() {
+                            return self.handle_onwrite(record);
+                        })
                         .then(function () {
-                            return self.reload_record(record); })
+                            return self.reload_record(record);
+                        })
                         .then(function () {
-                            return { created: created, record: record }; });
+                            return {created: created, record: record};
+                        });
+                }, function() {
+                    if (cancel_onfail) {
+                        return self.cancel_edition();
+                    }
                 });
             });
         });
     },
     /**
-     * @param {Boolean} [force=false] discards the data even if the form has been edited
+     * @param {Boolean} [force] force the line to be discarded (even if there was changes)
      * @return {jQuery.Deferred}
      */
     cancel_edition: function (force) {
@@ -516,8 +505,7 @@ ListView.include(/** @lends instance.web.ListView# */{
                 if (attrs.id) {
                     var record = self.records.get(attrs.id);
                     if (!record) {
-                        // Record removed by third party during edition
-                        return;
+                        return; // Record removed by third party during edition
                     }
                     return self.reload_record(record, {do_not_evict: true});
                 }
@@ -565,7 +553,7 @@ ListView.include(/** @lends instance.web.ListView# */{
         var view = $.extend(true, {}, this.fields_view);
         view.arch.tag = 'form';
         _.extend(view.arch.attrs, {
-            'class': 'oe_form_container',
+            'class': 'o_list_editable_form',
             version: '7.0'
         });
         _(view.arch.children).chain()
@@ -585,13 +573,13 @@ ListView.include(/** @lends instance.web.ListView# */{
     handle_onwrite: function (source_record) {
         var self = this;
         var on_write_callback = self.fields_view.arch.attrs.on_write;
-        if (!on_write_callback) { return $.when(); }
+        if (!on_write_callback) {
+            return $.when();
+        }
         var context = new data.CompoundContext(self.dataset.get_context(), {'on_write_domain': self.dataset.domain}).eval();
         return this.dataset.call(on_write_callback, [source_record.get('id'), context])
             .then(function (ids) {
-                return $.when.apply(
-                    null, _(ids).map(
-                        _.bind(self.handle_onwrite_record, self, source_record)));
+                return $.when.apply(null, _(ids).map(_.bind(self.handle_onwrite_record, self, source_record)));
             });
     },
     handle_onwrite_record: function (source_record, id) {
@@ -605,7 +593,7 @@ ListView.include(/** @lends instance.web.ListView# */{
         return this.reload_record(record);
     },
     prepends_on_create: function () {
-        return this.editable() === 'top';
+        return (this.editable() === 'top');
     },
     setup_events: function () {
         var self = this;
@@ -653,12 +641,15 @@ ListView.include(/** @lends instance.web.ListView# */{
             if (saveInfo.created) {
                 return self.start_edition();
             }
-            var record = self.records[next_record](
-                    saveInfo.record, {wraparound: true});
+            var options = { wraparound: !self.is_action_enabled('create') };
+            var record = self.records[next_record](saveInfo.record, options);
+            if (record === undefined) {
+                return self.start_edition();
+            }
             return self.start_edition(record, options);
         });
     },
-    keypress_ENTER: function () {
+    keyup_ENTER: function () {
         return this._next();
     },
     keydown_ESCAPE: function (e) {
@@ -729,7 +720,7 @@ ListView.include(/** @lends instance.web.ListView# */{
      * @private
      */
     _key_move_record: function (event, record_direction, is_valid_move) {
-        if (!this.editor.is_editing('edit')) { return $.when(); }
+        if (!this.editor.is_editing() || this.editor.is_creating()) { return $.when(); }
         var cursor = this._text_cursor(event.target);
         // if text-based input (has a cursor)
         //    and selecting (not collapsed) or not at a field boundary
@@ -742,16 +733,16 @@ ListView.include(/** @lends instance.web.ListView# */{
         return this._next(record_direction, {focus_field: source_field});
 
     },
-    keydown_UP: function (e) {
+    keyup_UP: function (e) {
         var self = this;
         return this._key_move_record(e, 'pred', function (el, cursor) {
-            return self._at_start(cursor, el);
+            return self._at_start(cursor, el) && !$(el).is('select,.ui-autocomplete-input');
         });
     },
-    keydown_DOWN: function (e) {
+    keyup_DOWN: function (e) {
         var self = this;
         return this._key_move_record(e, 'succ', function (el, cursor) {
-            return self._at_end(cursor, el);
+            return self._at_end(cursor, el) && !$(el).is('select,.ui-autocomplete-input');
         });
     },
 
@@ -800,7 +791,7 @@ ListView.include(/** @lends instance.web.ListView# */{
         field.focus();
         return $.when();
     },
-    keydown_TAB: function (e) {
+    keydown_TAB: function (e) { // Keydown and not keyup because this handler must be called before the browser has focused the next field
         var form = this.editor.form;
         var last_field = _(form.fields_order).chain()
             .map(function (name) { return form.fields[name]; })
@@ -808,12 +799,13 @@ ListView.include(/** @lends instance.web.ListView# */{
             .last()
             .value();
         // tabbed from last field in form
-        if (last_field && last_field.$el.has(e.target).length) {
+        if (last_field && $(e.target).closest(last_field.el).length) {
             e.preventDefault();
             return this._next();
         }
+        this.editor.form.__clicked_inside = true;
         return $.when();
-    }
+    },
 });
 
 
@@ -830,13 +822,20 @@ ListView.Groups.include(/** @lends instance.web.ListView.Groups# */{
 
 ListView.List.include(/** @lends instance.web.ListView.List# */{
     row_clicked: function (event) {
-        if (!this.view.editable() || ! this.view.is_action_enabled('edit')) {
+        if (!this.view.editable() || !this.view.is_action_enabled('edit')) {
             return this._super.apply(this, arguments);
         }
+
+        var self = this;
+        var args = arguments;
+        var _super = self._super;
+
         var record_id = $(event.currentTarget).data('id');
         return this.view.start_edition(
-            record_id ? this.records.get(record_id) : null, {
-            focus_field: $(event.target).not(".oe_readonly").data('field')
+            ((record_id)? this.records.get(record_id) : null), {
+            focus_field: $(event.target).not(".o_readonly").data('field'),
+        }).fail(function() {
+            return _super.apply(self, args); // The record can't be edited so open it in a modal (use-case: readonly mode)
         });
     },
     /**
@@ -849,11 +848,8 @@ ListView.List.include(/** @lends instance.web.ListView.List# */{
      */
     get_row_for: function (record) {
         var $row = this.$current.children('[data-id=' + record.get('id') + ']');
-        if ($row.length) {
-            return $row;
-        }
-        return null;
-    }
+        return (($row.length)? $row : null);
+    },
 });
 
 return Editor;

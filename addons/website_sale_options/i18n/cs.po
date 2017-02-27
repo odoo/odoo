@@ -1,38 +1,29 @@
-# Czech translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_sale_options
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-11-18 12:54+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2015-09-08 10:56+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-19 06:46+0000\n"
-"X-Generator: Launchpad (build 17252)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: website_sale_options
-#: code:addons/website_sale_options/models/sale_order.py:46
+#: code:addons/website_sale_options/models/sale_order.py:44
+#: code:addons/website_sale_options/models/sale_order.py:56
 #, python-format
 msgid ""
 "%s\n"
 "Option for: %s"
-msgstr ""
-
-#. module: website_sale_options
-#: view:website:website_sale.cart
-msgid "'optional_product info' if line.linked_line_id else ''"
-msgstr ""
-
-#. module: website_sale_options
-#: view:website:website_sale_options.modal
-msgid "1 Item"
 msgstr ""
 
 #. module: website_sale_options
@@ -46,109 +37,119 @@ msgid "2 year"
 msgstr ""
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
-msgid "5 Items"
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid ""
+"<i class=\"fa fa-chevron-left\"/> <span class=\"hidden-xs\">Continue "
+"Shopping</span><span class=\"visible-xs-inline\">Continue</span>"
 msgstr ""
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
-msgid "Add to Cart"
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid ""
+"<i class=\"fa fa-shopping-cart fa-fw\"/> <span class=\"hidden-xs\">Proceed "
+"to checkout</span><span class=\"visible-xs-inline\">Checkout</span>"
 msgstr ""
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
-msgid "Continue shopping"
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid "<small>Remove from cart</small>"
+msgstr ""
+
+#. module: website_sale_options
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid ""
+"<span class=\"js_item\">1 Item</span><span class=\"js_items hidden\">5 "
+"Items</span><br/>"
+msgstr ""
+
+#. module: website_sale_options
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid "<strong>Add to Cart</strong>"
 msgstr ""
 
 #. module: website_sale_options
 #: model:product.attribute,name:website_sale_options.product_attribute_1
 msgid "Duration"
-msgstr ""
+msgstr "Trvání"
 
 #. module: website_sale_options
-#: field:sale.order.line,linked_line_id:0
+#: model:ir.model.fields,field_description:website_sale_options.field_sale_order_line_linked_line_id
 msgid "Linked Order Line"
 msgstr ""
 
 #. module: website_sale_options
-#: field:product.template,optional_product_ids:0
+#: model:ir.model.fields,field_description:website_sale_options.field_product_template_optional_product_ids
 msgid "Optional Products"
 msgstr ""
 
 #. module: website_sale_options
-#: field:sale.order.line,option_line_ids:0
+#: model:ir.model.fields,field_description:website_sale_options.field_sale_order_line_option_line_ids
 msgid "Options Linked"
 msgstr ""
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
+#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Price"
-msgstr ""
+msgstr "Cena"
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
-msgid "Proceed to checkout"
-msgstr ""
-
-#. module: website_sale_options
-#: view:website:website_sale_options.modal
+#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Product"
-msgstr ""
+msgstr "Výrobek"
 
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Šablona výrobku"
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
+#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Product not available"
 msgstr ""
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
+#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Product to add in your shopping cart"
 msgstr ""
 
 #. module: website_sale_options
-#: help:product.template,optional_product_ids:0
+#: model:ir.model.fields,help:website_sale_options.field_product_template_optional_product_ids
 msgid "Products to propose when add to cart."
 msgstr ""
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
+#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Quantity"
-msgstr ""
-
-#. module: website_sale_options
-#: view:website:website_sale_options.modal
-msgid "Remove from cart"
-msgstr ""
+msgstr "Množství"
 
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Prodejní objednávka"
 
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Řádek potvrzení objednávky"
 
 #. module: website_sale_options
-#: view:website:website_sale_options.modal
+#: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Select Your Options:"
 msgstr ""
 
 #. module: website_sale_options
+#: model:product.product,name:website_sale_options.product_product_1
+#: model:product.product,name:website_sale_options.service_cost_01
 #: model:product.template,name:website_sale_options.product_product_1_product_template
-#: model:product.template,name:website_sale_options.product_product_1b_product_template
+#: model:product.template,name:website_sale_options.service_cost_01_product_template
 msgid "Warranty"
-msgstr ""
+msgstr "Záruka"
 
 #. module: website_sale_options
+#: model:product.product,description_sale:website_sale_options.product_product_1
+#: model:product.product,description_sale:website_sale_options.service_cost_01
 #: model:product.template,description_sale:website_sale_options.product_product_1_product_template
-#: model:product.template,description_sale:website_sale_options.product_product_1b_product_template
+#: model:product.template,description_sale:website_sale_options.service_cost_01_product_template
 msgid ""
 "Warranty, issued to the purchaser of an article by its manufacturer, "
 "promising to repair or replace it if necessary within a specified period of "
@@ -156,6 +157,8 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_options
-#: view:website:website_sale.cart
-msgid "not line.linked_line_id"
+#. openerp-web
+#: code:addons/website_sale_options/static/src/js/website_sale.test.js:13
+#, python-format
+msgid "click in modal on 'Proceed to checkout' button"
 msgstr ""

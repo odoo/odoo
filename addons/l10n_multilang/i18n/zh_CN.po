@@ -1,98 +1,71 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_multilang
+# 
+# Translators:
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:06+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"Project-Id-Version: Odoo Server 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:20+0000\n"
+"PO-Revision-Date: 2015-09-18 08:20+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:23+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
-msgstr "财务结构模板"
-
-#. module: l10n_multilang
-#: sql_constraint:account.account:0
-msgid "The code of the account must be unique per company !"
-msgstr "该科目的代码，每家公司必须是唯一的！"
-
-#. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid ""
-"Configuration Error!\n"
-"You can not define children to an account with internal type different of "
-"\"View\"! "
-msgstr ""
-"配置错误！ \n"
-"上级科目必须是“视图”类型的科目！ "
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_journal
-msgid "Analytic Journal"
-msgstr "辅助核算类型"
-
-#. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
-msgstr "错误！您不能创建递归的科目模板。"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_journal
-msgid "Journal"
-msgstr "分录序时薄"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "科目一览表模板"
-
-#. module: l10n_multilang
-#: sql_constraint:account.tax:0
-msgid "The description must be unique per company!"
-msgstr "此说明必须是每个公司唯一的"
-
-#. module: l10n_multilang
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr "错误！您不能创建递归的税编码。"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_template
-msgid "account.tax.template"
-msgstr "account.tax.template"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax
-msgid "account.tax"
-msgstr "account.tax"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account
 msgid "Account"
-msgstr "科目"
+msgstr "账户"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr "wizard.multi.charts.accounts"
+#: model:ir.model,name:l10n_multilang.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "分析账户"
 
 #. module: l10n_multilang
-#: constraint:account.journal:0
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "财政状况"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_journal
+msgid "Journal"
+msgstr "分类账"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template_spoken_languages
+msgid "Spoken Languages"
+msgstr "口语"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template_spoken_languages
 msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
-msgstr "设置错误！所选币种应与默认科目共享。"
+"State here the languages for which the translations of templates could be "
+"loaded at the time of installation of this localization module and copied in"
+" the final object when generating them from templates. You must provide the "
+"language codes separated by ';'"
+msgstr "模板翻译可以在安装此本地模块时上传和最终对象的生成时复制。您必须提供语言代码并以';'分隔"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_tax
+msgid "Tax"
+msgstr "税金"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
+msgid "Template for Fiscal Position"
+msgstr "财政状况模板"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_chart_template
+msgid "Templates for Account Chart"
+msgstr "科目表模板"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_template
@@ -100,71 +73,11 @@ msgid "Templates for Accounts"
 msgstr "科目模板"
 
 #. module: l10n_multilang
-#: help:account.chart.template,spoken_languages:0
-msgid ""
-"State here the languages for which the translations of templates could be "
-"loaded at the time of installation of this localization module and copied in "
-"the final object when generating them from templates. You must provide the "
-"language codes separated by ';'"
-msgstr ""
-"此处表明模板翻译所用语言可以在该本地化模块安装时加载，并且由此模板生成最终目标时该语言也会被拷贝到最终目标。提交语言代码时必须用分号 ';' 分隔。'"
+#: model:ir.model,name:l10n_multilang.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr "税金模板"
 
 #. module: l10n_multilang
-#: constraint:account.account:0
-msgid "Error ! You can not create recursive accounts."
-msgstr "错误!您不能创建递归的科目"
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not select an account type with a deferral method different of "
-"\"Unreconciled\" for accounts with internal type \"Payable/Receivable\"! "
-msgstr ""
-"配置错误！\n"
-"对于内部类型是‘应收/应付’的会计科目，你需要选择结转方式是‘未核销’的科目类型。 "
-
-#. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "每个公司的日记账名称必须唯一！"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "辅助核算项目"
-
-#. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "每个公司的日记账代码必须唯一！"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position
-msgid "Fiscal Position"
-msgstr "财务结构"
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not define children to an account with internal type different of "
-"\"View\"! "
-msgstr ""
-"配置错误！ \n"
-"您不能给 非“视图”类型的科目定义一个子科目。 "
-
-#. module: l10n_multilang
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "错误! 你不能创建递归的辅助核算项目"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_code_template
-msgid "Tax Code Template"
-msgstr "税编码模板"
-
-#. module: l10n_multilang
-#: field:account.chart.template,spoken_languages:0
-msgid "Spoken Languages"
-msgstr "交流语言"
+#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
+msgid "wizard.multi.charts.accounts"
+msgstr "wizard.multi.charts.accounts"

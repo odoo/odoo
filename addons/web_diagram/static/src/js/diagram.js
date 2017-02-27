@@ -7,7 +7,9 @@ odoo.define('web_diagram.DiagramView', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var form_common = require('web.form_common');
+var Pager = require('web.Pager');
 var View = require('web.View');
+var ajax = require('web.ajax');
 
 var _t = core._t;
 var _lt = core._lt;
@@ -15,61 +17,55 @@ var QWeb = core.qweb;
 
 var DiagramView = View.extend({
     display_name: _lt('Diagram'),
-    view_type: 'diagram',
-    searchable: false,
+    icon: 'fa-code-fork',
     multi_record: false,
-    init: function(parent, dataset, view_id, options) {
-        var self = this;
-        this._super(parent);
-        this.set_default_options(options);
-        this.view_manager = parent;
-        this.dataset = dataset;
-        this.model = this.dataset.model;
-        this.view_id = view_id;
+    searchable: false,
+
+    init: function() {
+        this._super.apply(this, arguments);
         this.domain = this.dataset._domain || [];
         this.context = {};
         this.ids = this.dataset.ids;
-        this.on('pager_action_executed', self, self.pager_action_trigger);
-    },
-
-    view_loading: function(r) {
-        return this.load_diagram(r);
-    },
-
-    toTitleCase: function(str) {
-        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    },
-
-    load_diagram: function(result) {
-        var self = this;
-        if(this.ids && this.ids.length) {
-            this.id = this.ids[self.dataset.index || 0];
+        if (this.ids && this.ids.length) {
+            this.id = this.ids[this.dataset.index || 0];
         }
-
-        this.fields_view = result;
-        this.view_id = this.fields_view.view_id;
         this.fields = this.fields_view.fields;
         this.nodes = this.fields_view.arch.children[0];
         this.connectors = this.fields_view.arch.children[1];
         this.node = this.nodes.attrs.object;
         this.connector = this.connectors.attrs.object;
         this.labels = _.filter(this.fields_view.arch.children, function(label) {
-            return label.tag == "label";
+            return label.tag === "label";
         });
+    },
 
-        this.$el.html(QWeb.render("DiagramView", {'widget': self}));
-        this.$el.addClass(this.fields_view.arch.attrs['class']);
-
-        _.each(self.labels,function(label){
-            var html_label = '<p style="padding: 4px;">' + label.attrs.string + "</p>";
-            self.$el.find('.oe_diagram_header').append(html_label);
-        });
-
-
-        if(this.id) {
-            self.get_diagram_info();
+    willStart: function() {
+        if (window.Raphael) {
+            return $.when();
         }
-        this.trigger('diagram_view_loaded', result);
+        return $.when(
+            ajax.loadJS('/web_diagram/static/lib/js/jquery.mousewheel.js'),
+            ajax.loadJS('/web_diagram/static/lib/js/raphael.js')
+        );
+    },
+    start: function() {
+        var self = this;
+        this.$el.html(QWeb.render("DiagramView", {'widget': this}));
+        this.$el.addClass('o_diagram_view').addClass(this.fields_view.arch.attrs.class);
+
+        _.each(this.labels,function(label){
+            self.$('.o_diagram_header').append($('<span>').html(label.attrs.string));
+        });
+
+        var diagram_info;
+        if(this.id) {
+            diagram_info = this.get_diagram_info();
+        }
+        return $.when(this._super(), diagram_info);
+    },
+
+    toTitleCase: function(str) {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     },
 
     get_diagram_info: function() {
@@ -92,7 +88,7 @@ var DiagramView = View.extend({
         };
 
         _.each(this.nodes.children, function(child) {
-            if(child.attrs.invisible == '1')
+            if(child.attrs.invisible === '1')
                 params.invisible_nodes.push(child.attrs.name);
             else {
                 params.visible_nodes.push(child.attrs.name);
@@ -104,7 +100,7 @@ var DiagramView = View.extend({
             params.connectors_fields.push(self.fields[conn.attrs.name]['string']|| this.toTitleCase(conn.attrs.name));
             params.connectors.push(conn.attrs.name);
         });
-        this.rpc(
+        return this.rpc(
             '/web_diagram/diagram/get_diagram_info',params).done(function(result) {
                 self.draw_diagram(result);
             }
@@ -177,8 +173,7 @@ var DiagramView = View.extend({
         };
 
         // remove previous diagram
-        var canvas = self.$el.find('div.oe_diagram_diagram')
-                             .empty().get(0);
+        var canvas = self.$('.o_diagram').empty().get(0);
 
         var r  = new Raphael(canvas, '100%','100%');
 
@@ -209,7 +204,6 @@ var DiagramView = View.extend({
         CuteNode.double_click_callback = function(cutenode){
             self.edit_node(cutenode.id);
         };
-        var i = 0;
         CuteNode.destruction_callback = function(cutenode){
             if(!confirm(_t("Deleting this node cannot be undone.\nIt will also delete all connected transitions.\n\nAre you sure ?"))){
                 return $.Deferred().reject().promise();
@@ -252,16 +246,13 @@ var DiagramView = View.extend({
             self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
         });
         
-        var form_fields = [self.parent_field];
-        var form_controller = pop.view_form;
-
-        form_controller.on("load_record", self, function(){
-            _.each(form_fields, function(fld) {
-                if (!(fld in form_controller.fields)) { return; }
-                var field = form_controller.fields[fld];
+        pop.opened().then(function(){
+            var form_controller = pop.view_form;
+            var field = form_controller.fields[self.parent_field];
+            if (field) {
                 field.$input.prop('disabled', true);
-                field.$drop_down.unbind();
-            });
+                field.$dropdown.unbind();
+            }
         });
     },
 
@@ -269,28 +260,24 @@ var DiagramView = View.extend({
     add_node: function(){
         var self = this;
         var title = _t('Activity');
-        var pop = new form_common.SelectCreateDialog(self, {
+        var pop = new form_common.FormViewDialog(self, {
             res_model: self.node,
-            domain: self.dataset.domain,
+            domain: self.domain,
             context: self.context || self.dataset.context,
             title: _t("Create:") + title,
-            initial_view: 'form',
             disable_multiple_selection: true,
             on_selected: function(element_ids) {
                 self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
             }
         }).open();
 
-        var form_controller = pop.view_form;
-        var form_fields = [this.parent_field];
-
-        form_controller.on("load_record", self, function(){
-            _.each(form_fields, function(fld) {
-                if (!(fld in form_controller.fields)) { return; }
-                var field = form_controller.fields[fld];
+        pop.opened().then(function(){
+            var form_controller = pop.view_form;
+            var field = form_controller.fields[self.parent_field];
+            if (field) {
                 field.set_value(self.id);
                 field.dirty = true;
-            });
+            }
         });
     },
 
@@ -314,12 +301,11 @@ var DiagramView = View.extend({
     add_connector: function(node_source_id, node_dest_id, dummy_cuteedge){
         var self = this;
         var title = _t('Transition');
-        var pop = new form_common.SelectCreateDialog(self, {
+        var pop = new form_common.FormViewDialog(self, {
             res_model: self.connector,
-            domain: this.dataset.domain,
+            domain: this.domain,
             context: this.context || this.dataset.context,
             title: _t("Create:") + title,
-            initial_view: 'form',
             disable_multiple_selection: true,
             on_selected: function(element_ids) {
                 self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
@@ -334,12 +320,14 @@ var DiagramView = View.extend({
             }
         });
 
-        var form_controller = pop.view_form;
-        form_controller.on("load_record", self, function(){
-            form_controller.fields[self.connectors.attrs.source].set_value(node_source_id);
-            form_controller.fields[self.connectors.attrs.source].dirty = true;
-            form_controller.fields[self.connectors.attrs.destination].set_value(node_dest_id);
-            form_controller.fields[self.connectors.attrs.destination].dirty = true;
+        pop.opened().then(function(){
+            var form_controller = pop.view_form;
+            var source_field = form_controller.fields[self.connectors.attrs.source];
+            var destination_field = form_controller.fields[self.connectors.attrs.destination];
+            source_field.set_value(node_source_id);
+            source_field.dirty = true;
+            destination_field.set_value(node_dest_id);
+            destination_field.dirty = true;
         });
     },
 
@@ -353,78 +341,52 @@ var DiagramView = View.extend({
         var self = this;
 
         this.$buttons = $(QWeb.render("DiagramView.buttons", {'widget': this}));
-        this.$buttons.on('click', '.oe_diagram_button_new', function() {
+        this.$buttons.on('click', '.o_diagram_new_button', function() {
             self.add_node();
         });
 
-        $node = $node || this.options.$buttons;
         this.$buttons.appendTo($node);
     },
-    
+
     /**
-     * Render the pager according to the DiagramView.pager template and add listeners on it.
-     * Set this.$pager with the produced jQuery element
-     * @param {jQuery} [$node] a jQuery node where the rendered pager should be inserted
-     * $node may be undefined, in which case the DiagramView inserts the pager into this.options.$pager
-     * or into a div of its template
+     * Instantiate and render the pager and add listeners on it.
+     * Set this.pager
+     * @param {jQuery} [$node] a jQuery node where the pager should be inserted
+     * $node may be undefined, in which case the FormView inserts the pager into this.options.$pager
      */
     render_pager: function($node) {
         var self = this;
 
-        this.$pager = $(QWeb.render("DiagramView.pager", {'widget': self}));
-        this.$pager.find('a[data-pager-action]').click(function() {
-            var action = $(this).data('pager-action');
-            self.execute_pager_action(action);
+        this.pager = new Pager(this, this.dataset.ids.length, this.dataset.index + 1, 1);
+        this.pager.appendTo($node || this.options.$pager);
+
+        this.pager.on('pager_changed', this, function (new_state) {
+            this.pager.disable();
+            this.dataset.index = new_state.current_min - 1;
+            $.when(this.reload()).then(function () {
+                self.pager.enable();
+            });
         });
-        this.execute_pager_action('reload');
-
-        $node = $node || this.options.$pager;
-        if ($node) {
-            this.$pager.appendTo($node);
-        } else {
-            this.$('.oe_diagram_pager').replaceWith(this.$pager);
-        }
     },
     
-    pager_action_trigger: function(){
-        var loaded = this.dataset.read_index(_.keys(this.fields_view.fields))
-                .then(this.on_diagram_loaded);
-        this.do_update_pager();
-        return loaded;
-    },
-    
-    execute_pager_action: function(action) {
-	    switch (action) {
-	        case 'first':
-	            this.dataset.index = 0;
-	            break;
-	        case 'previous':
-	            this.dataset.previous();
-	            break;
-	        case 'next':
-	            this.dataset.next();
-	            break;
-	        case 'last':
-	            this.dataset.index = this.dataset.ids.length - 1;
-	            break;
-	    }
-	    this.trigger('pager_action_executed');
+    update_pager: function() {
+        if (this.pager) {
+            this.pager.update_state({
+                size: this.dataset.ids.length,
+                current_min: this.dataset.index + 1,
+            });
+        }
     },
 
-    do_update_pager: function(hide_index) {
-        if (this.$pager) {
-            this.$pager.toggle(this.dataset.ids.length > 1);
-            if (hide_index) {
-                this.$pager.find(".oe_diagram_pager_state").html("");
-            } else {
-                this.$pager.find(".oe_diagram_pager_state").html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
-            }
-        }
+    reload: function() {
+        return this.dataset.read_index(_.keys(this.fields_view.fields))
+                .then(this.on_diagram_loaded)
+                .then(this.proxy('update_pager'));
     },
 
     do_show: function() {
         this.do_push_state({});
-        return $.when(this._super(), this.execute_pager_action('reload'));
+        return $.when(this._super(), this.reload());
     }
 });
 

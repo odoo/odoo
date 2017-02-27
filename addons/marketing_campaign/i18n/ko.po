@@ -1,114 +1,104 @@
-# Korean translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * marketing_campaign
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-09-03 02:24+0000\n"
-"Last-Translator: Josh Kim <joshkkim@gmail.com>\n"
-"Language-Team: Korean <ko@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-08-25 10:19+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-05 01:12+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
-
-#. module: marketing_crm
-#: help:marketing.config.settings,module_crm_profiling:0
-msgid ""
-"Allows users to perform segmentation within partners.\n"
-"-This installs the module crm_profiling."
-msgstr ""
-"사용자가 협력업체의 세분화를 수행할 수 있도록 함.\n"
-"- 이것은 모듈 crm_profiling을 설치합니다."
-
-#. module: marketing_crm
-#: field:marketing.config.settings,module_marketing_campaign_crm_demo:0
-msgid "Demo data for marketing campaigns"
-msgstr "마케팅 캠페인에 대한 데모 데이터"
-
-#. module: marketing_crm
-#: help:marketing.config.settings,module_marketing_campaign_crm_demo:0
-msgid ""
-"Installs demo data like leads, campaigns and segments for Marketing "
-"Campaigns.\n"
-"-This installs the module marketing_campaign_crm_demo."
-msgstr ""
-"리드, 캠페인 및 마케팅 캠페인에 대한 부분 등의 데모 데이터를 설치함.\n"
-"-이것은 모듈 marketing_campaign_crm_demo를 설치합니다."
-
-#. module: marketing_crm
-#: view:crm.lead:marketing_crm.view_crm_lead_form
-#: view:crm.lead:marketing_crm.view_crm_opportunity_form
-msgid "Marketing"
-msgstr "마케팅"
-
-#. module: marketing_crm
-#: field:marketing.config.settings,module_crm_profiling:0
-msgid "Track customer profile to focus your campaigns"
-msgstr "캠페인에 집중하기 위해 고객정보  추적"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,count:0
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle "
+"of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</"
+"p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
 msgid "# of Actions"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+msgid ""
+"<span class=\"o_stat_text\">Campaign</span>\n"
+"                            <span class=\"o_stat_text\">Statistics</span>"
 msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to create a marketing campaign.\n"
-"          </p><p>\n"
-"            Odoo's marketing campaign allows you to automate communication\n"
-"            to your prospects. You can define a segment (set of conditions) "
-"on\n"
-"            your leads and partners to fullfil the campaign.\n"
-"          </p><p>\n"
-"            A campaign can have many activities like sending an email, "
-"printing\n"
+"A campaign can have many activities like sending an email, printing\n"
 "            a letter, assigning to a team, etc. These activities are "
 "triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
-"            contact, if a lead is not closed yet, etc.\n"
-"          </p>\n"
-"        "
+"            contact, if a lead is not closed yet, etc."
 msgstr ""
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,server_action_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_server_action_id
 msgid "Action"
-msgstr ""
+msgstr "동작"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
-#: field:marketing.campaign,activity_ids:0
-#: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
-#: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_tree
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_ids
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_tree
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 msgid "Activities"
-msgstr ""
+msgstr "활동"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
-#: field:campaign.analysis,activity_id:0
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
-#: field:marketing.campaign.workitem,activity_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_activity_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_activity_id
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Activity"
-msgstr ""
+msgstr "활동"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:501
+#: code:addons/marketing_campaign/marketing_campaign.py:479
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "All"
-msgstr ""
+msgstr "전체"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -116,7 +106,7 @@ msgid "All records (no duplicates)"
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.activity,signal:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_signal
 msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
@@ -125,43 +115,44 @@ msgstr ""
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "April"
-msgstr ""
+msgstr "4월"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "August"
-msgstr ""
+msgstr "8월"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
 msgid "Automatic"
-msgstr ""
+msgstr "오토"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:500
+#: code:addons/marketing_campaign/marketing_campaign.py:478
 #, python-format
 msgid "Automatic transition"
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.activity,keep_if_condition_not_met:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
 msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
-#: field:campaign.analysis,campaign_id:0
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
-#: field:marketing.campaign.activity,campaign_id:0
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
-#: field:marketing.campaign.segment,campaign_id:0
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
-#: field:marketing.campaign.workitem,campaign_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_campaign_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_campaign_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_campaign_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_campaign_id
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_campaign_analysis_all
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Campaign"
-msgstr ""
+msgstr "캠페인"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
@@ -169,22 +160,19 @@ msgid "Campaign Activity"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
 #: model:ir.actions.act_window,name:marketing_campaign.action_campaign_analysis_all
 #: model:ir.model,name:marketing_campaign.model_campaign_analysis
-#: model:ir.ui.menu,name:marketing_campaign.menu_action_campaign_analysis_all
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
 msgid "Campaign Analysis"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_diagram
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_diagram
 msgid "Campaign Editor"
 msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
-#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
-#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Campaign Follow-up"
 msgstr ""
 
@@ -205,30 +193,30 @@ msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
-#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_campaigns
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_tree
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_tree
 msgid "Campaigns"
-msgstr ""
+msgstr "캠페인"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_tree
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
 msgid "Cancel"
-msgstr ""
+msgstr "취소"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 msgid "Cancel Campaign"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Cancel Segment"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 msgid "Cancel Workitem"
 msgstr ""
 
@@ -237,68 +225,73 @@ msgstr ""
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "취소됨"
 
 #. module: marketing_campaign
-#: help:marketing.campaign,object_id:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_object_id
 msgid "Choose the resource on which you want this campaign to be run"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid "Click to create a marketing campaign."
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Close"
-msgstr ""
+msgstr "마감"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,condition:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_condition
 msgid "Condition"
-msgstr ""
+msgstr "조건"
 
 #. module: marketing_campaign
-#: model:email.template,subject:marketing_campaign.email_template_2
+#: model:mail.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
 msgstr ""
 
 #. module: marketing_campaign
-#: model:email.template,subject:marketing_campaign.email_template_3
+#: model:mail.template,subject:marketing_campaign.email_template_3
 msgid "Congratulations! You are now one of our Gold Partners!"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:502
+#: code:addons/marketing_campaign/marketing_campaign.py:480
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_tree
-#: field:campaign.analysis,total_cost:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_total_cost
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
 msgid "Cost"
-msgstr ""
+msgstr "비용"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,country_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_country_id
 msgid "Country"
-msgstr ""
+msgstr "국가"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,create_uid:0
-#: field:marketing.campaign.activity,create_uid:0
-#: field:marketing.campaign.segment,create_uid:0
-#: field:marketing.campaign.transition,create_uid:0
-#: field:marketing.campaign.workitem,create_uid:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_create_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_create_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_create_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_create_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "작성자"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,create_date:0
-#: field:marketing.campaign.activity,create_date:0
-#: field:marketing.campaign.segment,create_date:0
-#: field:marketing.campaign.transition,create_date:0
-#: field:marketing.campaign.workitem,create_date:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_create_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_create_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_create_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_create_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_create_date
 msgid "Created on"
-msgstr ""
+msgstr "작성일"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -306,39 +299,29 @@ msgid "Custom Action"
 msgstr ""
 
 #. module: marketing_campaign
-#: field:campaign.analysis,date:0
-msgid "Date"
-msgstr ""
-
-#. module: marketing_campaign
-#: help:marketing.campaign.segment,sync_last_date:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_sync_last_date
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.segment,date_done:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_done
 msgid "Date this segment was last closed or cancelled."
-msgstr ""
-
-#. module: marketing_campaign
-#: field:campaign.analysis,day:0
-msgid "Day"
 msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "일"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "December"
-msgstr ""
+msgstr "12월"
 
 #. module: marketing_campaign
-#: help:marketing.campaign.segment,sync_mode:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_sync_mode
 msgid ""
 "Determines an additional criterion to add to the filter when selecting new "
 "records to inject in the campaign. \"No duplicates\" prevents selecting "
@@ -349,105 +332,127 @@ msgid ""
 msgstr ""
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,report_directory_id:0
-msgid "Directory"
-msgstr ""
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_display_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_display_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_display_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_display_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_display_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_display_name
+msgid "Display Name"
+msgstr "표시 이름"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,keep_if_condition_not_met:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
 msgid "Don't Delete Workitems"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
 #: selection:campaign.analysis,state:0
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 #: selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Done"
-msgstr ""
+msgstr "완료"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Draft"
+msgstr "기안"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:170
+#, python-format
+msgid "Duplicating campaigns is not supported."
 msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Email"
-msgstr ""
+msgstr "이메일"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:774
+#: code:addons/marketing_campaign/marketing_campaign.py:752
 #, python-format
 msgid "Email Preview"
-msgstr ""
+msgstr "이메일 미리보기"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,email_template_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "이메일 서식"
 
 #. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_email_template
+#: model:ir.model,name:marketing_campaign.model_email_template_preview
+#, fuzzy
+msgid "Email Template Preview"
+msgstr "이메일 서식"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_mail_template
 msgid "Email Templates"
-msgstr ""
+msgstr "이메일 서식"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.segment,date_done:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_done
 msgid "End Date"
-msgstr ""
+msgstr "마감일"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:111
-#: code:addons/marketing_campaign/marketing_campaign.py:123
-#: code:addons/marketing_campaign/marketing_campaign.py:133
-#, python-format
-msgid "Error"
-msgstr ""
-
-#. module: marketing_campaign
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
-#: field:marketing.campaign.workitem,error_msg:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_error_msg
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 msgid "Error Message"
 msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 #: selection:marketing.campaign.workitem,state:0
 msgid "Exception"
-msgstr ""
+msgstr "제외"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
 msgid "Exceptions"
-msgstr ""
+msgstr "예외"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.workitem,date:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_date
 msgid "Execution Date"
+msgstr "실행 날짜"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_day
+msgid "Execution Day"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_month
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Execution Month"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_year
+msgid "Execution Year"
 msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "February"
-msgstr ""
+msgstr "2월"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.segment,ir_filter_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_ir_filter_id
 msgid "Filter"
-msgstr ""
+msgstr "필터"
 
 #. module: marketing_campaign
-#: help:marketing.campaign.segment,ir_filter_id:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_ir_filter_id
 msgid ""
 "Filter to select the matching resource records that belong to this segment. "
 "New filters can be created and saved using the advanced search on the list "
@@ -456,12 +461,12 @@ msgid ""
 msgstr ""
 
 #. module: marketing_campaign
-#: field:marketing.campaign,fixed_cost:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_fixed_cost
 msgid "Fixed Cost"
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign,fixed_cost:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_fixed_cost
 msgid ""
 "Fixed cost for running this campaign. You may also specify variable cost and "
 "revenue on each campaign activity. Cost and Revenue statistics are included "
@@ -469,62 +474,51 @@ msgid ""
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 msgid "Follow-Up"
-msgstr ""
+msgstr "후속 조치"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
+msgid "Follow-up"
+msgstr "후속 조치"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Group By"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:email.template,body_html:marketing_campaign.email_template_1
-msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr ""
-
-#. module: marketing_campaign
-#: model:email.template,body_html:marketing_campaign.email_template_3
-msgid ""
-"Hi, we are delighted to let you know that you have entered the select circle "
-"of our Gold Partners"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:email.template,body_html:marketing_campaign.email_template_2
-msgid ""
-"Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr ""
+msgstr "그룹화"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Hour(s)"
-msgstr ""
+msgstr "시간"
 
 #. module: marketing_campaign
-#: help:marketing.campaign.transition,trigger:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_transition_trigger
 msgid "How is the destination workitem triggered"
 msgstr ""
 
 #. module: marketing_campaign
-#: field:campaign.analysis,id:0 field:marketing.campaign,id:0
-#: field:marketing.campaign.activity,id:0
-#: field:marketing.campaign.segment,id:0
-#: field:marketing.campaign.transition,id:0
-#: field:marketing.campaign.workitem,id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: marketing_campaign
-#: help:marketing.campaign.workitem,date:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_date
 msgid "If date is not set, this workitem has to be run manually"
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign,unique_field_id:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_unique_field_id
 msgid ""
 "If set, this field will help segments that work in \"no duplicates\" mode to "
 "avoid selecting similar records twice. Similar records are records that have "
@@ -537,127 +531,148 @@ msgid ""
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "수신 전환"
 
 #. module: marketing_campaign
-#: help:marketing.campaign.segment,date_run:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_run
 msgid "Initial start date of this segment."
 msgstr ""
 
 #. module: marketing_campaign
-#: field:marketing.campaign.transition,interval_type:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_interval_type
 msgid "Interval Unit"
-msgstr ""
+msgstr "간격 단위"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.transition,interval_nbr:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_interval_nbr
 msgid "Interval Value"
 msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "January"
-msgstr ""
+msgstr "1월"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "July"
-msgstr ""
+msgstr "7월"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "June"
-msgstr ""
+msgstr "6월"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.segment,sync_last_date:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis___last_update
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign___last_update
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity___last_update
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment___last_update
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition___last_update
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem___last_update
+msgid "Last Modified on"
+msgstr "최근 수정"
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_last_date
 msgid "Last Synchronization"
 msgstr ""
 
 #. module: marketing_campaign
-#: field:marketing.campaign,write_uid:0
-#: field:marketing.campaign.activity,write_uid:0
-#: field:marketing.campaign.segment,write_uid:0
-#: field:marketing.campaign.transition,write_uid:0
-#: field:marketing.campaign.workitem,write_uid:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_write_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_write_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_write_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_write_uid
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "최근 갱신한 사람"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,write_date:0
-#: field:marketing.campaign.activity,write_date:0
-#: field:marketing.campaign.segment,write_date:0
-#: field:marketing.campaign.transition,write_date:0
-#: field:marketing.campaign.workitem,write_date:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_write_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_write_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_write_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_write_date
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "최근 갱신 날짜"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.segment,date_run:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_run
 msgid "Launch Date"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Launch Month"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_root
+msgid "Lead Automation"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_manager
+msgid "Manager"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
 msgid "Manual Mode"
 msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "March"
-msgstr ""
+msgstr "3월"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 msgid "Marketing Campaign"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_tree
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
 msgid "Marketing Campaign Activities"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Marketing Campaign Activity"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Marketing Campaign Segment"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 msgid "Marketing Campaign Statistics"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_tree
-#: view:campaign.analysis:marketing_campaign.view_report_campaign_analysis_graph
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
+#: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_graph
+#: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_pivot
 msgid "Marketing Reports"
 msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "May"
-msgstr ""
+msgstr "5월"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
-#: field:marketing.campaign,mode:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_mode
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
 msgid "Mode"
-msgstr ""
+msgstr "방법"
 
 #. module: marketing_campaign
 #: constraint:marketing.campaign.segment:0
@@ -665,84 +680,82 @@ msgid "Model of filter must be same as resource model of Campaign "
 msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
-#: field:campaign.analysis,month:0
-msgid "Month"
-msgstr ""
-
-#. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "월"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,name:0 field:marketing.campaign.activity,name:0
-#: field:marketing.campaign.segment,name:0
-#: field:marketing.campaign.transition,name:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_name
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_name
 msgid "Name"
-msgstr ""
+msgstr "이름"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 msgid "New"
-msgstr ""
+msgstr "신규"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Newly Created"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Newly Modified"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
-#: field:marketing.campaign.activity,to_ids:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_to_ids
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Next Activities"
 msgstr ""
 
 #. module: marketing_campaign
-#: field:marketing.campaign.transition,activity_to_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_activity_to_id
 msgid "Next Activity"
 msgstr ""
 
 #. module: marketing_campaign
-#: field:marketing.campaign.segment,date_next_sync:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_next_sync
 msgid "Next Synchronization"
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.segment,date_next_sync:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_next_sync
 msgid "Next time the synchronization job is scheduled to run automatically"
-msgstr ""
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:800
-#, python-format
-msgid "No preview"
 msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Normal"
-msgstr ""
+msgstr "보통"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "November"
-msgstr ""
+msgstr "11월"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,object_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_object_id
 msgid "Object"
-msgstr ""
+msgstr "제목"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "October"
+msgstr "10월"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid ""
+"Odoo's marketing campaign allows you to automate communication\n"
+"            to your prospects. You can define a segment (set of conditions) "
+"on\n"
+"            your leads and partners to fulfill the campaign."
 msgstr ""
 
 #. module: marketing_campaign
@@ -756,62 +769,51 @@ msgid "Only records modified after last sync (no duplicates)"
 msgstr ""
 
 #. module: marketing_campaign
-#: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
-msgid "Open Marketing Menu"
-msgstr ""
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:189
-#, python-format
-msgid "Operation not supported"
-msgstr ""
-
-#. module: marketing_campaign
-#: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Outgoing Transitions"
-msgstr ""
+msgstr "출고 전환"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,partner_id:0
-#: field:marketing.campaign.workitem,partner_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_partner_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_partner_id
 msgid "Partner"
-msgstr ""
+msgstr "파트너"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,partner_field_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
 msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.filters,name:marketing_campaign.filter0
 msgid "Partners"
-msgstr ""
+msgstr "파트너"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_tree
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
 msgid "Preview"
-msgstr ""
+msgstr "미리 보기"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
-#: field:marketing.campaign.activity,from_ids:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_from_ids
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Previous Activities"
 msgstr ""
 
 #. module: marketing_campaign
-#: field:marketing.campaign.transition,activity_from_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_activity_from_id
 msgid "Previous Activity"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_tree
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
 msgid "Process"
-msgstr ""
+msgstr "처리"
 
 #. module: marketing_campaign
-#: help:marketing.campaign.activity,condition:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_condition
 msgid ""
 "Python expression to decide whether the activity can be executed, otherwise "
 "it will be deleted or cancelled.The expression may use the following "
@@ -824,86 +826,91 @@ msgid ""
 msgstr ""
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,report_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
 #: selection:marketing.campaign.activity,type:0
 msgid "Report"
-msgstr ""
+msgstr "보고서"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
+#: model:ir.ui.menu,name:marketing_campaign.report_marketing_campaign
+msgid "Reports"
+msgstr "보고서"
+
+#. module: marketing_campaign
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 msgid "Reset"
-msgstr ""
+msgstr "초기화"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,res_id:0
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
-#: field:marketing.campaign,object_id:0
-#: field:marketing.campaign.segment,object_id:0
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
-#: field:marketing.campaign.workitem,object_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_res_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_object_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_object_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_object_id
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Resource"
-msgstr ""
+msgstr "자원"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
-#: field:marketing.campaign.workitem,res_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_res_id
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Resource ID"
-msgstr ""
+msgstr "리소스 ID"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.workitem,res_name:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_res_name
 msgid "Resource Name"
-msgstr ""
+msgstr "리소스명"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,revenue:0
-#: field:marketing.campaign.activity,revenue:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_revenue
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_revenue
 msgid "Revenue"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Run"
-msgstr ""
+msgstr "실행"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 #: selection:marketing.campaign,state:0
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 #: selection:marketing.campaign.segment,state:0
 msgid "Running"
-msgstr ""
+msgstr "실행 중"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
-#: field:campaign.analysis,segment_id:0
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
-#: field:marketing.campaign.workitem,segment_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_segment_id
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_segment_id
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Segment"
 msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_ids
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segments_count
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
-#: field:marketing.campaign,segment_ids:0
-#: field:marketing.campaign,segments_count:0
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_tree
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_tree
 msgid "Segments"
 msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "September"
-msgstr ""
+msgstr "9월"
 
 #. module: marketing_campaign
-#: help:marketing.campaign.activity,variable_cost:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid ""
 "Set a variable cost if you consider that every campaign item that has "
 "reached this point has entailed a certain cost. You can get cost statistics "
@@ -911,7 +918,7 @@ msgid ""
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.activity,revenue:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_revenue
 msgid ""
 "Set an expected revenue if you consider that every campaign item that has "
 "reached this point has generated a certain revenue. You can get revenue "
@@ -919,65 +926,60 @@ msgid ""
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Set to Draft"
-msgstr ""
+msgstr "기안으로 설정"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,signal:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_signal
 msgid "Signal"
 msgstr ""
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,start:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_start
 msgid "Start"
-msgstr ""
+msgstr "시작"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
-msgid "Statistics"
-msgstr ""
-
-#. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
-#: field:campaign.analysis,state:0
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
-#: field:marketing.campaign,state:0
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
-#: field:marketing.campaign.segment,state:0
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
-#: field:marketing.campaign.workitem,state:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_state
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_state
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_state
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_state
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Status"
-msgstr ""
+msgstr "상태"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: all records"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records created after last sync"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records updated after last sync"
 msgstr ""
 
 #. module: marketing_campaign
-#: field:marketing.campaign.segment,sync_mode:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_mode
 msgid "Synchronization mode"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Synchronize Manually"
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign,mode:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
 msgid ""
 "Test - It creates and process all the activities directly (without waiting "
 "for the delay on transitions) but does not send emails or produce reports.\n"
@@ -995,7 +997,7 @@ msgid "Test Directly"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
 msgid "Test Mode"
 msgstr ""
 
@@ -1010,18 +1012,18 @@ msgid "The To/From Activity of transition must be of the same Campaign "
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.activity,server_action_id:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
 msgid "The action to perform when this activity is activated"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:133
+#: code:addons/marketing_campaign/marketing_campaign.py:114
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:123
+#: code:addons/marketing_campaign/marketing_campaign.py:104
 #, python-format
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
@@ -1029,24 +1031,24 @@ msgid ""
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:111
+#: code:addons/marketing_campaign/marketing_campaign.py:92
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:800
+#: code:addons/marketing_campaign/marketing_campaign.py:777
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.activity,email_template_id:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "The email to send when this activity is activated"
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign,partner_field_id:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid ""
 "The generated workitems will be linked to the partner related to the record. "
 "If the record is the partner itself leave this field empty. This is useful "
@@ -1060,12 +1062,12 @@ msgid "The interval must be positive or zero"
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.activity,report_id:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_report_id
 msgid "The report to generate when this activity is activated"
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.activity,type:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_type
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
 "   - Email: send an email using a predefined email template\n"
@@ -1077,50 +1079,50 @@ msgid ""
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.activity,start:0
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
 msgid "This activity is launched when the campaign starts."
-msgstr ""
-
-#. module: marketing_campaign
-#: help:marketing.campaign.activity,report_directory_id:0
-msgid "This folder is used to store the generated reports"
 msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
 msgid "Time"
-msgstr ""
+msgstr "시간"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
 #: selection:campaign.analysis,state:0
-#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
+#: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 #: selection:marketing.campaign.workitem,state:0
 msgid "To Do"
-msgstr ""
+msgstr "할 일"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.transition,trigger:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_trigger
 msgid "Trigger"
-msgstr ""
+msgstr "촉발"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,type:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_type
 msgid "Type"
-msgstr ""
+msgstr "유형"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,unique_field_id:0
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_unique_field_id
 msgid "Unique Field"
 msgstr ""
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,variable_cost:0
+#: model:res.groups,name:marketing_campaign.group_lead_automation_user
+msgid "User"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid "Variable Cost"
 msgstr ""
 
 #. module: marketing_campaign
-#: model:email.template,subject:marketing_campaign.email_template_1
+#: model:mail.template,subject:marketing_campaign.email_template_1
 msgid "Welcome to the Odoo Partner Channel!"
 msgstr ""
 
@@ -1132,20 +1134,14 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 msgid "Workitems"
-msgstr ""
-
-#. module: marketing_campaign
-#: field:campaign.analysis,year:0
-msgid "Year"
-msgstr ""
+msgstr "작업 항목"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "년"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:189
-#, python-format
-msgid "You cannot duplicate a campaign, Not supported yet."
-msgstr ""
+#: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"

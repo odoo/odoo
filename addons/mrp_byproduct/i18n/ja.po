@@ -1,21 +1,22 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_byproduct
 #
+# Translators:
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-07-11 09:00+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
+"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:29+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_bom
@@ -23,38 +24,38 @@ msgid "Bill of Material"
 msgstr "部品表"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,bom_id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_bom_id
 msgid "BoM"
 msgstr "部品表"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
 msgid "Byproduct"
-msgstr ""
+msgstr "副産品"
 
 #. module: mrp_byproduct
-#: view:mrp.bom:mrp_byproduct.mrp_subproduct_view
-#: field:mrp.bom,sub_products:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom_sub_products
+#: model:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
 msgid "Byproducts"
-msgstr ""
+msgstr "副産品"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "製品数量変更"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,create_uid:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "作成者"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,create_date:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_date
 msgid "Created on"
-msgstr ""
+msgstr "作成日"
 
 #. module: mrp_byproduct
-#: help:mrp.subproduct,subproduct_type:0
+#: model:ir.model.fields,help:mrp_byproduct.field_mrp_subproduct_subproduct_type
 msgid ""
 "Define how the quantity of byproducts will be set on the production orders "
 "using this BoM.  'Fixed' depicts a situation where the quantity of created "
@@ -66,52 +67,63 @@ msgid ""
 msgstr ""
 
 #. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Fixed"
 msgstr "固定"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,write_uid:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct___last_update
+msgid "Last Modified on"
+msgstr "最終更新日"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "最終更新者"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,write_date:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "最終更新日"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "製造オーダー"
-
-#. module: mrp_byproduct
-#: field:mrp.subproduct,product_id:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "製品"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_qty:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_qty
 msgid "Product Qty"
 msgstr "製品数量"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_uom:0
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "製品単位"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,subproduct_type:0
+#: model:ir.model,name:mrp_byproduct.model_mrp_production
+#, fuzzy
+msgid "Production"
+msgstr "製品"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_subproduct_type
 msgid "Quantity Type"
 msgstr "数量タイプ"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#: code:addons/mrp_byproduct/mrp_byproduct.py:45
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -124,7 +136,10 @@ msgid "Variable"
 msgstr "可変"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#: code:addons/mrp_byproduct/mrp_byproduct.py:45
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "警告"
+
+#~ msgid "Manufacturing Order"
+#~ msgstr "製造オーダ"

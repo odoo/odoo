@@ -3,12 +3,11 @@ odoo.define('web.translation', function (require) {
 "use strict";
 
 var Class = require('web.Class');
-var qweb = require('qweb');
-
 
 var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# */{
     init: function() {
         this.db = {};
+        this.multi_lang = false
         this.parameters = {"direction": 'ltr',
                         "date_format": '%m/%d/%Y',
                         "time_format": '%H:%M:%S',
@@ -18,7 +17,7 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
     },
     set_bundle: function(translation_bundle) {
         var self = this;
-        this.db = {};
+        this.multi_lang = translation_bundle.multi_lang
         var modules = _.keys(translation_bundle.modules);
         modules.sort();
         if (_.include(modules, "web")) {
@@ -29,9 +28,7 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
         });
         if (translation_bundle.lang_parameters) {
             this.parameters = translation_bundle.lang_parameters;
-            if (typeof(py) !== "undefined") {
-                this.parameters.grouping = py.eval(this.parameters.grouping);
-            }
+            this.parameters.grouping = JSON.parse(this.parameters.grouping);
         }
     },
     add_module_translation: function(mod) {
@@ -74,20 +71,42 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
 });
 
 var _t = new TranslationDataBase().build_translation_function();
+/**
+ * Lazy translation function, only performs the translation when actually
+ * printed (e.g. inserted into a template)
+ *
+ * Useful when defining translatable strings in code evaluated before the
+ * translation database is loaded, as class attributes or at the top-level of
+ * an OpenERP Web module
+ *
+ * @param {String} s string to translate
+ * @returns {Object} lazy translation object
+ */
 var _lt = function (s) {
     return {toString: function () { return _t(s); }};
 };
 
-// provide timeago.js with our own translator method
-if($.timeago){ // make timeago an optional dependency of translation
-    $.timeago.settings.translator = _t;
+/** Setup jQuery timeago */
+/*
+ * Strings in timeago are "composed" with prefixes, words and suffixes. This
+ * makes their detection by our translating system impossible. Use all literal
+ * strings we're using with a translation mark here so the extractor can do its
+ * job.
+ */
+{
+    _t('less than a minute ago');
+    _t('about a minute ago');
+    _t('%d minutes ago');
+    _t('about an hour ago');
+    _t('%d hours ago');
+    _t('a day ago');
+    _t('%d days ago');
+    _t('about a month ago');
+    _t('%d months ago');
+    _t('about a year ago');
+    _t('%d years ago');
 }
 
-qweb.default_dict = {
-    '_' : _,
-    'JSON': JSON,
-    '_t' : _t,
-};
 
 return {
     _t: _t,
@@ -96,4 +115,3 @@ return {
 };
 
 });
-

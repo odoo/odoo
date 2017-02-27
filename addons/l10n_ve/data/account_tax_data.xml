@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+
+    <!-- Account Tax Tags -->
+    <record id="tag_exento_ventas" model="account.account.tag">
+        <field name="name">Exento (ventas)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_iva_8_ventas" model="account.account.tag">
+        <field name="name">IVA (8.0%) ventas</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_iva_12_ventas" model="account.account.tag">
+        <field name="name">IVA (12.0%) ventas</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_iva_22_ventas" model="account.account.tag">
+        <field name="name">IVA (22.0%) ventas</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_exento_compras" model="account.account.tag">
+        <field name="name">Exento (compras)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_iva_8_compras" model="account.account.tag">
+        <field name="name">IVA (8.0%) compras</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_iva_12_compras" model="account.account.tag">
+        <field name="name">IVA (12.0%) compras</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_iva_22_compras" model="account.account.tag">
+        <field name="name">IVA (22.0%) compras</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+
+    <!-- Account Taxes -->
+    <record id="tax0sale" model="account.tax.template">
+        <field name="chart_template_id" ref="ve_chart_template_amd"/>
+        <field name="name">Exento (ventas)</field>
+        <field name="description">Exento (ventas)</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="account_activa_account_2172003"/>
+        <field name="refund_account_id" ref="account_activa_account_2172003"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_exento_ventas')])]"/>
+    </record>
+    <record id="tax1sale" model="account.tax.template">
+        <field name="chart_template_id" ref="ve_chart_template_amd"/>
+        <field name="name">IVA (12.0%) ventas</field>
+        <field name="description">IVA (12.0%) ventas</field>
+        <field name="amount">12</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="account_activa_account_2172003"/>
+        <field name="refund_account_id" ref="account_activa_account_2172003"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_iva_12_ventas')])]"/>
+    </record>
+    <record id="tax2sale" model="account.tax.template">
+        <field name="chart_template_id" ref="ve_chart_template_amd"/>
+        <field name="name">IVA (8.0%) ventas</field>
+        <field name="description">IVA (8.0%) ventas</field>
+        <field name="amount">8</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="account_activa_account_2172003"/>
+        <field name="refund_account_id" ref="account_activa_account_2172003"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_iva_8_ventas')])]"/>
+    </record>
+    <record id="tax3sale" model="account.tax.template">
+        <field name="chart_template_id" ref="ve_chart_template_amd"/>
+        <field name="name">IVA (22.0%) ventas</field>
+        <field name="description">IVA (22.0%) ventas</field>
+        <field name="amount">22</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="account_activa_account_2172003"/>
+        <field name="refund_account_id" ref="account_activa_account_2172003"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_iva_22_ventas')])]"/>
+    </record>
+    <record id="tax0purchase" model="account.tax.template">
+        <field name="chart_template_id" ref="ve_chart_template_amd"/>
+        <field name="name">Exento (compras)</field>
+        <field name="description">Exento (compras)</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="account_activa_account_2172003"/>
+        <field name="refund_account_id" ref="account_activa_account_2172003"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_exento_compras')])]"/>
+    </record>
+    <record id="tax1purchase" model="account.tax.template">
+        <field name="chart_template_id" ref="ve_chart_template_amd"/>
+        <field name="name">IVA (12.0%) compras</field>
+        <field name="description">IVA (12.0%) compras</field>
+        <field name="amount">12</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="account_activa_account_1151004"/>
+        <field name="refund_account_id" ref="account_activa_account_1151004"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_iva_12_compras')])]"/>
+    </record>
+    <record id="tax2purchase" model="account.tax.template">
+        <field name="chart_template_id" ref="ve_chart_template_amd"/>
+        <field name="name">IVA (8.0%) compras</field>
+        <field name="description">IVA (8.0%) compras</field>
+        <field name="amount">8</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="account_activa_account_1151004"/>
+        <field name="refund_account_id" ref="account_activa_account_1151004"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_iva_8_compras')])]"/>
+    </record>
+    <record id="tax3purchase" model="account.tax.template">
+        <field name="chart_template_id" ref="ve_chart_template_amd"/>
+        <field name="name">IVA (22.0%) compras</field>
+        <field name="description">IVA (22.0%) compras</field>
+        <field name="amount">22</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="account_activa_account_1151004"/>
+        <field name="refund_account_id" ref="account_activa_account_1151004"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_iva_22_compras')])]"/>
+    </record>
+</data>
+</odoo>

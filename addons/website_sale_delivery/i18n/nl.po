@@ -1,26 +1,70 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_sale_delivery
+# 
+# Translators:
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-11-06 07:18+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-26 10:27+0000\n"
+"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-07 07:36+0000\n"
-"X-Generator: Launchpad (build 17231)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_delivery
-#: field:delivery.carrier,website_published:0
-msgid "Available in the website"
-msgstr "Verkrijgbaar op de website"
+#: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
+msgid ""
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
+"updated after choosing a new delivery method\"> Delivery:</span>"
+msgstr ""
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Levering wordt "
+"geüpdatet na het kiezen van een nieuwe leveringsmethode\"> Levering:</span>"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
+"Een omschrijving van het product die u wilt delen met uw klanten. Deze "
+"omschrijving wordt gekopieerd naar elke verkooporder, leveringsbon en "
+"factuur/terugbetaling."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
+msgid "Accessory Products"
+msgstr "Product accessoires"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_alternative_product_ids
+msgid "Appear on the product page"
+msgstr "Tonen op product pagina"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
+msgid "Appear on the shopping cart"
+msgstr "Tonen in winkelmandje"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
+msgid "Availability"
+msgstr "Beschikbaarheid"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
+msgid "Availability Warning"
+msgstr "Beschikbaarheid waarschuwing"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
@@ -28,31 +72,134 @@ msgid "Carrier"
 msgstr "Vervoerder"
 
 #. module: website_sale_delivery
-#: view:website:website_sale.payment
+#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose your Delivery Method"
-msgstr "Kies uw verzend methode"
+msgstr "Kies uw verzendwijze"
 
 #. module: website_sale_delivery
-#: field:sale.order,amount_delivery:0
+#: model:ir.model,name:website_sale_delivery.model_res_country
+msgid "Country"
+msgstr "Land"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
 msgstr "Afleveringsbedrag"
 
 #. module: website_sale_delivery
-#: view:website:website_sale.total
-msgid "Delivery will be updated after choosing a new delivery method"
+#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+msgid "Delivery Methods"
+msgstr "Verzendwijzes"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
+msgid "Description"
+msgstr "Omschrijving"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
+msgid "Description displayed on the eCommerce and on online quotations."
+msgstr "Omschrijving gebruikt voor eCommerce en op online offertes."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
+msgid "Description for Online Quotations"
+msgstr "Omschrijving voor online offertes"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_quote_description
+msgid "Description for the quote"
+msgstr "Omschrijving voor de quote"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_sequence
+msgid "Determine the display order in the Website E-commerce"
+msgstr "Bepaald de weergave volgorde  in de E-commerce website"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_split_method
+msgid ""
+"Equal : Cost will be equally divided.\n"
+"By Quantity : Cost will be divided according to product's quantity.\n"
+"By Current cost : Cost will be divided according to product's current cost.\n"
+"By Weight : Cost will be divided depending on its weight.\n"
+"By Volume : Cost will be divided depending on its volume."
 msgstr ""
-"Aflevering zal worden geupdate na het kiezen van een nieuwe  "
-"afleveringsmethode"
 
 #. module: website_sale_delivery
-#: view:website:website_sale.total
-msgid "Delivery:"
-msgstr "Aflevering:"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
+msgid "File"
+msgstr "Bestand"
 
 #. module: website_sale_delivery
-#: field:delivery.carrier,website_description:0
-msgid "Description for the website"
-msgstr "Omschrijving voor de website"
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
+msgid "Has an order line set for delivery"
+msgstr "Heeft een orderregel gezet voor levering"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
+msgid "Has delivery"
+msgstr "Heeft levering"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_intrastat_id
+msgid "Intrastat code"
+msgstr "Intrastat-code"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_landed_cost_ok
+msgid "Landed Costs"
+msgstr "Totale kosten"
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/models/sale_order.py:99
+#, python-format
+msgid ""
+"No shipping method is available for your current order and shipping address."
+" Please contact us for more information."
+msgstr ""
+"Er is geen verzendwijze beschikbaar voor deze order en dit afleveradres. "
+"Neem alstublieft contact met ons op."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_optional_product_ids
+msgid "Optional Products"
+msgstr "Optionele producten"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_requisition
+msgid "Procurement"
+msgstr "Verwerving"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
+msgid "Products to propose when add to cart."
+msgstr "Producten voorstellen bij toevoegen mandje."
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
+msgid "Published"
+msgstr "Gepubliceerd"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
+msgid "Rating"
+msgstr "Beoordeling"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_last_value
+msgid "Rating Last Value"
+msgstr "Beoordeling laatste waarde"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
+msgid "Rating count"
+msgstr "Beoordeling teller"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
+msgid "Rating value: 0=Unhappy, 10=Happy"
+msgstr "Beoordeling waarde: 0 = Ontevreden, 10 = Blij"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
@@ -60,6 +207,91 @@ msgid "Sales Order"
 msgstr "Verkooporder"
 
 #. module: website_sale_delivery
-#: help:sale.order,amount_delivery:0
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_x
+msgid "Size X"
+msgstr "X-grootte"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_y
+msgid "Size Y"
+msgstr "Y-grootte"
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/models/sale_order.py:98
+#, python-format
+msgid "Sorry, we are unable to ship your order"
+msgstr "Sorry, het is niet mogelijk om uw order te verzenden."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_split_method
+msgid "Split Method"
+msgstr "Split methode"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_style_ids
+msgid "Styles"
+msgstr "Stijlen"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_alternative_product_ids
+msgid "Suggested Products"
+msgstr "Voorgestelde producten"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
 msgid "The amount without tax."
-msgstr "Het bedrag excl. BTW."
+msgstr "Het bedrag zonder BTW."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
+msgid ""
+"This field is used to display a availability banner with a message on the "
+"ecommerce"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
+msgid "Those categories are used to group similar products for e-commerce."
+msgstr ""
+"De categorieën zijn gebruikt om gelijkende producten te groeperen in "
+"e-commerce."
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.shipping_tracking
+msgid "Tracking:"
+msgstr "Volgen:"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
+msgid "Visible in Website"
+msgstr "Zichtbaar in website"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
+msgid "Website Comments"
+msgstr "Website commentaar"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
+msgid "Website Product Category"
+msgstr "Website productcategorie"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
+msgid "Website Sequence"
+msgstr "Website reeks"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
+msgid "Website meta description"
+msgstr "Website meta omschrijving"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Website meta trefwoorden"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_title
+msgid "Website meta title"
+msgstr "Website meta titel"

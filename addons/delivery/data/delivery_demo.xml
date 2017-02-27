@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Carrier -->
+
+        <record id="delivery_carrier" model="delivery.carrier">
+            <field name="name">The Poste</field>
+            <field name="fixed_price">20</field>
+            <field name="sequence">2</field>
+            <field name="delivery_type">base_on_rule</field>
+            <field name="product_type">service</field>
+            <field name="product_sale_ok" eval="False"/>
+        </record>
+
+        <record id="normal_delivery_carrier" model="delivery.carrier">
+            <field name="name">Normal Delivery Charges</field>
+            <field name="fixed_price">10</field>
+            <field name="sequence">3</field>
+            <field name="delivery_type">fixed</field>
+            <field name="product_type">service</field>
+            <field name="product_sale_ok" eval="False"/>
+        </record>
+
+        <record id="delivery_price_rule1" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier"/>
+            <field eval="5" name="max_value"/>
+            <field eval="20" name="list_base_price"/>
+            <field eval="10" name="standard_price"/>
+        </record>
+        <!--  delivery charge of product if weight more than 5kg-->
+        <record id="delivery_price_rule2" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier"/>
+            <field name="operator">&gt;=</field>
+            <field eval="5" name="max_value"/>
+            <field eval="50" name="list_base_price"/>
+            <field eval="30" name="standard_price"/>
+        </record>
+
+        <!--  free delivery charge if price more than 300-->
+        <record id="delivery_price_rule3" model="delivery.price.rule">
+            <field name="carrier_id" ref="delivery_carrier"/>
+            <field eval="300" name="max_value"/>
+            <field name="operator">&gt;=</field>
+            <field name="variable">price</field>
+            <field eval="0" name="list_base_price"/>
+            <field eval="0" name="standard_price"/>
+        </record>
+
+        <record forcecreate="True" id="property_delivery_carrier" model="ir.property">
+            <field name="name">property_delivery_carrier_id</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_delivery_carrier_id')]"/>
+            <field name="value" eval="'delivery.carrier,'+str(ref('normal_delivery_carrier'))"/>
+        </record>
+    </data>
+</odoo>

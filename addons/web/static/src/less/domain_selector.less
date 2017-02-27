@@ -1,0 +1,87 @@
+
+.o_domain_node {
+    @o-domain-selector-vspace: 8px;
+    @o-domain-selector-indent: 32px;
+    @o-domain-selector-panel-space: 128px;
+
+    .o_domain_node_control_panel {
+        .o-position-absolute(@right: 0);
+    }
+
+    &.o_domain_tree {
+        .o_domain_tree_operator_caret::after {
+            .o-caret-down();
+        }
+
+        > .o_domain_node_children_container {
+            padding-left: @o-domain-selector-indent;
+
+            > div {
+                margin-top: @o-domain-selector-vspace;
+            }
+        }
+
+        &.o_domain_selector {
+            &.o_edit_mode {
+                position: relative;
+
+                > .o_domain_node_children_container {
+                    padding-right: @o-domain-selector-panel-space;
+                }
+            }
+
+            > .o_domain_node_children_container {
+                padding-left: 0;
+            }
+        }
+    }
+
+    &.o_domain_leaf {
+        &.o_read_mode {
+            display: inline-block;
+            margin-right: 4px;
+        }
+
+        > .o_domain_leaf_info {
+            background: @odoo-brand-lightsecondary;
+            border: 1px solid darken(@odoo-brand-lightsecondary, 10%);
+            padding: 2px 4px;
+
+            .o_domain_leaf_chain, .o_domain_leaf_value {
+                font-weight: 700;
+            }
+            .o_domain_leaf_operator {
+                font-style: italic;
+            }
+        }
+
+        > .o_domain_leaf_edition {
+            .o-flex-display();
+            .o-align-items(flex-end);
+
+            > * {
+                width: percentage(1/3);
+
+                + * {
+                    margin-left: 4px;
+                }
+            }
+
+            .o_domain_leaf_value_tags {
+                .o-flex-display();
+
+                > * {
+                    .o-flex(0, 0, auto);
+                }
+                > input {
+                    .o-flex(1, 1, auto);
+                    width: 0;
+                    min-width: 50px;
+                }
+                .o_domain_leaf_value_remove_tag_button {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
-        <record model="ir.rule" id="issue_project_manager_rule">
+        <record id="issue_project_manager_rule" model="ir.rule">
             <field name="name">Project/Issue: project manager: see all</field>
             <field name="model_id" ref="model_project_issue"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
         </record>
 
-        <record model="ir.rule" id="issue_user_rule">
-            <field name="name">Project/Issue: employees: public or employee or (followers and following)</field>
+        <record id="issue_user_rule" model="ir.rule">
+            <field name="name">Project/Issue: employees: no need to follow or (following project or following issue</field>
             <field name="model_id" ref="model_project_issue"/>
             <field name="domain_force">['|',
-                                            ('project_id.privacy_visibility', 'in', ['public', 'employees']),
-                                            '&amp;',
-                                                ('project_id.privacy_visibility', '=', 'followers'),
-                                                ('message_follower_ids', 'in', [user.partner_id.id]),
+                                            ('project_id.privacy_visibility', '!=', 'followers'),
+                                            '|',
+                                                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                                                ('message_partner_ids', 'in', [user.partner_id.id]),
                                         ]</field>
             <field name="groups" eval="[(4,ref('base.group_user'))]"/>
         </record>
 
     </data>
-</openerp>
+</odoo>

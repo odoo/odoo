@@ -2,6 +2,7 @@ odoo.define('web_editor.editor', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
+var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var core = require('web.core');
 var base = require('web_editor.base');
@@ -15,28 +16,25 @@ var editor = {};
 
 editor.dummy = function () {return true;}; // used for snippets, options...
 
-editor.editable = !!$('html').data('editable');
+editor.editable = !!($('html').data('editable') || $("[data-oe-model]").length); // temporary hack, this should be done in python
 
 ajax.loadXML('/web_editor/static/src/xml/editor.xml', qweb);
 
-base.dom_ready.done(function () {
-    $(document).on('click', '.note-editable', function (ev) {
-        ev.preventDefault();
-    });
+$(document).on('click', '.note-editable', function (ev) {
+    ev.preventDefault();
+});
 
-    $(document).on('submit', '.note-editable form .btn', function (ev) {
-        // Disable form submition in editable mode
-        ev.preventDefault();
-    });
+$(document).on('submit', '.note-editable form .btn', function (ev) {
+    ev.preventDefault(); // Disable form submition in editable mode
+});
 
-    $(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
-        // Prevent dropdown closing when a contenteditable children is focused
-        if (ev.originalEvent
-                && $(ev.target).has(ev.originalEvent.target).length
-                && $(ev.originalEvent.target).is('[contenteditable]')) {
-            ev.preventDefault();
-        }
-    });
+$(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
+    // Prevent dropdown closing when a contenteditable children is focused
+    if (ev.originalEvent
+            && $(ev.target).has(ev.originalEvent.target).length
+            && $(ev.originalEvent.target).is('[contenteditable]')) {
+        ev.preventDefault();
+    }
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +44,7 @@ editor.reload = function () {
     if (location.search.indexOf("enable_editor") > -1) {
         window.location.href = window.location.href.replace(/&?enable_editor(=[^&]*)?/g, '');
     } else {
-        window.location.reload();
+        window.location.reload(true);
     }
 };
 
@@ -65,9 +63,9 @@ editor.Class = Widget.extend({
     template: 'web_editor.editorbar',
     events: {
         'click button[data-action=save]': 'save',
-        'click a[data-action=cancel]': 'cancel',
+        'click button[data-action=cancel]': 'cancel',
     },
-    init: function(parent) {
+    init: function (parent) {
         var self = this;
         var res = this._super.apply(this, arguments);
         this.parent = parent;
@@ -77,10 +75,7 @@ editor.Class = Widget.extend({
         });
         return res;
     },
-    start: function() {
-        var self = this;
-
-        this.$('button[data-action=save]').prop('disabled', true);
+    start: function () {
         $('.dropdown-toggle').dropdown();
 
         this.display_placeholder();
@@ -89,19 +84,20 @@ editor.Class = Widget.extend({
         this.rte.start();
 
         var flag = false;
-        window.onbeforeunload = function(event) {
+        window.onbeforeunload = function (event) {
             if (rte.history.getEditableHasUndo().length && !flag) {
                 flag = true;
-                setTimeout(function () {flag=false;},0);
+                _.defer(function () { flag=false; });
                 return _t('This document is not saved!');
             }
         };
-        return this._super();
+
+        return this._super.apply(this, arguments);
     },
     display_placeholder: function () {
         var $area = $("#wrapwrap").find("[data-oe-model] .oe_structure.oe_empty, [data-oe-model].oe_structure.oe_empty, [data-oe-type=html]")
-            .addClass("oe_empty")
-            .attr("data-oe-placeholder", _t("Press The Top-Left Edit Button"));
+            .filter(".oe_not_editable")
+            .filter(".oe_no_empty");
 
         this.on('rte:start', this, function () {
             $area.attr("data-oe-placeholder", _t("Write Your Text Here"));
@@ -121,10 +117,7 @@ editor.Class = Widget.extend({
             }
         });
     },
-    rte_changed: function () {
-        // todo: use !rte.history.getEditableHasUndo().length (but phantomjs unknow error)
-        this.$('button[data-action=save]').prop('disabled', !$('.o_dirty').length);
-    },
+    rte_changed: function () {},
     save: function () {
         return this.rte.save().then(function () {
             editor.reload();
@@ -137,20 +130,14 @@ editor.Class = Widget.extend({
         return this.rte.save();
     },
     cancel: function () {
-        new $.Deferred(function (d) {
+        return new $.Deferred(function (d) {
             if (!rte.history.getEditableHasUndo().length) {
                 return d.resolve();
             }
-            var $dialog = $(qweb.render('web_editor.discard')).appendTo(document.body);
-            $dialog.on('click', '.btn-danger', function () {
-                d.resolve();
-            }).on('hidden.bs.modal', function () {
-                d.reject();
+            var confirm = Dialog.confirm(null, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
+                confirm_callback: d.resolve.bind(d)
             });
-            d.always(function () {
-                $dialog.remove();
-            });
-            $dialog.modal('show');
+            confirm.on("closed", d, d.reject);
         }).then(function () {
             window.onbeforeunload = null;
             editor.reload();
@@ -159,6 +146,4 @@ editor.Class = Widget.extend({
 });
 
 return editor;
-
 });
-

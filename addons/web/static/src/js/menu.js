@@ -13,15 +13,7 @@ var Menu = Widget.extend({
         this._super.apply(this, arguments);
         this.is_bound = $.Deferred();
         this.data = {data:{children:[]}};
-        this.on("menu_bound", this, function() {
-            // launch the fetch of needaction counters, asynchronous
-            var $all_menus = self.$el.parents('body').find('.oe_webclient').find('[data-menu]');
-            var all_menu_ids = _.map($all_menus, function (menu) {return parseInt($(menu).attr('data-menu'), 10);});
-            if (!_.isEmpty(all_menu_ids)) {
-                this.do_load_needaction(all_menu_ids);
-            }
-        });
-        core.bus.on('do_reload_needaction', this, this.do_reload_needaction);
+        core.bus.on('change_menu_section', this, this.on_change_top_menu);
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -33,11 +25,16 @@ var Menu = Widget.extend({
     },
     bind_menu: function() {
         var self = this;
-        this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container');
+        this.$secondary_menus = this.$el.parents().find('.o_sub_menu');
         this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
-        this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
+        this.$el.on('click', 'a[data-menu]', function (event) {
+            event.preventDefault();
+            var menu_id = $(event.currentTarget).data('menu');
+            core.bus.trigger('change_menu_section', menu_id);
+        });
+
         // Hide second level submenus
-        this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
+        this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').addClass('o_hidden');
         if (self.current_menu) {
             self.open_menu(self.current_menu);
         }
@@ -55,27 +52,7 @@ var Menu = Widget.extend({
 
         this.is_bound.resolve();
     },
-    do_load_needaction: function (menu_ids) {
-        var self = this;
-        menu_ids = _.compact(menu_ids);
-        if (_.isEmpty(menu_ids)) {
-            return $.when();
-        }
-        return this.rpc("/web/menu/load_needaction", {'menu_ids': menu_ids}).done(function(r) {
-            self.on_needaction_loaded(r);
-        });
-    },
-    on_needaction_loaded: function(data) {
-        var self = this;
-        this.needaction_data = data;
-        _.each(this.needaction_data, function (item, menu_id) {
-            var $item = self.$secondary_menus.find('a[data-menu="' + menu_id + '"]');
-            $item.find('.badge').remove();
-            if (item.needaction_counter && item.needaction_counter > 0) {
-                $item.append(QWeb.render("Menu.needaction_counter", { widget : item }));
-            }
-        });
-    },
+
     /**
      * Reflow the menu items and dock overflowing items into a "More" menu item.
      * Automatically called when 'menu_bound' event is triggered and on window resizing.
@@ -153,14 +130,14 @@ var Menu = Widget.extend({
         $sub_menu.show();
 
         // Hide/Show the leftbar menu depending of the presence of sub-items
-        this.$secondary_menus.parent('.oe_leftbar').toggle(!!$sub_menu.children().length);
+        this.$secondary_menus.toggleClass('o_hidden', !$sub_menu.children().length);
 
         // Activate current menu item and show parents
         this.$secondary_menus.find('.active').removeClass('active');
         if ($main_menu !== $clicked_menu) {
-            $clicked_menu.parents().show();
+            $clicked_menu.parents().removeClass('o_hidden');
             if ($clicked_menu.is('.oe_menu_toggler')) {
-                $clicked_menu.toggleClass('oe_menu_opened').siblings('.oe_secondary_submenu:first').toggle();
+                $clicked_menu.toggleClass('oe_menu_opened').siblings('.oe_secondary_submenu:first').toggleClass('o_hidden');
             } else {
                 $clicked_menu.parent().addClass('active');
             }
@@ -186,9 +163,8 @@ var Menu = Widget.extend({
      * Process a click on a menu item
      *
      * @param {Number} id the menu_id
-     * @param {Boolean} [needaction=false] whether the triggered action should execute in a `needs action` context
      */
-    menu_click: function(id, needaction) {
+    menu_click: function(id) {
         if (!id) { return; }
 
         // find back the menuitem in dom to get the action
@@ -211,7 +187,6 @@ var Menu = Widget.extend({
         if (action_id) {
             this.trigger('menu_click', {
                 action_id: action_id,
-                needaction: needaction,
                 id: id,
                 previous_menu_id: this.current_menu // Here we don't know if action will fail (in which case we have to revert menu)
             }, $item);
@@ -220,40 +195,19 @@ var Menu = Widget.extend({
         }
         this.open_menu(id);
     },
-    do_reload_needaction: function () {
-        var self = this;
-        if (self.current_menu) {
-            self.do_load_needaction([self.current_menu]).then(function () {
-                self.trigger("need_action_reloaded");
-            });
-        }
-    },
+
     /**
-     * Jquery event handler for menu click
+     * Change the current top menu
      *
-     * @param {Event} ev the jquery event
+     * @param {int} [menu_id] the top menu id
      */
-    on_top_menu_click: function(ev) {
-        ev.preventDefault();
+    on_change_top_menu: function(menu_id) {
         var self = this;
-        var id = $(ev.currentTarget).data('menu');
-
-        // Fetch the menu leaves ids in order to check if they need a 'needaction'
-        var $secondary_menu = this.$el.parents().find('.oe_secondary_menu[data-menu-parent=' + id + ']');
-        var $menu_leaves = $secondary_menu.children().find('.oe_menu_leaf');
-        var menu_ids = _.map($menu_leaves, function (leave) {return parseInt($(leave).attr('data-menu'), 10);});
-
-        self.do_load_needaction(menu_ids).then(function () {
-            self.trigger("need_action_reloaded");
-        });
-        this.$el.parents().find(".oe_secondary_menus_container").scrollTop(0,0);
-
-        this.on_menu_click(ev);
+        this.menu_click(menu_id);
     },
     on_menu_click: function(ev) {
         ev.preventDefault();
-        var needaction = $(ev.target).is('div#menu_counter');
-        this.menu_click($(ev.currentTarget).data('menu'), needaction);
+        this.menu_click($(ev.currentTarget).data('menu'));
     },
 });
 

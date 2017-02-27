@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- sale_timesheet and project define the same field without depending on each, which causes the field to be deleted when the module that created it
+        is deleted. To avoid this, we create xmlids manually for this field in both modules to prevent accidental deletion. To fix in saas-7 by moving the field definition-->
+        <record id="duplicate_field_xmlid" model="ir.model.data">
+            <field name="res_id" search="[('model','=','res.company'),('name','=','project_time_mode_id')]" model="ir.model.fields"/>
+            <field name="model">ir.model.fields</field>
+            <field name="module">sale_timesheet</field>
+            <field name="name">project_time_mode_id_duplicate_xmlid</field>
+            <field name="noupdate">True</field>
+        </record>
+    </data>
+
+</odoo>

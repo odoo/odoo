@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="acquirer_form_authorize" model="ir.ui.view">
+            <field name="name">acquirer.form.authorize</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer"]' position='after'>
+                    <group attrs="{'invisible': [('provider', '!=', 'authorize')]}">
+                        <field name="authorize_login"/>
+                        <field name="authorize_transaction_key" password="True"/>
+                        <a colspan="2" href="http://welcome.authorize.net/about_authorizenet/" target="_blank">How to configure your Authorize.Net account (look for Getting Started Guide) ?</a>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

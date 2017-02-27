@@ -1,0 +1,684 @@
+# #-#-#-#-#  sk.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_crm_partner_assign
+#
+# Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# #-#-#-#-#  sk.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_partner_assign
+#
+# Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-01-19 11:22+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
+"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"#-#-#-#-#  sk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"#-#-#-#-#  sk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/controllers/main.py:60
+#, python-format
+msgid "All Categories"
+msgstr "Všetky kategórie"
+
+#. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/controllers/main.py:79
+#, python-format
+msgid "All Countries"
+msgstr "Všetky krajiny"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.index
+msgid "Contact a reseller"
+msgstr "Kontaktovať predajcu"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.index
+msgid "Filter by Country"
+msgstr "Filtrovať podľa krajiny"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.index
+msgid "Filter by Level"
+msgstr "Filtrovať podľa úrovne"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.index
+msgid "Looking For a Local Store?"
+msgstr "Hľadáte lokálny obchod?"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.index
+msgid "No result found"
+msgstr "Výsledok nenájedný"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.partner
+msgid "Our Partners"
+msgstr "Naši partneri"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.grade_in_detail
+msgid "Partner"
+msgstr "Partner"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.index
+msgid "Partners"
+msgstr "Partneri"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.references_block
+msgid "References"
+msgstr "Ďalšie zdroje"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.footer_custom
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.layout
+msgid "Resellers"
+msgstr "Sprostredkovatelia"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.index
+msgid "Search"
+msgstr "Hľadanie"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
+msgid "World Map"
+msgstr "Mapa sveta"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.index
+msgid "pull-left"
+msgstr "pull-ľavý"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.index
+msgid "reference(s)"
+msgstr "referencia(e)"
+
+#. module: website_crm_partner_assign
+#: model:ir.model,name:website_crm_partner_assign.model_res_partner_grade
+msgid "res.partner.grade"
+msgstr "res.partner.grade"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "Plné URL pre prístup do dokumentu cez webstránku."
+
+#~ msgid "Visible in Website"
+#~ msgstr "Viditeľné na webstránke"
+
+#~ msgid "Website URL"
+#~ msgstr "URL webstránky"
+
+#~ msgid ""
+#~ "\n"
+#~ "            \n"
+#~ "<p>Hello,</p>\n"
+#~ "\n"
+#~ "\n"
+#~ "<p>We have been contacted by those prospects that are in your region. "
+#~ "Thus, the following leads have been assigned to ${ctx['partner_id'].name}:"
+#~ "</p>\n"
+#~ "\n"
+#~ "<ol>\n"
+#~ "% for lead in ctx['partner_leads']:\n"
+#~ "     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject "
+#~ "Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name "
+#~ "or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id."
+#~ "country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or "
+#~ "'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
+#~ "% endfor\n"
+#~ "</ol>\n"
+#~ "\n"
+#~ "% if ctx.get('partner_in_portal'):\n"
+#~ "<p>Please connect to your <a href=\"${object.get_portal_url()}\">Partner "
+#~ "Portal</a> to get details. On each lead are two buttons on the top left "
+#~ "corner that you should press after having contacted the lead: \"I'm "
+#~ "interested\" & \"I'm not interested\".</p>\n"
+#~ "% else:\n"
+#~ "<p>\n"
+#~ "    You do not have yet a portal access to our database. Please contact \n"
+#~ "    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and "
+#~ "'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,"
+#~ "ctx['partner_id'].user_id.email) or 'us'}.\n"
+#~ "</p>\n"
+#~ "% endif\n"
+#~ "<p>The lead will be sent to another partner if you do not contact the "
+#~ "lead before 20 days.</p>\n"
+#~ "\n"
+#~ "<p>Thanks,</p>\n"
+#~ "\n"
+#~ "<pre>\n"
+#~ "${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | "
+#~ "safe or ''}\n"
+#~ "</pre>\n"
+#~ "% if not ctx['partner_id'].user_id:\n"
+#~ "PS: It looks like you do not have an account manager assigned to you, "
+#~ "please contact us.\n"
+#~ "% endif\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "<p>Dobrý deň,</p>\n"
+#~ "\n"
+#~ "\n"
+#~ "<p>Boli sme kontaktovaní výhliadkami, ktoré sú vo vašom regióne. Preto "
+#~ "boli tieto iniciatívy priradené ${ctx['partner_id'].name}:</p>\n"
+#~ "\n"
+#~ "<ol>\n"
+#~ "% for lead in ctx['partner_leads']:\n"
+#~ "<li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject "
+#~ "Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name "
+#~ "or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id."
+#~ "country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or "
+#~ "'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
+#~ "% endfor\n"
+#~ "</ol>\n"
+#~ "\n"
+#~ "% if ctx.get('partner_in_portal'):\n"
+#~ "<p>Prosím pripojte sa na Váš <a href=\"${object."
+#~ "get_portal_url()}\">Partnerský portál</a> pre viac detailov. Na každej "
+#~ "iniciatíve sú dve tlačidlá v ľavom hornom rohu, ktoré by ste mali stlačiť "
+#~ "po kontakte iniciatívou: \"Mám záujem\" & \"Nemám záujem\".</p>\n"
+#~ "% else:\n"
+#~ "<p>\n"
+#~ "Nemáte ešte portálový prístup do našej databázy. Prosím kontaktujte\n"
+#~ "${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your "
+#~ "account manager %s (%s)' % (ctx['partner_id'].user_id.name,"
+#~ "ctx['partner_id'].user_id.email) or 'us'}.\n"
+#~ "</p>\n"
+#~ "% endif\n"
+#~ "<p>Iniciatíva bude odoslaná na iného spoločníka, ak nebudete do 20 dní "
+#~ "kontaktovať iniciatívu.</p>\n"
+#~ "\n"
+#~ "<p>Vďaka,</p>\n"
+#~ "\n"
+#~ "<pre>\n"
+#~ "${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | "
+#~ "safe or ''}\n"
+#~ "</pre>\n"
+#~ "% if not ctx['partner_id'].user_id:\n"
+#~ "PS: Zdá sa, že nemáte priradeného manažéra účtu, prosím kontaktujte nás.\n"
+#~ "% endif"
+
+#~ msgid "# of Cases"
+#~ msgstr "# z prípadov"
+
+#~ msgid "# of Opportunity"
+#~ msgstr "# Príležitosti"
+
+#~ msgid "<p>I am interested by this lead.</p>"
+#~ msgstr "<p>Mám záujem o túto iniciatívu.</p>"
+
+#~ msgid "<p>I am not interested by this lead. I contacted the lead.</p>"
+#~ msgstr "<p>Nemám záujem o túto iniciatívu. Kontaktoval som iniciatívu.</p>"
+
+#~ msgid ""
+#~ "<p>I am not interested by this lead. I have not contacted the lead.</p>"
+#~ msgstr ""
+#~ "<p>Nemám záujem o túto iniciatívu. Nekontaktoval som iniciatívu.</p>"
+
+#~ msgid ""
+#~ "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;"
+#~ "=',0)]}\">N </span>\n"
+#~ "                                <span class=\"oe_grey\" attrs="
+#~ "\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
+#~ msgstr ""
+#~ "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;"
+#~ "=',0)]}\">S </span>\n"
+#~ "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;"
+#~ "=',0)]}\">J </span>"
+
+#~ msgid ""
+#~ "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;"
+#~ "=',0)]}\">E </span>\n"
+#~ "                                <span class=\"oe_grey\" attrs="
+#~ "\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+#~ "                                <span class=\"oe_grey\">) </span>"
+#~ msgstr ""
+#~ "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;"
+#~ "=',0)]}\">V </span>\n"
+#~ "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;"
+#~ "=',0)]}\">Z </span>\n"
+#~ "<span class=\"oe_grey\">) </span>"
+
+#~ msgid "Activation"
+#~ msgstr "Aktivácia"
+
+#~ msgid "Active"
+#~ msgstr "Aktívny"
+
+#~ msgid "Assign Date"
+#~ msgstr "Dátum priradenia"
+
+#~ msgid "Assign Month"
+#~ msgstr "Mesiac priradenia"
+
+#~ msgid "Assign salesman of assigned partner"
+#~ msgstr "Priradiť predajcu priradeného partnera"
+
+#~ msgid "Assignation Date"
+#~ msgstr "Dátum pridelenia"
+
+#~ msgid "Assigned"
+#~ msgstr "Pridelené"
+
+#~ msgid "Assigned Opportunities"
+#~ msgstr "Priradené príležitosti"
+
+#~ msgid "Assigned Partner"
+#~ msgstr "Priradený partner"
+
+#~ msgid "Automatic Assignation"
+#~ msgstr "Automatické priradenie"
+
+#~ msgid "Automatically sanitized HTML contents"
+#~ msgstr "Automaticky vylepšený HTML obsah"
+
+#~ msgid "Avg Probability"
+#~ msgstr "Priem. pravdepodobnosť"
+
+#~ msgid "Avg. of Probability"
+#~ msgstr "Priem. pravdepodobnosti"
+
+#~ msgid "CRM Lead Report"
+#~ msgstr "Výkaz CRM iniciatívy"
+
+#~ msgid "CRM Partner Report"
+#~ msgstr "Výkaz CRM partnera"
+
+#~ msgid "Cancel"
+#~ msgstr "Zrušiť"
+
+#~ msgid "Categorization"
+#~ msgstr "Kategorizácia"
+
+#~ msgid "Close Date"
+#~ msgstr "Dátum uzavretia"
+
+#~ msgid "Comment"
+#~ msgstr "Komentár"
+
+#~ msgid "Communication"
+#~ msgstr "Komunikácia"
+
+#~ msgid "Company"
+#~ msgstr "Spoločnost"
+
+#~ msgid "Confirm"
+#~ msgstr "Potvrdiť"
+
+#~ msgid "Contact"
+#~ msgstr "Kontakt"
+
+#~ msgid "Contents"
+#~ msgstr "Obsahy"
+
+#~ msgid "Country"
+#~ msgstr "Krajina"
+
+#~ msgid "Create Date"
+#~ msgstr "Dátum vytvorenia"
+
+#~ msgid "Created by"
+#~ msgstr "Vytvoril"
+
+#~ msgid "Created on"
+#~ msgstr "Vytvorené"
+
+#~ msgid "Customer"
+#~ msgstr "Zákazník"
+
+#~ msgid "Customer Name"
+#~ msgstr "Meno zákazníka"
+
+#~ msgid "Date Partnership"
+#~ msgstr "Dátum partnerstva"
+
+#~ msgid "Date Review"
+#~ msgstr "Dátum posudku"
+
+#~ msgid "Delay to Assign"
+#~ msgstr "Meškanie do priradenia"
+
+#~ msgid "Delay to Close"
+#~ msgstr "Meškanie do zatvorenia"
+
+#~ msgid "Details"
+#~ msgstr "Detaily"
+
+#~ msgid "Did you contact the lead?"
+#~ msgstr "Kontaktoval ste inciatívu?"
+
+#~ msgid "Display Name"
+#~ msgstr "Zobraziť meno"
+
+#~ msgid "Do you have contacted the customer?"
+#~ msgstr "Kontaktoval ste zákazníka?"
+
+#~ msgid "Email Template"
+#~ msgstr "Emailová šablóna"
+
+#~ msgid "Expected Revenues"
+#~ msgstr "Očakávané príjmy"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Rozšírené filtre..."
+
+#~ msgid "Forward Leads To"
+#~ msgstr "Odoslať ďalej iniciatívy "
+
+#~ msgid "Forward selected leads to"
+#~ msgstr "Odoslať ďalej zvolené iniciatívy "
+
+#~ msgid "Forward to Partner"
+#~ msgstr "Odoslať ďalej partnerovi"
+
+#~ msgid "Fwd: Lead: ${ctx['partner_id'].name}"
+#~ msgstr "Fwd: Iniciatíva: ${ctx['partner_id'].name}"
+
+#~ msgid "Geo Latitude"
+#~ msgstr "Geo zemepisná šírka"
+
+#~ msgid "Geo Longitude"
+#~ msgstr "Geo zemepisná dĺžka"
+
+#~ msgid "Geolocation"
+#~ msgstr "Geolokácia"
+
+#~ msgid ""
+#~ "Gives the probability to assign a lead to this partner. (0 means no "
+#~ "assignation.)"
+#~ msgstr ""
+#~ "Dáva pravdepodobnosť priradenia iniciatívy k tomuto partnerovi. (0 "
+#~ "znamená žiadne priradenie.)"
+
+#~ msgid "Grade"
+#~ msgstr "Známka"
+
+#~ msgid "Group By"
+#~ msgstr "Zoskupiť podľa"
+
+#~ msgid "High"
+#~ msgstr "Vysoká"
+
+#~ msgid "I'm interested"
+#~ msgstr "Mám záujem"
+
+#~ msgid "I'm not interested"
+#~ msgstr "Nemám záujem"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Implementation References"
+#~ msgstr "Implementačné referencie"
+
+#~ msgid "Implemented by"
+#~ msgstr "Implementoval"
+
+#~ msgid "Interested by this lead"
+#~ msgstr "Zaujatý touto iniciatívou"
+
+#~ msgid "Invoice Account Date"
+#~ msgstr "Dátum vyfaktúrovania účtu"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Posledná modifikácia"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Naposledy upravoval"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Naposledy upravované"
+
+#~ msgid "Last date this case was forwarded/assigned to a partner"
+#~ msgstr ""
+#~ "Posledný dátum tento prípad bol poslan ďalej partnerovi/pridelený "
+#~ "partnerovi"
+
+#~ msgid "Latest Partner Review"
+#~ msgstr "Najnovšie preskúmanie partnera"
+
+#~ msgid "Lead"
+#~ msgstr "Iniciatíva"
+
+#~ msgid "Lead  Single Links"
+#~ msgstr "Jednotlivé odkazy iniciatívy"
+
+#~ msgid "Lead Assign"
+#~ msgstr "Prideliť iniciatívu"
+
+#~ msgid "Lead Feedback"
+#~ msgstr "Spätná väzba iniciatívy"
+
+#~ msgid "Lead Location"
+#~ msgstr "Lokácia iniciatívy"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Iniciatíva/Príležitosť"
+
+#~ msgid "Leads"
+#~ msgstr "Iniciatívy"
+
+#~ msgid "Leads & Opportunities"
+#~ msgstr "Príležitosti"
+
+#~ msgid "Leads Analysis"
+#~ msgstr "Analýza iniciatív"
+
+#~ msgid "Level"
+#~ msgstr "Úroveň"
+
+#~ msgid "Level Name"
+#~ msgstr "Názov úrovne"
+
+#~ msgid "Level Weight"
+#~ msgstr "Hmotnosť úrovne"
+
+#~ msgid "Low"
+#~ msgstr "Nízka"
+
+#~ msgid "Max Probability"
+#~ msgstr "Max pravdepodobnosť"
+
+#~ msgid "My Assigned Partners"
+#~ msgstr "Moji pridelený partneri"
+
+#~ msgid "Name"
+#~ msgstr "Meno"
+
+#~ msgid "Next Partner Review"
+#~ msgstr "Nasledujúce preskúmanie partnera"
+
+#~ msgid "Normal"
+#~ msgstr "Normálna"
+
+#~ msgid "Number of Days to close the case"
+#~ msgstr "Počet dní na uzatvorenie udalosti"
+
+#~ msgid "Number of Days to open the case"
+#~ msgstr "Počet dní na otvorenie prípadu"
+
+#~ msgid ""
+#~ "Once the lead is processed, it will be in your \"Opportunities\" menu."
+#~ msgstr ""
+#~ "Akonáhle je iniciatíva spracovaná, bude vo vašom menu \"Príležitosti\"."
+
+#~ msgid "Opening Date"
+#~ msgstr "Dátum otvorenia"
+
+#~ msgid "Opp. Assignment Analysis"
+#~ msgstr "Analýza pridelenia prílež."
+
+#~ msgid "Opportunities"
+#~ msgstr "Príležitosti"
+
+#~ msgid "Opportunities Assignment Analysis"
+#~ msgstr "Analýza pridelenia príležitostí"
+
+#~ msgid "Opportunity"
+#~ msgstr "Príležitosť"
+
+#~ msgid "Overpassed Deadline"
+#~ msgstr "Prekročená uzávierka"
+
+#~ msgid "Partner Activation"
+#~ msgstr "Aktivácia partnera"
+
+#~ msgid "Partner Activations"
+#~ msgstr "Aktivácie partnera"
+
+#~ msgid "Partner Assignation"
+#~ msgstr "Prideľovanie partnera"
+
+#~ msgid "Partner Level"
+#~ msgstr "Úroveň partnera"
+
+#~ msgid "Partner Location"
+#~ msgstr "Lokácia partnera"
+
+#~ msgid "Partner Name"
+#~ msgstr "Názov partnera"
+
+#~ msgid "Partner Review"
+#~ msgstr "Preskúmanie partnera"
+
+#~ msgid "Partner assigned Analysis"
+#~ msgstr "Analýza pridelenia partnera"
+
+#~ msgid "Partner this case has been forwarded/assigned to."
+#~ msgstr "Partner ktorému bol tento prípad preposlaný/pridelený."
+
+#~ msgid "Partnership Analysis"
+#~ msgstr "Analýza partnerstva"
+
+#~ msgid "Partnership Date"
+#~ msgstr "Dátum partnerstva"
+
+#~ msgid "Partnerships"
+#~ msgstr "Partnerstvo"
+
+#~ msgid "Planned Revenue"
+#~ msgstr "Plánované príjmy"
+
+#~ msgid "Priority"
+#~ msgstr "Priorita"
+
+#~ msgid "Probable Revenue"
+#~ msgstr "Pravdepodobné príjmy"
+
+#~ msgid "Sales Team"
+#~ msgstr "Obchodný tím"
+
+#~ msgid "Salesperson"
+#~ msgstr "Predajca"
+
+#~ msgid "Send"
+#~ msgstr "Poslať"
+
+#~ msgid "Send Email"
+#~ msgstr "Poslať email"
+
+#~ msgid "Send Mail"
+#~ msgstr "Poslať poštu"
+
+#~ msgid "Sequence"
+#~ msgstr "Postupnosť"
+
+#~ msgid "Set an email address for the partner %s"
+#~ msgstr "Nastaviť emailovú adresu pre partnera %s"
+
+#~ msgid "Set an email address for the partner(s): %s"
+#~ msgstr "Nastaviť emailovú adresu pre partnera(ov): %s"
+
+#~ msgid "Stage"
+#~ msgstr "Etapa"
+
+#~ msgid "Subject"
+#~ msgstr "Predmet"
+
+#~ msgid "The CRM Channel Interested Action is missing"
+#~ msgstr "CRM kanál akcia Zainteresovaný chýba"
+
+#~ msgid "The Forward Email Template is not in the database"
+#~ msgstr "Emailová šablóna Poslať ďalej nie je v databáze"
+
+#~ msgid "The Portal group cannot be found"
+#~ msgstr "Skupina portálu nemožno nájsť"
+
+#~ msgid "The lead has been contacted"
+#~ msgstr "Iniciatíva bola kontaktovaná"
+
+#~ msgid "To Recycle"
+#~ msgstr "Na zrecyklovanie"
+
+#~ msgid "Turnover"
+#~ msgstr "Zvrat"
+
+#~ msgid "Type"
+#~ msgstr "Typ"
+
+#~ msgid "Type is used to separate Leads and Opportunities"
+#~ msgstr "Typ je používaný pre oddeľovanie iniciatív a príležitostí"
+
+#~ msgid "User"
+#~ msgstr "Používateľ"
+
+#~ msgid "Very High"
+#~ msgstr "Veľmi vysoké"
+
+#~ msgid "What are the elements that have led to this decision?"
+#~ msgstr "Čo sú elementy, ktoré viedli k tomuto rozhodnutiu?"
+
+#~ msgid "What is the next action? When? What is the expected revenue?"
+#~ msgstr "Čo je ďalšia akcia? Kedy? Aká je čakávaný výnos?"
+
+#~ msgid "Why aren't you interested by this lead?"
+#~ msgstr "Prečo vás nezaujala táto iniciatíva?"
+
+#~ msgid "You must contact the lead before saying that you are interested"
+#~ msgstr "Musíte kontaktovať iniciatívu než poviete že nemáte záujem"
+
+#~ msgid "a single partner: manual selection of partner"
+#~ msgstr "jediný partner: manuálny výber partnera"
+
+#~ msgid "crm.lead.assignation"
+#~ msgstr "crm.lead.assignation"
+
+#~ msgid "crm.lead.channel.interested"
+#~ msgstr "crm.lead.channel.interested"
+
+#~ msgid "crm.lead.forward.to.partner"
+#~ msgstr "crm.lead.forward.to.partner"
+
+#~ msgid "e.g. Gold Partner"
+#~ msgstr "napr. Zlatý partner"
+
+#~ msgid "res.partner.activation"
+#~ msgstr "res.partner.activation"
+
+#~ msgid ""
+#~ "several partners: automatic assignation, using GPS coordinates and "
+#~ "partner's grades"
+#~ msgstr ""
+#~ "viacero partnerov: automatické prideľovanie, používanie GPS koordinátov a "
+#~ "známok partnera"

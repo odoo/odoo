@@ -1,0 +1,26 @@
+.o_editable {
+    &:not(:empty), &[data-oe-type] {
+        &[date-oe-model="ir.ui.view"] {
+            &, th, td {
+                &:hover {
+                    -moz-box-shadow: #DDCC33 0 0 5px 2px inset;
+                    -webkit-box-shadow: #DDCC33 0 0 5px 2px inset;
+                    box-shadow: #DDCC33 0 0 5px 2px inset;
+                }
+            }
+        }
+    }
+}
+
+body.o_in_iframe {
+    margin-top: 40px!important;
+    div.o_css_editor {
+        > form {
+            display: none;
+        }
+    }
+
+    .header, .footer {
+        display: none;
+    }
+}

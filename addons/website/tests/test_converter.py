@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-import unittest2
-from openerp.addons.website.models.website import slugify, unslug
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import unittest
+from odoo.addons.website.models.website import slugify, unslug
 
 
-class TestUnslug(unittest2.TestCase):
+class TestUnslug(unittest.TestCase):
+
     def test_unslug(self):
         tests = {
             '': (None, None),
@@ -24,11 +27,12 @@ class TestUnslug(unittest2.TestCase):
             self.assertEqual(unslug(slug), expected)
 
 
-class TestTitleToSlug(unittest2.TestCase):
+class TestTitleToSlug(unittest.TestCase):
     """
     Those tests should pass with or without python-slugify
     See website/models/website.py slugify method
     """
+
     def test_spaces(self):
         self.assertEqual(
             "spaces",

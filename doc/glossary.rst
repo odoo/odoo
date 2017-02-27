@@ -1,5 +1,9 @@
 :orphan: true
 
+========
+Glossary
+========
+
 .. glossary::
 
     external id

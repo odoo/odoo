@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp import models, api, _
-from openerp.exceptions import UserError
+from odoo import models, api, _
+from odoo.exceptions import UserError
 
 
 class AccountInvoiceConfirm(models.TransientModel):
@@ -17,9 +17,9 @@ class AccountInvoiceConfirm(models.TransientModel):
         active_ids = context.get('active_ids', []) or []
 
         for record in self.env['account.invoice'].browse(active_ids):
-            if record.state not in ('draft', 'proforma', 'proforma2'):
-                raise UserError(_("Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-Forma' state."))
-            record.signal_workflow('invoice_open')
+            if record.state != 'draft':
+                raise UserError(_("Selected invoice(s) cannot be confirmed as they are not in 'Draft' state."))
+            record.action_invoice_open()
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -40,5 +40,5 @@ class AccountInvoiceCancel(models.TransientModel):
         for record in self.env['account.invoice'].browse(active_ids):
             if record.state in ('cancel', 'paid'):
                 raise UserError(_("Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' or 'Done' state."))
-            record.signal_workflow('invoice_cancel')
+            record.action_invoice_cancel()
         return {'type': 'ir.actions.act_window_close'}

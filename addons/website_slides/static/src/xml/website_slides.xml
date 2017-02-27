@@ -15,7 +15,11 @@
                         <form class="clearfix form-horizontal">
                             <div class="form-group">
                                 <div class="col-sm-4">
-                                    <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" class="img-responsive img-thumbnail"/>
+                                    <div class="img-thumbnail">
+                                        <div class="o_slide_preview">
+                                            <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" class="img-responsive"/>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-sm-8">
                                     <ul class="list-group">
@@ -64,8 +68,7 @@
                     <div class="modal-footer">
                         <button type="button" data-loading-text="Loading..." class="btn btn-primary save">Save as Draft</button>
                         <button type="button" data-loading-text="Loading..." data-published="true" class="btn btn-primary save">Save and Publish</button>
-                        or
-                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Discard</button>
                     </div>
                 </div>
             </div>

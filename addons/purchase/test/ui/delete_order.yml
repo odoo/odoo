@@ -8,20 +8,24 @@
 -
   I try to delete confirmed order and check Error Message.
 -
-  !python {model: purchase.order}: |
+  !python {model: purchase.order, id: purchase_order_1}: |
     try:
-        self.unlink(cr, uid, [ref("purchase_order_1")])
+        self.unlink()
     except Exception,e:
+        pass
+-
+  I delete a cancelled order.
+-
+  !python {model: purchase.order, id: purchase_order_7}: |
+    from odoo.exceptions import UserError
+    try:
+        self.unlink()
+    except UserError:
         pass
 -
   I delete a draft order.
 -
-  !python {model: purchase.order}: |
-    self.unlink(cr, uid, [ref("purchase_order_5")])
--
-  I delete a cancelled order.
--
-  !python {model: purchase.order}: |
-    self.unlink(cr, uid, [ref("purchase_order_7")])
+  !python {model: purchase.order, id: purchase_order_5}: |
+    self.unlink()
 
 

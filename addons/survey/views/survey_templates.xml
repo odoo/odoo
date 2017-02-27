@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data>
     <!-- "Thank you" message when the survey is completed -->
     <template id="sfinished" name="Survey Finished">
@@ -39,7 +39,7 @@
                 <div class="container">
                     <div class="jumbotron mt32">
                         <h1>Login required</h1>
-                        <p>This survey is open only to registered people. Please <a t-attf-href="/web/login?redirect=%2Fsurvey%2Fstart%2F#{ slug(survey) }">log in</a>.</p>
+                        <p>This survey is open only to registered people. Please <a t-attf-href="/web/login?redirect=%2Fsurvey%2Fstart%2F#{ slug(survey) }%2F#{token}">log in</a>.</p>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
 
     <!-- Back Button to redirect in form view of survey -->
     <template id="back" name="Back">
-        <div groups="base.group_website_publisher" t-ignore="true" class="pull-right">
+        <div groups="website.group_website_publisher" t-ignore="true" class="pull-right">
             <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form" class="btn btn-default">Back to Survey</a>
         </div>
     </template>
@@ -111,12 +111,13 @@
     <!-- A page -->
     <template id="page" name="Page">
         <div class="page-header">
-            <p class="pull-right">Page <span t-raw='page_nr + 1'/> on <span t-raw="len(survey.page_ids)"/></p>
+            <p class="pull-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
             <h1 t-field='page.title' />
             <div t-field='page.description' class="oe_no_empty"/>
         </div>
 
         <form role="form" method="post" class="js_surveyform" t-att-name="'%s_%s' % (survey.id, page.id)" t-att-action="'/survey/fill/%s/%s' % (slug(survey), token)" t-att-data-prefill="'/survey/prefill/%s/%s/%s' % (slug(survey), token, slug(page))" t-att-data-validate="'/survey/validate/%s' % (slug(survey))" t-att-data-submit="'/survey/submit/%s' % (slug(survey))">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="page_id" t-att-value="page.id" />
             <input type="hidden" name="token" t-att-value="token" />
             <t t-foreach='page.question_ids' t-as='question'>
@@ -181,7 +182,7 @@
     </template>
 
     <template id="simple_choice" name="Simple choice">
-        <div t-if="question.display_mode == 'dropdown'" class="js_drop row">
+        <div t-if="question.display_mode == 'dropdown' and token" class="js_drop row">
             <div class="col-md-12">
                 <select class="form-control" t-att-name="prefix">
                     <option disabled="1" selected="1" value="">Choose...</option>
@@ -201,9 +202,9 @@
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
         </div>
-        <div t-if="question.display_mode == 'columns' " class="row js_radio">
+        <div t-if="question.display_mode == 'columns' or not token" class="row js_radio">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
-                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else ''">
+                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else None">
                     <input type="radio" t-att-name="prefix" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
@@ -225,7 +226,7 @@
     <template id="multiple_choice" name="Multiple choice">
         <div class="row">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
-                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else ''">
+                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else None">
                     <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
@@ -268,6 +269,12 @@
         </div>
     </template>
 
+    <template id="assets_frontend_survey" inherit_id="website.assets_frontend" name="Printing Survey assets">
+        <xpath expr="." position="inside">
+            <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
+        </xpath>
+    </template>
+
     <!-- Printable view of a survey (all pages) -->
     <template id="survey_print" name="Survey">
         <t t-call="website.layout">
@@ -279,7 +286,7 @@
                             <h1><span t-field='survey.title'/></h1>
                             <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
                         </div>
-                        <form role="form" method="post" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (slug(survey), token)" t-att-data-scores="'/survey/scores/%s/%s' % (slug(survey), token) if quizz_correction else ''">
+                        <div role="form" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (slug(survey), token)">
                             <t t-foreach="survey.page_ids" t-as="page">
                                 <div class="page-header">
                                     <h1 t-field='page.title' />
@@ -306,11 +313,11 @@
                                 </t>
                                 <hr/>
                             </t>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </t>
     </template>
 </data>
-</openerp>
+</odoo>

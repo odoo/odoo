@@ -5,13 +5,6 @@ define([
   'summernote/core/dom'
 ], function (agent, func, list, dom) {
 
-  /**
-   * Data structure
-   *  - {BoundaryPoint}: a point of dom tree
-   *  - {BoundaryPoints}: two boundaryPoints corresponding to the start and the end of the Range
-   *
-   *  @see http://www.w3.org/TR/DOM-Level-2-Traversal-Range/ranges.html#Level-2-Range-Position
-   */
   var range = (function () {
 
     /**
@@ -118,6 +111,7 @@ define([
     /**
      * Wrapped Range
      *
+     * @constructor
      * @param {Node} sc - start container
      * @param {Number} so - start offset
      * @param {Node} ec - end container
@@ -189,25 +183,48 @@ define([
         } else {
           nativeRng.select();
         }
+        
+        return this;
       };
 
       /**
        * @return {WrappedRange}
        */
       this.normalize = function () {
-        var getVisiblePoint = function (point) {
-          if (!dom.isVisiblePoint(point)) {
-            if (dom.isLeftEdgePoint(point)) {
-              point = dom.nextPointUntil(point, dom.isVisiblePoint);
-            } else if (dom.isRightEdgePoint(point)) {
-              point = dom.prevPointUntil(point, dom.isVisiblePoint);
-            }
+
+        /**
+         * @param {BoundaryPoint} point
+         * @param {Boolean} isLeftToRight
+         * @return {BoundaryPoint}
+         */
+        var getVisiblePoint = function (point, isLeftToRight) {
+          if ((dom.isVisiblePoint(point) && !dom.isEdgePoint(point)) ||
+              (dom.isVisiblePoint(point) && dom.isRightEdgePoint(point) && !isLeftToRight) ||
+              (dom.isVisiblePoint(point) && dom.isLeftEdgePoint(point) && isLeftToRight) ||
+              (dom.isVisiblePoint(point) && dom.isBlock(point.node) && dom.isEmpty(point.node))) {
+            return point;
           }
-          return point;
+
+          // point on block's edge
+          var block = dom.ancestor(point.node, dom.isBlock);
+          if (((dom.isLeftEdgePointOf(point, block) || dom.isVoid(dom.prevPoint(point).node)) && !isLeftToRight) ||
+              ((dom.isRightEdgePointOf(point, block) || dom.isVoid(dom.nextPoint(point).node)) && isLeftToRight)) {
+
+            // returns point already on visible point
+            if (dom.isVisiblePoint(point)) {
+              return point;
+            }
+            // reverse direction 
+            isLeftToRight = !isLeftToRight;
+          }
+
+          var nextPoint = isLeftToRight ? dom.nextPointUntil(dom.nextPoint(point), dom.isVisiblePoint) :
+                                          dom.prevPointUntil(dom.prevPoint(point), dom.isVisiblePoint);
+          return nextPoint || point;
         };
 
-        var startPoint = getVisiblePoint(this.getStartPoint());
-        var endPoint = getVisiblePoint(this.getStartPoint());
+        var endPoint = getVisiblePoint(this.getEndPoint(), false);
+        var startPoint = this.isCollapsed() ? endPoint : getVisiblePoint(this.getStartPoint(), true);
 
         return new WrappedRange(
           startPoint.node,
@@ -353,42 +370,44 @@ define([
        * delete contents on range
        * @return {WrappedRange}
        */
-      // this.deleteContents = function () {
-      //   if (this.isCollapsed()) {
-      //     return this;
-      //   }
+      if(_.isUndefined(this.deleteContents)) // ODOO: ability to override by prototype
+      this.deleteContents = function () {
+        if (this.isCollapsed()) {
+          return this;
+        }
 
-      //   var rng = this.splitText();
-      //   var nodes = rng.nodes(null, {
-      //     fullyContains: true
-      //   });
+        var rng = this.splitText();
+        var nodes = rng.nodes(null, {
+          fullyContains: true
+        });
 
-      //   var point = dom.prevPointUntil(rng.getStartPoint(), function (point) {
-      //     return !list.contains(nodes, point.node);
-      //   });
+        // find new cursor point
+        var point = dom.prevPointUntil(rng.getStartPoint(), function (point) {
+          return !list.contains(nodes, point.node);
+        });
 
-      //   var emptyParents = [];
-      //   $.each(nodes, function (idx, node) {
-      //     // find empty parents
-      //     var parent = node.parentNode;
-      //     if (point.node !== parent && dom.nodeLength(parent) === 1) {
-      //       emptyParents.push(parent);
-      //     }
-      //     dom.remove(node, false);
-      //   });
+        var emptyParents = [];
+        $.each(nodes, function (idx, node) {
+          // find empty parents
+          var parent = node.parentNode;
+          if (point.node !== parent && dom.nodeLength(parent) === 1) {
+            emptyParents.push(parent);
+          }
+          dom.remove(node, false);
+        });
 
-      //   // remove empty parents
-      //   $.each(emptyParents, function (idx, node) {
-      //     dom.remove(node, false);
-      //   });
+        // remove empty parents
+        $.each(emptyParents, function (idx, node) {
+          dom.remove(node, false);
+        });
 
-      //   return new WrappedRange(
-      //     point.node,
-      //     point.offset,
-      //     point.node,
-      //     point.offset
-      //   );
-      // };
+        return new WrappedRange(
+          point.node,
+          point.offset,
+          point.node,
+          point.offset
+        ).normalize();
+      };
       
       /**
        * makeIsOn: return isOn(pred) function
@@ -408,36 +427,6 @@ define([
       this.isOnAnchor = makeIsOn(dom.isAnchor);
       // isOnAnchor: judge whether range is on cell node or not
       this.isOnCell = makeIsOn(dom.isCell);
-      // isOnAnchor: judge whether range is an image node or not
-      this.isOnImg = function () {
-        var nb = 0;
-        var image;
-        var startPoint = {node: sc.childNodes.length && sc.childNodes[so] || sc};
-        startPoint.offset = startPoint.node === sc ? so : 0;
-        var endPoint = {node: ec.childNodes.length && ec.childNodes[eo] || ec};
-        endPoint.offset = endPoint.node === ec ? eo : 0;
-
-        if (dom.isImg(startPoint.node)) {
-          nb ++;
-          image = startPoint.node;
-        }
-        dom.walkPoint(startPoint, endPoint, function (point) {
-          if (!dom.isText(endPoint.node) && point.node === endPoint.node && point.offset === endPoint.offset) {
-            return;
-          }
-          var node = point.node.childNodes.length && point.node.childNodes[point.offset] || point.node;
-          var offset = node === point.node ? point.offset : 0;
-          var isImg = dom.ancestor(node, dom.isImg);
-          if (!isImg && ((!dom.isBR(node) && !dom.isText(node)) || (offset && node.textContent.length !== offset && node.textContent.match(/\S|\u00A0/)))) {
-            nb++;
-          }
-          if (isImg && image !== isImg) {
-            image = isImg;
-            nb ++;
-          }
-        });
-        return nb === 1 && image;
-      };
 
       /**
        * @param {Function} pred
@@ -467,13 +456,20 @@ define([
       this.wrapBodyInlineWithPara = function () {
         if (dom.isBodyContainer(sc) && dom.isEmpty(sc)) {
           sc.innerHTML = dom.emptyPara;
-          return new WrappedRange(sc.firstChild, 0);
+          return new WrappedRange(sc.firstChild, 0, sc.firstChild, 0);
         }
 
+        /**
+         * [workaround] firefox often create range on not visible point. so normalize here.
+         *  - firefox: |<p>text</p>|
+         *  - chrome: <p>|text|</p>
+         */
+        var rng = this.normalize();
         if (dom.isParaInline(sc) || dom.isPara(sc)) {
-          return this.normalize();
+          return rng;
         }
 
+        // ODOO: insert a p tag when try to insert a br with insertNode method, if the editor is inside a p, li, h1... (start_modification
         // if apply the editor to a P, LI... or inside a P, LI...
         if (dom.isText(sc)) {
           var node = sc;
@@ -484,17 +480,18 @@ define([
             }
           }
         }
+        // ODOO: end_modification)
 
         // find inline top ancestor
         var topAncestor;
-        if (dom.isInline(sc)) {
-          var ancestors = dom.listAncestor(sc, func.not(dom.isInline));
+        if (dom.isInline(rng.sc)) {
+          var ancestors = dom.listAncestor(rng.sc, func.not(dom.isInline));
           topAncestor = list.last(ancestors);
           if (!dom.isInline(topAncestor)) {
-            topAncestor = ancestors[ancestors.length - 2] || sc.childNodes[so];
+            topAncestor = ancestors[ancestors.length - 2] || rng.sc.childNodes[rng.so];
           }
         } else {
-          topAncestor = sc.childNodes[so - 1];
+          topAncestor = rng.sc.childNodes[rng.so > 0 ? rng.so - 1 : 0];
         }
 
         // siblings not in paragraph
@@ -514,52 +511,81 @@ define([
        * insert node at current cursor
        *
        * @param {Node} node
-       * @param {Boolean} [isInline]
        * @return {Node}
        */
-      this.insertNode = function (node, isInline) {
-        var rng = this.wrapBodyInlineWithPara();
-        var point = rng.getStartPoint();
+      this.insertNode = function (node) {
+        var rng = this.wrapBodyInlineWithPara().deleteContents();
+        // ODOO: override to not split world for inserting inline
+        // original: var info = dom.splitPoint(rng.getStartPoint(), dom.isInline(node));
+        var info = dom.splitPoint(rng.getStartPoint(), !dom.isBodyContainer(dom.ancestor(rng.sc, function(node) { return dom.isBodyContainer(node) || dom.isPara(node) })));
 
-        var splitRoot, container, pivot;
-        if (isInline) {
-          container = dom.isPara(point.node) ? point.node : point.node.parentNode;
-          if (dom.isPara(point.node)) {
-            pivot = point.node.childNodes[point.offset];
-          } else {
-            pivot = dom.splitTree(point.node, point);
-          }
+        if (info.rightNode) {
+          info.rightNode.parentNode.insertBefore(node, info.rightNode);
         } else {
-          // splitRoot will be childNode of container
-          var ancestors = dom.listAncestor(point.node, dom.isBodyContainer);
-          var topAncestor = list.last(ancestors) || point.node;
-
-          if (dom.isBodyContainer(topAncestor)) {
-            splitRoot = ancestors[ancestors.length - 2];
-            container = topAncestor;
-          } else {
-            splitRoot = topAncestor;
-            container = splitRoot.parentNode;
-          }
-          pivot = splitRoot && dom.splitTree(splitRoot, point);
-        }
-
-        if (pivot) {
-          pivot.parentNode.insertBefore(node, pivot);
-        } else {
-          container.appendChild(node);
+          info.container.appendChild(node);
         }
 
         return node;
       };
+
+      /**
+       * insert html at current cursor
+       */
+      this.pasteHTML = function (markup) {
+        var contentsContainer = $('<div></div>').html(markup)[0];
+        var childNodes = list.from(contentsContainer.childNodes);
+
+        var rng = this.wrapBodyInlineWithPara().deleteContents();
+
+        return childNodes.reverse().map(function (childNode) {
+          return rng.insertNode(childNode);
+        }).reverse();
+      };
   
+      /**
+       * returns text in range
+       *
+       * @return {String}
+       */
       this.toString = function () {
         var nativeRng = nativeRange();
         return agent.isW3CRangeSupport ? nativeRng.toString() : nativeRng.text;
       };
+
+      /**
+       * returns range for word before cursor
+       *
+       * @param {Boolean} [findAfter] - find after cursor, default: false
+       * @return {WrappedRange}
+       */
+      this.getWordRange = function (findAfter) {
+        var endPoint = this.getEndPoint();
+
+        if (!dom.isCharPoint(endPoint)) {
+          return this;
+        }
+
+        var startPoint = dom.prevPointUntil(endPoint, function (point) {
+          return !dom.isCharPoint(point);
+        });
+
+        if (findAfter) {
+          endPoint = dom.nextPointUntil(endPoint, function (point) {
+            return !dom.isCharPoint(point);
+          });
+        }
+
+        return new WrappedRange(
+          startPoint.node,
+          startPoint.offset,
+          endPoint.node,
+          endPoint.offset
+        );
+      };
   
       /**
        * create offsetPath bookmark
+       *
        * @param {Node} editable
        */
       this.bookmark = function (editable) {
@@ -576,6 +602,24 @@ define([
       };
 
       /**
+       * create offsetPath bookmark base on paragraph
+       *
+       * @param {Node[]} paras
+       */
+      this.paraBookmark = function (paras) {
+        return {
+          s: {
+            path: list.tail(dom.makeOffsetPath(list.head(paras), sc)),
+            offset: so
+          },
+          e: {
+            path: list.tail(dom.makeOffsetPath(list.last(paras), ec)),
+            offset: eo
+          }
+        };
+      };
+
+      /**
        * getClientRects
        * @return {Rect[]}
        */
@@ -584,30 +628,43 @@ define([
         return nativeRng.getClientRects();
       };
     };
-  
+
+  /**
+   * @class core.range
+   *
+   * Data structure
+   *  * BoundaryPoint: a point of dom tree
+   *  * BoundaryPoints: two boundaryPoints corresponding to the start and the end of the Range
+   *
+   * See to http://www.w3.org/TR/DOM-Level-2-Traversal-Range/ranges.html#Level-2-Range-Position
+   *
+   * @singleton
+   * @alternateClassName range
+   */
     return {
-
-      WrappedRange: WrappedRange, // odoo change for overwrite
-
+      WrappedRange: WrappedRange, // ODOO: give access to WrappedRange
       /**
+       * @method
+       * 
        * create Range Object From arguments or Browser Selection
        *
        * @param {Node} sc - start container
        * @param {Number} so - start offset
        * @param {Node} ec - end container
        * @param {Number} eo - end offset
+       * @return {WrappedRange}
        */
       create : function (sc, so, ec, eo) {
         if (!arguments.length) { // from Browser Selection
           if (agent.isW3CRangeSupport) {
             var selection = document.getSelection();
-            if (selection.rangeCount === 0) {
+            if (!selection || selection.rangeCount === 0) {
               return null;
             } else if (dom.isBody(selection.anchorNode)) {
               // Firefox: returns entire body as range on initialization. We won't never need it.
               return null;
             }
-
+  
             var nativeRng = selection.getRangeAt(0);
             sc = nativeRng.startContainer;
             so = nativeRng.startOffset;
@@ -635,7 +692,6 @@ define([
             ec = endPoint.cont;
             eo = endPoint.offset;
           }
-
         } else if (arguments.length === 2) { //collapsed
           ec = sc;
           eo = so;
@@ -644,6 +700,8 @@ define([
       },
 
       /**
+       * @method 
+       * 
        * create WrappedRange from node
        *
        * @param {Node} node
@@ -657,13 +715,13 @@ define([
 
         // browsers can't target a picture or void node
         if (dom.isVoid(sc)) {
-          so = dom.listPrev(sc).length-1;
+          so = dom.listPrev(sc).length - 1;
           sc = sc.parentNode;
         }
         if (dom.isBR(ec)) {
-          eo = dom.listPrev(ec).length-1;
+          eo = dom.listPrev(ec).length - 1;
           ec = ec.parentNode;
-        } else if (dom.isVoid(ec) || dom.isImg(sc)) {
+        } else if (dom.isVoid(ec)) {
           eo = dom.listPrev(ec).length;
           ec = ec.parentNode;
         }
@@ -672,10 +730,32 @@ define([
       },
 
       /**
-       * create WrappedRange from Bookmark
+       * create WrappedRange from node after position
+       *
+       * @param {Node} node
+       * @return {WrappedRange}
+       */
+      createFromNodeBefore: function (node) {
+        return this.createFromNode(node).collapse(true);
+      },
+
+      /**
+       * create WrappedRange from node after position
+       *
+       * @param {Node} node
+       * @return {WrappedRange}
+       */
+      createFromNodeAfter: function (node) {
+        return this.createFromNode(node).collapse();
+      },
+
+      /**
+       * @method 
+       * 
+       * create WrappedRange from bookmark
        *
        * @param {Node} editable
-       * @param {Obkect} bookmark
+       * @param {Object} bookmark
        * @return {WrappedRange}
        */
       createFromBookmark : function (editable, bookmark) {
@@ -683,6 +763,24 @@ define([
         var so = bookmark.s.offset;
         var ec = dom.fromOffsetPath(editable, bookmark.e.path);
         var eo = bookmark.e.offset;
+        return new WrappedRange(sc, so, ec, eo);
+      },
+
+      /**
+       * @method 
+       *
+       * create WrappedRange from paraBookmark
+       *
+       * @param {Object} bookmark
+       * @param {Node[]} paras
+       * @return {WrappedRange}
+       */
+      createFromParaBookmark: function (bookmark, paras) {
+        var so = bookmark.s.offset;
+        var eo = bookmark.e.offset;
+        var sc = dom.fromOffsetPath(list.head(paras), bookmark.s.path);
+        var ec = dom.fromOffsetPath(list.last(paras), bookmark.e.path);
+
         return new WrappedRange(sc, so, ec, eo);
       }
     };

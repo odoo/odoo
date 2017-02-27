@@ -19,13 +19,6 @@ This allows full traceability (from customer to supplier, not limited to your
 warehouse), advanced reporting (e.g. inventory valuation on manufacturing
 counter-parts locations) and a very simple user interface.
 
-Barcode Scanner UI
-------------------
-
-Speed up operations with our dedicated barcode scanner and touch screen user
-interface, from which you can do all operations; receptions, picking, packing,
-delivery orders, internal controls, etc.
-
 Automate transactions
 ---------------------
 

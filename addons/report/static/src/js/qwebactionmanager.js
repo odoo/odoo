@@ -1,4 +1,5 @@
 odoo.define('report.report', function (require) {
+'use strict';
 
 var ActionManager = require('web.ActionManager');
 var core = require('web.core');
@@ -7,15 +8,26 @@ var framework = require('web.framework');
 var session = require('web.session');
 
 var _t = core._t;
+var _lt = core._lt;
+
+
 var wkhtmltopdf_state;
 
-var trigger_download = function(session, response, c, action, options) {
+// Messages that will be shown to the user (if needed).
+var WKHTMLTOPDF_MESSAGES = {
+    'install': _lt('Unable to find Wkhtmltopdf on this \nsystem. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">\nwkhtmltopdf.org</a>'),
+    'workers': _lt('You need to start OpenERP with at least two \nworkers to print a pdf version of the reports.'),
+    'upgrade': _lt('You should upgrade your version of\nWkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\nsupport for table-breaking between pages.<br><br><a href="http://wkhtmltopdf.org/" \ntarget="_blank">wkhtmltopdf.org</a>'),
+    'broken': _lt('Your installation of Wkhtmltopdf seems to be broken. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">wkhtmltopdf.org</a>')
+};
+
+var trigger_download = function (session, response, c, action, options) {
     session.get_file({
         url: '/report/download',
         data: {data: JSON.stringify(response)},
         complete: framework.unblockUI,
         error: c.rpc_error.bind(c),
-        success: function(){
+        success: function () {
             if (action && options && !action.dialog) {
                 options.on_close();
             }
@@ -23,81 +35,98 @@ var trigger_download = function(session, response, c, action, options) {
     });
 };
 
+/**
+ * This helper will generate an object containing the report's url (as value)
+ * for every qweb-type we support (as key). It's convenient because we may want
+ * to use another report's type at some point (for example, when `qweb-pdf` is
+ * not available).
+ */
+var make_report_url = function (action) {
+    var report_urls = {
+        'qweb-html': '/report/html/' + action.report_name,
+        'qweb-pdf': '/report/pdf/' + action.report_name,
+        'controller': action.report_file,
+    };
+    // We may have to build a query string with `action.data`. It's the place
+    // were report's using a wizard to customize the output traditionally put
+    // their options.
+    if (_.isUndefined(action.data) || _.isNull(action.data) || (_.isObject(action.data) && _.isEmpty(action.data))) {
+        if (action.context.active_ids) {
+            var active_ids_path = '/' + action.context.active_ids.join(',');
+            // Update the report's type - report's url mapping.
+            report_urls = _.mapObject(report_urls, function (value, key) {
+                return value += active_ids_path;
+            });
+        }
+    } else {
+        var serialized_options_path = '?options=' + encodeURIComponent(JSON.stringify(action.data));
+        serialized_options_path += '&context=' + encodeURIComponent(JSON.stringify(action.context));
+        // Update the report's type - report's url mapping.
+        report_urls = _.mapObject(report_urls, function (value, key) {
+            return value += serialized_options_path;
+        });
+    }
+    return report_urls;
+};
+
 ActionManager.include({
-    ir_actions_report_xml: function(action, options) {
+    ir_actions_report_xml: function (action, options) {
         var self = this;
-        framework.blockUI();
         action = _.clone(action);
-        _t =  core._t;
 
-        // QWeb reports
-        if ('report_type' in action && (action.report_type == 'qweb-html' || action.report_type == 'qweb-pdf' || action.report_type == 'controller')) {
-            var report_url = '';
-            switch (action.report_type) {
-                case 'qweb-html':
-                    report_url = '/report/html/' + action.report_name;
-                    break;
-                case 'qweb-pdf':
-                    report_url = '/report/pdf/' + action.report_name;
-                    break;
-                case 'controller':
-                    report_url = action.report_file;
-                    break;
-                default:
-                    report_url = '/report/html/' + action.report_name;
-                    break;
-            }
+        var report_urls = make_report_url(action);
 
-            // generic report: no query string
-            // particular: query string of action.data.form and context
-            if (!('data' in action) || !(action.data)) {
-                if ('active_ids' in action.context) {
-                    report_url += "/" + action.context.active_ids.join(',') + "?enable_editor=1";
+        if (action.report_type === 'qweb-html') {
+            var client_action_options = _.extend({}, options, {
+                report_url: report_urls['qweb-html'],
+                report_name: action.report_name,
+                report_file: action.report_file,
+                data: action.data,
+                context: action.context,
+                name: action.name,
+                display_name: action.display_name,
+            });
+            return this.do_action('report.client_action', client_action_options);
+        } else if (action.report_type === 'qweb-pdf') {
+            framework.blockUI();
+            // Before doing anything, we check the state of wkhtmltopdf on the server.
+            (wkhtmltopdf_state = wkhtmltopdf_state || session.rpc('/report/check_wkhtmltopdf')).then(function (state) {
+                // Display a notification to the user according to wkhtmltopdf's state.
+                if (WKHTMLTOPDF_MESSAGES[state]) {
+                    self.do_notify(_t('Report'), WKHTMLTOPDF_MESSAGES[state], true);
                 }
-            } else {
-                report_url += "?enable_editor=1";
-                report_url += "&options=" + encodeURIComponent(JSON.stringify(action.data));
-                report_url += "&context=" + encodeURIComponent(JSON.stringify(action.context));
-            }
 
-            var response = new Array();
-            response[0] = report_url;
-            response[1] = action.report_type;
-            var c = crash_manager;
-
-            if (action.report_type == 'qweb-html') {
-                window.open(report_url, '_blank', 'scrollbars=1,height=900,width=1280');
-                framework.unblockUI();
-            } else if (action.report_type === 'qweb-pdf') {
-                // Trigger the download of the pdf/controller report
-                (wkhtmltopdf_state = wkhtmltopdf_state || session.rpc('/report/check_wkhtmltopdf')).then(function (presence) {
-                    // Fallback on html if wkhtmltopdf is not installed or if OpenERP is started with one worker
-                    if (presence === 'install') {
-                        self.do_notify(_t('Report'), _t('Unable to find Wkhtmltopdf on this \
-system. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">\
-wkhtmltopdf.org</a>'), true);
-                        report_url = report_url.substring(12);
-                        window.open('/report/html/' + report_url, '_blank', 'height=768,width=1024');
-                        framework.unblockUI();
-                        return;
-                    } else if (presence === 'workers') {
-                        self.do_notify(_t('Report'), _t('You need to start OpenERP with at least two \
-workers to print a pdf version of the reports.'), true);
-                        report_url = report_url.substring(12);
-                        window.open('/report/html/' + report_url, '_blank', 'height=768,width=1024');
-                        framework.unblockUI();
-                        return;
-                    } else if (presence === 'upgrade') {
-                        self.do_notify(_t('Report'), _t('You should upgrade your version of\
-Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\
-support for table-breaking between pages.<br><br><a href="http://wkhtmltopdf.org/" \
-target="_blank">wkhtmltopdf.org</a>'), true);
-                    }
+                if (state === 'upgrade' || state === 'ok') {
+                    // Trigger the download of the PDF report.
+                    var response = [
+                        report_urls['qweb-pdf'],
+                        action.report_type,
+                    ];
+                    var c = crash_manager;
                     return trigger_download(self.session, response, c, action, options);
-                });
-            } else if (action.report_type === 'controller') {
-                return trigger_download(self.session, response, c, action, options);
-            }                     
+                } else {
+                    // Open the report in the client action if generating the PDF is not possible.
+                    var client_action_options = _.extend({}, options, {
+                        report_url: report_urls['qweb-html'],
+                        report_name: action.report_name,
+                        report_file: action.report_file,
+                        data: action.data,
+                        context: action.context,
+                        name: action.name,
+                        display_name: action.display_name,
+                    });
+                    framework.unblockUI();
+                    return self.do_action('report.client_action', client_action_options);
+                }
+            });
+        } else if (action.report_type === 'controller') {
+            framework.blockUI();
+            var response = [
+                report_urls.controller,
+                action.report_type,
+            ];
+            var c = crash_manager;
+            return trigger_download(self.session, response, c, action, options);
         } else {
             return self._super(action, options);
         }

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import datetime
 
-from openerp import models, fields, api, _
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import AccessError, ValidationError
+import odoo.addons.decimal_precision as dp
 
 
 class LunchOrder(models.Model):
@@ -16,26 +18,37 @@ class LunchOrder(models.Model):
     _description = 'Lunch Order'
     _order = 'date desc'
 
-    user_id = fields.Many2one('res.users', 'User', required=True, readonly=True,
+    def _default_previous_order_ids(self):
+        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='id desc')
+        # If we return return prev_order.ids, we will have duplicates (identical orders).
+        # Therefore, this following part removes duplicates based on product_id and note.
+        return {
+            (order.product_id, order.note): order.id
+            for order in prev_order
+        }.values()
+
+    user_id = fields.Many2one('res.users', 'User', readonly=True,
                               states={'new': [('readonly', False)]},
                               default=lambda self: self.env.uid)
     date = fields.Date('Date', required=True, readonly=True,
                        states={'new': [('readonly', False)]},
                        default=fields.Date.context_today)
     order_line_ids = fields.One2many('lunch.order.line', 'order_id', 'Products',
-                                     ondelete="cascade", readonly=True, copy=True,
+                                     readonly=True, copy=True,
                                      states={'new': [('readonly', False)], False: [('readonly', False)]})
     total = fields.Float(compute='_compute_total', string="Total", store=True)
     state = fields.Selection([('new', 'New'),
                               ('confirmed', 'Received'),
                               ('cancelled', 'Cancelled')],
-                             'Status', readonly=True, index=True, copy=False, default='new',
-                             compute='_compute_order_state')
+                             'Status', readonly=True, index=True, copy=False,
+                             compute='_compute_order_state', store=True)
     alerts = fields.Text(compute='_compute_alerts_get', string="Alerts")
-    previous_order_ids = fields.One2many(comodel_name='lunch.order.line',
-                                         compute='_compute_get_previous_order_ids')
     company_id = fields.Many2one('res.company', related='user_id.company_id', store=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
+    cash_move_balance = fields.Monetary(compute='_compute_cash_move_balance', multi='cash_move_balance')
+    balance_visible = fields.Boolean(compute='_compute_cash_move_balance', multi='cash_move_balance')
+    previous_order_ids = fields.Many2many('lunch.order.line', compute='_compute_previous_order')
+    previous_order_widget = fields.Text(compute='_compute_previous_order')
 
     @api.one
     @api.depends('order_line_ids')
@@ -60,33 +73,46 @@ class LunchOrder(models.Model):
                      if alert.display]
 
         if self.state == 'new':
-            self.alerts = '\n'.join(alert_msg)
+            self.alerts = alert_msg and '\n'.join(alert_msg) or False
 
-    @api.depends('state')
-    def _compute_get_previous_order_ids(self):
-        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid)], limit=20, order='id desc')
-        # If we return return prev_order.ids, we will have duplicates (identical orders).
+    @api.multi
+    @api.depends('user_id', 'state')
+    def _compute_previous_order(self):
+        self.ensure_one()
+        self.previous_order_widget = json.dumps(False)
+
+        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='id desc')
+        # If we use prev_order.ids, we will have duplicates (identical orders).
         # Therefore, this following part removes duplicates based on product_id and note.
         self.previous_order_ids = {
             (order.product_id, order.note): order.id
             for order in prev_order
         }.values()
 
-    @api.onchange('total')
-    def _onchange_total(self):
-        """
-        Calculates the forecasted balance of the user, taking into account the current order
-        """
-        prev_cashmove = self.env['lunch.cashmove'].search([('user_id', '=', self.user_id.id)])
-        balance = sum(cashmove.amount for cashmove in prev_cashmove)
+        if self.previous_order_ids:
+            lunch_data = {}
+            for line in self.previous_order_ids:
+                lunch_data[line.id] = {
+                    'line_id': line.id,
+                    'product_id': line.product_id.id,
+                    'product_name': line.product_id.name,
+                    'supplier': line.supplier.name,
+                    'note': line.note,
+                    'price': line.price,
+                    'currency': line.currency_id.symbol,
+                    'digits': [69, line.currency_id.decimal_places],
+                    'position': line.currency_id.position,
+                }
+            self.previous_order_widget = json.dumps(lunch_data)
 
-        if self.total > balance:
-            return {
-                'warning': {
-                    'title': _('Insufficient balance'),
-                    'message': ('%s (%s %s)' % (_('The total amount of the order is larger than the available balance'), balance, self.currency_id.name)),
-                },
-            }
+    @api.one
+    @api.depends('user_id')
+    def _compute_cash_move_balance(self):
+        domain = [('user_id', '=', self.user_id.id)]
+        lunch_cash = self.env['lunch.cashmove'].read_group(domain, ['amount', 'user_id'], ['user_id'])
+        if len(lunch_cash):
+            self.cash_move_balance = lunch_cash[0]['amount']
+        self.balance_visible = (self.user_id == self.env.user) or self.user_has_groups('lunch.group_lunch_manager')
 
     @api.one
     @api.constrains('date')
@@ -97,7 +123,7 @@ class LunchOrder(models.Model):
         date_order = datetime.datetime.strptime(self.date, '%Y-%m-%d')
         date_today = datetime.datetime.strptime(fields.Date.context_today(self), '%Y-%m-%d')
         if (date_order < date_today):
-            raise UserError(_('The date of your order is in the past.'))
+            raise ValidationError(_('The date of your order is in the past.'))
 
     @api.one
     @api.depends('order_line_ids.state')
@@ -132,7 +158,7 @@ class LunchOrderLine(models.Model):
     _name = 'lunch.order.line'
     _description = 'lunch order line'
 
-    name = fields.Char(related='product_id.name', readonly=True)
+    name = fields.Char(related='product_id.name', string="Product Name", readonly=True)
     order_id = fields.Many2one('lunch.order', 'Order', ondelete='cascade', required=True)
     product_id = fields.Many2one('lunch.product', 'Product', required=True)
     category_id = fields.Many2one('lunch.product.category', string='Product Category',
@@ -144,12 +170,12 @@ class LunchOrderLine(models.Model):
                               readonly=True, store=True)
     note = fields.Text('Note')
     price = fields.Float(related='product_id.price', readonly=True, store=True,
-                         digits_compute=dp.get_precision('Account'))
+                         digits=dp.get_precision('Account'))
     state = fields.Selection([('new', 'New'),
                               ('confirmed', 'Received'),
                               ('ordered', 'Ordered'),
                               ('cancelled', 'Cancelled')],
-                             'Status', readonly=True, select=True, default='new')
+                             'Status', readonly=True, index=True, default='new')
     cashmove = fields.One2many('lunch.cashmove', 'order_id', 'Cash Move')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
 
@@ -158,32 +184,41 @@ class LunchOrderLine(models.Model):
         """
         The order_line is ordered to the vendor but isn't received yet
         """
-        self.state = 'ordered'
+        if self.user_has_groups("lunch.group_lunch_manager"):
+            self.state = 'ordered'
+        else:
+            raise AccessError(_("Only your lunch manager processes the orders."))
 
     @api.one
     def confirm(self):
         """
         confirm one or more order line, update order status and create new cashmove
         """
-        if self.state != 'confirmed':
-            values = {
-                'user_id': self.user_id.id,
-                'amount': -self.price,
-                'description': self.product_id.name,
-                'order_id': self.id,
-                'state': 'order',
-                'date': self.date,
-            }
+        if self.user_has_groups("lunch.group_lunch_manager"):
+            if self.state != 'confirmed':
+                values = {
+                    'user_id': self.user_id.id,
+                    'amount': -self.price,
+                    'description': self.product_id.name,
+                    'order_id': self.id,
+                    'state': 'order',
+                    'date': self.date,
+                }
             self.env['lunch.cashmove'].create(values)
             self.state = 'confirmed'
+        else:
+            raise AccessError(_("Only your lunch manager sets the orders as received."))
 
     @api.one
     def cancel(self):
         """
         cancel one or more order.line, update order status and unlink existing cashmoves
         """
-        self.state = 'cancelled'
-        self.cashmove.unlink()
+        if self.user_has_groups("lunch.group_lunch_manager"):
+            self.state = 'cancelled'
+            self.cashmove.unlink()
+        else:
+            raise AccessError(_("Only your lunch manager cancels the orders."))
 
 
 class LunchProduct(models.Model):
@@ -194,8 +229,9 @@ class LunchProduct(models.Model):
     name = fields.Char('Product', required=True)
     category_id = fields.Many2one('lunch.product.category', 'Category', required=True)
     description = fields.Text('Description')
-    price = fields.Float('Price', digits_compute=dp.get_precision('Account'))
+    price = fields.Float('Price', digits=dp.get_precision('Account'))
     supplier = fields.Many2one('res.partner', 'Vendor')
+    active = fields.Boolean(default=True)
 
 
 class LunchProductCategory(models.Model):
@@ -211,7 +247,7 @@ class LunchCashMove(models.Model):
     _name = 'lunch.cashmove'
     _description = 'lunch cashmove'
 
-    user_id = fields.Many2one('res.users', 'User', required=True,
+    user_id = fields.Many2one('res.users', 'User',
                               default=lambda self: self.env.uid)
     date = fields.Date('Date', required=True, default=fields.Date.context_today)
     amount = fields.Float('Amount', required=True, help='Can be positive (payment) or negative (order or payment if user wants to get his money back)')
@@ -236,7 +272,7 @@ class LunchAlert(models.Model):
     alert_type = fields.Selection([('specific', 'Specific Day'),
                                    ('week', 'Every Week'),
                                    ('days', 'Every Day')],
-                                  string='Recurrency', required=True, select=True, default='specific')
+                                  string='Recurrency', required=True, index=True, default='specific')
     specific_day = fields.Date('Day', default=fields.Date.context_today)
     monday = fields.Boolean('Monday')
     tuesday = fields.Boolean('Tuesday')
@@ -247,6 +283,7 @@ class LunchAlert(models.Model):
     sunday = fields.Boolean('Sunday')
     start_hour = fields.Float('Between', oldname='active_from', required=True, default=7)
     end_hour = fields.Float('And', oldname='active_to', required=True, default=23)
+    active = fields.Boolean(default=True)
 
     @api.multi
     def name_get(self):
@@ -262,9 +299,16 @@ class LunchAlert(models.Model):
         return : Message if can_display_alert is True else False
         """
 
+        days_codes = {'0': 'sunday',
+                      '1': 'monday',
+                      '2': 'tuesday',
+                      '3': 'wednesday',
+                      '4': 'thursday',
+                      '5': 'friday',
+                      '6': 'saturday'}
         can_display_alert = {
             'specific': (self.specific_day == fields.Date.context_today(self)),
-            'week': self[datetime.datetime.now().strftime('%A').lower()],
+            'week': self[days_codes[datetime.datetime.now().strftime('%w')]],
             'days': True
         }
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+      <data noupdate="1">
+
+            <!--  Demo Leads -->
+            <record id="crm_case_partner_assign_1" model="crm.lead">
+                  <field name="type">lead</field>
+                  <field name="name">Specifications and price of your phones</field>
+                  <field name="contact_name">Steve Martinez</field>
+                  <field name="partner_name"></field>
+                  <field name="partner_id" ref=""/>
+                  <field name="function">Reseller</field>
+                  <field name="country_id" ref="base.uk"/>
+                  <field name="city">Edinburgh</field>
+                  <field name="tag_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
+                  <field name="priority">2</field>
+                  <field name="team_id" ref="sales_team.crm_team_1"/>
+                  <field name="user_id" ref=""/>
+                  <field name="stage_id" ref="crm.stage_lead1"/>
+                  <field name="description">Hi,
+
+            Please, can you give me more details about your phones, including their specifications and their prices.
+
+            Regards,
+            Steve</field>
+                  <field eval="1" name="active"/>
+                  <field name="partner_assigned_id" ref="portal.partner_demo_portal"/>
+                  <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+                  <field name="medium_id" ref="utm.utm_medium_email"/>
+                  <field name="source_id" ref="utm.utm_source_newsletter"/>
+            </record>
+      </data>
+</odoo>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data noupdate="0">
+<odoo>
 
     <record id="group_project_user" model="res.groups">
         <field name="name">User</field>
@@ -15,19 +14,15 @@
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
-    <record id="group_tasks_work_on_tasks" model="res.groups">
-        <field name="name">Task's Work on Tasks</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-    
     <record id="group_time_work_estimation_tasks" model="res.groups">
         <field name="name">Time Estimation on Tasks</field>
-        <field name="implied_ids" eval="[(4, ref('group_tasks_work_on_tasks'))]"/>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
-</data>
 <data noupdate="1">
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('project.group_project_manager'))]"/>
+    </record>
 
     <record model="ir.rule" id="project_comp_rule">
         <field name="name">Project: multi-company</field>
@@ -47,11 +42,11 @@
     </record>
 
     <record model="ir.rule" id="project_public_members_rule">
-        <field name="name">Project: employees: public, employees or followers</field>
+        <field name="name">Project: employees: following required for follower-only projects</field>
         <field name="model_id" ref="model_project_project"/>
         <field name="domain_force">['|',
-                                        ('privacy_visibility', 'in', ['public', 'employees']),
-                                        ('message_follower_ids', 'in', [user.partner_id.id])
+                                        ('privacy_visibility', '!=', 'followers'),
+                                        ('message_partner_ids', 'in', [user.partner_id.id])
                                     ]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
     </record>
@@ -67,17 +62,15 @@
     </record>
 
     <record model="ir.rule" id="task_visibility_rule">
-        <field name="name">Project/Task: employees: public or employee or (followers and following)</field>
+        <field name="name">Project/Task: employees: follow required for follower-only projects</field>
         <field name="model_id" ref="model_project_task"/>
         <field name="domain_force">[
         '|',
-            ('project_id.privacy_visibility', 'in', ['public', 'employees']),
+            ('project_id.privacy_visibility', '!=', 'followers'),
             '|',
-                '&amp;',
-                    ('project_id.privacy_visibility', '=', 'followers'),
-                    ('project_id.message_follower_ids', 'in', [user.partner_id.id]),
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
                 '|',
-                    ('message_follower_ids', 'in', [user.partner_id.id]),
+                    ('message_partner_ids', 'in', [user.partner_id.id]),
                     # to subscribe check access to the record, follower is not enough at creation
                     ('user_id', '=', user.id)
         ]</field>
@@ -91,5 +84,12 @@
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
 
+    <record model="ir.rule" id="report_project_task_user_report_comp_rule">
+        <field name="name">Task Analysis multi-company</field>
+        <field name="model_id" ref="model_report_project_task_user"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
 </data>
-</openerp>
+</odoo>

@@ -56,12 +56,15 @@ var KanbanRecord = Widget.extend({
             record: this.record,
             widget: this,
             read_only_mode: this.read_only_mode,
+            user_context: session.user_context,
+            formats: formats,
         };
         for (var p in this) {
             if (_.str.startsWith(p, 'kanban_')) {
                 qweb_context[p] = _.bind(this[p], this);
             }
         }
+        this.qweb_context = qweb_context;
         this.content = this.qweb.render('kanban-box', qweb_context);
     },
 
@@ -75,15 +78,42 @@ var KanbanRecord = Widget.extend({
             var widget = new Widget(self, field, $field);
             widget.replace($field);
             self.sub_widgets.push(widget);
+            self._set_field_display(widget, field);
         });
     },
 
+    _set_field_display: function(widget, field) {
+        // attribute display
+        if (field.__attrs.display === 'right') {
+            widget.$el.addClass('pull-right');
+        } else if (field.__attrs.display === 'full') {
+            widget.$el.addClass('o_text_block');
+        }
+
+        // attribute bold
+        if (field.__attrs.bold) {
+            widget.$el.addClass('o_text_bold');
+        }
+    },
+
     start: function() {
+        var self = this;
         this.add_widgets();
+        this.$('[tooltip]').each(function () {
+            var $el = $(this);
+            var tooltip = $el.attr('tooltip');
+            if (tooltip) {
+                $el.tooltip({
+                    'html': true,
+                    'title': self.qweb.render(tooltip, self.qweb_context)
+                });
+            }
+        });
     },
 
     renderElement: function () {
         this._super();
+        this.setup_color();
         this.setup_color_picker();
         this.$el.addClass('o_kanban_record');
         this.$el.data('record', this);
@@ -94,7 +124,7 @@ var KanbanRecord = Widget.extend({
     transform_record: function(record) {
         var self = this;
         var new_record = {};
-        _.each(record, function(value, name) {
+        _.each(_.extend(_.object(_.keys(this.fields), []), record), function(value, name) {
             var r = _.clone(self.fields[name] || {});
             if ((r.type === 'date' || r.type === 'datetime') && value) {
                 r.raw_value = time.auto_str_to_date(value);
@@ -123,10 +153,12 @@ var KanbanRecord = Widget.extend({
         } else if (this.record[field] && ! this.record[field].value) {
             url = "/web/static/src/img/placeholder.png";
         } else {
-            id = JSON.stringify(id);
+            if (_.isArray(id)) { id = id[0]; }
+            if (!id) { id = undefined; }
             if (options.preview_image)
                 field = options.preview_image;
-            url = session.url('/web/binary/image', {model: model, field: field, id: id});
+            var unique = this.record.__last_update && this.record.__last_update.value.replace(/[^0-9]/g, '');
+            url = session.url('/web/image', {model: model, field: field, id: id, unique: unique});
             if (cache !== undefined) {
                 // Set the cache duration in seconds.
                 url += '&cache=' + parseInt(cache, 10);
@@ -168,14 +200,15 @@ var KanbanRecord = Widget.extend({
                 if (elem == ev.currentTarget) {
                     ischild = false;
                 }
+                var test_event = events && events.click && (events.click.length > 1 || events.click[0].namespace !== "tooltip");
                 if (ischild) {
                     children.push(elem);
-                    if (events && events.click) {
+                    if (test_event) {
                         // do not trigger global click if one child has a click event registered
                         trigger = false;
                     }
                 }
-                if (trigger && events && events.click) {
+                if (trigger && test_event) {
                     _.each(events.click, function(click_event) {
                         if (click_event.selector) {
                             // For each parent of original target, check if a
@@ -248,6 +281,17 @@ var KanbanRecord = Widget.extend({
 
     update_record: function (event) {
         this.trigger_up('kanban_record_update', event.data);
+    },
+
+    /*
+     * If an attribute `color` is set on the kanban record,
+     * this will add the corresponding color class.
+     */
+    setup_color: function() {
+        var color_field = this.$el.attr('color');
+        if (color_field && color_field in this.fields) {
+            this.$el.addClass(this.kanban_color(this.values[color_field].value));
+        }
     },
 
     setup_color_picker: function() {

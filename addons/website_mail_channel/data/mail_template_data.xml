@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="mail_template_list_subscribe" model="mail.template">
+            <field name="name">Subscribe to mailing list</field>
+            <field name="model_id" ref="mail.model_mail_channel"/>
+            <field name="subject">Please confirm subscription to ${object.name}</field>
+            <field name="body_html" type="xml">
+<p>Hello,</p>
+<p>You have requested to be subscribed to the mailing list <strong>${object.name}</strong></p>
+<p>To confirm, please visit the following link:</p>
+<p><strong><a href="${ctx['token_url']}">${ctx['token_url']}</a></strong></p>
+<p>If this was a mistake or you did not requested this action, please ignore this message.</p>
+</field>
+        </record>
+
+        <record id="mail_template_list_unsubscribe" model="mail.template">
+            <field name="name">Unsubscribe to mailing list</field>
+            <field name="model_id" ref="mail.model_mail_channel"/>
+            <field name="subject">Please confirm unsubscription to ${object.name}</field>
+            <field name="body_html" type="xml">
+<p>Hello,</p>
+<p>You have requested to be unsubscribed to the mailing list <strong>${object.name}</strong></p>
+<p>To confirm, please visit the following link:</p>
+<p><strong><a href="${ctx['token_url']}">${ctx['token_url']}</a></strong></p>
+<p>If this was a mistake or you did not requested this action, please ignore this message.</p>
+</field>
+        </record>
+</odoo>

@@ -62,7 +62,7 @@ var OnscreenKeyboardWidget = Widget.extend({
     // Write a character to the input zone
     writeCharacter: function(character){
         var input = this.$target[0];
-        input.dispatchEvent(this.generateEvent('keydown',{char: character}));
+        input.dispatchEvent(this.generateEvent('keypress',{char: character}));
         if(character !== '\n'){
             input.value += character;
         }
@@ -72,7 +72,7 @@ var OnscreenKeyboardWidget = Widget.extend({
     // Removes the last character from the input zone.
     deleteCharacter: function(){
         var input = this.$target[0];
-        input.dispatchEvent(this.generateEvent('keydown',{code: 8}));
+        input.dispatchEvent(this.generateEvent('keypress',{code: 8}));
         input.value = input.value.substr(0, input.value.length -1);
         input.dispatchEvent(this.generateEvent('keyup',{code: 8}));
     },
@@ -81,7 +81,7 @@ var OnscreenKeyboardWidget = Widget.extend({
     deleteAllCharacters: function(){
         var input = this.$target[0];
         if(input.value){
-            input.dispatchEvent(this.generateEvent('keydown',{code: 8}));
+            input.dispatchEvent(this.generateEvent('keypress',{code: 8}));
             input.value = "";
             input.dispatchEvent(this.generateEvent('keyup',{code: 8}));
         }

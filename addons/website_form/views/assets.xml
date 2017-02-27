@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="assets_frontend" name="Website Form Assets Frontend" inherit_id="website.assets_frontend">
+            <xpath expr="." position="inside">
+                <link rel='stylesheet' href='/website_form/static/src/less/website_form.less'/>
+                <script type="text/javascript" src="/website_form/static/src/js/website_form.js"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

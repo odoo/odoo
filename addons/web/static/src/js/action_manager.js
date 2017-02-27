@@ -1,10 +1,12 @@
 odoo.define('web.ActionManager', function (require) {
 "use strict";
 
+var Bus = require('web.Bus');
 var ControlPanel = require('web.ControlPanel');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
+var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
 var pyeval = require('web.pyeval');
@@ -23,13 +25,18 @@ var Action = core.Class.extend({
     },
     /**
      * This method should restore this previously loaded action
-     * Calls on_reverse_breadcrumb callback if defined
+     * Calls on_reverse_breadcrumb_callback if defined
      * @return {Deferred} resolved when widget is enabled
      */
     restore: function() {
-        if (this.on_reverse_breadcrumb) {
-            return this.on_reverse_breadcrumb();
+        if (this.on_reverse_breadcrumb_callback) {
+            return this.on_reverse_breadcrumb_callback();
         }
+    },
+    /**
+     * There is nothing to detach in the case of a client function
+     */
+    detach: function() {
     },
     /**
      * Destroyer: there is nothing to destroy in the case of a client function
@@ -37,11 +44,16 @@ var Action = core.Class.extend({
     destroy: function() {
     },
     /**
-     * Sets the on_reverse_breadcrumb callback to be called when coming back to that action
-     * @param {Function} [on_reverse_breadcrumb] the callback
+     * Sets the on_reverse_breadcrumb_callback to be called when coming back to that action
+     * @param {Function} [callback] the callback
      */
-    set_on_reverse_breadcrumb: function(on_reverse_breadcrumb) {
-        this.on_reverse_breadcrumb = on_reverse_breadcrumb;
+    set_on_reverse_breadcrumb: function(callback) {
+        this.on_reverse_breadcrumb_callback = callback;
+    },
+    /**
+     * Not implemented for client actions
+     */
+    set_scrollTop: function() {
     },
     /**
      * Stores the DOM fragment of the action
@@ -52,8 +64,10 @@ var Action = core.Class.extend({
     },
     /**
      * Not implemented for client actions
+     * @return {int} the number of pixels the webclient is scrolled when leaving the action
      */
-    set_is_in_DOM: function() {
+    get_scrollTop: function() {
+        return 0;
     },
     /**
      * @return {Object} the description of the action
@@ -79,6 +93,12 @@ var Action = core.Class.extend({
     get_fragment: function() {
         return this.$fragment;
     },
+    /**
+     * @return {string} the active view, i.e. empty for client actions
+     */
+    get_active_view: function() {
+        return '';
+    },
 });
 /**
  * Specialization of Action for client actions that are Widgets
@@ -95,18 +115,33 @@ var WidgetAction = Action.extend({
         if (!this.widget.get('title')) {
             this.widget.set('title', this.title);
         }
+        this.widget.on('change:title', this, function(widget) {
+            this.title = widget.get('title');
+        });
     },
     /**
      * Restores WidgetAction by calling do_show on its widget
      */
     restore: function() {
-        this.widget.do_show();
-        return this._super();
+        var self = this;
+        return $.when(this._super()).then(function() {
+            return self.widget.do_show();
+        });
+    },
+    /**
+     * Detaches the action's widget from the DOM
+     * @return the widget's $el
+     */
+    detach: function() {
+        // Hack to remove badly inserted nvd3 tooltips ; should be removed when upgrading nvd3 lib
+        $('body > .nvtooltip').remove();
+
+        return framework.detach([{widget: this.widget}]);
     },
     /**
      * Destroys the widget
      */
-    destroy: function() { 
+    destroy: function() {
         this.widget.destroy();
     },
 });
@@ -120,18 +155,33 @@ var ViewManagerAction = WidgetAction.extend({
      * @param {int} [view_index] the index of the view to select
      */
     restore: function(view_index) {
-        var self = this;
-        var _super = this._super;
+        var _super = this._super.bind(this);
         return this.widget.select_view(view_index).then(function() {
-            _super.call(self);
+            return _super();
         });
     },
     /**
-     * Sets is_in_DOM on this.widget
-     * @param {Boolean} [is_in_DOM] true iff the widget is attached in the DOM
+     * Sets the on_reverse_breadcrumb_callback and the scrollTop to apply when
+     * coming back to that action
+     * @param {Function} [callback] the callback
+     * @param {int} [scrollTop] the number of pixels to scroll
      */
-    set_is_in_DOM: function(is_in_DOM) {
-        this.widget.is_in_DOM = is_in_DOM;
+    set_on_reverse_breadcrumb: function(callback, scrollTop) {
+        this._super(callback);
+        this.set_scrollTop(scrollTop);
+    },
+    /**
+     * Sets the scroll position of the widgets's active_view
+     * @param {int} [scrollTop] the number of pixels to scroll
+     */
+    set_scrollTop: function(scrollTop) {
+        this.widget.active_view.controller.set_scrollTop(scrollTop);
+    },
+    /**
+     * @return {int} the number of pixels the webclient is scrolled when leaving the action
+     */
+    get_scrollTop: function() {
+        return this.widget.active_view.controller.get_scrollTop();
     },
     /**
      * @return {Array} array of Objects that will be interpreted to display the breadcrumbs
@@ -152,16 +202,40 @@ var ViewManagerAction = WidgetAction.extend({
     get_nb_views: function() {
         return this.widget.view_stack.length;
     },
+    /**
+     * @return {string} the active view of the ViewManager
+     */
+    get_active_view: function() {
+        return this.widget.active_view.type;
+    }
 });
 
 var ActionManager = Widget.extend({
-    template: "ActionManager",
-    init: function(parent) {
+    template: 'ActionManager',
+    /**
+     * Called each time the action manager is attached into the DOM
+     */
+    on_attach_callback: function() {
+        this.is_in_DOM = true;
+        if (this.inner_widget && this.inner_widget.on_attach_callback) {
+            this.inner_widget.on_attach_callback();
+        }
+    },
+    /**
+     * Called each time the action manager is detached from the DOM
+     */
+    on_detach_callback: function() {
+        this.is_in_DOM = false;
+        if (this.inner_widget && this.inner_widget.on_detach_callback) {
+            this.inner_widget.on_detach_callback();
+        }
+    },
+    init: function(parent, options) {
         this._super(parent);
         this.action_stack = [];
         this.inner_action = null;
         this.inner_widget = null;
-        this.webclient = parent;
+        this.webclient = options && options.webclient;
         this.dialog = null;
         this.dialog_widget = null;
         this.on('history_back', this, this.proxy('history_back'));
@@ -173,12 +247,19 @@ var ActionManager = Widget.extend({
         this.main_control_panel = new ControlPanel(this);
         // Listen to event "on_breadcrumb_click" trigerred on the control panel when
         // clicking on a part of the breadcrumbs. Call select_action for this breadcrumb.
-        this.main_control_panel.on("on_breadcrumb_click", this, function(action, index) {
+        this.main_control_panel.on("on_breadcrumb_click", this, _.debounce(function(action, index) {
             this.select_action(action, index);
+        }, 200, true));
+
+        // Listen to event "DOM_updated" to restore the scroll position
+        core.bus.on('DOM_updated', this, function() {
+            if (this.inner_action) {
+                this.trigger_up('scrollTo', {offset: this.inner_action.get_scrollTop() || 0});
+            }
         });
 
-        // Append the main control panel to the DOM (inside the ActionManager jQuery element)
-        this.main_control_panel.appendTo(this.$el);
+        // Insert the main control panel into the DOM
+        return this.main_control_panel.insertBefore(this.$el);
     },
     dialog_stop: function (reason) {
         if (this.dialog) {
@@ -197,15 +278,18 @@ var ActionManager = Widget.extend({
      */
     push_action: function(widget, action_descr, options) {
         var self = this;
-        var to_destroy;
-        var old_widget = this.inner_widget;
+        var old_action_stack = this.action_stack;
         var old_action = this.inner_action;
+        var old_widget = this.inner_widget;
+        var actions_to_destroy;
         options = options || {};
 
-        // Empty action_stack if requested
+        // Empty action_stack or replace last action if requested
         if (options.clear_breadcrumbs) {
-            to_destroy = this.action_stack;
+            actions_to_destroy = this.action_stack;
             this.action_stack = [];
+        } else if (options.replace_last_action && this.action_stack.length > 0) {
+            actions_to_destroy = [this.action_stack.pop()];
         }
 
         // Instantiate the new action
@@ -219,11 +303,12 @@ var ActionManager = Widget.extend({
         }
 
         // Set on_reverse_breadcrumb callback on previous inner_action
-        if (old_action) {
-            old_action.set_on_reverse_breadcrumb(options.on_reverse_breadcrumb);
+        if (this.webclient && old_action) {
+            old_action.set_on_reverse_breadcrumb(options.on_reverse_breadcrumb, this.webclient.get_scrollTop());
         }
 
-        // Update action_stack
+        // Update action_stack (must be done before appendTo to properly
+        // compute the breadcrumbs and to perform do_push_state)
         this.action_stack.push(new_action);
         this.inner_action = new_action;
         this.inner_widget = widget;
@@ -231,9 +316,6 @@ var ActionManager = Widget.extend({
         if (widget.need_control_panel) {
             // Set the ControlPanel bus on the widget to allow it to communicate its status
             widget.set_cp_bus(this.main_control_panel.get_bus());
-        } else {
-            // Hide the main ControlPanel for widgets that do not use it
-            this.main_control_panel.do_hide();
         }
 
         // render the inner_widget in a fragment, and append it to the
@@ -242,22 +324,33 @@ var ActionManager = Widget.extend({
         return $.when(this.inner_widget.appendTo(new_widget_fragment)).done(function() {
             // Detach the fragment of the previous action and store it within the action
             if (old_action) {
-                old_action.set_fragment(old_widget.$el.detach());
-                old_action.set_is_in_DOM(false);
+                old_action.set_fragment(old_action.detach());
             }
-
-            framework.append(self.$el, new_widget_fragment, true);
-            self.inner_action.set_is_in_DOM(true);
-
-            // Hide the old_widget as it will be removed from the DOM when it
-            // is destroyed
-            if (old_widget) {
-                old_widget.$el.hide();
+            if (!widget.need_control_panel) {
+                // Hide the main ControlPanel for widgets that do not use it
+                self.main_control_panel.do_hide();
             }
-            if (options.clear_breadcrumbs) {
-                self.clear_action_stack(to_destroy);
+            framework.append(self.$el, new_widget_fragment, {
+                in_DOM: self.is_in_DOM,
+                callbacks: [{widget: self.inner_widget}],
+            });
+            if (actions_to_destroy) {
+                self.clear_action_stack(actions_to_destroy);
             }
+            self.toggle_fullscreen();
+            self.trigger_up('current_action_updated', {action: new_action});
+        }).fail(function () {
+            // Destroy failed action and restore internal state
+            new_action.destroy();
+            self.action_stack = old_action_stack;
+            self.inner_action = old_action;
+            self.inner_widget = old_widget;
         });
+    },
+    set_scrollTop: function(scrollTop) {
+        if (this.inner_action) {
+            this.inner_action.set_scrollTop(scrollTop);
+        }
     },
     get_breadcrumbs: function () {
         return _.flatten(_.map(this.action_stack, function (action) {
@@ -274,7 +367,8 @@ var ActionManager = Widget.extend({
                 return action.title;
             }
         }
-        return _.pluck(this.get_breadcrumbs(), 'title').join(' / ');
+        var last_breadcrumb = _.last(this.get_breadcrumbs());
+        return last_breadcrumb ? last_breadcrumb.title : "";
     },
     get_action_stack: function () {
         return this.action_stack;
@@ -301,7 +395,9 @@ var ActionManager = Widget.extend({
     },
     select_action: function(action, index) {
         var self = this;
-        return this.webclient.clear_uncommitted_changes().then(function() {
+        var def = this.webclient && this.webclient.clear_uncommitted_changes() || $.when();
+
+        return def.then(function() {
             // Set the new inner_action/widget and update the action stack
             var old_action = self.inner_action;
             var action_index = self.action_stack.indexOf(action);
@@ -309,20 +405,23 @@ var ActionManager = Widget.extend({
             self.inner_action = action;
             self.inner_widget = action.widget;
 
-            // Hide the ControlPanel if the widget doesn't use it
-            if (!self.inner_widget.need_control_panel) {
-                self.main_control_panel.do_hide();
-            }
-
             return $.when(action.restore(index)).done(function() {
+                // Hide the ControlPanel if the widget doesn't use it
+                if (!self.inner_widget.need_control_panel) {
+                    self.main_control_panel.do_hide();
+                }
+                // Attach the DOM of the action and restore the scroll position only if necessary
                 if (action !== old_action) {
                     // Clear the action stack (this also removes the current action from the DOM)
                     self.clear_action_stack(to_destroy);
 
                     // Append the fragment of the action to restore to self.$el
-                    framework.append(self.$el, action.get_fragment(), true);
-                    self.inner_action.set_is_in_DOM(true);
+                    framework.append(self.$el, action.get_fragment(), {
+                        in_DOM: self.is_in_DOM,
+                        callbacks: [{widget: action.widget}],
+                    });
                 }
+                self.trigger_up('current_action_updated', {action: action});
             });
         }).fail(function() {
             return $.Deferred().reject();
@@ -337,9 +436,16 @@ var ActionManager = Widget.extend({
             this.inner_action = null;
             this.inner_widget = null;
         }
+        this.toggle_fullscreen();
+    },
+    toggle_fullscreen: function() {
+        var is_fullscreen = _.some(this.action_stack, function(action) {
+            return action.action_descr.target === "fullscreen";
+        });
+        this.trigger_up("toggle_fullscreen", {fullscreen: is_fullscreen});
     },
     do_push_state: function(state) {
-        if (!this.webclient || !this.webclient.do_push_state || this.dialog) {
+        if (!this.webclient || this.dialog) {
             return;
         }
         state = state || {};
@@ -419,13 +525,10 @@ var ActionManager = Widget.extend({
                     if (warm) {
                         this.null_action();
                     }
-                    action_loaded = this.do_action(state.action, { additional_context: add_context, state: state });
-                    $.when(action_loaded || null).done(function() {
-                        self.webclient.menu.is_bound.done(function() {
-                            if (self.inner_action && self.inner_action.get_action_descr().id) {
-                                self.webclient.menu.open_action(self.inner_action.get_action_descr().id);
-                            }
-                        });
+                    action_loaded = this.do_action(state.action, {
+                        additional_context: add_context,
+                        res_id: state.id,
+                        view_type: state.view_type,
                     });
                 }
             }
@@ -438,7 +541,7 @@ var ActionManager = Widget.extend({
                 res_model: state.model,
                 res_id: state.id,
                 type: 'ir.actions.act_window',
-                views: [[false, 'form']]
+                views: [[_.isNumber(state.view_id) ? state.view_id : false, 'form']]
             };
             action_loaded = this.do_action(action);
         } else if (state.sa) {
@@ -453,16 +556,16 @@ var ActionManager = Widget.extend({
             });
         }
 
-        $.when(action_loaded || null).done(function() {
+        return $.when(action_loaded || null).done(function() {
             if (self.inner_widget && self.inner_widget.do_load_state) {
-                self.inner_widget.do_load_state(state, warm);
+                return self.inner_widget.do_load_state(state, warm);
             }
         });
     },
     /**
      * Execute an OpenERP action
      *
-     * @param {Number|String|Object} Can be either an action id, a client action or an action descriptor.
+     * @param {Number|String|String|Object} Can be either an action id, an action XML id, a client action tag or an action descriptor.
      * @param {Object} [options]
      * @param {Boolean} [options.clear_breadcrumbs=false] Clear the breadcrumbs history list
      * @param {Boolean} [options.replace_breadcrumb=false] Replace the current breadcrumb with the action
@@ -476,6 +579,7 @@ var ActionManager = Widget.extend({
     do_action: function(action, options) {
         options = _.defaults(options || {}, {
             clear_breadcrumbs: false,
+            replace_last_action: false,
             on_reverse_breadcrumb: function() {},
             hide_breadcrumb: false,
             on_close: function() {},
@@ -494,12 +598,15 @@ var ActionManager = Widget.extend({
                 active_ids : options.additional_context.active_ids,
                 active_model : options.additional_context.active_model
             };
-            return self.rpc("/web/action/load", { action_id: action, additional_context : additional_context }).then(function(result) {
+            return data_manager.load_action(action, additional_context).then(function(result) {
                 return self.do_action(result, options);
             });
         }
 
         core.bus.trigger('action', action);
+
+        // Force clear breadcrumbs if action's target is main
+        options.clear_breadcrumbs = (action.target === 'main') || options.clear_breadcrumbs;
 
         // Ensure context & domain are evaluated and can be manipulated/used
         var ncontext = new data.CompoundContext(options.additional_context, action.context || {});
@@ -522,6 +629,7 @@ var ActionManager = Widget.extend({
 
         var type = action.type.replace(/\./g,'_');
         action.menu_id = options.action_menu_id;
+        action.res_id = options.res_id || action.res_id;
         action.context.params = _.extend({ 'action' : action.id }, action.context.params);
         if (!(type in this)) {
             console.error("Action manager can't handle action of type " + action.type, action);
@@ -546,7 +654,7 @@ var ActionManager = Widget.extend({
             var form = _.str.startsWith(action.view_mode, 'form');
             action.flags = _.defaults(action.flags || {}, {
                 views_switcher : !popup && !inline,
-                search_view : !popup && !inline,
+                search_view : !(popup && form) && !inline,
                 action_buttons : !popup && !inline,
                 sidebar : !popup && !inline,
                 pager : (!popup || !form) && !inline,
@@ -556,7 +664,9 @@ var ActionManager = Widget.extend({
             });
         }
 
-        return this[type](action, options);
+        return $.when(this[type](action, options)).then(function() {
+            return action;
+        });
     },
     null_action: function() {
         this.dialog_stop();
@@ -573,6 +683,7 @@ var ActionManager = Widget.extend({
      * @return {*}
      */
     ir_actions_common: function(executor, options) {
+        var self = this;
         if (executor.action.target === 'new') {
             var pre_dialog = (this.dialog && !this.dialog.isDestroyed()) ? this.dialog : null;
             if (pre_dialog){
@@ -590,7 +701,8 @@ var ActionManager = Widget.extend({
             this.dialog = new Dialog(this, {
                 title: executor.action.name,
                 dialogClass: executor.klass,
-                buttons: []
+                buttons: [],
+                size: executor.action.context.dialog_size,
             });
 
             // chain on_close triggers with previous dialog, if any
@@ -602,6 +714,9 @@ var ActionManager = Widget.extend({
                     // closing, and *should* trigger a reload of the
                     // underlying form view (see comments above)
                     pre_dialog.on_close();
+                }
+                if (!pre_dialog) {
+                    self.dialog = null;
                 }
             };
             this.dialog.on("closed", null, this.dialog.on_close);
@@ -618,16 +733,23 @@ var ActionManager = Widget.extend({
             if (this.dialog_widget.need_control_panel) {
                 // Set a fake bus to Dialogs needing a ControlPanel as they should not
                 // communicate with the main ControlPanel
-                this.dialog_widget.set_cp_bus(new core.Bus());
+                this.dialog_widget.set_cp_bus(new Bus());
             }
             this.dialog_widget.setParent(this.dialog);
-            this.dialog.open();
-            
-            return this.dialog_widget.appendTo(this.dialog.$el);
+
+            var fragment = document.createDocumentFragment();
+            return this.dialog_widget.appendTo(fragment).then(function() {
+                self.dialog.open();
+                framework.append(self.dialog.$el, fragment, {
+                    in_DOM: true,
+                    callbacks: [{widget: self.dialog_widget}],
+                });
+                if(options.state && self.dialog_widget.do_load_state) {
+                    return self.dialog_widget.do_load_state(options.state);
+                }
+            }).then(function () { return executor.action; });
         }
-        // Clear uncommitted changes on the current inner widget if there is one
-        var self = this;
-        var def = (this.inner_widget && this.webclient.clear_uncommitted_changes()) || $.when();
+        var def = this.inner_action && this.webclient && this.webclient.clear_uncommitted_changes() || $.when();
         return def.then(function() {
             self.dialog_stop(executor.action);
             return self.push_action(executor.widget(), executor.action, options);
@@ -637,9 +759,23 @@ var ActionManager = Widget.extend({
     },
     ir_actions_act_window: function (action, options) {
         var self = this;
+
+        var flags = action.flags || {};
+        if (!('auto_search' in flags)) {
+            flags.auto_search = action.auto_search !== false;
+        }
+        options.action = action;
+        options.action_manager = this;
+        var dataset = new data.DataSetSearch(this, action.res_model, action.context, action.domain);
+        if (action.res_id) {
+            dataset.ids.push(action.res_id);
+            dataset.index = 0;
+        }
+        var views = action.views;
+
         return this.ir_actions_common({
             widget: function () {
-                return new ViewManager(self, null, null, null, action, options);
+                return new ViewManager(self, dataset, views, flags, options);
             },
             action: action,
             klass: 'o_act_window',
@@ -661,7 +797,7 @@ var ActionManager = Widget.extend({
 
         return this.ir_actions_common({
             widget: function () {
-                return new ClientWidget(self, action);
+                return new ClientWidget(self, action, options);
             },
             action: action,
             klass: 'oe_act_client',
@@ -678,11 +814,11 @@ var ActionManager = Widget.extend({
     },
     ir_actions_server: function (action, options) {
         var self = this;
-        this.rpc('/web/action/run', {
+        return this.rpc('/web/action/run', {
             action_id: action.id,
             context: action.context || {}
-        }).done(function (action) {
-            self.do_action(action, options);
+        }).then(function (action) {
+            return self.do_action(action, options);
         });
     },
     ir_actions_report_xml: function(action, options) {
@@ -725,10 +861,16 @@ var ActionManager = Widget.extend({
         });
     },
     ir_actions_act_url: function (action) {
+        var url = action.url;
+        if (session.debug && url && url.length && url[0] === '/') {
+            url = $.param.querystring(url, {debug: session.debug});
+        }
+
         if (action.target === 'self') {
-            framework.redirect(action.url);
+            framework.redirect(url);
+            return $.Deferred(); // The action is finished only when the redirection is done
         } else {
-            window.open(action.url, '_blank');
+            window.open(url, '_blank');
         }
         return $.when();
     },

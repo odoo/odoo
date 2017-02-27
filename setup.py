@@ -8,15 +8,15 @@ from setuptools import find_packages, setup
 from os.path import join, dirname
 
 
-execfile(join(dirname(__file__), 'openerp', 'release.py'))  # Load release variables
-lib_name = 'openerp'
+execfile(join(dirname(__file__), 'odoo', 'release.py'))  # Load release variables
+lib_name = 'odoo'
 
 
 def py2exe_datafiles():
     data_files = {}
     data_files['Microsoft.VC90.CRT'] = glob('C:\Microsoft.VC90.CRT\*.*')
 
-    for root, dirnames, filenames in os.walk('openerp'):
+    for root, dirnames, filenames in os.walk('odoo'):
         for filename in filenames:
             if not re.match(r'.*(\.pyc|\.pyo|\~)$', filename):
                 data_files.setdefault(root, []).append(join(root, filename))
@@ -35,16 +35,21 @@ def py2exe_datafiles():
         data_files[base] = [join(root, f) for f in filenames]
 
     import docutils
-    dudir = dirname(docutils.__file__)
-    for root, _, filenames in os.walk(dudir):
-        base = join('docutils', root[len(dudir) + 1:])
-        data_files[base] = [join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
-
     import passlib
-    pl = dirname(passlib.__file__)
-    for root, _, filenames in os.walk(pl):
-        base = join('passlib', root[len(pl) + 1:])
-        data_files[base] = [join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
+    import reportlab
+    import requests
+    data_mapping = ((docutils, 'docutils'),
+                    (passlib, 'passlib'),
+                    (reportlab, 'reportlab'),
+                    (requests, 'requests'))
+
+    for mod, datadir in data_mapping:
+        basedir = dirname(mod.__file__)
+        for root, _, filenames in os.walk(basedir):
+            base = join(datadir, root[len(basedir) + 1:])
+            data_files[base] = [join(root, f)
+                                for f in filenames
+                                if not f.endswith(('.py', '.pyc', '.pyo'))]
 
     return data_files.items()
 
@@ -54,9 +59,7 @@ def py2exe_options():
         import py2exe
         return {
             'console': [
-                {'script': 'odoo.py'},
-                {'script': 'openerp-gevent'},
-                {'script': 'openerp-server', 'icon_resources': [
+                {'script': 'odoo-bin', 'icon_resources': [
                     (1, join('setup', 'win32', 'static', 'pixmaps', 'openerp-icon.ico'))
                 ]},
             ],
@@ -81,7 +84,8 @@ def py2exe_options():
                         'mako',
                         'markupsafe',
                         'mock',
-                        'openerp',
+                        'ofxparse',
+                        'odoo',
                         'openid',
                         'passlib',
                         'PIL',
@@ -95,12 +99,14 @@ def py2exe_options():
                         'reportlab',
                         'requests',
                         'select',
-                        'simplejson',
                         'smtplib',
+                        'suds',
                         'uuid',
                         'vatnumber',
                         'vobject',
                         'win32service', 'win32serviceutil',
+                        'xlrd',
+                        'xlsxwriter',
                         'xlwt',
                         'xml', 'xml.dom',
                         'yaml',
@@ -124,11 +130,10 @@ setup(
     author_email=author_email,
     classifiers=filter(None, classifiers.split('\n')),
     license=license,
-    scripts=['openerp-server', 'odoo.py'],
+    scripts=['setup/odoo'],
     packages=find_packages(),
-    package_dir={'%s' % lib_name: 'openerp'},
+    package_dir={'%s' % lib_name: 'odoo'},
     include_package_data=True,
-    dependency_links=['http://download.gna.org/pychart/'],
     install_requires=[
         'babel >= 1.0',
         'decorator',
@@ -139,14 +144,15 @@ setup(
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'mako',
         'mock',
+        'ofxparse',
         'passlib',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
         'psycogreen',
         'psycopg2 >= 2.2',
-        'pychart',  # not on pypi, use: pip install http://download.gna.org/pychart/PyChart-1.39.tar.gz
+        'python-chart',
         'pydot',
-        'pyparsing < 2',
+        'pyparsing',
         'pypdf',
         'pyserial',
         'python-dateutil',
@@ -158,18 +164,17 @@ setup(
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
         'requests',
-        'simplejson',
-        'unittest2',
+        'suds-jurko',
         'vatnumber',
         'vobject',
         'werkzeug',
+        'xlsxwriter',
         'xlwt',
     ],
     extras_require={
         'SSL': ['pyopenssl'],
     },
     tests_require=[
-        'unittest2',
         'mock',
     ],
     **py2exe_options()

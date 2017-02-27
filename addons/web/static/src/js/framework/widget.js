@@ -32,7 +32,7 @@ var mixins = core.mixins;
  *     },
  *     start: function() {
  *         // stuff you want to make after the rendering, `this.$el` holds a correct value
- *         this.$el.find(".my_button").click(/* an example of event binding * /);
+ *         this.$(".my_button").click(/* an example of event binding * /);
  *
  *         // if you have some asynchronous operations, it's a good idea to return
  *         // a promise in start()
@@ -346,11 +346,28 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
             return this.$el;
         return this.$el.find(selector);
     },
+    /**
+     * Displays the widget
+     */
     do_show: function () {
-        this.$el.show();
+        this.$el.removeClass('o_hidden');
     },
+    /**
+     * Hides the widget
+     */
     do_hide: function () {
-        this.$el.hide();
+        this.$el.addClass('o_hidden');
+    },
+    /**
+     * Displays or hides the widget
+     * @param {Boolean} [display] use true to show the widget or false to hide it
+     */
+    do_toggle: function (display) {
+        if (_.isBoolean(display)) {
+            display ? this.do_show() : this.do_hide();
+        } else {
+            this.$el.hasClass('o_hidden') ? this.do_show() : this.do_hide();
+        }
     },
     /**
      * Proxies a method of the object, in order to keep the right ``this`` on
@@ -375,6 +392,9 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
         var self = this;
         return function () {
             var fn = (typeof method === 'string') ? self[method] : method;
+            if (fn === void 0) {
+                throw new Error("Couldn't find method '" + method + "' in widget " + self);
+            }
             return fn.apply(self, arguments);
         };
     },
@@ -390,14 +410,11 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
         }
         return false;
     },
-    do_notify: function() {
-        if (this.getParent()) {
-            return this.getParent().do_notify.apply(this,arguments);
-        }
-        return false;
+    do_notify: function(title, message, sticky) {
+        this.trigger_up('notification', {title: title, message: message, sticky: sticky});
     },
-    do_warn: function(title, message) {
-        core.bus.trigger('display_notification_warning', title, message);
+    do_warn: function(title, message, sticky) {
+        this.trigger_up('warning', {title: title, message: message, sticky: sticky});
     },
     rpc: function(url, data, options) {
         return this.alive(session.rpc(url, data, options));

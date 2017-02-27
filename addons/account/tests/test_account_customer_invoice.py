@@ -1,4 +1,4 @@
-from openerp.addons.account.tests.account_test_users import AccountTestUsers
+from odoo.addons.account.tests.account_test_users import AccountTestUsers
 import datetime
 
 
@@ -8,13 +8,11 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         # I will create bank detail with using manager access rights
         # because account manager can only create bank details.
         self.res_partner_bank_0 = self.env['res.partner.bank'].sudo(self.account_manager.id).create(dict(
-            state='bank',
+            acc_type='bank',
             company_id=self.main_company.id,
             partner_id=self.main_partner.id,
             acc_number='123456789',
-            footer=True,
-            bank=self.main_bank.id,
-            bank_name=self.main_bank.name,
+            bank_id=self.main_bank.id,
         ))
 
         # Test with that user which have rights to make Invoicing and payment and who is accountant.
@@ -67,20 +65,16 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         tax = self.env['account.invoice.tax'].create(invoice_tax_line)
         assert tax, "Tax has not been assigned correctly"
 
+        total_before_confirm = self.partner3.total_invoiced
+
         # I check that Initially customer invoice is in the "Draft" state
         self.assertEquals(self.account_invoice_customer0.state, 'draft')
-
-        # I change the state of invoice to "Proforma2" by clicking PRO-FORMA button
-        self.account_invoice_customer0.signal_workflow('invoice_proforma2')
-
-        # I check that the invoice state is now "Proforma2"
-        self.assertEquals(self.account_invoice_customer0.state, 'proforma2')
 
         # I check that there is no move attached to the invoice
         self.assertEquals(len(self.account_invoice_customer0.move_id), 0)
 
         # I validate invoice by creating on
-        self.account_invoice_customer0.signal_workflow('invoice_open')
+        self.account_invoice_customer0.action_invoice_open()
 
         # I check that the invoice state is "Open"
         self.assertEquals(self.account_invoice_customer0.state, 'open')
@@ -93,6 +87,9 @@ class TestAccountCustomerInvoice(AccountTestUsers):
 
         # I verify that invoice is now in Paid state
         assert (self.account_invoice_customer0.state == 'paid'), "Invoice is not in Paid state"
+
+        total_after_confirm = self.partner3.total_invoiced
+        self.assertEquals(total_after_confirm - total_before_confirm, self.account_invoice_customer0.amount_untaxed_signed)
 
         # I refund the invoice Using Refund Button
         invoice_refund_obj = self.env['account.invoice.refund']

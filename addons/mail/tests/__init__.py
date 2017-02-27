@@ -10,3 +10,4 @@ import test_message_track
 import test_mail_template
 import test_invite
 import test_ir_actions
+import test_update_notification

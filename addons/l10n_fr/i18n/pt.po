@@ -1,156 +1,44 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_fr
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-09 09:26+0000\n"
+"PO-Revision-Date: 2015-10-10 09:47+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
+"pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:22+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: l10n_fr
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr ""
-
-#. module: l10n_fr
-#: view:account.bilan.report:0
-#: view:account.cdr.report:0
-msgid "Print"
-msgstr "Imprimir"
-
-#. module: l10n_fr
-#: field:l10n.fr.report,line_ids:0
-msgid "Lines"
-msgstr "Linhas"
-
-#. module: l10n_fr
-#: model:ir.model,name:l10n_fr.model_account_bilan_report
-msgid "Account Bilan Report"
-msgstr ""
-
-#. module: l10n_fr
-#: model:ir.model,name:l10n_fr.model_account_cdr_report
-msgid "Account CDR Report"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.fiscal.position.template,note:l10n_fr.fiscal_position_template_import_export
-msgid "French VAT exemption according to articles 262 I of \"CGI\""
-msgstr ""
-
-#. module: l10n_fr
-#: field:l10n.fr.line,report_id:0
-msgid "Report"
-msgstr "Relatório"
-
-#. module: l10n_fr
-#: view:account.cdr.report:0
-msgid "Compte de resultat"
-msgstr ""
-
-#. module: l10n_fr
-#: model:ir.model,name:l10n_fr.model_l10n_fr_line
-msgid "Report Lines for l10n_fr"
-msgstr "Relatório de Linhas para l10n_fr"
-
-#. module: l10n_fr
-#: field:l10n.fr.line,definition:0
-msgid "Definition"
-msgstr "Definição"
-
-#. module: l10n_fr
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
-
-#. module: l10n_fr
-#: field:l10n.fr.line,name:0
-#: field:l10n.fr.report,name:0
-msgid "Name"
-msgstr "Nome"
-
-#. module: l10n_fr
-#: model:ir.actions.act_window,name:l10n_fr.action_account_cdr_report
-msgid "Compte de resultat Report"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.fiscal.position.template,note:l10n_fr.fiscal_position_template_intraeub2b
-msgid ""
-"French VAT exemption according to articles 262 ter I (for products) and/or "
-"283-2 (for services) of \"CGI\""
+#: model:ir.model.fields,field_description:l10n_fr.field_res_company_ape
+msgid "APE"
 msgstr ""
 
 #. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_res_company
 msgid "Companies"
+msgstr "Empresas"
+
+#. module: l10n_fr
+#: model:ir.ui.menu,name:l10n_fr.account_reports_fr_statements_menu
+msgid "French Statements"
 msgstr ""
 
 #. module: l10n_fr
-#: sql_constraint:l10n.fr.report:0
-msgid "The code report must be unique !"
-msgstr ""
+#: model:ir.actions.client,name:l10n_fr.action_client_l10n_fr_menu
+msgid "Open Account Dashboard Menu"
+msgstr "Abrir Menu da Contabilidade"
 
 #. module: l10n_fr
-#: field:account.bilan.report,fiscalyear_id:0
-#: field:account.cdr.report,fiscalyear_id:0
-msgid "Fiscal Year"
-msgstr "Ano fiscal"
-
-#. module: l10n_fr
-#: model:ir.model,name:l10n_fr.model_l10n_fr_report
-msgid "Report for l10n_fr"
-msgstr "Relatório para l10n_fr"
-
-#. module: l10n_fr
-#: field:res.company,siret:0
+#: model:ir.model.fields,field_description:l10n_fr.field_res_company_siret
 msgid "SIRET"
-msgstr ""
-
-#. module: l10n_fr
-#: sql_constraint:l10n.fr.line:0
-msgid "The variable name must be unique !"
-msgstr "O nome da variável deve ser único!"
-
-#. module: l10n_fr
-#: field:l10n.fr.report,code:0
-msgid "Code"
-msgstr "Código"
-
-#. module: l10n_fr
-#: view:account.bilan.report:0
-#: model:ir.actions.act_window,name:l10n_fr.action_account_bilan_report
-msgid "Bilan Report"
-msgstr ""
-
-#. module: l10n_fr
-#: view:account.bilan.report:0
-#: view:account.cdr.report:0
-msgid "Cancel"
-msgstr "Cancelar"
-
-#. module: l10n_fr
-#: field:l10n.fr.line,code:0
-msgid "Variable Name"
-msgstr "Nome da Variável"
-
-#. module: l10n_fr
-#: view:account.bilan.report:0
-#: view:account.cdr.report:0
-msgid "or"
-msgstr ""
-
-#. module: l10n_fr
-#: field:res.company,ape:0
-msgid "APE"
 msgstr ""

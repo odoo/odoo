@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<openerp>
+<odoo>
     <data>
 
         <record id="account_bank_statement_import_journal_creation_view" model="ir.ui.view">
@@ -7,21 +7,26 @@
             <field name="model">account.bank.statement.import.journal.creation</field>
             <field name="arch" type="xml">
                 <form string="Journal Creation">
-                    <p>The account of the statement you are importing is not yet recorded in Odoo. In order to proceed with the import, you need to create a bank account and journal using this form.</p>
+                    <p>The account of the statement you are importing is not yet recorded in Odoo. In order to proceed with the import, you need to create a bank journal for this account.</p>
                     <p>Just click OK to create the account/journal and finish the import. If this was a mistake, hit cancel to abort the import.</p>
                     <group>
-                        <field name="name"/>
-                        <field name="currency_id" options="{'no_create': True}" attrs="{'invisible': [('currency_id', '=', False)]}"/>
-                        <field name="account_number"/>
+                        <group>
+                            <field name="name" string="Bank Journal Name"/>
+                            <field name="bank_acc_number" readonly="1"/>
+                            <field name="bank_id"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" readonly="1" groups="base.group_multi_currency"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
                     </group>
                     <footer>
-                        <button name="create_journal" string="OK" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button name="create_journal" string="OK" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>
             </field>
         </record>
 
     </data>
-</openerp>
+</odoo>

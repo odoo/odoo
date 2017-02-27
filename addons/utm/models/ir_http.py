@@ -1,17 +1,27 @@
 # -*- coding: utf-8 -*-
-from openerp.http import request
-from openerp.osv import orm
+from odoo.http import request
+from odoo import models
 
 
-class ir_http(orm.AbstractModel):
+class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
-    def get_utm_domain_cookies(self):
+    @classmethod
+    def get_utm_domain_cookies(cls):
         return request.httprequest.host
 
-    def _dispatch(self):
-        response = super(ir_http, self)._dispatch()
-        for var, dummy, cook in self.pool['utm.mixin'].tracking_fields():
+    @classmethod
+    def _dispatch(cls):
+        cookies_to_set = []
+        for var, dummy, cook in request.env['utm.mixin'].tracking_fields():
             if var in request.params and request.httprequest.cookies.get(var) != request.params[var]:
-                response.set_cookie(cook, request.params[var], domain=self.get_utm_domain_cookies())
+                cookies_to_set.append((cook, request.params[var], cls.get_utm_domain_cookies()))
+
+        response = super(IrHttp, cls)._dispatch()
+        if isinstance(response, Exception):
+            return response
+
+        for cookie_to_set in cookies_to_set:
+            response.set_cookie(cookie_to_set[0], cookie_to_set[1], domain=cookie_to_set[2])
+
         return response

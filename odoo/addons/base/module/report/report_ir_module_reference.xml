@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<template id="report_irmodulereference">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">    
+            <t t-call="report.internal_layout">
+                <div class="page">
+                    <h3 class="text-center">Introspection report on objects</h3>
+                        <table class="table table-bordered mt32">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Module</th>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Version</th>
+                                    <th class="text-center">Directory</th>
+                                    <th class="text-center">Web</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center">
+                                    <td><span t-field="o.name"/></td>
+                                    <td><span t-field="o.shortdesc"/></td>
+                                    <td><span t-field="o.latest_version"/></td>
+                                    <td><span t-field="o.name"/></td>
+                                    <td><span t-field="o.website"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <span t-field="o.description"/>
+                        <div>
+                            <strong>Reports :</strong>
+                        </div>
+                        <span t-field="o.reports_by_module"/>
+                        <div>
+                            <strong>Menu :</strong>
+                        </div>
+                        <span t-field="o.menus_by_module"/>
+                        <div>
+                            <strong>View :</strong>
+                        </div>
+                        <span t-field="o.views_by_module"/>
+                        <div>
+                            <strong>Dependencies :</strong>
+                        </div>
+                        <div t-foreach="o.dependencies_id" t-as="dependency_id">
+                            <span t-field="dependency_id.name"/> - <span t-field="dependency_id.module_id.state"/>
+                        </div>
+
+                        <table t-foreach="findobj(o)" t-as="obj" class="table table-condensed mt16 mb32">
+                            <tr>
+                                <th colspan="2">Object: <span t-esc="obj.model"/></th>
+                            </tr>
+                            <tr t-foreach="findfields(obj.model, o)" t-as="field">
+                                <td class="col-xs-3"><t t-esc="field[0]"/></td>
+                                <td>
+                                    <span t-esc="field[1].get('string','Unknown')"/><span>, </span><span t-esc="field[1].get('type')"/><span t-if="field[1].get('required')">, required</span><span t-if="field[1].get('readonly',False)">, readonly</span>
+                                    <div t-esc="field[1].get('help', '')"/>
+                                </td>
+                            </tr>
+                        </table>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</odoo>

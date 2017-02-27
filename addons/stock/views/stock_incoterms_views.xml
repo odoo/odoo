@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Stock incoterms -->
+        <record id="view_incoterms_tree" model="ir.ui.view">
+            <field name="name">stock.incoterms.tree</field>
+            <field name="model">stock.incoterms</field>
+            <field name="arch" type="xml">
+                <tree string="Incoterms">
+                    <field name="active" invisible="1"/>
+                    <field name="code"/>
+                    <field colspan="4" name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="stock_incoterms_form" model="ir.ui.view">
+            <field name="name">stock.incoterms.form</field>
+            <field name="model">stock.incoterms</field>
+            <field name="arch" type="xml">
+                <form string="Incoterms">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="stock_incoterms_view_search" model="ir.ui.view">
+            <field name="name">stock.incoterms.search</field>
+            <field name="model">stock.incoterms</field>
+            <field name="arch" type="xml">
+                <search string="Incoterms">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+        <record id="action_incoterms_tree" model="ir.actions.act_window">
+            <field name="name">Incoterms</field>
+            <field name="res_model">stock.incoterms</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="5" groups="base.group_no_one"/>
+    </data>
+</odoo>

@@ -1,1 +1,1 @@
-from . import test_journal_entries
+from . import test_expenses

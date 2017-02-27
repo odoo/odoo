@@ -1,0 +1,419 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * resource
+#
+# Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-03-19 10:04+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
+"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#. module: resource
+#: code:addons/resource/resource.py:686
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kópia)"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource_active
+msgid "Active"
+msgstr "Aktívny"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
+msgid "Closing Days"
+msgstr "Zatváracie dni"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource_code
+msgid "Code"
+msgstr "Kód"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_company_id
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_company_id
+#: model:ir.model.fields,field_description:resource.field_resource_resource_company_id
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Company"
+msgstr "Spoločnost"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_create_uid
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_create_uid
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_uid
+#: model:ir.model.fields,field_description:resource.field_resource_resource_create_uid
+msgid "Created by"
+msgstr "Vytvoril"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_create_date
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_create_date
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_date
+#: model:ir.model.fields,field_description:resource.field_resource_resource_create_date
+msgid "Created on"
+msgstr "Vytvorené"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_dayofweek
+msgid "Day of Week"
+msgstr "Deň týždňa"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_calendar_id
+msgid "Define the schedule of resource"
+msgstr "Definujte harmonogram zdroja"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
+msgid ""
+"Define working hours and time table that could be scheduled to your project "
+"members"
+msgstr ""
+"Definujte pracovnú dobu a časový harmonogram, ktorý by mohol byť naplánovaný "
+"vašim členom projektu"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_display_name
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
+#: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
+msgid "Display Name"
+msgstr "Zobraziť meno"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+msgid "Duration"
+msgstr "Trvanie"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
+msgid "Efficiency Factor"
+msgstr "Faktor efektívnosti"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_to
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_to
+msgid "End Date"
+msgstr "Dátum ukončenia"
+
+#. module: resource
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr "Chyba! Dátum začiatku voľna musí byť nižší ako dátum konca voľna."
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Friday"
+msgstr "Piatok"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Group By"
+msgstr "Zoskupiť podľa"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
+msgid "Hours"
+msgstr "Hodiny"
+
+#. module: resource
+#: selection:resource.resource,resource_type:0
+msgid "Human"
+msgstr "Človek"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_id
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_id
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_id
+#: model:ir.model.fields,field_description:resource.field_resource_resource_id
+msgid "ID"
+msgstr "ID"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_leaves_resource_id
+msgid ""
+"If empty, this is a generic holiday for the company. If a resource is set, "
+"the holiday/leave is only for this resource"
+msgstr ""
+"Ak prázdne, je to všeobecný sviatok pre spoločnosť. Ak je nastavený zdroj,  "
+"sviatok/voľno je určený len pre tento zdroj"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Ak je aktívne pole nastavené na Nepravda, umožní vám skryť záznam zdroja bez "
+"jeho odstránenia."
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Inactive"
+msgstr "Neaktívne"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar___last_update
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance___last_update
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves___last_update
+#: model:ir.model.fields,field_description:resource.field_resource_resource___last_update
+msgid "Last Modified on"
+msgstr "Posledná modifikácia"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_uid
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_write_uid
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_write_uid
+#: model:ir.model.fields,field_description:resource.field_resource_resource_write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upravoval"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_date
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_write_date
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_write_date
+#: model:ir.model.fields,field_description:resource.field_resource_resource_write_date
+msgid "Last Updated on"
+msgstr "Naposledy upravované"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_leaves
+#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+msgid "Leave Detail"
+msgstr "Detail voľna"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Leave Month"
+msgstr "Mesiac voľna"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
+msgid "Leaves"
+msgstr "Voľná"
+
+#. module: resource
+#: selection:resource.resource,resource_type:0
+msgid "Material"
+msgstr "Materiál"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Monday"
+msgstr "Pondelok"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_name
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_name
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_name
+#: model:ir.model.fields,field_description:resource.field_resource_resource_name
+msgid "Name"
+msgstr "Meno"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Reason"
+msgstr "Dôvod "
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "Súvisiace užívateľské meno pre zdroj na spravovanie jeho prístupu."
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_resource_id
+#: model:ir.ui.menu,name:resource.menu_resource_config
+#: model:ir.ui.view,arch_db:resource.resource_resource_form
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Resource"
+msgstr "Prostriedok"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar
+msgid "Resource Calendar"
+msgstr "Kalendár zdrojov"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_resource
+msgid "Resource Detail"
+msgstr "Detail zdroja"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
+msgid "Resource Leaves"
+msgstr "Odchody zdrojov"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
+msgid "Resource Type"
+msgstr "Typ zdroja"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_calendar_id
+msgid "Resource's Calendar"
+msgstr "Kalendár zdroja"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_resource_tree
+#: model:ir.ui.menu,name:resource.menu_resource_resource
+#: model:ir.ui.view,arch_db:resource.resource_resource_tree
+msgid "Resources"
+msgstr "Zdroje"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
+msgid "Resources Leaves"
+msgstr "Voľná zdroja"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
+msgid ""
+"Resources allow you to create and manage resources that should be involved "
+"in a specific project phase. You can also set their efficiency level and "
+"workload based on their weekly working hours."
+msgstr ""
+"Zdroje vám umožňujú vytvárať a spravova zdroje ktoré by mali byť zahrnuté v "
+"špecifickej fáze projektu. Môžete tiež nastaviť úroveň ich účinnosti and "
+"pracovnej záťaže na základe ich týždenných pracovných hodín."
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Saturday"
+msgstr "Sobota"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Search Resource"
+msgstr "Vyhľadať zdroj"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Search Working Period Leaves"
+msgstr "Vyhľadať voľná pracovných období"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
+msgid "Search Working Time"
+msgstr "Vyhľadať pracovný čas"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_from
+msgid "Start Date"
+msgstr "Počiatočný dátum"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance_hour_from
+msgid "Start and End time of working."
+msgstr "Dátum zaçiatku a konca pracovania."
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
+msgid "Starting Date"
+msgstr "Dátum začatia"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Starting Date of Leave by Month"
+msgstr "Začiatočný dátum voľna podľa mesiaca"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Sunday"
+msgstr "Nedeľa"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
+msgstr ""
+"Toto pole zobrazuje účinnosť zdroja pri plnení úloh. napr zdroj pridaný sám "
+"na fázu 5 dní s 5 úlohami, ktoré mu ukáže zaťaženie 100% pre túto fázu v "
+"predvolenom nastavení, ale ak dáme účinnosť 200%, potom jeho zaťaženie bude "
+"iba 50%."
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Thursday"
+msgstr "Štvrtok"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Tuesday"
+msgstr "Utorok"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Type"
+msgstr "Typ"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource_user_id
+#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "User"
+msgstr "Používateľ"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Wednesday"
+msgstr "Streda"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Detail práce"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from
+msgid "Work from"
+msgstr "Pracový formulár"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_to
+msgid "Work to"
+msgstr "Práca do"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_manager
+msgid "Workgroup Manager"
+msgstr "Manažér pracovnej skupiny"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Working Period"
+msgstr "Pracovné obdobie"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_ids
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_calendar_id
+#: model:ir.model.fields,field_description:resource.field_resource_resource_calendar_id
+#: model:ir.ui.menu,name:resource.menu_resource_calendar
+#: model:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_tree
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "Working Time"
+msgstr "Pracovný čas"

@@ -31,6 +31,7 @@ var Dialog = Widget.extend({
     */
     init: function (parent, options) {
         this._super(parent);
+        this._opened = $.Deferred();
 
         options = _.defaults(options || {}, {
             title: _t('Odoo'), subtitle: '',
@@ -59,7 +60,7 @@ var Dialog = Widget.extend({
         this.$footer = this.$modal.find(".modal-footer");
 
         this.set_buttons(options.buttons);
-        
+
         this.$modal.on('hidden.bs.modal', _.bind(this.destroy, this));
     },
 
@@ -68,6 +69,7 @@ var Dialog = Widget.extend({
         if(this.$content) {
             this.setElement(this.$content);
         }
+        this.$el.addClass('modal-body ' + this.dialogClass);
     },
 
     set_buttons: function(buttons) {
@@ -79,23 +81,24 @@ var Dialog = Widget.extend({
             var text = b.text || "";
             var classes = b.classes || ((buttons.length === 1)? "btn-primary" : "btn-default");
 
-            var $b = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {'class': classes} }}}));
+            var $b = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {'class': classes, icon: b.icon} }, fa_icon: true }}));
             $b.prop('disabled', b.disabled);
             $b.on('click', function(e) {
+                var click_def;
                 if(b.click) {
-                    b.click.call(self, e);
+                    click_def = b.click.call(self, e);
                 }
                 if(b.close) {
-                    self.close();
+                    $.when(click_def).always(self.close.bind(self));
                 }
             });
             self.$footer.append($b);
         });
     },
-    
+
     set_title: function(title, subtitle) {
         this.title = title || "";
-        if(subtitle !== undefined) {
+        if (subtitle !== undefined) {
             this.subtitle = subtitle || "";
         }
 
@@ -107,15 +110,19 @@ var Dialog = Widget.extend({
         return this;
     },
 
+    opened: function(handler) {
+        return (handler)? this._opened.then(handler) : this._opened;
+    },
+
     open: function() {
         $('.tooltip').remove(); // remove open tooltip if any to prevent them staying when modal is opened
 
         var self = this;
         this.replace(this.$modal.find(".modal-body")).then(function() {
-            self.$el.addClass('modal-body ' + self.dialogClass);
             self.$modal.modal('show');
+            self._opened.resolve();
         });
-        
+
         return self;
     },
 
@@ -123,11 +130,12 @@ var Dialog = Widget.extend({
         this.$modal.modal('hide');
     },
 
-    destroy: function() {
-        if(this.isDestroyed())
+    destroy: function(reason) {
+        if (this.isDestroyed()) {
             return;
+        }
 
-        this.trigger("closed");
+        this.trigger("closed", reason);
 
         this._super();
 
@@ -136,7 +144,7 @@ var Dialog = Widget.extend({
         this.$modal.remove();
 
         setTimeout(function () { // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
-            var modals = $('body > .modal');
+            var modals = $('body > .modal').filter(':visible');
             if(modals.length) {
                 modals.last().focus();
                 $('body').addClass('modal-open');
@@ -145,6 +153,22 @@ var Dialog = Widget.extend({
     }
 });
 
+// static method to open simple alert dialog
+Dialog.alert = function (owner, message, options) {
+    var buttons = [{
+        text: _t("Ok"),
+        close: true,
+        click: options && options.confirm_callback,
+    }];
+    return new Dialog(owner, _.extend({
+        size: 'medium',
+        buttons: buttons,
+        $content: $('<div>', {
+            text: message,
+        }),
+        title: _t("Alert"),
+    }, options)).open();
+};
 
 // static method to open simple confirm dialog
 Dialog.confirm = function (owner, message, options) {
@@ -167,6 +191,7 @@ Dialog.confirm = function (owner, message, options) {
         $content: $('<div>', {
             text: message,
         }),
+        title: _t("Confirmation"),
     }, options)).open();
 };
 

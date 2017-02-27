@@ -1,81 +1,35 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# #-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_multilang
 #
+# Translators:
+# hamza tayseer atieh <hamza.atieh@minervadata.com>, 2015
+# #-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_multilang
+#
+# Translators:
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:06+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:20+0000\n"
+"PO-Revision-Date: 2015-09-10 15:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:22+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
-msgstr "قوالب للمركز المالي"
-
-#. module: l10n_multilang
-#: sql_constraint:account.account:0
-msgid "The code of the account must be unique per company !"
-msgstr "يجب ان يكون كود الحساب فريداً لكل شركة !"
-
-#. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid ""
-"Configuration Error!\n"
-"You can not define children to an account with internal type different of "
-"\"View\"! "
-msgstr ""
-"خطأ في الإعدادات!\n"
-" لاتستطيع تعريف أطفال لحساب من نوع داخلي مختلف ل\"العرض\"! "
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_journal
-msgid "Analytic Journal"
-msgstr "يومية تحليلية"
-
-#. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
-msgstr "خطأ ! لا يمكنك انشاء قوالب الحاسب العودية."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_journal
-msgid "Journal"
-msgstr "يومية"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "القوالب لجدول الحساب"
-
-#. module: l10n_multilang
-#: sql_constraint:account.tax:0
-msgid "The description must be unique per company!"
-msgstr "وصف لكل شركة يجب ان تكون فريد!"
-
-#. module: l10n_multilang
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr "خطأ ! لايمكنك إنشاء اكواد ضريبية متداخلة."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_template
-msgid "account.tax.template"
-msgstr "account.tax.template"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax
-msgid "account.tax"
-msgstr "account.tax"
+"Content-Transfer-Encoding: \n"
+"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account
@@ -83,90 +37,60 @@ msgid "Account"
 msgstr "حساب"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr "wizard.multi.charts.accounts"
+#: model:ir.model,name:l10n_multilang.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "الحساب التحليلي"
 
 #. module: l10n_multilang
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position
+msgid "Fiscal Position"
 msgstr ""
-"خطأ في الإعدادات! يجب أن تكون العملة المختارة مشتركة للحسابات الإفتراضية "
-"أيضأً."
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_account_template
-msgid "Templates for Accounts"
-msgstr "قوالب للحسابات"
+#: model:ir.model,name:l10n_multilang.model_account_journal
+msgid "Journal"
+msgstr ""
 
 #. module: l10n_multilang
-#: help:account.chart.template,spoken_languages:0
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template_spoken_languages
+msgid "Spoken Languages"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template_spoken_languages
 msgid ""
 "State here the languages for which the translations of templates could be "
 "loaded at the time of installation of this localization module and copied in "
 "the final object when generating them from templates. You must provide the "
 "language codes separated by ';'"
-msgstr "ضع هنا اللغات حيث ترجمات القوالب، و ليكون كود اللغة مفصول بـ \";\""
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid "Error ! You can not create recursive accounts."
-msgstr "خطأ ! لا يمكن إنشاء حسابات تكرارية."
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not select an account type with a deferral method different of "
-"\"Unreconciled\" for accounts with internal type \"Payable/Receivable\"! "
 msgstr ""
-"التكوين الخطأ!\n"
-"لا يمكنك اختيار  نوع الحساب باستخدام  طريقة التأجيل المختلفه \"عدم "
-"المساواه\" للحسابات من النوع الداخلي \"الدفع / القبض\" "
 
 #. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "يجب ان يكون الاسم لليومية فريد لكل شركة!"
+#: model:ir.model,name:l10n_multilang.model_account_tax
+msgid "Tax"
+msgstr "الضريبة"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "حسابات تحليلية"
-
-#. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "يجب ان يكون الكود لليومية فريد لكل شركة !"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position
-msgid "Fiscal Position"
-msgstr "الوضع المالي"
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not define children to an account with internal type different of "
-"\"View\"! "
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
+msgid "Template for Fiscal Position"
 msgstr ""
-"خطأ في الإعدادات!\n"
-"لا يمكنك تحديد فرع لحساب مع نوع داخلي مختلف من \"عرض\"! "
 
 #. module: l10n_multilang
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "خطأ! لا يمكنك إنشاء حسابات تحليلية متكررة."
+#: model:ir.model,name:l10n_multilang.model_account_chart_template
+msgid "Templates for Account Chart"
+msgstr ""
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_code_template
-msgid "Tax Code Template"
-msgstr "قالب رمز الضريبة"
+#: model:ir.model,name:l10n_multilang.model_account_account_template
+msgid "Templates for Accounts"
+msgstr ""
 
 #. module: l10n_multilang
-#: field:account.chart.template,spoken_languages:0
-msgid "Spoken Languages"
-msgstr "اللغات المنطوقة"
+#: model:ir.model,name:l10n_multilang.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
+msgid "wizard.multi.charts.accounts"
+msgstr "wizard.multi.charts.accounts"

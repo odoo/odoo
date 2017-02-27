@@ -1,3 +1,4 @@
 # -*- coding: utf-8 -*-
-import pad
-import res_company
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import models

@@ -145,8 +145,14 @@ var PDFSlidesViewer = (function(){
         return this.queueRenderPage(this.pdf_page_total);
     }
 
+    PDFSlidesViewer.prototype.toggleFullScreenFooter = function(){
+        if(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+            $('div#PDFViewer > div.navbar-fixed-bottom').toggleClass('oe_show_footer');
+        }
+    }
+
     PDFSlidesViewer.prototype.toggleFullScreen = function(){
-        var el = this.canvas;
+        var el = this.canvas.parentNode;
 
         var isFullscreenAvailable = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled || false;
         if(isFullscreenAvailable){ // Full screen supported

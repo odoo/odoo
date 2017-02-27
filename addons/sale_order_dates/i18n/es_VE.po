@@ -1,56 +1,67 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_order_dates
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-13 10:05+0000\n"
-"Last-Translator: Carlos @ smile.fr <Unknown>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2015-09-08 08:03+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Venezuela) (http://www.transifex.com/odoo/odoo-9/"
+"language/es_VE/)\n"
+"Language: es_VE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:54+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_order_dates
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "¡La referencia del pedido debe ser única!"
-
-#. module: sale_order_dates
-#: help:sale.order,requested_date:0
-msgid "Date on which customer has requested for sales."
-msgstr "Fecha en que el cliente ha solicitado la venta."
-
-#. module: sale_order_dates
-#: field:sale.order,commitment_date:0
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
 msgid "Commitment Date"
 msgstr "Fecha compromiso"
 
 #. module: sale_order_dates
-#: field:sale.order,effective_date:0
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
+msgid ""
+"Date by which the customer has requested the items to be delivered.\n"
+"When this Order gets confirmed, the Delivery Order's expected date will be "
+"computed based on this date and the Company's Security Delay.\n"
+"Leave this field empty if you want the Delivery Order to be processed as "
+"soon as possible. In that case the expected date will be computed using the "
+"default method: based on the Product Lead Times and the Company's Security "
+"Delay."
+msgstr ""
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
+msgid ""
+"Date by which the products are sure to be delivered. This is a date that you "
+"can promise to the customer, based on the Product Lead Times."
+msgstr ""
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
+msgid "Date on which the first Delivery Order was created."
+msgstr ""
+
+#. module: sale_order_dates
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
 msgid "Effective Date"
 msgstr "Fecha efectiva"
 
 #. module: sale_order_dates
-#: model:ir.module.module,shortdesc:sale_order_dates.module_meta_information
-msgid "Sales Order Dates"
-msgstr "Fechas en pedidos de venta"
-
-#. module: sale_order_dates
-#: help:sale.order,effective_date:0
-msgid "Date on which picking is created."
-msgstr "Fecha en que el albarán ha sido creado."
-
-#. module: sale_order_dates
-#: field:sale.order,requested_date:0
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
 msgstr "Fecha solicitud"
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/sale_order_dates.py:51
+#, python-format
+msgid "Requested date is too soon!"
+msgstr ""
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
@@ -58,16 +69,14 @@ msgid "Sales Order"
 msgstr "Pedido de venta"
 
 #. module: sale_order_dates
-#: model:ir.module.module,description:sale_order_dates.module_meta_information
-msgid ""
-"\n"
-"Add commitment, requested and effective dates on the sales order.\n"
-msgstr ""
-"\n"
-"Añade las fechas de compromiso, solicitada y efectiva en el pedido de "
-"venta.\n"
+#: model:ir.model,name:sale_order_dates.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea pedido de venta"
 
 #. module: sale_order_dates
-#: help:sale.order,commitment_date:0
-msgid "Date on which delivery of products is to be made."
-msgstr "Fecha en que la entrega de productos se va a realizar."
+#: code:addons/sale_order_dates/sale_order_dates.py:52
+#, python-format
+msgid ""
+"The date requested by the customer is sooner than the commitment date. You "
+"may be unable to honor the customer's request."
+msgstr ""

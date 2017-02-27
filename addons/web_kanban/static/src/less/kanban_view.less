@@ -1,7 +1,15 @@
 @o-kanban-record-margin: 4px;
+@o-kanban-group-padding: 4px;
 
 @o-kanban-default-record-width: 300px;
 @o-kanban-small-record-width: 240px;
+
+@o-kanban-image-width: 64px;
+@o-kanban-inside-vgutter: 8px;
+@o-kanban-inside-hgutter: 8px;
+@o-kanban-inside-hgutter-mobile: @odoo-horizontal-padding;
+@o-kanban-progressbar-height: 20px;
+
 // mixins
 .o-kanban-icon() {
     // Share the style of `.o_kanban_quick_add` and `o_kanban_config`.
@@ -9,61 +17,60 @@
     width: 50px;
     line-height: 1.8;
     text-align: center;
-    color: white;
+    color: @odoo-main-text-color;
     padding: 8px;
     font-size: 22px;
     cursor: pointer;
 }
 
-
 // LAYOUT
 .o_kanban_view {
     .o-flex-display();
     .o-align-content(stretch);
-    overflow-x: visible;
 
+    overflow-x: visible;
     @media (max-width: @screen-xs-max) {
         overflow-x: auto;
         padding: 0px;
     }
 
     .o_kanban_record {
+        .clearfix();
+        &:after, &:before {
+            width: 0;
+            height: 0;
+        }
+
+        position: relative;
         min-width: 150px;
         margin: 4px;
 
-        &.o_kanban_two_column {
-            .o-flex-display();
+        .o_kanban_image {
+            float: left;
+            width: @o-kanban-image-width;
 
-            .oe_kanban_details {
-                position: relative;
-                display: inline-block;
-                .o-flex(1, 1, auto);
-                width: 0;
-            }
-        }
-
-        &.o_kanban_two_column_tags {
-            .o-flex-display();
-            .o-flex-flow(row, wrap);
-
-            .o_kanban_tags_section {
-                .o-flex(1, 1, 100%);
-            }
-            .o_kanban_image {
-                .o-flex(1, 1, 25%);
-                margin-right: 0;
-            }
-            .oe_kanban_details {
-                position: relative;
-                .o-flex(1, 1, 75%);
-                ul {
-                    margin-bottom: 0;
+            + div {
+                padding-left: @o-kanban-image-width + @o-kanban-inside-hgutter;
+                @media (max-width: @screen-xs-max) {
+                    padding-left:  @o-kanban-image-width + @o-kanban-inside-hgutter-mobile;
                 }
             }
         }
 
+        .oe_kanban_details {
+            width: 100%;
+            > ul {
+                margin-bottom: 0;
+            }
+        }
+
         .o_dropdown_kanban {
-            float: right;
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            @media (max-width: @screen-xs-max) {
+                visibility: visible;
+            }
 
             // Open the dropdown a the left side of the dropdown toggle
             > .dropdown-menu {
@@ -73,18 +80,12 @@
             }
         }
 
-        .o_dropdown_kanban {
-            @media (max-width: @screen-xs-max) {
-                visibility: visible;
-            }
-        }
-
         .o_kanban_footer {
             .o-flex-display();
             .o-justify-content(space-between);
-            width: 100%;
+            .o-align-items(center);
             > * {
-                flex: none;
+                .o-flex(0, 0, auto);
             }
         }
 
@@ -98,89 +99,103 @@
 
         .oe_kanban_bottom_left {
             float: left;
+            .oe_kanban_align {
+                display: inline-block;
+                vertical-align: middle;
+            }
         }
 
         .o_kanban_tags {
-
-            margin-left: -8px;
-            height: 9px;
-            .o_tag{
-                width: 50px;
+            margin: 0 0 @o-kanban-inside-vgutter -@o-kanban-inside-hgutter;
+            @media (max-width: @screen-xs-max) {
+                margin-left:  -@o-kanban-inside-hgutter-mobile;
+            }
+            max-height: 9px;
+            .o_tag {
+                width: 40px;
                 height: 9px;
                 display: inline-block;
                 vertical-align: top;
+                opacity: 0.7;
+
+                &:hover {
+                    opacity: 1;
+                }
             }
         }
         .o_form_field_many2manytags {
             display: block;
         }
+        .oe_kanban_text_red {
+            color: #A61300;
+            font-weight: bold;
+        }
+        .o_text_bold {
+            font-weight: bold;
+        }
+        .o_text_block {
+            display: block;
+        }
+    }
+
+    .o_kanban_quick_create {
+        margin: 0 @o-kanban-record-margin @o-kanban-record-margin @o-kanban-record-margin;
+        padding: 3px;
+        input {
+            width: 100%;
+            margin: 4px 0;
+        }
     }
 
     .o_kanban_group {
         .o-flex(0, 0, auto);
-        margin: 0 4px;
+        padding: 0 @o-kanban-group-padding;
         &:not(.o_column_folded) {
-            width: @o-kanban-default-record-width + 2*@o-kanban-record-margin;
-        }
-
-        .o_kanban_quick_create {
-            margin: 0 @o-kanban-record-margin 8px @o-kanban-record-margin;
-            padding: 3px;
-            input {
-                width: 100%;
-                margin: 4px 0;
-            }
+            width: @o-kanban-default-record-width + 2*@o-kanban-group-padding + 2*@o-kanban-record-margin;
         }
 
         .o_kanban_header + .o_kanban_record {
             margin-top: 0;  // no margin top from the first card after kanban_header
         }
-
-    }
-    .o_kanban_group:first-child {
-        margin-left: 0;
     }
 
     &.o_kanban_ungrouped {
         .o-flex-flow(row, wrap);
         .o-justify-content(flex-start);
-        padding:  @o-kanban-record-margin @odoo-horizontal-padding - @o-kanban-record-margin;
 
+        padding: @o-kanban-record-margin @odoo-horizontal-padding - @o-kanban-record-margin;
         @media (max-width: @screen-xs-max) {
             padding: 0;
         }
 
         .o_kanban_record {
-            .o-flex(1, 1, auto);
-            width: @o-kanban-default-record-width;
+            .o-flex(1, 1, @o-kanban-default-record-width);
             @media (max-width: @screen-xs-max) {
                 margin: 0 0 1px 0;
-                width: 100vw;
+                .o-flex(1, 0, 100%);
                 box-shadow: none;
             }
 
             &.o_kanban_ghost {
                 height: 0;
-                min-height: 0 !important;  // to prevent view writers to override this height
+                min-height: 0!important; // to prevent view writers to override this height
                 visibility: hidden;
                 margin-top: 0;
                 margin-bottom: 0;
                 padding: 0;
             }
         }
-
     }
 
     &.o_kanban_grouped {
         min-height: 100%;
-        padding: 0 @odoo-horizontal-padding - @o-kanban-record-margin;
+        padding: 0 @odoo-horizontal-padding - @o-kanban-group-padding - @o-kanban-record-margin;
         .o_kanban_record {
             width: @o-kanban-default-record-width;
-
         }
         &.o_kanban_small_column .o_kanban_group {
             &:not(.o_column_folded) {
-                width: @o-kanban-small-record-width + 2*@o-kanban-record-margin;
+                width: @o-kanban-small-record-width + 2*@o-kanban-group-padding + 2*@o-kanban-record-margin;
                 .o_kanban_record {
                     width: @o-kanban-small-record-width;
                 }
@@ -188,6 +203,16 @@
         }
     }
 
+    &.o_kanban_nocontent {
+        min-height: 0;
+        padding: 0;
+    }
+
+    &.o_kanban_mobile .o_kanban_record {
+        span, div.label {
+            .o_text_overflow;
+        }
+    }
 
     .o_column_quick_create {
         .o-flex(0, 0, auto);
@@ -200,7 +225,6 @@
             width: 180px;
         }
     }
-
 }
 
 // STYLE
@@ -209,19 +233,13 @@
     .o_kanban_record {
         background-color: white;
         box-shadow: 0px 0px 1px 1px lighten(@odoo-main-text-color, 10%);
-        padding: 8px;
-
-        &:hover {
-            .o_dropdown_kanban {
-                visibility: visible;
-            }
+        padding: @o-kanban-inside-vgutter @o-kanban-inside-hgutter;
+        @media (max-width: @screen-xs-max) {
+            padding: @o-kanban-inside-vgutter @o-kanban-inside-hgutter-mobile;
         }
 
-        &.o_kanban_dragged {
-            > * {
-                visibility: hidden;
-            }
-            background-color: @odoo-main-text-color;
+        &:hover .o_dropdown_kanban {
+            visibility: visible;
         }
 
         &.oe_kanban_global_click, &.oe_kanban_global_click_edit {
@@ -230,14 +248,12 @@
 
         &.ui-sortable-helper {
             transform: rotate(3deg);
-            opacity: 0.9,
+            opacity: 0.9;
         }
 
         &.o_kanban_two_column_tags {
-            .o_kanban_image {
-                > img {
-                    box-shadow: none;
-                }
+            .o_kanban_image > img {
+                box-shadow: none;
             }
         }
 
@@ -252,13 +268,10 @@
         }
 
         .o_kanban_image {
-            .o-flex(0, 0, auto);
-            margin-right: 8px;
             text-align: center;
 
             img {
-                width: 64px;
-                height: 64px;
+                max-width: 100%;
                 box-shadow: none;
             }
         }
@@ -267,9 +280,10 @@
             margin-top: 15px;
 
             > button, > a {
-                position: absolute;
-                bottom: 0;
-                right: 0;
+                .o-position-absolute(@right: @o-kanban-inside-hgutter, @bottom: @o-kanban-inside-vgutter);
+                @media (max-width: @screen-xs-max) {
+                    right: @o-kanban-inside-hgutter-mobile;
+                }
             }
         }
 
@@ -284,7 +298,6 @@
         }
         .oe_kanban_avatar {
             .img-rounded;
-            border: 1px solid @odoo-main-color-muted;
             margin-left: 2px;
         }
 
@@ -292,55 +305,78 @@
             height: 40px;
             width: 40px;
             box-shadow: 0 1px 4px @gray-light;
+
+            float: left;
+            margin-right: 5px;
         }
 
         .o_kanban_attachment_image {
             // The image should take the whole card
-            margin: -8px;
+            margin: 0 -8px -8px;
             > img {
                 width: 100%;
             }
         }
         .o_progressbar {
-
             .o-flex-display();
+            height: @o-kanban-progressbar-height;
 
             .o_progressbar_title {
                 .o-flex(0, 0, auto);
             }
             .o_progress {
-                margin-top: 3px;
                 .o-flex(1, 1, auto);
+                margin-top: 3px;
             }
             .o_progressbar_value {
                 .o-flex(0, 0, auto);
-                width: auto;
                 text-align: right;
+                width: auto;
+                height: 100%;
+            }
+            input.o_progressbar_value {
+                width: 15%;
+                margin-left: 8px;
             }
         }
 
         .oe_kanban_colorpicker {
-            li {
-                float: left;
-                &:first-child a {
-                    border: 1px solid #ccc;
+            margin: 0;
+            white-space: nowrap;
+
+            > li {
+                display: inline-block;
+                margin-right: 1px;
+
+                > a {
+                    width: 15px;
+                    height: 15px;
+                    display: block;
                 }
 
-                a {
-                    width: 15px;
-                    height: 16px;
-                    display: inline-block;
-                    border: 1px solid white;
+                &:first-child > a {
+                    border: 1px solid #ccc;
                 }
             }
         }
         .o_dropdown_kanban {
             visibility: hidden;
         }
-
     }
 
     .o_kanban_group {
+        background-color: @odoo-webclient-background-color;
+        &:nth-child(odd) {
+            background-color: darken(@odoo-webclient-background-color, 3%);
+        }
+        &.ui-sortable-helper ~ .o_kanban_group, // Invert odd/even rule for groups which follows the helper (fixed)
+        &.ui-sortable-placeholder ~ .o_kanban_group.ui-sortable-helper { // Invert odd/even rule for the helper if the placeholder is before (so that it keep the same color)
+            background-color: @odoo-webclient-background-color;
+            &:nth-child(even) {
+                background-color: darken(@odoo-webclient-background-color, 3%);
+            }
+        }
+
         &.o_kanban_dragged {
             background-color: @odoo-main-text-color;
             .o_kanban_record {
@@ -349,8 +385,8 @@
         }
 
        .o_kanban_header {
-            color: white;
-            padding: 0 4px;
+            color: @odoo-main-text-color;
+            margin: 0 @o-kanban-record-margin;
             height: 50px;
             line-height: 2.2;
             cursor: move;
@@ -362,32 +398,34 @@
                 font-size: 18px;
                 font-weight: 300;
                 .o-flex(1, 1, auto);
-                white-space: nowrap;
+                .o-text-overflow();
                 padding-top: 5px;
             }
-
             .o_kanban_quick_add i {
                 .o-kanban-icon;
                 &:hover {
-                    background-color: @odoo-brand-optional;
+                    background-color: darken(@odoo-webclient-background-color, 10%);
+                    color: white !important;
                 }
             }
-            .o_kanban_config i {
-                .o-kanban-icon;
-                &:hover {
-                    background-color: darken(@gray-light, 10%);
-                }
+            &:hover .o_kanban_config, .o_kanban_config.open {
+                display: inline-block;
+                margin-left: 4px;
             }
-
-            .o_kanban_number {
-                color: @odoo-main-text-color;
-                text-align: center;
+            .o_kanban_config {
+                display: none;
+                i {
+                    .o-kanban-icon;
+                    &:hover {
+                        background-color: darken(@odoo-webclient-background-color, 10%);
+                    }
+                }
             }
         }
 
         &.o_column_folded {
             position: relative;
-            border-right: 1px solid @odoo-main-text-color;
+            border-right: 1px solid darken(@odoo-webclient-background-color, 10%);
             margin: 0;
 
             .o_column_title {
@@ -398,13 +436,13 @@
                 top: 40px;
                 left: 15px;
                 position: absolute;
+                overflow: visible;
             }
             > .o_kanban_record, .o_kanban_quick_add, .o_kanban_config, .o_kanban_load_more {
-                display: none;
+                display: none!important;
             }
             &:hover {
                 cursor: pointer;
-                background-color:  darken(@gray-light, 10%);
             }
             &.o_kanban_hover {
                 background-color: darken(@gray-light, 10%);
@@ -419,7 +457,7 @@
                 }
 
             }
-            background-color: @gray-light;
+            background-color: darken(@odoo-webclient-background-color, 5%);
         }
 
         .o_kanban_quick_create {
@@ -437,16 +475,13 @@
     }
 
     .o_column_quick_create {
-        background-color:  @odoo-main-text-color;
+        background-color: darken(@odoo-webclient-background-color, 10%);
         cursor: pointer;
 
-        &:hover {
-            background-color:  darken(@gray-light, 10%);
-        }
         .o_column_header {
             .o_kanban_add_column {
                 padding: 0 10px;
-                color: white;
+                color: @odoo-main-text-color;
 
                 > i {
                     font-size: 22px;
@@ -457,7 +492,6 @@
                 font-size: 18px;
                 font-weight: 300;
                 white-space: nowrap;
-                color: @gray-lighter;
                 text-transform: uppercase;
                 transform-origin: left bottom;
                 transform: rotate(90deg);
@@ -525,6 +559,7 @@
     height: 12px;
     width: 12px;
     border-radius: 6px;
+    vertical-align: middle;
 
     background-color: @odoo-brand-secondary;
 

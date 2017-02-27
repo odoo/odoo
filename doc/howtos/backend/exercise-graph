@@ -1,37 +1,36 @@
 # HG changeset patch
 # Parent a6fe4d3923db1f8f5dff2c39a711a814b0a0f549
+# Parent  0687e07f570f363bf5005c6337e0c565a63a6bac
 
-Index: addons/openacademy/models.py
-===================================================================
---- addons.orig/openacademy/models.py	2014-08-28 14:21:55.039015659 +0200
-+++ addons/openacademy/models.py	2014-08-28 14:21:55.031015659 +0200
-@@ -62,6 +62,9 @@
+diff --git a/openacademy/models.py b/openacademy/models.py
+--- a/openacademy/models.py
++++ b/openacademy/models.py
+@@ -62,6 +62,9 @@ class Session(models.Model):
      hours = fields.Float(string="Duration in hours",
                           compute='_get_hours', inverse='_set_hours')
  
 +    attendees_count = fields.Integer(
 +        string="Attendees count", compute='_get_attendees_count', store=True)
 +
-     @api.one
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
-@@ -121,6 +124,11 @@
-         self.duration = self.hours / 24
+         for r in self:
+@@ -120,6 +123,11 @@ class Session(models.Model):
+         for r in self:
+             r.duration = r.hours / 24
  
-     @api.one
 +    @api.depends('attendee_ids')
 +    def _get_attendees_count(self):
-+        self.attendees_count = len(self.attendee_ids)
++        for r in self:
++            r.attendees_count = len(r.attendee_ids)
 +
-+    @api.one
      @api.constrains('instructor_id', 'attendee_ids')
      def _check_instructor_not_in_attendees(self):
-         if self.instructor_id and self.instructor_id in self.attendee_ids:
-Index: addons/openacademy/views/openacademy.xml
-===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:21:55.039015659 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-28 14:21:55.031015659 +0200
-@@ -158,11 +158,22 @@
+         for r in self:
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -157,11 +157,22 @@
              </field>
          </record>
  

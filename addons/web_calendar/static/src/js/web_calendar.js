@@ -7,10 +7,13 @@ odoo.define('web_calendar.CalendarView', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var form_common = require('web.form_common');
+var formats = require('web.formats');
 var Model = require('web.DataModel');
 var time = require('web.time');
+var utils = require('web.utils');
 var View = require('web.View');
 var widgets = require('web_calendar.widgets');
+var local_storage = require('web.local_storage');
 
 var CompoundDomain = data.CompoundDomain;
 
@@ -19,8 +22,14 @@ var _lt = core._lt;
 var QWeb = core.qweb;
 
 function get_fc_defaultOptions() {
-    var shortTimeformat = moment._locale._longDateFormat.LT;
     var dateFormat = time.strftime_to_moment_format(_t.database.parameters.date_format);
+
+    // moment.js converts '%p' to 'A' for 'AM/PM'
+    // But FullCalendar v1.6.4 supports 'TT' format for 'AM/PM' but not 'A'
+    // NB: should be removed when fullcalendar is updated to 2.0 because it would
+    // be supported. See the following link
+    // http://fullcalendar.io/wiki/Upgrading-to-v2/
+    var timeFormat = time.strftime_to_moment_format(_t.database.parameters.time_format).replace('A', 'TT');
 
     // adapt format for fullcalendar v1.
     // see http://fullcalendar.io/docs1/utilities/formatDate/
@@ -29,6 +38,15 @@ function get_fc_defaultOptions() {
         dateFormat = dateFormat.replace(conv[0], conv[1]);
     });
 
+    // If 'H' is contained in timeFormat display '10:00'
+    // Else display '10 AM'. 
+    // See : http://fullcalendar.io/docs1/utilities/formatDate/
+    var hourFormat = function(timeFormat){
+        if (/H/.test(timeFormat))
+            return 'HH:mm';
+        return 'hh TT';
+    };
+
     return {
         weekNumberTitle: _t("W"),
         allDayText: _t("All day"),
@@ -36,18 +54,18 @@ function get_fc_defaultOptions() {
         monthNamesShort: moment.monthsShort(),
         dayNames: moment.weekdays(),
         dayNamesShort: moment.weekdaysShort(),
-        firstDay: moment._locale._week.dow,
-        weekNumbers: true,
-        axisFormat : shortTimeformat.replace(/:mm/,'(:mm)'),
-        timeFormat : {
-           // for agendaWeek and agendaDay               
-           agenda: shortTimeformat + '{ - ' + shortTimeformat + '}', // 5:00 - 6:30
-            // for all other views
-            '': shortTimeformat.replace(/:mm/,'(:mm)')  // 7pm
+        firstDay: moment().startOf('week').isoWeekday(),
+        weekNumberCalculation: function(date) {
+            return moment(date).week();
         },
+        axisFormat: hourFormat(timeFormat),
+        // Correct timeformat for agendaWeek and agendaDay
+        // http://fullcalendar.io/docs1/text/timeFormat/
+        timeFormat: timeFormat + ' {- ' + timeFormat + '}',
+        weekNumbers: true,
         titleFormat: {
             month: 'MMMM yyyy',
-            week: "W",
+            week: "w",
             day: dateFormat,
         },
         columnFormat: {
@@ -56,7 +74,6 @@ function get_fc_defaultOptions() {
             day: 'dddd ' + dateFormat,
         },
         weekMode : 'liquid',
-        aspectRatio: 1.8,
         snapMinutes: 15,
     };
 }
@@ -70,62 +87,43 @@ function isNullOrUndef(value) {
 }
 
 var CalendarView = View.extend({
-    template: "CalendarView",
+    custom_events: {
+        reload_events: function () {
+            this.$calendar.fullCalendar('refetchEvents');
+        },
+    },
+    defaults: _.extend({}, View.prototype.defaults, {
+        confirm_on_delete: true,
+    }),
     display_name: _lt('Calendar'),
+    events: {
+        'click .o_calendar_sidebar_toggler': 'toggle_full_width',
+    },
+    icon: 'fa-calendar',
     quick_create_instance: widgets.QuickCreate,
+    template: "CalendarView",
 
-    init: function (parent, dataset, view_id, options) {
-        this._super(parent);
-        this.ready = $.Deferred();
-        this.set_default_options(options);
-        this.dataset = dataset;
-        this.model = dataset.model;
-        this.fields_view = {};
-        this.view_id = view_id;
-        this.view_type = 'calendar';
+    init: function () {
+        this._super.apply(this, arguments);
         this.color_map = {};
         this.range_start = null;
         this.range_stop = null;
         this.selected_filters = [];
+        this.info_fields = [];
 
         this.title = (this.options.action)? this.options.action.name : '';
 
         this.shown = $.Deferred();
-    },
+        this.current_start = null;
+        this.current_end = null;
+        this.previous_ids = [];
 
-    set_default_options: function(options) {
-        this._super(options);
-        _.defaults(this.options, {
-            confirm_on_delete: true
-        });
-    },
-
-    destroy: function() {
-        this.$calendar.fullCalendar('destroy');
-        if (this.$small_calendar) {
-            this.$small_calendar.datepicker('destroy');
-        }
-        this._super.apply(this, arguments);
-    },
-
-    view_loading: function (fv) {
-        /* xml view calendar options */
-        var attrs = fv.arch.attrs,
-            self = this;
-        this.fields_view = fv;
-        this.$calendar = this.$(".o_calendar_widget");
-
-        this.info_fields = [];
-
+        var attrs = this.fields_view.arch.attrs;
         if (!attrs.date_start) {
             throw new Error(_t("Calendar view has not defined 'date_start' attribute."));
         }
-
-        this.$el.addClass(attrs['class']);
-
-        this.name = fv.name || attrs.string;
-        this.view_id = fv.view_id;
-
+        this.fields = this.fields_view.fields;
+        this.name = this.fields_view.name || attrs.string;
         this.mode = attrs.mode;                 // one of month, week or day
         this.date_start = attrs.date_start;     // Field name of starting date field
         this.date_delay = attrs.date_delay;     // duration
@@ -135,34 +133,33 @@ var CalendarView = View.extend({
         this.attendee_people = attrs.attendee;
 
         // Check whether the date field is editable (i.e. if the events can be dragged and dropped)
-        var main_date_field = this.date_start || this.date_end || this.date_delay;
-        this.editable = !this.options.read_only_mode && !this.fields_view.fields[main_date_field].readonly;
+        this.editable = !this.options.read_only_mode && !this.fields[this.date_start].readonly;
 
         //if quick_add = False, we don't allow quick_add
         //if quick_add = not specified in view, we use the default quick_create_instance
         //if quick_add = is NOT False and IS specified in view, we this one for quick_create_instance'   
 
-        this.quick_add_pop = (isNullOrUndef(attrs.quick_add) || _.str.toBoolElse(attrs.quick_add, true));
+        this.quick_add_pop = (isNullOrUndef(attrs.quick_add) || utils.toBoolElse(attrs.quick_add, true));
         // The display format which will be used to display the event where fields are between "[" and "]"
         if (!isNullOrUndef(attrs.display)) {
             this.how_display_event = attrs.display; // String with [FIELD]
         }
 
         // If this field is set ot true, we don't open the event in form view, but in a popup with the view_id passed by this parameter
-        if (isNullOrUndef(attrs.event_open_popup) || !_.str.toBoolElse(attrs.event_open_popup, true)) {
+        if (isNullOrUndef(attrs.event_open_popup) || !utils.toBoolElse(attrs.event_open_popup, true)) {
             this.open_popup_action = false;
         } else {
             this.open_popup_action = attrs.event_open_popup;
         }
         // If this field is set to true, we will use the calendar_friends model as filter and not the color field.
-        this.useContacts = (!isNullOrUndef(attrs.use_contacts) && _.str.toBool(attrs.use_contacts)) && (!isNullOrUndef(self.options.$sidebar));
+        this.useContacts = !isNullOrUndef(attrs.use_contacts) && _.str.toBool(attrs.use_contacts);
 
         // If this field is set ot true, we don't add itself as an attendee when we use attendee_people to add each attendee icon on an event
         // The color is the color of the attendee, so don't need to show again that it will be present
-        this.colorIsAttendee = (!(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee, true))) && (!isNullOrUndef(self.options.$sidebar));
+        this.colorIsAttendee = !(isNullOrUndef(attrs.color_is_attendee) || !utils.toBoolElse(attrs.color_is_attendee, true));
 
         // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
-        if (isNullOrUndef(self.options.$sidebar)) {
+        if (isNullOrUndef(this.options.sidebar)) {
             this.useContacts = false;
             this.colorIsAttendee = false;
             this.attendee_people = undefined;
@@ -210,32 +207,39 @@ var CalendarView = View.extend({
             }
         }
 
-        this.fields = fv.fields;
-
-        for (var fld = 0; fld < fv.arch.children.length; fld++) {
-            this.info_fields.push(fv.arch.children[fld].attrs.name);
+        for (var fld = 0; fld < this.fields_view.arch.children.length; fld++) {
+            this.info_fields.push(this.fields_view.arch.children[fld].attrs.name);
         }
-
-        self.shown.done(this._do_show_init.bind(this));
-        var edit_check = new Model(this.dataset.model)
-            .call("check_access_rights", ["write", false])
-            .then(function (write_right) {
-                self.write_right = write_right;
-            });
-        var init = new Model(this.dataset.model)
-            .call("check_access_rights", ["create", false])
-            .then(function (create_right) {
-                self.create_right = create_right;
-                self.ready.resolve();
-                self.trigger('calendar_view_loaded', fv);
-            });
-        return $.when(edit_check, init);
     },
-    _do_show_init: function () {
+    willStart: function () {
         var self = this;
+        var write_def = this.dataset.call("check_access_rights", ["write", false]);
+        var create_def = this.dataset.call("check_access_rights", ["create", false]);
+        return $.when(write_def, create_def, this._super()).then(function (write, create) {
+            self.write_right = write;
+            self.create_right = create;
+        });
+    },
+    start: function () {
+        this.$calendar = this.$(".o_calendar_widget");
+        this.$sidebar_container = this.$(".o_calendar_sidebar_container");
+        this.$el.addClass(this.fields_view.arch.attrs.class);
+        this.shown.done(this._do_show_init.bind(this));
+        return this._super();
+    },
+    destroy: function() {
+        if (this.$calendar) {
+            this.$calendar.fullCalendar('destroy');
+        }
+        if (this.$small_calendar) {
+            this.$small_calendar.datepicker('destroy');
+        }
+        this._super.apply(this, arguments);
+    },
+
+    _do_show_init: function () {
         this.init_calendar().then(function() {
             $(window).trigger('resize');
-            self.trigger('calendar_view_loaded', self.fields_view);
         });
     },
     /**
@@ -256,7 +260,7 @@ var CalendarView = View.extend({
 
         var bindCalendarButton = function(selector, arg1, arg2) {
             self.$buttons.on('click', selector, _.bind(self.$calendar.fullCalendar, self.$calendar, arg1, arg2));
-        }
+        };
         bindCalendarButton('.o_calendar_button_prev', 'prev');
         bindCalendarButton('.o_calendar_button_today', 'today');
         bindCalendarButton('.o_calendar_button_next', 'next');
@@ -266,18 +270,30 @@ var CalendarView = View.extend({
 
         this.$buttons.find('.o_calendar_button_' + this.mode).addClass('active');
         
-        $node = $node || this.options.$buttons;
         if ($node) {
             this.$buttons.appendTo($node);
         } else {
             this.$('.o_calendar_buttons').replaceWith(this.$buttons);
         }
     },
+    toggle_full_width: function () {
+        var full_width = (local_storage.getItem('web_calendar_full_width') !== 'true');
+        local_storage.setItem('web_calendar_full_width', full_width);
+        this.toggle_sidebar(!full_width);
+        this.$calendar.fullCalendar('render'); // to reposition the events
+    },
+    toggle_sidebar: function (display) {
+        this.sidebar.do_toggle(display);
+        this.$('.o_calendar_sidebar_toggler')
+            .toggleClass('fa-close', display)
+            .toggleClass('fa-chevron-left', !display)
+            .attr('title', display ? _('Close Sidebar') : _('Open Sidebar'));
+        this.$sidebar_container.toggleClass('o_sidebar_hidden', !display);
+    },
     get_fc_init_options: function () {
         //Documentation here : http://arshaw.com/fullcalendar/docs/
         var self = this;
-        return  $.extend({}, get_fc_defaultOptions(), {
-            
+        return $.extend({}, get_fc_defaultOptions(), {
             defaultView: (this.mode == "month")? "month" : ((this.mode == "week")? "agendaWeek" : ((this.mode == "day")? "agendaDay" : "agendaWeek")),
             header: false,
             selectable: !this.options.read_only_mode && this.create_right,
@@ -286,7 +302,6 @@ var CalendarView = View.extend({
             droppable: true,
 
             // callbacks
-
             viewRender: function(view) {
                 var mode = (view.name == "month")? "month" : ((view.name == "agendaWeek") ? "week" : "day");
                 if(self.$buttons !== undefined) {
@@ -296,6 +311,17 @@ var CalendarView = View.extend({
 
                 var title = self.title + ' (' + ((mode === "week")? _t("Week ") : "") + view.title + ")"; 
                 self.set({'title': title});
+
+                self.$calendar.fullCalendar('option', 'height', Math.max(290, parseInt(self.$('.o_calendar_view').height())));
+
+                setTimeout(function() {
+                    var $fc_view = self.$calendar.find('.fc-view');
+                    var width = $fc_view.find('> table').width();
+                    $fc_view.find('> div').css('width', (width > $fc_view.width())? width : '100%'); // 100% = fullCalendar default
+                }, 0);
+            },
+            windowResize: function() {
+                self.$calendar.fullCalendar('render');
             },
             eventDrop: function (event, _day_delta, _minute_delta, _all_day, _revertFunc) {
                 var data = self.get_event_data(event);
@@ -348,28 +374,32 @@ var CalendarView = View.extend({
     },
 
     init_calendar: function() {
-        var self = this;
-
+        var defs = [];
         if (!this.sidebar) {
             var translate = get_fc_defaultOptions();
             this.sidebar = new widgets.Sidebar(this);
-            this.sidebar.appendTo(this.$('.o_calendar_sidebar_container'));
+            defs.push(this.sidebar.appendTo(this.$sidebar_container));
 
-            this.$small_calendar = self.$(".o_calendar_mini");
+            this.$small_calendar = this.$(".o_calendar_mini");
             this.$small_calendar.datepicker({ 
-                onSelect: self.calendarMiniChanged(self),
+                onSelect: this.calendarMiniChanged(this),
                 dayNamesMin : translate.dayNamesShort,
                 monthNames: translate.monthNamesShort,
                 firstDay: translate.firstDay,
             });
 
-            this.extraSideBar();                
+            defs.push(this.extraSideBar());
+
+            // Add show/hide button and possibly hide the sidebar
+            this.$sidebar_container.append($('<i>').addClass('o_calendar_sidebar_toggler fa'));
+            this.toggle_sidebar((local_storage.getItem('web_calendar_full_width') !== 'true'));
         }
-        self.$calendar.fullCalendar(self.get_fc_init_options());
-        
-        return $.when();
+        this.$calendar.fullCalendar(this.get_fc_init_options());
+
+        return $.when.apply($, defs);
     },
     extraSideBar: function() {
+        return $.when();
     },
 
     get_quick_create_class: function () {
@@ -424,7 +454,11 @@ var CalendarView = View.extend({
                     });
                     self.$calendar.fullCalendar('updateEvent', event_obj);
                 } else { // New event object to create
+                    var $fc_view = self.$calendar.find('.fc-view');
+                    var scrollPosition = $fc_view.scrollLeft();
+                    $fc_view.scrollLeft(0);
                     self.$calendar.fullCalendar('renderEvent', new_event);
+                    $fc_view.scrollLeft(scrollPosition);
                     // By forcing attribution of this event to this source, we
                     // make sure that the event will be removed when the source
                     // will be removed (which occurs at each do_search)
@@ -453,7 +487,7 @@ var CalendarView = View.extend({
         var self = this;
         var to_get = {};
         _(this.info_fields).each(function (fieldname) {
-            if (!_(["many2one", "one2one"]).contains(
+            if (!_(["many2one"]).contains(
                 self.fields[fieldname].type))
                 return;
             to_get[fieldname] = [];
@@ -509,8 +543,7 @@ var CalendarView = View.extend({
         if (!all_day) {
             date_start = time.auto_str_to_date(evt[this.date_start]);
             date_stop = this.date_stop ? time.auto_str_to_date(evt[this.date_stop]) : null;
-        }
-        else {
+        } else {
             date_start = time.auto_str_to_date(evt[this.date_start].split(' ')[0],'start');
             date_stop = this.date_stop ? time.auto_str_to_date(evt[this.date_stop].split(' ')[0],'start') : null;
         }
@@ -521,12 +554,15 @@ var CalendarView = View.extend({
             
             _.each(this.info_fields, function (fieldname) {
                 var value = evt[fieldname];
-                if (_.contains(["many2one", "one2one"], self.fields[fieldname].type)) {
+                if (_.contains(["many2one"], self.fields[fieldname].type)) {
                     if (value === false) {
                         temp_ret[fieldname] = null;
                     }
                     else if (value instanceof Array) {
                         temp_ret[fieldname] = value[1]; // no name_get to make
+                    }
+                    else if (_.contains(["date", "datetime"], self.fields[fieldname].type)) {
+                        temp_ret[fieldname] = formats.format_value(value, self.fields[fieldname]);
                     }
                     else {
                         throw new Error("Incomplete data received from dataset for record " + evt.id);
@@ -577,20 +613,20 @@ var CalendarView = View.extend({
                         attendee_showed += 1;
                         if (attendee_showed<= MAX_ATTENDEES) {
                             if (self.avatar_model !== null) {
-                                   the_title_avatar += '<img title="' + self.all_attendees[the_attendee_people] + '" class="o_attendee_head"  \
-                                                        src="/web/binary/image?model=' + self.avatar_model + '&field=image_small&id=' + the_attendee_people + '"></img>';
+                                       the_title_avatar += '<img title="' + _.escape(self.all_attendees[the_attendee_people]) + '" class="o_attendee_head"  \
+                                                        src="/web/image/' + self.avatar_model + '/' + the_attendee_people + '/image_small"></img>';
                             }
                             else {
                                 if (!self.colorIsAttendee || the_attendee_people != temp_ret[self.color_field]) {
                                         var tempColor = (self.all_filters[the_attendee_people] !== undefined) 
                                                     ? self.all_filters[the_attendee_people].color
                                                     : (self.all_filters[-1] ? self.all_filters[-1].color : 1);
-                                    the_title_avatar += '<i class="fa fa-user o_attendee_head o_underline_color_'+tempColor+'" title="' + self.all_attendees[the_attendee_people] + '" ></i>';
+                                        the_title_avatar += '<i class="fa fa-user o_attendee_head o_underline_color_'+tempColor+'" title="' + _.escape(self.all_attendees[the_attendee_people]) + '" ></i>';
                                 }//else don't add myself
                             }
                         }
                         else {
-                            attendee_other += self.all_attendees[the_attendee_people] +", ";
+                                attendee_other += _.escape(self.all_attendees[the_attendee_people]) +", ";
                         }
                     }
                 );
@@ -613,17 +649,20 @@ var CalendarView = View.extend({
             'id': evt.id,
             'attendees':attendees
         };
-        if (!self.useContacts || self.all_filters[evt[this.color_field]] !== undefined) {
-            if (this.color_field && evt[this.color_field]) {
-                var color_key = evt[this.color_field];
+
+        var color_key = evt[this.color_field];
+        if (!self.useContacts || self.all_filters[color_key] !== undefined) {
+            if (color_key) {
                 if (typeof color_key === "object") {
                     color_key = color_key[0];
                 }
                 r.className = 'o_calendar_color_'+ this.get_color(color_key);
             }
+        } else { // if form all, get color -1
+            r.className = 'o_calendar_color_'+ (self.all_filters[-1] ? self.all_filters[-1].color : 1);
         }
-        else  { // if form all, get color -1
-              r.className = 'o_calendar_color_'+ self.all_filters[-1].color;
+        if (evt.is_highlighted) {
+            r.className += ' o_event_hightlight';
         }
         return r;
     },
@@ -694,9 +733,9 @@ var CalendarView = View.extend({
     },
     _do_search: function(domain, context, _group_by) {
         var self = this;
-       if (! self.all_filters) {
+        if (! self.all_filters) {
             self.all_filters = {};
-       }
+        }
 
         if (! _.isUndefined(this.event_source)) {
             this.$calendar.fullCalendar('removeEventSource', this.event_source);
@@ -710,11 +749,35 @@ var CalendarView = View.extend({
                 }
 
                 var current_event_source = self.event_source;
+                    var event_domain = self.get_range_domain(domain, start, end);
+                    if (self.useContacts && (!self.all_filters[-1] || !self.all_filters[-1].is_checked)) {
+                        var partner_ids = $.map(self.all_filters, function(o) { if (o.is_checked) { return o.value; }});
+                        if (!_.isEmpty(partner_ids)) {
+                            event_domain = new data.CompoundDomain(
+                                event_domain,
+                                [[self.attendee_people, 'in', partner_ids]]
+                            );
+                        }
+                    }
+
+                // read_slice is launched uncoditionally, when quickly
+                // changing the range in the calender view, all of
+                // these RPC calls will race each other. Because of
+                // this we keep track of the current range of the
+                // calendar view.
+                self.current_start = start;
+                self.current_end = end;
                 self.dataset.read_slice(_.keys(self.fields), {
                     offset: 0,
-                    domain: self.get_range_domain(domain, start, end),
+                    domain: event_domain,
                     context: context,
                 }).done(function(events) {
+                    // undo the read_slice if it the range has changed since it launched
+                    if (self.current_start.getTime() != start.getTime() || self.current_end.getTime() != end.getTime()) {
+                        self.dataset.ids = self.previous_ids;
+                        return;
+                    }
+                    self.previous_ids = self.dataset.ids.slice();
                     if (self.dataset.index === null) {
                         if (events.length) {
                             self.dataset.index = 0;
@@ -734,36 +797,36 @@ var CalendarView = View.extend({
                         self.now_filter_ids = [];
 
                         var color_field = self.fields[self.color_field];
-                        _.each(events, function (e) {
-                            var key,val = null;
-                            if (self.fields[self.color_field].type == "selection") {
-                                key = e[self.color_field];
-                                val = _.find( self.fields[self.color_field].selection, function(name){ return name[0] === key;});
-                            } else {
-                                key = e[self.color_field][0];
-                                val = e[self.color_field];
-                            }
-                            if (!self.all_filters[key]) {
-                                filter_item = {
-                                    value: key,
-                                    label: val[1],
-                                    color: self.get_color(key),
-                                    avatar_model: (_.str.toBoolElse(self.avatar_filter, true) ? self.avatar_filter : false ),
-                                    is_checked: true
-                                };
-                                self.all_filters[key] = filter_item;
-                            }
-                            if (! _.contains(self.now_filter_ids, key)) {
-                                self.now_filter_ids.push(key);
-                            }
-                        });
-
-                        if (self.sidebar) {
-                            self.sidebar.filter.events_loaded();
-                            self.sidebar.filter.set_filters();
+                        if (color_field) {
+                            _.each(events, function (e) {
+                                var key,val = null;
+                                if (color_field.type == "selection") {
+                                    key = e[self.color_field];
+                                    val = _.find(color_field.selection, function(name){ return name[0] === key;});
+                                } else {
+                                    key = e[self.color_field][0];
+                                    val = e[self.color_field];
+                                }
+                                if (!self.all_filters[key]) {
+                                    filter_item = {
+                                        value: key,
+                                        label: val[1],
+                                        color: self.get_color(key),
+                                        avatar_model: (utils.toBoolElse(self.avatar_filter, true) ? self.avatar_filter : false ),
+                                        is_checked: true
+                                    };
+                                    self.all_filters[key] = filter_item;
+                                }
+                                if (! _.contains(self.now_filter_ids, key)) {
+                                    self.now_filter_ids.push(key);
+                                }
+                            });
+                        }
+                        if (self.sidebar && color_field) {
+                            self.sidebar.filter.render();
 
                             events = $.map(events, function (e) {
-                                var key = self.fields[self.color_field].type == "selection" ? e[self.color_field] : e[self.color_field][0];
+                                var key = color_field.type == "selection" ? e[self.color_field] : e[self.color_field][0];
                                 if (_.contains(self.now_filter_ids, key) &&  self.all_filters[key].is_checked) {
                                     return e;
                                 }
@@ -771,21 +834,6 @@ var CalendarView = View.extend({
                             });
                         }
 
-                    }
-                    else { //WE USE CONTACT
-                        if (self.attendee_people !== undefined) {
-                            //if we don't filter on 'Everybody's Calendar
-                            if (!self.all_filters[-1] || !self.all_filters[-1].is_checked) {
-                                var checked_filter = $.map(self.all_filters, function(o) { if (o.is_checked) { return o.value; }});
-                                // If we filter on contacts... we keep only events from coworkers
-                                events = $.map(events, function (e) {
-                                    if (_.intersection(checked_filter,e[self.attendee_people]).length) {
-                                        return e;
-                                    }
-                                    return null;
-                                });
-                            }
-                        }
                     }
                     var all_attendees = $.map(events, function (e) { return e[self.attendee_people]; });
                     all_attendees = _.chain(all_attendees).flatten().uniq().value();
@@ -819,26 +867,23 @@ var CalendarView = View.extend({
      * between given start, end dates.
      */
     get_range_domain: function(domain, start, end) {
-        var format = time.date_to_str;
-        
-        var extend_domain = [[this.date_start, '>=', format(start)],
-                 [this.date_start, '<=', format(end)]];
-
+        var format = time.datetime_to_str;
+        var extend_domain = [[this.date_start, '<=', format(end)]];
         if (this.date_stop) {
-            //add at start 
-            extend_domain.splice(0,0,'|','|','&');
-            //add at end 
-            extend_domain.push(
-                            '&',
-                            [this.date_start, '<=', format(start)],
-                            [this.date_stop, '>=', format(start)],
-                            '&',
-                            [this.date_start, '<=', format(end)],
-                            [this.date_stop, '>=', format(start)]
-            );
-            //final -> (A & B) | (C & D) | (E & F) ->  | | & A B & C D & E F
+            extend_domain.push([this.date_stop, '>=', format(start)]);
+        } else if (!this.date_delay) {
+            extend_domain.push([this.date_start, '>=', format(start)]);
         }
         return new CompoundDomain(domain, extend_domain);
+    },
+
+    /**
+     * Get all_filters ordered by label
+     */
+    get_all_filters_ordered: function() {
+        return _.values(this.all_filters).sort(function(f1,f2) {
+            return _.string.naturalCmp(f1.label, f2.label);
+        });
     },
 
     /**
@@ -851,7 +896,7 @@ var CalendarView = View.extend({
         var index = this.dataset.get_id_index(id);
         if (index !== null) {
             event_id = this.dataset.ids[index];
-            this.dataset.write(event_id, data, {}).done(function() {
+            this.dataset.write(event_id, data, {}).always(function() {
                 if (is_virtual_id(event_id)) {
                     // this is a virtual ID and so this will create a new event
                     // with an unknown id for us.
@@ -870,15 +915,15 @@ var CalendarView = View.extend({
             var index = this.dataset.get_id_index(id);
             this.dataset.index = index;
             if (this.write_right) {
-                this.do_switch_view('form', null, { mode: "edit" });
+                this.do_switch_view('form', { mode: "edit" });
             } else {
-                this.do_switch_view('form', null, { mode: "view" });
+                this.do_switch_view('form', { mode: "view" });
             }
         }
         else {
-            var dialog = new form_common.FormViewDialog(this, {
-                res_model: this.dataset.model,
-                res_id: parseInt(id).toString() == id ? parseInt(id) : id,
+            new form_common.FormViewDialog(this, {
+                res_model: this.model,
+                res_id: parseInt(id).toString() === id ? parseInt(id) : id,
                 context: this.dataset.get_context(),
                 title: title,
                 view_id: +this.open_popup_action,
@@ -886,7 +931,7 @@ var CalendarView = View.extend({
                 buttons: [
                     {text: _t("Edit"), classes: 'btn-primary', close: true, click: function() {
                         self.dataset.index = self.dataset.get_id_index(id);
-                        self.do_switch_view('form', null, { mode: "edit" });
+                        self.do_switch_view('form', { mode: "edit" });
                     }},
 
                     {text: _t("Delete"), close: true, click: function() {

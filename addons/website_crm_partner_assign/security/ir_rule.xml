@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- CRM Lead portal -->
+    <record id="assigned_lead_portal_rule_1" model="ir.rule">
+        <field name="name">odoo.portal.crm.lead</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="groups" eval="[(6,0,[ref('base.group_portal')])]"/>
+        <field name="domain_force">[('partner_assigned_id','child_of',user.commercial_partner_id.id)]</field>
+    </record>
+</odoo>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
+<odoo>
     <data>
         <record model="ir.ui.view" id="email_template_form">
             <field name="name">email.template.form</field>
@@ -59,6 +59,7 @@
                                     <field name="reply_to"
                                             placeholder="Preferred reply address"/>
                                     <field name="user_signature" string="Author Signature (mass mail only)"/>
+                                    <field name="scheduled_date" string="Scheduled Send Date"/>
                                 </group>
                             </page>
                             <page string="Advanced Settings">
@@ -67,8 +68,7 @@
                                     <field name="mail_server_id"/>
                                     <field name="auto_delete"/>
                                     <field name="report_template" domain="[('model','=',model)]"/>
-                                    <field name="report_name" class="oe_inline"
-                                           attrs="{'invisible':[('report_template','=',False)]}"/>
+                                    <field name="report_name" attrs="{'invisible':[('report_template','=',False)]}"/>
                                 </group>
                             </page>
                             <page string="Dynamic Placeholder Generator">
@@ -115,8 +115,8 @@
                     <field name="lang"/>
                     <field name="model_id"/>
                     <group expand="0" string="Group by...">
-                        <filter string="SMTP Server" domain="[]" context="{'group_by':'mail_server_id'}" icon="terp-folder-orange"/>
-                        <filter string="Model" domain="[]" context="{'group_by':'model_id'}" icon="terp-accessories-archiver"/>
+                        <filter string="SMTP Server" domain="[]" context="{'group_by':'mail_server_id'}"/>
+                        <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                </search>
            </field>
@@ -135,4 +135,4 @@
                   sequence="20"/>
 
     </data>
-</openerp>
+</odoo>

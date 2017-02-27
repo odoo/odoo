@@ -1,14 +1,15 @@
 odoo.define('web.data', function (require) {
 "use strict";
 
-var core = require('web.core');
+var Class = require('web.Class');
+var mixins = require('web.mixins');
 var Model = require('web.Model');
 var session = require('web.session');
+var translation = require('web.translation');
 var pyeval = require('web.pyeval');
+var utils = require('web.utils');
 
-var Class = core.Class;
-var mixins = core.mixins;
-var _t = core._t;
+var _t = translation._t;
 
 /**
  * Serializes the sort criterion array of a dataset into a form which can be
@@ -28,7 +29,7 @@ function serialize_sort(criterion) {
 }
 
 /**
- * Reverse of the serialize_sort function: convert an array of SQL-like sort 
+ * Reverse of the serialize_sort function: convert an array of SQL-like sort
  * descriptors into a list of fields prefixed with '-' if necessary.
  */
 function deserialize_sort(criterion) {
@@ -204,7 +205,7 @@ var Query = Class.extend({
      * Creates a new query with the provided parameter lazy replacing the current
      * query's own.
      *
-     * @param {Boolean} lazy indicates if the read_group should return only the 
+     * @param {Boolean} lazy indicates if the read_group should return only the
      * first level of groupby records, or should return the records grouped by
      * all levels at once (so, it makes only 1 db request).
      * @returns {openerp.web.Query}
@@ -275,11 +276,11 @@ var QueryGroup = Class.extend({
         var group_size = fixed_group[count_key] || fixed_group.__count || 0;
         var leaf_group = fixed_group.__context.group_by.length === 0;
 
-        var value = (grouping_fields.length === 1) 
+        var value = (grouping_fields.length === 1)
                 ? fixed_group[grouping_fields[0]]
                 : _.map(grouping_fields, function (field) { return fixed_group[field]; });
-        var grouped_on = (grouping_fields.length === 1) 
-                ? grouping_fields[0] 
+        var grouped_on = (grouping_fields.length === 1)
+                ? grouping_fields[0]
                 : grouping_fields;
         this.attributes = {
             folded: !!(fixed_group.__fold),
@@ -319,6 +320,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         this.index = null;
         this._sort = [];
         this._model = new Model(model, context);
+        this.orderer = new utils.DropMisordered();
     },
     previous: function () {
         this.index -= 1;
@@ -369,7 +371,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
     read_ids: function (ids, fields, options) {
         if (_.isEmpty(ids))
             return $.Deferred().resolve([]);
-            
+
         options = options || {};
         var method = 'read';
         var ids_arg = ids;
@@ -407,10 +409,11 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
     read_slice: function (fields, options) {
         var self = this;
         options = options || {};
-        return this._model.query(fields)
+        var query = this._model.query(fields)
                 .limit(options.limit || false)
                 .offset(options.offset || 0)
-                .all().done(function (records) {
+                .all();
+        return this.orderer.add(query).done(function (records) {
             self.ids = _(records).pluck('id');
         });
     },
@@ -522,7 +525,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         return this._model.call('name_get', [ids], {context: this.get_context()});
     },
     /**
-     * 
+     *
      * @param {String} name name to perform a search for/on
      * @param {Array} [domain=[]] filters for the objects returned, OpenERP domain
      * @param {String} [operator='ilike'] matching operator to use with the provided name value
@@ -544,9 +547,6 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
      */
     name_create: function(name, context) {
         return this._model.call('name_create', [name], {context: this.get_context(context)});
-    },
-    exec_workflow: function (id, signal) {
-        return this._model.exec_workflow(id, signal);
     },
     get_context: function(request_context) {
         return this._model.context(request_context);
@@ -577,7 +577,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         return undefined;
     },
     /**
-     * Set the sort criteria on the dataset.  
+     * Set the sort criteria on the dataset.
      *
      * @param {Array} fields_list: list of fields order descriptors, as used by
      * Odoo's ORM (such as 'name desc', 'product_id', 'order_date asc')
@@ -629,7 +629,7 @@ var DataSetStatic =  DataSet.extend({
         var offset = options.offset || 0,
             limit = options.limit || false;
         var end_pos = limit && limit !== -1 ? offset + limit : this.ids.length;
-        return this.read_ids(this.ids.slice(offset, end_pos), fields);
+        return this.read_ids(this.ids.slice(offset, end_pos), fields, options);
     },
     set_ids: function (ids) {
         this.ids = ids;
@@ -685,7 +685,7 @@ var DataSetSearch = DataSet.extend({
             .limit(options.limit || false);
         q = q.order_by.apply(q, this._sort);
 
-        return q.all().done(function (records) {
+        return this.orderer.add(q.all()).done(function (records) {
             // FIXME: not sure about that one, *could* have discarded count
             q.count().done(function (count) { self._length = count; });
             self.ids = _(records).pluck('id');
@@ -705,6 +705,13 @@ var DataSetSearch = DataSet.extend({
         this._super(ids);
         if (this._length) {
             this._length -= (before - this.ids.length);
+        }
+    },
+    add_ids: function(ids, at) {
+        var before = this.ids.length;
+        this._super(ids, at);
+        if(this._length){
+            this._length += (this.ids.length - before);
         }
     },
     unlink: function(ids, callback, error_callback) {
@@ -730,94 +737,121 @@ var BufferedDataSet = DataSetStatic.extend({
         this.reset_ids([]);
         this.last_default_get = {};
         this.running_reads = [];
+        this.mutex = new utils.Mutex();
     },
     default_get: function(fields, options) {
         var self = this;
         return this._super(fields, options).done(function(res) {
-            self.last_default_get = res;
+            self.last_default_get = _.clone(res);
         });
     },
+    get_cache: function (id) {
+        if (!this.cache[id]) {
+            this.cache[id] = {
+                'id': id,
+                'values': {},
+                'from_read': {},
+                'changes': {},
+                'readonly_fields': {},
+                'to_create': false,
+                'to_delete': false};
+        }
+        return this.cache[id];
+    },
+    _update_cache: function (id, options) {
+        // One should call this method after modifying this.from_read,
+        // this.to_create or this.change. It updates this.cache and
+        // this.readonly_fields.
+        var cached = this.get_cache(id);
+        if (options) {
+            _.extend(cached.from_read, options.from_read);
+            _.extend(cached.changes, options.changes);
+            _.extend(cached.readonly_fields, options.readonly_fields);
+            if (options.to_create !== undefined) cached.to_create = options.to_create;
+            if (options.to_delete !== undefined) cached.to_delete = options.to_delete;
+        }
+        cached.values = _.extend({'id': id}, cached.from_read, cached.changes, cached.readonly_fields);
+        return cached;
+    },
     create: function(data, options) {
-        var cached = {
-            id:_.uniqueId(this.virtual_id_prefix),
-            values: _.extend({}, data, (options || {}).readonly_fields || {}),
-            defaults: this.last_default_get
-        };
-        this.to_create.push(_.extend(_.clone(cached), {values: _.clone(data)}));
-        this.cache.push(cached);
-        return $.Deferred().resolve(cached.id).promise();
+        var changes = _.extend({}, this.last_default_get, data);
+        var cached = this._update_cache(_.uniqueId(this.virtual_id_prefix), _.extend({'changes': changes, 'to_create': true}, options));
+        this.trigger("dataset_changed", data, options);
+        return $.Deferred().resolve(cached.id);
     },
     write: function (id, data, options) {
         var self = this;
-        var record = _.detect(this.to_create, function(x) {return x.id === id;});
-        record = record || _.detect(this.to_write, function(x) {return x.id === id;});
-        var dirty = false;
-        if (record) {
+        var cached = this.get_cache(id);
+
+        // if update after a remove, it's like an add before updating
+        cached.to_delete = false;
+
+        // apply change
+        var def = $.Deferred();
+        this.mutex.exec(function () {
+            var dirty = false;
+            // _.each is broken if a field "length" is present
             for (var k in data) {
-                if (record.values[k] === undefined || record.values[k] !== data[k]) {
+                if (!_.isEqual(data[k], cached.values[k])) {
                     dirty = true;
-                    break;
+                    if (_.isEqual(data[k], cached.from_read[k])) { // clean changes
+                        delete cached.changes[k];
+                    } else {
+                        cached.changes[k] = data[k];
+                    }
+                } else {
+                    delete data[k];
                 }
             }
-            $.extend(record.values, data);
-        } else {
-            dirty = true;
-            record = {id: id, values: data};
-            self.to_write.push(record);
-        }
-        var cached = _.detect(this.cache, function(x) {return x.id === id;});
-        if (!cached) {
-            cached = {id: id, values: {}};
-            this.cache.push(cached);
-        }
-        $.extend(cached.values, _.extend({}, record.values, (options || {}).readonly_fields || {}));
-        if (dirty)
-            this.trigger("dataset_changed", id, data, options);
-        return $.Deferred().resolve(data).promise();
+            self._update_cache(id, options);
+
+            if (dirty) {
+                self.trigger("dataset_changed", id, data, options);
+            }
+
+            return def.resolve(data).promise();
+        });
+
+        return def;
     },
     unlink: function(ids, callback, error_callback) {
         var self = this;
-        _.each(ids, function(id) {
-            if (! _.detect(self.to_create, function(x) { return x.id === id; })) {
-                self.to_delete.push({id: id});
-            }
+        _.each(ids, function (id) {
+            self.get_cache(id).to_delete = true;
         });
-        this.to_create = _.reject(this.to_create, function(x) { return _.include(ids, x.id);});
-        this.to_write = _.reject(this.to_write, function(x) { return _.include(ids, x.id);});
-        this.cache = _.reject(this.cache, function(x) { return _.include(ids, x.id);});
-        this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
+        this.set_ids(_.difference(this.ids, _.pluck(_.filter(this.cache, function (c) {return c.to_delete;}), 'id')));
         this.trigger("dataset_changed", ids, callback, error_callback);
-        return $.async_when({result: true}).done(callback);
+        return utils.async_when({result: true}).done(callback);
     },
-    reset_ids: function(ids) {
+    reset_ids: function(ids, options) {
+        var self = this;
         this.set_ids(ids);
-        this.to_delete = [];
-        this.to_create = [];
-        this.to_write = [];
-        this.cache = [];
+        if (!options || !options.keep_read_data) {
+            this.cache = {};
+        } else {
+            _.each(this.cache, function (cache) {
+                self._update_cache(cache.id, {'changes': {}, 'to_delete': false});
+            });
+        }
         this.delete_all = false;
-        _.each(_.clone(this.running_reads), function(el) {
-            el.reject();
-        });
+        this.cancel_read();
+    },
+    cancel_read: function () {
+        _.invoke(_.clone(this.running_reads), 'reject');
     },
     read_ids: function (ids, fields, options) {
+        // read what is necessary from the server to have ids and the given
+        // fields in this.from_read
         var self = this;
-        var to_get = [];
-        _.each(ids, function(id) {
-            var cached = _.detect(self.cache, function(x) {return x.id === id;});
-            var created = _.detect(self.to_create, function(x) {return x.id === id;});
-            if (created) {
-                _.each(fields, function(x) {if (cached.values[x] === undefined)
-                    cached.values[x] = created.defaults[x] || false;});
-            } else {
-                if (!cached || !_.all(fields, function(x) {return cached.values[x] !== undefined;}))
-                    to_get.push(id);
-            }
+        var to_get = _.filter(ids, function(id) {
+            var cache = self.get_cache(id);
+            return !cache.to_create && _.any(fields, function(x) {return cache.from_read[x] === undefined;});
         });
+        options = options || {};
+
         var return_records = function() {
             var records = _.map(ids, function(id) {
-                var c = _.find(self.cache, function(c) {return c.id === id;});
-                return _.isUndefined(c) ? c : _.extend({}, c.values, {"id": id});
+                return _.clone(self.get_cache(id).values);
             });
             if (self.debug_mode) {
                 if (_.include(records, undefined)) {
@@ -834,7 +868,7 @@ var BufferedDataSet = DataSetStatic.extend({
             // sorting an array where all items are considered equal is a worst-case that
             // will randomize the array with an unstable sort! Therefore we must avoid
             // sorting if there are no sort_fields (i.e. all items are considered equal)
-            // See also: http://ecma262-5.com/ELS5_Section_15.htm#Section_15.4.4.11 
+            // See also: http://ecma262-5.com/ELS5_Section_15.htm#Section_15.4.4.11
             //           http://code.google.com/p/v8/issues/detail?id=90
             if (sort_fields.length) {
                 records.sort(function (a, b) {
@@ -863,21 +897,17 @@ var BufferedDataSet = DataSetStatic.extend({
             def.always(function() {
                 self.running_reads = _.without(self.running_reads, def);
             });
-            this._super(to_get, fields, options).then(function() {
-                def.resolve.apply(def, arguments);
-            }, function() {
-                def.reject.apply(def, arguments);
+            var _super = this._super;
+            this.mutex.exec(function () {
+                if (def.state() !== "pending") return;
+                _super.call(self, to_get, fields, options).then(_.bind(def.resolve, def), _.bind(def.reject, def));
+                return def;
             });
             return def.then(function(records) {
                 _.each(records, function(record, index) {
+                    // add information into from_read
                     var id = to_get[index];
-                    var cached = _.detect(self.cache, function(x) {return x.id === id;});
-                    if (!cached) {
-                        self.cache.push({id: id, values: record});
-                    } else {
-                        // I assume cache value is prioritary
-                        cached.values = _.defaults(_.clone(cached.values), record);
-                    }
+                    self._update_cache(id, _.extend(options, {'from_read': record}));
                 });
                 return return_records();
             });
@@ -898,33 +928,21 @@ var BufferedDataSet = DataSetStatic.extend({
         // Don't evict records which haven't yet been saved: there is no more
         // recent data on the server (and there potentially isn't any data),
         // and this breaks the assumptions of other methods (that the data
-        // for new and altered records is both in the cache and in the to_write
+        // for new and altered records is both in the cache and in the change
         // or to_create collection)
-        if (_(this.to_create.concat(this.to_write)).find(function (record) {
-                return record.id === id; })) {
-            return;
-        }
-        for(var i=0, len=this.cache.length; i<len; ++i) {
-            var record = this.cache[i];
-            // if record we call the button upon is in the cache
-            if (record.id === id) {
-                // evict it so it gets reloaded from server
-                this.cache.splice(i, 1);
-                break;
-            }
-        }
+        this.get_cache(id).from_read = {};
+        this._update_cache(id);
     },
     call_button: function (method, args) {
         this.evict_record(args[0][0]);
         return this._super(method, args);
     },
-    exec_workflow: function (id, signal) {
-        this.evict_record(id);
-        return this._super(id, signal);
-    },
-    alter_ids: function(n_ids) {
-        this._super(n_ids);
-        this.trigger("dataset_changed", n_ids);
+    alter_ids: function(n_ids, options) {
+        var dirty = !_.isEqual(this.ids, n_ids);
+        this._super(n_ids, options);
+        if (dirty) {
+            this.trigger("dataset_changed", n_ids, options);
+        }
     },
 });
 
@@ -1101,7 +1119,6 @@ function compute_domain (expr, fields) {
     return _.all(stack, _.identity);
 }
 
-
 return {
     Query: Query,
     DataSet: DataSet,
@@ -1112,6 +1129,7 @@ return {
     CompoundContext: CompoundContext,
     CompoundDomain: CompoundDomain,
     compute_domain: compute_domain,
+    noDisplayContent: "<em class=\"text-warning\">" + _t("Unnamed") + "</em>",
 };
 
 });

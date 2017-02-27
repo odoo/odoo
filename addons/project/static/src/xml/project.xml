@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="project.SetCoverModal">
+        <div t-if="attachment_ids.length > 0" class="o_kanban_task_cover_image">
+            <img t-foreach="attachment_ids" t-as="attachment" t-attf-class="img-responsive#{cover_id == attachment['id'] ? ' o_selected' : ''}" t-attf-src="/web/image/#{attachment['id']}?unique=1" t-att-data-id="attachment['id']"/>
+        </div>
+        <div t-if="attachment_ids.length == 0">There is no available image to be set as cover. Send a message on the task with an attached image.</div>
+    </t>
+</templates>

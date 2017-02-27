@@ -2,9 +2,9 @@
 # Parent 2ee7212e5de4702dff08d9b5e4268e7dc261d038
 # Parent  4ca7b848bb60c3573de7ed41a28b4b65186a5725
 
-diff --git a/academy/__openerp__.py b/academy/__openerp__.py
---- a/academy/__openerp__.py
-+++ b/academy/__openerp__.py
+diff --git a/academy/__manifest__.py b/academy/__manifest__.py
+--- a/academy/__manifest__.py
++++ b/academy/__manifest__.py
 @@ -27,6 +27,7 @@
          'security/ir.model.access.csv',
          'templates.xml',
@@ -18,12 +18,12 @@ new file mode 100644
 --- /dev/null
 +++ b/academy/data.xml
 @@ -0,0 +1,6 @@
-+<openerp><data>
++<odoo><data>
 +  <record model="product.public.category" id="category_courses">
 +    <field name="name">Courses</field>
 +    <field name="parent_id" ref="website_sale.categ_others"/>
 +  </record>
-+</data></openerp>
++</data></odoo>
 diff --git a/academy/demo.xml b/academy/demo.xml
 --- a/academy/demo.xml
 +++ b/academy/demo.xml
@@ -57,7 +57,7 @@ diff --git a/academy/demo.xml b/academy/demo.xml
 +            <field name="type">service</field>
 +        </record>
      </data>
- </openerp>
+ </odoo>
 diff --git a/academy/models.py b/academy/models.py
 --- a/academy/models.py
 +++ b/academy/models.py

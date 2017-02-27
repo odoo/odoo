@@ -7,15 +7,16 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Import Bank Statements">
-                    <field name="data_file"/>
-                    <br/><br/><b> How to import your bank statement :</b>
-                    <br/><label string= "1. Download your bank statements from your bank website."/>
-                    <br/><label string= "2. Make sure you have installed the right module to support the file format."/>
-                    <br/><label string= "3. Select the file and click 'Import'."/>
+                    <h2>Select a bank statement file to import</h2>
+                    <p>Download a bank statement from your bank and import it here. Supported formats:</p>
+                    <ul id="statement_format">
+
+                    </ul>
+                    <field name="data_file" filename="filename" placeholder="Choose a file to import..."/>
+                    <field name="filename" invisible="1"/>
                     <footer>
-                        <button name="import_file" string="_Import" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button name="import_file" string="_Import" type="object" class="btn-primary" />
+                        <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -31,4 +32,24 @@
             <field name="view_id" ref="account_bank_statement_import_view"/>
         </record>
 
+    <record id="journal_dashboard_view_inherit" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr='//div[@name="bank_journal_default_cta"]' position='inside'>
+                <br t-if="dashboard.number_to_reconcile == 0"/><button t-if="dashboard.number_to_reconcile == 0" type="object" name="import_statement" class="btn btn-primary btn-sm">Import Statement</button>
+                <a t-if="dashboard.number_to_reconcile > 0" type="object" name="import_statement" class="oe_inline">Import Statement</a>
+            </xpath>
+            <xpath expr='//div[@name="bank_journal_cta"]' position='inside'>
+                <button t-if="dashboard.bank_statements_source == 'file_import' &amp;&amp; dashboard.number_to_reconcile == 0" type="object" name="import_statement" class="btn btn-primary btn-sm">Import Statement</button>
+                <a t-if="dashboard.bank_statements_source == 'file_import' &amp;&amp; dashboard.number_to_reconcile > 0" type="object" name="import_statement" class="oe_inline">Import Statement</a>
+            </xpath>
+            <xpath expr='//div[@name="bank_cash_commands"]' position="after">
+                <t t-if="journal_type == 'bank'">
+                    <a type="object" name="import_statement">Import Statement</a>
+                </t>
+            </xpath>
+        </field>
+    </record>
 </odoo>

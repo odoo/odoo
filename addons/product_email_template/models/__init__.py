@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
 import product
-import invoice
+import account_invoice

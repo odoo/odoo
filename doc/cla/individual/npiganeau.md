@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Nicolas Piganeau nicolas.piganeau@ndp-systemes.fr https://github.com/npiganeau
+Nicolas Piganeau npi@m4x.org https://github.com/npiganeau

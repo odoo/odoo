@@ -3,6 +3,10 @@
     .modal-content {
         border-radius: 0;
 
+        .modal-header .o_subtitle {
+            margin-left: 10px;
+        }
+
         .modal-body {
             &.o_act_window {
                 padding: 0;
@@ -10,13 +14,17 @@
 
             .o_modal_header {
                 .o-webclient-padding(@top: 10px, @bottom: 10px);
+                .clearfix();
 
-                .o_popup_list_pager { // FIXME : should check where it is used (o_modal_header ~= control panel)
+                .o_search_options {
+                    display: inline-block;
+                }
+                .o_pager {
                     float: right;
                 }
             }
 
-            .oe-view-manager-content {
+            .o_view_manager_content {
                 position: static;  // Reset position for view managers in modals (default value: absolute)
             }
         }
@@ -25,7 +33,7 @@
             text-align: left;
         }
     }
-    
+
 
     @media (min-width: @screen-sm-min) {
         .modal-dialog {
@@ -44,6 +52,23 @@
 
                 .modal-body {
                     overflow: auto;
+                    min-height: 0;
+
+                    &.o_dialog_error {
+                        overflow: visible;
+                        .o-flex-display();
+                        .o-flex-flow(column, nowrap);
+
+                        > .alert, > button {
+                            .o-flex(0, 0, auto);
+                        }
+
+                        > .o_error_detail {
+                            .o-flex(1, 1, auto);
+                            min-height: 0;
+                            overflow: auto;
+                        }
+                    }
                 }
             }
         }

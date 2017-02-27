@@ -11,7 +11,7 @@
   Create an incoming picking for this product of 10 PCE from suppliers to stock
 - 
   !record {model: stock.picking, id: pick1_wise}:
-    name: Incoming picking
+    name: Incoming picking (wise unit)
     partner_id: base.res_partner_2
     picking_type_id: picking_type_in
     move_lines:
@@ -22,35 +22,45 @@
 - 
   Confirm and assign picking and prepare partial
 - 
-  !python {model: stock.picking}: |
-    self.action_confirm(cr, uid, [ref('pick1_wise')], context=context)
-    self.do_prepare_partial(cr, uid, [ref('pick1_wise')], context=context)
+  !python {model: stock.picking, id: pick1_wise}: |
+    self.action_confirm()
+    self.do_prepare_partial()
 - 
   Put 6 pieces in shelf1 and 4 pieces in shelf2
 - 
-  !python {model: stock.picking}: |
-    record = self.browse(cr, uid, ref('pick1_wise'), context=context)
-    stock_pack = self.pool.get('stock.pack.operation')
-    stock_quant_pack = self.pool.get('stock.quant.package')
-    package1 = stock_quant_pack.create(cr, uid, {'name': 'Pack 1'}, context=context)
-    stock_pack.write(cr, uid, record.pack_operation_ids[0].id, {'result_package_id': package1, 'product_qty': 4, 'location_dest_id': ref('stock_location_components')})
-    new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product_wise'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1_wise'), 'product_qty': 6.0, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_14')}, context=context)
+  !python {model: stock.picking, id: pick1_wise}: |
+    stock_pack = self.env['stock.pack.operation']
+    stock_quant_pack = self.env['stock.quant.package']
+    package1 = stock_quant_pack.create({'name': 'Pack 1'})
+    self.pack_operation_ids[0].write({
+      'result_package_id': package1.id,
+      'product_qty': 4,
+      'location_dest_id': ref('stock_location_components')
+    })
+    new_pack1 = stock_pack.create({
+      'product_id': ref('product_wise'),
+      'product_uom_id': ref('product.product_uom_unit'),
+      'picking_id': ref('pick1_wise'),
+      'product_qty': 6.0,
+      'location_id': ref('stock_location_suppliers'),
+      'location_dest_id': ref('stock_location_14')
+    })
 - 
   Transfer the receipt
 - 
-  !python {model: stock.picking}: |
-    self.do_transfer(cr, uid, [ref('pick1_wise')], context=context)
+  !python {model: stock.picking, id: pick1_wise}: |
+    self.do_transfer()
 - 
   Check the system created 2 quants
 - 
-  !python {model: stock.quant}: |
-    reco_id = self.search(cr ,uid , [('product_id','=',ref('product_wise'))], context=context)
-    assert len(reco_id) == 2, "The number of quants created is not correct"
+  !python {model: stock.quant, id: False}: |
+    records = self.search([('product_id','=',ref('product_wise'))])
+    assert len(records.ids) == 2, "The number of quants created is not correct"
 - 
   Make a delivery order of 5 pieces to the customer
 - 
   !record {model: stock.picking, id: delivery_order_wise1}:
-    name: outgoing picking
+    name: outgoing picking 1 (wise unit)
     partner_id: base.res_partner_4
     picking_type_id: stock.picking_type_out
     move_lines:
@@ -61,14 +71,14 @@
 - 
   Assign and confirm
 - 
-  !python {model: stock.picking}: |
-    self.action_confirm(cr, uid, [ref('delivery_order_wise1')], context=context)
-    self.action_assign(cr, uid, [ref('delivery_order_wise1')])
+  !python {model: stock.picking, id: delivery_order_wise1}: |
+    self.action_confirm()
+    self.action_assign()
 - 
   Make a delivery order of 5 pieces to the customer
 - 
   !record {model: stock.picking, id: delivery_order_wise2}:
-    name: outgoing picking
+    name: outgoing picking 2 (wise unit)
     partner_id: base.res_partner_4
     picking_type_id: stock.picking_type_out
     move_lines:
@@ -79,48 +89,48 @@
 - 
   Assign and confirm
 - 
-  !python {model: stock.picking}: |
-    self.action_confirm(cr, uid, [ref('delivery_order_wise2')], context=context)
-    self.action_assign(cr, uid, [ref('delivery_order_wise2')])
+  !python {model: stock.picking, id: delivery_order_wise2}: |
+    self.action_confirm()
+    self.action_assign()
 - 
   The operator is a wise guy and decides to do the opposite of what Odoo proposes.  He uses the products reserved on picking 1 on picking 2 and vice versa
 - 
-  !python {model: stock.picking}: |
-    stock_pack = self.pool.get('stock.pack.operation')
-    picking1 = self.browse(cr, uid, ref('delivery_order_wise1'))
-    picking2 = self.browse(cr, uid, ref('delivery_order_wise2'))
+  !python {model: stock.picking, id: False}: |
+    stock_pack = self.env['stock.pack.operation']
+    picking1 = self.browse(ref('delivery_order_wise1'))
+    picking2 = self.browse(ref('delivery_order_wise2'))
     pack_ids1 = [x.id for x in picking1.pack_operation_ids]
     pack_ids2 = [x.id for x in picking2.pack_operation_ids]
-    stock_pack.write(cr, uid, pack_ids1, {'picking_id': picking2.id})
-    stock_pack.write(cr, uid, pack_ids2, {'picking_id': picking1.id})
-    link_obj = self.pool['stock.move.operation.link']
+    self.env['stock.pack.operation'].browse(pack_ids1).write({'picking_id': picking2.id})
+    self.env['stock.pack.operation'].browse(pack_ids2).write({'picking_id': picking1.id})
+    link_obj = self.env['stock.move.operation.link']
     # The recompute remaining qtys does not take into account that pack operations change picking
-    links = link_obj.search(cr, uid, [('operation_id', 'in', pack_ids1 + pack_ids2)])
-    link_obj.unlink(cr, uid, links)
+    links = link_obj.search([('operation_id', 'in', pack_ids1 + pack_ids2)])
+    links.unlink()
 - 
   Process this picking
 - 
-  !python {model: stock.picking}: |
-    self.do_transfer(cr, uid, [ref('delivery_order_wise1')], context=context)
+  !python {model: stock.picking, id: delivery_order_wise1}: |
+    self.do_transfer()
 - 
   Check there was no negative quant created by this picking
 - 
-  !python {model: stock.quant}: |
-    reco_id = self.search(cr ,uid , [('product_id','=',ref('product_wise')), ('qty', '<', 0.0)], context=context)
-    assert len(reco_id) == 0, 'This should not have created a negative quant'
+  !python {model: stock.quant, id: False}: |
+    records = self.search([('product_id','=',ref('product_wise')), ('qty', '<', 0.0)])
+    assert len(records.ids) == 0, 'This should not have created a negative quant'
 - 
   Check the other delivery order has changed its state back to partially available
 - 
-  !python {model: stock.picking}: |
-    assert self.browse(cr, uid, ref('delivery_order_wise2')).state == 'partially_available', "Delivery order 2 should be back in confirmed state"
+  !python {model: stock.picking, id: delivery_order_wise2}: |
+    assert self.state == 'partially_available', "Delivery order 2 should be back in confirmed state"
 - 
   Process the second picking
 - 
-  !python {model: stock.picking}: |
-    self.do_transfer(cr, uid, [ref('delivery_order_wise2')], context=context)
+  !python {model: stock.picking, id: delivery_order_wise2}: |
+    self.do_transfer()
 - 
   Check all quants are in Customers and there are no negative quants anymore
 - 
-  !python {model: stock.quant}: |
-    reco_id = self.search(cr ,uid , [('product_id','=',ref('product_wise'))], context=context)
-    assert all([x.location_id.id==ref('stock_location_customers') and x.qty > 0.0 for x in self.browse(cr, uid, reco_id)]), "Negative quant or wrong location detected"
+  !python {model: stock.quant, id: False}: |
+    records = self.search([('product_id','=',ref('product_wise'))])
+    assert all([x.location_id.id==ref('stock_location_customers') and x.qty > 0.0 for x in records]), "Negative quant or wrong location detected"

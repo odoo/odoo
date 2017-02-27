@@ -17,9 +17,11 @@ RUN apt-get update -qq &&  \
 	apt-get upgrade -qq -y && \
 	apt-get install \
 		adduser \
+		node-less \
 		postgresql \
 		postgresql-client \
 		python \
+		python-babel \
 		python-dateutil \
 		python-decorator \
 		python-docutils \
@@ -35,19 +37,18 @@ RUN apt-get update -qq &&  \
 		python-passlib \
 		python-psutil \
 		python-psycopg2 \
-		python-pybabel \
 		python-pychart \
 		python-pydot \
 		python-pyparsing \
 		python-pypdf \
 		python-reportlab \
 		python-requests \
-		python-simplejson \
+		python-suds \
 		python-tz \
-		python-unittest2 \
 		python-vatnumber \
 		python-vobject \
 		python-werkzeug \
+		python-xlsxwriter \
 		python-xlwt \
 		python-yaml -y && \
 	rm -rf /var/lib/apt/lists/*

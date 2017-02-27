@@ -6,24 +6,25 @@ var data = require('web.data');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
 var pyeval = require('web.pyeval');
-var session = require('web.session');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
 var Sidebar = Widget.extend({
-    init: function(parent) {
+    init: function(parent, options) {
         var self = this;
         this._super(parent);
-        this.view = this.getParent();
-        this.sections = [
-            { 'name' : 'print', 'label' : _t('Print'), },
-            { 'name' : 'other', 'label' : _t('More'), }
+        this.options = _.defaults(options || {}, {
+            'editable': true
+        });
+        this.sections = options.sections || [
+            {name: 'print', label: _t('Print')},
+            {name: 'other', label: _t('Action')},
         ];
-        this.items = {
-            'print' : [],
-            'other' : []
+        this.items = options.items || {
+            print: [],
+            other: [],
         };
         this.fileupload_id = _.uniqueId('oe_fileupload');
         $(window).on(this.fileupload_id, function() {
@@ -35,6 +36,7 @@ var Sidebar = Widget.extend({
     start: function() {
         var self = this;
         this._super(this);
+        this.$el.addClass('btn-group');
         this.redraw();
         this.$el.on('click','.dropdown-menu li a', function(event) {
             var section = $(this).data('section');
@@ -50,17 +52,24 @@ var Sidebar = Widget.extend({
             event.preventDefault();
         });
     },
+    destroy: function() {
+        $(window).off(this.fileupload_id);
+        return this._super.apply(this, arguments);
+    },
     redraw: function() {
-        var self = this;
-        self.$el.html(QWeb.render('Sidebar', {widget: self}));
+        this.$el.html(QWeb.render('Sidebar', {widget: this}));
 
         // Hides Sidebar sections when item list is empty
-        this.$('.oe_form_dropdown_section').each(function() {
-            $(this).toggle(!!$(this).find('li').length);
+        this.$('.o_dropdown').each(function() {
+            if (!$(this).find('li').length) {
+                $(this).hide();
+            }
         });
-        self.$("[title]").tooltip({
+        this.$("[title]").tooltip({
             delay: { show: 500, hide: 0}
         });
+        this.$('.o_sidebar_add_attachment .o_form_binary_form').change(this.on_attachment_changed);
+        this.$('.o_sidebar_delete_attachment').click(this.on_attachment_delete);
     },
     /**
      * For each item added to the section:
@@ -98,14 +107,13 @@ var Sidebar = Widget.extend({
         _.each(['print','action','relate'], function(type) {
             var items = toolbar[type];
             if (items) {
-                for (var i = 0; i < items.length; i++) {
-                    items[i] = {
-                        label: items[i]['name'],
-                        action: items[i],
-                        classname: 'oe_sidebar_' + type
+                var actions = _.map(items, function (item) {
+                    return {
+                        label: item.name,
+                        action: item,
                     };
-                }
-                self.add_items(type=='print' ? 'print' : 'other', items);
+                });
+                self.add_items(type === 'print' ? 'print' : 'other', actions);
             }
         });
     },
@@ -162,8 +170,9 @@ var Sidebar = Widget.extend({
     do_attachement_update: function(dataset, model_id, args) {
         this.dataset = dataset;
         this.model_id = model_id;
-        if (args && args[0].error) {
-            this.do_warn(_t('Uploading Error'), args[0].error);
+        var upload_error = _.filter(args, function(attachment) {return attachment.error;});
+        if (upload_error.length) {
+            this.do_warn(_t('Uploading Error'), upload_error[0].error);
         }
         if (!model_id) {
             this.on_attachments_loaded([]);
@@ -174,26 +183,22 @@ var Sidebar = Widget.extend({
         }
     },
     on_attachments_loaded: function(attachments) {
-        var self = this;
-        var prefix = session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'name'});
         _.each(attachments,function(a) {
             a.label = a.name;
             if(a.type === "binary") {
-                a.url = prefix  + '&id=' + a.id + '&t=' + (new Date().getTime());
+                a.url = '/web/content/'  + a.id + '?download=true';
             }
         });
-        self.items.files = attachments;
-        self.redraw();
-        this.$('.oe_sidebar_add_attachment .oe_form_binary_file').change(this.on_attachment_changed);
-        this.$el.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
+        this.items.files = attachments;
+        this.redraw();
     },
     on_attachment_changed: function(e) {
         var $e = $(e.target);
         if ($e.val() !== '') {
-            this.$el.find('form.oe_form_binary_form').submit();
+            this.$('form.o_form_binary_form').submit();
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
-            this.$('.oe_sidebar_add_attachment a').text(_t('Uploading...'));
+            this.$('.o_sidebar_add_attachment a').text(_t('Uploading...'));
             framework.blockUI();
         }
     },
@@ -202,15 +207,19 @@ var Sidebar = Widget.extend({
         e.stopPropagation();
         var self = this;
         var $e = $(e.currentTarget);
-        if (confirm(_t("Do you really want to delete this attachment ?"))) {
-            (new data.DataSet(this, 'ir.attachment')).unlink([parseInt($e.attr('data-id'), 10)]).done(function() {
-                self.do_attachement_update(self.dataset, self.model_id);
-            });
-        }
+        var options = {
+            confirm_callback: function () {
+                new data.DataSet(this, 'ir.attachment')
+                    .unlink([parseInt($e.attr('data-id'), 10)])
+                    .done(function() {
+                        self.do_attachement_update(self.dataset, self.model_id);
+                    });
+            }
+        };
+        Dialog.confirm(this, _t("Do you really want to delete this attachment ?"), options);
     }
 });
 
 return Sidebar;
 
 });
-

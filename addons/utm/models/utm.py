@@ -1,86 +1,82 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
-from openerp.http import request
+from odoo import api, fields, models, SUPERUSER_ID
+from odoo.http import request
 
 
-class utm_medium(osv.Model):
+class UtmMedium(models.Model):
     # OLD crm.case.channel
-    _name = "utm.medium"
-    _description = "Channels"
+    _name = 'utm.medium'
+    _description = 'Channels'
     _order = 'name'
-    _columns = {
-        'name': fields.char('Channel Name', required=True),
-        'active': fields.boolean('Active'),
-    }
-    _defaults = {
-        'active': lambda *a: 1,
-    }
+
+    name = fields.Char(string='Channel Name', required=True)
+    active = fields.Boolean(default=True)
 
 
-class utm_campaign(osv.Model):
+class UtmCampaign(models.Model):
     # OLD crm.case.resource.type
-    _name = "utm.campaign"
-    _description = "Campaign"
-    _rec_name = "name"
-    _columns = {
-        'name': fields.char('Campaign Name', required=True, translate=True),
-    }
+    _name = 'utm.campaign'
+    _description = 'Campaign'
+
+    name = fields.Char(string='Campaign Name', required=True, translate=True)
 
 
-class utm_source(osv.Model):
-    _name = "utm.source"
-    _description = "Source"
-    _rec_name = "name"
-    _columns = {
-        'name': fields.char('Source Name', required=True, translate=True),
-    }
+class UtmSource(models.Model):
+    _name = 'utm.source'
+    _description = 'Source'
+
+    name = fields.Char(string='Source Name', required=True, translate=True)
 
 
-class utm_mixin(osv.AbstractModel):
+class UtmMixin(models.AbstractModel):
+
     """Mixin class for objects which can be tracked by marketing. """
     _name = 'utm.mixin'
 
-    _columns = {
-        'campaign_id': fields.many2one('utm.campaign', 'Campaign',  # old domain ="['|',('team_id','=',team_id),('team_id','=',False)]"
-                                       help="This is a name that helps you keep track of your different campaign efforts Ex: Fall_Drive, Christmas_Special"),
-        'source_id': fields.many2one('utm.source', 'Source', help="This is the source of the link Ex: Search Engine, another domain, or name of email list"),
-        'medium_id': fields.many2one('utm.medium', 'Medium', help="This is the method of delivery. Ex: Postcard, Email, or Banner Ad", oldname='channel_id'),
-    }
+    campaign_id = fields.Many2one('utm.campaign', 'Campaign',
+                                  help="This is a name that helps you keep track of your different campaign efforts Ex: Fall_Drive, Christmas_Special")
+    source_id = fields.Many2one('utm.source', 'Source',
+                                help="This is the source of the link Ex:Search Engine, another domain,or name of email list")
+    medium_id = fields.Many2one('utm.medium', 'Medium',
+                                help="This is the method of delivery.Ex: Postcard, Email, or Banner Ad", oldname='channel_id')
 
     def tracking_fields(self):
+        # This function cannot be overridden in a model which inherit utm.mixin
+        # Limitation by the heritage on AbstractModel
+        # record_crm_lead.tracking_fields() will call tracking_fields() from module utm.mixin (if not overridden on crm.lead)
+        # instead of the overridden method from utm.mixin.
+        # To force the call of overridden method, we use self.env['utm.mixin'].tracking_fields() which respects overridden
+        # methods of utm.mixin, but will ignore overridden method on crm.lead
         return [
             # ("URL_PARAMETER", "FIELD_NAME_MIXIN", "NAME_IN_COOKIES")
             ('utm_campaign', 'campaign_id', 'odoo_utm_campaign'),
             ('utm_source', 'source_id', 'odoo_utm_source'),
-            ('utm_medium', 'medium_id', 'odoo_utm_medium')
+            ('utm_medium', 'medium_id', 'odoo_utm_medium'),
         ]
 
-    def tracking_get_values(self, cr, uid, vals, context=None):
-        for key, fname, cook in self.tracking_fields():
-            field = self._fields[fname]
-            value = vals.get(fname) or (request and request.httprequest.cookies.get(cook))  # params.get should be always in session by the dispatch from ir_http
-            if field.type == 'many2one' and isinstance(value, basestring):
+    @api.model
+    def default_get(self, fields):
+        values = super(UtmMixin, self).default_get(fields)
+
+        # We ignore UTM for salemen, except some requests that could be done as superuser_id to bypass access rights.
+        if self.env.uid != SUPERUSER_ID and self.env.user.has_group('sales_team.group_sale_salesman'):
+            return values
+
+        for url_param, field_name, cookie_name in self.env['utm.mixin'].tracking_fields():
+            if field_name in fields:
+                field = self._fields[field_name]
+                value = False
+                if request:
+                    # ir_http dispatch saves the url params in a cookie
+                    value = request.httprequest.cookies.get(cookie_name)
                 # if we receive a string for a many2one, we search/create the id
-                if value:
-                    Model = self.pool[field.comodel_name]
-                    rel_id = Model.name_search(cr, uid, value, context=context)
-                    if rel_id:
-                        rel_id = rel_id[0][0]
-                    else:
-                        rel_id = Model.create(cr, uid, {'name': value}, context=context)
-                vals[fname] = rel_id
-            else:
-                # Here the code for others cases that many2one
-                vals[fname] = value
-        return vals
-
-    def _get_default_track(self, cr, uid, field, context=None):
-        return self.tracking_get_values(cr, uid, {}, context=context).get(field)
-
-    _defaults = {
-        'source_id': lambda self, cr, uid, ctx: self._get_default_track(cr, uid, 'source_id', ctx),
-        'campaign_id': lambda self, cr, uid, ctx: self._get_default_track(cr, uid, 'campaign_id', ctx),
-        'medium_id': lambda self, cr, uid, ctx: self._get_default_track(cr, uid, 'medium_id', ctx),
-    }
+                if field.type == 'many2one' and isinstance(value, basestring) and value:
+                    Model = self.env[field.comodel_name]
+                    records = Model.search([('name', '=', value)], limit=1)
+                    if not records:
+                        records = Model.create({'name': value})
+                    value = records.id
+                values[field_name] = value
+        return values

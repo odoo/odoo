@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<t t-name="web_editor.ace_view_editor">
+    <div class="o_ace_view_editor">
+        <div class="form-inline o_ace_view_editor_title">
+            <div class="btn-group o_ace_type_switcher">
+                <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">XML (HTML)</button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#" class="o_ace_type_switcher_choice" data-type="xml">XML (HTML)</a></li>
+                    <li><a href="#" class="o_ace_type_switcher_choice" data-type="less">LESS (CSS)</a></li>
+                </ul>
+            </div>
+            <select id="ace-view-list" class="o_res_list"/>
+            <select id="ace-less-list" class="o_res_list hidden"/>
+            <label class="o_include_option oe_include_bundles">
+                <div class="o_checkbox">
+                    <input type="checkbox" class="js_include_bundles" t-att-checked="widget.options.includeBundles ? 'checked' : undefined"/><span/>
+                </div>
+                Include Asset Bundles
+            </label>
+            <label class="o_include_option o_include_all_less hidden">
+                <div class="o_checkbox">
+                    <input type="checkbox" class="js_include_all_less" t-att-checked="widget.options.includeAllLess ? 'checked' : undefined"/><span/>
+                </div>
+                Include All LESS Files
+            </label>
+            <div class="o_button_section">
+                <button data-action="save" type="submit" class="btn btn-sm btn-primary">Save</button>
+                <button data-action="close" type="button" class="btn btn-sm btn-default">Close</button>
+            </div>
+        </div>
+        <div id="ace-view-id">
+            <span/>
+            <div class="pull-right">
+                <button data-action="reset" type="button" class="btn btn-xs btn-danger"><i class="fa fa-undo"/> Reset</button>
+                <button data-action="format" type="button" class="btn btn-xs btn-link">Format</button>
+            </div>
+        </div>
+        <div id="ace-view-editor"/>
+    </div>
+</t>
+
+</templates>

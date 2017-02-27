@@ -25,7 +25,7 @@ var FieldTextHtmlSimple = widget.extend({
     template: 'web_editor.FieldTextHtmlSimple',
     _config: function () {
         var self = this;
-        return {
+        var config = {
             'focus': false,
             'height': 180,
             'toolbar': [
@@ -38,6 +38,7 @@ var FieldTextHtmlSimple = widget.extend({
                 ['insert', ['link', 'picture']],
                 ['history', ['undo', 'redo']]
             ],
+            'prettifyHtml': false,
             'styleWithSpan': false,
             'inlinemedia': ['p'],
             'lang': "odoo",
@@ -46,13 +47,39 @@ var FieldTextHtmlSimple = widget.extend({
                 self.trigger('changed_value');
             }
         };
+        if (session.debug) {
+            config.toolbar.splice(7, 0, ['view', ['codeview']]);
+        }
+        return config;
     },
-    initialize_content: function() {
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        this.$translate.remove();
+        this.$translate = $();
+        // Triggers a mouseup to refresh the editor toolbar
+        this.$content.trigger('mouseup');
+        return def;
+    },
+    initialize_content: function () {
         var self = this;
         this.$textarea = this.$("textarea").val(this.get('value') || "<p><br/></p>");
+        this.$content = $();
 
         if (this.get("effective_readonly")) {
-            this.$textarea.hide().after('<div class="note-editable"/>');
+            if (this.options['style-inline']) {
+                var $iframe = $('<iframe class="o_readonly"/>');
+                this.$textarea.hide().after($iframe);
+                var load = function () {
+                    self.$content = $($iframe.contents()[0]).find("body");
+                    self.$content.html(self.text_to_html(self.get('value')));
+                    self.resize();
+                };
+                setTimeout(load);
+                $iframe.on('load', load);
+            } else {
+                this.$content = $('<div class="o_readonly"/>');
+                this.$textarea.hide().after(this.$content);
+            }
         } else {
             this.$textarea.summernote(this._config());
 
@@ -65,8 +92,12 @@ var FieldTextHtmlSimple = widget.extend({
             var reset = _.bind(this.reset_history, this);
             this.view.on('load_record', this, reset);
             setTimeout(reset, 0);
+
+            this.$content = this.$('.note-editable:first');
+            if (this.options['style-inline']) {
+                transcoder.style_to_class(this.$content);
+            }
         }
-        this.$content = this.$('.note-editable:first');
 
         $(".oe-view-manager-content").on("scroll", function () {
             $('.o_table_handler').remove();
@@ -82,33 +113,64 @@ var FieldTextHtmlSimple = widget.extend({
     },
     text_to_html: function (text) {
         var value = text || "";
-        if (value.match(/^\s*$/)) {
-            value = '<p><br/></p>';
-        } else {
-            value = "<p>"+value.split(/<br\/?>/).join("</p><p>")+"</p>";
-            value = value.replace('<p><p>', '<p>').replace('</p></p>', '</p>');
+        try {
+            $(text)[0].innerHTML;
+            return text;
+        } catch (e) {
+            if (value.match(/^\s*$/)) {
+                value = '<p><br/></p>';
+            } else {
+                value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
+                value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('<p><p ', '<p ').replace('</p></p>', '</p>');
+            }
         }
         return value;
     },
-    render_value: function() {
+    focus: function() {
+        if (!(!this.get("effective_readonly") && this.$textarea)) {
+            return false;
+        }
+        // on IE an error may occur when creating range on not displayed element
+        try {
+            return this.$textarea.focusInEnd();
+        } catch (e) {
+            return this.$textarea.focus();
+        }
+    },
+    resize: function() {
+        this.$('iframe').css('height', '0px').css('height', Math.max(30, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
+    },
+    render_value: function () {
         var value = this.get('value');
         this.$textarea.val(value || '');
         this.$content.html(this.text_to_html(value));
-        this.$content.focusInEnd();
+        if (this.get("effective_readonly")) {
+            this.resize();
+        } else {
+            transcoder.style_to_class(this.$content);
+        }
+        if (this.$content.is(document.activeElement)) {
+            this.focus();
+        }
         var history = this.$content.data('NoteHistory');
         if (history && history.recordUndo()) {
             this.$('.note-toolbar').find('button[data-event="undo"]').attr('disabled', false);
         }
     },
-    is_false: function() {
+    is_false: function () {
         return !this.get('value') || this.get('value') === "<p><br/></p>" || !this.get('value').match(/\S/);
     },
-    before_save: function() {
+    commit_value: function () {
+        /* Switch to WYSIWYG mode if currently in code view */
+        if (session.debug) {
+            var layoutInfo = this.$textarea.data('layoutInfo');
+            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+        }
         if (this.options['style-inline']) {
             transcoder.class_to_style(this.$content);
             transcoder.font_to_img(this.$content);
-            this.internal_set_value(this.$content.html());
         }
+        this.internal_set_value(this.$content.html());
     },
     destroy_content: function () {
         $(".oe-view-manager-content").off("scroll");
@@ -143,6 +205,9 @@ var FieldTextHtml = widget.extend({
             self.trigger('changed_value');
             self.resize();
         };
+        window.odoo[this.callback+"_do_action"] = function () {
+            self.do_action.apply(self, arguments);
+        };
 
         // init jqery objects
         this.$iframe = this.$el.find('iframe');
@@ -161,13 +226,19 @@ var FieldTextHtml = widget.extend({
                 self.$iframe.css("height", (self.$body.find("#oe_snippets").length ? 500 : 300) + "px");
             }
         };
-        $(window).on('resize', self.resize);
+        $(window).on('resize', this.resize);
 
-        return this._super();
+        var def = this._super.apply(this, arguments);
+        this.$translate.remove();
+        this.$translate = $();
+        return def;
+    },
+    get_datarecord: function() {
+        return this.view.get_fields_values();
     },
     get_url: function (_attr) {
-        var src = this.options.editor_url ? this.options.editor_url+"?" : "/web_editor/field/html?";
-        var datarecord = this.view.get_fields_values();
+        var src = this.options.editor_url || "/web_editor/field/html";
+        var datarecord = this.get_datarecord();
 
         var attr = {
             'model': this.view.model,
@@ -183,6 +254,9 @@ var FieldTextHtml = widget.extend({
         if (this.options.snippets) {
             attr.snippets = this.options.snippets;
         }
+        if (this.options.template) {
+            attr.template = this.options.template;
+        }
         if (!this.get("effective_readonly")) {
             attr.enable_editor = 1;
         }
@@ -190,13 +264,17 @@ var FieldTextHtml = widget.extend({
             attr.translatable = 1;
         }
         if (session.debug) {
-            attr.debug = 1;
+            attr.debug = session.debug;
         }
 
         attr.lang = attr.enable_editor ? 'en_US' : this.session.user_context.lang;
 
         for (var k in _attr) {
             attr[k] = _attr[k];
+        }
+
+        if (src.indexOf('?') === -1) {
+            src += "?";
         }
 
         for (var k in attr) {
@@ -207,10 +285,9 @@ var FieldTextHtml = widget.extend({
 
         delete datarecord[this.name];
         src += "&datarecord="+ encodeURIComponent(JSON.stringify(datarecord));
-
         return src;
     },
-    initialize_content: function() {
+    initialize_content: function () {
         this.$el.closest('.modal-body').css('max-height', 'none');
         this.$iframe = this.$el.find('iframe');
         this.document = null;
@@ -225,6 +302,7 @@ var FieldTextHtml = widget.extend({
         this.document = this.$iframe.contents()[0];
         this.$body = $("body", this.document);
         this.$content = this.$body.find("#editable_area");
+        this._toggle_label();
         this.lang = this.$iframe.attr('src').match(/[?&]lang=([^&]+)/);
         this.lang = this.lang ? this.lang[1] : this.view.dataset.context.lang;
         this._dirty_flag = false;
@@ -267,7 +345,7 @@ var FieldTextHtml = widget.extend({
                 $("body").toggleClass("o_form_FieldTextHtml_fullscreen");
                 var full = $("body").hasClass("o_form_FieldTextHtml_fullscreen");
                 self.$iframe.parents().toggleClass('o_form_fullscreen_ancestor', full);
-                self.resize();
+                $(window).trigger("resize"); // induce a resize() call and let other backend elements know (the navbar extra items management relies on this)
             });
 
         this.$body.on('click', '[data-action="cancel"]', function (event) {
@@ -275,7 +353,7 @@ var FieldTextHtml = widget.extend({
             self.initialize_content();
         });
     },
-    render_value: function() {
+    render_value: function () {
         if (this.lang !== this.view.dataset.context.lang || this.$iframe.attr('src').match(/[?&]edit_translations=1/)) {
             return;
         }
@@ -290,33 +368,46 @@ var FieldTextHtml = widget.extend({
             }
         } else {
             this.$content.html(value);
-            this.$iframe.css("height", (this.$body.height()+20) + "px");
+            if (this.$iframe[0].contentWindow) {
+                this.$iframe.css("height", (this.$body.height()+20) + "px");
+            }
         }
     },
-    is_false: function() {
+    is_false: function () {
         return this.get('value') === false || !this.$content.html() || !this.$content.html().match(/\S/);
     },
-    before_save: function () {
+    commit_value: function () {
         if (this.lang !== 'en_US' && this.$body.find('.o_dirty').length) {
             this.internal_set_value( this.view.datarecord[this.name] );
             this._dirty_flag = false;
             return this.editor.save();
         } else if (this._dirty_flag && this.editor && this.editor.buildingBlock) {
+            /* Switch to WYSIWYG mode if currently in code view */
+            if (session.debug) {
+                var layoutInfo = this.editor.rte.editable().data('layoutInfo');
+                $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+            }
             this.editor.buildingBlock.clean_for_save();
             this.internal_set_value( this.$content.html() );
         }
     },
     destroy: function () {
-        $(window).off('resize', self.resize);
+        $(window).off('resize', this.resize);
         delete window.odoo[this.callback+"_editor"];
         delete window.odoo[this.callback+"_content"];
         delete window.odoo[this.callback+"_updown"];
         delete window.odoo[this.callback+"_downup"];
+        delete window.odoo[this.callback+"_do_action"];
     }
 });
 
 core.form_widget_registry
     .add('html', FieldTextHtmlSimple)
     .add('html_frame', FieldTextHtml);
+
+return {
+    FieldTextHtmlSimple: FieldTextHtmlSimple,
+    FieldTextHtml: FieldTextHtml,
+};
 
 });

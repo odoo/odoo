@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import datetime
 import random
 import re
 import string
 
-from lxml.html import parse
-from urllib import urlencode
+from lxml import html
 from urllib2 import urlopen
 from urlparse import urljoin
 from urlparse import urlparse
+from werkzeug import url_encode
 
-from openerp import models, fields, api, _
+from odoo import models, fields, api, _
+from odoo.tools import ustr
 
-URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
+URL_REGEX = r'(\bhref=[\'"](?!mailto:)([^\'"]+)[\'"])'
 
 def VALIDATE_URL(url):
     if urlparse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
@@ -48,7 +51,7 @@ class link_tracker(models.Model):
     def convert_links(self, html, vals, blacklist=None):
         for match in re.findall(URL_REGEX, html):
 
-            short_schema = self.env['ir.config_parameter'].get_param('web.base.url') + '/r/'
+            short_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
 
             href = match[0]
             long_url = match[1]
@@ -73,12 +76,12 @@ class link_tracker(models.Model):
     @api.one
     @api.depends('code')
     def _compute_short_url(self):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         self.short_url = urljoin(base_url, '/r/%(code)s' % {'code': self.code})
 
     @api.one
     def _compute_short_url_host(self):
-        self.short_url_host = self.env['ir.config_parameter'].get_param('web.base.url') + '/r/'
+        self.short_url_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
 
     @api.one
     def _compute_code(self):
@@ -101,14 +104,14 @@ class link_tracker(models.Model):
             if attr:
                 utms[key] = attr
 
-        self.redirected_url = '%s://%s%s?%s&%s#%s' % (parsed.scheme, parsed.netloc, parsed.path, urlencode(utms), parsed.query, parsed.fragment)
+        self.redirected_url = '%s://%s%s?%s&%s#%s' % (parsed.scheme, parsed.netloc, parsed.path, url_encode(utms), parsed.query, parsed.fragment)
 
     @api.model
     @api.depends('url')
     def _get_title_from_url(self, url):
         try:
             page = urlopen(url, timeout=5)
-            p = parse(page)
+            p = html.fromstring(ustr(page.read()).encode('utf-8'), parser=html.HTMLParser(encoding='utf-8'))
             title = p.find('.//title').text
         except:
             title = url

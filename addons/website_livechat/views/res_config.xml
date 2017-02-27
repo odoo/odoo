@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
-    <record id="view_website_config_settings" model="ir.ui.view">
-        <field name="name">Website livechat settings</field>
+    <record id="website_config_settings_view_form_inherit_website_livechat" model="ir.ui.view">
+        <field name="name">website.config.settings.form.inherit.livechat</field>
         <field name="model">website.config.settings</field>
-        <field name="inherit_id" ref="website.view_website_config_settings"/>
+        <field name="inherit_id" ref="website.website_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='social']" position="inside">
-                <label for="channel_id"/>
-                <div name="channel_id">
-                    <div class="oe_inline">
-                        <field name="channel_id"/>
+            <div id="msg_module_website_livechat" position="replace">
+                <div class="content-group mt16" attrs="{'invisible': [('module_website_livechat', '=', False)]}">
+                    <div class="row">
+                        <label class="col-md-3 o_light_label" string="Channel" for="channel_id"/>
+                        <field name="channel_id" class="oe_inline"/>
                     </div>
                 </div>
-            </xpath>
+            </div>
         </field>
     </record>
 
-    </data>
-</openerp>
+</odoo>

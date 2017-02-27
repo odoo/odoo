@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-import base64
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
-from openerp import http
-from openerp.tools.translate import _
-from openerp.http import request
+from odoo import http, _
+from odoo.addons.website.models.website import slug
+from odoo.http import request
 
-from openerp.addons.website.models.website import slug
 
-class website_hr_recruitment(http.Controller):
+class WebsiteHrRecruitment(http.Controller):
     @http.route([
         '/jobs',
         '/jobs/country/<model("res.country"):country>',
@@ -30,11 +28,6 @@ class website_hr_recruitment(http.Controller):
         # Browse jobs as superuser, because address is restricted
         jobs = Jobs.sudo().browse(job_ids)
 
-        # Deduce departments and offices of those jobs
-        departments = set(j.department_id for j in jobs if j.department_id)
-        offices = set(j.address_id for j in jobs if j.address_id)
-        countries = set(o.country_id for o in offices if o.country_id)
-
         # Default search by user country
         if not (country or department or office_id or kwargs.get('all_countries')):
             country_code = request.session['geoip'].get('country_code')
@@ -44,16 +37,26 @@ class website_hr_recruitment(http.Controller):
                 if not any(j for j in jobs if j.address_id and j.address_id.country_id == country):
                     country = False
 
-        # Filter the matching one
+        # Filter job / office for country
         if country and not kwargs.get('all_countries'):
-            jobs = (j for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id)
+            jobs = [j for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id]
+            offices = set(j.address_id for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id)
+        else:
+            offices = set(j.address_id for j in jobs if j.address_id)
+
+        # Deduce departments and countries offices of those jobs
+        departments = set(j.department_id for j in jobs if j.department_id)
+        countries = set(o.country_id for o in offices if o.country_id)
+
         if department:
             jobs = (j for j in jobs if j.department_id and j.department_id.id == department.id)
-        if office_id:
+        if office_id and office_id in map(lambda x: x.id, offices):
             jobs = (j for j in jobs if j.address_id and j.address_id.id == office_id)
+        else:
+            office_id = False
 
         # Render page
-        return request.website.render("website_hr_recruitment.index", {
+        return request.render("website_hr_recruitment.index", {
             'jobs': jobs,
             'countries': countries,
             'departments': departments,
@@ -66,7 +69,7 @@ class website_hr_recruitment(http.Controller):
     @http.route('/jobs/add', type='http', auth="user", website=True)
     def jobs_add(self, **kwargs):
         job = request.env['hr.job'].create({
-            'name': _('New Job Offer'),
+            'name': _('Job Title'),
         })
         return request.redirect("/jobs/detail/%s?enable_editor=1" % slug(job))
 
@@ -89,40 +92,3 @@ class website_hr_recruitment(http.Controller):
             'error': error,
             'default': default,
         })
-
-    @http.route('/jobs/thankyou', methods=['POST'], type='http', auth="public", website=True)
-    def jobs_thankyou(self, **post):
-        error = {}
-        for field_name in ["partner_name", "phone", "email_from"]:
-            if not post.get(field_name):
-                error[field_name] = 'missing'
-        if error:
-            request.session['website_hr_recruitment_error'] = error
-            ufile = post.pop('ufile')
-            if ufile:
-                error['ufile'] = 'reset'
-            request.session['website_hr_recruitment_default'] = post
-            return request.redirect('/jobs/apply/%s' % post.get("job_id"))
-
-        # public user can't create applicants (duh)
-        env = request.env(user=SUPERUSER_ID)
-        value = {
-            'name': '%s\'s Application' % post.get('partner_name'),
-        }
-        for f in ['email_from', 'partner_name', 'description']:
-            value[f] = post.get(f)
-        for f in ['department_id', 'job_id']:
-            value[f] = int(post.get(f) or 0)
-        # Retro-compatibility for saas-3. "phone" field should be replace by "partner_phone" in the template in trunk.
-        value['partner_phone'] = post.pop('phone', False)
-
-        applicant = env['hr.applicant'].create(value)
-        if post['ufile']:
-            name = applicant.partner_name if applicant.partner_name else applicant.name
-            applicant.message_post(
-                body = _("%s's Application \n From: %s \n\n %s \n") % (name, applicant.email_from or "", applicant.description or ""),
-                attachments = [(post['ufile'].filename, post['ufile'].read())],
-                content_subtype = 'plaintext',
-                subtype = "hr_recruitment.mt_applicant_hired")
-
-        return request.render("website_hr_recruitment.thankyou", {})

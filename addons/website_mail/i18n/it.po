@@ -1,181 +1,210 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_mail
 #
+# Translators:
+# Simone Bernini <simone@aperturelabs.it>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-09-26 11:09+0000\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-02-26 17:01+0000\n"
 "Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
-"Language-Team: Italian <it@li.org>\n"
+"Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-27 06:38+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "A Great Headline"
-msgstr "Uno Splendido Titolo"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "A Punchy Headline"
-msgstr "Un Titolo Accattivante"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "A Section Subtitle"
-msgstr "Il Titolo della Sezione"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "A Small Subtitle"
-msgstr "Un Piccolo Sottotitolo"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "A good subtitle"
-msgstr "Un buon sottotitolo"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
+#: model:mail.template,body_html:website_mail.mail_template_data_module_install_website_mail
 msgid ""
-"A great way to catch your reader's attention is to tell a story.\n"
-"                                    Everything you consider writing can be "
-"told as a story."
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;"
+"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;"
+"text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;"
+"margin:15px auto;background: #a24689;border-radius: 5px;color: #ffffff;font-"
+"size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</"
+"a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;"
+"border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p style=\"color:#a24689;margin:0\" >Awesome!</"
+"p><br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-"
+"top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Your website is now online !</span></"
+"p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-"
+"bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:"
+"bold; \">Did you know ?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;"
+"font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:0pt;\">\n"
+"                                        <span>Enhance your online business "
+"with astonishing apps like : Forum, Blog, e-Commerce, Events, online jobs..."
+"</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:8pt;\">\n"
+"                                        <span>Customize the look of your "
+"website with our </span>\n"
+"                                        <span style=\"font-weight:bold;text-"
+"decoration:underline;\"><a href=\"https://www.odoo.com/apps/themes"
+"\">magnificent themes</a></span>\n"
+"                                        <span>to easily create a unique "
+"website.</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
+"top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Discover "
+"the </span>\n"
+"                                <span><a href=\"/"
+"web#view_type=kanban&model=project.project&action=project."
+"open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-"
+"decoration:underline;\">Website planner</span></a></span>\n"
+"                                <span> to activate extra features</span>\n"
+"                                <span style=\"color:#a24689;margin:0;font-"
+"weight:bold\">(${user.env['web.planner']."
+"get_planner_progress('planner_website')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;"
+"font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:0pt;\">\n"
+"                                        <span>Grow your traffic by "
+"optimizing your referencing with our SEO tool,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:0pt;\">\n"
+"                                        <span>Test different versions of a "
+"page to perform better in reaching your business objectives,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:0pt;\">\n"
+"                                        <span>Improve your conversion from "
+"visitor to customer with the Website Live support,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:0pt;\">\n"
+"                                        <span>Broaden your audience by "
+"translating your website automatically with Gengo,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:0pt;\">\n"
+"                                        <span>Go further into the "
+"customizing with our advanced HTML editor,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:8pt;\">\n"
+"                                        <span>And much more...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-"
+"height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Need Help?"
+"</span>\n"
+"                                <span style=\"font-style:italic;\">You’re "
+"not alone</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
+"top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>We would be delighted to assist you "
+"along the way. Contact us at \n"
+"                                <a href=\"mailto:help@odoo.com\"><span style="
+"\"text-decoration:underline;\">\n"
+"                                help@odoo.com</span></a> if you have any "
+"question. You can also discover \n"
+"                                how to get the best out of Odoo with our </"
+"span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/"
+"user/9.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;"
+"\">User Documentation</span></a>\n"
+"                                </span><span> or with our </span>\n"
+"                                <a href=\"https://www.odoo.com/"
+"documentation/9.0/\">\n"
+"                                <span style=\"text-decoration:underline;"
+"\">API Documentation</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
+"top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-"
+"bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, "
+"check </span><a href=\"https://twitter.com/odoo/favorites\"><span style="
+"\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 msgstr ""
-"Un buon modo per catturare l'attenzione dei visitatori è raccontare una "
-"storia.\n"
-"                                    Ogni cosa di cui potresti voler scrivere "
-"può essere raccontata come una storia."
 
 #. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:87
-#, python-format
-msgid "Access Denied"
-msgstr "Accesso Negato"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Advanced Email Features"
+#: model:ir.model,name:website_mail.model_account_analytic_account
+msgid "Analytic Account"
 msgstr ""
 
 #. module: website_mail
-#: model:res.groups,comment:website_mail.group_comment
-msgid "Allows website visitors to post comments on blogs, etc."
-msgstr "Permetti ai visitatori del sito di inviare commenti"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer
-msgid "Back"
-msgstr "Indietro"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Battery: 12 hours"
-msgstr "Batteria: 12 ore"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Battery: 20 hours"
-msgstr "Batteria: 20 ore"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Battery: 8 hours"
-msgstr "Batteria: 8 ore"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Beginner"
-msgstr "Principiante"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Big Message"
+#: model:ir.model,name:website_mail.model_event_registration
+msgid "Attendee"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Big Picture"
-msgstr "Immagine grande"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Button"
-msgstr "Bottone"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid ""
-"Choose a vibrant image and write an inspiring paragraph\n"
-"                                about it. It does not have to be long, but "
-"it should\n"
-"                                reinforce your image."
+#: model:ir.model,name:website_mail.model_hr_department
+msgid "Department"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer
-msgid "Choose an Email Template"
-msgstr "Scegli un Template Email"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Comparisons"
-msgstr ""
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid ""
-"Consider telling\n"
-"                                    a great story that provides personality. "
-"Writing a story \n"
-"                                    with personality for potential clients "
-"will asist with \n"
-"                                    making a relationship connection. This "
-"shows up in small\n"
-"                                    quirks like word choices or phrases. "
-"Write from your point \n"
-"                                    of view, not from someone else's "
-"experience."
-msgstr ""
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Contact us"
-msgstr "Contattaci"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer
-msgid "Design Your Email"
-msgstr ""
-
-#. module: website_mail
-#: model:mail.group,name:website_mail.group_all_employees
+#: model:mail.channel,name:website_mail.channel_public
 msgid "Discussion Group"
 msgstr "Gruppo Discussioni"
 
 #. module: website_mail
-#: code:addons/website_mail/models/email_template.py:15
-#: view:email.template:website_mail.email_template_form_inherit_website_link
-#, python-format
-msgid "Edit Template"
-msgstr ""
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Email Design"
-msgstr ""
-
-#. module: website_mail
-#: model:ir.model,name:website_mail.model_email_template
-msgid "Email Templates"
-msgstr ""
+#: model:ir.model,name:website_mail.model_mail_channel
+#, fuzzy
+msgid "Discussion channel"
+msgstr "Gruppo Discussioni"
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_mail_thread
@@ -183,72 +212,54 @@ msgid "Email Thread"
 msgstr "Thread Email"
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Enterprise package"
+#: model:ir.model,name:website_mail.model_mail_compose_message
+msgid "Email composition wizard"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Expert"
-msgstr "Esperto"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Feature One"
+#: model:ir.model,name:website_mail.model_survey_mail_compose_message
+msgid "Email composition wizard for Survey"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Feature Three"
+#: model:ir.model,name:website_mail.model_hr_employee
+msgid "Employee"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Feature Two"
+#: model:ir.model,name:website_mail.model_event_event
+msgid "Event"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Free shipping, satisfied or reimbursed."
-msgstr "Spedizione gratuita, soddisfatti o rimborsati."
-
-#. module: website_mail
-#: view:website:website_mail.email_designer
-msgid "From:"
-msgstr "Da:"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid ""
-"Great stories are for everyone even when only written for\n"
-"                                    just one person."
+#: model:ir.model,name:website_mail.model_gamification_badge
+msgid "Gamification badge"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Great stories have personality."
-msgstr "Le grandi storie hanno personalità."
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid ""
-"If you try to write with a wide general\n"
-"                                    audience in mind, your story will ring "
-"false and be bland. \n"
-"                                    No one will be interested. Write for one "
-"person. If it’s genuine\n"
-"                                    for the one, it’s genuine for the rest."
+#: model:ir.model,name:website_mail.model_gamification_challenge
+msgid "Gamification challenge"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Image-Text"
-msgstr "Immagino-Testo"
+#: model:ir.model,name:website_mail.model_fleet_vehicle
+msgid "Information on a vehicle"
+msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Limited support"
-msgstr "Supporto limitato"
+#: model:ir.model,name:website_mail.model_hr_job
+msgid "Job Position"
+msgstr ""
+
+#. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "Leave a comment"
+msgstr "Lascia un commento"
+
+#. module: website_mail
+#: model:ir.model,name:website_mail.model_mail_mass_mailing_contact
+msgid "Mass Mailing Contact"
+msgstr ""
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_mail_message
@@ -256,109 +267,69 @@ msgid "Message"
 msgstr "Messaggio"
 
 #. module: website_mail
-#: help:mail.message,description:0
+#: model:ir.model.fields,help:website_mail.field_mail_compose_message_description
+#: model:ir.model.fields,help:website_mail.field_mail_message_description
+#: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message_description
 msgid "Message description: either the subject, or the beginning of the body"
 msgstr ""
+"Descrizione messaggio: l'oggetto del messaggio o l'inizio del corpo del testo"
 
 #. module: website_mail
-#: view:website:website_mail.email_designer
-msgid "New Template"
+#: model:ir.model,name:website_mail.model_note_note
+msgid "Note"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "No support"
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "Oops! Something went wrong. Try to reload the page and to log in."
+msgstr ""
+"Oops! Qualcosa è andato storto. Prova a ricaricare la pagina e effettuare "
+"nuovamente il login."
+
+#. module: website_mail
+#: model:ir.model,name:website_mail.model_res_partner
+msgid "Partner"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Order now"
-msgstr "Ordina ora"
+#: model:ir.model,name:website_mail.model_product_product
+msgid "Product"
+msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Our Offers"
-msgstr "Le nostre Offerte"
+#: model:ir.model,name:website_mail.model_product_template
+msgid "Product Template"
+msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Professional"
-msgstr "Professionale"
-
-#. module: website_mail
-#: field:mail.message,website_published:0
+#: model:ir.model.fields,field_description:website_mail.field_mail_compose_message_website_published
+#: model:ir.model.fields,field_description:website_mail.field_mail_message_website_published
+#: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message_website_published
 msgid "Published"
 msgstr "Pubblicato"
 
 #. module: website_mail
-#: view:website:website_mail.email_designer
-msgid "Save and Continue"
-msgstr "Salva e Continua"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Screen: 2.5 inch"
-msgstr "Schermo: 2.5 pollici"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Screen: 2.8 inch"
-msgstr "Schermo: 2.8 pollici"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer
-msgid "Select"
-msgstr "Seleziona"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Sell Online. Easily."
-msgstr "Vendi Online. Facilmente."
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Separator"
-msgstr "Separatore"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid ""
-"Start with the customer – find out what they want\n"
-"                                                    and give it to them."
+#: model:ir.model,name:website_mail.model_crm_team
+msgid "Sales Team"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Starter Package"
-msgstr ""
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "Send"
+msgstr "Invia"
 
 #. module: website_mail
-#: view:website:website_mail.email_designer
-msgid "Subject:"
-msgstr "Oggetto:"
-
-#. module: website_mail
-#: view:website:website_mail.follow
+#: model:ir.ui.view,arch_db:website_mail.follow
 msgid "Subscribe"
+msgstr "Iscriviti"
+
+#. module: website_mail
+#: model:ir.model,name:website_mail.model_survey_survey
+msgid "Survey"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Text Block"
-msgstr "Blocco Testo"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Text-Image"
-msgstr "Testo-Immagine"
-
-#. module: website_mail
-#: view:website:website_mail.follow
-msgid "Thanks for your subscription!"
-msgstr ""
-
-#. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:88
+#: code:addons/website_mail/models/mail_message.py:69
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -372,91 +343,185 @@ msgstr ""
 "(TIpo documento: %s, Operazione: %s)"
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "The top of the top"
-msgstr ""
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Three Columns"
-msgstr "Tre Colonne"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Two Columns"
-msgstr "Due Colonne"
-
-#. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Unlimited support"
-msgstr "Supporto illiminato"
-
-#. module: website_mail
-#: view:website:website_mail.follow
+#: model:ir.ui.view,arch_db:website_mail.follow
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Annulla la sottoscrizione"
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "View Product"
-msgstr ""
-
-#. module: website_mail
-#: help:mail.message,website_published:0
+#: model:ir.model.fields,help:website_mail.field_mail_compose_message_website_published
+#: model:ir.model.fields,help:website_mail.field_mail_message_website_published
+#: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message_website_published
 msgid "Visible on the website as a comment"
 msgstr "Visibile sul sito web come commento"
 
 #. module: website_mail
-#: model:res.groups,name:website_mail.group_comment
+#: model:ir.model.fields,field_description:website_mail.field_product_template_website_message_ids
+#, fuzzy
 msgid "Website Comments"
-msgstr ""
+msgstr "Messaggi sito web"
 
 #. module: website_mail
-#: field:mail.thread,website_message_ids:0
+#: model:ir.model.fields,field_description:website_mail.field_account_analytic_account_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_account_asset_asset_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_account_bank_statement_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_account_invoice_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_account_voucher_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_blog_blog_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_calendar_event_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_crm_lead_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_crm_team_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_crossovered_budget_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_event_event_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_event_registration_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_event_track_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_fleet_vehicle_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_forum_forum_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_forum_tag_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_gamification_badge_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_gamification_challenge_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_hr_applicant_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_hr_contract_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_hr_department_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_hr_employee_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_hr_equipment_category_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_hr_equipment_request_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_hr_equipment_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_hr_expense_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_hr_holidays_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_hr_job_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_hr_timesheet_sheet_sheet_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_mail_channel_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_mail_mass_mailing_contact_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_mail_thread_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_mrp_bom_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_mrp_production_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_mrp_production_workcenter_line_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_mrp_repair_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_note_note_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_procurement_order_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_product_product_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_project_issue_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_project_project_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_project_task_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_purchase_order_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_purchase_requisition_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_res_partner_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_sale_order_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_slide_channel_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_stock_landed_cost_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_stock_picking_wave_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_stock_picking_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_stock_production_lot_website_message_ids
+#: model:ir.model.fields,field_description:website_mail.field_survey_survey_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Messaggi sito web"
 
 #. module: website_mail
-#: help:mail.thread,website_message_ids:0
+#: model:ir.model.fields,help:website_mail.field_account_analytic_account_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_account_asset_asset_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_account_bank_statement_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_account_invoice_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_account_voucher_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_blog_blog_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_calendar_event_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_crm_lead_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_crm_team_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_crossovered_budget_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_event_event_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_event_registration_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_event_track_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_fleet_vehicle_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_forum_forum_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_forum_tag_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_gamification_badge_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_gamification_challenge_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_hr_applicant_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_hr_contract_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_hr_department_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_hr_employee_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_hr_equipment_category_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_hr_equipment_request_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_hr_equipment_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_hr_expense_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_hr_holidays_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_hr_job_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_hr_timesheet_sheet_sheet_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_mail_channel_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_mail_mass_mailing_contact_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_mail_thread_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_mrp_bom_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_mrp_production_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_mrp_production_workcenter_line_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_mrp_repair_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_note_note_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_procurement_order_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_product_product_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_project_issue_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_project_project_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_project_task_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_purchase_order_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_purchase_requisition_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_res_partner_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_sale_order_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_slide_channel_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_stock_landed_cost_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_stock_picking_wave_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_stock_picking_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_stock_production_lot_website_message_ids
+#: model:ir.model.fields,help:website_mail.field_survey_survey_website_message_ids
 msgid "Website communication history"
+msgstr "Storico comunicazione sito"
+
+#. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "Write a message..."
+msgstr "Scrivi un messaggio..."
+
+#. module: website_mail
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "You must be"
+msgstr "Devi essere"
+
+#. module: website_mail
+#: model:mail.template,subject:website_mail.mail_template_data_module_install_website_mail
+msgid "Your business is reachable from anywhere, anytime !"
 msgstr ""
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Weight: 1.1 ounces"
-msgstr "Peso: 31g"
+#. openerp-web
+#: code:addons/website_mail/static/src/xml/chatter_message.xml:8
+#, python-format
+msgid "just now"
+msgstr "in questo momento"
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Weight: 1.2 ounces"
-msgstr "Peso: 34g"
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "logged in"
+msgstr "autenticato"
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid ""
-"Write one or two paragraphs describing your product,\n"
-"                                                    services or a specific "
-"feature. To be successful\n"
-"                                                    your content needs to be "
-"useful to your readers."
-msgstr ""
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "on"
+msgstr "il"
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "Write one sentence to convince visitor about your message."
-msgstr ""
+#: model:ir.model,name:website_mail.model_publisher_warranty_contract
+msgid "publisher_warranty.contract"
+msgstr "publisher_warranty.contract"
 
 #. module: website_mail
-#: view:website:website_mail.email_designer_snippets
-msgid "per month"
-msgstr ""
+#: model:ir.ui.view,arch_db:website_mail.message_thread
+msgid "to post a comment."
+msgstr "per inviare un commento."
 
 #. module: website_mail
-#: field:mail.message,description:0
+#: model:ir.model.fields,field_description:website_mail.field_mail_compose_message_description
+#: model:ir.model.fields,field_description:website_mail.field_mail_message_description
+#: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message_description
 msgid "unknown"
-msgstr "sconosciuto"
+msgstr "Sconosciuto"
 
 #. module: website_mail
-#: view:website:website_mail.follow
+#: model:ir.ui.view,arch_db:website_mail.follow
 msgid "your email..."
 msgstr "la tua email..."

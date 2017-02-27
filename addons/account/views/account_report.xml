@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <!-- QWeb Reports -->
         <report 
@@ -13,6 +13,17 @@
             attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
         />
 
+        <record id="account_invoices" model="ir.actions.report.xml">
+            <field name="print_report_name">(object.type == 'out_invoice' and object.state == 'draft' and 'Draft Invoice' or
+            object.type == 'out_invoice' and object.state in ('open','paid') and 'Invoice'+'-'+(object.number) or
+            object.type == 'out_refund' and object.state == 'draft' and 'Refund' or
+            object.type == 'out_refund' and 'Refund'+'-'+(object.number) or
+            object.type == 'in_invoice' and object.state == 'draft' and 'Vendor Bill' or
+            object.type == 'in_invoice' and object.state in ('open','paid') and 'Vendor Bill'+'-'+(object.number) or
+            object.type == 'in_refund' and object.state == 'draft' and 'Vendor Refund' or
+            object.type == 'in_refund' and 'Vendor Refund'+'-'+(object.number))</field>
+        </record>
+
         <report 
             id="account_invoice_action_report_duplicate"
             model="account.invoice"
@@ -22,6 +33,93 @@
             file="account.report_invoice_duplicate"
             attachment_use="False"
         />
+        <record id="account_invoice_action_report_duplicate" model="ir.actions.report.xml">
+            <field name="print_report_name">(object.type == 'out_invoice' and object.state == 'draft' and 'Duplicate Invoice' or
+            object.type == 'out_invoice' and object.state in ('open','paid') and 'Duplicate Invoice'+'-'+(object.number) or
+            object.type == 'out_refund' and object.state == 'draft' and 'Duplicate Refund' or
+            object.type == 'out_refund' and 'Duplicate Refund'+'-'+(object.number) or
+            object.type == 'in_invoice' and object.state == 'draft' and 'Duplicate Vendor Bill' or
+            object.type == 'in_invoice' and object.state in ('open','paid') and 'Duplicate Vendor Bill'+'-'+(object.number) or
+            object.type == 'in_refund' and object.state == 'draft' and 'Duplicate Vendor Refund' or
+            object.type == 'in_refund' and 'Duplicate Vendor Refund'+'-'+(object.number))</field>
+        </record>
+
+        <report 
+            id="action_report_print_overdue"
+            model="res.partner"
+            report_type="qweb-pdf"
+            string="Due Payments"
+            name="account.report_overdue"
+            file="account.report_overdue"
+            />
+        <record id="action_report_print_overdue" model="ir.actions.report.xml">
+            <field name="print_report_name">'Due Payments'+'-'+(object.name)</field>
+        </record>
+
+        <report 
+            id="action_report_general_ledger"
+            model="account.report.general.ledger"
+            string="General Ledger"
+            report_type="qweb-pdf"
+            name="account.report_generalledger"
+            file="account.report_generalledger"
+            />
+
+        <report 
+            id="action_report_trial_balance"
+            model="account.balance.report"
+            string="Trial Balance"
+            report_type="qweb-pdf"
+            name="account.report_trialbalance"
+            file="account.report_trialbalance"
+            />
+
+        <report 
+            id="action_report_financial"
+            model="account.financial.report"
+            string="Financial report"
+            report_type="qweb-pdf"
+            name="account.report_financial"
+            file="account.report_financial"
+            />
+
+        <report
+            id="action_report_aged_partner_balance"
+            model="res.partner"
+            string="Aged Partner Balance"
+            menu="False"
+            report_type="qweb-pdf"
+            name="account.report_agedpartnerbalance"
+            file="account.report_agedpartnerbalance"
+        />
+
+        <report 
+            id="action_report_journal"
+            model="account.report.journal"
+            string="Sale/Purchase Journal"
+            report_type="qweb-pdf"
+            name="account.report_journal"
+            file="account.report_journal"
+            />
+
+        <report 
+            id="action_report_partnerledger"
+            model="account.report_partnerledger"
+            string="Partner Ledger"
+            report_type="qweb-pdf"
+            name="account.report_partnerledger"
+            file="account.report_partnerledger"
+            />
+
+        <report
+            id="action_report_payment_receipt"
+            model="account.payment"
+            string="Print Receipt"
+            report_type="qweb-pdf"
+            name="account.report_payment_receipt"
+            file="account.report_payment_receipt"
+            menu="False"
+        />
 
     </data>
-</openerp>
+</odoo>

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.website_blog.tests.common import TestWebsiteBlogCommon
+from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 
 
 class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
@@ -21,7 +22,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'name': 'New Blog',
         })
         self.assertIn(
-            self.user_blogmanager.partner_id, test_blog.message_follower_ids,
+            self.user_blogmanager.partner_id, test_blog.message_partner_ids,
             'website_blog: blog create should be in the blog followers')
         test_blog.message_subscribe([self.user_employee.partner_id.id, self.user_public.partner_id.id])
 
@@ -31,10 +32,10 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'blog_id': test_blog.id,
         })
         self.assertNotIn(
-            self.user_employee.partner_id, test_blog_post.message_follower_ids,
+            self.user_employee.partner_id, test_blog_post.message_partner_ids,
             'website_blog: subscribing to a blog should not subscribe to its posts')
         self.assertNotIn(
-            self.user_public.partner_id, test_blog_post.message_follower_ids,
+            self.user_public.partner_id, test_blog_post.message_partner_ids,
             'website_blog: subscribing to a blog should not subscribe to its posts')
 
         # Publish the blog
@@ -43,8 +44,8 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         # Check publish message has been sent to blog followers
         publish_message = next((m for m in test_blog_post.blog_id.message_ids if m.subtype_id.id == self.ref('website_blog.mt_blog_blog_published')), None)
         self.assertEqual(
-            set(publish_message.notified_partner_ids._ids),
-            set([self.user_employee.partner_id.id, self.user_public.partner_id.id]),
+            publish_message.needaction_partner_ids,
+            self.user_employee.partner_id | self.user_public.partner_id,
             'website_blog: peuple following a blog should be notified of a published post')
 
         # Armand posts a message -> becomes follower
@@ -55,5 +56,5 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             subtype='mt_comment',
         )
         self.assertIn(
-            self.user_employee.partner_id, test_blog_post.message_follower_ids,
+            self.user_employee.partner_id, test_blog_post.message_partner_ids,
             'website_blog: people commenting a post should follow it afterwards')

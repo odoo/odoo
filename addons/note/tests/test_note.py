@@ -1,25 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.tests import common
+from odoo.tests import common
 
 class TestNote(common.TransactionCase):
 
     def test_bug_lp_1156215(self):
-        """ensure any users can create new users"""
-        cr, uid = self.cr, self.uid
-        IMD = self.registry('ir.model.data')
-        Users = self.registry('res.users')
+        """ ensure any users can create new users """
+        demo_user = self.env.ref('base.user_demo')
+        group_erp = self.env.ref('base.group_erp_manager')
 
-        _, demo_user = IMD.get_object_reference(cr, uid, 'base', 'user_demo')
-        _, group_id = IMD.get_object_reference(cr, uid, 'base', 'group_erp_manager')
-
-        Users.write(cr, uid, [demo_user], {
-            'groups_id': [(4, group_id)],
+        demo_user.write({
+            'groups_id': [(4, group_erp.id)],
         })
 
         # must not fail
-        Users.create(cr, demo_user, {
+        demo_user.create({
             'name': 'test bug lp:1156215',
             'login': 'lp_1156215',
         })

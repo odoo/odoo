@@ -1,0 +1,556 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * procurement
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-03-10 13:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"A <b>Procurement Exception</b> occurs when the system cannot find a way to "
+"fulfill a procurement. Some exceptions will resolve themselves "
+"automatically, but others require manual intervention (those are identified "
+"by a specific error message in the chatter)."
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid ""
+"A <b>procurement order</b> is used to record a need for a specific\n"
+"                product at a specific location. Procurement orders are "
+"usually\n"
+"                created automatically from <i>sales orders, pull logistic "
+"rules or\n"
+"                minimum stock rules.</i>"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
+msgid "Action"
+msgstr "동작"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
+msgid "Active"
+msgstr "활성"
+
+#. module: procurement
+#: selection:procurement.group,move_type:0
+msgid "All at once"
+msgstr "일괄"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Cancel"
+msgstr "취소"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Cancel Procurement"
+msgstr "조달 취소"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Cancelled"
+msgstr "취소됨"
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:138
+#, python-format
+msgid "Cannot delete Procurement Order(s) which are in %s state."
+msgstr "%s 상태에 있는 조달 주문은 삭제할 수 없습니다."
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Check Procurement"
+msgstr "조달 확인"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
+msgid ""
+"Chosen rule for the procurement resolution. Usually chosen by the system but "
+"can be manually set by the procurement manager to force an unusual behavior."
+msgstr ""
+"조달 해결을 위한 선택 규칙. 일반적으로 시스템에 의해 선택되지만 비정상적인 동"
+"작을 강제로 조달 관리자에 의해 수동으로 설정할 수 있습니다."
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid "Click to create a procurement order."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Compute all procurements in the background."
+msgstr "백그라운드에서 모든 조달을 계산합니다."
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "모든 예약 계산"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Confirmed"
+msgstr "확인됨"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_date
+msgid "Created on"
+msgstr "작성일"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
+#, fuzzy
+msgid "Delivery Type"
+msgstr "운송 방법"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_name
+msgid "Description"
+msgstr "설명"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_display_name
+msgid "Display Name"
+msgstr "표시 이름"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Done"
+msgstr "완료"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Exception"
+msgstr "제외"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Exceptions"
+msgstr "예외"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "External note..."
+msgstr "외부 참고 ..."
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Extra Information"
+msgstr "추가 정보"
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Fixed"
+msgstr "고정"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_id
+msgid "Fixed Procurement Group"
+msgstr "고정 조달 그룹"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Global"
+msgstr "포괄적"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Group By"
+msgstr "그룹화"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.do_view_procurements
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Group's Procurements"
+msgstr "그룹의 조달"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_id
+msgid "ID"
+msgstr "ID"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "If the route is global"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_rule_active
+msgid "If unchecked, it will allow you to hide the rule without removing it."
+msgstr "선택을 해제하면 삭제하지 않고 규칙을 숨길 수 있습니다."
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_order___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule___last_update
+msgid "Last Modified on"
+msgstr "최근 수정"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Late"
+msgstr "늦음"
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Leave Empty"
+msgstr "비워두기"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.mrp_company
+msgid "Logistics"
+msgstr "물류"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
+msgid "Name"
+msgstr "이름"
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:200
+#, python-format
+msgid "No rule matching this procurement"
+msgstr "이 조달에 일치하는 규칙이 없습니다"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Normal"
+msgstr "보통"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Not urgent"
+msgstr "긴급하지 않음"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Notes"
+msgstr "노트"
+
+#. module: procurement
+#: selection:procurement.group,move_type:0
+msgid "Partial"
+msgstr "부분"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_priority
+msgid "Priority"
+msgstr "우선 순위"
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Procurement"
+msgstr "조달"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_exceptions
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Procurement Exceptions"
+msgstr "조달 예외"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
+msgid "Procurement Group"
+msgstr "조달 그룹"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_tree_view
+msgid "Procurement Lines"
+msgstr "조달 명세"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.procurement_action
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_product_template_stat
+msgid "Procurement Orders"
+msgstr "조달 주문"
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_group
+msgid "Procurement Requisition"
+msgstr "조달 요청"
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_rule
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "Procurement Rule"
+msgstr "조달 규칙"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
+msgid "Procurement Rules"
+msgstr "조달 규칙"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
+msgid "Procurement group"
+msgstr "조달 그룹"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Procurement started late"
+msgstr "조달 지연"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
+#: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
+#: model:ir.ui.view,arch_db:procurement.product_product_view_form_procurement_button
+#: model:ir.ui.view,arch_db:procurement.product_template_view_form_procurement_button
+msgid "Procurements"
+msgstr "조달"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_id
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Product"
+msgstr "제품"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_uom
+msgid "Product Unit of Measure"
+msgstr "제품 측정 단위"
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Propagate"
+msgstr "전파"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "Propagation Options"
+msgstr "전파 옵션"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_propagation_option
+msgid "Propagation of Procurement Group"
+msgstr "조달 그룹의 전파"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_qty
+msgid "Quantity"
+msgstr "수량"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Reconfirm Procurement"
+msgstr "조달 재확인"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_name
+msgid "Reference"
+msgstr "참조"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_order_origin
+msgid ""
+"Reference of the document that created this Procurement.\n"
+"This is automatically completed by Odoo."
+msgstr ""
+"이 조달에 작성된 문서의 참조.\n"
+"Odoo에 의해 자동으로 완성됩니다."
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
+msgid "Rule"
+msgstr "규칙"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Run Procurement"
+msgstr "조달 실행"
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.procurement_order_server_action
+msgid "Run Procurements"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.action_compute_schedulers
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Run Schedulers"
+msgstr "예약 실행"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Running"
+msgstr "실행 중"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_date_planned
+msgid "Scheduled Date"
+msgstr "예정 날짜"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Scheduled Month"
+msgstr "예정월"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Scheduler Parameters"
+msgstr "예정 매개 변수"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Scheduling"
+msgstr "예약 실행"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Search Procurement"
+msgstr "조달 검색"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_sequence
+msgid "Sequence"
+msgstr "순서"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_origin
+msgid "Source Document"
+msgstr "자재 문서"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_state
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Status"
+msgstr "상태"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_rule_name
+msgid "This field will fill the packing origin and the name of its moves"
+msgstr "이 필드는 이동 이름과 포장 출처를 채웁니다."
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_tree_view
+msgid "Unit of Measure"
+msgstr "측정 단위"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Urgent"
+msgstr "긴급"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Very Urgent"
+msgstr "매우 긴급"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid ""
+"When the procurement order is confirmed, it automatically\n"
+"                creates the necessary operations to fulfill the need: "
+"purchase\n"
+"                order proposition, manufacturing order, etc."
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "e.g. Buy"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "e.g. SO005"
+msgstr "예 : SO005"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
+
+#~ msgid "Followers"
+#~ msgstr "팔로워"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
+
+#~ msgid "Last Message Date"
+#~ msgstr "최근 메시지 날짜"
+
+#~ msgid "Messages"
+#~ msgstr "메시지"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "메시지 및 대화 기록"
+
+#~ msgid "Unread Messages"
+#~ msgstr "읽지 않은 메시지"
+
+#~ msgid "Website Messages"
+#~ msgstr "웹사이트 메시지"
+
+#~ msgid "Website communication history"
+#~ msgstr "웹사이트 대화 이력"

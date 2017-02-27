@@ -1,5 +1,3 @@
-@import "elements.less";
-
 /* Theme Variables
  ------------------------------------------*/
 @border-color: #a9a9a9;
@@ -10,6 +8,7 @@
 .note-editor {
   border: 1px solid @border-color;
   position: relative;
+  /* overflow: hidden; ODOO: removed for embedded editor */
 
   /* dropzone */
   @dropzone-color: lightskyblue;
@@ -17,8 +16,7 @@
   .note-dropzone {
     position: absolute;
     display: none;
-    z-index: 1;
-    border: 2px dashed @dropzone-color;
+    z-index: 100;
     color: @dropzone-color;
     background-color: white;
     opacity: 0.95;
@@ -33,7 +31,6 @@
     }
 
     &.hover {
-      border: 2px dashed @dropzone-active-color;
       color: @dropzone-active-color;
     }
   }
@@ -42,9 +39,16 @@
     display: table;
   }
 
-  .note-toolbar {
-    background-color: @background-color;
-    border-bottom: 1px solid @border-color;
+  /* codeview mode */
+  &.codeview {
+    .note-editing-area {
+      .note-editable {
+        display: none;
+      }
+      .note-codable {
+        display: block;
+      }
+    }
   }
 
   /* fullscreen mode */
@@ -62,13 +66,43 @@
     }
   }
 
-  /* codeview mode */
-  &.codeview {
+  .note-editing-area {
+    position: relative;
+    overflow: hidden;
+
+    /* editable */
     .note-editable {
-      display: none;
+      background-color: #fff;
+      color: #000;
+      padding: 10px;
+      overflow: auto;
+      outline: none;
+
+      &[contenteditable=true]:empty:not(:focus):before {
+        content:attr(data-placeholder);
+      }
+      &[contenteditable="false"] {
+        background-color: #e5e5e5;
+      }
     }
+
+    /* codeable */
     .note-codable {
-      display: block;
+      display: none;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      box-shadow: none;
+      font-family: Menlo, Monaco, monospace, sans-serif;
+      font-size: 14px;
+      color: #ccc;
+      background-color: #222;
+      resize: none;
+
+      /* override BS2 default style */
+      box-sizing: border-box;
+      border-radius: 0;
+      margin-bottom: 0;
     }
   }
 
@@ -76,9 +110,9 @@
   .note-statusbar {
     background-color: @background-color;
     .note-resizebar {
+      padding-top: 1px;
       height: 8px;
       width: 100%;
-      border-top: 1px solid @border-color;
       cursor: ns-resize;
       .note-icon-bar {
         width: 20px;
@@ -87,50 +121,16 @@
       }
     }
   }
-
-  /* editable */
-  .note-editable[contenteditable=true]:empty:not(:focus):before {
-    content:attr(data-placeholder);
-    color: #a9a9a9;
-  }
-
-  .note-editable {
-    padding: 10px;
-    overflow: auto;
-    outline: none;
-  }
-  .note-editable[contenteditable="false"] {
-    background-color: #e5e5e5;
-  }
-
-  /* codeable */
-  .note-codable {
-    display: none;
-    width: 100%;
-    padding: 10px;
-    border: none;
-    box-shadow: none;
-    font-family: Menlo, Monaco, monospace, sans-serif;
-    font-size: 14px;
-    color: #ccc;
-    background-color: #222;
-    resize: none;
-
-    /* override BS2 default style */
-    .box-sizing(border-box);
-    .rounded(0);
-    margin-bottom: 0;
-  }
 }
 
 /* Air Mode Layout
- ------------------------------------------*/
+------------------------------------------*/
 .note-air-editor {
   outline: none;
 }
 
 /* Popover
- ------------------------------------------*/
+------------------------------------------*/
 .note-popover .popover {
   max-width: none;
   .popover-content {
@@ -149,8 +149,8 @@
 }
 
 /* Popover and Toolbar (Button container)
- ------------------------------------------*/
-.note-popover .popover .popover-content, .note-toolbar {
+------------------------------------------*/
+.note-popover .popover .popover-content, .panel-heading.note-toolbar {
   margin: 0;
   padding: 0 0 5px 5px;
 
@@ -222,7 +222,7 @@
           margin: 3px;
           padding: 0 3px;
           cursor: pointer;
-          .rounded(5px);
+          border-radius: 5px;
         }
 
         .note-color-row {
@@ -258,15 +258,17 @@
       &::before { right: 9px; left: auto !important;  }
       &::after { right: 10px; left: auto !important;  }
     }
-
     /* dropdown-menu for selectbox */
-    li a i {
-      color: deepskyblue;
-      visibility: hidden;
+    &.note-check {
+      li a i {
+        color: deepskyblue;
+        visibility: hidden;
+      }
+      li a.checked i {
+        visibility: visible;
+      }
     }
-    li a.checked i {
-      visibility: visible;
-    }
+
   }
 
   .note-fontsize-10 {
@@ -292,7 +294,7 @@
 }
 
 /* Dialog
- ------------------------------------------*/
+------------------------------------------*/
 .note-dialog {
   &>div {
     display: none; /* BS2's hide pacth. */
@@ -320,12 +322,12 @@
     font-size: 12px;
     color: #ccc;
     background-color: #222 !important;
-    .opacity(0.9);
+    opacity: 0.9;
     .modal-content {
       background: transparent;
       border: 1px solid white;
-      .box-shadow(none);
-      .rounded(5px);
+      box-shadow: none;
+      border-radius: 5px;
     }
 
     /* BS2's background pacth. */
@@ -386,7 +388,7 @@
 }
 
 /* Handle
- ------------------------------------------*/
+------------------------------------------*/
 .note-handle {
   /* control selection */
   .note-control-selection {
@@ -399,7 +401,7 @@
       width: 100%;
       height: 100%;
       background-color: black;
-      .opacity(0.30)
+      opacity: 0.3;
     }
 
     .note-control-handle {
@@ -444,6 +446,12 @@
       cursor: se-resize;
     }
 
+    .note-control-se.note-control-holder {
+      cursor: default;
+      border-top: none;
+      border-left: none;
+    }
+
     .note-control-selection-info {
       right: 0;
       bottom: 0;
@@ -452,8 +460,8 @@
       color: white;
       background-color: black;
       font-size: 12px;
-      .rounded(5px);
-      .opacity(0.7);
+      border-radius: 5px;
+      opacity: 0.7;
     }
   }
 }

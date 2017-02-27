@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.tests import common
+from odoo.tests import common
 
 
 class Test_Lunch(common.TransactionCase):

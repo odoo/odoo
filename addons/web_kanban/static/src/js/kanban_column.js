@@ -1,6 +1,7 @@
 odoo.define('web_kanban.Column', function (require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
@@ -24,6 +25,8 @@ var KanbanColumn = Widget.extend({
         },
         'click .o_column_edit': 'edit_column',
         'click .o_column_delete': 'delete_column',
+        'click .o_column_archive': 'archive_records',
+        'click .o_column_unarchive': 'unarchive_records',
         'click .o_kanban_quick_add': 'add_quick_create',
         'click .o_kanban_load_more': 'load_more',
     },
@@ -49,6 +52,8 @@ var KanbanColumn = Widget.extend({
         this.grouped_by_m2o = options.grouped_by_m2o;
         this.editable = options.editable;
         this.deletable = options.deletable;
+        this.draggable = record_options.draggable;
+        this.has_active_field = options.has_active_field;
         this.records_editable = options.records_editable;
         this.records_deletable = options.records_deletable;
         this.relation = options.relation;
@@ -78,41 +83,48 @@ var KanbanColumn = Widget.extend({
         }
         this.$header.tooltip();
 
-        this.$el.sortable({
-            connectWith: '.o_kanban_group',
-            revert: 0,
-            delay: 0,
-            items: '> .o_kanban_record',
-            helper: 'clone',
-            cursor: 'move',
-            over: function () {
-                self.$el.addClass('o_kanban_hover');
-                self.update_column();
-            },
-            out: function () {
-                self.$el.removeClass('o_kanban_hover');
-            },
-            update: function (event, ui) {
-                var record = ui.item.data('record');
-                var index = self.records.indexOf(record);
-                var test2 = $.contains(self.$el[0], record.$el[0]);
-                record.$el.removeAttr('style');  // jqueryui sortable add display:block inline
-                if (index >= 0 && test2) {
-                    // resequencing records
-                    self.trigger_up('kanban_column_resequence');
-                } else if (index >= 0 && !test2) {
-                    // removing record from this column
-                    self.records.splice(self.records.indexOf(record), 1);
-                    self.dataset.remove_ids([record.id]);
-                } else {
-                    // adding record to this column
-                    self.records.push(record);
-                    record.setParent(self);
-                    self.trigger_up('kanban_column_add_record', {record: record});
+        if (config.device.size_class > config.device.SIZES.XS && this.draggable !== false) {
+            // deactivate sortable in mobile mode.  It does not work anyway,
+            // and it breaks horizontal scrolling in kanban views.  Someday, we
+            // should find a way to use the touch events to make sortable work.
+            this.$el.sortable({
+                connectWith: '.o_kanban_group',
+                revert: 0,
+                delay: 0,
+                items: '> .o_kanban_record:not(.o_updating)',
+                helper: 'clone',
+                cursor: 'move',
+                over: function () {
+                    self.$el.addClass('o_kanban_hover');
+                    self.update_column();
+                },
+                out: function () {
+                    self.$el.removeClass('o_kanban_hover');
+                },
+                update: function (event, ui) {
+                    var record = ui.item.data('record');
+                    var index = self.records.indexOf(record);
+                    var test2 = $.contains(self.$el[0], record.$el[0]);
+                    record.$el.removeAttr('style');  // jqueryui sortable add display:block inline
+                    if (index >= 0 && test2) {
+                        // resequencing records
+                        self.trigger_up('kanban_column_resequence');
+                    } else if (index >= 0 && !test2) {
+                        // removing record from this column
+                        self.records.splice(self.records.indexOf(record), 1);
+                        self.dataset.remove_ids([record.id]);
+                    } else {
+                        // adding record to this column
+                        self.records.push(record);
+                        self.dataset.add_ids([record.id]);
+                        record.setParent(self);
+                        ui.item.addClass('o_updating');
+                        self.trigger_up('kanban_column_add_record', {record: record});
+                    }
+                    self.update_column();
                 }
-                self.update_column();
-            }
-        });
+            });
+        }
         this.update_column();
         this.$el.click(function (event) {
             if (self.$el.hasClass('o_column_folded')) {
@@ -155,17 +167,12 @@ var KanbanColumn = Widget.extend({
     },
 
     update_column: function () {
-        var title = this.folded ? this.title + ' (' + this.records.length + ')' : this.title;
+        var title = this.folded ? this.title + ' (' + this.dataset.size() + ')' : this.title;
         this.$header.find('.o_column_title').text(title);
         this.$header.find('.o-kanban-count').text(this.records.length);
 
         this.$el.toggleClass('o_column_folded', this.folded);
-        var tooltip;
-        if (this.remaining) {
-            tooltip = this.records.length + '/' + this.dataset.size() + _t(' records');
-        } else {
-            tooltip = this.records.length + _t(' records');
-        }
+        var tooltip = this.dataset.size() + _t(' records');
         tooltip = '<p>' + tooltip + '</p>' + this.tooltip_info;
         this.$header.tooltip({html: true}).attr('data-original-title', tooltip);
         if (!this.remaining) {
@@ -173,6 +180,16 @@ var KanbanColumn = Widget.extend({
         } else {
             this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget:this}))
         }
+    },
+
+    archive_records: function(event) {
+        event.preventDefault();
+        this.trigger_up('kanban_column_archive_records', {archive: true});
+    },
+
+    unarchive_records: function(event) {
+        event.preventDefault();
+        this.trigger_up('kanban_column_archive_records', {archive: false});
     },
 
     delete_column: function (event) {
@@ -227,12 +244,10 @@ var KanbanColumn = Widget.extend({
         this.quick_create_widget = new RecordQuickCreate(this, width);
         this.quick_create_widget.insertAfter(this.$header);
         this.quick_create_widget.$el.focusout(function () {
-            setTimeout(function() {
-                var hasFocus = !! (self.quick_create_widget.$(':focus').length > 0);
-                if (! hasFocus && self.quick_create_widget) {
-                    self.cancel_quick_create();
-                }
-            }, 10);
+            var hasFocus = (self.quick_create_widget.$(':focus').length > 0);
+            if (! hasFocus && self.quick_create_widget) {
+                self.cancel_quick_create();
+            }
         });
 
     },

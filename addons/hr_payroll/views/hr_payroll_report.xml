@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+         <report 
+            id="action_contribution_register" 
+            model="hr.contribution.register" 
+            string="PaySlip Lines By Conribution Register"
+            report_type="qweb-pdf"
+            name="hr_payroll.report_contributionregister" 
+            file="hr_payroll.report_contributionregister"
+            menu="False"
+        />
+        <report 
+            id="action_report_payslip" 
+            model="hr.payslip" 
+            string="Payslip"
+            report_type="qweb-pdf"
+            name="hr_payroll.report_payslip" 
+            file="hr_payroll.report_payslip"
+        />
+        <record id="action_report_payslip" model="ir.actions.report.xml">
+            <field name="print_report_name">(object.employee_id.name)+'-'+'Payslip'</field>
+        </record>
+        <report
+            id="payslip_details_report"
+            model="hr.payslip"
+            string="PaySlip Details"
+            report_type="qweb-pdf"
+            name="hr_payroll.report_payslipdetails" 
+            file="hr_payroll.report_payslipdetails"
+        />
+        <record id="payslip_details_report" model="ir.actions.report.xml">
+            <field name="print_report_name">(object.name)</field>
+        </record>
+</odoo>

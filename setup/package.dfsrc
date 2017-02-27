@@ -20,6 +20,7 @@ RUN apt-get update -qq &&  \
 		postgresql-server-dev-all \
 		postgresql-client \
 		adduser \
+		node-less \
 		libxml2-dev \
 		libxslt1-dev \
 		libldap2-dev \
@@ -30,6 +31,7 @@ RUN apt-get update -qq &&  \
 		python-pip \
 		build-essential \
 		python -y && \
+	easy_install --upgrade pip && \
 	rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip

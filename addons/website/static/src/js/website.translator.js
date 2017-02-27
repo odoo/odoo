@@ -7,6 +7,7 @@ var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var translate = require('web_editor.translate');
 var website = require('website.website');
+var local_storage = require('web.local_storage');
 
 var qweb = core.qweb;
 
@@ -31,6 +32,14 @@ website.TopBar.include({
     edit_master: function (ev) {
         ev.preventDefault();
         var $link = $('.js_language_selector a[data-default-lang]');
+        if (!$link.length) {
+            // Fallback for old website
+            var l = false;
+            _.each($('.js_language_selector a'), function(a) {
+               if (!l || a.href.length < l.href.length) { l = a; }
+            });
+            $link = $(l);
+        }
         $link[0].search += ($link[0].search ? '&' : '?') + 'enable_editor=1';
         $link.click();
     },
@@ -47,21 +56,21 @@ var nodialog = 'website_translator_nodialog';
 
 var Translate = translate.Class.include({
     onTranslateReady: function () {
-        if(this.gengo_translate){
+        if(this.gengo_translate) {
             this.translation_gengo_display();
         }
         this._super();
     },
     edit: function () {
         $("#oe_main_menu_navbar").hide();
-        if (!localStorage[nodialog]) {
+        if (!local_storage.getItem(nodialog)) {
             var dialog = new TranslatorDialog();
             dialog.appendTo($(document.body));
             dialog.on('activate', this, function () {
                 if (dialog.$('input[name=do_not_show]').prop('checked')) {
-                    localStorage.removeItem(nodialog);
+                    local_storage.removeItem(nodialog);
                 } else {
-                    localStorage.setItem(nodialog, true);
+                    local_storage.setItem(nodialog, true);
                 }
                 dialog.$el.modal('hide');
             });

@@ -2,9 +2,10 @@ odoo.define('point_of_sale.devices', function (require) {
 "use strict";
 
 var core = require('web.core');
+var Model = require('web.DataModel');
 var Session = require('web.Session');
-var web_client = require('web.web_client');
 
+var QWeb = core.qweb;
 var _t = core._t;
 
 // the JobQueue schedules a sequence of 'jobs'. each job is
@@ -96,7 +97,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
 
         this.pos = parent;
 
-        this.weighting = false;
+        this.weighing = false;
         this.debug_weight = 0;
         this.use_debug_weight = false;
 
@@ -422,7 +423,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
                         send_printing_job();
                     },function(error){
                         if (error) {
-                            self.pos.chrome.screen_selector.show_popup('error-traceback',{
+                            self.pos.gui.show_popup('error-traceback',{
                                 'title': _t('Printing Error: ') + error.data.message,
                                 'body':  error.data.debug,
                             });
@@ -433,6 +434,23 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
             }
         }
         send_printing_job();
+    },
+
+    print_sale_details: function() { 
+        var self = this;
+        new Model('report.point_of_sale.report_saledetails').call('get_sale_details').then(function(result){
+            var env = {
+                company: self.pos.company,
+                pos: self.pos,
+                products: result.products,
+                payments: result.payments,
+                taxes: result.taxes,
+                total_paid: result.total_paid,
+                date: (new Date()).toLocaleString(),
+            };
+            var report = QWeb.render('SaleDetailsReport', env);
+            self.print_receipt(report);
+        })
     },
 
     // asks the proxy to log some information, as with the debug.log you can provide several arguments.
@@ -528,17 +546,6 @@ var BarcodeReader = core.Class.extend({
         } else {
             console.warn("Ignored Barcode Scan:", parsed_result);
         }
-    },
-
-    // starts catching keyboard events and tries to interpret codebar
-    // calling the callbacks when needed.
-    connect: function(){
-        web_client.get_barcode_events().start();
-    },
-
-    // stops catching keyboard events
-    disconnect: function(){
-        web_client.get_barcode_events().stop();
     },
 
     // the barcode scanner will listen on the hw_proxy/scanner interface for

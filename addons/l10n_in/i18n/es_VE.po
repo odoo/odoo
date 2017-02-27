@@ -1,99 +1,61 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * l10n_in
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-11-25 15:28+0000\n"
-"PO-Revision-Date: 2011-01-10 14:00+0000\n"
-"Last-Translator: Borja López Soilán (NeoPolus) <borjalopezsoilan@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:19+0000\n"
+"PO-Revision-Date: 2015-09-08 05:37+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Venezuela) (http://www.transifex.com/odoo/odoo-9/"
+"language/es_VE/)\n"
+"Language: es_VE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:45+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: l10n_chart_in
-#: model:ir.module.module,description:l10n_chart_in.module_meta_information
-msgid ""
-"\n"
-"    Indian Accounting : chart of Account\n"
-"    "
+#. module: l10n_in
+#: model:ir.ui.menu,name:l10n_in.account_reports_in_statements_menu
+msgid "Indian Statements"
 msgstr ""
-"\n"
-"    Contabilidad India : Plan de cuentas\n"
-"    "
 
-#. module: l10n_chart_in
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
-msgstr "¡ Error ! No puede crear plantillas de cuentas recursivas."
+#~ msgid "Expense"
+#~ msgstr "Gasto"
 
-#. module: l10n_chart_in
-#: model:account.journal,name:l10n_chart_in.opening_journal
-msgid "Opening Journal"
-msgstr "Diario de apertura"
+#~ msgid ""
+#~ "Generate Chart of Accounts from a Chart Template. You will be asked to "
+#~ "pass the name of the company, the chart template to follow, the no. of "
+#~ "digits to generate the code for your accounts and Bank account, currency "
+#~ "to create Journals. Thus,the pure copy of chart Template is generated.\n"
+#~ "\tThis is the same wizard that runs from Financial Management/"
+#~ "Configuration/Financial Accounting/Financial Accounts/Generate Chart of "
+#~ "Accounts from a Chart Template."
+#~ msgstr ""
+#~ "Generar el plan contable a partir de una plantilla de plan contable. Se "
+#~ "le pedirá el nombre de la compañía, la plantilla de plan contable a "
+#~ "utilizar, el número de dígitos para generar el código de las cuentas y de "
+#~ "la cuenta bancaria, la moneda para crear los diarios. Así pues, se genere "
+#~ "una copia exacta de la plantilla de plan contable.\n"
+#~ "\tEste es el mismo asistente que se ejecuta desde Contabilidad y "
+#~ "finanzas / Configuración / Contabilidad financiera / Cuentas "
+#~ "financieras / Generar el plan contable a partir de una plantilla de plan "
+#~ "contable."
 
-#. module: l10n_chart_in
-#: model:ir.actions.todo,note:l10n_chart_in.config_call_account_template_in_minimal
-msgid ""
-"Generate Chart of Accounts from a Chart Template. You will be asked to pass "
-"the name of the company, the chart template to follow, the no. of digits to "
-"generate the code for your accounts and Bank account, currency to create "
-"Journals. Thus,the pure copy of chart Template is generated.\n"
-"\tThis is the same wizard that runs from Financial "
-"Management/Configuration/Financial Accounting/Financial Accounts/Generate "
-"Chart of Accounts from a Chart Template."
-msgstr ""
-"Generar el plan contable a partir de una plantilla de plan contable. Se le "
-"pedirá el nombre de la compañía, la plantilla de plan contable a utilizar, "
-"el número de dígitos para generar el código de las cuentas y de la cuenta "
-"bancaria, la moneda para crear los diarios. Así pues, se genere una copia "
-"exacta de la plantilla de plan contable.\n"
-"\tEste es el mismo asistente que se ejecuta desde Contabilidad y finanzas / "
-"Configuración / Contabilidad financiera / Cuentas financieras / Generar el "
-"plan contable a partir de una plantilla de plan contable."
+#~ msgid "Liability"
+#~ msgstr "Pasivo"
 
-#. module: l10n_chart_in
-#: model:account.account.type,name:l10n_chart_in.account_type_liability1
-msgid "Liability"
-msgstr "Pasivo"
+#~ msgid "Asset"
+#~ msgstr "Activo"
 
-#. module: l10n_chart_in
-#: model:account.account.type,name:l10n_chart_in.account_type_asset1
-msgid "Asset"
-msgstr "Activo"
+#~ msgid "Closed"
+#~ msgstr "Cerrada"
 
-#. module: l10n_chart_in
-#: model:account.account.type,name:l10n_chart_in.account_type_closed1
-msgid "Closed"
-msgstr "Cerrado"
+#~ msgid "Income"
+#~ msgstr "Ingreso"
 
-#. module: l10n_chart_in
-#: model:account.account.type,name:l10n_chart_in.account_type_income1
-msgid "Income"
-msgstr "Ingreso"
-
-#. module: l10n_chart_in
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr "¡ Error ! No puede crear códigos de impuestos recursivos."
-
-#. module: l10n_chart_in
-#: model:account.account.type,name:l10n_chart_in.account_type_expense1
-msgid "Expense"
-msgstr "Gasto"
-
-#. module: l10n_chart_in
-#: model:ir.module.module,shortdesc:l10n_chart_in.module_meta_information
-msgid "Indian Chart of Account"
-msgstr "Plan de cuentas de la India"
-
-#. module: l10n_chart_in
-#: model:account.account.type,name:l10n_chart_in.account_type_root_ind1
-msgid "View"
-msgstr "Vista"
+#~ msgid "View"
+#~ msgstr "Vista"

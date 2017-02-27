@@ -5,7 +5,7 @@
     uid: 'res_users_account_voucher_user'
 
 -
-  In order to check account voucher module in OpenERP I create a customer voucher
+  In order to check account voucher module in Odoo I create a customer voucher
 -
   !record {model: account.voucher, id: account_voucher_voucherforaxelor0, view: view_sale_receipt_form}:
     voucher_type: sale
@@ -28,29 +28,6 @@
 -
   !assert {model: account.voucher, id: account_voucher_voucherforaxelor0}:
     - state == 'draft'
-# -
-#   I compute the voucher to calculate the taxes by clicking Compute button
-# -
-#   !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_voucherforaxelor0}
-
-# -
-#   I create voucher by clicking on Create button
-# -
-#   !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_voucherforaxelor0}
-# -
-#   I clicked on Validate Button
-# -
-#   !assert {model: account.voucher, id: account_voucher_voucherforaxelor0}:
-#     - state == 'posted'
-
-# -
-#   I check that Moves get created for this voucher
-# -
-#   !python {model: account.voucher}: |
-#     acc_id=self.browse(cr, uid, ref("account_voucher_voucherforaxelor0"))
-#     assert(acc_id.move_id)
-
-
 -
   Now I create a Vendor Voucher
 -
@@ -75,18 +52,3 @@
 -
   !assert {model: account.voucher, id: account_voucher_voucheraxelor0}:
     - state == 'draft'
-# -
-#   I create voucher by clicking on Create button
-# -
-#   !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_voucheraxelor0}
-# -
-#   I check that the voucher state is "posted"
-# -
-#   !assert {model: account.voucher, id: account_voucher_voucheraxelor0}:
-#     - state == 'posted'
-# -
-#   I check that moves get created for this voucher
-# -
-#   !python {model: account.voucher}: |
-#     acc_id=self.browse(cr, uid, ref("account_voucher_voucheraxelor0"))
-#     assert(acc_id.move_id)

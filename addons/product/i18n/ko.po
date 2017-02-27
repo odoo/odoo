@@ -1,40 +1,58 @@
-# Korean translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Korean <ko@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-01-25 08:56+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:26+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product
-#: field:product.template,product_variant_count:0
-msgid "# of Product Variants"
+#: selection:product.pricelist.item,applied_on:0
+msgid " Product Category"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:725
-#: code:addons/product/product.py:1070
+#: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
+#: model:ir.model.fields,field_description:product.field_product_template_product_variant_count
+msgid "# of Product Variants"
+msgstr "파생 상품의 #"
+
+#. module: product
+#: code:addons/product/pricelist.py:372
+#, python-format
+msgid "%s %% discount"
+msgstr ""
+
+#. module: product
+#: code:addons/product/pricelist.py:374
+#, python-format
+msgid "%s %% discount and %s surcharge"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:716
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (사본)"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
 msgid "16 GB"
-msgstr ""
+msgstr "16 GB"
 
 #. module: product
+#: model:product.product,description_sale:product.product_product_3
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid ""
 "17\" LCD Monitor\n"
@@ -42,8 +60,13 @@ msgid ""
 "512MB RAM\n"
 "HDD SH-1"
 msgstr ""
+"17\" LCD 모니터\n"
+"CPU AMD 8-Core\n"
+"512MB 램\n"
+"하드 SH-1"
 
 #. module: product
+#: model:product.product,description:product.product_product_25
 #: model:product.template,description:product.product_product_25_product_template
 msgid ""
 "17\" Monitor\n"
@@ -51,28 +74,24 @@ msgid ""
 "Standard-1294P Processor\n"
 "QWERTY keyboard"
 msgstr ""
-
-#. module: product
-#: model:product.template,description:product.product_product_26_product_template
-msgid ""
-"17\" Monitor\n"
-"6GB RAM\n"
-"Hi-Speed 234Q Processor\n"
-"QWERTY keyboard"
-msgstr ""
+"17\" 모니터\n"
+"4GB 램\n"
+"Standard-1294P 프로세서\n"
+"QWERTY 키보드"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
 msgid "2.4 GHz"
-msgstr ""
+msgstr "2.4 GHz"
 
 #. module: product
+#: model:product.product,description_sale:product.product_product_8
 #: model:product.template,description_sale:product.product_product_8_product_template
 msgid ""
 "2.7GHz quad-core Intel Core i5\n"
 "                Turbo Boost up to 3.2GHz\n"
 "                8GB (two 4GB) memory\n"
-"                1TB hard drive1\n"
+"                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
 msgstr ""
@@ -80,9 +99,13 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
 msgid "32 GB"
-msgstr ""
+msgstr "32 GB"
 
 #. module: product
+#: model:product.product,description_sale:product.product_product_4
+#: model:product.product,description_sale:product.product_product_4b
+#: model:product.product,description_sale:product.product_product_4c
+#: model:product.product,description_sale:product.product_product_4d
 #: model:product.template,description_sale:product.product_product_4_product_template
 #: model:product.template,description_sale:product.product_product_4b_product_template
 #: model:product.template,description_sale:product.product_product_4c_product_template
@@ -92,723 +115,854 @@ msgid ""
 "Dual-core A5 with quad-core graphics\n"
 "FaceTime HD Camera, 1.2 MP Photos"
 msgstr ""
+"7.9‑inch (diagonal) LED-backlit, 128Gb\n"
+"Dual-core A5 with quad-core graphics\n"
+"FaceTime HD Camera, 1.2 MP Photos"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_ul_form_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new Logistic Unit\n"
-"              </p><p>\n"
-"                The logistic unit defines the container used for the "
-"package.  \n"
-"                It has a type (e.g. pallet, box, ...) and you can specify "
-"its \n"
-"                size. \n"
-"              </p>\n"
-"            "
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid "75 percent less reflection."
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new unit of measure category.\n"
-"              </p><p>\n"
-"                Units of measure belonging to the same category can be\n"
-"                converted between each others. For example, in the category\n"
-"                <i>'Time'</i>, you will have the following units of "
-"measure:\n"
-"                Hours, Days.\n"
-"              </p>\n"
-"            "
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  "
+"-  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', "
+"'standard_price')]}\">Cost  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', "
+"'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new unit of measure.\n"
-"              </p><p>\n"
-"                You must define a conversion rate between several Units of\n"
-"                Measure within the same category.\n"
-"              </p>\n"
-"            "
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "<span>kg</span>"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a pricelist version.\n"
-"              </p><p>\n"
-"                There can be more than one version of a pricelist, each of\n"
-"                these must be valid during a certain period of time. Some\n"
-"                examples of versions: Main Prices, 2010, 2011, Summer "
-"Sales,\n"
-"                etc.\n"
-"              </p>\n"
-"            "
+#: model:ir.ui.view,arch_db:product.report_pricelist
+msgid "<strong>Currency</strong>:<br/>"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a pricelist.\n"
-"              </p><p>\n"
-"                A price list contains rules to be evaluated in order to "
-"compute\n"
-"                the purchase price. The default price list has only one "
-"rule; use\n"
-"                the cost price defined on the product form, so that you do "
-"not have to\n"
-"                worry about supplier pricelists if you have very simple "
-"needs.\n"
-"              </p><p>\n"
-"                But you can also import complex price lists form your "
-"supplier\n"
-"                that may depends on the quantities ordered or the current\n"
-"                promotions.\n"
-"              </p>\n"
-"            "
+#: model:ir.ui.view,arch_db:product.report_pricelist
+msgid "<strong>Description</strong>"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action2
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a pricelist.\n"
-"              </p><p>\n"
-"                A price list contains rules to be evaluated in order to "
-"compute\n"
-"                the sales price of the products.\n"
-"              </p><p>\n"
-"                Price lists may have several versions (2010, 2011, Promotion "
-"of\n"
-"                February 2010, etc.) and each version may have several "
-"rules.\n"
-"                (e.g. the customer price of a product category will be based "
-"on\n"
-"                the supplier price multiplied by 1.80).\n"
-"              </p>\n"
-"            "
+#: model:ir.ui.view,arch_db:product.report_pricelist
+msgid "<strong>Price List Name</strong>:<br/>"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action
-#: model:ir.actions.act_window,help:product.product_variant_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new product.\n"
-"              </p><p>\n"
-"                You must define a product for everything you buy or sell,\n"
-"                whether it's a physical product, a consumable or service.\n"
-"              </p>\n"
-"            "
+#: model:ir.ui.view,arch_db:product.report_pricelist
+msgid "<strong>Print date</strong>:<br/>"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action_sell
+#: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new product.\n"
-"              </p><p>\n"
-"                You must define a product for everything you sell, whether "
-"it's\n"
-"                a physical product, a consumable or a service you offer to\n"
-"                customers.\n"
-"              </p><p>\n"
-"                The product form contains information to simplify the sale\n"
-"                process: price, notes in the quotation, accounting data,\n"
-"                procurement methods, etc.\n"
-"              </p>\n"
-"            "
+"<strong>Warning</strong>: adding or deleting attributes\n"
+"                            will delete and recreate existing variants and "
+"lead\n"
+"                            to the loss of their possible customizations."
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_category_action
-msgid ""
-"<p>\n"
-"                Here is a list of all your products classified by category. "
-"You\n"
-"                can click a category to get the list of all products linked "
-"to\n"
-"                this category or to a child of this category.\n"
-"              </p>\n"
-"            "
+#: code:addons/product/product.py:1011 sql_constraint:product.product:0
+#, python-format
+msgid "A barcode can only be assigned to one product !"
 msgstr ""
 
 #. module: product
-#: help:product.category,type:0
+#: model:ir.model.fields,help:product.field_product_category_type
 msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
 msgstr ""
+"보기 유형의 분류는 계층적 구조를 생성하기 위해 다른 분류의 상위 요소로 사용"
+"할 수 있는 가상 분류입니다."
 
 #. module: product
-#: help:product.template,description_sale:0
+#: model:ir.model.fields,help:product.field_product_product_type
+#: model:ir.model.fields,help:product.field_product_template_type
+msgid ""
+"A consumable is a product for which you don't manage stock, a service is a "
+"non-material product provided by a company or an individual."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product_description_sale
+#: model:ir.model.fields,help:product.field_product_template_description_sale
 msgid ""
 "A description of the Product that you want to communicate to your customers. "
 "This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
+"고객에게 전달하고자 하는 상품 설명. 이 설명은 모든 판매 주문, 배송 주문 및 고"
+"객 송장/환불에 복사됩니다"
 
 #. module: product
-#: help:product.template,description_purchase:0
+#: model:ir.model.fields,help:product.field_product_product_description_purchase
+#: model:ir.model.fields,help:product.field_product_template_description_purchase
 msgid ""
-"A description of the Product that you want to communicate to your suppliers. "
-"This description will be copied to every Purchase Order, Receipt and "
-"Supplier Invoice/Refund."
+"A description of the Product that you want to communicate to your vendors. "
+"This description will be copied to every Purchase Order, Receipt and Vendor "
+"Bill/Refund."
 msgstr ""
 
 #. module: product
-#: help:product.template,description:0
+#: model:product.product,website_description:product.product_product_9
+#: model:product.template,website_description:product.product_product_9_product_template
+msgid "A great Keyboard. Cordless."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product_description
+#: model:ir.model.fields,help:product.field_product_template_description
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
+msgstr "상품의 상세한 설명, 내부 정보용으로만 사용됩니다."
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"A price list contains rules to be evaluated in order to compute\n"
+"                the sales price of the products."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_7
-msgid "Accessories"
-msgstr "액세서리"
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid "A screen worthy of iPad."
+msgstr ""
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.template,active:0
-#: field:product.uom,active:0
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid ""
+"About the size of a credit card — and just 5.4 mm thin — iPod nano is the "
+"thinnest iPod ever made.\n"
+"                                    The 2.5-inch Multi-Touch display is "
+"nearly twice as big as the display on the previous iPod nano,\n"
+"                                    so you can see more of the music, "
+"photos, and videos you love."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_active
+#: model:ir.model.fields,field_description:product.field_product_product_active
+#: model:ir.model.fields,field_description:product.field_product_template_active
+#: model:ir.model.fields,field_description:product.field_product_uom_active
 msgid "Active"
 msgstr "활성"
 
 #. module: product
 #: model:product.category,name:product.product_category_all
 msgid "All"
+msgstr "전체"
+
+#. module: product
+#: code:addons/product/pricelist.py:367
+#, python-format
+msgid "All Products"
+msgstr "모든 상품"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "All general settings about this product are managed on"
 msgstr ""
 
 #. module: product
-#: model:product.template,description:product.product_product_37_product_template
-msgid "All in one hi-speed printer with fax and scanner."
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid ""
+"And at the Apple Online Store, you can configure your iMac with an even more "
+"powerful Intel Core i7 processor, up to 3.5GHz."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.accessories
-msgid "Apple Accessories"
+#: model:product.product,website_description:product.product_product_4
+#: model:product.product,website_description:product.product_product_4b
+#: model:product.product,website_description:product.product_product_4c
+#: model:product.product,website_description:product.product_product_4d
+#: model:product.template,website_description:product.product_product_4_product_template
+#: model:product.template,website_description:product.product_product_4b_product_template
+#: model:product.template,website_description:product.product_product_4c_product_template
+#: model:product.template,website_description:product.product_product_4d_product_template
+msgid "And because it’s so easy to use, it’s easy to love."
 msgstr ""
 
 #. module: product
+#: model:product.product,name:product.product_product_7
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Apple In-Ear Headphones"
-msgstr ""
+msgstr "애플 인-이어 헤드폰"
 
 #. module: product
-#: model:product.category,name:product.apple
-msgid "Apple Products"
-msgstr ""
-
-#. module: product
+#: model:product.product,name:product.product_product_9
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Apple Wireless Keyboard"
+msgstr "애플 무선 키보드"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Applicable On"
+msgstr "다음에 적용 가능"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
+msgid "Apply On"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_view_search
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Archived"
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.product_assembly
 #: model:product.template,name:product.product_assembly_product_template
 msgid "Assembly Service Cost"
+msgstr "조립 서비스 비용"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
+msgid "Assigns the priority to the list of product vendor."
 msgstr ""
 
 #. module: product
-#: help:product.supplierinfo,sequence:0
-msgid "Assigns the priority to the list of product supplier."
-msgstr ""
-
-#. module: product
-#: help:product.price.type,field:0
-msgid "Associated field in the product form."
-msgstr "상품 양식의 관련 필드"
-
-#. module: product
-#: code:addons/product/pricelist.py:208
-#, python-format
-msgid ""
-"At least one pricelist has no active version !\n"
-"Please create or activate one."
-msgstr ""
-
-#. module: product
-#: field:product.attribute.line,attribute_id:0
-#: field:product.attribute.value,attribute_id:0
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_attribute_id
 msgid "Attribute"
-msgstr ""
+msgstr "속성"
 
 #. module: product
-#: field:product.attribute.value,price_extra:0
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
 msgid "Attribute Price Extra"
-msgstr ""
+msgstr "속성 가격 추가"
 
 #. module: product
-#: field:product.attribute.value,price_ids:0
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_price_ids
 msgid "Attribute Prices"
-msgstr ""
+msgstr "속성 가격"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_action
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_value_ids
 #: model:ir.ui.menu,name:product.menu_variants_action
 msgid "Attribute Values"
-msgstr ""
+msgstr "속성 값"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
+#: model:ir.model.fields,field_description:product.field_product_product_attribute_value_ids
 #: model:ir.ui.menu,name:product.menu_attribute_action
-#: field:product.product,attribute_value_ids:0
+#: model:ir.ui.view,arch_db:product.product_attribute_value_view_tree
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Attributes"
+msgstr "속성"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "Auxiliary input for portable devices"
 msgstr ""
 
 #. module: product
-#: view:product.pricelist.item:product.product_pricelist_item_form_view
-msgid "Base Price"
-msgstr "기초 가격"
-
-#. module: product
-#: help:product.pricelist.item,base:0
-msgid "Base price for computation."
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "Auxiliary port lets you connect other audio sources, like an MP3 player"
 msgstr ""
 
 #. module: product
-#: help:product.template,list_price:0
+#: model:ir.model.fields,field_description:product.field_product_product_barcode
+#: model:ir.model.fields,field_description:product.field_product_template_barcode
+msgid "Barcode"
+msgstr "바코드"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item_base
+msgid ""
+"Base price for computation. \n"
+" Public Price: The base price will be the Sale/public Price. \n"
+" Cost Price : The base price will be the cost price. \n"
+" Other Pricelist : Computation of the base price based on another Pricelist."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product_list_price
+#: model:ir.model.fields,help:product.field_product_template_list_price
 msgid ""
 "Base price to compute the customer price. Sometimes called the catalog price."
-msgstr ""
+msgstr "계산용 기준 가격. 카탈로그 가격이라고도 불리웁니다."
 
 #. module: product
-#: field:product.pricelist.item,base:0
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_base
 msgid "Based on"
-msgstr "토대"
+msgstr "기준"
 
 #. module: product
-#: field:product.product,image:0
+#: model:product.product,name:product.consu_delivery_03
+#: model:product.template,name:product.consu_delivery_03_product_template
+msgid "Basic Computer"
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.membership_2
+#: model:product.template,name:product.membership_2_product_template
+msgid "Basic Membership"
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid "Beautiful 7.9‑inch display."
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid "Beautiful widescreen display."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_image
 msgid "Big-sized image"
-msgstr ""
+msgstr "큰 크기의 그림"
 
 #. module: product
-#: field:product.uom,factor_inv:0
+#: model:ir.model.fields,field_description:product.field_product_uom_factor_inv
 msgid "Bigger Ratio"
-msgstr ""
+msgstr "더 큰 비율"
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference Unit of Measure"
-msgstr ""
+msgstr "기준 측정 단위보다 큼"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
 msgid "Black"
+msgstr "검정색"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "Bluetooth connectivity"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_35_product_template
-msgid "Blank CD"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_36_product_template
-msgid "Blank DVD-RW"
-msgstr ""
-
-#. module: product
+#: model:product.product,name:product.product_product_5b
 #: model:product.template,name:product.product_product_5b_product_template
 msgid "Bose Mini Bluetooth Speaker"
+msgstr "보스 미니 블루투스 스피커"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "Bose Mini Bluetooth Speaker."
 msgstr ""
 
 #. module: product
+#: model:product.product,description_sale:product.product_product_5b
 #: model:product.template,description_sale:product.product_product_5b_product_template
 msgid "Bose's smallest portable Bluetooth speaker"
+msgstr "보스 초소형 휴대형 블루투스 스피커"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid "Brilliance onscreen. And behind it."
 msgstr ""
 
 #. module: product
-#: selection:product.ul,type:0
-msgid "Box"
-msgstr "박스"
-
-#. module: product
-#: model:product.ul,name:product.product_ul_box
-msgid "Box 20x20x40"
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid ""
+"Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
+"                                    The smooth anodized aluminum design "
+"makes iPod nano feel as good as it sounds.\n"
+"                                    And iPod nano wouldn’t be iPod nano "
+"without gorgeous, hard-to-choose-from color."
 msgstr ""
 
 #. module: product
-#: model:product.ul,name:product.product_ul_big_box
-msgid "Box 30x40x60"
-msgstr ""
-
-#. module: product
-#: help:product.uom,active:0
+#: model:ir.model.fields,help:product.field_product_uom_active
 msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
 msgstr ""
+"활성 필드를 선택 해제하면 삭제 없이 측정 단위를 사용하지 않도록 설정할 수 있"
+"습니다."
 
 #. module: product
-#: view:product.price_list:product.view_product_price_list
+#: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
-msgstr ""
+msgstr "가격표 버전을 기반으로 단위 당 제품 가격을 계산합니다."
 
 #. module: product
-#: field:product.template,rental:0
+#: model:ir.model.fields,field_description:product.field_product_product_rental
+#: model:ir.model.fields,field_description:product.field_product_template_rental
 msgid "Can be Rent"
-msgstr ""
+msgstr "대여 가능"
 
 #. module: product
-#: view:product.template:product.product_template_search_view
-#: field:product.template,sale_ok:0
+#: model:ir.model.fields,field_description:product.field_product_product_sale_ok
+#: model:ir.model.fields,field_description:product.field_product_template_sale_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Sold"
-msgstr ""
+msgstr "판매 가능"
 
 #. module: product
-#: view:product.price_list:product.view_product_price_list
+#: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Cancel"
 msgstr "취소"
 
 #. module: product
-#: code:addons/product/product.py:210
-#, python-format
-msgid "Cannot change the category of existing Unit of Measure '%s'."
-msgstr ""
-
-#. module: product
-#: model:product.public.category,name:product.case
-msgid "Case"
-msgstr "케이스"
-
-#. module: product
-#: view:product.template:product.product_template_search_view
-msgid "Category"
-msgstr "카테고리"
-
-#. module: product
-#: field:product.category,type:0
+#: model:ir.model.fields,field_description:product.field_product_category_type
+#: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category Type"
+msgstr "분류 유형"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_category_form_view
+msgid "Category name"
 msgstr ""
 
 #. module: product
-#: field:product.category,child_id:0
-msgid "Child Categories"
+#: code:addons/product/pricelist.py:361
+#, python-format
+msgid "Category: %s"
 msgstr ""
 
 #. module: product
-#: field:product.packaging,code:0
-msgid "Code"
-msgstr "코드"
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "Characteristics"
+msgstr ""
 
 #. module: product
-#: help:product.template,uos_coeff:0
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "Charges iPod/iPhone"
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale\n"
-" uos = uom * coeff"
+"Charging cradle recharges the battery and serves as a convenient\n"
+"                                    home base for your speaker, and it lets "
+"you play while it charges."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category_child_id
+msgid "Child Categories"
+msgstr "하위 분류"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+msgid "Click to add a new unit of measure category."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid "Click to add a new unit of measure."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid "Click to create a pricelist."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
+#: model:ir.actions.act_window,help:product.product_template_action
+#: model:ir.actions.act_window,help:product.product_template_action_product
+#: model:ir.actions.act_window,help:product.product_variant_action
+msgid "Click to define a new product."
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Codes"
 msgstr ""
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_2
 msgid "Color"
-msgstr ""
+msgstr "색상"
 
 #. module: product
-#: field:product.template,color:0
+#: model:ir.model.fields,field_description:product.field_product_product_color
+#: model:ir.model.fields,field_description:product.field_product_template_color
 msgid "Color Index"
-msgstr ""
+msgstr "컬러 색인"
 
 #. module: product
+#: model:product.product,description_sale:product.product_product_6
 #: model:product.template,description_sale:product.product_product_6_product_template
 msgid ""
 "Color: White\n"
 "Capacity: 16GB\n"
 "Connectivity: Wifi\n"
 "Beautiful 7.9-inch display\n"
-"Over 375,000 apps3\n"
+"Over 375,000 apps\n"
 "Ultrafast wireless\n"
 "iOS7\n"
 "            "
 msgstr ""
 
 #. module: product
-#: field:product.pricelist,company_id:0
-#: field:product.pricelist.item,company_id:0
-#: field:product.pricelist.version,company_id:0
-#: field:product.supplierinfo,company_id:0
-#: field:product.template,company_id:0
+#: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_company_id
+#: model:ir.model.fields,field_description:product.field_product_product_company_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_company_id
+#: model:ir.model.fields,field_description:product.field_product_template_company_id
 msgid "Company"
-msgstr "회사/기관/단체"
+msgstr "회사"
 
 #. module: product
-#: model:product.category,name:product.product_category_8
 #: model:product.public.category,name:product.Components
 msgid "Components"
+msgstr "부품"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Compute Price"
 msgstr ""
 
 #. module: product
+#: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Computer Case"
+msgstr "컴퓨터 케이스"
+
+#. module: product
+#: model:product.product,name:product.product_product_3
+#: model:product.template,name:product.product_product_3_product_template
+msgid "Computer SC234"
 msgstr ""
 
 #. module: product
 #: model:product.public.category,name:product.Computer_all_in_one
 msgid "Computer all-in-one"
-msgstr ""
+msgstr "올인원 컴퓨터"
 
 #. module: product
-#: model:product.category,name:product.product_category_4
-#: model:product.public.category,name:product.computers
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
-msgstr ""
+msgstr "컴퓨터"
 
 #. module: product
-#: view:product.template:product.product_template_form_view
-msgid "Configurations"
-msgstr ""
-
-#. module: product
-#: view:product.template:product.product_template_search_view
-#: selection:product.template,type:0
+#: code:addons/product/product.py:474
+#, python-format
 msgid "Consumable"
-msgstr "소비재"
-
-#. module: product
-#: view:product.template:product.product_template_search_view
-msgid "Consumable products"
 msgstr ""
 
 #. module: product
-#: help:product.template,type:0
-msgid ""
-"Consumable: Will not imply stock management for this product. \n"
-"Stockable product: Will imply stock management for this product."
-msgstr ""
-
-#. module: product
-#: help:product.uom,category_id:0
+#: model:ir.model.fields,help:product.field_product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"측정 단위 사이의 변환은 동일 분류 항목에서만 가능합니다. 변환은 비율에 따라 "
+"이루어집니다."
 
 #. module: product
-#: code:addons/product/product.py:178
+#: code:addons/product/product.py:122
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
 msgstr ""
+"동일 분류에 속해있지 않기 때문에 제품 UoM %s을(를) 기본 UoM %s으로 변환할 수 "
+"없습니다."
 
 #. module: product
-#: model:product.price.type,name:product.standard_price
-#: field:product.template,standard_price:0
-msgid "Cost Price"
-msgstr "원가 가격"
+#: model:ir.model.fields,field_description:product.field_product_price_history_cost
+#: model:ir.model.fields,field_description:product.field_product_product_standard_price
+#: model:ir.model.fields,field_description:product.field_product_template_standard_price
+#: selection:product.pricelist.item,base:0
+msgid "Cost"
+msgstr "비용"
 
 #. module: product
-#: help:product.template,standard_price:0
+#: model:ir.model.fields,help:product.field_product_product_standard_price
 msgid ""
-"Cost price of the product template used for standard stock valuation in "
-"accounting and used as a base price on purchase orders."
+"Cost of the product template used for standard stock valuation in accounting "
+"and used as a base price on purchase orders. Expressed in the default unit "
+"of measure of the product."
 msgstr ""
 
 #. module: product
-#: field:pricelist.partnerinfo,create_uid:0
-#: field:product.attribute,create_uid:0
-#: field:product.attribute.line,create_uid:0
-#: field:product.attribute.price,create_uid:0
-#: field:product.attribute.value,create_uid:0
-#: field:product.category,create_uid:0
-#: field:product.packaging,create_uid:0
-#: field:product.price.history,create_uid:0
-#: field:product.price.type,create_uid:0
-#: field:product.price_list,create_uid:0
-#: field:product.pricelist,create_uid:0
-#: field:product.pricelist.item,create_uid:0
-#: field:product.pricelist.type,create_uid:0
-#: field:product.pricelist.version,create_uid:0
-#: field:product.product,create_uid:0
-#: field:product.supplierinfo,create_uid:0
-#: field:product.template,create_uid:0
-#: field:product.ul,create_uid:0
-#: field:product.uom,create_uid:0
-#: field:product.uom.categ,create_uid:0
+#: model:ir.model.fields,help:product.field_product_template_standard_price
+msgid "Cost of the product, in the default unit of measure of the product."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.service_delivery
+#: model:product.template,name:product.service_delivery_product_template
+msgid "Cost-plus Contract"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_create_uid
+#: model:ir.model.fields,field_description:product.field_product_category_create_uid
+#: model:ir.model.fields,field_description:product.field_product_packaging_create_uid
+#: model:ir.model.fields,field_description:product.field_product_price_history_create_uid
+#: model:ir.model.fields,field_description:product.field_product_price_list_create_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_create_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_create_uid
+#: model:ir.model.fields,field_description:product.field_product_product_create_uid
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_create_uid
+#: model:ir.model.fields,field_description:product.field_product_template_create_uid
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_create_uid
+#: model:ir.model.fields,field_description:product.field_product_uom_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "작성자"
 
 #. module: product
-#: field:pricelist.partnerinfo,create_date:0
-#: field:product.attribute,create_date:0
-#: field:product.attribute.line,create_date:0
-#: field:product.attribute.price,create_date:0
-#: field:product.attribute.value,create_date:0
-#: field:product.category,create_date:0
-#: field:product.packaging,create_date:0
-#: field:product.price.history,create_date:0
-#: field:product.price.type,create_date:0
-#: field:product.price_list,create_date:0
-#: field:product.pricelist,create_date:0
-#: field:product.pricelist.item,create_date:0
-#: field:product.pricelist.type,create_date:0
-#: field:product.pricelist.version,create_date:0
-#: field:product.product,create_date:0
-#: field:product.supplierinfo,create_date:0
-#: field:product.template,create_date:0
-#: field:product.ul,create_date:0
-#: field:product.uom,create_date:0
-#: field:product.uom.categ,create_date:0
+#: model:ir.model.fields,field_description:product.field_product_attribute_create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_create_date
+#: model:ir.model.fields,field_description:product.field_product_category_create_date
+#: model:ir.model.fields,field_description:product.field_product_packaging_create_date
+#: model:ir.model.fields,field_description:product.field_product_price_history_create_date
+#: model:ir.model.fields,field_description:product.field_product_price_list_create_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_create_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_create_date
+#: model:ir.model.fields,field_description:product.field_product_product_create_date
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_create_date
+#: model:ir.model.fields,field_description:product.field_product_template_create_date
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_create_date
+#: model:ir.model.fields,field_description:product.field_product_uom_create_date
 msgid "Created on"
+msgstr "작성일"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid ""
+"Creating such a stunningly thin design took some equally stunning feats of "
+"technological innovation. We refined,re-imagined,or re-engineered everything "
+"about iMac from the inside out. The result is an advanced, elegant all-in-"
+"one computer that’s as much a work of art as it is state of the art."
 msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
-#: field:product.price.type,currency_id:0
-#: field:product.pricelist,currency_id:0
-#: view:website:product.report_pricelist
+#: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
+#: model:ir.model.fields,field_description:product.field_product_product_currency_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template_currency_id
 msgid "Currency"
-msgstr "통화"
+msgstr "유통"
 
 #. module: product
+#: model:product.product,name:product.product_product_5
+#: model:product.template,name:product.product_product_5_product_template
+msgid "Custom Computer (kit)"
+msgstr ""
+
+#. module: product
+#: model:product.product,description:product.product_product_27
 #: model:product.template,description:product.product_product_27_product_template
 msgid "Custom Laptop based on customer's requirement."
-msgstr ""
+msgstr "사용자 요구 사항을 만족하는 맞춤형 랩탑"
 
 #. module: product
+#: model:product.product,description:product.product_product_5
 #: model:product.template,description:product.product_product_5_product_template
-#: model:product.template,description:product.product_product_5b_product_template
-msgid "Custom computer assembled on order based on customer's requirement."
+msgid "Custom computer shipped in kit."
 msgstr ""
 
 #. module: product
-#: field:product.product,partner_ref:0
+#: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer ref"
 msgstr "고객 참조"
 
 #. module: product
-#: model:product.template,name:product.product_product_46_product_template
+#: model:product.product,name:product.product_delivery_02
+#: model:product.template,name:product.product_delivery_02_product_template
 msgid "Datacard"
-msgstr ""
+msgstr "데이타카드"
 
 #. module: product
-#: help:product.product,message_last_post:0
-#: help:product.template,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr ""
+#: model:ir.model.fields,field_description:product.field_product_price_history_datetime
+msgid "Date"
+msgstr "날짜"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_day
 msgid "Day(s)"
-msgstr ""
+msgstr "일"
 
 #. module: product
-#: model:product.pricelist.version,name:product.ver0
-msgid "Default Public Pricelist Version"
-msgstr ""
-
-#. module: product
-#: view:product.template:product.product_template_search_view
-msgid "Default Unit of Measure"
-msgstr ""
-
-#. module: product
-#: help:product.template,uom_id:0
+#: model:ir.model.fields,help:product.field_product_product_uom_id
+#: model:ir.model.fields,help:product.field_product_template_uom_id
 msgid "Default Unit of Measure used for all stock operation."
-msgstr "모든 스톡 운용에 사용되는 디폴트 UoM"
+msgstr "모든 재고 운용에 사용되는 기본 측정 단위."
 
 #. module: product
-#: help:product.template,uom_po_id:0
+#: model:ir.model.fields,help:product.field_product_product_uom_po_id
+#: model:ir.model.fields,help:product.field_product_template_uom_po_id
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
+"구매 주문에 사용되는 기본 측정 단위. 기본 측정 단위와 같은 분류에 있어야 합니"
+"다."
 
 #. module: product
-#: field:product.supplierinfo,delay:0
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "배송 소요 시간"
 
 #. module: product
-#: field:pricelist.partnerinfo,name:0
-#: field:product.packaging,name:0
-#: field:product.template,description:0
-#: view:website:product.report_pricelist
+#: model:ir.model.fields,field_description:product.field_product_product_description
+#: model:ir.model.fields,field_description:product.field_product_template_description
 msgid "Description"
 msgstr "설명"
 
 #. module: product
-#: view:product.template:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Quotations"
+msgstr "견적 설명"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Description for Vendors"
 msgstr ""
 
 #. module: product
-#: view:product.template:product.product_template_form_view
-msgid "Description for Suppliers"
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid "Design. The thinnest iPod ever."
 msgstr ""
 
 #. module: product
-#: help:product.attribute.value,sequence:0
+#: model:ir.model.fields,help:product.field_product_attribute_sequence
+#: model:ir.model.fields,help:product.field_product_attribute_value_sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "표시 순서 결정"
 
 #. module: product
 #: model:product.public.category,name:product.devices
 msgid "Devices"
-msgstr ""
+msgstr "장치"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_display_name
+#: model:ir.model.fields,field_description:product.field_product_category_display_name
+#: model:ir.model.fields,field_description:product.field_product_packaging_display_name
+#: model:ir.model.fields,field_description:product.field_product_price_history_display_name
+#: model:ir.model.fields,field_description:product.field_product_price_list_display_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_display_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_display_name
+#: model:ir.model.fields,field_description:product.field_product_product_display_name
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_display_name
+#: model:ir.model.fields,field_description:product.field_product_template_display_name
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_display_name
+#: model:ir.model.fields,field_description:product.field_product_uom_display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
+msgid "Display Name"
+msgstr "표시 이름"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
 msgid "Dozen(s)"
+msgstr "다스"
+
+#. module: product
+#: model:product.product,description_sale:product.consu_delivery_03
+#: model:product.template,description_sale:product.consu_delivery_03_product_template
+msgid ""
+"Dvorak keyboard \n"
+"            left-handed mouse"
 msgstr ""
 
 #. module: product
-#: field:product.packaging,ean:0
-msgid "EAN"
-msgstr "EAN"
-
-#. module: product
-#: field:product.product,ean13:0
-#: field:product.template,ean13:0
-msgid "EAN13 Barcode"
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"Each rule include a set of applicability criteria (date range,\n"
+"                product category...) and a computation that easily helps to "
+"achieve\n"
+"                any kind of pricing."
 msgstr ""
 
 #. module: product
-#: field:product.ul,weight:0
-msgid "Empty Package Weight"
-msgstr "빈 패키지 중량"
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "Efficient, high-quality audio"
+msgstr ""
 
 #. module: product
-#: field:product.pricelist.version,date_end:0
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_end
 msgid "End Date"
-msgstr "마감 날짜"
+msgstr "마감일"
 
 #. module: product
-#: selection:product.template,state:0
-msgid "End of Lifecycle"
-msgstr "라이프사이클 끝"
+#: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
+msgid "End date for this vendor price"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
+msgid "Ending valid for the pricelist item validation"
+msgstr ""
 
 #. module: product
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
+msgstr "오류! 재귀적 분류를 작성할 수 없습니다."
+
+#. module: product
+#: constraint:product.attribute.line:0
+msgid "Error ! You cannot use this attribute with the following value."
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:178
-#, python-format
-msgid "Error!"
+#: constraint:product.product:0
+msgid ""
+"Error! It is not allowed to choose more than one value for a given attribute."
 msgstr ""
 
 #. module: product
 #: constraint:product.pricelist.item:0
 msgid "Error! The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "오류! 최소 마진은 최대 마진보다 적어야 합니다."
 
 #. module: product
 #: constraint:product.pricelist.item:0
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
-msgstr ""
+msgstr "오류! 가격표 항목에 다른 가격표로 주요 가격표를 할당할 수 없습니다!"
 
 #. module: product
 #: constraint:res.currency:0
@@ -816,6 +970,8 @@ msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
 msgstr ""
+"오류! '계정'의 소수점 정밀도 보다 작게 회사의 주요 통화에 대한 반올림 요소를 "
+"정의할 수 없습니다."
 
 #. module: product
 #: constraint:decimal.precision:0
@@ -823,63 +979,135 @@ msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
 msgstr ""
-
-#. module: product
-#: constraint:product.packaging:0
-msgid "Error: Invalid ean code"
-msgstr "에러: 유효하지 않은 EAN 코드"
+"오류! '계정'의 소수점 정밀도를 회사의 주요 통화에 대한 반올림 요소보다 크게 "
+"정의할 수 없습니다"
 
 #. module: product
 #: constraint:product.template:0
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
+msgstr "오류 : 기본 측정 단위와 구매 측정 단위가 같은 분류여야 합니다."
+
+#. module: product
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid ""
+"Everything you love about iPad — the beautiful\n"
+"                                    screen, fast Colors are vivid and text "
+"is sharp on the iPad mini display.\n"
+"                                    But what really makes it stand out is "
+"its size. At 7.9 inches,\n"
+"                                    it’s perfectly sized to deliver an "
+"experience every bit as big as iPad."
 msgstr ""
 
 #. module: product
-#: help:product.pricelist.item,name:0
-msgid "Explicit rule name for this pricelist line."
-msgstr "이 가격리스트 라인의 명시적 규칙 이름"
+#: model:product.product,website_description:product.product_product_4
+#: model:product.product,website_description:product.product_product_4b
+#: model:product.product,website_description:product.product_product_4c
+#: model:product.product,website_description:product.product_product_4d
+#: model:product.template,website_description:product.product_product_4_product_template
+#: model:product.template,website_description:product.product_product_4b_product_template
+#: model:product.template,website_description:product.product_product_4c_product_template
+#: model:product.template,website_description:product.product_product_4d_product_template
+msgid ""
+"Everything you love about iPad — the beautiful\n"
+"                                    screen, fast and fluid performance, "
+"FaceTime and\n"
+"                                    iSight cameras, thousands of amazing "
+"apps, 10-hour\n"
+"                                    battery life* — is everything you’ll "
+"love about\n"
+"                                    iPad mini, too. And you can hold it in "
+"one hand."
+msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_6
-msgid "External Devices"
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid ""
+"Everything you love about iPad — the beautiful screen,\n"
+"                                        fast and fluid performance, FaceTime "
+"and iSight cameras, \n"
+"                                        thousands of amazing apps, 10-hour "
+"battery life* — is everything\n"
+"                                        you’ll love about iPad mini, too. "
+"And you can hold it in one hand."
+msgstr ""
+
+#. module: product
+#: model:product.product,description:product.product_product_2
+#: model:product.template,description:product.product_product_2_product_template
+msgid "Example of product to invoice based on delivery."
+msgstr ""
+
+#. module: product
+#: model:product.product,description:product.service_order_01
+#: model:product.template,description:product.service_order_01_product_template
+msgid "Example of product to invoice on order."
+msgstr ""
+
+#. module: product
+#: model:product.product,description:product.service_cost_01
+#: model:product.template,description:product.service_cost_01_product_template
+msgid "Example of products to invoice based on cost."
+msgstr ""
+
+#. module: product
+#: model:product.product,description:product.product_product_1
+#: model:product.template,description:product.product_product_1_product_template
+msgid "Example of products to invoice based on delivery."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item_name
+#: model:ir.model.fields,help:product.field_product_pricelist_item_price
+msgid "Explicit rule name for this pricelist line."
+msgstr "이 가격리스트 명세의 명시적 규칙 이름"
+
+#. module: product
+#: model:product.product,name:product.service_cost_01
+#: model:product.template,name:product.service_cost_01_product_template
+msgid "External Audit"
 msgstr ""
 
 #. module: product
 #: model:product.public.category,name:product.External_Hard_Drive
 msgid "External Hard Drive"
+msgstr "외장 하드 드라이브"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid "Fast connections.The world over."
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_28_product_template
-msgid "External Hard disk"
+#: selection:product.pricelist.item,compute_price:0
+msgid "Fix Price"
 msgstr ""
 
 #. module: product
-#: help:product.pricelist.version,date_start:0
-msgid "First valid date for the version."
-msgstr ""
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
+msgid "Fixed Price"
+msgstr "고정 가격"
 
 #. module: product
-#: selection:product.template,mes_type:0
-msgid "Fixed"
-msgstr "고정됨"
-
-#. module: product
-#: field:product.product,message_follower_ids:0
-#: field:product.template,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: product
-#: help:product.pricelist.item,min_quantity:0
+#: model:ir.model.fields,help:product.field_product_pricelist_item_min_quantity
 msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to "
-"minimum quantity specified in this field."
+"the minimum quantity specified in this field.\n"
+"Expressed in the default unit of measure of the product."
 msgstr ""
 
 #. module: product
+#: selection:product.pricelist.item,compute_price:0
+msgid "Formula"
+msgstr "수식"
+
+#. module: product
+#: model:product.product,description_sale:product.product_product_7
 #: model:product.template,description_sale:product.product_product_7_product_template
 msgid ""
 "Frequency: 5Hz to 21kHz\n"
@@ -887,24 +1115,45 @@ msgid ""
 "Sensitivity: 109 dB SPL/mW\n"
 "Drivers: two-way balanced armature\n"
 "Cable length: 1065 mm\n"
-"Weight: 0.4 ounce\n"
+"Weight: 10.2 grams\n"
 "            "
 msgstr ""
 
 #. module: product
-#: model:product.template,description_sale:product.product_product_44_product_template
-msgid "Full featured image editing software."
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid "Friendly to the environment."
 msgstr ""
 
 #. module: product
-#: help:product.template,packaging_ids:0
+#: model:product.product,name:product.product_product_1
+#: model:product.template,name:product.product_product_1_product_template
+msgid "GAP Analysis Service"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "General Information"
+msgstr "일반 정보"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid "Genius. Your own personal DJ."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product_packaging_ids
+#: model:ir.model.fields,help:product.field_product_template_packaging_ids
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
 msgstr ""
 
 #. module: product
-#: help:product.pricelist.item,sequence:0
+#: model:ir.model.fields,help:product.field_product_pricelist_item_sequence
 msgid ""
 "Gives the order in which the pricelist items will be checked. The evaluation "
 "gives highest priority to lowest sequence and stops as soon as a matching "
@@ -912,123 +1161,93 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: help:product.packaging,sequence:0
-msgid "Gives the sequence order when displaying a list of packaging."
+#: model:ir.model.fields,help:product.field_product_category_sequence
+msgid "Gives the sequence order when displaying a list of product categories."
+msgstr "상품 분류 목록을 표시할 때 주문 순서를 제공합니다."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product_sequence
+#: model:ir.model.fields,help:product.field_product_template_sequence
+msgid "Gives the sequence order when displaying a product list"
 msgstr ""
 
 #. module: product
-#: help:product.category,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of product categories."
+#: selection:product.pricelist.item,applied_on:0
+msgid "Global"
+msgstr "포괄적"
+
+#. module: product
+#: model:product.product,name:product.membership_0
+#: model:product.template,name:product.membership_0_product_template
+msgid "Gold Membership"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_44_product_template
-msgid "GrapWorks Software"
-msgstr ""
-
-#. module: product
-#: model:product.public.category,name:product.graphics_card
+#: model:product.product,name:product.product_product_24
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Graphics Card"
-msgstr ""
+msgstr "그래픽카드"
 
 #. module: product
-#: field:product.template,weight:0
-msgid "Gross Weight"
-msgstr "총중량"
-
-#. module: product
-#: view:product.template:product.product_template_search_view
-msgid "Group by..."
-msgstr ""
-
-#. module: product
+#: model:product.product,name:product.product_product_17
 #: model:product.template,name:product.product_product_17_product_template
 msgid "HDD SH-1"
-msgstr ""
+msgstr "HDD SH-1"
 
 #. module: product
-#: model:product.template,name:product.product_product_18_product_template
-msgid "HDD SH-2"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_19_product_template
-msgid "HDD on Demand"
-msgstr ""
-
-#. module: product
-#: model:product.template,description:product.product_product_32_product_template
-msgid ""
-"Hands free headset for laptop PC with in-line microphone and headphone plug."
-msgstr ""
-
-#. module: product
-#: model:product.public.category,name:product.HDD
-msgid "Hard Drive"
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid "Have Genius call the tunes."
 msgstr ""
 
 #. module: product
 #: model:product.public.category,name:product.Headset
 msgid "Headset"
+msgstr "헤드셋"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_7
+#: model:product.template,website_description:product.product_product_7_product_template
+msgid "Hear, hear."
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_33_product_template
-msgid "Headset USB"
-msgstr ""
-
-#. module: product
-#: model:product.template,description:product.product_product_33_product_template
-msgid "Headset for laptop PC with USB connector."
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_32_product_template
-msgid "Headset standard"
-msgstr ""
-
-#. module: product
-#: field:product.ul,height:0
-msgid "Height"
-msgstr "높이"
-
-#. module: product
+#: model:product.product,description_sale:product.product_product_11
+#: model:product.product,description_sale:product.product_product_11b
 #: model:product.template,description_sale:product.product_product_11_product_template
 #: model:product.template,description_sale:product.product_product_11b_product_template
 msgid ""
-"Height: 3.01 inches\n"
-"Width:  1.56 inches\n"
-"Depth:  0.21 inch\n"
-"Weight: 1.1 ounces"
+"Height: 76.5 mm\n"
+"Width:  39.6 mm\n"
+"Depth:  5.4 mm\n"
+"Weight: 31 grams"
 msgstr ""
 
 #. module: product
-#: field:product.price.history,datetime:0
-msgid "Historization Time"
-msgstr ""
-
-#. module: product
-#: field:product.price.history,cost:0
-msgid "Historized Cost"
-msgstr ""
-
-#. module: product
-#: help:product.product,message_summary:0
-#: help:product.template,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid "Highly rated designs."
 msgstr ""
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
 msgid "Hour(s)"
+msgstr "시간"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid ""
+"How did we make an already gorgeous widescreen display even better? By "
+"making it 75 percent less reflective. And by re-architecting the LCD and "
+"moving it right up against the cover glass. So you see your photos, games, "
+"movies, and everything else in vivid, lifelike detail."
 msgstr ""
 
 #. module: product
-#: help:product.uom,factor_inv:0
+#: model:ir.model.fields,help:product.field_product_uom_factor_inv
 msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category:\n"
@@ -1036,7 +1255,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: help:product.uom,factor:0
+#: model:ir.model.fields,help:product.field_product_uom_factor
 msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category:\n"
@@ -1044,61 +1263,59 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:pricelist.partnerinfo,id:0
-#: field:product.attribute,id:0
-#: field:product.attribute.line,id:0
-#: field:product.attribute.price,id:0
-#: field:product.attribute.value,id:0
-#: field:product.category,id:0
-#: field:product.packaging,id:0
-#: field:product.price.history,id:0
-#: field:product.price.type,id:0
-#: field:product.price_list,id:0
-#: field:product.pricelist,id:0
-#: field:product.pricelist.item,id:0
-#: field:product.pricelist.type,id:0
-#: field:product.pricelist.version,id:0
-#: field:product.product,id:0
-#: field:product.supplierinfo,id:0
-#: field:product.template,id:0
-#: field:product.ul,id:0
-#: field:product.uom,id:0
-#: field:product.uom.categ,id:0
-#: field:report.product.report_pricelist,id:0
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid "How to get your groove on."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_id
+#: model:ir.model.fields,field_description:product.field_product_category_id
+#: model:ir.model.fields,field_description:product.field_product_packaging_id
+#: model:ir.model.fields,field_description:product.field_product_price_history_id
+#: model:ir.model.fields,field_description:product.field_product_price_list_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_id
+#: model:ir.model.fields,field_description:product.field_product_product_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_id
+#: model:ir.model.fields,field_description:product.field_product_template_id
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_id
+#: model:ir.model.fields,field_description:product.field_product_uom_id
+#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_id
 msgid "ID"
+msgstr "ID"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid "If it's made for iPad, it's made for iPad mini."
 msgstr ""
 
 #. module: product
-#: help:product.product,message_unread:0
-#: help:product.template,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: product
-#: help:product.pricelist,active:0
+#: model:ir.model.fields,help:product.field_product_pricelist_active
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr ""
+msgstr "선택을 해제하면 제거하지 않고 가격표를 숨길 수 있습니다."
 
 #. module: product
-#: help:product.product,active:0
-#: help:product.template,active:0
+#: model:ir.model.fields,help:product.field_product_product_active
+#: model:ir.model.fields,help:product.field_product_template_active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
+msgstr "선택을 해제하면 제거하지 않고 상품을 숨길 수 있습니다."
 
 #. module: product
-#: model:product.category,name:product.imac
-msgid "Imac"
-msgstr ""
-
-#. module: product
-#: field:product.template,image:0
+#: model:ir.model.fields,field_description:product.field_product_template_image
 msgid "Image"
-msgstr ""
+msgstr "이미지"
 
 #. module: product
-#: help:product.product,image:0
+#: model:ir.model.fields,help:product.field_product_product_image
 msgid ""
 "Image of the product variant (Big-sized image of product template if false). "
 "It is automatically resized as a 1024x1024px image, with aspect ratio "
@@ -1106,184 +1323,171 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: help:product.product,image_medium:0
+#: model:ir.model.fields,help:product.field_product_product_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
 msgstr ""
 
 #. module: product
-#: help:product.product,image_small:0
+#: model:ir.model.fields,help:product.field_product_product_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
 msgstr ""
 
 #. module: product
-#: selection:product.template,state:0
-msgid "In Development"
-msgstr "개발 중"
-
-#. module: product
-#: view:product.template:product.product_template_form_view
-msgid "Information"
-msgstr "정보"
-
-#. module: product
-#: model:ir.model,name:product.model_product_supplierinfo
-msgid "Information about a product supplier"
-msgstr "상품 공급자에 관한 정보"
-
-#. module: product
-#: model:product.template,name:product.product_product_38_product_template
-msgid "Ink Cartridge"
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid "Individually calibrated for true-to-life color."
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:385
-#, python-format
-msgid "Integrity Error!"
+#: model:ir.model,name:product.model_product_supplierinfo
+msgid "Information about a product vendor"
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_7
+#: model:product.template,website_description:product.product_product_7_product_template
+msgid ""
+"Inside each earpiece is a stainless steel mesh cap that protects the "
+"precision acoustic\n"
+"                                    components from dust and debris. You can "
+"remove the caps for cleaning or replace\n"
+"                                    them with an extra set that’s included "
+"in the box."
 msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_2
 msgid "Internal"
-msgstr ""
+msgstr "내부"
 
 #. module: product
-#: field:product.template,categ_id:0
+#: model:ir.model.fields,field_description:product.field_product_product_categ_id
+#: model:ir.model.fields,field_description:product.field_product_template_categ_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Category"
-msgstr ""
+msgstr "내부 분류"
 
 #. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
-#: field:product.template,default_code:0
+#: model:ir.model.fields,field_description:product.field_product_product_code
+#: model:ir.model.fields,field_description:product.field_product_product_default_code
+#: model:ir.model.fields,field_description:product.field_product_template_default_code
 msgid "Internal Reference"
-msgstr ""
+msgstr "내부 참조"
 
 #. module: product
-#: help:product.product,ean13:0
+#: model:ir.model.fields,help:product.field_product_product_barcode
 msgid "International Article Number used for product identification."
-msgstr ""
+msgstr "상품 식별을 위한 국제 아티클 번호"
 
 #. module: product
-#: view:product.template:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
+msgstr "목록"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
+#: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
+msgid "Is a product variant"
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.ipad
-msgid "Ipad"
+#: model:product.product,website_description:product.product_product_7
+#: model:product.template,website_description:product.product_product_7_product_template
+msgid "Keep it clean."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.ipod
-msgid "Ipod"
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid "Key Features"
 msgstr ""
-
-#. module: product
-#: field:product.product,message_is_follower:0
-#: field:product.template,message_is_follower:0
-msgid "Is a Follower"
-msgstr ""
-
-#. module: product
-#: view:product.pricelist.version:product.product_pricelist_version_form_view
-msgid "Item List"
-msgstr ""
-
-#. module: product
-#: field:product.pricelist.type,key:0
-msgid "Key"
-msgstr "키"
 
 #. module: product
 #: model:product.public.category,name:product.Keyboard_Mouse
 msgid "Keyboard / Mouse"
-msgstr ""
+msgstr "키보드 / 마우스"
 
 #. module: product
+#: model:product.product,name:product.product_product_27
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Laptop Customized"
-msgstr ""
+msgstr "주문제작 랩탑"
 
 #. module: product
+#: model:product.product,name:product.product_product_25
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Laptop E5023"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Laptop S3450"
-msgstr ""
+msgstr "랩탐 E5023"
 
 #. module: product
 #: model:product.public.category,name:product.laptops
 msgid "Laptops"
-msgstr ""
+msgstr "랩탑"
 
 #. module: product
-#: field:product.product,message_last_post:0
-#: field:product.template,message_last_post:0
-msgid "Last Message Date"
-msgstr ""
+#: model:ir.model.fields,field_description:product.field_product_attribute___last_update
+#: model:ir.model.fields,field_description:product.field_product_attribute_line___last_update
+#: model:ir.model.fields,field_description:product.field_product_attribute_price___last_update
+#: model:ir.model.fields,field_description:product.field_product_attribute_value___last_update
+#: model:ir.model.fields,field_description:product.field_product_category___last_update
+#: model:ir.model.fields,field_description:product.field_product_packaging___last_update
+#: model:ir.model.fields,field_description:product.field_product_price_history___last_update
+#: model:ir.model.fields,field_description:product.field_product_price_list___last_update
+#: model:ir.model.fields,field_description:product.field_product_pricelist___last_update
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item___last_update
+#: model:ir.model.fields,field_description:product.field_product_product___last_update
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo___last_update
+#: model:ir.model.fields,field_description:product.field_product_template___last_update
+#: model:ir.model.fields,field_description:product.field_product_uom___last_update
+#: model:ir.model.fields,field_description:product.field_product_uom_categ___last_update
+#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist___last_update
+msgid "Last Modified on"
+msgstr "최근 수정"
 
 #. module: product
-#: field:pricelist.partnerinfo,write_uid:0
-#: field:product.attribute,write_uid:0
-#: field:product.attribute.line,write_uid:0
-#: field:product.attribute.price,write_uid:0
-#: field:product.attribute.value,write_uid:0
-#: field:product.category,write_uid:0
-#: field:product.packaging,write_uid:0
-#: field:product.price.history,write_uid:0
-#: field:product.price.type,write_uid:0
-#: field:product.price_list,write_uid:0
-#: field:product.pricelist,write_uid:0
-#: field:product.pricelist.item,write_uid:0
-#: field:product.pricelist.type,write_uid:0
-#: field:product.pricelist.version,write_uid:0
-#: field:product.product,write_uid:0
-#: field:product.supplierinfo,write_uid:0
-#: field:product.template,write_uid:0
-#: field:product.ul,write_uid:0
-#: field:product.uom,write_uid:0
-#: field:product.uom.categ,write_uid:0
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_write_uid
+#: model:ir.model.fields,field_description:product.field_product_category_write_uid
+#: model:ir.model.fields,field_description:product.field_product_packaging_write_uid
+#: model:ir.model.fields,field_description:product.field_product_price_history_write_uid
+#: model:ir.model.fields,field_description:product.field_product_price_list_write_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_write_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_write_uid
+#: model:ir.model.fields,field_description:product.field_product_product_write_uid
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_write_uid
+#: model:ir.model.fields,field_description:product.field_product_template_write_uid
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_write_uid
+#: model:ir.model.fields,field_description:product.field_product_uom_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "최근 갱신한 사람"
 
 #. module: product
-#: field:pricelist.partnerinfo,write_date:0
-#: field:product.attribute,write_date:0
-#: field:product.attribute.line,write_date:0
-#: field:product.attribute.price,write_date:0
-#: field:product.attribute.value,write_date:0
-#: field:product.category,write_date:0
-#: field:product.packaging,write_date:0
-#: field:product.price.history,write_date:0
-#: field:product.price.type,write_date:0
-#: field:product.price_list,write_date:0
-#: field:product.pricelist,write_date:0
-#: field:product.pricelist.item,write_date:0
-#: field:product.pricelist.type,write_date:0
-#: field:product.pricelist.version,write_date:0
-#: field:product.product,write_date:0
-#: field:product.supplierinfo,write_date:0
-#: field:product.template,write_date:0
-#: field:product.ul,write_date:0
-#: field:product.uom,write_date:0
-#: field:product.uom.categ,write_date:0
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_write_date
+#: model:ir.model.fields,field_description:product.field_product_category_write_date
+#: model:ir.model.fields,field_description:product.field_product_packaging_write_date
+#: model:ir.model.fields,field_description:product.field_product_price_history_write_date
+#: model:ir.model.fields,field_description:product.field_product_price_list_write_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_write_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_write_date
+#: model:ir.model.fields,field_description:product.field_product_product_write_date
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_write_date
+#: model:ir.model.fields,field_description:product.field_product_template_write_date
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_write_date
+#: model:ir.model.fields,field_description:product.field_product_uom_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "최근 갱신 날짜"
 
 #. module: product
-#: help:product.pricelist.version,date_end:0
-msgid "Last valid date for the version."
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,delay:0
+#: model:ir.model.fields,help:product.field_product_supplierinfo_delay
 msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
@@ -1291,343 +1495,228 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.category,parent_left:0
+#: model:ir.model.fields,field_description:product.field_product_category_parent_left
 msgid "Left Parent"
-msgstr ""
-
-#. module: product
-#: field:product.ul,length:0
-msgid "Length"
-msgstr "길이"
+msgstr "좌측 상위요소"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_length
 msgid "Length / Distance"
-msgstr ""
+msgstr "길이 / 거리"
 
 #. module: product
-#: view:product.template:product.product_template_only_form_view
-msgid "List of Variants"
-msgstr ""
+#: model:ir.model.fields,field_description:product.field_product_attribute_attribute_line_ids
+msgid "Lines"
+msgstr "명세"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
 msgid "Liter(s)"
+msgstr "리터"
+
+#. module: product
+#: model:product.product,name:product.consu_delivery_02
+#: model:product.template,name:product.consu_delivery_02_product_template
+msgid "Little server"
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_product_ul
-msgid "Logistic Unit"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_ul_form_action
-#: model:ir.ui.menu,name:product.menu_product_ul_form_action
-#: view:product.ul:product.product_ul_form_view
-#: view:product.ul:product.product_ul_tree
-msgid "Logistic Units"
-msgstr ""
-
-#. module: product
-#: field:product.template,packaging_ids:0
+#: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
+#: model:ir.model.fields,field_description:product.field_product_template_packaging_ids
 msgid "Logistical Units"
-msgstr "물류 유닛"
-
-#. module: product
-#: field:product.template,seller_id:0
-msgid "Main Supplier"
-msgstr ""
-
-#. module: product
-#: help:product.template,seller_id:0
-msgid "Main Supplier who has highest priority in Supplier List."
-msgstr ""
+msgstr "물류 단위"
 
 #. module: product
 #: model:res.groups,name:product.group_uom
 msgid "Manage Multiple Units of Measure"
+msgstr "복수의 측정 단위 관리"
+
+#. module: product
+#: model:res.groups,name:product.group_pricelist_item
+msgid "Manage Pricelist Items"
 msgstr ""
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
+msgstr "상품 포장 관리"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
+#: model:res.groups,name:product.group_product_variant
+msgid "Manage Product Variants"
 msgstr ""
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
 msgid "Manage Properties of Product"
-msgstr ""
+msgstr "상품 속성 관리"
 
 #. module: product
 #: model:res.groups,name:product.group_uos
 msgid "Manage Secondary Unit of Measure"
-msgstr ""
+msgstr "보조 측정 단위 관리"
 
 #. module: product
-#: view:product.pricelist.item:product.product_pricelist_item_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
 msgstr "최대 마진"
 
 #. module: product
-#: field:product.pricelist.item,price_max_margin:0
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_max_margin
 msgid "Max. Price Margin"
-msgstr ""
+msgstr "최대 가격 마진"
 
 #. module: product
-#: field:product.template,mes_type:0
-msgid "Measure Type"
-msgstr "측정 유형"
-
-#. module: product
-#: field:product.product,image_medium:0
-#: field:product.template,image_medium:0
+#: model:ir.model.fields,field_description:product.field_product_product_image_medium
+#: model:ir.model.fields,field_description:product.field_product_template_image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "중간 크기 이미지"
 
 #. module: product
-#: help:product.template,image_medium:0
+#: model:ir.model.fields,help:product.field_product_template_image_medium
 msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
 msgstr ""
+"상품을 나타내는 중간 크기 사진입니다. 이미지의 가로 세로 비율을 유지한 채 자"
+"동으로 128x128픽셀 이미지로 크기가 조정됩니다. 양식 보기 또는 다른 칸반 보기"
+"에 이 필드를 이용합니다."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
-#: model:product.public.category,name:product.Memory
 msgid "Memory"
-msgstr ""
+msgstr "메모리"
 
 #. module: product
-#: field:product.product,message_ids:0
-#: field:product.template,message_ids:0
-msgid "Messages"
-msgstr ""
-
-#. module: product
-#: help:product.product,message_ids:0
-#: help:product.template,message_ids:0
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: product
-#: view:product.pricelist.item:product.product_pricelist_item_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min. Margin"
 msgstr "최소 마진"
 
 #. module: product
-#: field:product.pricelist.item,price_min_margin:0
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_min_margin
 msgid "Min. Price Margin"
-msgstr ""
+msgstr "최소 가격 마진"
 
 #. module: product
-#: field:product.pricelist.item,min_quantity:0
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_min_quantity
 msgid "Min. Quantity"
 msgstr "최소 수량"
 
 #. module: product
-#: field:product.supplierinfo,min_qty:0
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_min_qty
 msgid "Minimal Quantity"
 msgstr "최소 수량"
 
 #. module: product
-#: model:product.public.category,name:product.Modem_Router
-msgid "Modem & Router"
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid "More energy efficient."
 msgstr ""
 
 #. module: product
-#: model:product.public.category,name:product.motherboard
-msgid "Motherboard"
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "More features."
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_21_product_template
-msgid "Motherboard A20Z7"
-msgstr ""
-
-#. module: product
+#: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Motherboard I9P57"
-msgstr ""
+msgstr "메인보드 I9P57"
 
 #. module: product
+#: model:product.product,name:product.product_product_10
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Mouse, Optical"
-msgstr ""
+msgstr "마우스, 광학식"
 
 #. module: product
+#: model:product.product,name:product.product_product_12
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Mouse, Wireless"
+msgstr "마우스, 무선"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid "Music. It's what beats inside."
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_31_product_template
-msgid "Multimedia Speakers"
-msgstr ""
-
-#. module: product
-#: field:product.attribute,name:0
-#: field:product.category,complete_name:0
-#: field:product.category,name:0
-#: field:product.pricelist.type,name:0
-#: field:product.pricelist.version,name:0
-#: field:product.template,name:0
-#: field:product.ul,name:0
-#: field:product.uom.categ,name:0
+#: model:ir.model.fields,field_description:product.field_product_attribute_name
+#: model:ir.model.fields,field_description:product.field_product_category_complete_name
+#: model:ir.model.fields,field_description:product.field_product_category_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_name
+#: model:ir.model.fields,field_description:product.field_product_product_name
+#: model:ir.model.fields,field_description:product.field_product_template_name
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_name
 msgid "Name"
 msgstr "이름"
 
 #. module: product
-#: help:product.price.type,name:0
-msgid "Name of this kind of price."
-msgstr "이 종류의 가격 이름"
-
-#. module: product
-#: field:product.template,weight_net:0
-msgid "Net Weight"
-msgstr "순 중량"
-
-#. module: product
 #: model:product.public.category,name:product.network
 msgid "Network"
-msgstr ""
+msgstr "네트워크"
 
 #. module: product
-#: view:product.pricelist.item:product.product_pricelist_item_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "New Price ="
 msgstr "새 가격 ="
 
 #. module: product
-#: code:addons/product/product.py:705
-#, python-format
-msgid ""
-"New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
-"as of old Unit of Measure '%s'. If you need to change the unit of measure, "
-"you may deactivate this product from the 'Procurements' tab and create a new "
-"one."
-msgstr ""
-
-#. module: product
 #: selection:product.category,type:0
-#: selection:product.template,state:0
 msgid "Normal"
-msgstr ""
+msgstr "보통"
 
 #. module: product
-#: field:product.packaging,rows:0
-msgid "Number of Layers"
-msgstr ""
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Notes"
+msgstr "노트"
 
 #. module: product
-#: selection:product.template,state:0
-msgid "Obsolete"
-msgstr "구형"
-
-#. module: product
-#: model:product.template,description_sale:product.product_product_42_product_template
-msgid ""
-"Office Editing Software with word processing, spreadsheets, presentations, "
-"graphics, and databases..."
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_42_product_template
-msgid "Office Suite"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_2_product_template
-msgid "On Site Assistance"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_1_product_template
-msgid "On Site Monitoring"
-msgstr ""
-
-#. module: product
-#: model:product.template,description:product.product_product_19_product_template
-msgid "On demand hard-disk having capacity based on requirement."
-msgstr ""
-
-#. module: product
-#: field:product.template,is_product_variant:0
-msgid "Only one product variant"
-msgstr ""
-
-#. module: product
-#: view:product.packaging:product.product_packaging_form_view
-#: view:product.packaging:product.product_packaging_form_view_without_product
-msgid "Other Info"
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "Other Information"
 msgstr "기타 정보"
 
 #. module: product
-#: code:addons/product/pricelist.py:391
-#: field:product.pricelist.item,base_pricelist_id:0
-#, python-format
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_base_pricelist_id
+#: selection:product.pricelist.item,base:0
 msgid "Other Pricelist"
 msgstr "다른 가격리스트"
 
 #. module: product
-#: model:product.category,name:product.product_category_3
-msgid "Other Products"
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid "Over 375,000 apps."
 msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_5_product_template
-msgid "PC Assemble + Custom (PC on Demand) "
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_3_product_template
-msgid "PC Assemble SC234"
-msgstr ""
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Pack"
-msgstr "팩"
-
-#. module: product
-#: field:product.packaging,ul:0
-msgid "Package Logistic Unit"
-msgstr ""
-
-#. module: product
-#: field:product.packaging,ul_qty:0
-msgid "Package by layer"
-msgstr "층 별 패키지"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
-#: view:product.packaging:product.product_packaging_form_view
-#: view:product.packaging:product.product_packaging_form_view_without_product
-#: view:product.packaging:product.product_packaging_tree_view
-#: view:product.packaging:product.product_packaging_tree_view_product
-#: view:product.template:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_packaging_form_view
+#: model:ir.ui.view,arch_db:product.product_packaging_tree_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Packaging"
 msgstr "포장"
 
 #. module: product
-#: selection:product.ul,type:0
-msgid "Pallet"
+#: model:ir.model.fields,field_description:product.field_product_packaging_name
+msgid "Packaging Type"
 msgstr ""
 
 #. module: product
-#: field:product.packaging,ul_container:0
-msgid "Pallet Logistic Unit"
+#: model:ir.actions.act_window,name:product.action_packaging_view
+msgid "Packagings"
 msgstr ""
 
 #. module: product
-#: view:product.packaging:product.product_packaging_form_view
-#: view:product.packaging:product.product_packaging_form_view_without_product
-msgid "Palletization"
-msgstr ""
-
-#. module: product
-#: field:product.category,parent_id:0
+#: model:ir.model.fields,field_description:product.field_product_category_parent_id
 msgid "Parent Category"
-msgstr "페어런트 카테고리"
+msgstr "상위 분류"
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -1635,583 +1724,627 @@ msgid "Partner"
 msgstr "파트너"
 
 #. module: product
-#: field:pricelist.partnerinfo,suppinfo_id:0
-msgid "Partner Information"
-msgstr "파트너 정보"
-
-#. module: product
 #: model:product.public.category,name:product.Pen_Drive
 msgid "Pen Drive"
+msgstr "펜 드라이브"
+
+#. module: product
+#: selection:product.pricelist.item,compute_price:0
+msgid "Percentage (discount)"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_29_product_template
-msgid "Pen drive, SP-2"
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
+msgid "Percentage Price"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_30_product_template
-msgid "Pen drive, SP-4"
+#: model:product.category,name:product.product_category_5
+msgid "Physical"
 msgstr ""
 
 #. module: product
-#: field:product.product,price:0
-#: field:product.template,price:0
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid "Playlists. The perfect mix for every mood."
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "Plays where you play"
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid ""
+"Powered by fourth-generation Intel Core processors, this iMac is the fastest "
+"yet. Every model in the lineup comes standard with a quad-core Intel Core i5 "
+"processor, starting at 2.7GHz and topping out at 3.4GHz."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.service_order_01
+#: model:product.template,name:product.service_order_01_product_template
+msgid "Prepaid Consulting"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price
+#: model:ir.model.fields,field_description:product.field_product_product_price
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_price
+#: model:ir.model.fields,field_description:product.field_product_template_price
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Price"
-msgstr ""
+msgstr "가격"
 
 #. module: product
-#: view:product.pricelist.item:product.product_pricelist_item_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Price Computation"
 msgstr "가격 계산"
 
 #. module: product
-#: field:product.pricelist.item,price_discount:0
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_discount
 msgid "Price Discount"
 msgstr "가격 할인"
 
 #. module: product
-#: field:product.attribute.price,price_extra:0
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_price_extra
 msgid "Price Extra"
-msgstr ""
+msgstr "추가 가격"
 
 #. module: product
-#: help:product.attribute.value,price_extra:0
+#: model:ir.model.fields,help:product.field_product_attribute_value_price_extra
 msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
 msgstr ""
+"추가 가격: 이 속성을 갖는 파생 상품에 추가되는 가격 차액. 예. 추가 가격이 200"
+"인 경우, 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
 #: model:ir.model,name:product.model_product_price_list
-#: view:product.price_list:product.view_product_price_list
-#: field:product.pricelist.version,pricelist_id:0
-#: view:website:product.report_pricelist
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model:ir.ui.view,arch_db:product.report_pricelist
+#: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Price List"
-msgstr "가격 리스트"
+msgstr "가격표"
 
 #. module: product
-#: field:product.pricelist.version,items_id:0
-msgid "Price List Items"
-msgstr "가격 리스트 아이템"
-
-#. module: product
-#: view:website:product.report_pricelist
-msgid "Price List Name"
-msgstr ""
-
-#. module: product
-#: field:product.pricelist.item,price_version_id:0
-msgid "Price List Version"
-msgstr "가격 리스트 버전"
-
-#. module: product
-#: field:product.price.type,name:0
-msgid "Price Name"
-msgstr "가격 이름"
-
-#. module: product
-#: field:product.pricelist.item,price_round:0
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_round
 msgid "Price Rounding"
 msgstr "가격 반올림"
 
 #. module: product
-#: field:product.pricelist.item,price_surcharge:0
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_surcharge
 msgid "Price Surcharge"
 msgstr "가격 할증"
 
 #. module: product
-#: model:ir.model,name:product.model_product_price_type
-msgid "Price Type"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_price_type_action
-#: model:ir.ui.menu,name:product.menu_product_price_type
-msgid "Price Types"
-msgstr ""
-
-#. module: product
-#: view:product.product:product.product_kanban_view
-#: view:product.template:product.product_template_kanban_view
+#: model:ir.ui.view,arch_db:product.product_kanban_view
+#: model:ir.ui.view,arch_db:product.product_template_kanban_view
 msgid "Price:"
-msgstr ""
+msgstr "가격 :"
 
 #. module: product
-#: field:product.price_list,price_list:0
+#: model:ir.model.fields,field_description:product.field_product_price_list_price_list
 msgid "PriceList"
-msgstr "가격리스트"
+msgstr "가격표"
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.action_report_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: view:product.supplierinfo:product.product_supplierinfo_form_view
-#: field:product.template,pricelist_id:0
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_pricelist_id
+#: model:ir.model.fields,field_description:product.field_product_product_pricelist_id
+#: model:ir.model.fields,field_description:product.field_product_template_pricelist_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist"
-msgstr "가격리스트"
+msgstr "가격표"
 
 #. module: product
-#: field:product.pricelist,name:0
+#: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
+msgid "Pricelist Item applicable on selected option"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
+#: model:ir.model.fields,field_description:product.field_product_product_item_ids
+#: model:ir.model.fields,field_description:product.field_product_template_item_ids
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Pricelist Items"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_name
 msgid "Pricelist Name"
-msgstr "가격리스트 이름"
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_type
-#: field:product.pricelist,type:0
-msgid "Pricelist Type"
-msgstr "가격리스트 유형"
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_version
-#: view:product.pricelist:product.product_pricelist_view
-#: view:product.pricelist.version:product.product_pricelist_version_form_view
-#: view:product.pricelist.version:product.product_pricelist_version_tree_view
-msgid "Pricelist Version"
-msgstr "가격리스트 버전"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_pricelist_action
-#: model:ir.ui.menu,name:product.menu_product_pricelist_action
-#: field:product.pricelist,version_id:0
-msgid "Pricelist Versions"
-msgstr "가격리스트 버전"
+msgstr "가격표 이름"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
 msgid "Pricelist item"
-msgstr "가격리스트 아이템"
+msgstr "가격표 항목"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
-#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action2
 #: model:ir.ui.menu,name:product.menu_product_pricelist_main
 msgid "Pricelists"
-msgstr "가격리스트"
+msgstr "가격표"
 
 #. module: product
-#: view:res.partner:product.view_partner_property_form
+#: model:res.groups,name:product.group_product_pricelist
+msgid "Pricelists On Product"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "Pricelists are managed on"
+msgstr "가격표 관리"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Pricing"
 msgstr ""
 
 #. module: product
-#: view:product.price_list:product.view_product_price_list
+#: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Print"
-msgstr "프린트"
-
-#. module: product
-#: view:website:product.report_pricelist
-msgid "Print date"
-msgstr ""
+msgstr "인쇄"
 
 #. module: product
 #: model:product.public.category,name:product.printer
 msgid "Printer"
-msgstr ""
+msgstr "프린터"
 
 #. module: product
-#: model:product.template,name:product.product_product_37_product_template
-msgid "Printer, All-in-one"
-msgstr ""
-
-#. module: product
-#: model:product.public.category,name:product.processor
-msgid "Processor"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_23_product_template
-msgid "Processor AMD 8-Core"
-msgstr ""
-
-#. module: product
+#: model:product.product,name:product.product_product_22
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Processor Core i5 2.70 Ghz"
-msgstr ""
+msgstr "프로세서 코어 i5 2.70 Ghz"
 
 #. module: product
-#: view:product.template:product.product_template_form_view
-msgid "Procurements"
-msgstr ""
-
-#. module: product
+#: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.model,name:product.model_product_product
-#: field:product.packaging,product_tmpl_id:0
-#: field:product.pricelist.item,product_id:0
-#: view:product.product:product.product_search_form_view
-#: view:product.template:product.product_template_form_view
-#: view:product.template:product.product_template_search_view
-#: view:product.template:product.product_template_tree_view
+#: model:ir.model.fields,field_description:product.field_product_packaging_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_price_history_product_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_product_id
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+#: model:ir.ui.view,arch_db:product.product_template_tree_view
+#: selection:product.pricelist.item,applied_on:0
 #: model:res.request.link,name:product.req_link_product
 msgid "Product"
-msgstr "상품"
+msgstr "제품"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute
 msgid "Product Attribute"
-msgstr ""
+msgstr "상품 속성"
 
 #. module: product
-#: field:product.attribute.line,value_ids:0
-#: field:product.attribute.price,value_id:0
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_value_id
 msgid "Product Attribute Value"
-msgstr ""
+msgstr "상품 속성 값"
 
 #. module: product
-#: field:product.template,attribute_line_ids:0
+#: model:ir.model.fields,field_description:product.field_product_product_attribute_line_ids
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line_ids
 msgid "Product Attributes"
-msgstr ""
+msgstr "상품 속성"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
 #: model:ir.ui.menu,name:product.menu_product_category_action_form
-#: view:product.category:product.product_category_form_view
-#: view:product.category:product.product_category_list_view
-#: view:product.category:product.product_category_search_view
-#: view:product.category:product.product_category_tree_view
+#: model:ir.ui.view,arch_db:product.product_category_list_view
+#: model:ir.ui.view,arch_db:product.product_category_search_view
 msgid "Product Categories"
-msgstr "상품 카테고리"
-
-#. module: product
-#: model:ir.ui.menu,name:product.prod_config_main
-msgid "Product Categories & Attributes"
-msgstr ""
+msgstr "제품 범주"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
-#: field:product.pricelist.item,categ_id:0
-#: field:product.uom,category_id:0
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_categ_id
 msgid "Product Category"
-msgstr "상품 카테고리"
+msgstr "제품 범주"
 
 #. module: product
-#: field:product.price.type,field:0
-msgid "Product Field"
-msgstr "상품 필드"
-
-#. module: product
-#: field:product.template,product_manager:0
+#: model:ir.model.fields,field_description:product.field_product_product_product_manager
+#: model:ir.model.fields,field_description:product.field_product_template_product_manager
 msgid "Product Manager"
-msgstr "상품 매니저"
+msgstr "상품 관리자"
 
 #. module: product
-#: view:product.template:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Name"
-msgstr ""
+msgstr "제품 이름"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
-#: field:product.attribute.line,product_tmpl_id:0
-#: field:product.attribute.price,product_tmpl_id:0
-#: field:product.price.history,product_template_id:0
-#: field:product.pricelist.item,product_tmpl_id:0
-#: view:product.product:product.product_search_form_view
-#: field:product.product,product_tmpl_id:0
-#: field:product.supplierinfo,product_tmpl_id:0
-#: view:product.template:product.product_template_only_form_view
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_product_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_tmpl_id
+#: model:ir.ui.view,arch_db:product.product_search_form_view
 msgid "Product Template"
-msgstr "상품 템플릿"
+msgstr "제품 양식"
 
 #. module: product
-#: field:product.template,type:0
+#: model:ir.model.fields,field_description:product.field_product_product_type
+#: model:ir.model.fields,field_description:product.field_product_template_type
 msgid "Product Type"
 msgstr "상품 유형"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
-msgstr "상품 UoM"
+msgstr "제품 측정 단위"
 
 #. module: product
-#: view:product.product:product.product_normal_form_view
-#: view:product.template:product.product_template_search_view
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: selection:product.pricelist.item,applied_on:0
 msgid "Product Variant"
-msgstr "상품 편차"
+msgstr "파생 상품"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
-#: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.actions.act_window,name:product.product_variant_action
 #: model:ir.ui.menu,name:product.menu_products
-#: view:product.product:product.product_product_tree_view
+#: model:ir.ui.view,arch_db:product.product_product_tree_view
 msgid "Product Variants"
-msgstr ""
+msgstr "파생 제품"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product uom categ"
-msgstr "상품 UoM 카테고리"
+msgstr "상품 UoM 분류"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action
+#: model:ir.actions.act_window,name:product.product_template_action_product
+#: model:ir.model.fields,field_description:product.field_product_product_product_variant_ids
+#: model:ir.model.fields,field_description:product.field_product_template_product_variant_ids
 #: model:ir.ui.menu,name:product.menu_product_template_action
-#: field:product.template,product_variant_ids:0
+#: model:ir.ui.menu,name:product.prod_config_main
+#: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Products"
-msgstr "상품"
+msgstr "제품"
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
 msgid "Products Labels"
-msgstr "상품 라벨"
+msgstr "상품 이름표"
 
 #. module: product
-#: view:product.pricelist.item:product.product_pricelist_item_form_view
-#: view:product.pricelist.item:product.product_pricelist_item_tree_view
-msgid "Products Listprices Items"
-msgstr "상품 가격리스트 아이템"
-
-#. module: product
-#: view:product.pricelist:product.product_pricelist_view_search
+#: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price"
-msgstr ""
+msgstr "상품 가격"
 
 #. module: product
-#: view:product.pricelist:product.product_pricelist_view
-#: view:product.pricelist:product.product_pricelist_view_tree
+#: model:ir.ui.view,arch_db:product.product_pricelist_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_view_tree
 msgid "Products Price List"
-msgstr "상품 가격 리스트"
+msgstr "상품 가격표"
 
 #. module: product
-#: view:product.pricelist:product.product_pricelist_view_search
+#: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price Search"
+msgstr "상품 가격 검색"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: view:product.price.type:product.product_price_type_view
-msgid "Products Price Type"
-msgstr "상품 가격 유형"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_category_action
-#: model:ir.ui.menu,name:product.menu_products_category
-msgid "Products by Category"
-msgstr "카테고리 별 상품"
-
-#. module: product
-#: code:addons/product/product.py:809
+#: code:addons/product/product.py:824
 #, python-format
 msgid "Products: "
-msgstr "상품 "
+msgstr "제품 : "
 
 #. module: product
-#: model:product.price.type,name:product.list_price
-#: field:product.product,lst_price:0
-#: field:product.template,lst_price:0
+#: model:ir.model.fields,field_description:product.field_product_template_lst_price
+#: selection:product.pricelist.item,base:0
 msgid "Public Price"
-msgstr "공용 가격"
+msgstr "공개 가격"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
-msgstr "공용 가격리스트"
+msgstr "공개 가격표"
 
 #. module: product
-#: view:product.template:product.product_template_form_view
-msgid "Purchase"
-msgstr ""
-
-#. module: product
-#: field:product.template,description_purchase:0
+#: model:ir.model.fields,field_description:product.field_product_product_description_purchase
+#: model:ir.model.fields,field_description:product.field_product_template_description_purchase
 msgid "Purchase Description"
 msgstr "구매 설명"
 
 #. module: product
-#: model:res.groups,name:product.group_purchase_pricelist
-msgid "Purchase Pricelists"
-msgstr ""
-
-#. module: product
-#: field:product.template,uom_po_id:0
+#: model:ir.model.fields,field_description:product.field_product_product_uom_po_id
+#: model:ir.model.fields,field_description:product.field_product_template_uom_po_id
 msgid "Purchase Unit of Measure"
-msgstr ""
+msgstr "구매 측정 단위"
 
 #. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-#: field:product.supplierinfo,qty:0
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_qty
 msgid "Quantity"
 msgstr "수량"
 
 #. module: product
-#: field:product.packaging,qty:0
+#: model:ir.model.fields,field_description:product.field_product_packaging_qty
 msgid "Quantity by Package"
-msgstr "패키지 별 수량"
+msgstr "패키지별 수량"
 
 #. module: product
-#: field:product.price_list,qty1:0
+#: model:ir.model.fields,field_description:product.field_product_price_list_qty1
 msgid "Quantity-1"
 msgstr "수량-1"
 
 #. module: product
-#: field:product.price_list,qty2:0
+#: model:ir.model.fields,field_description:product.field_product_price_list_qty2
 msgid "Quantity-2"
 msgstr "수량-2"
 
 #. module: product
-#: field:product.price_list,qty3:0
+#: model:ir.model.fields,field_description:product.field_product_price_list_qty3
 msgid "Quantity-3"
 msgstr "수량-3"
 
 #. module: product
-#: field:product.price_list,qty4:0
+#: model:ir.model.fields,field_description:product.field_product_price_list_qty4
 msgid "Quantity-4"
 msgstr "수량-4"
 
 #. module: product
-#: field:product.price_list,qty5:0
+#: model:ir.model.fields,field_description:product.field_product_price_list_qty5
 msgid "Quantity-5"
 msgstr "수량-5"
 
 #. module: product
-#: model:product.template,name:product.product_product_14_product_template
-msgid "RAM SR2"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_15_product_template
-msgid "RAM SR3"
-msgstr ""
-
-#. module: product
+#: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "RAM SR5"
-msgstr ""
+msgstr "램 SR5"
 
 #. module: product
-#: field:product.uom,factor:0
+#: model:ir.model.fields,field_description:product.field_product_uom_factor
 msgid "Ratio"
-msgstr ""
-
-#. module: product
-#: model:product.category,name:product.product_category_10
-msgid "Raw Materials"
-msgstr ""
+msgstr "비율"
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference Unit of Measure for this category"
+msgstr "이 분류의 기준 측정 단위"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "Remote control for power, volume, track seek"
 msgstr ""
 
 #. module: product
-#: field:product.category,parent_right:0
+#: model:ir.model.fields,field_description:product.field_product_category_parent_right
 msgid "Right Parent"
+msgstr "우측 상위"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid ""
+"Right from the start, apps made for iPad also work with iPad mini.\n"
+"                                    They’re immersive, full-screen apps that "
+"let you do almost anything\n"
+"                                    you can imagine. And with automatic "
+"updates,\n"
+"                                    you're always getting the best "
+"experience possible."
 msgstr ""
 
 #. module: product
-#: view:product.pricelist.item:product.product_pricelist_item_form_view
+#: model:product.product,website_description:product.product_product_4
+#: model:product.product,website_description:product.product_product_4b
+#: model:product.product,website_description:product.product_product_4c
+#: model:product.product,website_description:product.product_product_4d
+#: model:product.template,website_description:product.product_product_4_product_template
+#: model:product.template,website_description:product.product_product_4b_product_template
+#: model:product.template,website_description:product.product_product_4c_product_template
+#: model:product.template,website_description:product.product_product_4d_product_template
+msgid ""
+"Right from the start, there’s a lot to love about\n"
+"                                    iPad. It’s simple yet powerful. Thin and "
+"light yet\n"
+"                                    full-featured. It can do just about "
+"everything and\n"
+"                                    be just about anything."
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid ""
+"Right from the start, there’s a lot to love about iPad.\n"
+"                                   It’s simple yet powerful. Thin and light "
+"yet full-\n"
+"                                   featured. It can do just about everything "
+"and be just\n"
+"                                   about anything.And because it’s so easy "
+"to use, it’s\n"
+"                                   easy to love."
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Rounding Method"
 msgstr "반올림 방식"
 
 #. module: product
-#: field:product.uom,rounding:0
+#: model:ir.model.fields,field_description:product.field_product_uom_rounding
 msgid "Rounding Precision"
 msgstr "반올림 정밀도"
 
 #. module: product
-#: model:product.template,name:product.product_product_45_product_template
-msgid "Router R430"
-msgstr ""
-
-#. module: product
-#: field:product.pricelist.item,name:0
-msgid "Rule Name"
-msgstr "규칙 이름"
-
-#. module: product
-#: view:product.template:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sale Conditions"
-msgstr ""
+msgstr "판매 조건"
 
 #. module: product
-#: field:product.template,description_sale:0
+#: model:ir.model.fields,field_description:product.field_product_product_description_sale
+#: model:ir.model.fields,field_description:product.field_product_template_description_sale
 msgid "Sale Description"
 msgstr "판매 설명"
 
 #. module: product
-#: field:product.template,list_price:0
+#: model:ir.model.fields,field_description:product.field_product_product_list_price
+#: model:ir.model.fields,field_description:product.field_product_product_lst_price
+#: model:ir.model.fields,field_description:product.field_product_template_list_price
 msgid "Sale Price"
 msgstr "판매 가격"
 
 #. module: product
-#: model:product.pricelist.type,name:product.pricelist_type_sale
-#: field:res.partner,property_product_pricelist:0
+#: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
 msgid "Sale Pricelist"
-msgstr "판매 가격리스트"
+msgstr "판매 가격표"
 
 #. module: product
 #: model:product.category,name:product.product_category_1
 msgid "Saleable"
-msgstr ""
+msgstr "판매가능"
 
 #. module: product
-#: view:product.template:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sales"
-msgstr ""
-
-#. module: product
-#: view:res.partner:product.view_partner_property_form
-msgid "Sales & Purchases"
-msgstr "판매 & 구매"
+msgstr "매출"
 
 #. module: product
 #: model:res.groups,name:product.group_sale_pricelist
 msgid "Sales Pricelists"
+msgstr "판매 가격표"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid ""
+"Say you’re listening to a song you love and you want to stay in the mood.\n"
+"                                        Just tap Genius. It finds other "
+"songs on iPod nano that go great together\n"
+"                                        and makes a Genius playlist for you. "
+"For more song combinations\n"
+"                                        you wouldn’t have thought of "
+"yourself, create Genius Mixes in iTunes\n"
+"                                        and sync the ones you like to iPod "
+"nano. Then tap Genius Mixes and\n"
+"                                        rediscover songs you haven’t heard "
+"in a while — or find music you forgot you even had."
 msgstr ""
 
 #. module: product
 #: model:product.public.category,name:product.Screen
 msgid "Screen"
-msgstr ""
+msgstr "화면"
 
 #. module: product
-#: help:product.template,categ_id:0
+#: model:ir.model.fields,help:product.field_product_product_categ_id
+#: model:ir.model.fields,help:product.field_product_template_categ_id
 msgid "Select category for the current product"
-msgstr ""
+msgstr "현재 상품의 분류를 선택하십시오."
 
 #. module: product
-#: field:product.attribute.value,sequence:0
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-#: field:product.supplierinfo,sequence:0
+#: model:ir.model.fields,field_description:product.field_product_attribute_sequence
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_sequence
+#: model:ir.model.fields,field_description:product.field_product_category_sequence
+#: model:ir.model.fields,field_description:product.field_product_packaging_sequence
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_sequence
+#: model:ir.model.fields,field_description:product.field_product_product_sequence
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_sequence
+#: model:ir.model.fields,field_description:product.field_product_template_sequence
 msgid "Sequence"
-msgstr "시퀀스"
+msgstr "순서"
 
 #. module: product
+#: model:product.product,name:product.consu_delivery_01
 #: model:product.public.category,name:product.server
+#: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Server"
+msgstr "서버"
+
+#. module: product
+#: code:addons/product/product.py:474
+#, python-format
+msgid "Service"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_consultant_product_template
-#: selection:product.template,type:0
-msgid "Service"
-msgstr "서비스"
-
-#. module: product
-#: model:product.category,name:product.product_category_5
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+#: model:product.category,name:product.product_category_3
 #: model:product.public.category,name:product.services
-#: view:product.template:product.product_template_search_view
 msgid "Services"
-msgstr "서비스"
+msgstr "차량 관리"
 
 #. module: product
-#: help:product.pricelist.item,price_round:0
+#: model:ir.model.fields,help:product.field_product_pricelist_item_price_round
 msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
+"이 값의 배수가 되도록 가격을 설정합니다.\n"
+"반올림은 요금 추가 전과 할인 후에 적용됩니다.\n"
+"즉 9.99로 끝나는 가격이 있을 경우, 반올림하면 10, "
 
 #. module: product
-#: field:product.product,image_small:0
-#: field:product.template,image_small:0
-msgid "Small-sized image"
+#: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
+msgid "Share product to all companies"
 msgstr ""
 
 #. module: product
-#: help:product.template,image_small:0
+#: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
+msgid ""
+"Share your product to all companies defined in your instance.\n"
+" * Checked : Product are visible for every company, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its product (product where company "
+"is defined). Product not related to a company are visible for all companies."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.membership_1
+#: model:product.template,name:product.membership_1_product_template
+msgid "Silver Membership"
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "Sleek, compact design"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_image_small
+#: model:ir.model.fields,field_description:product.field_product_template_image_small
+msgid "Small-sized image"
+msgstr "작은 크기의 사진"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_template_image_small
 msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
@@ -2221,176 +2354,185 @@ msgstr ""
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference Unit of Measure"
+msgstr "기준 측정 단위보다 작음"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid ""
+"Soft covers are available separately in blue, green or orange. Pick a color "
+"to match your style."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_9
+#: model:product.category,name:product.product_category_4
 #: model:product.public.category,name:product.Software
 msgid "Software"
-msgstr ""
+msgstr "소프트웨어"
 
 #. module: product
 #: model:product.public.category,name:product.Speakers
 msgid "Speakers"
-msgstr ""
+msgstr "스피커"
 
 #. module: product
-#: help:product.pricelist.item,categ_id:0
+#: model:ir.model.fields,help:product.field_product_pricelist_item_categ_id
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
 
 #. module: product
-#: help:product.pricelist.item,product_id:0
+#: model:ir.model.fields,help:product.field_product_pricelist_item_product_id
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
 
 #. module: product
-#: help:product.pricelist.item,product_tmpl_id:0
+#: model:ir.model.fields,help:product.field_product_pricelist_item_product_tmpl_id
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr ""
 
 #. module: product
-#: help:product.template,uos_id:0
-msgid ""
-"Specify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-
-#. module: product
-#: help:product.template,sale_ok:0
+#: model:ir.model.fields,help:product.field_product_product_sale_ok
+#: model:ir.model.fields,help:product.field_product_template_sale_ok
 msgid "Specify if the product can be selected in a sales order line."
 msgstr ""
 
 #. module: product
-#: help:product.pricelist.item,price_surcharge:0
+#: model:ir.model.fields,help:product.field_product_pricelist_item_price_surcharge
 msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
 
 #. module: product
-#: help:product.pricelist.item,price_max_margin:0
+#: model:ir.model.fields,help:product.field_product_pricelist_item_price_max_margin
 msgid "Specify the maximum amount of margin over the base price."
 msgstr ""
 
 #. module: product
-#: help:product.pricelist.item,price_min_margin:0
+#: model:ir.model.fields,help:product.field_product_pricelist_item_price_min_margin
 msgid "Specify the minimum amount of margin over the base price."
 msgstr ""
 
 #. module: product
-#: field:product.pricelist.version,date_start:0
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_start
 msgid "Start Date"
-msgstr "시작 날짜"
+msgstr "시작일"
 
 #. module: product
-#: view:product.template:product.product_template_form_view
-#: field:product.template,state:0
-msgid "Status"
-msgstr "상태"
-
-#. module: product
-#: selection:product.template,type:0
-msgid "Stockable Product"
-msgstr "스톡가능한 상품"
-
-#. module: product
-#: field:product.product,message_summary:0
-#: field:product.template,message_summary:0
-msgid "Summary"
+#: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
+msgid "Start date for this vendor price"
 msgstr ""
 
 #. module: product
-#: field:product.supplierinfo,name:0
-#: field:product.template,seller_ids:0
-msgid "Supplier"
+#: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
+msgid "Starting date for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: view:product.supplierinfo:product.product_supplierinfo_form_view
-#: view:product.supplierinfo:product.product_supplierinfo_tree_view
-msgid "Supplier Information"
-msgstr "공급자 정보"
-
-#. module: product
-#: field:product.template,seller_delay:0
-msgid "Supplier Lead Time"
-msgstr "공급자 리드타임"
-
-#. module: product
-#: field:product.supplierinfo,pricelist_ids:0
+#: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Supplier Pricelist"
 msgstr "공급자 가격리스트"
 
 #. module: product
-#: code:addons/product/pricelist.py:392
-#, python-format
-msgid "Supplier Prices on the product form"
+#: model:product.product,name:product.product_product_2
+#: model:product.template,name:product.product_product_2_product_template
+msgid "Support Contract (on timesheet)"
 msgstr ""
 
 #. module: product
-#: field:product.supplierinfo,product_code:0
-msgid "Supplier Product Code"
-msgstr ""
-
-#. module: product
-#: field:product.supplierinfo,product_name:0
-msgid "Supplier Product Name"
-msgstr ""
-
-#. module: product
-#: field:product.template,seller_qty:0
-msgid "Supplier Quantity"
-msgstr ""
-
-#. module: product
-#: field:product.supplierinfo,product_uom:0
-msgid "Supplier Unit of Measure"
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,name:0
-msgid "Supplier of this product"
-msgstr "이 상품의 공급자"
-
-#. module: product
-#: view:product.template:product.product_template_form_view
-msgid "Suppliers"
-msgstr ""
-
-#. module: product
-#: model:product.public.category,name:product.Switch
-msgid "Switch"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_47_product_template
+#: model:product.product,name:product.product_delivery_01
+#: model:product.template,name:product.product_delivery_01_product_template
 msgid "Switch, 24 ports"
+msgstr "스위치, 24 포트"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid "Sync to your heart’s content."
 msgstr ""
 
 #. module: product
-#: field:product.product,name_template:0
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid ""
+"Tap to play your favorite songs. Or entire albums.\n"
+"                                    Or everything by one artist. You can "
+"even browse by genres or composers.\n"
+"                                    Flip through your music: Album art looks "
+"great on the bigger screen.\n"
+"                                    Or to keep things fresh, give iPod nano "
+"a shake and it shuffles to a different song in your music library."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_name_template
 msgid "Template Name"
+msgstr "서식 이름"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_7
+#: model:product.template,website_description:product.product_product_7_product_template
+msgid ""
+"The Apple In-Ear Headphones deliver a truly immersive sound experience by "
+"drastically\n"
+"                                    reducing unwanted outside noises. The "
+"soft, silicone ear tips fit snugly and comfortably\n"
+"                                    in your ear, creating a seal that "
+"isolates your music from your surroundings.\n"
+"                                    Three different sizes of ear tips are "
+"included so you can find a perfect fit for each ear.\n"
+"                                    Also included are a convenient carrying "
+"case for the ear tips and a cable-control case\n"
+"                                    for the headphones themselves."
 msgstr ""
 
 #. module: product
-#: help:product.packaging,ean:0
-msgid "The EAN code of the package unit."
-msgstr "패키지 유닛의 EAN 코드"
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid ""
+"The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its "
+"ultra-compact size fits in the \n"
+"                                    palm of your hand, yet gives you full, "
+"natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
+"                                    full-featured. It can do just about "
+"everything and\n"
+"                                    experience music just about anywhere."
+msgstr ""
 
 #. module: product
-#: help:product.packaging,code:0
-msgid "The code of the transport unit."
-msgstr "운송 단위 코드"
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid ""
+"The SoundLink® Mini speaker is small and light enough\n"
+"                                        to tuck into your bag. It weighs in "
+"at just 1.5 pounds.\n"
+"                                        Its low profile lets you place it "
+"almost anywhere and\n"
+"                                        provides a low center of gravity "
+"that makes it nearly\n"
+"                                        impossible to tip over."
+msgstr ""
 
 #. module: product
-#: help:product.uom,rounding:0
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid ""
+"The computed price is expressed in the default Unit of Measure of the "
+"product."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_uom_rounding
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
@@ -2402,72 +2544,93 @@ msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr ""
 
 #. module: product
-#: help:product.price.type,currency_id:0
-msgid "The currency the field is expressed in."
-msgstr "이 필드에 적용되는 통화"
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid "The desktop. In its most advanced form ever"
+msgstr ""
 
 #. module: product
-#: help:product.template,weight:0
-msgid "The gross weight in Kg."
-msgstr "총중량 (kg)"
+#: model:ir.model.fields,help:product.field_product_packaging_sequence
+msgid "The first in the sequence is the default one."
+msgstr ""
 
 #. module: product
-#: help:product.ul,height:0
-msgid "The height of the package"
-msgstr "패키지의 높이"
+#: model:product.product,website_description:product.product_product_4
+#: model:product.product,website_description:product.product_product_4b
+#: model:product.product,website_description:product.product_product_4c
+#: model:product.product,website_description:product.product_product_4d
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_4_product_template
+#: model:product.template,website_description:product.product_product_4b_product_template
+#: model:product.template,website_description:product.product_product_4c_product_template
+#: model:product.template,website_description:product.product_product_4d_product_template
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid "The full iPad experience."
+msgstr ""
 
 #. module: product
-#: help:product.ul,length:0
-msgid "The length of the package"
-msgstr "패키지 길이"
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
+#: model:product.product,website_description:product.product_product_9
+#: model:product.template,website_description:product.product_product_9_product_template
 msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the supplier "
-"Product Unit of Measure if not empty, in the default unit of measure of the "
+"The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
+"                                    which makes it compatible with iPad. And "
+"you’re free to type wherever\n"
+"                                    you like — with the keyboard in front of "
+"your iPad or on your lap."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_min_qty
+msgid ""
+"The minimal quantity to purchase from this vendor, expressed in the vendor "
+"Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
 msgstr ""
 
 #. module: product
-#: help:pricelist.partnerinfo,min_quantity:0
-msgid ""
-"The minimal quantity to trigger this rule, expressed in the supplier Unit of "
-"Measure if any or in the default Unit of Measure of the product otherrwise."
-msgstr ""
-
-#. module: product
-#: help:product.template,weight_net:0
-msgid "The net weight in Kg."
-msgstr "순중량 (Kg)"
-
-#. module: product
-#: help:product.packaging,rows:0
-msgid "The number of layers on a pallet or box"
-msgstr ""
-
-#. module: product
-#: help:product.packaging,ul_qty:0
-msgid "The number of packages by layer"
-msgstr ""
-
-#. module: product
-#: code:addons/product/product.py:385
+#: code:addons/product/product.py:332
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
-"You trying to delete an attribute value with a reference on a product "
+"You are trying to delete an attribute value with a reference on a product "
 "variant."
 msgstr ""
 
 #. module: product
-#: view:product.supplierinfo:product.product_supplierinfo_form_view
-msgid ""
-"The prices below will only be taken into account when your pricelist is set "
-"as based on supplier prices."
+#: model:ir.model.fields,help:product.field_product_supplierinfo_price
+msgid "The price to purchase a product"
 msgstr ""
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
+#: model:ir.actions.act_window,help:product.product_variant_action
+msgid ""
+"The product form contains information to simplify the sale\n"
+"                process: price, notes in the quotation, accounting data,\n"
+"                procurement methods, etc."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_template_action
+msgid ""
+"The product form contains information to simplify the sale process: price, "
+"notes in the quotation, accounting data, procurement methods, etc."
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid ""
+"The rechargeable lithium-ion battery delivers up to seven hours of "
+"playtime.\n"
+"                                    And at home, you can listen even longer—"
+"the charging cradle lets\n"
+"                                    you listen while it charges."
+msgstr ""
+
+#. module: product
+#: model:product.product,description_sale:product.product_product_9
 #: model:product.template,description_sale:product.product_product_9_product_template
 msgid ""
 "The sleek aluminium Apple Wireless Keyboard.\n"
@@ -2475,458 +2638,617 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: help:product.packaging,qty:0
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid ""
+"The speaker has a range of about 30 feet, so you can enjoy\n"
+"                                    the sound you want without wires. It "
+"pairs easily with your\n"
+"                                    smartphone, iPad® or other Bluetooth "
+"device.\n"
+"                                    And it remembers the most recent six "
+"devices you've used,\n"
+"                                    so reconnecting is even simpler."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_packaging_qty
 msgid "The total number of products you can put by pallet or box."
 msgstr ""
 
 #. module: product
-#: help:product.template,volume:0
+#: model:ir.model.fields,help:product.field_product_product_volume
+#: model:ir.model.fields,help:product.field_product_template_volume
 msgid "The volume in m3."
 msgstr "m3에 있는 체적"
 
 #. module: product
-#: help:product.packaging,weight:0
-msgid "The weight of a full package, pallet or box."
+#: model:ir.model.fields,help:product.field_product_product_weight
+#: model:ir.model.fields,help:product.field_product_template_weight
+msgid "The weight of the contents in Kg, not including any packaging, etc."
 msgstr ""
 
 #. module: product
-#: help:product.ul,width:0
-msgid "The width of the package"
-msgstr "패키지 폭"
+#: model:product.product,website_description:product.product_product_4
+#: model:product.product,website_description:product.product_product_4b
+#: model:product.product,website_description:product.product_product_4c
+#: model:product.product,website_description:product.product_product_4d
+#: model:product.template,website_description:product.product_product_4_product_template
+#: model:product.template,website_description:product.product_product_4b_product_template
+#: model:product.template,website_description:product.product_product_4c_product_template
+#: model:product.template,website_description:product.product_product_4d_product_template
+msgid "There is less of it, but no less to it."
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid "There's less of it, but no less to it."
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid ""
+"There’s another way to get a good mix of music on iPod: Let Genius do the "
+"work.\n"
+"                                        Activate Genius in iTunes on your "
+"computer, and it automatically finds songs that sound\n"
+"                                        great together. Then it creates "
+"Genius Mixes, which you can easily sync to your iPod.\n"
+"                                        It’s the perfect way to rediscover "
+"songs you haven’t listened to in forever."
+msgstr ""
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
 msgid "This attribute value already exists !"
-msgstr ""
+msgstr "이 속성 값은 이미 존재합니다!"
 
 #. module: product
-#: help:product.supplierinfo,product_uom:0
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_uom
 msgid "This comes from the product form."
 msgstr ""
 
 #. module: product
-#: help:product.product,image_variant:0
+#: model:ir.model.fields,help:product.field_product_product_image_variant
 msgid ""
 "This field holds the image used as image for the product variant, limited to "
 "1024x1024px."
 msgstr ""
 
 #. module: product
-#: help:product.template,image:0
+#: model:ir.model.fields,help:product.field_product_template_image
 msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
 msgstr ""
 
 #. module: product
-#: help:product.supplierinfo,qty:0
+#: model:ir.model.fields,help:product.field_product_supplierinfo_qty
 msgid "This is a quantity which is converted into Default Unit of Measure."
 msgstr ""
 
 #. module: product
-#: help:product.product,price_extra:0
-msgid "This is le sum of the extra price of all attributes"
+#: model:ir.model.fields,help:product.field_product_product_price_extra
+msgid "This is the sum of the extra price of all attributes"
 msgstr ""
 
 #. module: product
-#: help:product.template,seller_qty:0
-msgid "This is minimum quantity to purchase from Main Supplier."
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "This note will be displayed on requests for quotation."
 msgstr ""
 
 #. module: product
-#: help:product.template,seller_delay:0
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the receipts for this product and for the default supplier. It is used "
-"by the scheduler to order requests based on reordering delays."
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "This note will be displayed on the quotations."
 msgstr ""
 
 #. module: product
-#: view:product.template:product.product_template_form_view
-msgid "This note will be displayed on requests for quotation..."
-msgstr ""
-
-#. module: product
-#: help:pricelist.partnerinfo,price:0
-msgid ""
-"This price will be considered as a price for the supplier Unit of Measure if "
-"any or the default Unit of Measure of the product otherwise"
-msgstr ""
-
-#. module: product
-#: help:res.partner,property_product_pricelist:0
+#: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
 
 #. module: product
-#: model:product.template,description:product.product_product_9_product_template
-msgid "This product is configured with example of push/pull flows"
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,product_code:0
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
 msgid ""
-"This supplier's product code will be used when printing a request for "
+"This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
 
 #. module: product
-#: help:product.supplierinfo,product_name:0
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_name
 msgid ""
-"This supplier's product name will be used when printing a request for "
+"This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
 
 #. module: product
-#: model:product.template,description:product.product_product_2_product_template
-msgid ""
-"This type of service include assistance for security questions, system "
-"configuration requirements, implementation or special needs."
+#: model:product.product,website_description:product.product_product_7
+#: model:product.template,website_description:product.product_product_7_product_template
+msgid "Two is better than one."
 msgstr ""
 
 #. module: product
-#: model:product.template,description:product.product_product_1_product_template
-#: model:product.template,description_sale:product.product_product_1_product_template
-msgid "This type of service include basic monitoring of products."
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_39_product_template
-msgid "Toner Cartridge"
-msgstr ""
-
-#. module: product
-#: field:product.packaging,weight:0
-msgid "Total Package Weight"
-msgstr "총 패키지 중량"
-
-#. module: product
-#: view:product.template:product.product_template_search_view
-#: field:product.ul,type:0
-#: field:product.uom,uom_type:0
+#: model:ir.model.fields,field_description:product.field_product_uom_uom_type
 msgid "Type"
 msgstr "유형"
 
 #. module: product
-#: model:product.template,name:product.product_product_48_product_template
-msgid "USB Adapter"
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid ""
+"USB port allows for software update to ensure ongoing Bluetooth device "
+"compatibility"
 msgstr ""
 
 #. module: product
-#: selection:product.ul,type:0
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid "Ultrafast wireless."
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_8
+#: model:product.template,website_description:product.product_product_8_product_template
+msgid "Ultrathin design"
+msgstr ""
+
+#. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
 msgstr "유닛"
 
 #. module: product
-#: field:pricelist.partnerinfo,price:0
-msgid "Unit Price"
-msgstr "유닛 가격"
-
-#. module: product
-#: view:product.template:product.product_template_form_view
-#: field:product.template,uom_id:0
-#: field:product.uom,name:0
+#: model:ir.model.fields,field_description:product.field_product_product_uom_id
+#: model:ir.model.fields,field_description:product.field_product_template_uom_id
+#: model:ir.model.fields,field_description:product.field_product_uom_name
 msgid "Unit of Measure"
-msgstr ""
-
-#. module: product
-#: field:product.template,uos_coeff:0
-msgid "Unit of Measure -> UOS Coeff"
-msgstr ""
+msgstr "측정 단위"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "측정 단위 분류"
 
 #. module: product
-#: code:addons/product/product.py:705
-#, python-format
-msgid "Unit of Measure categories Mismatch!"
+#: model:ir.model.fields,field_description:product.field_product_uom_category_id
+msgid "Unit of Measure Category"
 msgstr ""
-
-#. module: product
-#: field:product.template,uos_id:0
-msgid "Unit of Sale"
-msgstr "판매 단위"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr ""
+msgstr "단위"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_form_action
 #: model:ir.ui.menu,name:product.next_id_16
-#: view:product.uom:product.product_uom_form_view
-#: view:product.uom:product.product_uom_tree_view
+#: model:ir.ui.view,arch_db:product.product_uom_form_view
+#: model:ir.ui.view,arch_db:product.product_uom_tree_view
 msgid "Units of Measure"
 msgstr "측정 단위"
 
 #. module: product
-#: view:product.uom.categ:product.product_uom_categ_form_view
+#: model:ir.ui.view,arch_db:product.product_uom_categ_form_view
 msgid "Units of Measure categories"
 msgstr "UoM 카테고리"
 
 #. module: product
-#: field:product.product,message_unread:0
-#: field:product.template,message_unread:0
-msgid "Unread Messages"
-msgstr ""
-
-#. module: product
-#: help:product.pricelist.type,key:0
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
 msgid ""
-"Used in the code to select specific prices based on the context. Keep "
-"unchanged."
-msgstr "문맥에 기초하여 특정 가격을 선택하기 위한 코드에서 사용됩니다. 그대로 두십시오."
+"Units of measure belonging to the same category can be\n"
+"                converted between each others. For example, in the category\n"
+"                <i>'Time'</i>, you will have the following units of "
+"measure:\n"
+"                Hours, Days."
+msgstr ""
 
 #. module: product
-#: field:product.attribute.value,name:0
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "Universal iPod docking station fits most iPod/iPhone models"
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_7
+#: model:product.template,website_description:product.product_product_7_product_template
+msgid ""
+"Unlike many small headphones, each earpiece of the Apple In-Ear Headphones\n"
+"                                    contains two separate high-performance "
+"drivers — a woofer to handle bass and\n"
+"                                    mid-range sounds and a tweeter for high-"
+"frequency audio. These dedicated\n"
+"                                    drivers help ensure accurate, detailed "
+"sound across the entire sonic spectrum.\n"
+"                                    The result: you’re immersed in the music "
+"and hear details you never knew existed.\n"
+"                                    Even when listening to an old favorite, "
+"you may feel like you’re hearing it for the first time."
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "Validity"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_name
 msgid "Value"
-msgstr ""
+msgstr "값"
 
 #. module: product
-#: field:product.attribute,value_ids:0
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_ids
 msgid "Values"
-msgstr ""
+msgstr "값"
 
 #. module: product
-#: selection:product.template,mes_type:0
-msgid "Variable"
-msgstr "변수"
-
-#. module: product
-#: field:product.product,price_extra:0
+#: model:ir.model.fields,field_description:product.field_product_product_price_extra
 msgid "Variant Extra Price"
-msgstr ""
+msgstr "파생 추가 가격"
 
 #. module: product
-#: field:product.product,image_variant:0
+#: model:ir.model.fields,field_description:product.field_product_product_image_variant
 msgid "Variant Image"
+msgstr "파생 그림"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Variant Information"
 msgstr ""
 
 #. module: product
-#: view:product.template:product.product_template_only_form_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant Prices"
-msgstr ""
+msgstr "파생 가격"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.variants_template_action
-#: view:product.attribute:product.attribute_tree_view
-#: view:product.attribute.value:product.variants_template_tree_view
-#: view:product.attribute.value:product.variants_tree_view
+#: model:ir.actions.act_window,name:product.product_attribute_value_action
+#: model:ir.ui.view,arch_db:product.attribute_tree_view
+#: model:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
-msgstr ""
+msgstr "파생 값"
 
 #. module: product
-#: field:product.attribute.value,product_ids:0
-#: view:product.template:product.product_template_kanban_view
-#: view:product.template:product.product_template_only_form_view
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
+#: model:ir.ui.view,arch_db:product.product_template_kanban_view
+#: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
-msgstr "변량"
+msgstr "변형"
 
 #. module: product
-#: model:product.public.category,name:product.video_acquisition
-msgid "Video Acquisition"
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_name
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "Vendor"
 msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
+msgid "Vendor Information"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
+msgid "Vendor Product Code"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
+msgid "Vendor Product Name"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
+msgid "Vendor Unit of Measure"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_name
+msgid "Vendor of this product"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Vendors"
+msgstr "공급업체"
 
 #. module: product
 #: selection:product.category,type:0
 msgid "View"
-msgstr ""
+msgstr "화면"
 
 #. module: product
-#: field:product.template,volume:0
+#: model:ir.model.fields,field_description:product.field_product_product_volume
+#: model:ir.model.fields,field_description:product.field_product_template_volume
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr "체적"
 
 #. module: product
-#: code:addons/product/pricelist.py:208
-#: code:addons/product/product.py:210
-#, python-format
-msgid "Warning!"
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid "Volume control on main system"
 msgstr ""
 
 #. module: product
-#: field:product.template,warranty:0
+#: model:product.product,website_description:product.product_product_5b
+#: model:product.template,website_description:product.product_product_5b_product_template
+msgid ""
+"Wall charger can be plugged into the cradle or directly into the speaker"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_warranty
+#: model:ir.model.fields,field_description:product.field_product_template_warranty
 msgid "Warranty"
-msgstr ""
+msgstr "보증"
 
 #. module: product
-#: model:product.template,name:product.product_product_34_product_template
-msgid "Webcam"
-msgstr ""
-
-#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_weight
+#: model:ir.model.fields,field_description:product.field_product_template_weight
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
-msgstr "중량"
+msgstr "무게"
 
 #. module: product
-#: view:product.template:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Weights"
 msgstr "중량"
 
 #. module: product
-#: help:product.pricelist.version,active:0
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid "When one playlist isn’t enough."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
 msgid ""
-"When a version is duplicated it is set to non active, so that the dates do "
-"not overlaps with original version. You should change the dates and "
-"reactivate the pricelist"
+"When this field is filled in, the vendor data will only apply to the variant."
 msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
 msgid "White"
+msgstr "흰색"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_4
+#: model:product.product,website_description:product.product_product_4b
+#: model:product.product,website_description:product.product_product_4c
+#: model:product.product,website_description:product.product_product_4d
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_4_product_template
+#: model:product.template,website_description:product.product_product_4b_product_template
+#: model:product.template,website_description:product.product_product_4c_product_template
+#: model:product.template,website_description:product.product_product_4d_product_template
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid "Why you'll love an iPad."
 msgstr ""
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_3
 msgid "Wi-Fi"
+msgstr "와이파이"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_6
+#: model:product.template,website_description:product.product_product_6_product_template
+msgid ""
+"With advanced Wi‑Fi that’s up to twice as fast as\n"
+"                                   any previous-generation iPad and access "
+"to fast\n"
+"                                   cellular data networks around the world, "
+"iPad mini\n"
+"                                   lets you download content, stream video,\n"
+"                                   and browse the web at amazing speeds."
 msgstr ""
 
 #. module: product
-#: field:product.ul,width:0
-msgid "Width"
-msgstr "폭"
-
-#. module: product
-#: model:product.template,name:product.product_product_40_product_template
-msgid "Windows 7 Professional"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_41_product_template
-msgid "Windows Home Server 2011"
+#: model:ir.model.fields,help:product.field_base_config_settings_group_product_variant
+msgid ""
+"Work with product variant allows you to define some variant of the same "
+"products, an ease the product management in the ecommerce for example"
 msgstr ""
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
-msgstr ""
+msgstr "근무 시간"
 
 #. module: product
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
-
-#. module: product
-#: constraint:product.product:0
+#: model:ir.actions.act_window,help:product.product_uom_form_action
 msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
+"You must define a conversion rate between several Units of\n"
+"                Measure within the same category."
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_43_product_template
+#: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
+#: model:ir.actions.act_window,help:product.product_variant_action
+msgid ""
+"You must define a product for everything you sell, whether it's\n"
+"                a physical product, a consumable or a service you offer to\n"
+"                customers."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_template_action
+msgid ""
+"You must define a product for everything you sell, whether it's a physical "
+"product, a consumable or a service you offer to customers."
+msgstr ""
+
+#. module: product
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid ""
+"You probably have multiple playlists in iTunes on your computer.\n"
+"                                        One for your commute. One for the "
+"gym. Sync those playlists\n"
+"                                        to iPod, and you can play the "
+"perfect mix for whatever\n"
+"                                        mood strikes you. VoiceOver tells "
+"you the name of each playlist,\n"
+"                                        so it’s easy to switch between them "
+"and find the one you want without looking."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.product_order_01
+#: model:product.template,name:product.product_order_01_product_template
 msgid "Zed+ Antivirus"
+msgstr "Zed+ 안티바이러스"
+
+#. module: product
+#: model:ir.model,name:product.model_base_config_settings
+msgid "base.config.settings"
 msgstr ""
 
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
 msgid "cm"
+msgstr "센티미터"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "days"
+msgstr "일"
+
+#. module: product
+#: model:ir.model,name:product.model_decimal_precision
+msgid "decimal.precision"
+msgstr "decimal.precision"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_category_form_view
+msgid "e.g. Lamps"
 msgstr ""
 
 #. module: product
-#: view:product.template:product.product_template_form_view
-msgid "describe the product characteristics..."
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "e.g. Odoo Enterprise Susbcription"
 msgstr ""
 
 #. module: product
-#: view:product.uom:product.product_uom_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "e.g. USD Retailers"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_uom_form_view
 msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "예: 1 * (기준 단위) = 비율 * (이 단위)"
 
 #. module: product
-#: view:product.uom:product.product_uom_form_view
+#: model:ir.ui.view,arch_db:product.product_uom_form_view
 msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "e.g: 1 * (이 단위) = 비율 * (기준 단위)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_floz
 msgid "fl oz"
-msgstr ""
+msgstr "fl oz"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_foot
 msgid "foot(ft)"
-msgstr ""
+msgstr "피트"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_gal
 msgid "gal(s)"
-msgstr ""
+msgstr "갤런"
 
 #. module: product
+#: model:product.product,name:product.product_product_8
 #: model:product.template,name:product.product_product_8_product_template
 msgid "iMac"
-msgstr ""
+msgstr "아이맥"
 
 #. module: product
+#: model:product.product,name:product.product_product_6
 #: model:product.template,name:product.product_product_6_product_template
 msgid "iPad Mini"
-msgstr ""
+msgstr "아이패드 미니"
 
 #. module: product
+#: model:product.product,name:product.product_product_4
+#: model:product.product,name:product.product_product_4b
+#: model:product.product,name:product.product_product_4c
+#: model:product.product,name:product.product_product_4d
 #: model:product.template,name:product.product_product_4_product_template
 #: model:product.template,name:product.product_product_4b_product_template
 #: model:product.template,name:product.product_product_4c_product_template
 #: model:product.template,name:product.product_product_4d_product_template
 msgid "iPad Retina Display"
-msgstr ""
+msgstr "아이패드 레티나 디스플레이"
 
 #. module: product
+#: model:product.product,name:product.product_product_11
+#: model:product.product,name:product.product_product_11b
 #: model:product.template,name:product.product_product_11_product_template
 #: model:product.template,name:product.product_product_11b_product_template
 msgid "iPod"
+msgstr "아이팟"
+
+#. module: product
+#: model:product.product,website_description:product.product_product_11
+#: model:product.product,website_description:product.product_product_11b
+#: model:product.template,website_description:product.product_product_11_product_template
+#: model:product.template,website_description:product.product_product_11b_product_template
+msgid ""
+"iTunes on your Mac or PC makes it easy to load up\n"
+"                                        your iPod. Just choose the "
+"playlists, audiobooks,\n"
+"                                        podcasts, and other audio files you "
+"want, then sync."
 msgstr ""
 
 #. module: product
 #: model:product.uom,name:product.product_uom_inch
 msgid "inch(es)"
-msgstr ""
+msgstr "인치"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "kg"
-msgstr ""
+msgstr "kg"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_km
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_lb
 msgid "lb(s)"
-msgstr ""
-
-#. module: product
-#: view:product.product:product.product_normal_form_view
-msgid "lst_price"
-msgstr ""
+msgstr "파운드"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_mile
 msgid "mile(s)"
-msgstr ""
+msgstr "마일"
 
 #. module: product
-#: view:product.template:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "months"
-msgstr ""
-
-#. module: product
-#: view:product.template:product.product_template_form_view
-msgid "note to be displayed on quotations..."
-msgstr ""
+msgstr "월"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_oz
@@ -2934,16 +3256,205 @@ msgid "oz(s)"
 msgstr ""
 
 #. module: product
+#: model:ir.model,name:product.model_product_attribute_line
+msgid "product.attribute.line"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_attribute_price
+msgid "product.attribute.price"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_attribute_value
+msgid "product.attribute.value"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_price_history
+msgid "product.price.history"
+msgstr ""
+
+#. module: product
 #: model:product.uom,name:product.product_uom_qt
 msgid "qt"
+msgstr "개"
+
+#. module: product
+#: model:product.product,description_sale:product.consu_delivery_02
+#: model:product.template,description_sale:product.consu_delivery_02_product_template
+msgid ""
+"raid 1 \n"
+"            512ECC ram"
 msgstr ""
 
 #. module: product
-#: view:res.partner:product.view_partner_property_form
+#: model:product.product,description_sale:product.consu_delivery_01
+#: model:product.template,description_sale:product.consu_delivery_01_product_template
+msgid ""
+"raid 10 \n"
+"            2048ECC ram"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_pricelist
+msgid "report.product.report_pricelist"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "the parent company"
+msgstr "모기업"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "the product template"
 msgstr ""
 
 #. module: product
-#: field:product.price.history,company_id:0
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "to"
+msgstr "까지"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
-msgstr ""
+msgstr "알 수 없음"
+
+#~ msgid ""
+#~ "17\" Monitor\n"
+#~ "6GB RAM\n"
+#~ "Hi-Speed 234Q Processor\n"
+#~ "QWERTY keyboard"
+#~ msgstr ""
+#~ "17\" 모니터\n"
+#~ "6GB 램\n"
+#~ "Hi-Speed 234Q 프로세서\n"
+#~ "QWERTY 키보드"
+
+#~ msgid "All in one hi-speed printer with fax and scanner."
+#~ msgstr "팩스 스캐너 일체형 고속 프린터"
+
+#~ msgid "Blank CD"
+#~ msgstr "공 CD"
+
+#~ msgid "Blank DVD-RW"
+#~ msgstr "공 DVD-RW"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
+
+#~ msgid "End of Lifecycle"
+#~ msgstr "라이프사이클 끝"
+
+#~ msgid "External Hard disk"
+#~ msgstr "외장 하드 디스크"
+
+#~ msgid "Followers"
+#~ msgstr "팔로워"
+
+#~ msgid "Full featured image editing software."
+#~ msgstr "모든 기능을 담은 이미지 편집 소프트웨어."
+
+#~ msgid "GrapWorks Software"
+#~ msgstr "GrapWorks 소프트웨어"
+
+#~ msgid "Gross Weight"
+#~ msgstr "총중량"
+
+#~ msgid "HDD on Demand"
+#~ msgstr "HDD 요청시"
+
+#~ msgid ""
+#~ "Hands free headset for laptop PC with in-line microphone and headphone "
+#~ "plug."
+#~ msgstr "마이크와 헤드폰 플러그가 포함된 랩탑용 핸즈프리 헤드셋"
+
+#~ msgid "Headset USB"
+#~ msgstr "USB 헤드셋"
+
+#~ msgid "Headset for laptop PC with USB connector."
+#~ msgstr "USB 커넥터가 포함된 랩탑용 헤드셋"
+
+#~ msgid "Headset standard"
+#~ msgstr "표준 헤드셋"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
+
+#~ msgid "In Development"
+#~ msgstr "개발 중"
+
+#~ msgid "Ink Cartridge"
+#~ msgstr "잉크 카트리지"
+
+#~ msgid "Laptop S3450"
+#~ msgstr "랩탑 S3450"
+
+#~ msgid "Last Message Date"
+#~ msgstr "최근 메시지 날짜"
+
+#~ msgid "Messages"
+#~ msgstr "메시지"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "메시지 및 대화 기록"
+
+#~ msgid "Motherboard A20Z7"
+#~ msgstr "메인보드 A20Z7"
+
+#~ msgid "Multimedia Speakers"
+#~ msgstr "멀티미디어 스피커"
+
+#~ msgid "Obsolete"
+#~ msgstr "구형"
+
+#~ msgid ""
+#~ "Office Editing Software with word processing, spreadsheets, "
+#~ "presentations, graphics, and databases..."
+#~ msgstr ""
+#~ "문서편집기, 스프레드시트, 프레젠테이션, 그래픽과 데이터베이스를 제공하는 "
+#~ "오피스 편집 소프트웨어"
+
+#~ msgid "Office Suite"
+#~ msgstr "오피스 모음"
+
+#~ msgid "On demand hard-disk having capacity based on requirement."
+#~ msgstr "요구 사항에 따라 하드 디스크 용량 추가"
+
+#~ msgid "Pen drive, SP-2"
+#~ msgstr "펜 드라이브, SP-2"
+
+#~ msgid "Pen drive, SP-4"
+#~ msgstr "펜 드라이브, SP-4"
+
+#~ msgid "Printer, All-in-one"
+#~ msgstr "프린터, 일체형"
+
+#~ msgid "Processor AMD 8-Core"
+#~ msgstr "프로세서 AMD 8-코어"
+
+#~ msgid "RAM SR3"
+#~ msgstr "램 SR3"
+
+#~ msgid "Router R430"
+#~ msgstr "라우터 R430"
+
+#~ msgid "Status"
+#~ msgstr "상태"
+
+#~ msgid "USB Adapter"
+#~ msgstr "USB 어댑터"
+
+#~ msgid "Unread Messages"
+#~ msgstr "읽지 않은 메시지"
+
+#~ msgid "Webcam"
+#~ msgstr "웹캠"
+
+#~ msgid "Windows 7 Professional"
+#~ msgstr "Windows 7 Professional"
+
+#~ msgid "Windows Home Server 2011"
+#~ msgstr "Windows Home Server 2011"

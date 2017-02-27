@@ -1,21 +1,21 @@
-# Gujarati translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_contract
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Gujarati <gu@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-09-19 08:21+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Gujarati (http://www.transifex.com/odoo/odoo-9/language/gu/)\n"
+"Language: gu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:11+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_base_action_rule
@@ -23,48 +23,39 @@ msgid "Action Rules"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,advantages:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
 msgid "Advantages"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Advantages..."
 msgstr ""
 
 #. module: hr_contract
-#: help:hr.contract,wage:0
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
 msgid "Basic Salary of the employee"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.employee,vehicle:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
-#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
-#: field:hr.employee,contract_id:0
-#: model:ir.model,name:hr_contract.model_hr_contract
-#: model:ir.ui.menu,name:hr_contract.next_id_56
-msgid "Contract"
-msgstr "કરાર"
-
-#. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
-#: field:hr.contract,name:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Reference"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
-#: field:hr.contract,type_id:0
-#: view:hr.contract.type:hr_contract.hr_contract_type_view_form
-#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
-#: view:hr.contract.type:hr_contract.hr_contract_type_view_tree
-#: field:hr.contract.type,name:0
 #: model:ir.model,name:hr_contract.model_hr_contract_type
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_tree
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Contract Type"
 msgstr ""
 
@@ -75,48 +66,88 @@ msgid "Contract Types"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
-#: view:hr.contract:hr_contract.hr_contract_view_tree
-#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
-#: field:hr.employee,contract_ids:0
-#: field:hr.employee,contracts_count:0
+#: model:mail.message.subtype,description:hr_contract.mt_contract_pending
+#: model:mail.message.subtype,description:hr_contract.mt_department_contract_pending
+msgid "Contract about to expire"
+msgstr ""
+
+#. module: hr_contract
+#: model:mail.message.subtype,description:hr_contract.mt_contract_close
+msgid "Contract expired"
+msgstr ""
+
+#. module: hr_contract
+#: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
+msgid "Contract to Renew"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_ids
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contracts_count
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
+#: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Contracts"
 msgstr "કરારો"
 
 #. module: hr_contract
-#: field:hr.contract,create_uid:0
-#: field:hr.contract.type,create_uid:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,create_date:0
-#: field:hr.contract.type,create_date:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_date
 msgid "Created on"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,department_id:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_id
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid "Current Contract"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Current Employee"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
 msgid "Department"
 msgstr "વિભાગ"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Duration"
 msgstr "સમયગાળો"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
-#: field:hr.contract,employee_id:0
 #: model:ir.model,name:hr_contract.model_hr_employee
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_employee_id
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Employee"
 msgstr "કર્મચારી"
 
 #. module: hr_contract
-#: field:hr.contract,date_end:0
+#: model:ir.model,name:hr_contract.model_hr_contract
+#, fuzzy
+msgid "Employee Contract"
+msgstr "કરાર"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
 msgstr "અંતિમ તારીખ"
 
@@ -126,161 +157,233 @@ msgid "Error! Contract start-date must be less than contract end-date."
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
+#: selection:hr.contract,state:0
+#: model:mail.message.subtype,name:hr_contract.mt_contract_close
+msgid "Expired"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
+msgid "Gives the sequence when displaying a list of Contract."
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Group By"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
+#: model:ir.actions.server,name:hr_contract.contract_set_as_close
+msgid "HR Contract: set as close"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.actions.server,name:hr_contract.contract_set_as_pending
+msgid "HR Contract: set as pending"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle_distance
 msgid "Home-Work Dist."
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,id:0
-#: field:hr.contract.type,id:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
 msgid "ID"
-msgstr ""
+msgstr "ઓળખ"
 
 #. module: hr_contract
-#: help:hr.employee,vehicle_distance:0
+#: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
 msgid "In kilometers"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Information"
 msgstr "માહિતી"
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
 msgid "Is a Manager"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Job"
 msgstr "કાર્ય"
 
 #. module: hr_contract
-#: field:hr.contract,job_id:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
 msgid "Job Title"
 msgstr "નોકરી શીર્ષક"
 
 #. module: hr_contract
-#: field:hr.contract,write_uid:0
-#: field:hr.contract.type,write_uid:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,write_date:0
-#: field:hr.contract.type,write_date:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_write_date
 msgid "Last Updated on"
 msgstr ""
 
 #. module: hr_contract
-#: help:hr.employee,contract_id:0
+#: model:ir.model.fields,help:hr_contract.field_hr_employee_contract_id
 msgid "Latest contract of the employee"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+#: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Medical Exam"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.employee,medic_exam:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_medic_exam
 msgid "Medical Examination Date"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
-#: field:hr.contract,notes:0
+#: selection:hr.contract,state:0
+msgid "New"
+msgstr "નવું"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_notes
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Notes"
 msgstr "નોંધ"
 
 #. module: hr_contract
-#: field:hr.employee,children:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
 msgid "Number of Children"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.employee,place_of_birth:0
+#: model:ir.filters,name:hr_contract.contract_open
+msgid "Open Contracts"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
 msgid "Place of Birth"
 msgstr "જન્મનું સ્થાન"
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
+#: selection:hr.contract,state:0
+msgid "Running"
+msgstr "ચાલી રહ્યું છે"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary and Advantages"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Search Contract"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Search Contract Type"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,date_start:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_sequence
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
+msgid "Sequence"
+msgstr "ક્રમ"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_start
 msgid "Start Date"
 msgstr "શરુઆતની તારીખ"
 
 #. module: hr_contract
-#: field:hr.contract,trial_date_end:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_state
+msgid "Status"
+msgstr "સ્થિતિ"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_state
+msgid "Status of the contract"
+msgstr ""
+
+#. module: hr_contract
+#: selection:hr.contract,state:0
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model:mail.message.subtype,name:hr_contract.mt_contract_pending
+msgid "To Renew"
+msgstr "નવીનીકરણ માટે"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
 msgid "Trial End Date"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Trial Period Duration"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,trial_date_start:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_start
 msgid "Trial Start Date"
 msgstr ""
 
 #. module: hr_contract
-#: field:base.action.rule,trg_date_resource_field_id:0
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Unread Messages"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
 msgid "Use employee work schedule"
 msgstr ""
 
 #. module: hr_contract
-#: help:base.action.rule,trg_date_resource_field_id:0
+#: model:ir.model.fields,help:hr_contract.field_base_action_rule_trg_date_resource_field_id
 msgid "Use the user's working schedule."
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,visa_expire:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
 msgid "Visa Expire Date"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,visa_no:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_no
 msgid "Visa No"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_wage
 msgid "Wage"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_form
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Work Permit"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,permit_no:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_permit_no
 msgid "Work Permit No"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:hr_contract.hr_contract_view_search
-#: field:hr.contract,working_hours:0
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
 msgid "Working Schedule"
 msgstr ""
+
+#~ msgid "Messages"
+#~ msgstr "સંદેશાઓ"

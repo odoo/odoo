@@ -1,0 +1,563 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * procurement
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-07-23 18:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"A <b>Procurement Exception</b> occurs when the system cannot find a way to "
+"fulfill a procurement. Some exceptions will resolve themselves "
+"automatically, but others require manual intervention (those are identified "
+"by a specific error message in the chatter)."
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid ""
+"A <b>procurement order</b> is used to record a need for a specific\n"
+"                product at a specific location. Procurement orders are "
+"usually\n"
+"                created automatically from <i>sales orders, pull logistic "
+"rules or\n"
+"                minimum stock rules.</i>"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
+msgid "Action"
+msgstr "פעולה"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
+msgid "Active"
+msgstr "פעיל"
+
+#. module: procurement
+#: selection:procurement.group,move_type:0
+msgid "All at once"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Cancel"
+msgstr "בטל"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Cancel Procurement"
+msgstr ""
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Cancelled"
+msgstr "בוטלה"
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:138
+#, python-format
+msgid "Cannot delete Procurement Order(s) which are in %s state."
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Check Procurement"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
+msgid ""
+"Chosen rule for the procurement resolution. Usually chosen by the system but "
+"can be manually set by the procurement manager to force an unusual behavior."
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid "Click to create a procurement order."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_company_id
+msgid "Company"
+msgstr "חברה"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Compute all procurements in the background."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr ""
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Confirmed"
+msgstr "מאושר"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_create_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_uid
+msgid "Created by"
+msgstr "נוצר על ידי"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_create_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_date
+msgid "Created on"
+msgstr "נוצר ב-"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
+msgid "Delivery Type"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_name
+msgid "Description"
+msgstr "תיאור"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_display_name
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_display_name
+msgid "Display Name"
+msgstr "השם המוצג"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Done"
+msgstr "בוצע"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Exception"
+msgstr "חריגה"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Exceptions"
+msgstr "חריגות"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "External note..."
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Extra Information"
+msgstr ""
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Fixed"
+msgstr "קבוע"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_id
+msgid "Fixed Procurement Group"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Global"
+msgstr "גלובלי"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Group By"
+msgstr "קבץ לפי"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.do_view_procurements
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Group's Procurements"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_id
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_id
+msgid "ID"
+msgstr "מזהה"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "If the route is global"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_rule_active
+msgid "If unchecked, it will allow you to hide the rule without removing it."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_order___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all___last_update
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule___last_update
+msgid "Last Modified on"
+msgstr "תאריך שינוי אחרון"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_write_uid
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_uid
+msgid "Last Updated by"
+msgstr "עודכן לאחרונה על ידי"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_write_date
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_date
+msgid "Last Updated on"
+msgstr "עודכן לאחרונה על"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Late"
+msgstr ""
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Leave Empty"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.mrp_company
+msgid "Logistics"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
+msgid "Name"
+msgstr "שם"
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:200
+#, python-format
+msgid "No rule matching this procurement"
+msgstr ""
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Normal"
+msgstr "רגילה"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Not urgent"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Notes"
+msgstr "הערות"
+
+#. module: procurement
+#: selection:procurement.group,move_type:0
+msgid "Partial"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_priority
+msgid "Priority"
+msgstr "עדיפות"
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Procurement"
+msgstr "רכש"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_exceptions
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Procurement Exceptions"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
+msgid "Procurement Group"
+msgstr "קבוצת רכישה"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_tree_view
+msgid "Procurement Lines"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.procurement_action
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,name:procurement.procurement_order_action_product_template_stat
+msgid "Procurement Orders"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_group
+msgid "Procurement Requisition"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_rule
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "Procurement Rule"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
+msgid "Procurement Rules"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
+msgid "Procurement group"
+msgstr "קבוצת רכש"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Procurement started late"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
+#: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
+#: model:ir.ui.view,arch_db:procurement.product_product_view_form_procurement_button
+#: model:ir.ui.view,arch_db:procurement.product_template_view_form_procurement_button
+msgid "Procurements"
+msgstr "רכישות"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_id
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Product"
+msgstr "פריט"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_uom
+msgid "Product Unit of Measure"
+msgstr ""
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Propagate"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "Propagation Options"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_propagation_option
+msgid "Propagation of Procurement Group"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_product_qty
+msgid "Quantity"
+msgstr "כמות"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Reconfirm Procurement"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_name
+msgid "Reference"
+msgstr "הפניה"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_order_origin
+msgid ""
+"Reference of the document that created this Procurement.\n"
+"This is automatically completed by Odoo."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
+msgid "Rule"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Run Procurement"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.procurement_order_server_action
+msgid "Run Procurements"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.action_compute_schedulers
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Run Schedulers"
+msgstr ""
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Running"
+msgstr "פעיל"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_date_planned
+msgid "Scheduled Date"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Scheduled Month"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
+msgid "Scheduler Parameters"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "Scheduling"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Search Procurement"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_rule_sequence
+msgid "Sequence"
+msgstr "רצף"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_origin
+msgid "Source Document"
+msgstr "מסמך מקור"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_order_state
+#: model:ir.ui.view,arch_db:procurement.view_procurement_filter
+msgid "Status"
+msgstr "סטטוס"
+
+#. module: procurement
+#: model:ir.model.fields,help:procurement.field_procurement_rule_name
+msgid "This field will fill the packing origin and the name of its moves"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_tree_view
+msgid "Unit of Measure"
+msgstr "יחידת מידה"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Urgent"
+msgstr "דחופה"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Very Urgent"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+msgid ""
+"When the procurement order is confirmed, it automatically\n"
+"                creates the necessary operations to fulfill the need: "
+"purchase\n"
+"                order proposition, manufacturing order, etc."
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
+msgid "e.g. Buy"
+msgstr ""
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.procurement_form_view
+msgid "e.g. SO005"
+msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "נדרשת פעולה"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "תאריך הודעה אחרונה שפורסמה ברשומה."
+
+#~ msgid "Followers"
+#~ msgstr "עוקבים"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "אם מסומן אז הודעה חדשה דורשת התייחסותכם."
+
+#~ msgid "Last Message Date"
+#~ msgstr "תאריך הודעה אחרונה"
+
+#~ msgid "Messages"
+#~ msgstr "הודעות"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "היסטוריית הודעות ותקשורת"
+
+#~ msgid "Number of Actions"
+#~ msgstr "מספר הפעולות"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "מספר ההודעות שדורשות פעולה"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "מספר ההודעות שלא נקראו"
+
+#~ msgid "Unread Messages"
+#~ msgstr "הודעות שלא נקראו"
+
+#~ msgid "Website Messages"
+#~ msgstr "הודעות מהאתר אינטרנט"
+
+#~ msgid "Website communication history"
+#~ msgstr "היסטוריית תקשורת מהאתר"

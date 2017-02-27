@@ -1,63 +1,67 @@
-# Spanish (Costa Rica) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_mrp
 #
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Spanish (Costa Rica) <es_CR@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2015-09-08 08:03+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Costa Rica) (http://www.transifex.com/odoo/odoo-9/"
+"language/es_CR/)\n"
+"Language: es_CR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_mrp
-#: help:mrp.production,sale_ref:0
+#: model:ir.model.fields,help:sale_mrp.field_mrp_production_sale_ref
 msgid "Indicate the Customer Reference from sales order."
 msgstr "Indica la referencia del cliente del pedido de venta."
 
 #. module: sale_mrp
-#: help:mrp.production,sale_name:0
+#: model:ir.model.fields,help:sale_mrp.field_mrp_production_sale_name
 msgid "Indicate the name of sales order."
 msgstr "Indica el nombre del pedido de venta."
 
 #. module: sale_mrp
-#: model:ir.model,name:sale_mrp.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Orden de fabricación"
-
-#. module: sale_mrp
-#: field:sale.order.line,property_ids:0
-msgid "Properties"
+#: model:ir.model,name:sale_mrp.model_account_invoice_line
+msgid "Invoice Line"
 msgstr ""
 
 #. module: sale_mrp
-#: field:mrp.production,sale_name:0
+#: model:ir.model,name:sale_mrp.model_mrp_production
+msgid "Production"
+msgstr ""
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line_property_ids
+msgid "Properties"
+msgstr "Propiedades"
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production_sale_name
 msgid "Sale Name"
 msgstr ""
 
 #. module: sale_mrp
-#: field:mrp.production,sale_ref:0
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production_sale_ref
 msgid "Sale Reference"
-msgstr ""
-
-#. module: sale_mrp
-#: model:ir.model,name:sale_mrp.model_sale_order
-msgid "Sales Order"
 msgstr ""
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Línea pedido de venta"
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Movimiento stock"
+
+#~ msgid "Manufacturing Order"
+#~ msgstr "Orden de fabricación"

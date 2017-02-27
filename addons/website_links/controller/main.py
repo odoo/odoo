@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import werkzeug
 
-from openerp.addons.web import http
-from openerp.http import request
+from odoo import http
+from odoo.http import request
 
 
-class Website_Url(http.Controller):
+class WebsiteUrl(http.Controller):
     @http.route('/website_links/new', type='json', auth='user', methods=['POST'])
     def create_shorten_url(self, **post):
         if 'url' not in post or post['url'] == '':
@@ -14,7 +16,7 @@ class Website_Url(http.Controller):
 
     @http.route('/r', type='http', auth='user', website=True)
     def shorten_url(self, **post):
-        return request.website.render("website_links.page_shorten_url", post)
+        return request.render("website_links.page_shorten_url", post)
 
     @http.route('/website_links/add_code', type='json', auth='user')
     def add_code(self, **post):
@@ -34,6 +36,6 @@ class Website_Url(http.Controller):
         code = request.env['link.tracker.code'].search([('code', '=', code)], limit=1)
 
         if code:
-            return request.website.render("website_links.graphs", code.link_id.read()[0])
+            return request.render("website_links.graphs", code.link_id.read()[0])
         else:
             return werkzeug.utils.redirect('', 301)

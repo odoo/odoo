@@ -1,7 +1,0 @@
--
-  !python {model: account.chart.template}: |
-      if 'spoken_languages' in self._all_columns:
-        self.write(cr, uid, [ref('l10nbe_chart_template')], {'spoken_languages': 'nl_BE'})
--
-  !python {model: account.chart.template, id: l10nbe_chart_template}: |
-    self[0].try_loading_for_current_company()
