@@ -297,7 +297,7 @@ class AccountInvoice(models.Model):
         help="It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment.")
     partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account',
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Refund, otherwise a Partner bank account number.',
-        readonly=True, states={'draft': [('readonly', False)]})
+        readonly=True, states={'draft': [('readonly', False)]}) #Default value computed in default_get for out_invoices
 
     residual = fields.Monetary(string='Amount Due',
         compute='_compute_residual', store=True, help="Remaining amount due.")
@@ -357,6 +357,24 @@ class AccountInvoice(models.Model):
         (reconciled & pre_reconciled).filtered(lambda invoice: invoice.state == 'open').action_invoice_paid()
         (not_reconciled & pre_not_reconciled).filtered(lambda invoice: invoice.state == 'paid').action_invoice_re_open()
         return res
+
+    @api.model
+    def default_get(self,default_fields):
+        """ Overridden to compute default partner_bank_id field for out_invoice
+        type using the default values computed for the other fields.
+        """
+        rslt = super(AccountInvoice, self).default_get(default_fields)
+
+        if not rslt.get('type', False) == 'out_invoice' or not 'company_id' in rslt:
+            return rslt
+
+        company = self.env['res.company'].browse(rslt['company_id'])
+        if company.partner_id:
+            partner_bank_result = self.env['res.partner.bank'].search([('partner_id', '=', company.partner_id.id)], limit=1)
+            if partner_bank_result:
+                rslt['partner_bank_id'] = partner_bank_result.id
+
+        return rslt
 
     @api.model
     def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
