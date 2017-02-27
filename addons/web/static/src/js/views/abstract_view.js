@@ -14,7 +14,7 @@ odoo.define('web.AbstractView', function (require) {
  *
  * JS views are supposed to be used like this:
  * 1. instantiate a view with some arch, fields and params
- * 2. call the createController method on the view instance. This returns a
+ * 2. call the getController method on the view instance. This returns a
  *    controller (with a model and a renderer as sub widgets)
  * 3. append the controller somewhere
  *
@@ -113,12 +113,12 @@ var AbstractView = Class.extend({
      *      likely a view manager)
      * @returns {Deferred} The deferred resolves to a controller
      */
-    createController: function (parent) {
+    getController: function (parent) {
         var self = this;
-        var model = this.model || this.createModel(parent);
-        return $.when(model.load(this.loadParams), this._loadLibs()).then(function () {
+        return $.when(this._loadData(parent), this._loadLibs()).then(function () {
+            var model = self.getModel();
             var state = model.get(arguments[0]);
-            var renderer = self.createRenderer(parent, state);
+            var renderer = self.getRenderer(parent, state);
             var Controller = self.Controller || self.config.Controller;
             var controllerParams = _.extend({
                 initialState: state,
@@ -134,16 +134,19 @@ var AbstractView = Class.extend({
             return controller;
         });
     },
-    createModel: function (parent) {
-        var Model = this.config.Model;
-        return new Model(parent);
+    getModel: function (parent) {
+        if (!this.model) {
+            var Model = this.config.Model;
+            this.model = new Model(parent);
+        }
+        return this.model;
     },
-    createRenderer: function (parent, state) {
+    getRenderer: function (parent, state) {
         var Renderer = this.config.Renderer;
         return new Renderer(parent, state, this.rendererParams);
     },
     /**
-     * this is usedful to customize the actual class to use before calling
+     * this is useful to customize the actual class to use before calling
      * createView.
      *
      * @param {Controller} Controller
@@ -156,6 +159,18 @@ var AbstractView = Class.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Load initial data from the model
+     *
+     * @private
+     * @param {Widget} parent the parent of the model, if it has to be created
+     * @returns {Deferred<*>} a deferred that resolves to whatever the model
+     *   decide to return
+     */
+    _loadData: function (parent) {
+        var model = this.getModel(parent);
+        return model.load(this.loadParams);
+    },
     /**
      * Makes sure that the js_libs and css_libs are properly loaded. Note that
      * the ajax loadJS and loadCSS methods don't do anything if the given file

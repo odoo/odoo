@@ -661,7 +661,7 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 nbRPCs++;
                 return this._super(route, args);
-            }
+            },
         });
         assert.strictEqual(kanban.$('.o_kanban_group[data-id=5] .o_column_title').text(), 'xmo',
             'title of the column should be "xmo"');

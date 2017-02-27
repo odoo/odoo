@@ -99,12 +99,26 @@ var BasicView = AbstractView.extend({
         this.loadParams.fieldNames = fieldNames;
         this.loadParams.fields = fields;
         this.loadParams.limit = parseInt(arch.attrs.limit, 10) || params.limit;
+        this.recordID = params.recordID;
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * In some cases, we already have a preloaded record
+     *
+     * @override
+     * @private
+     * @returns {Deferred}
+     */
+    _loadData: function () {
+        if (this.recordID) {
+            return $.when(this.recordID);
+        }
+        return this._super.apply(this, arguments);
+    },
     /**
      * Visit all nodes in the arch field and process each fields
      *

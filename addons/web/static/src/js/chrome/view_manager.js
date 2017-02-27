@@ -349,7 +349,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         }
 
         view = new View(arch, view.fields_view.fields, params);
-        return view.createController(this).then(function(controller) {
+        return view.getController(this).then(function(controller) {
             controller.on('history_back', this, function() {
                 if (self.action_manager) self.action_manager.trigger('history_back');
             });

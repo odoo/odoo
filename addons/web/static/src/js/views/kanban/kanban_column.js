@@ -220,13 +220,12 @@ var KanbanColumn = Widget.extend({
 
     edit_column: function (event) {
         event.preventDefault();
-        var dialog = new view_dialogs.FormViewDialog(this, {
+        new view_dialogs.FormViewDialog(this, {
             res_model: this.relation,
             res_id: this.id,
             title: _t("Edit Column"),
+            on_saved: this.trigger_up.bind(this, 'reload'),
         }).open();
-
-        dialog.on('saved', null, this.trigger_up.bind(this, 'reload'));
     },
 
     delete_record: function (event) {

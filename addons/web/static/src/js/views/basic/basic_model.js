@@ -403,6 +403,7 @@ var BasicModel = AbstractModel.extend({
      *   of all fields by default
      * @param {Object} params.fields contains the description of each field
      * @param {string} [params.type] 'record' or 'list'
+     * @param {string} [params.recordID] an ID for an existing resource.
      * @returns {Deferred -> string} resolves to a local id, or handle
      */
     load: function (params) {
@@ -733,11 +734,22 @@ var BasicModel = AbstractModel.extend({
      * @param {string} record_id local resource
      * @param {Object} [options]
      * @param {boolean} [options.reload=true] if true, data will be reloaded
+     * @param {boolean} [options.localSave=false] if true, the record will only
+     *   be 'locally' saved: its changes will move from the _changes key to the
+     *   data key
      * @returns {Deferred}
      */
     save: function (record_id, options) {
         var self = this;
         options = options || {};
+        if (options.localSave) {
+            var record = self.localData[record_id];
+            if (record._changes) {
+                _.extend(record.data, record._changes);
+                record._changes = null;
+            }
+            return $.when();
+        }
         var shouldReload = 'reload' in options ? options.reload : true;
         return this.mutex.exec(function () {
             var record = self.localData[record_id];
@@ -798,6 +810,21 @@ var BasicModel = AbstractModel.extend({
                 return $.when(record_id);
             }
         });
+    },
+    /**
+     * Set and return the fieldattrs on a record element.
+     * It is mostly useful for the cases where a record element is shared
+     * between various views, such as a one2many with a tree and a form view.
+     *
+     * @param {string} recordID a valid element ID
+     * @param {Object} attrs the new field attrs
+     * @return {Object} the previous field attrs
+     */
+    setFieldAttrs: function (recordID, attrs) {
+        var record = this.localData[recordID];
+        var result = record.fieldAttrs;
+        record.fieldAttrs = attrs;
+        return result;
     },
     /**
      * For list resources, this changes the orderedBy key, then performs the

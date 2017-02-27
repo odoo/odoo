@@ -82,6 +82,10 @@ var FormViewDialog = ViewDialog.extend({
      * @param {function} [options.on_saved] callback executed after on_save
      * @param {BasicModel} [options.model] if given, it will be used instead of
      *  a new form view model
+     * @param {string} [options.recordID] if given, the model has to be given as
+     *   well, and in that case, it will be used without loading anything.
+     * @param {boolean} [options.shouldSaveLocally] if true, the view dialog
+     *   will save locally instead of actually saving (useful for one2manys)
      */
     init: function (parent, options) {
         var self = this;
@@ -91,6 +95,8 @@ var FormViewDialog = ViewDialog.extend({
         this.context = options.context;
         this.model = options.model;
         this.parentID = options.parentID;
+        this.recordID = options.recordID;
+        this.shouldSaveLocally = options.shouldSaveLocally;
 
         var multi_select = !_.isNumber(options.res_id) && !options.disable_multiple_selection;
         var readonly = _.isNumber(options.res_id) && options.readonly;
@@ -130,7 +136,15 @@ var FormViewDialog = ViewDialog.extend({
         }
         this._super(parent, options);
     },
-
+    /**
+     * If we changed some fieldAttrs, we need to restore them now.
+     */
+    destroy: function () {
+        if (this.recordID && this.fieldAttrs) {
+            this.model.setFieldAttrs(this.recordID, this.fieldAttrs);
+        }
+        this._super.apply(this, arguments);
+    },
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -153,6 +167,10 @@ var FormViewDialog = ViewDialog.extend({
         }
 
         fields_view_def.then(function (fields_view) {
+            if (self.recordID) {
+                self.fieldAttrs =
+                    self.model.setFieldAttrs(self.recordID, fields_view.fieldAttrs);
+            }
             var formview = new FormView(fields_view.arch, fields_view.fields, {
                 modelName: self.res_model,
                 context: self.context,
@@ -164,11 +182,15 @@ var FormViewDialog = ViewDialog.extend({
                 default_buttons: false,
                 model: self.model,
                 parentID: self.parentID,
+                recordID: self.recordID,
             });
-            return formview.createController(self);
+            return formview.getController(self);
         }).then(function (formView) {
             self.form_view = formView;
             var fragment = document.createDocumentFragment();
+            if (self.recordID && self.shouldSaveLocally) {
+                self.model.save(self.recordID, {localSave: true});
+            }
             self.form_view.appendTo(fragment)
                 .then(function () {
                     var $buttons = $('<div>');
@@ -197,7 +219,11 @@ var FormViewDialog = ViewDialog.extend({
             }
             def = this.options.on_save(this.form_view.model.get(this.form_view.handle));
         } else {
-            def = this.form_view.saveRecord({stayInEdit: true, reload: false});
+            def = this.form_view.saveRecord({
+                stayInEdit: true,
+                reload: false,
+                localSave: this.shouldSaveLocally,
+            });
         }
         return $.when(def).then(function () {
             // record might have been changed by the save (e.g. if this was a new record, it has an
@@ -316,7 +342,7 @@ var SelectCreateDialog = ViewDialog.extend({
                 hasSelectors: !self.options.disable_multiple_selection,
             }, self.options.list_view_options));
             listView.setController(SelectCreateListController);
-            return listView.createController(self);
+            return listView.getController(self);
         }).then(function (controller) {
             self.list_controller = controller;
             // Set the dialog's buttons

@@ -853,20 +853,13 @@ var FieldOne2Many = FieldX2Many.extend({
      */
     _onOpenRecord: function (event) {
         var self = this;
-        this._super.apply(this, arguments);
         _.extend(event.data, {
-            on_save: function (record) {
-                // update in a form view opened from the o2m (kanban or non editable list)
-                var relRecord = _.find(self.value.data, function (d) {
-                    return d.res_id === record.res_id;
-                });
-                self._setValue({
-                    operation: 'UPDATE',
-                    id: relRecord.id,
-                    data: record.data,
-                });
+            shouldSaveLocally: true,
+            on_saved: function () {
+                self._setValue({ operation: 'NOOP' });
             },
         });
+        this._super.apply(this, arguments);
     },
 });
 
@@ -926,10 +919,10 @@ var FieldMany2Many = FieldX2Many.extend({
      * @param {OdooEvent}
      */
     _onOpenRecord: function (event) {
-        this._super.apply(this, arguments);
         _.extend(event.data, {
             on_saved: this.trigger_up.bind(this, 'reload', {db_id: event.data.id}),
         });
+        this._super.apply(this, arguments);
     },
 });
 
