@@ -1154,9 +1154,7 @@ var BasicModel = AbstractModel.extend({
                 defs.push(this.addDefaultRecord(list.id));
                 break;
             case 'UPDATE':
-                var changedRecord = this.localData[command.id];
-                changedRecord._changes = changedRecord._changes || {};
-                _.extend(changedRecord._changes, _.pick(command.data, list.fieldNames));
+                defs.push(this.notifyChanges(command.id, command.data));
                 break;
             case 'REMOVE':
                 list._changes = _.without(list._changes, command.id);
