@@ -783,9 +783,9 @@ class mrp_production(osv.osv):
         # Put related procurements in exception
         proc_obj = self.pool.get("procurement.order")
         procs = proc_obj.search(cr, uid, [('production_id', 'in', ids)], context=context)
-        if procs:
-            proc_obj.message_post(cr, uid, procs, body=_('Manufacturing order cancelled.'), context=context)
-            proc_obj.write(cr, uid, procs, {'state': 'exception'}, context=context)
+        for proc in procs:
+            proc_obj.message_post(cr, uid, proc, body=_('Manufacturing order cancelled.'), context=context)
+        proc_obj.write(cr, uid, procs, {'state': 'exception'}, context=context)
         return True
 
     def action_ready(self, cr, uid, ids, context=None):
