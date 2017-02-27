@@ -100,18 +100,10 @@ var getMatchedCSSRules = function (a) {
         delete style.display;
     }
     if (style['margin-top']) {
-        style.margin = (style['margin-top'] || 0) + ' ' + (style['margin-right'] || 0) + ' ' + (style['margin-bottom'] || 0) + ' ' + (style['margin-left'] || 0);
-        delete style['margin-top'];
-        delete style['margin-right'];
-        delete style['margin-bottom'];
-        delete style['margin-left'];
+        delete style.margin;
     }
     if (style['padding-top']) {
-        style.padding = (style['padding-top'] || 0) + ' ' + (style['padding-right'] || 0) + ' ' + (style['padding-bottom'] || 0) + ' ' + (style['padding-left'] || 0);
-        delete style['padding-top'];
-        delete style['padding-right'];
-        delete style['padding-bottom'];
-        delete style['padding-left'];
+        delete style.padding;
     }
 
     return a.className ? cache[a.tagName + "." +a.className] = style : style;
