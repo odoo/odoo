@@ -84,21 +84,25 @@ class ProjectIssue(models.Model):
     @api.depends('create_date', 'date_closed', 'date_open')
     def _compute_day(self):
         for issue in self:
-            # if the working hours on the project are not defined, use default ones (8 -> 12 and 13 -> 17 * 5)
-            calendar = issue.project_id.resource_calendar_id
-
             dt_create_date = fields.Datetime.from_string(issue.create_date)
+
             if issue.date_open:
                 dt_date_open = fields.Datetime.from_string(issue.date_open)
                 issue.day_open = (dt_date_open - dt_create_date).total_seconds() / (24.0 * 3600)
-                issue.working_hours_open = calendar.get_working_hours(dt_create_date, dt_date_open,
-                    compute_leaves=True, resource_id=False, default_interval=(8, 16))
+                if issue.project_id.resource_calendar_id:
+                    issue.working_hours_open = issue.project_id.resource_calendar_id.get_work_hours_count(
+                        dt_create_date, dt_date_open, False, compute_leaves=True)
+                else:
+                    issue.working_hours_open = 0
 
             if issue.date_closed:
                 dt_date_closed = fields.Datetime.from_string(issue.date_closed)
                 issue.day_close = (dt_date_closed - dt_create_date).total_seconds() / (24.0 * 3600)
-                issue.working_hours_close = calendar.get_working_hours(dt_create_date, dt_date_closed,
-                    compute_leaves=True, resource_id=False, default_interval=(8, 16))
+                if issue.project_id.resource_calendar_id:
+                    issue.working_hours_close = issue.project_id.resource_calendar_id.get_work_hours_count(
+                        dt_create_date, dt_date_closed, False, compute_leaves=True)
+                else:
+                    issue.working_hours_close = 0
 
     @api.multi
     @api.depends('create_date', 'date_action_last', 'date_last_stage_update')
