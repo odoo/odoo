@@ -361,7 +361,7 @@ class AccountInvoice(models.Model):
         return res
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         def get_view_id(xid, name):
             try:
                 return self.env.ref('account.' + xid)
