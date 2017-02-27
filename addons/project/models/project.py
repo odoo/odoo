@@ -185,7 +185,9 @@ class Project(models.Model):
         help="Whether this project should be displayed on the dashboard or not")
     label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Gives label to tasks on project's kanban view.")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
-    resource_calendar_id = fields.Many2one('resource.calendar', string='Working Time',
+    resource_calendar_id = fields.Many2one(
+        'resource.calendar', string='Working Time',
+        default=lambda self: self.env.user.company_id.resource_calendar_id.id,
         help="Timetable working hours to adjust the gantt diagram report")
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Tasks")

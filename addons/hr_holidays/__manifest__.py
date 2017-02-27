@@ -24,7 +24,7 @@ You can keep track of leaves in different ways by following reports:
 
 A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a leave request is accepted by setting up a type of meeting in Leave Type.
 """,
-    'depends': ['hr', 'calendar', 'resource', 'product', 'report'],
+    'depends': ['hr', 'calendar', 'resource', 'report'],
     'data': [
         'data/report_paperformat.xml',
         'data/hr_holidays_data.xml',

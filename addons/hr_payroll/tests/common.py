@@ -46,5 +46,4 @@ class TestPayslipBase(TransactionCase):
             'type_id': self.ref('hr_contract.hr_contract_type_emp'),
             'employee_id': self.richard_emp.id,
             'struct_id': self.developer_pay_structure.id,
-            'working_hours': self.ref('resource.resource_calendar_std')
         })
