@@ -207,16 +207,29 @@ odoo.define('website_quote.payment_method', function (require) {
     require('website.website');
     var ajax = require('web.ajax');
 
-    if(!$('#payment_method').length) {
-        return $.Deferred().reject("DOM doesn't contain '#payment_method'");
-    }
-
     // dbo note: website_sale code for payment
     // if we standardize payment somehow, this should disappear
     // When choosing an acquirer, display its Pay Now button
     var $payment = $("#payment_method");
-    $payment.on("click", "input[name='acquirer']", function (ev) {
-            var payment_id = $(ev.currentTarget).val();
+    $payment.on("click", "input[name='acquirer'], a.btn_payment_token", function (ev) {
+            var ico_off = 'fa-circle-o';
+            var ico_on = 'fa-dot-circle-o';
+
+            var payment_id = $(ev.currentTarget).val() || $(this).data('acquirer');
+            var token = $(ev.currentTarget).data('token') || '';
+
+            $("div.oe_quote_acquirer_button[data-id='"+payment_id+"']", $payment).attr('data-token', token);
+            $("div.js_payment a.list-group-item").removeClass("list-group-item-info");
+            $('span.js_radio').switchClass(ico_on, ico_off, 0);
+            if (token) {
+              $("div.oe_quote_acquirer_button div.token_hide").hide();
+              $(ev.currentTarget).find('span.js_radio').switchClass(ico_off, ico_on, 0);
+              $(ev.currentTarget).parents('li').find('input').prop("checked", true);
+              $(ev.currentTarget).addClass("list-group-item-info");
+            }
+            else{
+              $("div.oe_quote_acquirer_button div.token_hide").show();
+            }
             $("div.oe_quote_acquirer_button[data-id]", $payment).addClass("hidden");
             $("div.oe_quote_acquirer_button[data-id='"+payment_id+"']", $payment).removeClass("hidden");
         })
@@ -240,11 +253,29 @@ odoo.define('website_quote.payment_method', function (require) {
       $form.off('submit');
       var href = $(location).attr("href");
       var order_id = href.match(/quote\/([0-9]+)/)[1];
-      var token = href.match(/quote\/[0-9]+\/([^\/?]*)/);
-      token = token ? token[1] : '';
-      ajax.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id + (token ? '/' + token : ''), 'call', params, {}).then(function (data) {
-          $form.html(data);
-          $form.submit();
+      ajax.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id, 'call', params, {}).then(function (data) {
+          $(data).appendTo('body').submit();
       });
-   });
+      return false;
+    });
+
+    $('div.o_pay_token').on('click', 'a.js_btn_valid_tx', function() {
+      $('div.js_token_load').toggle();
+
+      var $form = $(this).parents('form');
+      ajax.jsonRpc($form.attr('action'), 'call', $.deparam($form.serialize())).then(function (data) {
+        if (data.url) {
+          window.location = data.url;
+        }
+        else {
+          $('div.js_token_load').toggle();
+          if (!data.success && data.error) {
+            $('div.o_pay_token div.panel-body p').html(data.error + "<br/><br/>" + _('Retry ? '));
+            $('div.o_pay_token div.panel-body').parents('div').removeClass('panel-info').addClass('panel-danger');
+          }
+        }
+      });
+
+    });
+
 });
