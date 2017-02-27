@@ -267,7 +267,7 @@ var FormController = BasicController.extend({
      *   can be discarded.  If it has been rejected, then we cannot discard.
      */
     _canBeDiscarded: function () {
-        if (!this.model.isDirty(this.handle)) {
+        if (!this.isDirty) {
             return $.when();
         }
         var message = _t("The record has been modified, your changes will be discarded. Are you sure you want to leave this page ?");
@@ -452,6 +452,7 @@ var FormController = BasicController.extend({
         var self = this;
         this.model.duplicateRecord(this.handle)
             .then(function (handle) {
+                self.isDirty = false;
                 self.handle = handle;
                 self._updateEnv();
                 self._toEditMode();
