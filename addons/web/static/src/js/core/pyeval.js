@@ -33,28 +33,28 @@ for (var i=1; i<DAYS_IN_MONTH.length; ++i) {
     dbm += DAYS_IN_MONTH[i];
 }
 
-function is_leap (year) {
+function is_leap(year) {
     return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
 }
 
-function days_before_year (year) {
+function days_before_year(year) {
     var y = year - 1;
     return y*365 + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400);
 }
 
-function days_in_month (year, month) {
+function days_in_month(year, month) {
     if (month === 2 && is_leap(year)) {
         return 29;
     }
     return DAYS_IN_MONTH[month];
 }
 
-function days_before_month (year, month) {
+function days_before_month(year, month) {
     var post_leap_feb = month > 2 && is_leap(year);
     return DAYS_BEFORE_MONTH[month] + (post_leap_feb ? 1 : 0);
 }
 
-function ymd2ord (year, month, day) {
+function ymd2ord(year, month, day) {
     var dim = days_in_month(year, month);
     if (!(1 <= day && day <= dim)) {
         throw new Error("ValueError: day must be in 1.." + dim);
@@ -68,7 +68,7 @@ var DI400Y = days_before_year(401);
 var DI100Y = days_before_year(101);
 var DI4Y = days_before_year(5);
 
-function ord2ymd (n) {
+function ord2ymd(n) {
     --n;
     var n400, n100, n4, n1, n0;
     utils.divmod(n, DI400Y, function (_n400, n) {
@@ -519,7 +519,7 @@ datetime.date = py.type('date', null, {
 
     @return {datetime.date}
 */
-function context_today () {
+function context_today() {
     var d = new Date();
     return py.PY_call(
         datetime.date, [d.getFullYear(), d.getMonth() + 1, d.getDate()]);
@@ -578,7 +578,7 @@ var _utils = {
         return py.PY_call(py.PY_getAttr(date, 'weekday'));
     },
     isleap: function (year) {
-        return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)
+        return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
     },
     mdays: [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
     January: 1,
@@ -757,7 +757,7 @@ var wrapping_dict = py.type('wrapping_dict', null, {
         return this.__getitem__(py.str.fromJSON(key));
     },
     __len__: function () {
-        return Object.keys(this._store).length
+        return Object.keys(this._store).length;
     },
     __nonzero__: function () {
         return py.PY_size(this) > 0 ? py.True : py.False;
@@ -801,7 +801,7 @@ var wrapping_list = py.type('wrapping_list', null, {
     },
 });
 
-function wrap_context (context) {
+function wrap_context(context) {
     for (var k in context) {
         if (!context.hasOwnProperty(k)) { continue; }
         var val = context[k];
@@ -817,7 +817,7 @@ function wrap_context (context) {
     return context;
 }
 
-function eval_contexts (contexts, evaluation_context) {
+function eval_contexts(contexts, evaluation_context) {
     evaluation_context = _.extend(pycontext(), evaluation_context || {});
     return _(contexts).reduce(function (result_context, ctx) {
         // __eval_context evaluations can lead to some of `contexts`'s
@@ -846,7 +846,7 @@ function eval_contexts (contexts, evaluation_context) {
     }, {});
 }
 
-function eval_domains (domains, evaluation_context) {
+function eval_domains(domains, evaluation_context) {
     evaluation_context = _.extend(pycontext(), evaluation_context || {});
     var result_domain = [];
     // Normalize only if the first domain is the array ["|"] or ["!"]
@@ -905,7 +905,7 @@ function get_normalized_domain(domain_array) {
     return new_explicit_ands.concat(domain_array);
 }
 
-function eval_groupbys (contexts, evaluation_context) {
+function eval_groupbys(contexts, evaluation_context) {
     evaluation_context = _.extend(pycontext(), evaluation_context || {});
     var result_group = [];
     _(contexts).each(function (ctx) {
@@ -942,7 +942,7 @@ function eval_groupbys (contexts, evaluation_context) {
 }
 
 
-function pycontext () {
+function pycontext() {
     return {
         datetime: datetime,
         context_today: context_today,
@@ -958,7 +958,7 @@ function pycontext () {
  * @param {Array} object domains or contexts to evaluate
  * @param {Object} [context] evaluation context
  */
-function pyeval (type, object, context) {
+function pyeval(type, object, context) {
     context = _.extend(pycontext(), context || {});
 
     //noinspection FallthroughInSwitchStatementJS
@@ -980,7 +980,7 @@ function pyeval (type, object, context) {
     throw new Error("Unknow evaluation type " + type);
 }
 
-function eval_arg (arg) {
+function eval_arg(arg) {
     if (typeof arg !== 'object' || !arg.__ref) { return arg; }
     switch(arg.__ref) {
     case 'domain': case 'compound_domain':
@@ -1001,7 +1001,7 @@ function eval_arg (arg) {
  * @param args
  * @param kwargs
  */
-function ensure_evaluated (args, kwargs) {
+function ensure_evaluated(args, kwargs) {
     for (var i=0; i<args.length; ++i) {
         args[i] = eval_arg(args[i]);
     }
@@ -1011,7 +1011,7 @@ function ensure_evaluated (args, kwargs) {
     }
 }
 
-function eval_domains_and_contexts (source) {
+function eval_domains_and_contexts(source) {
     // see Session.eval_context in Python
     return {
         context: pyeval('contexts', source.contexts || [], source.eval_context),
@@ -1020,7 +1020,7 @@ function eval_domains_and_contexts (source) {
     };
 }
 
-function py_eval (expr, context) {
+function py_eval(expr, context) {
     return py.eval(expr, _.extend({}, context || {}, {"true": true, "false": false, "null": null}));
 }
 
