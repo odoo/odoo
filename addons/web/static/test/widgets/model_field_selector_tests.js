@@ -123,6 +123,7 @@ QUnit.module('ModelFieldSelector', {
             "field selector popover should be closed now");
         assert.strictEqual($input.val(), "product_id.name",
             "field selector input value should be 'product_id.name'");
+        fieldSelector.destroy();
     });
 });
 });

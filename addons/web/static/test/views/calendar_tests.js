@@ -214,6 +214,7 @@ QUnit.module('Views', {
         assert.ok($('.modal button.btn:contains(Ok)').length, "should display the confirm message");
         $('.modal button.btn:contains(Ok)').trigger('click');
         assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 3, "click on remove then should display 3 filter items for 'attendees'");
+        calendar.destroy();
     });
 
     QUnit.test('create and change events', function (assert) {
@@ -309,7 +310,7 @@ QUnit.module('Views', {
         calendar.$buttons.find('.o_calendar_button_next').click();
 
         assert.strictEqual(calendar.$('.fc-event-container .fc-event').length, 0, "should display 0 events");
-
+        calendar.destroy();
     });
 
 });

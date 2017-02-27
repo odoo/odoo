@@ -97,6 +97,7 @@ QUnit.module('Views', {
             "should not have a visible save button");
         assert.ok(!list.$buttons.find('.o_list_button_discard').is(':visible'),
             "should not have a visible save button");
+        list.destroy();
     });
 
 
@@ -129,6 +130,7 @@ QUnit.module('Views', {
             "should have a visible save button");
         assert.ok(list.$buttons.find('.o_list_button_discard').is(':visible'),
             "should have a visible discard button");
+        list.destroy();
     });
 
 
@@ -147,6 +149,7 @@ QUnit.module('Views', {
 
         // 1 th for checkbox, 1 for 1 visible column
         assert.strictEqual(list.$('th').length, 2, "should have 2 th");
+        list.destroy();
     });
 
     QUnit.test('at least 4 rows are rendered, even if less data', function (assert) {
@@ -161,6 +164,7 @@ QUnit.module('Views', {
         });
 
         assert.strictEqual(list.$('tbody tr').length, 4, "should have 4 rows");
+        list.destroy();
     });
 
     QUnit.test('basic grouped list rendering', function (assert) {
@@ -178,6 +182,7 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('th:contains(Bar)').length, 1, "should contain Bar");
         assert.strictEqual(list.$('tr.o_group_header').length, 2, "should have 2 .o_group_header");
         assert.strictEqual(list.$('th.o_group_name').length, 2, "should have 2 .o_group_name");
+        list.destroy();
     });
 
     QUnit.test('many2one field rendering', function (assert) {
@@ -192,6 +197,7 @@ QUnit.module('Views', {
 
         assert.ok(list.$('td:contains(Value 1)').length,
             "should have the display_name of the many2one");
+        list.destroy();
     });
 
     QUnit.test('grouped list view, with 1 open group', function (assert) {
@@ -212,6 +218,7 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('td:contains(-4)').length, 1, "should contain -4");
         assert.strictEqual(list.$('td:contains(10)').length, 1, "should contain 10");
         assert.strictEqual(list.$('tr.o_group_header td:contains(10)').length, 1, "but 10 should be in a header");
+        list.destroy();
     });
 
     QUnit.test('opening records when clicking on record', function (assert) {
@@ -234,6 +241,7 @@ QUnit.module('Views', {
         list.$('th.o_group_name').first().click();
 
         list.$('tr:not(.o_group_header) td:not(.o_list_record_selector)').first().click();
+        list.destroy();
     });
 
     QUnit.test('editable list view: readonly fields cannot be edited', function (assert) {
@@ -252,6 +260,7 @@ QUnit.module('Views', {
         $td.click();
         assert.ok(!$td.hasClass('o_edit_mode'), "foo cells should not be editable");
         assert.ok($second_td.hasClass('o_edit_mode'), "bar cells should be editable");
+        list.destroy();
     });
 
     QUnit.test('basic operations for editable list renderer', function (assert) {
@@ -271,6 +280,7 @@ QUnit.module('Views', {
         assert.strictEqual($td.hasClass('o_field_dirty'), false, "td should not be dirty");
         $td.find('input').val('abc').trigger('input');
         assert.strictEqual($td.hasClass('o_field_dirty'), true, "td should be dirty");
+        list.destroy();
     });
 
     QUnit.test('field changes are triggered correctly', function (assert) {
@@ -293,6 +303,7 @@ QUnit.module('Views', {
         assert.strictEqual(n, 1, "field_changed should not have been triggered");
         list.$('td:not(.o_list_record_selector)').eq(2).click();
         assert.strictEqual(n, 1, "field_changed should have been triggered");
+        list.destroy();
     });
 
     QUnit.test('editable list view: basic char field edition', function (assert) {
@@ -317,6 +328,7 @@ QUnit.module('Views', {
             'saved row should be in readonly mode');
         assert.strictEqual(this.data.foo.records[0].foo, 'abc',
             "the edition should have been properly saved");
+        list.destroy();
     });
 
     QUnit.test('selection changes are triggered correctly', function (assert) {
@@ -355,6 +367,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('tbody .o_list_record_selector input:checked').length, 0,
                             "no selection checkbox should be checked");
+        list.destroy();
     });
 
     QUnit.test('aggregates are computed correctly', function (assert) {
@@ -379,6 +392,7 @@ QUnit.module('Views', {
         $thead_selector.click();
         assert.strictEqual(list.$('tfoot td:nth(2)').text(), "32",
                         "total should be 32 as all records are selected");
+        list.destroy();
     });
 
     QUnit.test('aggregates are computed correctly in grouped lists', function (assert) {
@@ -406,6 +420,7 @@ QUnit.module('Views', {
         list.$('tbody .o_list_record_selector input').first().click();
         assert.strictEqual(list.$('tfoot td:nth(2)').text(), "10",
                         "total should be 10 as first record of first group is selected");
+        list.destroy();
     });
 
     QUnit.test('properly apply onchange in simple case', function (assert) {
@@ -433,6 +448,7 @@ QUnit.module('Views', {
 
         assert.strictEqual($int_field_td.find('input').val(), "1007",
                         "should contain input with onchange applied");
+        list.destroy();
     });
 
     QUnit.test('column width should not change when switching mode', function (assert) {
@@ -467,6 +483,7 @@ QUnit.module('Views', {
             assert.strictEqual(editionWidths[i], readonlyWidths[i],
                 'width of columns should remain unchanged which switching from edit to readonly mode');
         }
+        list.destroy();
     });
 
     QUnit.test('deleting one record', function (assert) {
@@ -493,6 +510,7 @@ QUnit.module('Views', {
         $('body .modal-dialog button span:contains(Ok)').click();
 
         assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 3, "should have 3 records");
+        list.destroy();
     });
 
     QUnit.test('pager (ungrouped and grouped mode), default limit', function (assert) {
@@ -515,6 +533,7 @@ QUnit.module('Views', {
         assert.strictEqual(list.pager.state.size, 4, "pager's size should be 4");
         list.update({ groupBy: ['bar']});
         assert.ok(list.pager.$el.hasClass('o_hidden'), "pager should be invisible");
+        list.destroy();
     });
 
     QUnit.test('can sort records when clicking on header', function (assert) {
@@ -545,6 +564,7 @@ QUnit.module('Views', {
             "record 3 should be first");
         assert.ok(list.$('tbody tr:eq(3) td:contains(blip)').length,
             "record 1 should be first");
+        list.destroy();
     });
 
     QUnit.test('can display button in edit mode', function (assert) {
@@ -560,6 +580,7 @@ QUnit.module('Views', {
                 '</tree>',
         });
         assert.ok(list.$('tbody button').length, "should have a button");
+        list.destroy();
     });
 
     QUnit.test('can display a list with a many2many field', function (assert) {
@@ -582,6 +603,7 @@ QUnit.module('Views', {
         assert.strictEqual(rpcCount, 2, "should have done 2 rpcs: 1 searchread and 1 read for m2m");
         assert.ok(list.$('td:contains(Value 1, Value 2, Value 3)').length,
             "should have a td with correct formatted value");
+        list.destroy();
     });
 
 
@@ -599,6 +621,7 @@ QUnit.module('Views', {
         });
 
         assert.ok(!list.$buttons, "should not have any buttons");
+        list.destroy();
     });
 
     QUnit.test('display a tooltip on a field', function (assert) {
@@ -630,6 +653,7 @@ QUnit.module('Views', {
         assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1, "should have rendered a tooltip");
 
         config.debug = initialDebugMode;
+        list.destroy();
     });
 
     QUnit.test('support row decoration', function (assert) {
@@ -648,6 +672,7 @@ QUnit.module('Views', {
             "should have 3 columns with text-info class");
 
         assert.strictEqual(list.$('tbody tr').length, 4, "should have 4 rows");
+        list.destroy();
     });
 
     QUnit.test('no content helper when no data', function (assert) {
@@ -683,6 +708,7 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
             "should not display the no content helper");
         assert.strictEqual(list.$('table').length, 1, "should have a table in the dom");
+        list.destroy();
     });
 
 
@@ -732,6 +758,7 @@ QUnit.module('Views', {
             "the date field td should not have any content");
 
         list.$buttons.find('.o_list_button_save').click();
+        list.destroy();
     });
 
     QUnit.test('list view, editable, with a button', function (assert) {
@@ -753,7 +780,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('table button.o_icon_button i.fa-phone').length, 1,
             "should have rendered a button");
-
+        list.destroy();
     });
 
     QUnit.test('list view, editable, can discard', function (assert) {
@@ -782,6 +809,7 @@ QUnit.module('Views', {
 
         assert.ok(!list.$buttons.find('.o_list_button_discard').is(':visible'),
             "discard button should not be visible");
+        list.destroy();
     });
 
     QUnit.test('editable list view, click on the list to save', function (assert) {
@@ -821,6 +849,7 @@ QUnit.module('Views', {
         list.$('tbody tr').last().click();
 
         assert.strictEqual(createCount, 3, "should have created a record");
+        list.destroy();
     });
 
     QUnit.test('click on a button in a list view', function (assert) {
@@ -854,6 +883,7 @@ QUnit.module('Views', {
             'buttons should have correct icon');
 
         list.$('.o_list_button:first > button').click(); // click on the button
+        list.destroy();
     });
 
     QUnit.test('invisible attrs in readonly and editable list', function (assert) {
@@ -889,6 +919,7 @@ QUnit.module('Views', {
         list.$('tbody tr:nth(0) td:nth(4)').click();
         assert.ok(list.$('tbody tr:nth(0)').hasClass('o_selected_row'),
             "first row should be in edition");
+        list.destroy();
     });
 
     QUnit.test('monetary fields are properly rendered', function (assert) {
@@ -910,7 +941,6 @@ QUnit.module('Views', {
             session: {
                 currencies: currencies,
             },
-            manualDestroy: true,
         });
 
         assert.strictEqual(list.$('tbody tr:first td').length, 3,
@@ -938,6 +968,7 @@ QUnit.module('Views', {
             "should have formatted the date");
         assert.strictEqual(list.$('td:contains(12/12/2016 10:55:05)').length, 1,
             "should have formatted the datetime");
+        list.destroy();
     });
 });
 

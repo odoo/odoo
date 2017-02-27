@@ -119,6 +119,7 @@ QUnit.module('Views', {
             assert.strictEqual(nbReadGroups, 1, 'should have done 1 read_group');
             assert.strictEqual(nbSearchRead, 2, 'should have done 2 search_read');
             assert.strictEqual(nbNameCreate, 1, 'should have done 1 name_create');
+            model.destroy();
         });
     });
 
@@ -150,6 +151,7 @@ QUnit.module('Views', {
             assert.strictEqual(xphoneGroup.count, 0, 'xphone group has no record anymore');
             xpadGroup = _.findWhere(state.data, {res_id: 41});
             assert.strictEqual(xpadGroup.count, 1, 'xpad group still has one record');
+            model.destroy();
         });
     });
 

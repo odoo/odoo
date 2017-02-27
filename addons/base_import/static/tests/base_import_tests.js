@@ -39,6 +39,7 @@ QUnit.test('add import button in list', function(assert) {
     });
 
     list.$buttons.find('.o_button_import:contains(Import)').click();
+    list.destroy();
 });
 
 QUnit.test('list without import button', function(assert) {
@@ -55,6 +56,7 @@ QUnit.test('list without import button', function(assert) {
     });
 
     assert.ok(!list.$buttons.find('.o_button_import').length, "should not have an Import button");
+    list.destroy();
 });
 
 });

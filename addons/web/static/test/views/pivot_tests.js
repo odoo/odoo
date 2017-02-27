@@ -77,6 +77,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(pivot.$('td.o_pivot_cell_value:contains(32)').length, 1,
                     "should contain a pivot cell with the sum of all records");
+        pivot.destroy();
     });
 
     QUnit.test('pivot view without "string" attribute', function (assert) {
@@ -93,13 +94,14 @@ QUnit.module('Views', {
 
         // this is important for export functionality.
         assert.strictEqual(pivot.title, _t("Untitled"), "should have a valid title");
+        pivot.destroy();
     });
 
     QUnit.test('pivot view grouped by date field', function (assert) {
         assert.expect(2);
 
         var data = this.data;
-        createView({
+        var pivot = createView({
             View: PivotView,
             model: "partner",
             data: this.data,
@@ -115,6 +117,7 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
+        pivot.destroy();
     });
 
     QUnit.test('without measures, pivot view uses __count by default', function (assert) {
@@ -136,6 +139,7 @@ QUnit.module('Views', {
 
         var $countMeasure = pivot.$buttons.find('li[data-field=__count]');
         assert.ok($countMeasure.hasClass('selected'), "The count measure should be activated");
+        pivot.destroy();
     });
 
     QUnit.test('pivot view can be reloaded', function (assert) {
@@ -163,6 +167,7 @@ QUnit.module('Views', {
         assert.strictEqual(pivot.$('td.o_pivot_cell_value:contains(2)').length, 1,
                     "should contain a pivot cell with the number of remaining records");
         assert.strictEqual(readGroupCount, 2, "should have done 2 rpcs");
+        pivot.destroy();
     });
 
     QUnit.test('pivot view grouped by many2one field', function (assert) {
@@ -184,6 +189,7 @@ QUnit.module('Views', {
             "should display one header with 'xphone'");
         assert.strictEqual(pivot.$('.o_pivot_header_cell_closed:contains(xpad)').length, 1,
             "should display one header with 'xpad'");
+        pivot.destroy();
     });
 
     QUnit.test('basic folding/unfolding', function (assert) {
@@ -229,6 +235,7 @@ QUnit.module('Views', {
             "should have 4 rows: one for header, 3 for data");
         assert.strictEqual(rpcCount, 3,
             "should have done 3 rpcs (initial load) + open header with different groupbys");
+        pivot.destroy();
     });
 
     QUnit.test('more folding/unfolding', function (assert) {
@@ -254,6 +261,7 @@ QUnit.module('Views', {
 
         assert.strictEqual(pivot.$('tbody tr').length, 7,
             "should have 7 rows (1 for total, 1 for xphone, 1 for xpad, 4 for data)");
+        pivot.destroy();
     });
 
     QUnit.test('pivot view can be flipped', function (assert) {
@@ -283,6 +291,7 @@ QUnit.module('Views', {
         assert.strictEqual(rpcCount, 0, "should not have done any rpc");
         assert.strictEqual(pivot.$('tbody tr').length, 1,
             "should have 1 rows: 1 for the main header");
+        pivot.destroy();
     });
 
     QUnit.test('can toggle extra measure', function (assert) {
@@ -327,6 +336,7 @@ QUnit.module('Views', {
             "should have 3 cells: 1 for the open header, and 2 for data");
         assert.strictEqual(rpcCount, 2,
             "should not have done any extra rpcs");
+        pivot.destroy();
     });
 
     QUnit.test('no content helper when no active measure', function (assert) {
@@ -351,6 +361,7 @@ QUnit.module('Views', {
             "should have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 0,
             "should not have a table in DOM");
+        pivot.destroy();
     });
 
     QUnit.test('no content helper when no data', function (assert) {
@@ -375,6 +386,7 @@ QUnit.module('Views', {
             "should have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 0,
             "should not have a table in DOM");
+        pivot.destroy();
     });
 
     QUnit.test('tries to restore previous state after domain change', function (assert) {
@@ -411,6 +423,7 @@ QUnit.module('Views', {
             "should still have 3 cells: 1 for the open header, and 2 for data");
         assert.strictEqual(pivot.$('.o_pivot_measure_row:contains(Foo)').length, 1,
             "should still have 1 row for measure Foo");
+        pivot.destroy();
     });
 
 });});

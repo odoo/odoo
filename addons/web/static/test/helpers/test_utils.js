@@ -91,13 +91,11 @@ function createView(params) {
  * @param {any[]} [params.domain] the initial domain for the view
  * @param {Object} [params.context] the initial context for the view
  * @param {Object} [params.debug=false] if true, the widget will be appended in
- *   the DOM, will not be destroyed, and following tests will not be run.  Also,
- *   the logLevel will be forced to 2 and the uncaught OdooEvent will be logged
+ *   the DOM. Also, the logLevel will be forced to 2 and the uncaught OdooEvent
+ *   will be logged
  * @param {string[]} [params.groupBy] the initial groupBy for the view
  * @param {AbstractView} params.View the class that will be instantiated
  * @param {string} params.model a model name, will be given to the view
- * @param {boolean} params.manualDestroy if true, the widget will not be
- *   automatically destroyed
  * @param {Object} params.intercepts an object with event names as key, and
  *   callback as value.  Each key,value will be used to intercept the event.
  *   Note that this is particularly useful if you want to intercept events going
@@ -106,15 +104,12 @@ function createView(params) {
  * @returns {Deferred<AbstractView>} resolves with the instance of the view
  */
 function createAsyncView(params) {
-    _checkParamSafety(params);
-
     var $target = $('#qunit-fixture');
     var widget = new Widget();
 
     if (params.debug) {
         $target = $('body');
         params.logLevel = 2;
-        params.manualDestroy = true;
         observe(widget);
         var separator = window.location.href.indexOf('?') !== -1 ? "&" : "?";
         var url = window.location.href + separator + 'testId=' + QUnit.config.current.testId;
@@ -168,11 +163,6 @@ function createAsyncView(params) {
             view.$el.on('click', 'a', function (ev) {
                 ev.preventDefault();
             });
-            if (!params.manualDestroy) {
-                setTimeout(function () {
-                    view.destroy();
-                }, 50);
-            }
         }).then(function () {
             var $buttons = $('<div>');
             view.renderButtons($buttons);
@@ -307,17 +297,10 @@ function addMockEnvironment(widget, params) {
 }
 
 /**
- * create a model from given parameters.  Unless manualDestroy is specified, the
- * created model will be automatically destroyed after 50ms.
- *
- * Note that it is unsafe to mock the session and to let the automatic destroy
- * feature on, because that would mean that the next tests will be run in an
- * environment with the mocked session.
+ * create a model from given parameters.
  *
  * @param {Object} params This object will be given to addMockEnvironment, so
  *   any parameters from that method applies
- * @param {boolean} params.manualDestroy if true, the widget will not be
- *   automatically destroyed
  * @param {Class} params.Model the model class to use
  * @param {string[]} [params.fieldNames] the fields given to the model
  * @param {Object[]} [params.fields] map of field names to field description
@@ -325,7 +308,6 @@ function addMockEnvironment(widget, params) {
  * @returns {Model}
  */
 function createModel(params) {
-    _checkParamSafety(params);
     var widget = new Widget();
 
     var model = new params.Model(widget, {
@@ -336,28 +318,7 @@ function createModel(params) {
 
     addMockEnvironment(widget, params);
 
-    if (!params.manualDestroy) {
-        setTimeout(function () {
-            widget.destroy();
-        }, 50);
-    }
-
     return model;
-}
-
-/**
- * We need to disallow modifying the session/translate parameters and destroying
- * automatically a widget. So, we throw an error to make sure everything fails.
- *
- * @param {Object} params
- */
-function _checkParamSafety(params) {
-    if ('session' in params && !params.manualDestroy) {
-        throw new Error("Modifying the session is unsafe if the view is not manually destroyed");
-    }
-    if ('translateParameters' in params && !params.manualDestroy) {
-        throw new Error("Modifying the translate parameters is unsafe if the view is not manually destroyed");
-    }
 }
 
 /**

@@ -27,10 +27,6 @@ QUnit.module('Views', {
         var widget = new Widget();
 
         testUtils.addMockEnvironment(widget, params);
-
-        setTimeout(function () {
-            widget.destroy();
-        }, 50);
         return widget;
     }
 
@@ -50,15 +46,16 @@ QUnit.module('Views', {
             },
         });
 
-        new dialogs.FormViewDialog(parent, {
+        var dialog = new dialogs.FormViewDialog(parent, {
             res_model: 'partner',
             res_id: 1,
         }).open();
 
         assert.notOk($('div.modal .modal-body button').length,
-            "should not have any button in body")
+            "should not have any button in body");
         assert.strictEqual($('div.modal .modal-footer button').length, 1,
-            "should have only one button in footer")
+            "should have only one button in footer");
+        dialog.destroy();
     });
 
 });

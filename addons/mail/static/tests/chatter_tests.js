@@ -151,6 +151,7 @@ QUnit.test('basic rendering', function (assert) {
     // assert.strictEqual(msgRpc, 1, "should still have fetched messages only once");
     assert.strictEqual(count, 0, "should have done no read_followers rpc as there are no followers");
     assert.strictEqual(unwanted_read_count, 0, "followers should only be fetched with read_followers route");
+    form.destroy();
 });
 
 QUnit.test('chatter is not rendered in mode === create', function (assert) {
@@ -193,6 +194,7 @@ QUnit.test('chatter is not rendered in mode === create', function (assert) {
     assert.ok(form.$('.o_chatter').length, "there should be a chatter widget");
     form.$buttons.find('.o_form_button_create').click();
     assert.ok(!form.$('.o_chatter').length, "there should not be a chatter widget");
+    form.destroy();
 });
 
 QUnit.test('kanban activity widget with no activity', function (assert) {
@@ -214,7 +216,6 @@ QUnit.test('kanban activity widget with no activity', function (assert) {
             return this._super(route, args);
         },
         session: {uid: 2},
-        manualDestroy: true,
     });
 
     var $record = kanban.$('.o_kanban_record').first();
@@ -268,7 +269,6 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
             return this._super(route, args);
         },
         session: {uid:2},
-        manualDestroy: true,
     });
 
     var $record = kanban.$('.o_kanban_record').first();
@@ -383,7 +383,6 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
                 bus.trigger('update_message', msg);
             },
         },
-        manualDestroy: true,
     });
 
     assert.ok(form.$('.o_chatter_topbar .o_chatter_button_log_note').length,
@@ -539,6 +538,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         "there should be no more activity");
     assert.strictEqual(form.$('.o_mail_thread .o_thread_message').length, 1,
         "a chatter message should have been generated");
+    form.destroy();
 });
 
 
@@ -624,7 +624,6 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', function (assert)
             return this._super.apply(this, arguments);
         },
         session: {partner_id: partnerID},
-        manualDestroy: true,
     });
 
     assert.strictEqual(form.$('.o_followers_count').text(), "0", 'should have no followers');
