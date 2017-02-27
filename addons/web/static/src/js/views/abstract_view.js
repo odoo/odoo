@@ -119,7 +119,7 @@ var AbstractView = Class.extend({
         return $.when(model.load(this.loadParams), this._loadLibs()).then(function () {
             var state = model.get(arguments[0]);
             var renderer = self.createRenderer(parent, state);
-            var Controller = self.config.Controller;
+            var Controller = self.Controller || self.config.Controller;
             var controllerParams = _.extend({
                 initialState: state,
             }, self.controllerParams);
@@ -149,7 +149,7 @@ var AbstractView = Class.extend({
      * @param {Controller} Controller
      */
     setController: function (Controller) {
-        this.config.Controller = Controller;
+        this.Controller = Controller;
     },
 
     //--------------------------------------------------------------------------
