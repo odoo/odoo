@@ -7,6 +7,12 @@
     </xpath>
 </template>
 
+<template id="less" name="Website HR Recruitment less" inherit_id="website.assets_frontend" active="True" priority="1">
+    <xpath expr="." position="inside">
+        <link href="/website_hr_recruitment/static/src/less/layout.less" rel="stylesheet" type="text/less"/>
+    </xpath>
+</template>
+
 <template id="index" name="Jobs">
     <t t-call="website.layout">
         <div id="wrap">
@@ -392,7 +398,7 @@
                             <div class="col-md-1 col-md-offset-4">
                                 <p t-field="responsible.image_small" t-field-options='{"widget": "image", "class": "img-circle center-block"}'/>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-5 o_responsible_data">
                                 <h4 class="mt0" t-field="responsible.name"></h4>
                                 <p t-field="responsible.function"></p>
                                 <i class="fa fa-envelope"></i> <a t-attf-href="mailto:#{responsible.email}" t-esc="responsible.email"/>
