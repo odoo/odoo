@@ -273,7 +273,7 @@ class Department(models.Model):
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
     note = fields.Text('Note')
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color Index', default=1)
 
     @api.constrains('parent_id')
     def _check_parent_id(self):

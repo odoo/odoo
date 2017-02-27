@@ -189,7 +189,7 @@ class Warehouse(models.Model):
         # choose the next available color for the operation types of this warehouse
         all_used_colors = [res['color'] for res in PickingType.search_read([('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')]
         available_colors = [zef for zef in [0, 3, 4, 5, 6, 7, 8, 1, 2] if zef not in all_used_colors]
-        color = available_colors and available_colors[0] or 0
+        color = available_colors and available_colors[0] or 1
 
         # suit for each warehouse: reception, internal, pick, pack, ship
         max_sequence = PickingType.search_read([('sequence', '!=', False)], ['sequence'], limit=1, order='sequence desc')

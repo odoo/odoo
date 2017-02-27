@@ -693,8 +693,8 @@
                 <field name="todo_request_count_block"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
-                            <div class="o_kanban_card_header">
+                        <div>
+                            <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary"><field name="name"/></div>
                                 </div>
