@@ -763,6 +763,7 @@ var FieldOne2Many = FieldX2Many.extend({
             var command = event.data.changes[this.name];
             if (command.operation === 'UPDATE') {
                 var fieldsChanged = _.keys(command.data);
+                // FIXME: other fields might have change with onchange
                 this.renderer.confirmChange(record.data[this.name], command.id, fieldsChanged);
                 return $.when();
             }
