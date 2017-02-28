@@ -336,6 +336,9 @@ var BasicModel = AbstractModel.extend({
             delete element.orderedBy;
             delete element.aggregateValues;
             delete element.groupedBy;
+            if (this.isNew(element.id)) {
+                delete element.res_id;
+            }
         }
         if (element.type === 'list') {
             // apply changes if any

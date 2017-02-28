@@ -1711,12 +1711,10 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: '<form>' +
-                    '<div name="button_box" class="oe_button_box">' +
-                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
-                            '<field name="bar" widget="boolean_button" options=\'{"terminology": ' +
-                                JSON.stringify(terminology) + '}\'/>' +
-                        '</button>' +
-                    '</div>' +
+                    '<group>' +
+                        '<field name="bar" widget="boolean_button" options=\'{"terminology": ' +
+                            JSON.stringify(terminology) + '}\'/>' +
+                    '</group>' +
                 '</form>',
             res_id: 2,
         });
@@ -1728,6 +1726,42 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('.o_stat_text.o_not_hover:contains(Test Environment)').length, 1,
             "button should contain correct string");
+
+        form.destroy();
+    });
+
+    QUnit.test('button box is not rendered in create mode', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<div name="button_box" class="oe_button_box">' +
+                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+                            '<field name="bar"/>' +
+                        '</button>' +
+                    '</div>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        // readonly mode
+        assert.strictEqual(form.$('.oe_stat_button').length, 1,
+            "button box should be displayed in readonly");
+
+        // edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.oe_stat_button').length, 1,
+            "button box should be displayed in edit on an existing record");
+
+        // create mode
+        form.$buttons.find('.o_form_button_create').click();
+        assert.strictEqual(form.$('.oe_stat_button').length, 0,
+            "button box should not be displayed when creating a new record");
+
         form.destroy();
     });
 
