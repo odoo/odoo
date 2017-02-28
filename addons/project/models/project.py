@@ -195,7 +195,7 @@ class Project(models.Model):
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
                                domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)])
     color = fields.Integer(string='Color Index')
-    user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, track_visibility="onchange")
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True,
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
@@ -253,7 +253,10 @@ class Project(models.Model):
             vals['alias_name'] = vals.get('alias_name') or vals.get('name')
         # Prevent double project creation when 'use_tasks' is checked
         self = self.with_context(project_creation_in_progress=True, mail_create_nosubscribe=True)
-        return super(Project, self).create(vals)
+        project = super(Project, self).create(vals)
+        if project.privacy_visibility == 'portal' and project.partner_id:
+            project.message_subscribe(project.partner_id.ids)
+        return project
 
     @api.multi
     def write(self, vals):
@@ -264,6 +267,9 @@ class Project(models.Model):
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
             self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
+        if vals.get('partner_id') or vals.get('privacy_visibility'):
+            for project in self.filtered(lambda project: project.privacy_visibility == 'portal'):
+                project.message_subscribe(project.partner_id.ids)
         return res
 
     @api.multi
