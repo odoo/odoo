@@ -2,9 +2,9 @@ odoo.define('google_spreadsheet.google.spreadsheet', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
-var Context = require('web.Context');
 var core = require('web.core');
 var data = require('web.data');
+var Domain = require('web.Domain');
 var FavoriteMenu = require('web.FavoriteMenu');
 var pyeval = require('web.pyeval');
 var ViewManager = require('web.ViewManager');
@@ -14,7 +14,7 @@ var QWeb = core.qweb;
 FavoriteMenu.include({
     start: function () {
         this._super();
-        var am = this.findAncestor(function(a) {
+        var am = this.findAncestor(function (a) {
             return a instanceof ActionManager;
         });
         if (am && am.get_inner_widget() instanceof ViewManager) {
@@ -28,17 +28,14 @@ FavoriteMenu.include({
             model = this.searchview.dataset.model,
             list_view = this.view_manager.views.list,
             list_view_id = list_view ? list_view.view_id : false,
-            context = this.searchview.dataset.get_context() || [],
-            compound_context = new Context(context),
-            compound_domain = new data.CompoundDomain(context),
+            domain = [],
             groupbys = pyeval.eval('groupbys', sv_data.groupbys).join(" "),
             ds = new data.DataSet(this, 'google.drive.config');
 
-        _.each(sv_data.contexts, compound_context.add, compound_context);
-        _.each(sv_data.domains, compound_domain.add, compound_domain);
-
-        compound_domain = JSON.stringify(compound_domain.eval());
-        ds.call('set_spreadsheet', [model, compound_domain, groupbys, list_view_id])
+        _.each(sv_data.domains, function (d) {
+            domain.push(Domain.prototype.stringToArray(d));
+        });
+        ds.call('set_spreadsheet', [model, Domain.prototype.arrayToString(domain), groupbys, list_view_id])
             .done(function (res) {
                 if (res.url){
                     window.open(res.url, '_blank');

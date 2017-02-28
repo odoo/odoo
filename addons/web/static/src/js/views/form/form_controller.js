@@ -243,7 +243,7 @@ var FormController = BasicController.extend({
         var recordID = record.data.id;
         this.trigger_up('execute_action', {
             action_data: _.extend({}, attrs, {
-                context: data.build_context(record, attrs.context)
+                context: _.extend(record.getContext(), attrs.context),
             }),
             model: record.model,
             record_id: recordID,
@@ -532,7 +532,7 @@ var FormController = BasicController.extend({
                 res_model: model,
                 res_id: res_id,
                 fields_view: form_fields_view,
-                context: data.build_context(record),
+                context: record.getContext(),
                 readonly: event.data.readonly,
                 title: _t("Open: ") + event.data.string,
                 on_save: event.data.on_save,
@@ -605,7 +605,7 @@ return FormController;
     //     record = record || this.model.get(this.db_id);
     //     var record_id = record.data.id;
     //     this.trigger_up('execute_action', {
-    //         action_data: _.extend({}, attrs, { context: data.build_context(record, attrs.context) }),
+    //         action_data: _.extend({}, attrs, { context: _.extend(record.getContext(), attrs.context) }),
     //         dataset: this.dataset,
     //         record_id: record_id,
     //         on_close: function (reason) {

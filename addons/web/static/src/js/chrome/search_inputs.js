@@ -3,7 +3,7 @@ odoo.define('web.search_inputs', function (require) {
 
 var Context = require('web.Context');
 var core = require('web.core');
-var data = require('web.data');
+var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
 var pyeval = require('web.pyeval');
 var time = require('web.time');
@@ -151,27 +151,27 @@ var Field = Input.extend( /** @lends instance.web.search.Field# */ {
         var domain = this.attrs.filter_domain;
         if (domain) {
             value_to_domain = function (facetValue) {
-                return new data.CompoundDomain(domain)
-                    .set_eval_context({self: self.value_from(facetValue)});
+                return Domain.prototype.stringToArray(
+                    domain,
+                    {self: self.value_from(facetValue)}
+                );
             };
         } else {
             value_to_domain = function (facetValue) {
                 return self.make_domain(
                     self.attrs.name,
                     self.attrs.operator || self.default_operator,
-                    facetValue);
+                    facetValue
+                );
             };
         }
         var domains = facet.values.map(value_to_domain);
-
-        if (domains.length === 1) { return domains[0]; }
-        for (var i = domains.length; --i;) {
-            domains.unshift(['|']);
+        if (domains.length === 1) {
+            return domains[0];
         }
 
-        return _.extend(new data.CompoundDomain(), {
-            __domains: domains
-        });
+        var ors = _.times(domains.length - 1, _.constant("|"));
+        return ors.concat.apply(ors, domains);
     }
 });
 
@@ -421,7 +421,7 @@ var ManyToOneField = CharField.extend({
         var args = this.attrs.domain;
         if (typeof args === 'string') {
             try {
-                args = pyeval.eval('domain', args);
+                args = Domain.prototype.stringToArray(args);
             } catch(e) {
                 args = [];
             }
@@ -625,14 +625,15 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
             .reject(_.isEmpty)
             .value();
 
-        if (!domains.length) { return; }
-        if (domains.length === 1) { return domains[0]; }
-        for (var i=domains.length; --i;) {
-            domains.unshift(['|']);
+        if (!domains.length) {
+            return;
         }
-        return _.extend(new data.CompoundDomain(), {
-            __domains: domains
-        });
+        if (domains.length === 1) {
+            return domains[0];
+        }
+
+        var ors = _.times(domains.length - 1, _.constant("|"));
+        return ors.concat.apply(ors, domains);
     },
     toggle_filter: function (e) {
         e.preventDefault();

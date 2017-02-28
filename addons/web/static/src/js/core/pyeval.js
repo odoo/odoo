@@ -867,12 +867,6 @@ function eval_domains(domains, evaluation_context) {
             evaluation_context.context = evaluation_context;
             domain_array_to_combine = py.eval(domain.__debug, wrap_context(evaluation_context));
             break;
-        case 'compound_domain':
-            var eval_context = eval_contexts([domain.__eval_context]);
-            domain_array_to_combine = eval_domains(
-                domain.__domains, _.extend({}, evaluation_context, eval_context)
-            );
-            break;
         default:
             domain_array_to_combine = domain;
         }
@@ -983,7 +977,7 @@ function pyeval(type, object, context) {
 function eval_arg(arg) {
     if (typeof arg !== 'object' || !arg.__ref) { return arg; }
     switch(arg.__ref) {
-    case 'domain': case 'compound_domain':
+    case 'domain':
         return pyeval('domains', [arg]);
     case 'context': case 'compound_context':
         return pyeval('contexts', [arg]);

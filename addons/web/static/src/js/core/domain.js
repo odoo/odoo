@@ -12,20 +12,22 @@ var Domain = collections.Tree.extend({
     /**
      * @constructor
      * @param {string|Array|boolean|undefined} domain
-     *        - The given domain can be:
+     *        The given domain can be:
      *            * a string representation of the Python prefix-array
      *              representation of the domain.
      *            * a JS prefix-array representation of the domain.
      *            * a boolean where the "true" domain match all records and the
      *              "false" domain does not match any records.
      *            * undefined, considered as the false boolean.
+     * @param {Object} [evalContext] - in case the given domain is a string, an
+     *                               evaluation context might be needed
      */
-    init: function (domain) {
+    init: function (domain, evalContext) {
         this._super.apply(this, arguments);
         if (domain === true || domain === false || domain === undefined) {
             this._data = domain || false;
         } else {
-            this._parse(this.normalizeArray(_.clone(this.stringToArray(domain))));
+            this._parse(this.normalizeArray(_.clone(this.stringToArray(domain, evalContext))));
         }
     },
 
@@ -107,6 +109,30 @@ var Domain = collections.Tree.extend({
         }
     },
 
+    /**
+     * @returns {Array} JS prefix-array representation of this domain
+     */
+    toArray: function () {
+        if (this._data === false) {
+            throw new Error("'false' domain cannot be converted to array");
+        } else if (this._data === true) {
+            return [];
+        } else {
+            var arr = [this._data];
+            return arr.concat.apply(arr, _.map(this._children, function (child) {
+                return child.toArray();
+            }));
+        }
+    },
+
+    /**
+     * @returns {string} representation of the Python prefix-array
+     *                   representation of the domain
+     */
+    toString: function () {
+        return Domain.prototype.arrayToString(this.toArray());
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -179,8 +205,9 @@ var Domain = collections.Tree.extend({
     arrayToString: function (domain) {
         if (_.isString(domain)) return domain;
         return JSON.stringify(domain || [])
-                    .replace(/false/g, "False")
-                    .replace(/true/g, "True");
+            .replace(/null/g, "None")
+            .replace(/false/g, "False")
+            .replace(/true/g, "True");
     },
     /**
      * Converts a string representation of the Python prefix-array
@@ -189,11 +216,12 @@ var Domain = collections.Tree.extend({
      *
      * @static
      * @param {string|Array} domain
+     * @param {Object} [evalContext]
      * @returns {Array}
      */
-    stringToArray: function (domain) {
+    stringToArray: function (domain, evalContext) {
         if (!_.isString(domain)) return domain;
-        return pyeval.eval("domain", domain || "[]");
+        return pyeval.eval("domain", domain || "[]", evalContext);
     },
     /**
      * Makes implicit "&" operators explicit in the given JS prefix-array

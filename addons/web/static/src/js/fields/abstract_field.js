@@ -81,6 +81,9 @@ var AbstractField = Widget.extend({
         // 'name' is the field name displayed by this widget
         this.name = name;
 
+        // the datapoint fetched from the model
+        this.record = record;
+
         // the 'field' property is a description of all the various field properties,
         // such as the type, the comodel (relation), ...
         this.field = record.fields[name];
@@ -208,17 +211,6 @@ var AbstractField = Widget.extend({
         this._reset(record, event);
         return this._render();
     },
-    /**
-     * @override performModelRPC from ServicesMixin
-     * Adds the dataPointID to the option parameter so that the BasicController
-     * (the FieldManagerMixin) knows the context to bind to the rpc call.
-     */
-    performModelRPC: function (model, method, args, kwargs, options) {
-        return this._super(model, method, args, kwargs, _.extend({
-            dataPointID: this.dataPointID,
-            fieldName: this.name,
-        }, options || {}));
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -289,6 +281,7 @@ var AbstractField = Widget.extend({
      * @param {OdooEvent} event the event that triggered the change
      */
     _reset: function (record, event) {
+        this.record = record;
         this.value = record.data[this.name];
         this.recordData = record.data;
     },

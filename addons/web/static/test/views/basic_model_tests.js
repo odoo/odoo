@@ -638,7 +638,6 @@ QUnit.module('Views', {
         model.destroy();
     });
 
-
     QUnit.test('write commands on a one2many', function (assert) {
         assert.expect(4);
 
@@ -835,5 +834,64 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('contexts and domains can be properly fetched', function (assert) {
+        assert.expect(8);
 
+        this.data.partner.fields.product_id.context = "{'hello': 'world', 'test': foo}";
+        this.data.partner.fields.product_id.domain = "[['hello', 'like', 'world'], ['test', 'like', foo]]";
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        this.params.fieldNames = ['product_id', 'foo'];
+
+        model.load(this.params).then(function (resultID) {
+            var recordPartner = model.get(resultID);
+            assert.strictEqual(typeof recordPartner.getContext, "function",
+                "partner record should have a getContext function");
+            assert.strictEqual(typeof recordPartner.getDomain, "function",
+                "partner record should have a getDomain function");
+            assert.deepEqual(recordPartner.getContext(), {},
+                "asking for a context without a field name should fetch the session/user/view context");
+            assert.deepEqual(recordPartner.getDomain(), [],
+                "asking for a domain without a field name should fetch the session/user/view domain");
+            assert.deepEqual(
+                recordPartner.getContext({fieldName: "product_id"}),
+                {hello: "world", test: "gnap"},
+                "asking for a context with a field name should fetch the field context (evaluated)");
+            assert.deepEqual(
+                recordPartner.getDomain({fieldName: "product_id"}),
+                [["hello", "like", "world"], ["test", "like", "gnap"]],
+                "asking for a domain with a field name should fetch the field domain (evaluated)");
+        });
+        model.destroy();
+
+        // Try again with xml override of field domain and context
+        model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        this.params.fieldAttrs = {
+            product_id: {
+                context: "{'hello2': 'world', 'test2': foo}",
+                domain: "[['hello2', 'like', 'world'], ['test2', 'like', foo]]",
+            },
+        };
+
+        model.load(this.params).then(function (resultID) {
+            var recordPartner = model.get(resultID);
+            assert.deepEqual(
+                recordPartner.getContext({fieldName: "product_id"}),
+                {hello2: "world", test2: "gnap"},
+                "field context should have been overriden by xml attribute");
+            assert.deepEqual(
+                recordPartner.getDomain({fieldName: "product_id"}),
+                [["hello2", "like", "world"], ["test2", "like", "gnap"]],
+                "field domain should have been overriden by xml attribute");
+        });
+        model.destroy();
+    });
 });});

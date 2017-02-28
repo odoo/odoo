@@ -4,8 +4,8 @@ odoo.define('board.dashboard', function (require) {
 var ActionManager = require('web.ActionManager');
 var Context = require('web.Context');
 var core = require('web.core');
-var data = require('web.data');
 var Dialog = require('web.Dialog');
+var Domain = require('web.Domain');
 var FavoriteMenu = require('web.FavoriteMenu');
 var form_common = require('web.view_dialogs');
 var pyeval = require('web.pyeval');
@@ -396,9 +396,11 @@ FavoriteMenu.include({
 
         var search_data = this.searchview.build_search_data(),
             context = new Context(this.searchview.dataset.get_context() || []),
-            domain = new data.CompoundDomain(this.searchview.dataset.get_domain() || []);
+            domain = this.searchview.dataset.get_domain() || [];
         _.each(search_data.contexts, context.add, context);
-        _.each(search_data.domains, domain.add, domain);
+        _.each(search_data.domains, function (d) {
+            domain.push(Domain.prototype.stringToArray(d));
+        });
 
         context.add({
             group_by: pyeval.eval('groupbys', search_data.groupbys || [])
@@ -412,13 +414,12 @@ FavoriteMenu.include({
         }
         this.toggle_dashboard_menu(false);
         c.dashboard_merge_domains_contexts = false;
-        var d = pyeval.eval('domain', domain);
         var name = self.$add_dashboard_input.val();
-        
+
         return self.rpc('/board/add_to_dashboard', {
             action_id: self.action_id || false,
             context_to_save: c,
-            domain: d,
+            domain: domain,
             view_mode: self.view_manager.active_view.type,
             name: name,
         }).then(function (r) {

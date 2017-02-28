@@ -79,7 +79,7 @@ odoo.define('web.BasicModel', function (require) {
 var AbstractModel = require('web.AbstractModel');
 var concurrency = require('web.concurrency');
 var Context = require('web.Context');
-var data = require('web.data'); // TODO: remove dependency to data.js
+var Domain = require('web.Domain');
 var fieldUtils = require('web.field_utils');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
@@ -365,6 +365,10 @@ var BasicModel = AbstractModel.extend({
         delete element.parentID;
         delete element.relation_field;
         delete element.rawContext;
+
+        element.getContext = this._getContext.bind(this, record);
+        element.getDomain = this._getDomain.bind(this, record);
+
         return element;
     },
     /**
@@ -928,20 +932,6 @@ var BasicModel = AbstractModel.extend({
                 return groupId;
             });
         }
-    },
-    /**
-     * Every RPC done by the model need to add some context, which is a
-     * combination of the context of the session, of the record/list, and/or of
-     * the concerned field. This method combines all these contexts and evaluate
-     * them with the proper evalcontext.
-     *
-     * @param {string} recordID - the id of an element from the localData
-     * @see _getContext for the options parameter
-     * @returns {Object} the evaluated context
-     */
-    getContext: function (recordID, options) {
-        var record = this.localData[recordID];
-        return this._getContext(record, options);
     },
 
     //--------------------------------------------------------------------------
@@ -1626,7 +1616,77 @@ var BasicModel = AbstractModel.extend({
      */
     _getContext: function (element, options) {
         var context = new Context(session.user_context, element.context);
+        context.set_eval_context(this._getEvalContext(element));
+
+        if (options && options.fieldName) {
+            var attrs = element.fieldAttrs[options.fieldName];
+            if (attrs && attrs.context) {
+                context.add(attrs.context);
+            } else {
+                var fieldParams = element.fields[options.fieldName];
+                if (fieldParams.context) {
+                    context.add(fieldParams.context);
+                }
+            }
+        }
+        if (element.rawContext) {
+            var rawContext = new Context(element.rawContext);
+            var evalContext = this._getEvalContext(this.localData[element.parentID]);
+            evalContext.id = evalContext.id || false;
+            rawContext.set_eval_context(evalContext);
+            context.add(rawContext);
+        }
+
+        return context.eval();
+    },
+    /**
+     * Some records are associated to a/some domain(s). This method allows to
+     * retrieve them, evaluated.
+     *
+     * @param {Object} element an element from the localData
+     * @param {Object} [options]
+     * @param {string} [options.fieldName]
+     *        the name of the field whose domain needs to be returned
+     * @returns {Array} the evaluated domain
+     */
+    _getDomain: function (element, options) {
+        if (options && options.fieldName) {
+            var attrs = element.fieldAttrs[options.fieldName];
+            if (attrs && attrs.domain) {
+                return Domain.prototype.stringToArray(
+                    attrs.domain,
+                    this._getEvalContext(element)
+                );
+            }
+            var fieldParams = element.fields[options.fieldName];
+            if (fieldParams.domain) {
+                return Domain.prototype.stringToArray(
+                    fieldParams.domain,
+                    this._getEvalContext(element)
+                );
+            }
+            return [];
+        }
+
+        return Domain.prototype.stringToArray(
+            element.domain,
+            this._getEvalContext(element)
+        );
+    },
+    /**
+     * Returns the evaluation context that should be used when evaluating the
+     * context/domain associated to a given element from the localData.
+     *
+     * @param {Object} element - an element from the localData
+     * @returns {Object}
+     */
+    _getEvalContext: function (element) {
         var evalContext = this.get(element.id, {raw: true}).data;
+        evalContext.active_model = element.model;
+        if (evalContext.id) {
+            evalContext.active_id = evalContext.id;
+            evalContext.active_ids = [evalContext.id];
+        }
         if (element.parentID) {
             var parent = this.get(element.parentID, {raw: true});
             if (parent.type === 'list' && this.localData[element.parentID].parentID) {
@@ -1634,23 +1694,7 @@ var BasicModel = AbstractModel.extend({
             }
             _.extend(evalContext, {parent: parent.data});
         }
-        context.set_eval_context(evalContext);
-        if (options && options.fieldName) {
-            var attrs = element.fieldAttrs[options.fieldName];
-            if (attrs && attrs.context) {
-                context.add(attrs.context);
-            }
-        }
-
-        if (element.rawContext) {
-            var rawContext = new Context(element.rawContext);
-            var evalContext = this.get(element.parentID, {raw: true}).data;
-            evalContext.id = evalContext.id || false;
-            rawContext.set_eval_context(evalContext);
-            context.add(rawContext);
-        }
-
-        return context.eval();
+        return evalContext;
     },
     /**
      * Helper method for the load entry point.
@@ -1759,8 +1803,7 @@ var BasicModel = AbstractModel.extend({
                     }
                     return val;
                 });
-                var _domain = new data.CompoundDomain(field.domain || {}).set_eval_context(field_values);
-                var domain = pyeval.eval('domain', _domain);
+                var domain = Domain.prototype.stringToArray(field.domain || [], field_values);
                 var fold_field = pyeval.py_eval(attrs.options || '{}').fold_field;
                 var fetch_status_information = self.rpc(field.relation, 'search_read')
                     .withFields(['id'].concat(fold_field ? [fold_field] : []))

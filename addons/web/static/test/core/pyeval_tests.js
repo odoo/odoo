@@ -281,13 +281,13 @@ QUnit.module('core', function () {
         }, /^Error: TypeError:/); //20
         assert.throws(function () {
             py.eval('a - 1', ctx);
-        }, /^Error: TypeError:/); 
+        }, /^Error: TypeError:/);
         assert.throws(function () {
             py.eval('1 + a', ctx);
-        }, /^Error: TypeError:/); 
+        }, /^Error: TypeError:/);
         assert.throws(function () {
             py.eval('1 - a', ctx);
-        }, /^Error: TypeError:/); 
+        }, /^Error: TypeError:/);
 
         // delta - date is senseless.
         assert.throws(function () {
@@ -451,7 +451,7 @@ QUnit.module('core', function () {
             { "active_id": 9, "active_ids": [ 9 ], "active_model": "mail.compose.message" }
         ];
         var result = pyEval.eval_domains_and_contexts({
-            contexts: ctx, 
+            contexts: ctx,
             domins: [],
         });
 
@@ -522,10 +522,7 @@ QUnit.module('core', function () {
         var result = pyEval.eval_domains_and_contexts({
             domains: [
                 [['type', '=', 'contract']],
-                { "__domains": [["|"], [["state", "in", ["open", "draft"]]], [["type", "=", "contract"], ["state", "=", "pending"]]],
-                  "__eval_context": null,
-                  "__ref": "compound_domain"
-                },
+                ["|", ["state", "in", ["open", "draft"]], [["type", "=", "contract"], ["state", "=", "pending"]]],
                 "['|', '&', ('date', '!=', False), ('date', '<=', time.strftime('%Y-%m-%d')), ('is_overdue_quantity', '=', True)]",
                 [['user_id', '=', 1]]
             ],
@@ -562,14 +559,11 @@ QUnit.module('core', function () {
         });
         assert.deepEqual(result1.domain, [['company_id', '=', false]]);
 
-        var compound_domain = new data.CompoundDomain(d);
-        compound_domain.set_eval_context({company_id: 42});
-
         var result2 = pyEval.eval_domains_and_contexts({
-            domains: [compound_domain],
+            domains: [d],
             contexts: [],
+            eval_context: {company_id: 42},
         });
-
         assert.deepEqual(result2.domain, [['company_id', '=', 42]]);
     });
 
@@ -1014,4 +1008,3 @@ QUnit.module('core', function () {
 });
 
 });
-
