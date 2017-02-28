@@ -498,6 +498,24 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.sudo(user1).foo, 'alpha')
         self.assertEqual(record.sudo(user2).foo, 'default')
 
+        # Create company record and attribute
+        company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
+        attribute_record = self.env['test_new_api.company.attr'].create({
+            'foo': company_record.id,
+            'quantity': 1,
+        })
+        # Check if initial state is correct
+        self.assertEqual(attribute_record.bar, 'ABC')
+        # Change quantity 2, bar should recompute to ABCABC
+        attribute_record.quantity = 2
+        self.assertEqual(attribute_record.bar, 'ABCABC')
+        # Change company 'foo', this should invalidate 'foo' in attribute env
+        # and force recomputation of attribute's 'bar' to match new values
+        # (i.e bar = 'DEFDEF')
+        company_record.foo = 'DEF'
+        self.assertEqual(attribute_record.foo.foo, 'DEF')
+        self.assertEqual(attribute_record.bar, 'DEFDEF')
+
     def test_28_sparse(self):
         """ test sparse fields. """
         record = self.env['test_new_api.sparse'].create({})
