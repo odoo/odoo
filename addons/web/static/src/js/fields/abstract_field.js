@@ -157,6 +157,7 @@ var AbstractField = Widget.extend({
             if (self.required) {
                 self.$el.addClass('o_form_required');
             }
+            self.$el.attr('name', self.name);
         });
     },
 
