@@ -73,6 +73,9 @@
                         <table></table>
                     </div>
                     <div class="action_pane create">
+                        <div t-if="!presets">
+                            <p style="color: #bbb;">You did not configure any reconcile model yet, you can do it <a style="cursor: pointer;" class="goto_create_preset">there</a>.</p>
+                        </div>
                         <div class="quick_add" t-att-style="(!presets ? 'display: none' : undefined)">
                             <div class="btn-group btn-group-sm presets_container"><t t-raw="presets" /></div>
                             <div class="dropdown presets_config">

@@ -1105,6 +1105,7 @@ var bankStatementReconciliation = abstractReconciliation.extend({
         "keyup .change_statement_name_field": "changeStatementNameFieldHandler",
         "click .change_statement_name_button": "changeStatementButtonClickHandler",
         "click .show_more": "showMoreButtonClickHandler",
+        "click .goto_create_preset": "goToCreatePreset",
     }, abstractReconciliation.prototype.events),
 
     init: function(parent, context) {
@@ -1579,6 +1580,15 @@ var bankStatementReconciliation = abstractReconciliation.extend({
             this.$(".show_more").show().find(".num_items_remaining").text(items_remaining);
         else
             this.$(".show_more").hide();
+    },
+
+    goToCreatePreset: function() {
+        this.action_manager.do_action({
+            type: 'ir.actions.act_window',
+            res_model: 'account.reconcile.model',
+            views: [[false, 'form']],
+            target: 'current'
+        });
     },
 });
 
