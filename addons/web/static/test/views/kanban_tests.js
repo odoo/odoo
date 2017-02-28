@@ -849,7 +849,38 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-});
+    QUnit.test('evaluate conditions on relational fields', function (assert) {
+        assert.expect(3);
 
+        this.data.partner.records[0].product_id = false;
+        this.data.partner.records[0].category_ids = [6];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<field name="product_id"/>' +
+                    '<field name="category_ids"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<button t-if="!record.product_id.raw_value" class="btn_a">A</button>' +
+                        '<button t-if="!record.category_ids.raw_value" class="btn_b">B</button>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+        });
+
+        assert.strictEqual($('.o_kanban_record:not(.o_kanban_ghost)').length, 4,
+            "there should be 4 records");
+        assert.strictEqual($('.o_kanban_record:not(.o_kanban_ghost) .btn_a').length, 1,
+            "only 1 of them should have the 'Action' button");
+        assert.strictEqual($('.o_kanban_record:not(.o_kanban_ghost) .btn_b').length, 3,
+            "only 3 of them should have the 'Action' button");
+
+        kanban.destroy();
+    });
+
+});
 
 });
