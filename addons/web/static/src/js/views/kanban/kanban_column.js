@@ -132,6 +132,8 @@ var KanbanColumn = Widget.extend({
             }
         });
         this.update_column();
+
+        return this._super.apply(this, arguments);
     },
 
     is_empty: function () {
