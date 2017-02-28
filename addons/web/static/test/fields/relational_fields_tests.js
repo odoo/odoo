@@ -1431,6 +1431,44 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many list, editable, with many2one and with context with parent key', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[1].product_id = 37;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="product_id" context="{\'partner_foo\':parent.foo}"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'name_search') {
+                    assert.strictEqual(args.kwargs.context.partner_foo, "yop",
+                        "should have correctly evaluated parent foo field");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        form.$('tr.o_data_row:eq(0) td:contains(xphone)').click();
+
+        // trigger a name search
+        form.$('table td input.o_form_input').click();
+
+        form.destroy();
+    });
+
     QUnit.test('one2many list edition, some basic functionality', function (assert) {
         assert.expect(3);
 
