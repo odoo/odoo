@@ -239,18 +239,18 @@ function parseDate (value) {
     }
     var date_pattern = time.strftime_to_moment_format(core._t.database.parameters.date_format);
     var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D');
-    var date = moment(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601], true);
+    var date = moment.utc(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601], true);
     if (date.isValid() && date.year() >= 1900) {
-        date.toJSON = time.date_to_str.bind(time, date.toDate());
+        date.toJSON = function () {return this.utc().format('YYYY-MM-DD');};
         return date;
     }
-    date = moment(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601]);
+    date = moment.utc(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601]);
     if (date.isValid()) {
         if (date.year() === 0) {
             date.year(moment.utc().year());
         }
         if (date.year() >= 1900) {
-            date.toJSON = time.date_to_str.bind(time, date.toDate());
+            date.toJSON = function () {return this.utc().format('YYYY-MM-DD');};
             return date;
         }
     }
@@ -274,18 +274,20 @@ function parseDateTime (value) {
         time_pattern_wo_zero = time_pattern.replace('HH','H').replace('mm','m').replace('ss','s');
     var pattern1 = date_pattern + ' ' + time_pattern;
     var pattern2 = date_pattern_wo_zero + ' ' + time_pattern_wo_zero;
-    var datetime = moment(value, [pattern1, pattern2, moment.ISO_8601], true);
+    var datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601], true);
     if (datetime.isValid() && datetime.year() >= 1900) {
-        datetime.toJSON = time.datetime_to_str.bind(time, datetime.toDate());
+        datetime.toJSON = function () {
+            return this.utc().format('YYYY-MM-DD HH:mm:ss');
+        };
         return datetime;
     }
-    datetime = moment(value, [pattern1, pattern2, moment.ISO_8601]);
+    datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601]);
     if (datetime.isValid()) {
         if (datetime.year() === 0) {
             datetime.year(moment.utc().year());
         }
         if (datetime.year() >= 1900) {
-            datetime.toJSON = time.datetime_to_str.bind(time, datetime.toDate());
+            datetime.toJSON = function () {return this.utc().format('YYYY-MM-DD HH:mm:ss');};
             return datetime;
         }
     }
