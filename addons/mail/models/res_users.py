@@ -77,6 +77,7 @@ class Users(models.Model):
         return self.partner_id.id
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def message_post(self, **kwargs):
         """ Redirect the posting of message on res.users as a private discussion.
             This is done because when giving the context of Chatter on the
