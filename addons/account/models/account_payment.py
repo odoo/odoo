@@ -210,6 +210,10 @@ class account_payment(models.Model):
     payment_difference = fields.Monetary(compute='_compute_payment_difference', readonly=True)
     payment_difference_handling = fields.Selection([('open', 'Keep open'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference", copy=False)
     writeoff_account_id = fields.Many2one('account.account', string="Difference Account", domain=[('deprecated', '=', False)], copy=False)
+    writeoff_label = fields.Char(
+        string='Journal Item Label',
+        help='Change label of the counterpart that will hold the payment difference',
+        default='Write-Off')
 
     # FIXME: ondelete='restrict' not working (eg. cancel a bank statement reconciliation with a payment)
     move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False, ondelete='restrict')
@@ -408,7 +412,7 @@ class account_payment(models.Model):
                 amount_wo = total_residual_company_signed - total_payment_company_signed
             debit_wo = amount_wo > 0 and amount_wo or 0.0
             credit_wo = amount_wo < 0 and -amount_wo or 0.0
-            writeoff_line['name'] = _('Counterpart')
+            writeoff_line['name'] = self.writeoff_label
             writeoff_line['account_id'] = self.writeoff_account_id.id
             writeoff_line['debit'] = debit_wo
             writeoff_line['credit'] = credit_wo
