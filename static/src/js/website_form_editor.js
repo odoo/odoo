@@ -3,7 +3,6 @@ odoo.define('website_form_editor', function (require) {
 
     var core = require('web.core');
     var ajax      = require('web.ajax');
-    var Model = require('web.Model');
     var base = require('web_editor.base');
     var options = require('web_editor.snippets.options');
 
@@ -60,11 +59,8 @@ odoo.define('website_form_editor', function (require) {
 
         fetch_model_fields: function() {
             var self = this;
-            var ir_model = new Model("ir.model");
-
             this.fields_deferred = new $.Deferred();
-            ir_model.call(
-                "get_authorized_fields",
+            this.performModelRPC("ir.model", "get_authorized_fields",
                 [
                     this.$target.closest('form').attr('data-model_name')
                 ],
@@ -90,8 +86,7 @@ odoo.define('website_form_editor', function (require) {
             if (type !== 'click') return;
 
             var self = this;
-            new Model("ir.model").call(
-                "search_read",
+            this.performModelRPC("ir.model", "search_read",
                 [
                     [['website_form_access', '=', true]],
                     ['id', 'model', 'name', 'website_form_label']
@@ -350,7 +345,7 @@ odoo.define('website_form_editor', function (require) {
                 if (fields.length) {
                     // ideally we'd only do this if saving the form
                     // succeeds... but no idea how to do that
-                    new Model('ir.model.fields').call('formbuilder_whitelist', [model, _.uniq(fields)]);
+                    this.performModelRPC('ir.model.fields', 'formbuilder_whitelist', [model, _.uniq(fields)]);
                 }
             }
 
