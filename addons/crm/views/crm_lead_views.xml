@@ -672,7 +672,7 @@
             <field name="code">
 if record:
     action_values = env.ref('crm.crm_lead_lost_action').read()[0]
-    action_values.update({'context': context})
+    action_values.update({'context': env.context})
     action = action_values
             </field>
         </record>
