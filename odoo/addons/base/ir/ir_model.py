@@ -129,7 +129,14 @@ class IrModel(models.Model):
         """ Return the (sudoed) `ir.model` record with the given name.
         The result may be an empty recordset if the model is not found.
         """
-        return self.sudo().search([('model', '=', name)])
+        model_id = self._get_id(name) if name else False
+        return self.sudo().browse(model_id)
+
+    @tools.ormcache('name')
+    def _get_id(self, name):
+        self.env.cr.execute("SELECT id FROM ir_model WHERE model=%s", (name,))
+        result = self.env.cr.fetchone()
+        return result and result[0]
 
     # overridden to allow searching both on model name (field 'model') and model
     # description (field 'name')
@@ -455,7 +462,15 @@ class IrModelFields(models.Model):
         """ Return the (sudoed) `ir.model.fields` record with the given model and name.
         The result may be an empty recordset if the model is not found.
         """
-        return self.sudo().search([('model', '=', model_name), ('name', '=', name)])
+        field_id = self._get_id(model_name, name) if model_name and name else False
+        return self.sudo().browse(field_id)
+
+    @tools.ormcache('model_name', 'name')
+    def _get_id(self, model_name, name):
+        self.env.cr.execute("SELECT id FROM ir_model_fields WHERE model=%s AND name=%s",
+                            (model_name, name))
+        result = self.env.cr.fetchone()
+        return result and result[0]
 
     @api.multi
     def _drop_column(self):
