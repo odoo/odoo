@@ -3,7 +3,6 @@ odoo.define('website_form_editor.tour', function(require) {
 
     var base = require('web_editor.base');
     var tour = require("web_tour.tour");
-    var Model = require('web.Model');
 
     tour.register("website_form_editor_tour", {
         test: true,
@@ -602,8 +601,7 @@ odoo.define('website_form_editor.tour', function(require) {
             content: "Check mail.mail records have been created",
             trigger: "body",
             run: function () {
-                var mailDef = new Model("mail.mail").call(
-                    "search_read",
+                var mailDef = this.performModelRPC("mail.mail", "search_read",
                     [
                         // TODO: add other fields in domain !
                         [
