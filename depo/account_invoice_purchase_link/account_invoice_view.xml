@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Copyright (C) 2016 Mustafa TÜRKER
+   The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<record id="invoice_form" model="ir.ui.view">
+    <field name="name">account_invoice_purchase_link.invoice.supplier.form</field>
+    <field name="model">account.invoice</field>
+    <field name="inherit_id" ref="account.invoice_supplier_form"/>
+    <field name="arch" type="xml">
+        <notebook position="inside">
+            <page name="purchase_ids" string="Purchase Orders">
+                <field name="purchase_ids"/>
+            </page>
+        </notebook>
+    </field>
+</record>
+
+</data>
+</openerp>
