@@ -15,7 +15,7 @@ var _t = core._t;
 
 KanbanRecord.include({
     on_card_clicked: function () {
-        if (this.model === 'project.project') {
+        if (this.modelName === 'project.project') {
             this.$('.o_project_kanban_boxes a').first().click();
         } else {
             this._super.apply(this, arguments);
@@ -23,7 +23,7 @@ KanbanRecord.include({
     },
     on_kanban_action_clicked: function (ev) {
         var self = this;
-        if (this.model === 'project.task' && $(ev.currentTarget).data('type') === 'set_cover') {
+        if (this.modelName === 'project.task' && $(ev.currentTarget).data('type') === 'set_cover') {
             ev.preventDefault();
 
             new Model('ir.attachment').query(['id', 'name'])

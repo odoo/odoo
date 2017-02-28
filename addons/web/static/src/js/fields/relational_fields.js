@@ -604,7 +604,6 @@ var FieldX2Many = AbstractRelationalField.extend({
             var record_options = {
                 editable: false,
                 deletable: false,
-                model: this.value.model, // required by includes of KanbanRecord
                 read_only_mode: this.isReadonly,
             };
             this.renderer = new KanbanRenderer(this, this.value, {

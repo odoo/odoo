@@ -38,7 +38,6 @@ var KanbanView = BasicView.extend({
         this.rendererParams.record_options = {
             editable: activeActions.edit,
             deletable: activeActions.delete,
-            model: this.model, // required by includes of KanbanRecord
             read_only_mode: params.readOnlyMode,
         };
 
@@ -80,4 +79,3 @@ return KanbanView;
     //     read_only_mode: false,
     //     confirm_on_delete: true,
     // }),
-

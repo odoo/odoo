@@ -5,7 +5,7 @@ var KanbanRecord = require('web.KanbanRecord');
 
 KanbanRecord.include({
     on_card_clicked: function() {
-        if (this.model === 'gamification.badge.user') {
+        if (this.modelName === 'gamification.badge.user') {
             var action = {
                 type: 'ir.actions.act_window',
                 res_model: 'gamification.badge',

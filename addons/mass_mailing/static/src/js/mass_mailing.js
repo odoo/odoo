@@ -6,7 +6,7 @@ var KanbanColumn = require('web.KanbanColumn');
 
 KanbanRecord.include({
     on_card_clicked: function (event) {
-        if (this.model === 'mail.mass_mailing.campaign') {
+        if (this.modelName === 'mail.mass_mailing.campaign') {
             this.$('.oe_mailings').click();
         } else {
             this._super.apply(this, arguments);
@@ -17,7 +17,7 @@ KanbanRecord.include({
 KanbanColumn.include({
     init: function () {
         this._super.apply(this, arguments);
-        if (this.dataset.model === 'mail.mass_mailing') {
+        if (this.modelName === 'mail.mass_mailing') {
             this.draggable = false;
         }
     },

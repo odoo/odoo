@@ -54,6 +54,7 @@ var KanbanColumn = Widget.extend({
         this.values = data.values;
         this.fields = data.fields;
         this.records = [];
+        this.modelName = data.model;
 
         this.quick_create = options.quick_create;
         this.grouped_by_m2o = options.grouped_by_m2o;
