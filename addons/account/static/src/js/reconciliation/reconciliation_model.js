@@ -719,10 +719,11 @@ var StatementModel = BasicModel.extend({
             'is_tax': values.is_tax,
             '__focus': '__focus' in values ? values.__focus : true,
         };
-        prop.base_amount = Math.sign(prop.base_amount) *
-            field_utils.parse.monetary(
-                field_utils.format.monetary(Math.abs(prop.base_amount), {}, line)
-            );
+        if (prop.base_amount) {
+            var sign = prop.base_amount < 0 ? -1 : 1;
+            var amount = field_utils.format.monetary(Math.abs(prop.base_amount), {}, line);
+            prop.base_amount = sign * field_utils.parse.monetary(amount);
+        }
         prop.amount = prop.base_amount;
         return prop;
     },
