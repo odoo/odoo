@@ -3555,6 +3555,10 @@ class BaseModel(object):
                 self._write(old_vals)
 
             if new_vals:
+                # for recomputing new-style fields
+                extra_fields = ['write_date', 'write_uid'] if self._log_access else []
+                self.modified(list(vals) + extra_fields)
+
                 # put the values of pure new-style fields into cache, and inverse them
                 for record in self:
                     record._cache.update(record._convert_to_cache(new_vals, update=True))
