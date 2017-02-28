@@ -201,7 +201,7 @@ var KanbanActivity = AbstractActivityField.extend({
         var $span = this.$(".o_activity_btn > span");
         $span.removeClass(function (index, classNames) {
             return classNames.split(/\s+/).filter(function (className) {
-                return className.startsWith('o_activity_color_');
+                return _.str.startsWith(className, 'o_activity_color_');
             }).join(' ');
         });
         $span.addClass('o_activity_color_' + (this.activity_state || 'default'));
