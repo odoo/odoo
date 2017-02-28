@@ -5,7 +5,7 @@ var KanbanRecord = require('web.KanbanRecord');
 
 KanbanRecord.include({
     on_card_clicked: function() {
-        if (this.model === 'hr.job') {
+        if (this.modelName === 'hr.job') {
             this.$('.oe_applications a').first().click();
         } else {
             this._super.apply(this, arguments);
