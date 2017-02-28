@@ -1555,6 +1555,9 @@ var BasicModel = AbstractModel.extend({
         var evalContext = this.get(element.id, {raw: true}).data;
         if (element.parentID) {
             var parent = this.get(element.parentID, {raw: true});
+            if (parent.type === 'list' && this.localData[element.parentID].parentID) {
+                parent = this.get(this.localData[element.parentID].parentID, {raw: true});
+            }
             _.extend(evalContext, {parent: parent.data});
         }
         context.set_eval_context(evalContext);
@@ -1846,11 +1849,12 @@ var BasicModel = AbstractModel.extend({
                     dataPoint = self.localData[list._cache[id]];
                 } else {
                     dataPoint = self._makeDataPoint({
-                        modelName: list.model,
                         data: _.findWhere(records, {id: id}),
-                        fields: list.fields,
-                        fieldNames: list.fieldNames,
                         fieldAttrs: list.fieldAttrs,
+                        fieldNames: list.fieldNames,
+                        fields: list.fields,
+                        modelName: list.model,
+                        parentID: list.id,
                     });
 
                     // add many2one records
@@ -1862,7 +1866,8 @@ var BasicModel = AbstractModel.extend({
                                 data: {
                                     id: dataPoint.data[name][0],
                                     display_name: dataPoint.data[name][1],
-                                }
+                                },
+                                parentID: dataPoint.id,
                             });
 
                             dataPoint.data[name] = r.id;
@@ -1905,6 +1910,7 @@ var BasicModel = AbstractModel.extend({
                     fieldNames: list.fieldNames,
                     fieldAttrs: list.fieldAttrs,
                     modelName: list.model,
+                    parentID: list.id,
                 });
 
                 // add many2one records
