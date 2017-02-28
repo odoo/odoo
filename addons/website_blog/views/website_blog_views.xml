@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <odoo>
-        <menuitem name="Blog" id="menu_website_blog_root" sequence="20" parent="website.menu_website_configuration"/>
+        <menuitem name="Blog"
+            id="menu_website_blog_root"
+            sequence="20"
+            parent="website.menu_website_configuration"
+            groups="website.group_website_designer"/>
 
         <!-- Blog views -->
         <record id="view_blog_blog_list" model="ir.ui.view">
