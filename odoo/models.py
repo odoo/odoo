@@ -237,7 +237,6 @@ class BaseModel(object):
     _date_name = 'date'         # field to use for default calendar view
     _fold_name = 'fold'         # field to determine folded groups in kanban views
 
-    _needaction = False         # whether the model supports "need actions" (see mail)
     _translate = True           # False disables translations export for this model
 
     _depends = {}               # dependencies of models backed up by sql views
