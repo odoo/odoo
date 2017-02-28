@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
+        <record id="paperformat_euro_no_margin" model="report.paperformat">
+            <field name="name">European A4 without borders</field>
+            <field name="default" eval="False" />
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+        </record>
+
         <!--Report containing an ISR corrresponding to an invoice.-->
         <report id="l10n_ch_isr_report"
             model="account.invoice"
@@ -20,7 +34,14 @@
                 report is only available to be printed for out invoices after
                 'draft' state, if the fields required by the ISR have been set.-->
             </field>
+            <field name="paperformat_id" ref="paperformat_euro_no_margin"/>
         </record>
+
+        <template id="assets_common" name="l10n_ch_isr_report" inherit_id="report.assets_common">
+            <xpath expr="." position="inside">
+                <link href="/l10n_ch/static/src/less/report_isr.less" rel="stylesheet"/>
+            </xpath>
+        </template>
 
         <!--TODO: this template needs to be modified in order to respect the ISR
         layout given in PostFinance's specifications.
@@ -31,98 +52,108 @@
         <template id="l10n_ch_isr_report_template">
             <t t-call="report.external_layout">
                 <t t-set="split_total_amount" t-value="invoice.split_total_amount()"/>
+                <t t-set="invoice_bank_id" t-value="invoice.company_id.l10n_ch_isr_print_bank_location and invoice.partner_bank_id.bank_id"/>
 
                 <h1>ISR for invoice <t t-esc="invoice.number"/></h1>
 
-                <!--Voucher, left part of the ISR.-->
-                <div id="voucher">
-                    <h1>Voucher</h1>
+                <div id="l10n_ch_isr" t-att-class="'isr-print-bank' if invoice_bank_id else None">
 
-                    <div id="voucher-for">
-                        <h2>Einzahlung für/Versement pour/Versamento per</h2>
+                    <!--Voucher, left part of the ISR.-->
+                    <div id="voucher">
+                        <!--<h1>Voucher</h1>-->
+
+                        <!--<h2>Einzahlung für/Versement pour/Versamento per</h2>-->
 
                         <!--If we use the alternate ISR layout, displaying name
                         and location of the bank.-->
-                        <t t-if="invoice.company_id.l10n_ch_isr_print_bank_location">
-                            <p t-field="invoice.partner_bank_id.bank_id.name"/>
-                            <p>
-                                <t t-esc="invoice.zip"/>
-                                <t t-esc="invoice.city"/>
+                        <t t-if="invoice_bank_id">
+                            <div id="voucher-for-bank">
+                                <p>
+                                    <t t-esc="invoice_bank_id.name"/><br />
+                                    <t t-esc="invoice_bank_id.zip"/>
+                                    <t t-esc="invoice_bank_id.city"/>
+                                </p>
+                            </div>
+                            <!--<h2>Zugunsten von/En faveur de/A favore di</h2>-->
+                        </t>
+                        <div id="voucher-for-contact">
+                            <p id="voucher-for_name" t-field="invoice.company_id.display_name"/>
+                            <p id="voucher-for_address1" t-field="invoice.company_id.street"/>
+                            <p id="voucher-for_address2" t-field="invoice.company_id.street2"/>
+                            <p id="voucher-for_address3">
+                                <t t-esc="invoice.company_id.zip"/>
+                                <t t-esc="invoice.company_id.city"/>
                             </p>
+                        </div>
 
-                            <h2>Zugunsten von/En faveur de/A favore di</h2>
-                        </t>
-                        <p id="voucher-for_name" t-field="invoice.company_id.display_name"/>
-                        <p id="voucher-for_address1" t-field="invoice.company_id.street"/>
-                        <p id="voucher-for_address2" t-field="invoice.company_id.street2"/>
-                        <p id="voucher-for_address3">
-                            <t t-esc="invoice.company_id.zip"/>
-                            <t t-esc="invoice.company_id.city"/>
-                        </p>
+                        <div id="voucher-bank">
+                            <!--<h2>Konto/Compte/Conto</h2>-->
+                            <p id="voucher-bank_ref" t-field="invoice.l10n_ch_isr_postal_formatted"/>
+                        </div>
+
+                        <p id="voucher-currency" t-field="invoice.currency_id.name"/>
+                        <p id="voucher-amount_units" t-esc="split_total_amount[0]"/>
+                        <p id="voucher-amount_cents" t-esc="split_total_amount[1]"/>
+
+                        <div id="voucher-by">
+                            <!--<h2>Einbezahlt von/Versé par/Versato da</h2>-->
+                            <p id="voucher-by_reference_number" t-field="invoice.l10n_ch_isr_number"/>
+                            <address id="voucher-by_customer_address" t-field="invoice.partner_id" t-options='{"widget": "contact", "fields": ["address","name"], "no_marker": True}' />
+                        </div>
                     </div>
 
-                    <div id="voucher-bank">
-                        <h2>Konto/Compte/Conto</h2>
-                        <p id="voucher-bank_ref" t-field="invoice.l10n_ch_isr_postal_formatted"/>
-                    </div>
+                    <!--Slip, right part of the ISR.-->
+                    <div id="slip">
+                        <!--<h1>Slip</h1>-->
 
-                    <p id="voucher-currency" t-field="invoice.currency_id.name"/>
-                    <p id="voucher-amount_units" t-esc="split_total_amount[0]"/>
-                    <p id="voucher-amount_cents" t-esc="split_total_amount[1]"/>
-
-                    <div id="voucher-by">
-                        <h2>Einbezahlt von/Versé par/Versato da</h2>
-                        <p id="voucher-by_reference_number" t-field="invoice.l10n_ch_isr_number"/>
-                        <address id="voucher-by_customer_address" t-field="invoice.partner_id" t-options='{"widget": "contact", "fields": ["address","name"], "no_marker": True}' />
-                    </div>
-                </div>
-
-                <!--Slip, right part of the ISR.-->
-                <div id="slip">
-                    <h1>Slip</h1>
-
-                    <div id="slip-for">
-                        <h2>Einzahlung für/Versement pour/Versamento per</h2>
+                        <!--<h2>Einzahlung für/Versement pour/Versamento per</h2>-->
 
                         <!--If we use the alternate ISR layout, displaying name
                         and location of the bank.-->
-                        <t t-if="invoice.company_id.l10n_ch_isr_print_bank_location">
-                            <p t-field="invoice.partner_bank_id.bank_id.name"/>
-                            <p t-field="invoice.partner_bank_id.bank_id.location_line"/>
-                            <h2>Zugunsten von/En faveur de/A favore di</h2>
+                        <t t-if="invoice_bank_id">
+                            <div id="slip-for-bank">
+                                <p>
+                                    <t t-esc="invoice_bank_id.name"/><br />
+                                    <t t-esc="invoice_bank_id.zip"/>
+                                    <t t-esc="invoice_bank_id.city"/>
+                                </p>
+                            </div>
+                            <!--<h2>Zugunsten von/En faveur de/A favore di</h2>-->
                         </t>
 
-                        <p id="slip-for_name" t-field="invoice.company_id.display_name"/>
-                        <p id="slip-for_address1" t-field="invoice.company_id.street"/>
-                        <p id="slip-for_address2" t-field="invoice.company_id.street2"/>
-                        <p id="slip-for_address3">
-                            <t t-esc="invoice.company_id.zip"/>
-                            <t t-esc="invoice.company_id.city"/>
-                        </p>
-                    </div>
+                        <div id="slip-for-contact">
+                            <p id="slip-for_name" t-field="invoice.company_id.display_name"/>
+                            <p id="slip-for_address1" t-field="invoice.company_id.street"/>
+                            <p id="slip-for_address2" t-field="invoice.company_id.street2"/>
+                            <p id="slip-for_address3">
+                                <t t-esc="invoice.company_id.zip"/>
+                                <t t-esc="invoice.company_id.city"/>
+                            </p>
+                        </div>
 
-                    <div id="slip-bank">
-                        <h2>Konto/Compte/Conto</h2>
-                        <p id="slip-bank_ref" t-field="invoice.l10n_ch_isr_postal_formatted"/>
-                    </div>
+                        <div id="slip-bank">
+                            <!--<h2>Konto/Compte/Conto</h2>-->
+                            <p id="slip-bank_ref" t-field="invoice.l10n_ch_isr_postal_formatted"/>
+                        </div>
 
-                    <p id="slip-currency" t-field="invoice.currency_id.name"/>
-                    <p id="slip-amount_units" t-esc="split_total_amount[0]"/>
-                    <p id="slip-amount_cents" t-esc="split_total_amount[1]"/>
+                        <p id="slip-currency" t-field="invoice.currency_id.name"/>
+                        <p id="slip-amount_units" t-esc="split_total_amount[0]"/>
+                        <p id="slip-amount_cents" t-esc="split_total_amount[1]"/>
 
-                    <div id="slip-reference">
-                        <h2>Referenz-Nr./N°de référence/N°di riferimento</h2>
-                        <p id="slip-reference_number" t-field="invoice.l10n_ch_isr_number_spaced"/>
-                    </div>
+                        <div id="slip-reference">
+                            <!--<h2>Referenz-Nr./N°de référence/N°di riferimento</h2>-->
+                            <p id="slip-reference_number" t-field="invoice.l10n_ch_isr_number_spaced"/>
+                        </div>
 
-                    <div id="slip-by">
-                        <h2>Einbezahlt von/Versé par/Versato da</h2>
-                        <address id="slip-by_customer_address" t-field="invoice.partner_id" t-options='{"widget": "contact", "fields": ["address","name"], "no_marker": True}' />
-                    </div>
+                        <div id="slip-by">
+                            <!--<h2>Einbezahlt von/Versé par/Versato da</h2>-->
+                            <address id="slip-by_customer_address" t-field="invoice.partner_id" t-options='{"widget": "contact", "fields": ["address","name"], "no_marker": True}' />
+                        </div>
 
-                    <div id="slip-optical">
-                        <h2>Optical reference</h2>
-                        <p id="slip-optical_ref_line" t-field="invoice.l10n_ch_isr_optical_line"/>
+                        <div id="slip-optical">
+                            <!--<h2>Optical reference</h2>-->
+                            <span id="slip-optical_ref_line" t-field="invoice.l10n_ch_isr_optical_line"/>
+                        </div>
                     </div>
                 </div>
             </t>
