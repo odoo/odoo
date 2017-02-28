@@ -14,6 +14,11 @@ var Context = Class.extend({
             self.add(x);
         });
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     add: function (context) {
         this.__contexts.push(context);
         return this;
@@ -21,9 +26,6 @@ var Context = Class.extend({
     set_eval_context: function (eval_context) {
         this.__eval_context = eval_context;
         return this;
-    },
-    get_eval_context: function () {
-        return this.__eval_context;
     },
     eval: function () {
         return pyeval.eval('context', this);

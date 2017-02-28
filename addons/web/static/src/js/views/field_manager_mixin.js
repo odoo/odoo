@@ -18,7 +18,6 @@ var FieldManagerMixin = {
     custom_events: {
         field_changed: '_onFieldChanged',
         load: '_onLoad',
-        call_service: '_onCallService',
     },
     /**
      * A FieldManagerMixin can be initialized with an instance of a basicModel.
@@ -113,40 +112,6 @@ var FieldManagerMixin = {
         this.model.reload(data.id, params).then(function (db_id) {
             data.on_success(self.model.get(db_id));
         });
-    },
-    /**
-     * Some widgets perform model RPCs. These are intercepted so that the
-     * context can be automatically added according to the given dataPointID
-     * option the AbstractField implementation automatically adds.
-     *
-     * @param {OdooEvent} e
-     * @param {string} e.data.service - the service called, here we are only
-     *                                interested in the "ajax" service
-     * @param {string} e.data.method - the service method called, here we are
-     *                               only interested by the "rpc" method
-     * @param {Array} e.data.args
-     *        the args parameters contains the route, the route arguments and
-     *        the RPC call options. This method purpose is to check the RPC
-     *        call options for the dataPointID (and field name) and merge the
-     *        appropriate context with the route arguments' one.
-     */
-    _onCallService: function (e) {
-        if (e.data.service !== "ajax" || e.data.method !== "rpc") {
-            return;
-        }
-
-        var args = e.data.args[1];
-        var options = e.data.args[2];
-        if (args.kwargs && options.dataPointID) {
-            args.kwargs.context = _.extend(
-                this.model.getContext(options.dataPointID, {
-                    fieldName: options.fieldName || false,
-                }),
-                args.kwargs.context || {}
-            );
-            // to prevent doing this work again, in some other widget with FMM.
-            delete options.dataPointID;
-        }
     },
 };
 

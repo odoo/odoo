@@ -437,8 +437,8 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('check that the field context is used when doing a name_search in a m2o', function (assert) {
-        assert.expect(3);
+    QUnit.test('domain and context are correctly used when doing a name_search in a m2o', function (assert) {
+        assert.expect(2);
 
         var form = createView({
             View: FormView,
@@ -446,20 +446,24 @@ QUnit.module('relational_fields', {
             data: this.data,
             arch:
                 '<form string="Partners">' +
-                    '<field name="product_id" context="{\'hello\': \'world\', \'test\': foo}"/>' +
+                    '<field name="product_id" ' +
+                        'domain="[[\'foo\', \'=\', \'bar\'], [\'foo\', \'=\', foo]]" ' +
+                        'context="{\'hello\': \'world\', \'test\': foo}"/>' +
                     '<field name="foo"/>' +
                 '</form>',
             res_id: 1,
             session: {user_context: {hey: "ho"}},
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/product/name_search') {
-                    var context = args.kwargs.context;
-                    assert.strictEqual(context.hey, "ho",
-                        'the session context should have been used for the rpc');
-                    assert.strictEqual(context.hello, "world",
-                        'the field context should have been used for the RPC');
-                    assert.strictEqual(context.test, "yop",
-                        'the field context should have been properly evaluated');
+                    assert.deepEqual(
+                        args.kwargs.args,
+                        [['foo', '=', 'bar'], ['foo', '=', 'yop']],
+                        'the field attr domain should have been used for the RPC (and evaluated)');
+                    assert.deepEqual(
+                        args.kwargs.context,
+                        {hey: "ho", hello: "world", test: "yop"},
+                        'the field attr context should have been used for the '
+                        + 'RPC (evaluated and merged with the session one)');
                 }
                 return this._super.apply(this, arguments);
             },

@@ -1298,9 +1298,9 @@ var FieldDomain = AbstractField.extend({
         // ... then query the model to get the number of matched record if valid
         var self = this;
         return def.then(function () {
-            var context = {}; // FIXME ?
             return self.rpc(self.domainModel, "search_count")
-                .args([domain,context])
+                .args([domain])
+                .kwargs({context: self.record.getContext({fieldName: self.name})})
                 .exec()
                 .then(function (data) {
                     self._isValidForModel = true;

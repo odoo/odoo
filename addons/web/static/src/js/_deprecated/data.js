@@ -64,8 +64,7 @@ var Query = Class.extend({
             if (!to_set.hasOwnProperty(key)) { continue; }
             switch(key) {
             case 'filter':
-                q._filter = new CompoundDomain(
-                        q._filter, to_set.filter);
+                q._filter = (q._filter || []).concat(to_set.filter || []);
                 break;
             case 'context':
                 q._context = new Context(
@@ -729,77 +728,12 @@ var DataSetSearch = DataSet.extend({
     }
 });
 
-var CompoundDomain = Class.extend({
-    init: function () {
-        this.__ref = "compound_domain";
-        this.__domains = [];
-        this.__eval_context = null;
-        var self = this;
-        _.each(arguments, function (x) {
-            self.add(x);
-        });
-    },
-    add: function (domain) {
-        this.__domains.push(domain);
-        return this;
-    },
-    set_eval_context: function (eval_context) {
-        this.__eval_context = eval_context;
-        return this;
-    },
-    get_eval_context: function () {
-        return this.__eval_context;
-    },
-    eval: function () {
-        return pyeval.eval('domain', this);
-    },
-});
-
-function rawify (data) {
-    // replaces the value of relational fields by their raw value (the id, if
-    // any, for many2ones and an array of ids for x2manys), in turn
-    return _.mapObject(data, function (value) {
-        if (value instanceof moment) {
-            return moment;
-        }
-        if (_.isObject(value)) {
-            return value.type === 'record' ? value.res_id : value.res_ids;
-        }
-        return value;
-    });
-}
-
-function build_eval_context (record) {
-    var field_values = rawify(_.extend({}, record.data, { active_model: record.model }));
-    if ('id' in record.data) {
-        field_values.active_id = record.data.id;
-        field_values.active_ids = [record.data.id];
-    }
-    // FIXME: parent?
-    return new Context(field_values);
-}
-
-function build_context(record, context) {
-    context = context || {};
-    var eval_context = build_eval_context(record);
-    return new Context(context).set_eval_context(eval_context);
-}
-
-function build_domain(record, domain) {
-    domain = domain || [];
-    var eval_context = build_eval_context(record);
-    return new CompoundDomain(domain).set_eval_context(eval_context);
-}
-
 var data = {
     Query: Query,
     DataSet: DataSet,
     DataSetStatic: DataSetStatic,
     DataSetSearch: DataSetSearch,
-    CompoundDomain: CompoundDomain,
     noDisplayContent: "<em class=\"text-warning\">" + _t("Unnamed") + "</em>",
-    build_context: build_context,
-    build_domain: build_domain,
 };
 
 
@@ -841,11 +775,11 @@ var Model = Class.extend({
      * Fetches the model's domain, combined with the provided domain if any
      *
      * @param {Array} [domain] to combine with the model's internal domain
-     * @returns {instance.web.CompoundDomain} The model's internal domain, or the AND-ed union of the model's internal domain and the provided domain
+     * @returns {Array} The model's internal domain, or the AND-ed union of the model's internal domain and the provided domain
      */
     domain: function (domain) {
         if (!domain) { return this._domain; }
-        return new data.CompoundDomain(this._domain, domain);
+        return this._domain.concat(domain);
     },
     /**
      * Fetches the combination of the user's context and the domain context,

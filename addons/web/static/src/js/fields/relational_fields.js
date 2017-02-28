@@ -16,7 +16,6 @@ odoo.define('web.relational_fields', function (require) {
 var AbstractField = require('web.AbstractField');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
-var Context = require('web.Context');
 var ControlPanel = require('web.ControlPanel');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
@@ -26,38 +25,9 @@ var field_utils = require('web.field_utils');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 var Pager = require('web.Pager');
-var pyeval = require('web.pyeval');
 
 var _t = core._t;
 var qweb = core.qweb;
-
-/**
- * Abstract widget to handle relational fields
- */
-var AbstractRelationalField = AbstractField.extend({
-    init: function (parent, name, record) {
-        this._super.apply(this, arguments);
-        // 'domain' and 'context' that should be used by the field widget. It
-        // can come from the attrs, and is mostly useful for rpcs
-        this.domain = this.attrs.domain || this.field.domain || [];
-        this.context = this.attrs.context || this.field.context || {};
-
-        // todo: remove this
-        this.record = record;
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _reset: function (record) {
-        this.record = record;
-        this._super.apply(this, arguments);
-    },
-});
 
 //------------------------------------------------------------------------------
 // Many2one widgets
@@ -104,7 +74,7 @@ var M2ODialog = Dialog.extend({
     },
 });
 
-var FieldMany2One = AbstractRelationalField.extend({
+var FieldMany2One = AbstractField.extend({
     template: 'FieldMany2One',
     custom_events: {
         'quick_create': '_onQuickCreate',
@@ -229,6 +199,7 @@ var FieldMany2One = AbstractRelationalField.extend({
         if (this.nodeOptions.quick_create) {
             this.rpc(this.field.relation, "name_create")
                 .args([name])
+                .kwargs({context: this.record.getContext({fieldName: this.name})})
                 .exec()
                 .then(function (result) {
                     if (self.mode === "edit") {
@@ -288,18 +259,20 @@ var FieldMany2One = AbstractRelationalField.extend({
         var def = $.Deferred();
         this.orderer.add(def);
 
-        var exclusion_domain = [];
+        var context = this.record.getContext({fieldName: this.name});
+        var domain = this.record.getDomain({fieldName: this.name});
+
         var blacklisted_ids = this._getSearchBlacklist();
         if (blacklisted_ids.length > 0) {
-            exclusion_domain.push(['id', 'not in', blacklisted_ids]);
+            domain.push(['id', 'not in', blacklisted_ids]);
         }
-        var domain = new data.CompoundDomain(data.build_domain(this.record, this.domain), exclusion_domain);
 
         this.performModelRPC(this.field.relation, "name_search", [], {
             name: search_val,
-            args: pyeval.eval("domain", domain),
+            args: domain,
             operator: "ilike",
             limit: this.limit + 1,
+            context: context,
         }).then(function (result) {
             // possible selections for the m2o
             var values = _.map(result, function (x) {
@@ -320,9 +293,10 @@ var FieldMany2One = AbstractRelationalField.extend({
                     action: function () {
                         self.performModelRPC(self.field.relation, "name_search", {
                             name: search_val,
-                            args: pyeval.eval('domain', domain),
+                            args: domain,
                             operator: "ilike",
                             limit: 160,
+                            context: context,
                         }).then(self._searchCreatePopup.bind(self, "search"));
                     },
                     classname: 'o_m2o_dropdown_option',
@@ -370,8 +344,8 @@ var FieldMany2One = AbstractRelationalField.extend({
         var self = this;
         new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, {
             res_model: this.field.relation,
-            domain: data.build_domain(this.record, this.domain),
-            context: new Context(data.build_context(this.record, this.context), context || {}),
+            domain: this.record.getDomain({fieldName: this.name}),
+            context: _.extend({}, this.record.getContext({fieldName: this.name}), context || {}),
             title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
             initial_ids: ids ? _.map(ids, function (x) { return x[0]; }) : undefined,
             initial_view: view,
@@ -405,12 +379,13 @@ var FieldMany2One = AbstractRelationalField.extend({
         if (this.mode === 'readonly' && !this.nodeOptions.no_open) {
             event.preventDefault();
             event.stopPropagation();
-            var context = data.build_context(this.record, this.context);
-            var args = [[this.value.res_id], context.eval()];
-            this.performModelRPC(this.field.relation, 'get_formview_action', args)
-                .then(function (action) {
-                    self.trigger_up('do_action', {action: action});
-                });
+            this.performModelRPC(this.field.relation, 'get_formview_action', [
+                [this.value.res_id]
+            ], {
+                context: this.record.getContext({fieldName: this.name}),
+            }).then(function (action) {
+                self.trigger_up('do_action', {action: action});
+            });
         }
     },
     /**
@@ -422,11 +397,14 @@ var FieldMany2One = AbstractRelationalField.extend({
             return;
         }
         var self = this;
-        var context = data.build_context(this.record, this.context);
         var model = this.field.relation;
         var method = 'get_formview_id';
-        var args = [[this.value.res_id], context.eval()];
-        this.performModelRPC(model, method, args).then(function (view_id) {
+        var context = this.record.getContext({fieldName: this.name});
+        this.performModelRPC(model, method, [
+            [this.value.res_id]
+        ], {
+            context: context,
+        }).then(function (view_id) {
             new dialogs.FormViewDialog(self, {
                 res_model: self.field.relation,
                 res_id: self.value.res_id,
@@ -492,7 +470,7 @@ var ListFieldMany2One = FieldMany2One.extend({
     },
 });
 
-var KanbanFieldMany2One = AbstractRelationalField.extend({
+var KanbanFieldMany2One = AbstractField.extend({
     tagName: 'span',
     init: function () {
         this._super.apply(this, arguments);
@@ -515,9 +493,9 @@ var KanbanFieldMany2One = AbstractRelationalField.extend({
 // X2Many widgets
 //------------------------------------------------------------------------------
 
-var FieldX2Many = AbstractRelationalField.extend({
+var FieldX2Many = AbstractField.extend({
     tagName: 'div',
-    custom_events: _.extend({}, AbstractRelationalField.prototype.custom_events, {
+    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         field_changed: '_onFieldChanged',
         kanban_record_delete: '_onDeleteRecord',
         list_record_delete: '_onDeleteRecord',
@@ -716,8 +694,8 @@ var FieldX2Many = AbstractRelationalField.extend({
      */
     _onOpenRecord: function (event) {
         _.extend(event.data, {
-            context: data.build_context(this.record, this.context),
-            domain: data.build_context(this.record, this.domain),
+            context: this.record.getContext({fieldName: this.name}),
+            domain: this.record.getDomain({fieldName: this.name}),
             form_view: this.field.views && this.field.views.form,
             readonly: this.mode === 'readonly',
             string: this.string,
@@ -810,8 +788,8 @@ var FieldOne2Many = FieldX2Many.extend({
             });
         } else {
             this.trigger_up('add_one2many_record', {
-                domain: data.build_domain(this.record, this.domain),
-                context: data.build_context(this.record, this.context),
+                domain: this.record.getDomain({fieldName: this.name}),
+                context: this.record.getContext({fieldName: this.name}),
                 field: this.field,
                 on_save: function (record) {
                     this._setValue({
@@ -872,11 +850,13 @@ var FieldMany2Many = FieldX2Many.extend({
      */
     _onAddRecord: function () {
         var self = this;
-        var domain = data.build_domain(this.record, this.domain);
+
+        var domain = this.record.getDomain({fieldName: this.name});
+
         new dialogs.SelectCreateDialog(this, {
             res_model: this.field.relation,
-            domain: new data.CompoundDomain(domain, ["!", ["id", "in", this.value.res_ids]]),
-            context: data.build_context(this.record, this.context),
+            domain: domain.concat(["!", ["id", "in", this.value.res_ids]]),
+            context: this.record.getContext({fieldName: this.name}),
             title: _t("Add: ") + this.string,
             no_create: this.nodeOptions.no_create || !this.activeActions.create,
             on_selected: function (res_ids) {
@@ -908,7 +888,7 @@ var FieldMany2Many = FieldX2Many.extend({
     },
 });
 
-var FieldMany2ManyTags = AbstractRelationalField.extend({
+var FieldMany2ManyTags = AbstractField.extend({
     tag_template: "FieldMany2ManyTag",
     className: "o_form_field o_form_field_many2manytags",
     replace_element: true,
@@ -1118,9 +1098,9 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     },
 });
 
-var FieldMany2ManyCheckBoxes = AbstractRelationalField.extend({
+var FieldMany2ManyCheckBoxes = AbstractField.extend({
     template: 'FieldMany2ManyCheckBoxes',
-    events: _.extend({}, AbstractRelationalField.prototype.events, {
+    events: _.extend({}, AbstractField.prototype.events, {
         change: '_onChange',
     }),
     supportedFieldTypes: ['many2many'],

@@ -6,7 +6,6 @@ var utils = require('mail.utils');
 var config = require('web.config');
 var Bus = require('web.Bus');
 var core = require('web.core');
-var data = require('web.data');
 var session = require('web.session');
 var time = require('web.time');
 var web_client = require('web.web_client');
@@ -669,11 +668,11 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, Mixins.ServicesMixi
         var cache = get_channel_cache(channel, options.domain);
 
         if (options.domain) {
-            domain = new data.CompoundDomain(domain, options.domain || []).eval();
+            domain = domain.concat(options.domain || []);
         }
         if (options.load_more) {
             var min_message_id = cache.messages[0].id;
-            domain = new data.CompoundDomain([['id', '<', min_message_id]], domain).eval();
+            domain = [['id', '<', min_message_id]].concat(domain);
         }
 
         return this.rpc('mail.message', 'message_fetch')
