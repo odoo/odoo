@@ -113,3 +113,20 @@ class TestPricelist(TransactionCase):
         test_unit_price(3500, kg, (tonne_price - 10) / 1000.0)
         test_unit_price(2, tonne, tonne_price)
         test_unit_price(3, tonne, tonne_price - 10)
+
+    def test_30_pricelist_company(self):
+        # check if changes in company_id propagate to versions and items
+        # this is actually a test for old-style stored related fields
+        company = self.env['res.company'].create({
+            'name': 'testcompany',
+        })
+        pricelist_id = self.sale_pricelist_id
+        self.env['product.pricelist'].browse([pricelist_id]).write({
+            'company_id': company.id
+        })
+        pricelist = self.env['product.pricelist'].browse([pricelist_id])
+        self.assertEqual(pricelist.version_id[0].company_id, company)
+        self.assertEqual(pricelist.version_id[0].items_id[0].company_id,
+                         company)
+        self.assertEqual(pricelist.version_id[0].items_id[1].company_id,
+                         company)

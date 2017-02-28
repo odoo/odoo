@@ -667,8 +667,48 @@ class BaseModel(object):
             # process store parameter
             store = column.store
             if store is True:
-                get_ids = lambda self, cr, uid, ids, c={}: ids
-                store = {cls._name: (get_ids, None, column.priority, None)}
+                priority = column.priority
+                if isinstance(column, fields.related):
+                    # create triggers for every object in the path
+                    # this relies on being able to search through the whole
+                    # path
+                    triggers = []
+                    head = []
+                    tail = list(cls._columns[fname].arg)
+                    current_model = cls
+                    while tail:
+                        part = tail.pop(0)
+                        if part not in current_model._fields:
+                            continue
+                        part_field = current_model._fields[part]
+                        # if we have a related field in our path, expand it
+                        if isinstance(part_field.column, fields.related):
+                            priority += 1
+                            tail = list(part_field.column.arg) + tail
+                            continue
+                        trigger_model = current_model._name
+                        trigger_fields = [part]
+                        get_ids = lambda self, cr, uid, ids, c={}: ids
+                        if head:
+                            path = '.'.join(head)
+                            modelname = cls._name
+                            get_ids = lambda self, cr, uid, ids, c={}:\
+                                self.pool[modelname].search(
+                                    cr, uid, [(path, 'in', ids)], context=c)
+                        triggers.append(
+                            (trigger_model, get_ids, trigger_fields)
+                        )
+                        if part_field.relational:
+                            current_model = pool[part_field.comodel_name]
+                        head.append(part)
+                    store = {
+                        trigger_model: (
+                            get_ids, trigger_fields, priority, None)
+                        for trigger_model, get_ids, trigger_fields in triggers
+                    }
+                else:
+                    get_ids = lambda self, cr, uid, ids, c={}: ids
+                    store = {cls._name: (get_ids, None, priority, None)}
             for model, spec in store.iteritems():
                 if len(spec) == 4:
                     (fnct, fields2, order, length) = spec
