@@ -41,11 +41,17 @@
     </record>
 
     <record id="mail_activity_type_action" model="ir.actions.act_window">
-        <field name="name">Activities</field>
+        <field name="name">Activity Types</field>
         <field name="res_model">mail.activity.type</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+    <menuitem
+      id="menu_mail_activity_type"
+      action="mail_activity_type_action"
+      parent="base.menu_email"
+    />
 
     <record id="mail_activity_view_form_popup" model="ir.ui.view">
         <field name="name">mail.activity.view.form.popup</field>
@@ -138,4 +144,5 @@
             </calendar>
         </field>
     </record>
+
 </odoo>
