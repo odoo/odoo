@@ -168,7 +168,8 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {string[]} a list of css classes
      */
     _computeDecorationClassNames: function (record) {
-        var context = _.extend({}, record.data, {
+        var data = JSON.parse(JSON.stringify(record.data));
+        var context = _.extend({}, data, {
             uid: session.uid,
             current_date: moment().format('YYYY-MM-DD')
             // TODO: time, datetime, relativedelta

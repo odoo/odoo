@@ -675,6 +675,30 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('support row decoration with date', function (assert) {
+        assert.expect(3);
+
+        this.data.foo.records[0].datetime = '2017-02-27 12:51:35';
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree decoration-info="datetime == \'2017-02-27 12:51:35\'" decoration-danger="datetime &gt; \'2017-02-27 12:51:35\' AND datetime &lt; \'2017-02-27 10:51:35\'">' +
+                    '<field name="datetime"/><field name="int_field"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('tbody tr.text-info').length, 1,
+            "should have 1 columns with text-info class with good datetime");
+
+        assert.strictEqual(list.$('tbody tr.text-danger').length, 0,
+            "should have 0 columns with text-danger class with wrong timezone datetime");
+
+        assert.strictEqual(list.$('tbody tr').length, 4, "should have 4 rows");
+        list.destroy();
+    });
+
     QUnit.test('no content helper when no data', function (assert) {
         assert.expect(5);
 
