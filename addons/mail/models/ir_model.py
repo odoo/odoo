@@ -16,19 +16,20 @@ class IrModel(models.Model):
 
     @api.multi
     def write(self, vals):
-        res = super(IrModel, self).write(vals)
         if self and 'is_mail_thread' in vals:
             if not all(rec.state == 'manual' for rec in self):
                 raise UserError(_('Only custom models can be modified.'))
-            # one can only change is_mail_thread from False to True
             if not all(rec.is_mail_thread <= vals['is_mail_thread'] for rec in self):
                 raise UserError(_('Field "Mail Thread" cannot be changed to "False".'))
+            res = super(IrModel, self).write(vals)
             # setup models; this reloads custom models in registry
             self.pool.setup_models(self._cr, partial=(not self.pool.ready))
             # update database schema of models
             models = self.pool.descendants(self.mapped('model'), '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
             self.pool.signal_registry_change()
+        else:
+            res = super(IrModel, self).write(vals)
         return res
 
     def _reflect_model_params(self, model):
