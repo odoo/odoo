@@ -89,24 +89,19 @@ class SaleOrder(models.Model):
             reward_product_qty = max_product_qty
 
         reward_qty = min(int(int(max_product_qty / program.rule_min_quantity) * program.reward_product_quantity), reward_product_qty)
-
-        vals = {
+        # Take the default taxes on the reward product, mapped with the fiscal position
+        taxes = program.reward_product_id.taxes_id
+        if self.fiscal_position_id:
+            taxes = self.fiscal_position_id.map_tax(taxes)
+        return {
             'product_id': program.discount_line_product_id.id,
             'price_unit': - price_unit,
             'product_uom_qty': reward_qty,
-            'is_reward_line': True
+            'is_reward_line': True,
+            'name': "Free Product - " + program.reward_product_id.name,
+            'product_uom': program.reward_product_id.uom_id.id,
+            'tax_id': [(4, tax.id, False) for tax in taxes],
         }
-        if not program.reward_product_id:
-            vals.update({
-                'name': "Discount: %s" % (program.name),
-                'product_uom': program.discount_line_product_id.uom_id.id,
-            })
-        else:
-            vals.update({
-                'name': "Free Product - " + program.reward_product_id.name,
-                'product_uom': program.reward_product_id.uom_id.id,
-            })
-        return vals
 
     def _get_order_lines_untaxed_amount(self):
         """ Returns the untaxed sale order total amount without the rewards amount"""
@@ -232,7 +227,11 @@ class SaleOrder(models.Model):
             if values['product_uom_qty'] and values['price_unit']:
                 order.write({'order_line': [(1, line.id, values) for line in lines]})
             else:
-                order.write({'order_line': [(2, line.id, False) for line in lines]})
+                if program.reward_type != 'free_shipping':
+                    order.write({'order_line': [(2, line.id, False) for line in lines]})
+                else:
+                    values.update(price_unit=0.0)
+                    order.write({'order_line': [(1, line.id, values) for line in lines]})
 
     def _remove_invalid_reward_lines(self):
         '''Unlink reward order lines that are not applicable anymore'''
@@ -257,7 +256,7 @@ class SaleOrderLine(models.Model):
     @api.model
     def create(self, vals):
         res = super(SaleOrderLine, self).create(vals)
-        self.order_id._recompute_coupon_lines()
+        res.order_id._recompute_coupon_lines()
         return res
 
     def write(self, vals):
