@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="transaction_form_website_sale" model="ir.ui.view">
-        <field name="name">payment.transaction.form.website_sale</field>
+    <record id="payment_transaction_view_form_inherit_website_sale" model="ir.ui.view">
+        <field name="name">payment.transaction.view.form.inherit.website_sale</field>
         <field name="model">payment.transaction</field>
         <field name="inherit_id" ref="payment.transaction_form"/>
         <field name="arch" type="xml">
@@ -9,5 +9,16 @@
                 <field name="sale_order_id"/>
             </xpath>
         </field>
+    </record>
+
+    <record id="payment_transaction_action_payments_to_capture" model="ir.actions.act_window">
+        <field name="name">Payments To Capture</field>
+        <field name="res_model">payment.transaction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', '=', 'authorized'), ('sale_order_id.state', '!=', 'cancel')]</field>
+        <field name="context">{'create': False}</field>
+        <field name="view_id" ref="payment.transaction"/>
+        <field name="help">You don't have any payments to capture from the website.</field>
     </record>
 </odoo>
