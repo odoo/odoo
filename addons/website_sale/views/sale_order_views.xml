@@ -1,26 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <record id="product_template_search_view_website" model="ir.ui.view">
-        <field name="name">product.template.search.published</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_search_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//filter[@name='consumable']" position="after">
-                <separator/>
-                <filter string="Published" name="published" domain="[('website_published', '=', True)]"/>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="product_template_action" model="ir.actions.act_window">
-        <field name="name">Products</field>
-        <field name="res_model">product.template</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="context">{'search_default_published': 1, 'default_website_published': True}</field>
-    </record>
-
     <record id="view_sales_order_filter_ecommerce" model="ir.ui.view">
         <field name="name">sale.order.ecommerce.search.view</field>
         <field name="model">sale.order</field>
@@ -29,6 +8,18 @@
             <search>
                 <filter string="From Website" name="from_website" domain="[('team_id.website_ids', '!=', False)]"/>
             </search>
+        </field>
+    </record>
+
+    <record id="view_order_form_acquirer" model="ir.ui.view">
+        <field name="name">sale.order.form.acquirer</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="payment_acquirer_id" readonly="1" attrs="{'invisible': [('payment_acquirer_id', '=', False)]}" options='{"no_open":True}'/>
+                <field name="payment_tx_id" readonly="1" attrs="{'invisible': [('payment_acquirer_id', '=', False)]}"/>
+            </xpath>
         </field>
     </record>
 
@@ -62,28 +53,6 @@
         <field name="help">You don't have any cancelled order from the website.</field>
     </record>
 
-    <record id="action_invoices_ecommerce" model="ir.actions.act_window">
-        <field name="name">Invoices</field>
-        <field name="res_model">account.invoice</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('team_id.website_ids', '!=', False)]</field>
-        <field name="view_id" ref="account.invoice_tree"/>
-        <field name="context">{'type':'out_invoice'}</field>
-        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
-    </record>
-
-    <record id="website_product_pricelist3" model="ir.actions.act_window">
-        <field name="name">Pricelists</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">product.pricelist</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('website_id', '!=', False)]</field>
-        <field name="search_view_id" ref="product.product_pricelist_view_search" />
-        <field name="context">{"default_base":'list_price'}</field>
-    </record>
-
     <menuitem id="menu_orders" name="Orders" parent="website.menu_website_configuration" sequence="2"/>
     <menuitem id="menu_catalog" name="Catalog" parent="website.menu_website_configuration" sequence="3"/>
     <menuitem id="menu_ecommerce_settings" parent="website.menu_website_global_configuration" name="eCommerce"/>
@@ -95,7 +64,7 @@
     <menuitem id="menu_orders_invoices" name="Invoices" parent="menu_orders" action="action_invoices_ecommerce" sequence="4"/>
 
     <!-- Catalog sub-menus -->
-    <menuitem id="menu_catalog_products" name="Products" parent="menu_catalog" action="product_template_action" sequence="1"/>
+    <menuitem id="menu_catalog_products" name="Products" parent="menu_catalog" action="product_template_action_website" sequence="1"/>
     <menuitem id="menu_catalog_pricelists" name="Pricelists" parent="menu_catalog" action="product.product_pricelist_action2" groups="product.group_sale_pricelist" sequence="3"/>
     <menuitem id="menu_catalog_categories" parent="menu_ecommerce_settings" action="product_public_category_action" sequence="2"/>
 
