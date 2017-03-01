@@ -109,7 +109,7 @@ ActionManager.include({
                             report_urls['qweb-pdf'],
                             action.report_type, //The 'root' report is considered the maine one, so we use its type for all the others.
                         ];
-                        trigger_download(self.session, response, c, current_action, options);
+                        trigger_download(self.getSession(), response, c, current_action, options);
 
                         treated_actions.push(current_action);
                         current_action = current_action.next_report_to_generate;
@@ -140,9 +140,8 @@ ActionManager.include({
                 action.report_type,
             ];
             var c = crash_manager;
-            return trigger_download(self.session, response, c, action, options);
-        }
-        else {
+            return trigger_download(self.getSession(), response, c, action, options);
+        } else {
             return self._super(action, options);
         }
     }
