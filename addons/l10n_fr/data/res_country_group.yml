@@ -1,0 +1,25 @@
+-
+  !python {model: res.country.group, id: l10n_fr.rest_of_world_france}: |
+    rest_countries = self.env['res.country'].search([('country_group_ids', 'not in', [self.env.ref('l10n_fr.dom-tom').id, self.env.ref('base.europe').id]), 
+                                                     ('id', '!=', self.env.ref('base.fr').id)])
+    self.write({
+        'country_ids': [(6, False, rest_countries.ids)],
+      })
+-
+  !python {model: account.fiscal.position.template, id: l10n_fr.fiscal_position_template_import_export}: |
+    fp_dom_tom = self.env.ref('l10n_fr.fiscal_position_template_dom_tom')
+    IrModelData = self.env['ir.model.data']
+    tax_ir_mod_data = IrModelData.search([('model', '=', 'account.fiscal.position.tax.template'), ('res_id', 'in', self.tax_ids.ids)])
+
+    TaxTemplate = self.env['account.fiscal.position.tax.template']
+
+    for tax_data in tax_ir_mod_data:
+      actual_tax_template = TaxTemplate.browse(tax_data.res_id)
+      duplicate_tax_template = actual_tax_template.copy()
+      IrModelData.create({'name': tax_data.name + "_dom_tom",
+                          'module': 'l10n_fr',
+                          'model': 'account.fiscal.position.tax.template',
+                          'res_id': duplicate_tax_template.id,})
+      TaxTemplate |= duplicate_tax_template
+
+    fp_dom_tom.write({'tax_ids': [(6, False, TaxTemplate.ids)]})
