@@ -218,9 +218,9 @@
 
     <template id="sort" inherit_id="website_sale.products" active="True" customize_show="True" name="Show Sort by">
         <xpath expr="//div[@class='products_pager']/div/t[@t-call][last()]" position="after">
-            <t t-set="list_price_desc_label">Price <i class="fa fa-carret-up" aria-hidden="true"/></t>
-            <t t-set="list_price_asc_label">Price <i class="fa fa-carret-down" aria-hidden="true"/></t>
-            <t t-set="name_asc_label">Name <i class="fa fa-carret-down" aria-hidden="true"/></t>
+            <t t-set="list_price_desc_label">Price <i class="fa fa-caret-up" aria-hidden="true"/></t>
+            <t t-set="list_price_asc_label">Price <i class="fa fa-caret-down" aria-hidden="true"/></t>
+            <t t-set="name_asc_label">Name <i class="fa fa-caret-down" aria-hidden="true"/></t>
             <t t-set="website_sale_sortable" t-value="[
                 (list_price_desc_label, 'list_price desc'),
                 (list_price_asc_label, 'list_price asc'),
@@ -1030,16 +1030,16 @@
         </xpath>
     </template>
 
-    <template id="reduction_code" inherit_id="website_sale.cart" active="False" customize_show="True" name="Coupon Code">
+    <template id="reduction_code" inherit_id="website_sale.cart" active="True" customize_show="True" name="Coupon Code">
         <xpath expr="//div[@id='right_column']" position="inside">
             <h4>Coupon Code</h4>
             <p>
               Have a coupon code? Fill in this field and apply.
             </p>
-            <t t-if="code_not_available">
+            <t t-if="code_not_available" name="code_not_available">
                 <p class="bg-warning">This promo code is not available</p>
             </t>
-            <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist" method="post" class="mb32">
+            <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist" method="post" class="mb32" name="coupon_code">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                 <div class="input-group">
                     <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None" />
@@ -1351,15 +1351,15 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div>
+                            <div class="row">
+                                <div class="col-lg-5 col-sm-4 col-md-4 text-muted" id="coupon_box"/>
                                 <t t-call="website_sale.total">
                                     <t t-set='extra_class' t-value='"col-md-5 col-md-offset-7 col-xs-8 col-xs-offset-4"'/>
                                 </t>
                             </div>
                             <div class="clearfix" />
                             <div class="oe_structure" />
-                          </div>
-                          <div class="js_payment mb64 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
+                            <div class="js_payment mb64 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
                                 <div class="col-lg-5 col-sm-6">
                                     <h4>Payment Method:</h4>
                                     <ul class="list-unstyled">
@@ -1417,8 +1417,8 @@
                                         </div>
                                     </t>
                                 </div>
-                          </div>
-                          <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
+                            </div>
+                            <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
                                 <div class="col-sm-12">
                                     <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
@@ -1428,6 +1428,7 @@
                                         </a>
                                     </form>
                                 </div>
+                            </div>
                           </div>
                         </div>
 
@@ -1437,6 +1438,26 @@
                 <div class="oe_structure" />
             </div>
         </t>
+    </template>
+
+    <template id="reduction_code_payment" inherit_id="website_sale.payment" active="True" customize_show="True" name="Coupon Code">
+        <xpath expr="//div[@id='coupon_box']" position="inside">
+            <p>
+              Have a coupon code? Fill in this field and apply.
+            </p>
+            <t t-if="code_not_available" name="code_not_available">
+                <p class="bg-warning">This promo code is not available</p>
+            </t>
+            <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist_payment" method="post" class="mb32" name="coupon_code">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                <div class="input-group">
+                    <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None" />
+                    <div class="input-group-btn">
+                        <a class="btn btn-default a-submit">Apply</a>
+                    </div>
+                </div>
+            </form>
+        </xpath>
     </template>
 
     <template id="payment_sale_note" inherit_id="payment" name="Accept Terms &amp; Conditions" customize_show="True" active="False">

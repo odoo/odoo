@@ -1920,13 +1920,7 @@ class BaseModel(object):
         if not groupby_fields:
             return fetched_data
 
-        many2onefields = [gb['field'] for gb in annotated_groupbys if gb['type'] == 'many2one']
-        if many2onefields:
-            data_ids = [r['id'] for r in fetched_data]
-            many2onefields = list(set(many2onefields))
-            data_dict = {d['id']: d for d in self.browse(data_ids).read(many2onefields)}
-            for d in fetched_data:
-                d.update(data_dict[d['id']])
+        self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys)
 
         data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict) for k,v in r.iteritems()}, fetched_data)
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain) for d in data]
@@ -1940,6 +1934,15 @@ class BaseModel(object):
                 aggregated_fields, count_field, result, read_group_order=order,
             )
         return result
+
+    def _read_group_resolve_many2one_fields(self, data, fields):
+        many2onefields = {field['field'] for field in fields if field['type'] == 'many2one'}
+        for field in many2onefields:
+            ids_set = {d[field] for d in data}
+            m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
+            data_dict = dict(m2o_records.name_get())
+            for d in data:
+                d[field] = (d[field], data_dict[d[field]]) if d[field] else False
 
     def _inherits_join_add(self, current_model, parent_model_name, query):
         """
@@ -2357,6 +2360,11 @@ class BaseModel(object):
             if field.compute:
                 cls._field_computed[field] = group = groups[field.compute]
                 group.append(field)
+        for fields in groups.itervalues():
+            compute_sudo = fields[0].compute_sudo
+            if not all(field.compute_sudo == compute_sudo for field in fields):
+                _logger.warning("%s: inconsistent 'compute_sudo' for computed fields: %s",
+                                self._name, ", ".join(field.name for field in fields))
 
     @api.model
     def _setup_complete(self):

@@ -58,6 +58,12 @@
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
+    <record model="ir.rule" id="opp_report_multi_company">
+      <field name="name">Opportunity Analysis multi-company</field>
+      <field name="model_id" ref="model_crm_opportunity_report"/>
+      <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
     <record id="crm_activity_report_rule_all_activities" model="ir.rule">
         <field name="name">All Activities</field>
         <field ref="model_crm_activity_report" name="model_id"/>

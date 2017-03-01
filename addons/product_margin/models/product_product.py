@@ -64,7 +64,7 @@ class ProductProduct(models.Model):
                     products = self.search(re['__domain'])
                     tot_products |= products
                     for prod in products:
-                        prod_re[prod] = re_ind
+                        prod_re[prod.id] = re_ind
                 re_ind += 1
             res_val = tot_products._compute_product_margin_fields_values(field_names=[x for x in fields if fields in fields_list])
             for key in res_val.keys():
@@ -85,12 +85,9 @@ class ProductProduct(models.Model):
             date_from = self.env.context.get('date_from', time.strftime('%Y-01-01'))
             date_to = self.env.context.get('date_to', time.strftime('%Y-12-31'))
             invoice_state = self.env.context.get('invoice_state', 'open_paid')
-            if 'date_from' in field_names:
-                res[val.id]['date_from'] = date_from
-            if 'date_to' in field_names:
-                res[val.id]['date_to'] = date_to
-            if 'invoice_state' in field_names:
-                res[val.id]['invoice_state'] = invoice_state
+            res[val.id]['date_from'] = date_from
+            res[val.id]['date_to'] = date_to
+            res[val.id]['invoice_state'] = invoice_state
             invoice_types = ()
             states = ()
             if invoice_state == 'paid':
@@ -136,14 +133,10 @@ class ProductProduct(models.Model):
             res[val.id]['normal_cost'] = val.standard_price * res[val.id]['purchase_num_invoiced']
             res[val.id]['purchase_gap'] = res[val.id]['normal_cost'] - res[val.id]['total_cost']
 
-            if 'total_margin' in field_names:
-                res[val.id]['total_margin'] = res[val.id]['turnover'] - res[val.id]['total_cost']
-            if 'expected_margin' in field_names:
-                res[val.id]['expected_margin'] = res[val.id]['sale_expected'] - res[val.id]['normal_cost']
-            if 'total_margin_rate' in field_names:
-                res[val.id]['total_margin_rate'] = res[val.id]['turnover'] and res[val.id]['total_margin'] * 100 / res[val.id]['turnover'] or 0.0
-            if 'expected_margin_rate' in field_names:
-                res[val.id]['expected_margin_rate'] = res[val.id]['sale_expected'] and res[val.id]['expected_margin'] * 100 / res[val.id]['sale_expected'] or 0.0
+            res[val.id]['total_margin'] = res[val.id]['turnover'] - res[val.id]['total_cost']
+            res[val.id]['expected_margin'] = res[val.id]['sale_expected'] - res[val.id]['normal_cost']
+            res[val.id]['total_margin_rate'] = res[val.id]['turnover'] and res[val.id]['total_margin'] * 100 / res[val.id]['turnover'] or 0.0
+            res[val.id]['expected_margin_rate'] = res[val.id]['sale_expected'] and res[val.id]['expected_margin'] * 100 / res[val.id]['sale_expected'] or 0.0
             for k, v in res[val.id].items():
                 setattr(val, k, v)
         return res

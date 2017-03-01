@@ -28,7 +28,7 @@ class WebsiteConfigSettings(models.TransientModel):
     module_delivery_usps = fields.Boolean("USPS integration")
 
     module_sale_ebay = fields.Boolean("eBay connector")
-    module_sale_coupon = fields.Boolean("Manage coupons and promotional offers")
+    module_sale_coupon = fields.Boolean("Discount Programs")
 
     group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image')
     group_discount_per_so_line = fields.Boolean(string="Discounted Prices", implied_group='sale.group_discount_per_so_line')

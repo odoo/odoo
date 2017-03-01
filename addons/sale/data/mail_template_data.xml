@@ -68,6 +68,8 @@ from ${object.company_id.name}.
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[<html>
                 <head></head>
+                % set record = ctx.get('record')
+                % set company = record and record.company_id or user.company_id
                 <body style="margin: 0; padding: 0;">
                 <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed" summary="o_mail_notification">
                     <tbody>
@@ -83,7 +85,7 @@ from ${object.company_id.name}.
                                   </span>
                               </td>
                               <td valign="middle" align="right">
-                                  <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+                                  <img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${company.name}">
                               </td>
                             </tr>
                           </table>
@@ -109,16 +111,16 @@ from ${object.company_id.name}.
                           <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px;">
                             <tr>
                               <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-                                ${user.company_id.name}<br/>
-                                ${user.company_id.phone or ''}
+                                ${company.name}<br/>
+                                ${company.phone or ''}
                               </td>
                               <td valign="middle" align="right" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-                                % if user.company_id.email:
-                                <a href="mailto:${user.company_id.email}" style="text-decoration:none; color: white;">${user.company_id.email}</a><br/>
+                                % if company.email:
+                                <a href="mailto:${company.email}" style="text-decoration:none; color: white;">${company.email}</a><br/>
                                 % endif
-                                % if user.company_id.website:
-                                    <a href="${user.company_id.website}" style="text-decoration:none; color: white;">
-                                        ${user.company_id.website}
+                                % if company.website:
+                                    <a href="${company.website}" style="text-decoration:none; color: white;">
+                                        ${company.website}
                                     </a>
                                 % endif
                               </td>

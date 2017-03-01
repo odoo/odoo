@@ -337,7 +337,7 @@ class ProductTemplate(models.Model):
             products_ns = Product.name_search(name, args+domain, operator=operator)
             products = Product.browse([x[0] for x in products_ns])
             templates |= products.mapped('product_tmpl_id')
-            if (not products) or (len(templates) > limit):
+            if (not products) or (limit and (len(templates) > limit)):
                 break
 
         # re-apply product.template order + name_get

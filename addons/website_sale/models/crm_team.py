@@ -13,26 +13,28 @@ class CrmTeam(models.Model):
     website_ids = fields.One2many('website', 'salesteam_id', string='Websites', help="Websites using this sales channel")
     abandoned_carts_count = fields.Integer(
         compute='_compute_abandoned_carts',
-        string='Number of transactions to capture', readonly=True)
+        string='Number of Abandoned Carts', readonly=True)
     abandoned_carts_amount = fields.Integer(
         compute='_compute_abandoned_carts',
-        string='Amount of transactions to capture', readonly=True)
+        string='Amount of Abandoned Carts', readonly=True)
 
     def _compute_abandoned_carts(self):
+        # abandoned carts are draft sales orders that have no order lines,
+        # a partner other than the public user, and created over an hour ago
         website_teams = self.filtered(lambda team: team.team_type == 'website')
-        # abandoned carts are draft sales orders that have no order lines, a partner other than the public user, and created over an hour ago
-        abandoned_carts_data = self.env['sale.order'].read_group([
-            ('team_id', 'in', website_teams.ids),
-            ('date_order', '<', fields.Datetime.to_string(datetime.now() - relativedelta(hours=1))),
-            ('state', '=', 'draft'),
-            ('partner_id', '!=', self.env.ref('base.public_partner').id),
-            ('order_line', '!=', False),
-        ], ['amount_total', 'team_id'], ['team_id'])
-        counts = dict((data['team_id'][0], data['team_id_count']) for data in abandoned_carts_data)
-        amounts = dict((data['team_id'][0], data['amount_total']) for data in abandoned_carts_data)
-        for team in website_teams:
-            team.abandoned_carts_count = counts.get(team.id, 0)
-            team.abandoned_carts_amount = amounts.get(team.id, 0)
+        if website_teams:
+            abandoned_carts_data = self.env['sale.order'].read_group([
+                ('team_id', 'in', website_teams.ids),
+                ('date_order', '<', fields.Datetime.to_string(datetime.now() - relativedelta(hours=1))),
+                ('state', '=', 'draft'),
+                ('partner_id', '!=', self.env.ref('base.public_partner').id),
+                ('order_line', '!=', False),
+            ], ['amount_total', 'team_id'], ['team_id'])
+            counts = {data['team_id'][0]: data['team_id_count'] for data in abandoned_carts_data}
+            amounts = {data['team_id'][0]: data['amount_total'] for data in abandoned_carts_data}
+            for team in website_teams:
+                team.abandoned_carts_count = counts.get(team.id, 0)
+                team.abandoned_carts_amount = amounts.get(team.id, 0)
 
     def _compute_dashboard_button_name(self):
         website_teams = self.filtered(lambda team: team.team_type == 'website' and not team.use_quotations)

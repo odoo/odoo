@@ -997,9 +997,7 @@ var X2ManyListView = ListView.extend({
  */
 var X2ManyList = ListView.List.extend({
     pad_table_to: function (count) {
-        var ftype = this.view.x2m.field.type;
-        var is_readonly = this.view.x2m.get('effective_readonly');
-        if (is_readonly || (ftype === 'one2many' && !this.view.is_action_enabled('create'))) {
+        if (!this.view.is_action_enabled('create') || this.view.x2m.get('effective_readonly')) {
             this._super(count);
             return;
         }

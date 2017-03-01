@@ -467,10 +467,10 @@ class MrpProduction(models.Model):
             production.workorder_ids.filtered(lambda x: x.state != 'cancel').action_cancel()
 
             finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')).action_cancel()
-            finish_moves.action_cancel()
+            raw_moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            (finish_moves | raw_moves).action_cancel()
 
-            procurements = ProcurementOrder.search([('move_dest_id', 'in', finish_moves.ids)])
+            procurements = ProcurementOrder.search([('move_dest_id', 'in', (finish_moves | raw_moves).ids)])
             if procurements:
                 procurements.cancel()
 

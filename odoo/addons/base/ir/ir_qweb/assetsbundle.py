@@ -173,8 +173,7 @@ class AssetsBundle(object):
         ]
 
         # force bundle invalidation on other workers
-        if 'xml' not in tools.config['dev_mode']:
-            self.env['ir.qweb']._get_asset.clear_cache(self.env['ir.qweb'])
+        self.env['ir.qweb'].clear_caches()
 
         return ira.sudo().search(domain).unlink()
 

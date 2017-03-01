@@ -88,9 +88,6 @@ class HrEmployee(models.Model):
         self.ensure_one()
         action_message = self.env.ref('hr_attendance.hr_attendance_action_greeting_message').read()[0]
         action_message['previous_attendance_change_date'] = self.last_attendance_id and (self.last_attendance_id.check_out or self.last_attendance_id.check_in) or False
-        if action_message['previous_attendance_change_date']:
-            action_message['previous_attendance_change_date'] = \
-                fields.Datetime.to_string(fields.Datetime.context_timestamp(self, fields.Datetime.from_string(action_message['previous_attendance_change_date'])))
         action_message['employee_name'] = self.name
         action_message['next_action'] = next_action
 

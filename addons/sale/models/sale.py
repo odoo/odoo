@@ -125,7 +125,7 @@ class SaleOrder(models.Model):
     project_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.", copy=False)
     related_project_id = fields.Many2one('account.analytic.account', inverse='_inverse_project_id', related='project_id', string='Analytic Account', help="The analytic account related to a sales order.")
 
-    order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True)
+    order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
 
     invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
     invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
@@ -446,7 +446,7 @@ class SaleOrder(models.Model):
     def action_unlock(self):
         self.write({'state': 'sale'})
 
-    @api.model
+    @api.multi
     def _prepare_procurement_group(self):
         return {'name': self.name}
 
@@ -916,13 +916,18 @@ class SaleOrderLine(models.Model):
         PricelistItem = self.env['product.pricelist.item']
         field_name = 'lst_price'
         currency_id = None
+        product_currency = None
         if rule_id:
             pricelist_item = PricelistItem.browse(rule_id)
             if pricelist_item.base == 'standard_price':
                 field_name = 'standard_price'
+            if pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id:
+                field_name = 'price'
+                product = product.with_context(pricelist=pricelist_item.base_pricelist_id.id)
+                product_currency = pricelist_item.base_pricelist_id.currency_id
             currency_id = pricelist_item.pricelist_id.currency_id
 
-        product_currency = (product.company_id and product.company_id.currency_id) or self.env.user.company_id.currency_id
+        product_currency = product_currency or(product.company_id and product.company_id.currency_id) or self.env.user.company_id.currency_id
         if not currency_id:
             currency_id = product_currency
             cur_factor = 1.0

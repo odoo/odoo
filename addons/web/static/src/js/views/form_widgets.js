@@ -323,6 +323,9 @@ var FieldPriority = common.AbstractField.extend({
             self.replaceElement(self.priority.$el);
         }));
     },
+    is_false: function() {
+        return false;
+    },
     render_value: function() {
         this.priority.set_value(this.get('value'));
     },
