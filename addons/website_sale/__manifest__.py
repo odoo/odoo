@@ -18,6 +18,7 @@ Odoo E-Commerce
         'data/web_planner_data.xml',
         'views/product_views.xml',
         'views/account_views.xml',
+        'views/sale_report_views.xml',
         'views/sale_order_views.xml',
         'views/crm_team_views.xml',
         'views/templates.xml',
