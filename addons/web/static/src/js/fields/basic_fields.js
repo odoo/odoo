@@ -1422,20 +1422,35 @@ var FieldDomain = AbstractField.extend({
  */
 var AceEditor = AbstractField.extend({
     template: "AceEditor",
+    /**
+     * @override willStart from AbstractField (Widget)
+     * Loads the ace library if not already loaded.
+     *
+     * @returns {Deferred}
+     */
     willStart: function () {
         if (!window.ace && !this.loadJS_def) {
             this.loadJS_def = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
-                return $.when(ajax.loadJS('/web/static/lib/ace/mode-python.js'),
+                return $.when(
+                    ajax.loadJS('/web/static/lib/ace/mode-python.js'),
                     ajax.loadJS('/web/static/lib/ace/mode-xml.js')
                 );
             });
         }
         return $.when(this._super(), this.loadJS_def);
     },
+    /**
+     * @override start from AbstractField (Widget)
+     *
+     * @returns {Deferred}
+     */
     start: function () {
         this._startAce(this.$('.ace-view-editor')[0]);
         return this._super();
     },
+    /**
+     * @override destroy from AbstractField (Widget)
+     */
     destroy: function () {
         if (this.aceEditor) {
             this.aceEditor.destroy();
@@ -1446,24 +1461,34 @@ var AceEditor = AbstractField.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    _renderEdit: function () {
-        var value = this._formatValue(this.value);
-        if (value !== this.lastValue) {
-            this.aceSession.setValue(this._formatValue(this.value));
+    /**
+     * @override _render from AbstractField
+     * The rendering is the same for edit and readonly mode: changing the ace
+     * session value. This is only done if the value in the ace editor is not
+     * already the new one (prevent losing focus / retriggering changes / empty
+     * the undo stack / ...).
+     *
+     * @private
+     */
+    _render: function () {
+        var newValue = this._formatValue(this.value);
+        if (this.aceSession.getValue() !== newValue) {
+            this.aceSession.setValue(newValue);
         }
     },
-    _renderReadonly: function () {
-        this.aceSession.setValue(this._formatValue(this.value));
-    },
-    _setValue: function (value) {
-        this.lastValue = value;
-        this._super(value);
-    },
+    /**
+     * Starts the ace library on the given DOM element. This initializes the
+     * ace editor option according to the edit/readonly mode and binds ace
+     * editor events.
+     *
+     * @private
+     * @param {Node} node - the DOM element the ace library must initialize on
+     */
     _startAce: function (node) {
         var self = this;
         this.aceEditor = ace.edit(node);
         this.aceEditor.setOptions({
-            "maxLines": Infinity,
+            maxLines: Infinity,
             showPrintMargin: false,
         });
         if (this.mode === 'readonly') {
@@ -1482,15 +1507,15 @@ var AceEditor = AbstractField.extend({
         this.aceSession = this.aceEditor.getSession();
         this.aceSession.setOptions({
             useWorker: false,
-            mode: "ace/mode/"+(this.nodeOptions.mode || 'xml'),
+            mode: "ace/mode/" + (this.nodeOptions.mode || 'xml'),
             tabSize: 2,
             useSoftTabs: true,
         });
-        this.aceEditor.on("change", function () {
-            if (self.aceSession.getUndoManager().hasUndo()) {
+        if (this.mode === "edit") {
+            this.aceEditor.on("change", _.debounce(function () {
                 self._setValue(self.aceSession.getValue());
-            }
-        });
+            }, 0)); // debounce because aceSession.setValue triggers 2 changes...
+        }
     },
 });
 
