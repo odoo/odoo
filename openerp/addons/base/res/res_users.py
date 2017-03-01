@@ -181,7 +181,7 @@ class Users(models.Model):
 
     def _default_groups(self):
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
-        return (default_user or self.env['res.users']).groups_id
+        return (default_user or self.env['res.users']).sudo().groups_id
 
     def _companies_count(self):
         return self.env['res.company'].sudo().search_count([])
