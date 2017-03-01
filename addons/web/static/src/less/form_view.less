@@ -76,6 +76,93 @@
         }
     }
 
+    // Header containing status/workflow buttons
+    .o_form_statusbar {
+        background-color: @odoo-view-background-color;
+        position: relative; // Needed for the "More" dropdown
+        border-bottom: 1px solid @odoo-brand-secondary;
+
+        > .o_statusbar_status {
+            > .o_arrow_button {
+                min-height: @odoo-statusbar-height;
+                font-size: 11px;
+                font-weight: bold;
+                position: relative;
+                padding-left: @odoo-statusbar-arrow-width*2;
+                color: @odoo-main-color-muted;
+                .o-transition(all, 0.2s);
+
+                &:first-child {
+                    padding-right: @odoo-horizontal-padding; // Compensate container padding
+                }
+                &:last-child {
+                    padding-left: @odoo-horizontal-padding - 1;
+                    border-left: 1px solid @odoo-brand-lightsecondary;
+                }
+
+                &:active {
+                    box-shadow: none;
+                }
+
+                &.disabled {
+                    opacity: 1.0;
+                    cursor: auto;
+                    pointer-events: auto;
+                    color: @odoo-main-text-color;
+                    border-left: 1px solid @odoo-brand-lightsecondary;
+                }
+
+                &:before, &:after {
+                    content: " ";
+                    display: block;
+                    .o-position-absolute(0, -@odoo-statusbar-arrow-width + 1);
+
+                    border-top: @odoo-statusbar-height/2 solid transparent;
+                    border-bottom: @odoo-statusbar-height/2 solid transparent;
+                    border-right: none;
+                    border-left: @odoo-statusbar-arrow-width solid @odoo-view-background-color;
+                    .o-transition(border, 0.2s);
+                    -moz-transform: scale(0.9999); // Smooth the triangle on firefox
+                }
+
+                &:not(.disabled) {
+                    &:hover, &:active, &:focus {
+                        color: white;
+                        background-color: @odoo-brand-optional;
+                        &:after {
+                            border-left-color: @odoo-brand-optional;
+                        }
+                    }
+                }
+
+                &:before {
+                    right: -@odoo-statusbar-arrow-width;
+                    border-left-color: @odoo-brand-lightsecondary;
+                }
+
+                &.btn-primary.disabled {
+                    color: @text-color;
+                    background-color: @odoo-statusbar-disabled-bg;
+
+                    &:before {
+                        border-left-color: @odoo-brand-lightsecondary;
+                    }
+                    &:after {
+                        border-left-color: @odoo-statusbar-disabled-bg;
+                    }
+                }
+            }
+            .o-status-more {
+                .o-position-absolute(100%, 0);
+                min-width: 100px;
+                > li > button {
+                    width: 100%;
+                    text-align: left;
+                }
+            }
+        }
+    }
+
     // Button box
     .oe_button_box {
         .oe_stat_button {
@@ -93,7 +180,7 @@
         .o_priority > .o_priority_star {
             font-size: inherit;
         }
-    }  
+    }
 
     // Groups
     .o_group {

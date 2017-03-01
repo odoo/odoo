@@ -88,6 +88,61 @@
         }
     }
 
+     // Header containing status/workflow buttons
+    .o_form_statusbar {
+        .o-flex(0, 0, auto);
+        .o-flex-display();
+        .o-justify-content(space-between);
+
+        padding-left: @odoo-horizontal-padding;
+
+        > .o_statusbar_buttons, > .o_statusbar_status {
+            .o-flex-display();
+            .o-align-items(center);
+            .o-align-content(space-around);
+        }
+
+        > .o_form_field {
+            .o-align-self(center);
+            margin-bottom: 0px;
+        }
+
+        > .o_statusbar_buttons {
+            .o-flex-flow(row, wrap);
+
+            > .btn {
+                margin: 2px 3px 2px 0;
+            }
+        }
+
+        > .o_statusbar_status {
+            .o-flex-flow(row-reverse, wrap-reverse);
+            .o-align-self(stretch);
+            .o-align-items(stretch);
+            overflow-x: hidden; // to prevent horizontal scroll due to last arrow
+        }
+
+        // Touch device mode
+        > .o_statusbar_buttons > .btn-group {
+            > .dropdown-toggle {
+                &:after {
+                    .o-caret-down();
+                    margin-left: @odoo-form-spacing-unit;
+                }
+            }
+
+            > .dropdown-menu {
+                padding: 5px 0 2px 0;
+                min-width: 100px;
+
+                > li > .btn {
+                    min-width: 100%;
+                    margin-bottom: 3px;
+                }
+            }
+        }
+    }
+
     // Title
     .oe_title {
         > h1, > h2, > h3 {
