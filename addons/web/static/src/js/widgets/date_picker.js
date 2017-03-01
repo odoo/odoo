@@ -50,13 +50,14 @@ var DateWidget = Widget.extend({
         this.picker = this.$input.data('DateTimePicker');
         this.$input.click(this.picker.toggle.bind(this.picker));
         this.set_readonly(false);
-        this.set_value(false);
     },
     set_value: function(value) {
         this.set({'value': value});
         var formatted_value = value ? this.format_client(value) : null;
         this.$input.val(formatted_value);
-        this.picker.date(formatted_value);
+        if (this.picker) {
+            this.picker.date(formatted_value);
+        }
     },
     get_value: function() {
         return this.get('value');
