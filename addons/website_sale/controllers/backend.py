@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
-from odoo import http
-from odoo.http import request
-from dateutil.relativedelta import relativedelta
-from datetime import datetime, date, timedelta
-from math import floor
-import time
-import operator
+
 import babel
 
+from datetime import datetime, timedelta
+
+from odoo import http
 from odoo.addons.website.controllers.backend import WebsiteBackend
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from odoo.http import request
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class WebsiteSaleBackend(WebsiteBackend):
 
     @http.route()
     def fetch_dashboard_data(self, date_from, date_to):
-
         results = super(WebsiteSaleBackend, self).fetch_dashboard_data(date_from, date_to)
         results['groups']['sale_salesman'] = request.env['res.users'].has_group('sales_team.group_sale_salesman')
         if not results['groups']['sale_salesman']:
