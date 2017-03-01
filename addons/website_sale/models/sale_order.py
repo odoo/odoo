@@ -302,6 +302,13 @@ class Website(models.Model):
         DEFAULT_PAYMENT_TERM = 'account.account_payment_term_immediate'
         return self.env.ref(DEFAULT_PAYMENT_TERM, False).id or partner.property_payment_term_id.id
 
+    def apply_pricelist(self, promo):
+        sale_order = False
+        pricelist = self.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
+        if pricelist and self.is_pricelist_available(pricelist.id):
+            sale_order = self.sale_get_order(code=promo)
+        return sale_order
+
     @api.multi
     def _prepare_sale_order_values(self, partner, pricelist):
         self.ensure_one()

@@ -1030,16 +1030,19 @@
         </xpath>
     </template>
 
-    <template id="reduction_code" inherit_id="website_sale.cart" active="False" customize_show="True" name="Coupon Code">
+    <template id="reduction_code" inherit_id="website_sale.cart" active="False" customize_show="True" name="Coupon/Promo Code">
         <xpath expr="//div[@id='right_column']" position="inside">
-            <h4>Coupon Code</h4>
+            <h4>Coupon/Promo Code</h4>
             <p>
-              Have a coupon code? Fill in this field and apply.
+              Have a code? Fill in this field and apply.
             </p>
             <t t-if="code_not_available">
-                <p class="bg-warning">This promo code is not available</p>
+                <p class="bg-warning">Code is invalid.</p>
             </t>
-            <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist" method="post" class="mb32">
+            <t t-if="code_applied">
+                <p class="bg-warning">Code applied successfully.</p>
+            </t>
+            <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist" method="post" class="mb32" id="pricelist_form">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                 <div class="input-group">
                     <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None" />
