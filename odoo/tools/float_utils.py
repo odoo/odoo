@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
+import re
 
 def _float_check_precision(precision_digits=None, precision_rounding=None):
     assert (precision_digits is not None or precision_rounding is not None) and \
@@ -149,6 +150,18 @@ def float_repr(value, precision_digits):
     return ("%%.%sf" % precision_digits) % value
 
 _float_repr = float_repr
+
+def float_split(value, precision_digits):
+    """ Splits the float given as 'value' argument, returning a tupe containing
+    (as integers) its number of units (as element 0), and the digits after the dot
+    in its representation (as element 1), limited to the provided number of
+    precision digits passed in arguments.
+    """
+    value = float_round(value, precision_digits=precision_digits)
+    units = math.floor(value)
+    cents = math.floor(float_round((value - units) * 10**precision_digits, precision_digits=0))
+    return (int(units), int(cents))
+
 
 class float_precision(float):
     """ A class for float values that carry precision digits. This is a thin
