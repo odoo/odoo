@@ -162,11 +162,12 @@ var FieldDate = InputField.extend({
     //--------------------------------------------------------------------------
 
     _makeDatePicker: function () {
-        return new datepicker.DateWidget(this);
+        return new datepicker.DateWidget(this, {defaultDate: this.value});
     },
     _renderEdit: function () {
         this.datewidget.set_value(this.value);
     },
+
 });
 
 var FieldDateTime = FieldDate.extend({
@@ -177,7 +178,7 @@ var FieldDateTime = FieldDate.extend({
     //--------------------------------------------------------------------------
 
     _makeDatePicker: function () {
-        return new datepicker.DateTimeWidget(this);
+        return new datepicker.DateTimeWidget(this, {defaultDate: this.value});
     },
 });
 
