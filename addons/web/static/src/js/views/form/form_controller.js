@@ -247,15 +247,12 @@ var FormController = BasicController.extend({
             }),
             model: record.model,
             record_id: recordID,
-            on_close: function (reason) {
+            on_closed: function (reason) {
                 if (!_.isObject(reason)) {
-                    return self.load_record(recordID)
-                               .then(self.update_state.bind(self));
+                    return self.reload();
                 }
             },
-            on_fail: function () {
-                self.reload();
-            },
+            on_fail: this.reload.bind(this),
             on_success: def.resolve.bind(def),
         });
         return def;
