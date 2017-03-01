@@ -67,7 +67,7 @@ tour.register('sale_tour', {
     position: "bottom"
 }, {
     trigger: ".breadcrumb li:not(.active):last",
-    extra_trigger: ".o_sale_order [data-id='sent'].btn-primary, .o_sale_order [data-id='sent'].oe_active",
+    extra_trigger: ".o_sale_order [data-value='sent'].btn-primary",
     content: _t("Use the breadcrumbs to <b>go back to preceeding screens</b>."),
     position: "bottom"
 }, {
