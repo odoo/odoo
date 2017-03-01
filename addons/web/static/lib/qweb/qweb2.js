@@ -153,14 +153,15 @@ var QWeb2 = {
         foreach: function(context, enu, as, old_dict, callback) {
             if (enu != null) {
                 var index, jlen, cur;
-                var size, new_dict = this.extend({}, old_dict);
+                var new_dict = this.extend({}, old_dict);
                 new_dict[as + "_all"] = enu;
                 var as_value = as + "_value",
                     as_index = as + "_index",
                     as_first = as + "_first",
                     as_last = as + "_last",
                     as_parity = as + "_parity";
-                if (size = enu.length) {
+                if (enu instanceof Array) {
+                    var size = enu.length;
                     new_dict[as + "_size"] = size;
                     for (index = 0, jlen = enu.length; index < jlen; index++) {
                         cur = enu[index];
