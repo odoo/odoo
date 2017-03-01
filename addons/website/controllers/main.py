@@ -151,9 +151,12 @@ class Website(openerp.addons.web.controllers.main.Home):
                 # rename the -id-page.xml => -id.xml
                 ira.write(cr, uid, last, dict(url="/sitemap-%d.xml" % current_website.id, name="/sitemap-%d.xml" % current_website.id), context=context)
             else:
+                # TODO: in master/saas-15, move current_website_id in template directly
+                pages_with_website = map(lambda p: "%d-%d" % (current_website.id, p), range(1, pages + 1))
+
                 # Sitemaps must be split in several smaller files with a sitemap index
                 content = iuv.render_template(cr, uid, 'website.sitemap_index_xml', dict(
-                    pages=range(1, pages + 1),
+                    pages=pages_with_website,
                     url_root=request.httprequest.url_root,
                 ), context=context)
                 create_sitemap('/sitemap-%d.xml' % current_website.id, content)
