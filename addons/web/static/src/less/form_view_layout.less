@@ -168,7 +168,9 @@
 
     // Flex fields
     .o_form_field_many2one, .o_form_field_radio, .o_form_field_many2manytags, .o_form_field_percent_pie, .o_form_field_monetary, .o_form_field_binary_file {
+    @media (min-width: @screen-sm-min) {
         .o-inline-flex-display();
+    }
         > span, > button {
             .o-flex(0, 0, auto);
         }

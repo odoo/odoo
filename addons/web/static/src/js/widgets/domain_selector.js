@@ -114,31 +114,22 @@ var DomainTree = DomainNode.extend({
     },
     /// @see DomainTree.init
     _initialize: function (domain) {
-        this.children = [];
-
-        // As the domain is under prefix representation, the operator is the first element
-        // If not, odoo considers that the default is "&"
         this.operator = domain[0];
-        var start = 1;
-        if (!_.contains(["&", "|", "!"], this.operator)) {
-            this.operator = "&";
-            start = 0;
-        }
+        this.children = [];
 
         // Add flattened children by search the appropriate number of children in the rest
         // of the domain (after the operator)
-        var childrenDomains = domain.slice(start);
         var nbLeafsToFind = 1;
-        for (var i = 0 ; i < childrenDomains.length ; i++) {
-            if (_.contains(["&", "|"], childrenDomains[i])) {
+        for (var i = 1 ; i < domain.length ; i++) {
+            if (_.contains(["&", "|"], domain[i])) {
                 nbLeafsToFind++;
-            } else if (childrenDomains[i] !== "!") {
+            } else if (domain[i] !== "!") {
                 nbLeafsToFind--;
             }
 
             if (!nbLeafsToFind) {
-                var partLeft = childrenDomains.slice(0, i+1);
-                var partRight = childrenDomains.slice(i+1);
+                var partLeft = domain.slice(1, i+1);
+                var partRight = domain.slice(i+1);
                 if (partLeft.length) {
                     this._addFlattenedChildren(partLeft);
                 }
@@ -288,6 +279,28 @@ var DomainSelector = DomainTree.extend({
             }
         },
     }),
+    _initialize: function (domain) {
+        // Check if the domain starts with implicit "&" operators and make them
+        // explicit. As the DomainSelector is a specialization of a DomainTree,
+        // it is waiting for a tree and not a leaf. So [] and [A] will be made
+        // explicit with ["&"], ["&", A] so that tree parsing is made correctly.
+        // Note: the domain is considered to be a valid one
+        if (domain.length <= 1) {
+            return this._super(["&"].concat(domain));
+        }
+        var expected = 1;
+        _.each(domain, function (item) {
+            if (item === "&" || item === "|") {
+                expected++;
+            } else if (item !== "!") {
+                expected--;
+            }
+        });
+        if (expected < 0) {
+            domain =  _.times(Math.abs(expected), _.constant("&")).concat(domain);
+        }
+        return this._super(domain);
+    },
     _postRender: function () {
         this._super.apply(this, arguments);
 

@@ -187,6 +187,7 @@ class StockMove(models.Model):
     def product_price_update_before_done(self):
         tmpl_dict = defaultdict(lambda: 0.0)
         # adapt standard price on incomming moves if the product cost_method is 'average'
+        std_price_update = {}
         for move in self.filtered(lambda move: move.location_id.usage == 'supplier' and move.product_id.cost_method == 'average'):
             product_tot_qty_available = move.product_id.qty_available + tmpl_dict[move.product_id.id]
 
@@ -195,23 +196,24 @@ class StockMove(models.Model):
                 new_std_price = move.get_price_unit()
             else:
                 # Get the standard price
-                amount_unit = move.product_id.standard_price
+                amount_unit = std_price_update.get((move.company_id.id, move.product_id.id)) or move.product_id.standard_price
                 new_std_price = ((amount_unit * product_tot_qty_available) + (move.get_price_unit() * move.product_qty)) / (product_tot_qty_available + move.product_qty)
 
             tmpl_dict[move.product_id.id] += move.product_qty
             # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-            move.product_id.with_context(force_company=move.company_id.id).write({'standard_price': new_std_price})
+            move.product_id.with_context(force_company=move.company_id.id).sudo().write({'standard_price': new_std_price})
+            std_price_update[move.company_id.id, move.product_id.id] = new_std_price
 
     @api.multi
     def product_price_update_after_done(self):
-        ''' Adapt standard price on outgoing moves if the product cost_method is 'real', so that a
+        ''' Adapt standard price on outgoing moves, so that a
         return or an inventory loss is made using the last value used for an outgoing valuation. '''
-        to_update_moves = self.filtered(lambda move: move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal')
+        to_update_moves = self.filtered(lambda move: move.location_dest_id.usage != 'internal')
         to_update_moves._store_average_cost_price()
 
     def _store_average_cost_price(self):
-        """ Store the average price of the move on the move and product form """
-        for move in self:
+        """ Store the average price of the move on the move and product form (costing method 'real')"""
+        for move in self.filtered(lambda move: move.product_id.cost_method == 'real'):
             # product_obj = self.pool.get('product.product')
             if any(q.qty <= 0 for q in move.quant_ids) or move.product_qty == 0:
                 # if there is a negative quant, the standard price shouldn't be updated
@@ -225,6 +227,12 @@ class StockMove(models.Model):
 
             move.product_id.with_context(force_company=move.company_id.id).sudo().write({'standard_price': average_valuation_price})
             move.write({'price_unit': average_valuation_price})
+
+        for move in self.filtered(lambda move: move.product_id.cost_method != 'real' and not move.origin_returned_move_id):
+            # Unit price of the move should be the current standard price, taking into account
+            # price fluctuations due to products received between move creation (e.g. at SO
+            # confirmation) and move set to done (delivery completed).
+            move.write({'price_unit': move.product_id.standard_price})
 
     @api.multi
     def _get_accounting_data_for_valuation(self):

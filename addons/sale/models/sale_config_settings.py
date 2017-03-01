@@ -97,6 +97,10 @@ class SaleConfiguration(models.TransientModel):
 
     @api.onchange('multi_sales_price', 'multi_sales_price_method')
     def _onchange_sale_price(self):
+        if self.multi_sales_price and not self.multi_sales_price_method:
+            self.update({
+                'multi_sales_price_method': 'percentage',
+            })
         self.sale_pricelist_setting = self.multi_sales_price and self.multi_sales_price_method or 'fixed'
         if self.sale_pricelist_setting == 'percentage':
             self.update({

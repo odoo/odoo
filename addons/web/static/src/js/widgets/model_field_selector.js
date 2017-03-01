@@ -268,6 +268,7 @@ var ModelFieldSelector = Widget.extend({
         if (this.pages.length <= 1) return;
         this.pages.pop();
         this.removeChainNode();
+        this.selectedField = this._getLastPageField(_.last(this.chain.split(".")));
         this.displayPage("o_animate_slide_left");
     },
     /// The goToNextPage method adds a new page to the popover following the given field relation and adapts

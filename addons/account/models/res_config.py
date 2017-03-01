@@ -55,7 +55,6 @@ class AccountConfigSettings(models.TransientModel):
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
-        # import pdb; pdb.set_trace()
         self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
 
     def set_group_multi_currency(self):
@@ -65,7 +64,6 @@ class AccountConfigSettings(models.TransientModel):
 
     def set_default_product_taxes(self):
         """ Set the product taxes if they have changed """
-        # import pdb; pdb.set_trace()
         ir_values_obj = self.env['ir.values']
         if self.default_sale_tax_id:
             ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id], for_all_users=True, company_id=self.company_id.id)

@@ -965,8 +965,6 @@ class IrModelRelation(models.Model):
             self._cr.execute('DROP TABLE "%s" CASCADE' % table,)
             _logger.info('Dropped table %s', table)
 
-        self._cr.commit()
-
     def _reflect_relation(self, model, table, module):
         """ Reflect the table of a many2many field for the given model, to make
             it possible to delete it later when the module is uninstalled.
@@ -1495,7 +1493,6 @@ class IrModelData(models.Model):
 
         undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model')
 
-        self._cr.commit()
 
         (datas - undeletable).unlink()
 

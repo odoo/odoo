@@ -18,7 +18,7 @@
                 <group name="account_property" position="before">
                     <group>
                         <group string="Inventory Valuation">
-                            <field name="property_cost_method" attrs="{'invisible': [('property_valuation', '=', 'manual_periodic')]}"/>
+                            <field name="property_cost_method" groups="stock_account.group_inventory_valuation"/>
                             <field name="property_valuation"/>
                         </group>
                     </group>
@@ -50,7 +50,7 @@
                             groups="stock_account.group_inventory_valuation"/>
                     </div>
                     <div name="standard_price_uom" position="after">
-                        <button string="Compute from average cost" type="action"
+                        <button string="Set standard cost" type="action"
                             name="%(action_view_change_standard_price)d"
                             attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average']), ('product_variant_count', '>', 1)]}"
                             class="oe_link oe_read_only" colspan="2"
@@ -89,7 +89,7 @@
                             groups="stock_account.group_inventory_valuation"/>
                     </field>
                     <field name="standard_price" position="after">
-                        <button string="Compute from average cost" type="action"
+                        <button string="Set standard cost" type="action"
                             name="%(action_view_change_standard_price)d"
                             attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average'])]}"
                             class="oe_link oe_read_only" colspan="2"

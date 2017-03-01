@@ -15,6 +15,7 @@ class TestEquipment(TransactionCase):
         self.equipment = self.env['maintenance.equipment']
         self.maintenance_request = self.env['maintenance.request']
         self.res_users = self.env['res.users']
+        self.maintenance_team = self.env['maintenance.team']
         self.main_company = self.env.ref('base.main_company')
         res_user = self.env.ref('base.group_user')
         res_manager = self.env.ref('maintenance.group_equipment_manager')
@@ -105,3 +106,27 @@ class TestEquipment(TransactionCase):
         # As it is generating the requests for one month in advance, we should have 4 requests in total
         tot_requests = self.maintenance_request.search([('equipment_id', '=', equipment_cron.id)])
         self.assertEqual(len(tot_requests), 1, 'The cron should have generated just 1 request for the High Maintenance Monitor.')
+
+    def test_21_cron(self):
+        """ Check the creation of maintenance requests by the cron"""
+
+        team_test = self.maintenance_team.create({
+            'name': 'team_test',
+        })
+        equipment = self.equipment.create({
+            'name': 'High Maintenance Monitor because of Color Calibration',
+            'category_id': self.ref('maintenance.equipment_monitor'),
+            'technician_user_id': self.ref('base.user_root'),
+            'owner_user_id': self.user.id,
+            'assign_date': time.strftime('%Y-%m-%d'),
+            'period': 7,
+            'color': 3,
+            'maintenance_team_id': team_test.id,
+            'maintenance_duration': 3.0,
+        })
+
+        self.env['maintenance.equipment']._cron_generate_requests()
+        tot_requests = self.maintenance_request.search([('equipment_id', '=', equipment.id)])
+        self.assertEqual(len(tot_requests), 1, 'The cron should have generated just 1 request for the High Maintenance Monitor.')
+        self.assertEqual(tot_requests.maintenance_team_id.id, team_test.id, 'The maintenance team should be the same as equipment one')
+        self.assertEqual(tot_requests.duration, 3.0, 'Equipement maintenance duration is not the same as the request one')
