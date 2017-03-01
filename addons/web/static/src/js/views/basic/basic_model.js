@@ -969,7 +969,11 @@ var BasicModel = AbstractModel.extend({
             var args = [idList, currentData, fields, onchange_spec, context];
             return self.performModelRPC(record.model, 'onchange', args, {}).then(function (result) {
                 if (result.warning) {
-                    return $.Deferred().reject(result.warning);
+                    self.trigger_up('warning', {
+                        message: result.warning.message,
+                        title: result.warning.title,
+                        type: 'dialog',
+                    });
                 }
                 var defs = [];
                 _.each(result.value, function (val, name) {
