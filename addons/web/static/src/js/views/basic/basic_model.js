@@ -539,10 +539,10 @@ var BasicModel = AbstractModel.extend({
                         defs.push(self._fetchNameGets(x2manyList, name));
                     });
                 } else if (field.type === 'date') {
-                    // process date: convert into Date object
+                    // process date: convert into a moment instance
                     record._changes[name] = fieldUtils.parse.date(result[name]);
                 } else if (field.type === 'datetime') {
-                    // process datetime: convert into Date object
+                    // process datetime: convert into a moment instance
                     record._changes[name] = fieldUtils.parse.datetime(result[name]);
                 } else {
                     record._changes[name] = result[name];
@@ -1042,6 +1042,12 @@ var BasicModel = AbstractModel.extend({
                                 list._changes = [];
                             }
                         });
+                    } else if (field.type === 'date') {
+                        // process data: convert into a moment instance
+                        record._changes[name] = fieldUtils.parse.date(val);
+                    } else if (field.type === 'datetime') {
+                        // process datetime: convert into a moment instance
+                        record._changes[name] = fieldUtils.parse.datetime(val);
                     } else {
                         record._changes[name] = val;
                     }
@@ -1265,10 +1271,10 @@ var BasicModel = AbstractModel.extend({
                         record.data[name] = false;
                     }
                 } else if (field.type === 'date') {
-                    // process data: convert into Date object
+                    // process data: convert into a moment instance
                     record.data[name] = fieldUtils.parse.date(val);
                 } else if (field.type === 'datetime') {
-                    // process datetime: convert into Date object
+                    // process datetime: convert into a moment instance
                     record.data[name] = fieldUtils.parse.datetime(val);
                 }
             });
