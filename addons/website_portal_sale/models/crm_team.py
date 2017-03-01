@@ -21,24 +21,15 @@ class CrmTeam(models.Model):
         string='Amount of transactions to capture', readonly=True)
 
     def _compute_payment_transactions(self):
-        for team in self:
-            query = """
-                SELECT amount,
-                       currency_id,
-                       state
-                  FROM payment_transaction
-                 WHERE sale_order_id in %s
-                   AND state in ('authorized', 'pending')
-            """
-            sale_order_ids = self.env['sale.order'].search([('team_id', '=', team.id)]).ids
-            if sale_order_ids:
-                self._cr.execute(query, [tuple(sale_order_ids)])
-                transactions = self._cr.dictfetchall()
-                for line in transactions:
-                    line_currency = self.env['res.currency'].browse(line['currency_id'])
-                    if line['state'] == 'authorized':
-                        team.authorized_payment_transactions_count += 1
-                        team.authorized_payment_transactions_amount += line_currency.compute(line['amount'], self.env.user.company_id.currency_id)
-                    elif line['state'] == 'pending':
-                        team.pending_payment_transactions_count += 1
-                        team.pending_payment_transactions_amount += line_currency.compute(line['amount'], self.env.user.company_id.currency_id)
+        payment_data = self.env['payment.transaction'].read_group([
+            ('state', 'in', ['authorized', 'pending']),
+            ('crm_team_id', '=', self.ids)
+        ], ['amount', 'currency_id', 'state', 'crm_team_id'], ['state', 'currency_id', 'crm_team_id'], lazy=False)
+        for datum in payment_data:
+            datum_currency = self.env['res.currency'].browse(datum['currency_id'][0])
+            if datum['state'] == 'authorized':
+                self.browse(datum['crm_team_id'][0]).authorized_payment_transactions_count += datum['__count']
+                self.browse(datum['crm_team_id'][0]).authorized_payment_transactions_amount += datum_currency.compute(datum['amount'], self.env.user.company_id.currency_id)
+            elif datum['state'] == 'pending':
+                self.browse(datum['crm_team_id'][0]).pending_payment_transactions_count += datum['__count']
+                self.browse(datum['crm_team_id'][0]).pending_payment_transactions_amount += datum_currency.compute(datum['amount'], self.env.user.company_id.currency_id)

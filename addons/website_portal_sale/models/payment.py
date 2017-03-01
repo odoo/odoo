@@ -12,6 +12,7 @@ class PaymentTransaction(models.Model):
 
     # link with the sales order
     sale_order_id = fields.Many2one('sale.order', string='Sales Order')
+    crm_team_id = fields.Many2one('crm.team', related='sale_order_id.team_id', string="Sales Channel", store=True)
 
     def _generate_and_pay_invoice(self, tx, acquirer_name):
         tx.sale_order_id._force_lines_to_invoice_policy_order()
