@@ -266,6 +266,11 @@ var FormController = BasicController.extend({
     _callButtonAction: function (attrs, record) {
         var self = this;
         var def = $.Deferred();
+        var reload = function () {
+            if (!self.isDestroyed()) {
+                self.reload();
+            }
+        };
         record = record || this.model.get(this.handle);
         var recordID = record.data.id;
         this.trigger_up('execute_action', {
@@ -276,13 +281,13 @@ var FormController = BasicController.extend({
             record_id: recordID,
             on_closed: function (reason) {
                 if (!_.isObject(reason)) {
-                    return self.reload();
+                    reload();
                 }
             },
-            on_fail: this.reload.bind(this),
+            on_fail: reload,
             on_success: def.resolve.bind(def),
         });
-        return def;
+        return this.alive(def);
     },
     /**
      * @override method from FieldManagerMixin

@@ -2161,6 +2161,27 @@ QUnit.module('Views', {
         }
     });
 
+    QUnit.test('rpc complete after destroying parent', function (assert) {
+        // We just test that there is no crash in this situation
+        assert.expect(0);
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<button name="update_module" type="object" class="o_form_button_update"/>' +
+                '</form>',
+            res_id: 2,
+            intercepts: {
+                execute_action: function (event) {
+                    form.destroy();
+                    event.data.on_success();
+                }
+            }
+        });
+        form.$('.o_form_button_update').click();
+    });
+
     QUnit.test('onchanges that complete after discarding', function (assert) {
         assert.expect(4);
 
