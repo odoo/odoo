@@ -5,7 +5,6 @@ var ActionManager = require('web.ActionManager');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var framework = require('web.framework');
-var session = require('web.session');
 
 var _t = core._t;
 var _lt = core._lt;
@@ -90,7 +89,7 @@ ActionManager.include({
         } else if (action.report_type === 'qweb-pdf') {
             framework.blockUI();
             // Before doing anything, we check the state of wkhtmltopdf on the server.
-            (wkhtmltopdf_state = wkhtmltopdf_state || session.rpc('/report/check_wkhtmltopdf')).then(function (state) {
+            (wkhtmltopdf_state = wkhtmltopdf_state || this.performRPC('/report/check_wkhtmltopdf')).then(function (state) {
                 // Display a notification to the user according to wkhtmltopdf's state.
                 if (WKHTMLTOPDF_MESSAGES[state]) {
                     self.do_notify(_t('Report'), WKHTMLTOPDF_MESSAGES[state], true);
