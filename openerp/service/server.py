@@ -217,8 +217,12 @@ class ThreadedServer(CommonServer):
             _logger.debug('cron%d polling for jobs', number)
             for db_name, registry in registries.iteritems():
                 while registry.ready:
-                    acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
-                    if not acquired:
+                    try:
+                        acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
+                        if not acquired:
+                            break
+                    except Exception:
+                        _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
                         break
 
     def cron_spawn(self):
