@@ -1817,6 +1817,51 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('onchanges on date(time) fields', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.date = '2021-12-12';
+                obj.datetime = '2021-12-12 10:55:05';
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="foo"/>' +
+                        '<field name="date"/>' +
+                        '<field name="datetime"/>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_form_field[name=date]').text(),
+            '01/25/2017', "the initial date should be correct");
+        assert.strictEqual(form.$('.o_form_field[name=datetime]').text(),
+            '12/12/2016 10:55:05', "the initial datetime should be correct");
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_form_field[name=date] input').val(),
+            '01/25/2017', "the initial date should be correct in edit");
+        assert.strictEqual(form.$('.o_form_field[name=datetime] input').val(),
+            '12/12/2016 10:55:05', "the initial datetime should be correct in edit");
+
+        // trigger the onchange
+        form.$('.o_form_field[name="foo"]').val("coucou").trigger('input');
+
+        assert.strictEqual(form.$('.o_form_field[name=date] input').val(),
+            '12/12/2021', "the initial date should be correct in edit");
+        assert.strictEqual(form.$('.o_form_field[name=datetime] input').val(),
+            '12/12/2021 10:55:05', "the initial datetime should be correct in edit");
+
+        form.destroy();
+    });
 });
 
 });
