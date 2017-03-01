@@ -351,7 +351,12 @@ var FieldTextHtml = widget.extend({
         });
     },
     render_value: function () {
-        if (this.lang !== this.view.dataset.context.lang || this.$iframe.attr('src').match(/[?&]edit_translations=1/)) {
+        if (this.$iframe.attr('src').match(/[?&]edit_translations=1/)) {
+            return;
+        }
+        // ONLY HAVE THIS IN 9.0 AND SAAS-11
+        var is_editor_onchange = this.get('value') === '<p>on_change_model_and_list</p>';
+        if (this.lang !== this.view.dataset.context.lang && !is_editor_onchange) {
             return;
         }
         var value = (this.get('value') || "").replace(/^<p[^>]*>(\s*|<br\/?>)<\/p>$/, '');
