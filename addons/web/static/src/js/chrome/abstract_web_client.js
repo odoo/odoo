@@ -16,6 +16,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data_manager = require('web.data_manager');
+var Dialog = require('web.Dialog');
 var Loading = require('web.Loading');
 var mixins = require('web.mixins');
 var NotificationManager = require('web.notification').NotificationManager;
@@ -23,6 +24,7 @@ var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
+var qweb = core.qweb;
 
 var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     custom_events: {
@@ -46,11 +48,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 this.notification_manager.notify(e.data.title, e.data.message, e.data.sticky);
             }
         },
-        warning: function (e) {
-            if(this.notification_manager) {
-                this.notification_manager.warn(e.data.title, e.data.message, e.data.sticky);
-            }
-        },
+        warning: '_displayWarning',
         load_views: function (event) {
             var params = {
                 model: event.data.modelName,
@@ -283,6 +281,33 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     //--------------------------------------------------------------
     toggle_fullscreen: function (fullscreen) {
         this.$el.toggleClass('o_fullscreen', fullscreen);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Displays a warning in a dialog of with the NotificationManager
+
+     * @param {OdooEvent} e
+     * @param {string} e.data.message the warning's message
+     * @param {string} e.data.title the warning's title
+     * @param {string} [e.data.type] 'dialog' to display in a dialog
+     * @param {boolean} [e.data.sticky] whether or not the warning should be
+     *   sticky (if displayed with the NotificationManager)
+     */
+    _displayWarning: function (e) {
+        var data = e.data;
+        if (data.type === 'dialog') {
+            new Dialog(this, {
+                size: 'medium',
+                title: data.title,
+                $content: qweb.render("CrashManager.warning", data),
+            }).open();
+        } else if (this.notification_manager) {
+            this.notification_manager.warn(e.data.title, e.data.message, e.data.sticky);
+        }
     },
 });
 

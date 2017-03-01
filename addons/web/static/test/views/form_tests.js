@@ -1657,7 +1657,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('display a dialog if onchange result is a warning', function (assert) {
-        assert.expect(2);
+        assert.expect(5);
 
         this.data.partner.onchanges = { foo: true };
 
@@ -1672,7 +1672,7 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === 'onchange') {
                     return $.when({
-                        valu: {},
+                        value: { int_field: 10 },
                         warning: {
                             title: "Warning",
                             message: "You must first select a partner"
@@ -1681,16 +1681,28 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
+            intercepts: {
+                warning: function (event) {
+                    assert.strictEqual(event.data.type, 'dialog',
+                        "should have triggered an event with the correct data");
+                    assert.strictEqual(event.data.title, "Warning",
+                        "should have triggered an event with the correct data");
+                    assert.strictEqual(event.data.message, "You must first select a partner",
+                        "should have triggered an event with the correct data");
+                },
+            },
         });
 
         form.$buttons.find('.o_form_button_edit').click();
 
+        assert.strictEqual(form.$('.o_form_input[name=int_field]').val(), '9',
+            "'int_field' value should be 9 before the change");
+
         form.$('input').first().val("tralala").trigger('input');
 
-        assert.strictEqual($('.modal .modal-title:contains(Warning)').length, 1,
-            "should have rendered a modal dialog with correct title");
-        assert.strictEqual($('.modal .modal-body:contains(You must first select a partner)').length, 1,
-            "should have rendered a modal dialog with correct content");
+        assert.strictEqual(form.$('.o_form_input[name=int_field]').val(), '10',
+            "the onchange should have been correctly applied");
+
         form.destroy();
     });
 

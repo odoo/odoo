@@ -86,12 +86,6 @@ var FieldManagerMixin = {
             } else {
                 self._confirmChange(dataPointID, result, event);
             }
-        }).fail(function (warning) {
-            new Dialog(self, {
-                size: 'medium',
-                title: warning.title,
-                $content: qweb.render("CrashManager.warning", warning)
-            }).open();
         });
     },
     /**
