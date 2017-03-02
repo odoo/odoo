@@ -51,7 +51,7 @@ class SaleConfiguration(models.TransientModel):
     sale_show_tax = fields.Selection([
         ('subtotal', 'Tax-Included Prices'),
         ('total', 'Tax-Excluded Prices')], "Tax Display",
-        default='subtotal',
+        default='total',
         required=True)
     default_invoice_policy = fields.Selection([
         ('order', 'Ordered quantities'),
