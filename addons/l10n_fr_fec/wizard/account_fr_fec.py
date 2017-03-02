@@ -185,14 +185,17 @@ class AccountFrFec(models.TransientModel):
                     unaffected_earnings_amount = float(unaffected_earnings_results[11].replace(',', '.')) - float(unaffected_earnings_results[12].replace(',', '.'))
                     listrow_amount = current_amount + unaffected_earnings_amount
                     if listrow_amount > 0:
-                        listrow[11] = str(listrow_amount)
-                        listrow[12] = '0.00'
+                        listrow[11] = str(listrow_amount).replace('.', ',')
+                        listrow[12] = '0,00'
                     else:
-                        listrow[11] = '0.00'
-                        listrow[12] = str(listrow_amount)
+                        listrow[11] = '0,00'
+                        listrow[12] = str(-listrow_amount).replace('.', ',')
             w.writerow([s.encode("utf-8") for s in listrow])
         #if the unaffected earnings account wasn't in the selection yet: add it manually
-        if not unaffected_earnings_line and unaffected_earnings_results and unaffected_earnings_results[11] != '0,00' and unaffected_earnings_results[12] != '0,00':
+        if (not unaffected_earnings_line
+            and unaffected_earnings_results
+            and (unaffected_earnings_results[11] != '0,00'
+                 or unaffected_earnings_results[12] != '0,00')):
             #search an unaffected earnings account
             unaffected_earnings_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_unaffected_earnings').id)], limit=1)
             if unaffected_earnings_account:

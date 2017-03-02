@@ -58,7 +58,7 @@ msgstr ""
 "    cu referința: ${object.partner_ref}\n"
 "% endif\n"
 "% if object.origin:\n"
-"    (RFQ origin: ${object.origin})\n"
+"    (Origine Cerere de Ofertă: ${object.origin})\n"
 "% endif\n"
 "în valoare <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
 "de la ${object.company_id.name}.\n"
@@ -470,11 +470,12 @@ msgstr ""
 msgid ""
 "Click to create a quotation that will be converted into a purchase order."
 msgstr ""
+"Click pentru a crea o ofertă ce va fi convertită în comandă de achiziție"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "Click to create a request for quotation."
-msgstr "Click pentru a crea o cerere de cotație (RFQ/CdC)"
+msgstr "Click pentru a crea o cerere de ofertă (RFQ/CdC)"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -659,7 +660,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,state:0
 msgid "Draft RFQ"
-msgstr "Ciornă CdC"
+msgstr "Ciornă CdO"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_dest_address_id
@@ -1044,7 +1045,7 @@ msgstr "Preț per furnizor"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr "Tipărire CdC/RFQ"
+msgstr "Tipărire CdO/RFQ"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1311,37 +1312,37 @@ msgstr "Cantitate"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Quotations"
-msgstr "Cotații"
+msgstr "Oferte"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ"
-msgstr "CdC"
+msgstr "CdO"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr "CdC Aprobată"
+msgstr "CdO Aprobată"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr "CdC Confirmată"
+msgstr "CdO Confirmată"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr "CdC gata"
+msgstr "CdO gata"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "RFQ Sent"
-msgstr "CdC Trimisă"
+msgstr "CdO Trimisă"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr "CdC_${(object.name or '').replace('/','_')}"
+msgstr "CdO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1351,7 +1352,7 @@ msgstr "Cotații și Achiziții"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr "Retrimitere CdC prin Email"
+msgstr "Retrimitere CdO prin Email"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1406,18 +1407,18 @@ msgstr "Rapoarte"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "Request for Quotation"
-msgstr "Cerere de Cotație"
+msgstr "Cerere de ofertă"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Request for Quotation #"
-msgstr ""
+msgstr "Cerere de ofertă #"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr "Cereri de cotații"
+msgstr "Cereri de ofertă"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_ids
@@ -1464,7 +1465,7 @@ msgstr "Trimite CA prin Email"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr "Trimite CdC prin Email"
+msgstr "Trimite CdO prin Email"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_sequence

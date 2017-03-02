@@ -619,7 +619,7 @@ class Partner(models.Model):
             raise UserError(_("Couldn't create contact without email address!"))
         if not name and email:
             name = email
-        partner = self.create({self._rec_name: name or email, 'email': email or False})
+        partner = self.create({self._rec_name: name or email, 'email': email or self.env.context.get('default_email', False)})
         return partner.name_get()[0]
 
     @api.model
