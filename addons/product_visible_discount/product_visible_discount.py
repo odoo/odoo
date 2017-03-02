@@ -28,7 +28,12 @@ class sale_order_line(osv.osv):
         else:
             rule_id = False
         if rule_id:
+            pricelist_context = dict(context, uom=uom)
             item = item_obj.browse(cr, uid, rule_id, context=context)
+            if item.pricelist_id.discount_policy == 'without_discount':
+                while item.base == 'pricelist' and item.base_pricelist_id and item.base_pricelist_id.discount_policy == 'without_discount':
+                    price, rule_id = item.base_pricelist_id.with_context(pricelist_context).price_rule_get(product_id, qty, context.get('partner_id'))[item.base_pricelist_id.id]
+                    item = item_obj.browse(cr, uid, rule_id, context=context)
             if item.base == 'standard_price':
                 field_name = 'standard_price'
             if item.base == 'pricelist' and item.base_pricelist_id:
@@ -67,7 +72,7 @@ class sale_order_line(osv.osv):
                 pricelist_context = dict(context_partner, uom=line.product_uom.id, date=line.order_id.date_order)
                 list_price_dict = line.order_id.pricelist_id.with_context(pricelist_context).price_rule_get(line.product_id.id, line.product_uom_qty or 1.0, line.order_id.partner_id)
                 list_price = list_price_dict[line.order_id.pricelist_id.id][0]
-                new_list_price, currency_id = line.with_context(context_partner)._get_real_price_currency(line.product_id.id, list_price_dict, line.product_uom_qty, line.product_uom.id, line.order_id.pricelist_id.id)
+                new_list_price, currency_id = line.with_context(dict(context_partner, date=line.order_id.date_order))._get_real_price_currency(line.product_id.id, list_price_dict, line.product_uom_qty, line.product_uom.id, line.order_id.pricelist_id.id)
                 new_list_price = self.env['account.tax']._fix_tax_included_price(new_list_price, line.product_id.taxes_id, line.tax_id)
                 if line.order_id.pricelist_id.discount_policy == 'without_discount' and list_price != 0 and new_list_price != 0:
                     if line.product_id.company_id and line.order_id.pricelist_id.currency_id.id != line.product_id.company_id.currency_id.id:
@@ -97,7 +102,7 @@ class sale_order_line(osv.osv):
             pricelist_context = dict(context_partner, uom=self.product_uom.id, date=self.order_id.date_order)
             list_price_dict = self.order_id.pricelist_id.with_context(pricelist_context).price_rule_get(self.product_id.id, self.product_uom_qty or 1.0, self.order_id.partner_id)
             list_price = list_price_dict[self.order_id.pricelist_id.id][0]
-            new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id.id, list_price_dict, self.product_uom_qty, self.product_uom.id, self.order_id.pricelist_id.id)
+            new_list_price, currency_id = self.with_context(dict(context_partner, date=self.order_id.date_order))._get_real_price_currency(self.product_id.id, list_price_dict, self.product_uom_qty, self.product_uom.id, self.order_id.pricelist_id.id)
             new_list_price = self.env['account.tax']._fix_tax_included_price(new_list_price, self.product_id.taxes_id, self.tax_id)
             if self.order_id.pricelist_id.discount_policy == 'without_discount' and list_price != 0 and new_list_price != 0:
                 if self.product_id.company_id and self.order_id.pricelist_id.currency_id.id != self.product_id.company_id.currency_id.id:
