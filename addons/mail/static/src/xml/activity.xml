@@ -16,16 +16,23 @@
                         <strong>
                             <span t-attf-class="fa #{activity.icon}" />
                             <t t-esc="activity.activity_type_id[1]" />
-                        </strong> planned by <strong><t t-esc="activity.user_id[1]" /></strong>
+                        </strong>
                         <span class="fa fa-clock-o ml8" />
-                        <span t-attf-class="o_activity_date o_activity_color_#{activity.state}"><t t-esc="activity.label_delay" /></span>
+                        <strong>
+                            <span t-attf-class="o_activity_date o_activity_color_#{activity.state}"><t t-esc="activity.label_delay" /> (<t t-esc="activity.date_deadline"/>) </span>
+                        </strong>
+                        planned by <t t-esc="activity.create_uid[1]" />
+                        <t t-if="activity.create_uid[0] != activity.user_id[0]">
+                            for <t t-esc="activity.user_id[1]" />
+                        </t>
+                        - <t t-esc="activity.time_ago"/>
                         <div class="pull-right">
                             <a href="#" class="o_activity_edit o_activity_link" t-att-data-activity-id="activity.id">Edit</a> |
                             <a href="#" class="o_activity_unlink o_activity_link" t-att-data-activity-id="activity.id">Remove</a>
                         </div>
                     </div>
                     <div t-if="activity.summary">
-                        <strong><i><t t-esc="activity.summary"/></i></strong>
+                        <strong><t t-esc="activity.summary"/></strong>
                     </div>
                     <div t-if="activity.note">
                         <t t-raw="activity.note"/>
