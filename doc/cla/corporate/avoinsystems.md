@@ -13,7 +13,11 @@ Erno Iipponen erno.iipponen@avoin.systems https://github.com/iipponen
 List of contributors:
 
 Miku Laitinen miku.laitinen@avoin.systems https://github.com/mlaitinen
+
 Svante Suominen svante.suominen@avoin.systems https://github.com/svantesuominen
+
 Erno Iipponen erno.iipponen@avoin.systems https://github.com/iipponen
+
 Tuomo Aura tuomo.aura@avoin.systems https://github.com/tuomoaura
+
 Atte Isopuro atte.isopuro@avoin.systems https://github.com/aisopuro
