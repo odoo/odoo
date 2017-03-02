@@ -40,21 +40,8 @@ class SaleConfiguration(models.TransientModel):
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
         ('formula', 'Price computed from formulas (discounts, margins, roundings)')
         ], string="Pricelists")
-    group_show_price_subtotal = fields.Boolean(
-        "Show subtotal",
-        implied_group='sale.group_show_price_subtotal',
-        group='base.group_portal,base.group_user,base.group_public')
-    group_show_price_total = fields.Boolean(
-        "Show total",
-        implied_group='sale.group_show_price_total',
-        group='base.group_portal,base.group_user,base.group_public')
     group_proforma_sales = fields.Boolean(string="Pro-Forma", implied_group='sale.group_proforma_sales',
         help="Allows you to send pro-forma.")
-    sale_show_tax = fields.Selection([
-        ('subtotal', 'Tax-Excluded Prices'),
-        ('total', 'Tax-Included Prices')], "Tax Display",
-        default='subtotal',
-        required=True)
     default_invoice_policy = fields.Selection([
         ('order', 'Ordered quantities'),
         ('delivery', 'Delivered quantities or service hours')
@@ -104,6 +91,13 @@ class SaleConfiguration(models.TransientModel):
             'multi_sales_price_method': multi_sales_price and sale_pricelist_setting or False
         }
 
+    @api.model
+    def get_default_sale_show_tax(self, fields):
+        return {'sale_show_tax': self.env['ir.values'].get_default('res.config.settings', 'sale_show_tax')}
+
+    def set_default_sale_show_tax(self):
+        return self.env['ir.values'].sudo().set_default('res.config.settings', 'sale_show_tax', self.sale_show_tax)
+
     @api.onchange('multi_sales_price', 'multi_sales_price_method')
     def _onchange_sale_price(self):
         if self.multi_sales_price and not self.multi_sales_price_method:
@@ -138,9 +132,6 @@ class SaleConfiguration(models.TransientModel):
 
     def set_auto_done_defaults(self):
         return self.env['ir.values'].sudo().set_default('sale.config.settings', 'auto_done_setting', self.auto_done_setting)
-
-    def set_sale_tax_defaults(self):
-        return self.env['ir.values'].sudo().set_default('sale.config.settings', 'sale_show_tax', self.sale_show_tax)
 
     @api.onchange('sale_show_tax')
     def _onchange_sale_tax(self):

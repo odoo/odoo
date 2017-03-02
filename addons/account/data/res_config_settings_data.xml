@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo> 
+    <!-- Res config data -->
+
+    <record id="set_default_tax_included" model="res.config.settings">
+        <field name="sale_show_tax">total</field>
+        <field name="group_show_price_total" eval="True"/>
+        <field name="group_show_price_subtotal" eval="False"/>
+    </record>
+
+    <function id="set_default_sale_show_tax"
+        model="ir.values" name="set_default"
+        eval="('res.config.settings', 'sale_show_tax', 'total')"/>
+
+    <function model="res.config.settings" name="execute"
+             eval="[[ref('set_default_tax_included')]]"/>
+</odoo>
+

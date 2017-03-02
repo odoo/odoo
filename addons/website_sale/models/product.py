@@ -195,7 +195,7 @@ class Product(models.Model):
         context = dict(self._context, pricelist=pricelist.id, partner=partner)
         self2 = self.with_context(context) if self._context != context else self
 
-        ret = self.env.user.has_group('sale.group_show_price_subtotal') and 'total_excluded' or 'total_included'
+        ret = self.env.user.has_group('account.group_show_price_subtotal') and 'total_excluded' or 'total_included'
 
         for p, p2 in zip(self, self2):
             taxes = partner.property_account_position_id.map_tax(p.taxes_id)
