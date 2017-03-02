@@ -55,11 +55,12 @@ class CalendarController(http.Controller):
             # - we need a template rendering which is not lazy, to render before cursor closing
             # - we need to display the template in the language of the user (not possible with
             #   request.render())
-            return env['ir.ui.view'].with_context(lang=lang).render_template(
+            response_content = env['ir.ui.view'].with_context(lang=lang).render_template(
                 'calendar.invitation_page_anonymous', {
                     'event': event,
                     'attendee': attendee,
                 })
+            return request.make_response(response_content, headers=[('Content-Type', 'text/html')])
 
     # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
     @http.route('/calendar/notify', type='json', auth="user")
