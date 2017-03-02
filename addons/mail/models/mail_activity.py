@@ -105,26 +105,16 @@ class MailActivity(models.Model):
     @api.model
     def create(self, values):
         activity = super(MailActivity, self).create(values)
-        activity.post_assignation_message()
+        self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
         return activity
 
+    @api.multi
     def write(self, values):
         res = super(MailActivity, self).write(values)
         if values.get('user_id'):
-            self.post_assignation_message()
+            for activity in self:
+                self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
         return res
-
-    def post_assignation_message(self):
-        for activity in self:
-            record = self.env[activity.res_model].browse(activity.res_id)
-            record.with_context(
-                mail_post_autofollow=True
-            ).message_post_with_view(
-                'mail.message_activity_assigned',
-                values={'activity': activity},
-                partner_ids=[activity.user_id.partner_id.id],
-                subtype_id=self.env.ref('mail.mt_note').id,
-            )
 
     @api.multi
     def action_done(self):
