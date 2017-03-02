@@ -64,19 +64,5 @@
 </div>
         </template>
 
-        <template id="message_activity_assigned">
-<div>
-    <p>
-        Planned <span t-field="activity.activity_type_id.name"/> related to <t t-esc="object.name_get()[0][1]"/>:
-        <soan t-if="activity.summary" t-field="activity.summary"/>
-    </p>
-    <ul>
-        <li>Scheduled for: <span t-field="activity.date_deadline"/></li>
-        <li>Assigned to: <span t-field="activity.user_id.name"/></li>
-    </ul>
-    <div t-if="activity.note" t-field="activity.note"/>
-</div>
-        </template>
-
     </data>
 </odoo>

@@ -7,6 +7,7 @@ var Model = require("web.Model");
 var Widget = require('web.Widget');
 var ChatManager = require('mail.chat_manager');
 var QWeb = core.qweb;
+var time = require('web.time');
 var _t = core._t;
 
 
@@ -113,6 +114,9 @@ var Activity = form_common.AbstractField.extend({
         return this.Activity
             .call("read", [this.value])
             .then(function (results) {
+                _.each(results, function(result){
+                    result['time_ago'] = moment(time.auto_str_to_date(result.create_date)).fromNow();
+                });
                 this.activities = set_delay_label(results);
                 self.$el.html(QWeb.render('mail.activity_items', {
                     activities: this.activities,
