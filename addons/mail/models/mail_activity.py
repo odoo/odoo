@@ -102,30 +102,6 @@ class MailActivity(models.Model):
                 self.summary = self.activity_type_id.summary
             self.date_deadline = (datetime.now() + timedelta(days=self.activity_type_id.days))
 
-    @api.model
-    def create(self, values):
-        activity = super(MailActivity, self).create(values)
-        activity.post_assignation_message()
-        return activity
-
-    def write(self, values):
-        res = super(MailActivity, self).write(values)
-        if values.get('user_id'):
-            self.post_assignation_message()
-        return res
-
-    def post_assignation_message(self):
-        for activity in self:
-            record = self.env[activity.res_model].browse(activity.res_id)
-            record.with_context(
-                mail_post_autofollow=True
-            ).message_post_with_view(
-                'mail.message_activity_assigned',
-                values={'activity': activity},
-                partner_ids=[activity.user_id.partner_id.id],
-                subtype_id=self.env.ref('mail.mt_note').id,
-            )
-
     @api.multi
     def action_done(self):
         message = self.env['mail.message']
