@@ -1,5 +1,40 @@
 <?xml version="1.0"?>
 <odoo>
+    <data>
+        <!-- Templates for interest / refusing applicants -->
+        <record id="email_template_data_applicant_refuse" model="mail.template">
+            <field name="name">Applicant: Refuse</field>
+            <field name="subject">Application refused</field>
+            <field name="email_to">${object.email_from}</field>
+            <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
+            <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
+            <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+            <field name="user_signature" eval="False"/>
+            <field name="body_html"><![CDATA[
+    <p>Dear ${object.partner_name or 'applicant'},</p>
+    <p>Thank you for your enquiry.<br />
+    Unfortunately, your profile does not match with our needs</p>
+    <p>If you have any questions, please let us know.</p>
+    <p>Best regards</p>]]></field>
+        </record>
+
+        <record id="email_template_data_applicant_interest" model="mail.template">
+            <field name="name">Applicant: Interest</field>
+            <field name="subject">Application approved</field>
+            <field name="email_to">${object.email_from}</field>
+            <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
+            <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
+            <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+            <field name="user_signature" eval="False"/>
+            <field name="body_html"><![CDATA[
+    <p>Dear ${object.partner_name or 'applicant'},</p>
+    <p>Thank you for your enquiry.<br />
+    Your resume got our interest. I will contact you as soon as possible to plan
+    next steps of the recruitment process.</p>
+    <p>If you have any questions, please let us know.</p>
+    <p>Best regards,</p>]]></field>
+        </record>
+    </data>
 <data noupdate="1">
 
     <!-- Meeting Types (for interview meetings) -->
@@ -7,39 +42,6 @@
         <field name="name">Interview</field>
     </record>
 
-    <!-- Templates for interest / refusing applicants -->
-    <record id="email_template_data_applicant_refuse" model="mail.template">
-        <field name="name">Applicant: Refuse</field>
-        <field name="subject">Application refused</field>
-        <field name="email_to">${object.email_from}</field>
-        <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
-        <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
-        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="user_signature" eval="False"/>
-        <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_name or 'applicant'},</p>
-<p>Thank you for your enquiry.<br />
-Unfortunately, your profile does not match with our needs</p>
-<p>If you have any questions, please let us know.</p>
-<p>Best regards,</p>]]></field>
-    </record>
-
-    <record id="email_template_data_applicant_interest" model="mail.template">
-        <field name="name">Applicant: Interest</field>
-        <field name="subject">Application approved</field>
-        <field name="email_to">${object.email_from}</field>
-        <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
-        <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
-        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="user_signature" eval="False"/>
-        <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_name or 'applicant'},</p>
-<p>Thank you for your enquiry.<br />
-Your resume got our interest. I will contact you as soon as possible to plan
-next steps of the recruitment process.</p>
-<p>If you have any questions, please let us know.</p>
-<p>Best regards,</p>]]></field>
-    </record>
 
     <record id="email_template_data_applicant_employee" model="mail.template">
         <field name="name">Applicant: Welcome new employee</field>
