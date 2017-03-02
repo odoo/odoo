@@ -127,7 +127,7 @@ class PartnerTitle(models.Model):
     _sql_constraints = [('name_uniq', 'unique (name)', "Title name already exists !")]
 
 class Partner(models.Model):
-    _description = 'Partner'
+    _description = 'Contact'
     _inherit = ['format.address.mixin']
     _name = "res.partner"
     _order = "display_name"
