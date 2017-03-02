@@ -164,15 +164,16 @@ class HrContract(models.Model):
         return [('can_be_requested', '=', True)]
 
     def _get_gross_from_employer_costs(self, yearly_cost):
+        contract = self
         remaining_for_gross = yearly_cost \
-            - 12.0 * self.get_value('representation_fees') \
-            - 12.0 * self.get_value('fuel_card') \
-            - 12.0 * self.get_value('internet') \
-            - 12.0 * self.get_value('mobile') \
-            - 12.0 * self.company_car_total_depreciated_cost \
-            - self.structural_reductions \
-            - (12.0 * 0.3507 + 12.0) * self.get_value('commission_on_target') \
-            - 220.0 * self.meal_voucher_paid_by_employer
+            - 12.0 * contract.get_value('representation_fees') \
+            - 12.0 * contract.get_value('fuel_card') \
+            - 12.0 * contract.get_value('internet') \
+            - 12.0 * contract.get_value('mobile') \
+            - 12.0 * contract.company_car_total_depreciated_cost \
+            - contract.structural_reductions \
+            - (12.0 * 0.3507 + 12.0) * contract.get_value('commission_on_target') \
+            - 220.0 * contract.meal_voucher_paid_by_employer
         gross = remaining_for_gross / (12.0 * 0.05 + 13.0 + 13.0 * 0.3507 + 0.92)
         return gross
 
