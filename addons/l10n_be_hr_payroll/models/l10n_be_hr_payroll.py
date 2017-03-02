@@ -43,7 +43,7 @@ class HrContract(models.Model):
     structural_reductions = fields.Float(compute='_compute_structural_reductions', string='Structural Reductions')
     social_security_contributions = fields.Float(compute='_compute_social_security_contributions', string="Social Security Contributions")
     yearly_cost_before_charges = fields.Float(compute='_compute_yearly_cost_before_charges', string="Yearly Costs Before Charges")
-    meal_voucher_paid_by_employer = fields.Float(string="Meal Voucher Paid by Employer")
+    meal_voucher_paid_by_employer = fields.Float(compute_='_compute_meal_voucher_paid_by_employer', string="Meal Voucher Paid by Employer")
     company_car_total_depreciated_cost = fields.Float(related='car_id.total_depreciated_cost')
 
     @api.depends('name')
@@ -77,15 +77,16 @@ class HrContract(models.Model):
                 (220.0 * contract.meal_voucher_paid_by_employer)
             )
 
-    @api.onchange('advantage_ids')
-    def _onchange_meal_voucher_paid_by_employer(self):
-        self.meal_voucher_paid_by_employer = self.get_value('meal_voucher_amount') - self.get_value('meal_voucher_employee_deduction')
+    @api.depends('advantage_ids', 'advantage_ids.value')
+    def _compute_meal_voucher_paid_by_employer(self):
+        for contract in self:
+            contract.meal_voucher_paid_by_employer = contract.get_value('meal_voucher_amount') - contract.get_value('meal_voucher_employee_deduction')
 
     @api.depends('wage', 'has_commission_on_target')
     def _compute_social_security_contributions(self):
         for contract in self:
             total_wage = contract.wage * 13.0
-            total_commissions = contract.get_value('commission_on_target')
+            total_commissions = contract.get_value('commission_on_target') * 12.0
             contract.social_security_contributions = (total_wage + total_commissions) * 0.3507
 
     @api.depends('wage')
@@ -168,10 +169,12 @@ class HrContract(models.Model):
             - 12.0 * self.get_value('fuel_card') \
             - 12.0 * self.get_value('internet') \
             - 12.0 * self.get_value('mobile') \
-            - self.social_security_contributions \
-            - 12.0 * 0.3507 * self.get_value('commission_on_target') \
+            - 12.0 * self.company_car_total_depreciated_cost \
+            - self.structural_reductions \
+            - (12.0 * 0.3507 + 12.0) * self.get_value('commission_on_target') \
             - 220.0 * self.meal_voucher_paid_by_employer
-        return remaining_for_gross / 18.0791
+        gross = remaining_for_gross / (12.0 * 0.05 + 13.0 + 13.0 * 0.3507 + 0.92)
+        return gross
 
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'

@@ -557,8 +557,8 @@ class HrPayslip(models.Model):
                     rules_dict[rule.code] = rule
                     #sum the amount for its salary category
                     # print 'sum', _sum_salary_rule_category(localdict, rule.category_id, tot_rule - previous_amount)['categories'].DED
-                    if rule.name == 'Reduction for dependent seniors':
-                        import pdb; pdb.set_trace()
+                    # if rule.name == 'Reduction for dependent seniors':
+                    #     import pdb; pdb.set_trace()
                     localdict = _sum_salary_rule_category(localdict, rule.category_id, tot_rule - previous_amount)
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
