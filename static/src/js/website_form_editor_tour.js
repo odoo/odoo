@@ -601,8 +601,8 @@ odoo.define('website_form_editor.tour', function(require) {
             content: "Check mail.mail records have been created",
             trigger: "body",
             run: function () {
-                var mailDef = this.performModelRPC("mail.mail", "search_read",
-                    [
+                var mailDef = this.rpc("mail.mail", "search_read")
+                    .args([
                         // TODO: add other fields in domain !
                         [
                             ['email_to', '=', 'test@test.test'],
@@ -612,8 +612,8 @@ odoo.define('website_form_editor.tour', function(require) {
                             ['body_html', 'like', 'Products : Xperia,Wiko Stairway']
                         ],
                         []
-                    ]
-                );
+                    ])
+                    .exec();
                 var success = function(model, data) {
                     if(data.length) {
                         $('body').append('<div id="website_form_editor_success_test_tour_'+model+'"></div>');
