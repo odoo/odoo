@@ -363,6 +363,8 @@ class ModelConverter(ir.ir_http.ModelConverter):
 
     def generate(self, query=None, args=None):
         Model = request.env[self.model]
+        if request.context.get('use_public_user'):
+            Model = Model.sudo(request.website.user_id.id)
         domain = safe_eval(self.domain, (args or {}).copy())
         if query:
             domain.append((Model._rec_name, 'ilike', '%' + query + '%'))
