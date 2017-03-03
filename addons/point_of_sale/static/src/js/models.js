@@ -890,7 +890,7 @@ exports.PosModel = Backbone.Model.extend({
                 return order;
             })];
         var rpcOptions = {timeout: timeout, shadow: !options.to_invoice};
-        rpc.query({model: 'pos.order', method: 'create_from_ui'})
+        return rpc.query({model: 'pos.order', method: 'create_from_ui'})
            .args(args)
            .exec({callback: ajax.rpc.bind(ajax), callbackOptions: rpcOptions})
            .then(function (server_ids) {
