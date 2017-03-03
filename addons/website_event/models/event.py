@@ -6,14 +6,18 @@ from odoo import api, fields, models, _
 from odoo.addons.website.models.website import slug
 
 
+class EventType(models.Model):
+    _name = 'event.type'
+    _inherit = ['event.type']
+
+    website_menu = fields.Boolean(
+        'Display a dedicated menu on Website')
+
+
 class Event(models.Model):
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.mixin']
 
-    def _default_hashtag(self):
-        return re.sub("[- \\.\\(\\)\\@\\#\\&]+", "", self.env.user.company_id.name).lower()
-
-    twitter_hashtag = fields.Char('Twitter Hashtag', default=_default_hashtag)
     website_published = fields.Boolean(track_visibility='onchange')
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
@@ -25,9 +29,10 @@ class Event(models.Model):
     )
     is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating")
 
-    show_menu = fields.Boolean('Dedicated Menu', compute='_get_show_menu', inverse='_set_show_menu',
-                               help="Creates menus Introduction, Location and Register on the page "
-                                    " of the event on the website.", store=True)
+    website_menu = fields.Boolean(
+        'Dedicated Menu', compute='_compute_website_menu', inverse='_set_website_menu',
+        help="Creates menus Introduction, Location and Register on the page "
+             " of the event on the website.", store=True)
     menu_id = fields.Many2one('website.menu', 'Event Menu')
 
     def _compute_is_participating(self):
@@ -46,46 +51,47 @@ class Event(models.Model):
             if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 event.website_url = '/event/%s' % slug(event)
 
-    @api.multi
-    def _get_new_menu_pages(self):
-        """ Retuns a list of tuple ('Page name', 'relative page url') for the event """
+    @api.onchange('event_type_id')
+    def _onchange_type(self):
+        super(Event, self)._onchange_type()
+        if self.event_type_id:
+            self.website_menu = self.event_type_id.website_menu
+
+    def _get_menu_entries(self):
         self.ensure_one()
-        todo = [
-            (_('Introduction'), 'website_event.template_intro'),
-            (_('Location'), 'website_event.template_location')
+        return [
+            (_('Introduction'), False, 'website_event.template_intro'),
+            (_('Location'), False, 'website_event.template_location'),
+            (_('Register'), '/event/%s/register' % slug(self), False),
         ]
-        result = []
-        for name, path in todo:
-            complete_name = name + ' ' + self.name
-            newpath = self.env['website'].new_page(complete_name, path, ispage=False)
-            url = "/event/" + slug(self) + "/page/" + newpath
-            result.append((name, url))
-        result.append((_('Register'), '/event/%s/register' % slug(self)))
-        return result
 
     @api.multi
-    def _set_show_menu(self):
+    def _set_website_menu(self):
         for event in self:
-            if event.menu_id and not event.show_menu:
+            if event.menu_id and not event.website_menu:
                 event.menu_id.unlink()
-            elif event.show_menu and not event.menu_id:
-                root_menu = self.env['website.menu'].create({'name': event.name})
-                to_create_menus = event._get_new_menu_pages()
-                seq = 0
-                for name, url in to_create_menus:
-                    self.env['website.menu'].create({
-                        'name': name,
-                        'url': url,
-                        'parent_id': root_menu.id,
-                        'sequence': seq,
-                    })
-                    seq += 1
-                event.menu_id = root_menu
+            elif event.website_menu:
+                if not event.menu_id:
+                    root_menu = self.env['website.menu'].create({'name': event.name})
+                    event.menu_id = root_menu
+
+                for sequence, (name, url, xml_id) in enumerate(self._get_menu_entries()):
+                    existing_pages = event.menu_id.child_id.mapped('name')
+                    if name not in existing_pages:
+                        if not url:
+                            newpath = self.env['website'].new_page(name + ' ' + self.name, xml_id, ispage=False)
+                            url = "/event/" + slug(self) + "/page/" + newpath
+                        self.env['website.menu'].create({
+                            'name': name,
+                            'url': url,
+                            'parent_id': event.menu_id.id,
+                            'sequence': sequence,
+                        })
 
     @api.multi
-    def _get_show_menu(self):
+    def _compute_website_menu(self):
         for event in self:
-            event.show_menu = bool(event.menu_id)
+            event.website_menu = bool(event.menu_id)
 
     @api.multi
     def google_map_img(self, zoom=8, width=298, height=298):

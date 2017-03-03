@@ -65,7 +65,7 @@ class WebsiteEventTrackController(http.Controller):
             'dates': dates
         }
 
-    @http.route(['''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/agenda'''], type='http', auth="public", website=True)
+    @http.route(['''/event/<model("event.event", "[('website_track','=',1)]"):event>/agenda'''], type='http', auth="public", website=True)
     def event_agenda(self, event, tag=None, **post):
         days_tracks = collections.defaultdict(lambda: [])
         for track in event.track_ids.sorted(lambda track: (track.date, bool(track.location_id))):
@@ -79,22 +79,16 @@ class WebsiteEventTrackController(http.Controller):
             tracks_by_days[day] = tracks
             days[day] = self._prepare_calendar(event, tracks)
 
-        speakers = {}
-        for track in event.sudo().track_ids:
-            speakers_name = u" – ".join(track.speaker_ids.mapped('name'))
-            speakers[track.id] = speakers_name
-
         return request.render("website_event_track.agenda", {
             'event': event,
             'days': days,
             'tracks_by_days': tracks_by_days,
-            'speakers': speakers,
             'tag': tag
         })
 
     @http.route([
-        '''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/track''',
-        '''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/track/tag/<model("event.track.tag"):tag>'''
+        '''/event/<model("event.event", "[('website_track','=',1)]"):event>/track''',
+        '''/event/<model("event.event", "[('website_track','=',1)]"):event>/track/tag/<model("event.track.tag"):tag>'''
         ], type='http', auth="public", website=True)
     def event_tracks(self, event, tag=None, **post):
         searches = {}
@@ -114,7 +108,7 @@ class WebsiteEventTrackController(http.Controller):
         }
         return request.render("website_event_track.tracks", values)
 
-    @http.route(['''/event/<model("event.event", "[('show_track_proposal','=',1)]"):event>/track_proposal'''], type='http', auth="public", website=True)
+    @http.route(['''/event/<model("event.event", "[('website_track_proposal','=',1)]"):event>/track_proposal'''], type='http', auth="public", website=True)
     def event_track_proposal(self, event, **post):
         return request.render("website_event_track.event_track_proposal", {'event': event})
 

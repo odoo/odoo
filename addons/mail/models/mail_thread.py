@@ -734,6 +734,8 @@ class MailThread(models.AbstractModel):
                 recipient_ids.add(record.partner_id.id)
             elif 'email_from' in self._fields and record.email_from:
                 email_to = record.email_from
+            elif 'partner_email' in self._fields and record.partner_email:
+                email_to = record.partner_email
             elif 'email' in self._fields:
                 email_to = record.email
             res[record.id] = {'partner_ids': list(recipient_ids), 'email_to': email_to, 'email_cc': email_cc}
