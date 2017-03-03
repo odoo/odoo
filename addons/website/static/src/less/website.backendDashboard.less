@@ -128,6 +128,74 @@
             }
         }
 
+        .o_dashboard_common {
+            .o_box {
+                display: flex;
+                flex-flow: row wrap;
+                justify-content: flex-start;
+                > .o_box_item {
+                    @media (max-width: @screen-sm-min) {
+                        flex: 1 1 200px;
+                        display: block !important;
+                    }
+                    @media (min-width: @screen-sm-min) {
+                        flex: 0 0 20%;
+                    }
+                }
+            }
+            .o_inner_box {
+                padding-top: 10px;
+                text-align: center;
+                border: 1px solid @odoo-view-background-color;
+                height: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                &.o_main {
+                    background-color: @odoo-brand-optional;
+                    &:hover {
+                        background-color: darken(@odoo-brand-optional, 10%);
+                    }
+                    a {
+                        color: white;
+                    }
+                }
+                &.o_primary {
+                    background-color: @odoo-brand-primary;
+                    color: white;
+                    &:hover {
+                        background-color: darken(@odoo-brand-primary, 10%);
+                    }
+                }
+                &.o_apps {
+                    position: relative;
+                    background-color: @odoo-brand-optional;
+                    color: white;
+                    .o_apps_hidden {
+                        display: none;
+                        &.o_apps_hide_panel {
+                            position: absolute;
+                            top: 0px;
+                            right: 0px;
+                            background: @brand-danger;
+                            padding: 6px;
+                        }
+                    }
+                    &:hover {
+                        background-color: #45818E;
+                        .o_apps_show {
+                            display: none;
+                        }
+                        .o_apps_hidden {
+                            display: block;
+                        }
+                    }
+                }
+                .o_highlight {
+                    font-size: 27px;
+                }
+            }
+        }
+
         .o_dashboard_visits {
 
             .o_demo_background {

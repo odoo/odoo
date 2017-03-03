@@ -2,11 +2,11 @@
 <odoo>
     <data>
         <!-- Menu items -->
-        <menuitem name="Website Admin"
+        <menuitem name="Website"
             id="menu_website_configuration"
             sequence="9"
-            groups="website.group_website_publisher"
-            web_icon="website,static/description/icon_admin.png"/>
+            groups="base.group_user"
+            web_icon="website,static/description/icon.png"/>
 
         <!-- website views -->
         <record id="view_website_form" model="ir.ui.view">
@@ -124,11 +124,17 @@
             <field name="tag">backend_dashboard</field>
         </record>
 
+        <record id="ir_actions_server_website_dashboard" model="ir.actions.server">
+            <field name="name">Website: Dashboard</field>
+            <field name="model_id" ref="website.model_website"/>
+            <field name="state">code</field>
+            <field name="code">action = model.action_dashboard_redirect()</field>
+        </record>
+
         <menuitem id="menu_dashboard"
             name="Dashboard"
             sequence="1"
-            action="website.backend_dashboard"
-            groups="website.group_website_publisher"
+            action="website.ir_actions_server_website_dashboard"
             parent="website.menu_website_configuration"/>
 
     </data>
