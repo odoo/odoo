@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="s_cover" name="Cover">
+<template id="s_cover" name="Banner">
     <section class="s_text_block_image_fw oe_img_bg oe_custom_bg" style="background-image: url(/web/image/website.s_cover_default_image); background-position: 50% 100%">
         <div class="container">
             <div class="row">
@@ -14,7 +14,7 @@
     </section>
 </template>
 
-<template id="s_banner" name="Banner">
+<template id="s_banner" name="Slider">
     <div id="myCarousel" class="carousel slide s_banner" data-interval="10000" style="height: 400px;">
         <!-- Indicators -->
         <ol class="carousel-indicators hidden">
@@ -87,7 +87,7 @@
     </section>
 </template>
 
-<template id="s_big_message" name="Big message">
+<template id="s_big_message" name="Big Message">
     <section class="jumbotron s_big_message oe_img_bg oe_custom_bg" style="background-image: url('/web/image/website.s_background_image_01');">
         <div class="container">
             <div class="row">
@@ -365,7 +365,7 @@
     </section>
 </template>
 
-<template id="s_button" name="Call to Action">
+<template id="s_button" name="Call-to-Action">
     <section class="jumbotron s_button bg-gray-lighter">
         <div class="container">
             <div class="row">
@@ -387,7 +387,7 @@
     </section>
 </template>
 
-<template id="s_faq_collapse" name="Accordion">
+<template id="s_faq_collapse" name="FAQ">
     <section class="s_faq_collapse">
         <div class="container">
             <h2 class="page-header">Point of Sale Questions <small>v7</small></h2>
@@ -592,41 +592,42 @@
 <template id="snippets" inherit_id="web_editor.snippets" primary="True">
     <xpath expr="//div[@id='o_scroll']" position="replace">
         <div id="o_scroll">
-            <div id="snippet_structure" class="o_panel">
+            <div id="snippet_cover" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-th-large"/> Structure
+                    <i class="fa fa-picture-o"/> Cover
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/blocks/block_title.png"/>
                     <t t-snippet="website.s_cover" t-thumbnail="/website/static/src/img/blocks/block_banner.png"/>
-                    <t t-snippet="website.s_text_image" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
-                    <t t-snippet="website.s_image_text" t-thumbnail="/website/static/src/img/blocks/block_image_text.png"/>
-                    <t t-snippet="website.s_big_message" t-thumbnail="/website/static/src/img/blocks/block_jumbotron.png"/>
-                    <t t-snippet="website.s_text_block" t-thumbnail="/website/static/src/img/blocks/block_text_block.png"/>
-                    <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/blocks/block_features.png"/>
-                    <t t-snippet="website.s_big_picture" t-thumbnail="/website/static/src/img/blocks/block_big_picture.png"/>
-                    <t t-snippet="website.s_three_columns" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
-                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_banner.png"/>
+                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_slider.png"/>
+                     <t t-snippet="website.s_big_message" t-thumbnail="/website/static/src/img/blocks/block_jumbotron.png"/>
                 </div>
             </div>
 
-            <div id="snippet_feature" class="o_panel">
+            <div id="snippet_body" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-diamond"/> Feature
+                    <i class="fa fa-th"/> Body
                 </div>
                 <div class="o_panel_body">
-                    <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/blocks/block_image_gallery.png"/>
-                    <t t-snippet="website.s_comparisons" t-thumbnail="/website/static/src/img/blocks/block_comparison.png"/>
-                    <t t-snippet="website.s_button" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
-                    <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/blocks/block_references.png"/>
-                    <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
+                    <t t-snippet="website.s_text_image" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
+                    <t t-snippet="website.s_image_text" t-thumbnail="/website/static/src/img/blocks/block_image_text.png"/>
+                    <t t-snippet="website.s_text_block" t-thumbnail="/website/static/src/img/blocks/block_text_block.png"/>
+                    <t t-snippet="website.s_three_columns" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
+                    <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/blocks/block_features.png"/>
                     <t t-snippet="website.s_feature_grid" t-thumbnail="/website/static/src/img/blocks/block_feature_grid.png"/>
+                    <t t-snippet="website.s_big_picture" t-thumbnail="/website/static/src/img/blocks/block_big_picture.png"/>
+                    <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/blocks/block_image_gallery.png"/>
+                    <t t-snippet="website.s_button" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
+                    <t t-snippet="website.s_comparisons" t-thumbnail="/website/static/src/img/blocks/block_comparison.png"/>
+                    <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
+                    <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/blocks/block_references.png"/>
+                    <t t-install="website_twitter" t-title="Twitter Scroller" t-thumbnail="/website/static/src/img/blocks/twitter_scroll.png"/>
                 </div>
             </div>
 
             <div id="snippet_effect" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-magic icon-fix"/> Effect
+                    <i class="fa fa-magic icon-fix"/> Body Effects
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_parallax" t-thumbnail="/website/static/src/img/blocks/block_parallax.png"/>
@@ -634,15 +635,25 @@
                 </div>
             </div>
 
+            <div id="snippet_inner_actions" class="o_panel">
+                <div class="o_panel_header">
+                    <i class="fa fa-indent"/> Inner Call-to-Actions
+                </div>
+                <div class="o_panel_body">
+                    <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/blocks/block_share.png"/>
+                    <t t-install="website_event" t-title="Local Events" t-thumbnail="/website/static/src/img/blocks/block_local_event.png"/>
+                    <t t-install="website_mail_channel" t-title="Discussion Group" t-thumbnail="/website/static/src/img/blocks/button_channel_subscribe.png"/>
+                    <t t-install="mass_mailing" t-title="Newsletter" t-thumbnail="/website/static/src/img/blocks/newsletter_subscribe_form.png"/>
+                </div>
+            </div>
             <div id="snippet_content" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-indent"/> Inner content
+                    <i class="fa fa-list-alt"/> Inner Content
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_well" t-thumbnail="/website/static/src/img/blocks/block_well.png"/>
                     <t t-snippet="website.s_panel" t-thumbnail="/website/static/src/img/blocks/block_panel.png"/>
                     <t t-snippet="website.s_image_floating" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
-                    <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/blocks/block_share.png"/>
                 </div>
             </div>
         </div>

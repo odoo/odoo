@@ -15,7 +15,7 @@ odoo.define("website.tour.banner", function (require) {
         content: _t("<b>Click Edit</b> to start designing your homepage."),
         position: "bottom",
     }, {
-        trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail",
+        trigger: "#snippet_cover .oe_snippet:eq(1) .oe_snippet_thumbnail",
         content: _t("Drag the <i>Cover</i> block and drop it in your page."),
         position: "bottom",
         run: "drag_and_drop",
@@ -31,7 +31,7 @@ odoo.define("website.tour.banner", function (require) {
         content: _t("Customize any block through this menu. Try to change the background of the banner."),
         position: "bottom",
     }, {
-        trigger: "#snippet_structure .oe_snippet:eq(3) .oe_snippet_thumbnail",
+        trigger: "#snippet_body .oe_snippet:eq(1) .oe_snippet_thumbnail",
         content: _t("Drag another block in your page, below the cover."),
         position: "bottom",
         run: "drag_and_drop",

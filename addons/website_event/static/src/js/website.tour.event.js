@@ -24,7 +24,7 @@ odoo.define("website_event.tour", function (require) {
         content: _t("Click <em>Continue</em> to create the event."),
         position: "right",
     }, {
-        trigger: "#snippet_structure .oe_snippet:eq(2) .oe_snippet_thumbnail",
+        trigger: "#snippet_body .oe_snippet:eq(0) .oe_snippet_thumbnail",
         content: _t("Drag this block and drop it in your page."),
         position: "bottom",
         run: "drag_and_drop",

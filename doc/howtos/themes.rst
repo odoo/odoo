@@ -623,7 +623,7 @@ The previous code will create the snippet’s content, but we still need to plac
 .. rst-class:: col-sm-6
 
 Using xpath, we are targeting a particular element with id
-``snippet_structure``. This means that the snippet will appear in the
+``snippet_cover``. This means that the snippet will appear in the
 Structure tab. If you want to change the destination tab, you have just to replace the ``id`` value in the xpath expression.
 
 
@@ -636,9 +636,9 @@ Structure tab. If you want to change the destination tab, you have just to repla
 ============  ==================================
 Tab Name      Xpath expression
 ============  ==================================
-Structure     ``//div[@id='snippet_structure']``
+Structure     ``//div[@id='snippet_cover']``
 Content       ``//div[@id='snippet_content']``
-Feature       ``//div[@id='snippet_feature']``
+Feature       ``//div[@id='snippet_body']``
 Effect        ``//div[@id='snippet_effect']``
 ============  ==================================
 

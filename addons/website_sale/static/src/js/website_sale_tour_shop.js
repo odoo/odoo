@@ -42,7 +42,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         content: _t("Click on <b>Save</b> to add the image to the product description."),
         position: "right",
     }, {
-        trigger: "#snippet_structure .oe_snippet:eq(8) .oe_snippet_thumbnail",
+        trigger: "#snippet_body .oe_snippet:eq(3) .oe_snippet_thumbnail",
         extra_trigger: "body:not(.modal-open)",
         content: _t("Drag this website block and drop it in your page."),
         position: "bottom",

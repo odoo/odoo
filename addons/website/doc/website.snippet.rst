@@ -142,7 +142,7 @@ e.g.:
   <hr/>
 </template>
 
-Inside #snippet_structure for e.g.: ``<t t-snippet="website.name_of_the_snippet" t-thumbnail="/image_path"/>``
+Inside #snippet_cover for e.g.: ``<t t-snippet="website.name_of_the_snippet" t-thumbnail="/image_path"/>``
 The container of the snippet became not editable (with branding)
 
 Inside a demo page call the snippet with: ``<div data-oe-call="website.name_of_the_template"/>``

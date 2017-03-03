@@ -41,7 +41,7 @@ tour.register('rte_translator', {
             extra_trigger: 'input[type="text"]:propValue(rte_translator)',
         }, {
             content: "drop a snippet",
-            trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail",
+            trigger: "#snippet_cover .oe_snippet:eq(1) .oe_snippet_thumbnail",
             run: 'drag_and_drop',
         }, {
             content: "change content",
