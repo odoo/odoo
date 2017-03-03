@@ -117,6 +117,7 @@ var FieldMany2One = AbstractRelationalField.extend({
         'click .o_external_button': '_onExternalButtonClick',
         'click': '_onClick',
     }),
+    supported_field_types: ['many2one'],
 
     init: function () {
         this._super.apply(this, arguments);

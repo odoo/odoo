@@ -101,6 +101,7 @@ WebClient.include({
 });
 
 var Many2ManyAttendee = FieldMany2ManyTags.extend({
+    supported_field_types: [],
     tag_template: "Many2ManyAttendeeTag",
     // FIXME: This widget used to refetch the relational data fields needed to
     //        its rendering. Basically, all usual fields for tags plus "status".

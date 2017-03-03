@@ -117,7 +117,7 @@ var InputField = AbstractField.extend({
 });
 
 var FieldChar = InputField.extend({
-    supportedFieldTypes: ['char', 'text'],
+    supportedFieldTypes: ['char'],
     tagName: 'span',
 });
 
@@ -125,7 +125,7 @@ var FieldDate = InputField.extend({
     className: "o_form_field_date",
     tagName: "span",
     replace_element: true,
-    supportedFieldTypes: ['date', 'datetime'],
+    supportedFieldTypes: ['date'],
 
     start: function () {
         var self = this;
@@ -711,7 +711,11 @@ var PriorityWidget = AbstractField.extend({
             this._setValue(new_value);
         },
     },
-    supportedFieldTypes: ['integer'],
+    supportedFieldTypes: ['selection'],
+
+    is_set: function() {
+        return true;
+    },
     render_star: function (tag, is_full, value, tip) {
         return $(tag)
             .attr('title', tip)
@@ -722,11 +726,13 @@ var PriorityWidget = AbstractField.extend({
     },
     _render: function () {
         var self = this;
-        var value = parseInt(this.value, 10);
+        var index_value = this.value ? _.findIndex(this.field.selection, function (v) {
+            return v[0] === self.value;
+        }) : 0;
         this.$el.empty();
         this.empty_value = this.field.selection[0][0];
-        _.each(this.field.selection.slice(1), function (choice) {
-            self.$el.append(self.render_star('<a href="#">', value >= parseInt(choice[0]), choice[0], choice[1]));
+        _.each(this.field.selection.slice(1), function(choice, index) {
+            self.$el.append(self.render_star('<a href="#">', index_value >= index+1, choice[1]));
         });
     },
 });
@@ -851,7 +857,7 @@ var FieldBooleanButton = AbstractField.extend({
 });
 
 var FieldID = InputField.extend({
-    supportedFieldTypes: ['integer'],
+    supportedFieldTypes: ['id'],
     init: function () {
         this._super.apply(this, arguments);
         this.mode = 'readonly';
