@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- Menu items -->
+        <menuitem name="Website"
+            id="menu_website_configuration"
+            sequence="9"
+            groups="base.group_user"
+            web_icon="website,static/description/icon.png"/>
 
         <!-- website views -->
         <record id="view_website_form" model="ir.ui.view">
@@ -111,6 +117,25 @@
 
             </field>
         </record>
+
+        <!-- Dashboard -->
+        <record id="backend_dashboard" model="ir.actions.client">
+            <field name="name">Dashboard</field>
+            <field name="tag">backend_dashboard</field>
+        </record>
+
+        <record id="ir_actions_server_website_dashboard" model="ir.actions.server">
+            <field name="name">Website: Dashboard</field>
+            <field name="model_id" ref="website.model_website"/>
+            <field name="state">code</field>
+            <field name="code">action = model.action_dashboard_redirect()</field>
+        </record>
+
+        <menuitem id="menu_dashboard"
+            name="Dashboard"
+            sequence="1"
+            action="website.ir_actions_server_website_dashboard"
+            parent="website.menu_website_configuration"/>
 
     </data>
 </odoo>

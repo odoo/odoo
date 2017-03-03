@@ -98,7 +98,7 @@
                                             </div>
                                         </div>
                                         <div attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
-                                            <a href="https://www.odoo.com/documentation/user/online/website/google_analytics.html"
+                                            <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics.html"
                                                 class="oe_link fa fa-arrow-right" target="_blank">
                                                 Tutorial
                                             </a>
@@ -371,18 +371,12 @@ You can also edit the fields of the Extra Step page in eCommerce checkout.">
             <field name="target">inline</field>
         </record>
 
-        <record id="backend_dashboard" model="ir.actions.client">
-            <field name="name">Website Dashboard</field>
-            <field name="tag">backend_dashboard</field>
-        </record>
-
-        <menuitem id="menu_website_configuration" sequence="215" name="Website Admin"
-            groups="website.group_website_designer" web_icon="website,static/description/icon_admin.png"/>
-
-        <menuitem id="menu_dashboard" name="Dashboard" action="website.backend_dashboard" parent="website.menu_website_configuration" sequence="1"/>
-
         <menuitem id="menu_website_global_configuration" parent="menu_website_configuration"
             sequence="100" name="Configuration" groups="base.group_system"/>
-        <menuitem id="menu_website_website_settings" parent="menu_website_global_configuration" name="Settings" action="action_website_configuration"/>
+        <menuitem name="Settings"
+            id="menu_website_website_settings"
+            action="action_website_configuration"
+            parent="menu_website_global_configuration"
+            groups="base.group_system"/>
 
 </odoo>

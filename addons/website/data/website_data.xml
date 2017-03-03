@@ -65,13 +65,6 @@
             <field name="target">self</field>
         </record>
 
-        <record id="menu_website" model="ir.ui.menu">
-            <field name="name">Website</field>
-            <field name="sequence" eval="200"/>
-            <field name="web_icon">website,static/description/icon.png</field>
-            <field name="action" ref="action_website"/>
-        </record>
-
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_website"/>
             <field name="state">open</field>

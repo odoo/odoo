@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <menuitem name="Slides" id="menu_website_slides_root" sequence="32" parent="website.menu_website_configuration"/>
+        <menuitem name="Slides"
+            id="menu_website_slides_root"
+            sequence="32"
+            parent="website.menu_website_configuration"
+            groups="website.group_website_designer"/>
 
         <!-- SLIDE.TAG -->
         <record id="view_slide_tag_form" model="ir.ui.view">
