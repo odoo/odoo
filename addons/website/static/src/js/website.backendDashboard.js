@@ -6,11 +6,13 @@ var ajax = require('web.ajax');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var formats = require('web.formats');
 var Model = require('web.Model');
 var session = require('web.session');
-var utils = require('web.utils');
 var web_client = require('web.web_client');
 var Widget = require('web.Widget');
+
+var local_storage = require('web.local_storage');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -19,7 +21,9 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     template: "website.WebsiteDashboardMain",
     events: {
         'click .js_link_analytics_settings': 'on_link_analytics_settings',
-        'click .o_dashboard_action': 'on_dashboard_action_clicked',
+        'click .o_dashboard_action': 'on_dashboard_action',
+        'click .o_dashboard_action_form': 'on_dashboard_action_form',
+        'click .o_dashboard_hide_panel': 'on_dashboard_hide_panel',
     },
 
     init: function(parent, context) {
@@ -28,6 +32,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         this.date_range = 'week';  // possible values : 'week', 'month', year'
         this.date_from = moment().subtract(1, 'week');
         this.date_to = moment();
+        this.hidden_apps = JSON.parse(local_storage.getItem('website_dashboard_hidden_app_ids') || '[]');
 
         this.dashboards_templates = ['website.dashboard_visits'];
         this.graphs = [];
@@ -107,7 +112,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     render_dashboards: function() {
         var self = this;
         _.each(this.dashboards_templates, function(template) {
-            self.$('.o_website_dashboard').append(QWeb.render(template, {widget: self}));
+            self.$('.o_website_dashboard_content').append(QWeb.render(template, {widget: self}));
         });
     },
 
@@ -140,7 +145,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                 .append("svg");
 
             svg
-                .attr("height", '20em')
+                .attr("height", '24em')
                 .datum(chart_values)
                 .call(chart);
 
@@ -206,7 +211,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
         var self = this;
         $.when(this.fetch_data()).then(function() {
-            self.$('.o_website_dashboard').empty();
+            self.$('.o_website_dashboard_content').empty();
             self.render_dashboards();
             self.render_graphs();
         });
@@ -218,7 +223,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         this.update_cp();
     },
 
-    on_dashboard_action_clicked: function (ev) {
+    on_dashboard_action: function (ev) {
         ev.preventDefault();
         var $action = $(ev.currentTarget);
         var additional_context = {};
@@ -233,6 +238,32 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             additional_context: additional_context,
             on_reverse_breadcrumb: this.on_reverse_breadcrumb
         });
+    },
+
+    on_dashboard_action_form: function (ev) {
+        ev.preventDefault();
+        var $action = $(ev.currentTarget);
+        this.do_action({
+            name: $action.attr('name'),
+            res_model: $action.data('res_model'),
+            res_id: $action.data('res_id'),
+            views: [[false, 'form']],
+            type: 'ir.actions.act_window',
+        }, {
+            on_reverse_breadcrumb: this.on_reverse_breadcrumb
+        });
+    },
+
+    on_dashboard_hide_panel: function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        var $action = $(ev.currentTarget);
+        // update hidden module list
+        this.hidden_apps = JSON.parse(local_storage.getItem('website_dashboard_hidden_app_ids') || '[]');
+        this.hidden_apps.push(JSON.parse($action.data('module_id')));
+        local_storage.setItem('website_dashboard_hidden_app_ids', JSON.stringify(this.hidden_apps));
+        // remove box
+        $action.closest(".o_box_item").remove();
     },
 
     update_cp: function() {
@@ -535,24 +566,24 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             return i % keep_one_of === 0;
         });
     },
-    format_number: function(value, symbol) {
-        value = utils.human_number(value);
-        if (symbol === 'currency') {
+    format_number: function(value, type, digits, symbol) {
+        if (type === 'currency') {
             return this.render_monetary_field(value, this.currency_id);
         } else {
-            return value + (symbol || '');
+            return formats.format_value(value || 0, {type: type, digits: digits}) + ' ' + symbol;
         }
     },
     render_monetary_field: function(value, currency_id) {
         var currency = session.get_currency(currency_id);
+        var formatted_value = formats.format_value(value || 0, {type: "float", digits: currency && currency.digits});
         if (currency) {
             if (currency.position === "after") {
-                value += currency.symbol;
+                formatted_value += currency.symbol;
             } else {
-                value = currency.symbol + value;
+                formatted_value = currency.symbol + formatted_value;
             }
         }
-        return value;
+        return formatted_value;
     },
 
 });
