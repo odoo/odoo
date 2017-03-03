@@ -27,9 +27,9 @@
 
             h4 { margin: 0 0 0 8px; }
 
-            h2 { color: @odoo-brand-primary; }
+            h2, h4 { color: @odoo-brand-primary; }
             
-            .col-md-6 {
+            .col-md-5, .col-md-7 {
                 padding: 15px;
 
                 .js_field_selection {
@@ -80,12 +80,6 @@
                         .translate(45; 30) !important;
                     }
 
-                    g.nv-y.nv-axis, g.nv-x.nv-axis, g.nv-y.nv-axis .nv-axisMaxMin {
-                        text {
-                            opacity: .3 !important;
-                        }
-                    }
-
                     g.nv-x.nv-axis .tick > line {
                         opacity: 0 !important;
                     }
@@ -122,7 +116,7 @@
                         background-color: @odoo-brand-optional !important;
                     }
                     tr:last-child .legend-color-guide > div {
-                        background-color: darken(@odoo-brand-optional, 10%) !important;
+                        background-color: darken(@odoo-brand-lightsecondary, 10%) !important;
                     }
                 }
             }
@@ -139,7 +133,7 @@
                         display: block !important;
                     }
                     @media (min-width: @screen-sm-min) {
-                        flex: 0 0 20%;
+                        flex: 0 0 16.6%;
                     }
                 }
             }
@@ -172,7 +166,7 @@
                     color: white;
                     .o_apps_hidden {
                         display: none;
-                        &.o_apps_hide_panel {
+                        &.o_dashboard_hide_panel {
                             position: absolute;
                             top: 0px;
                             right: 0px;
@@ -197,6 +191,10 @@
         }
 
         .o_dashboard_visits {
+
+            h2 {
+                padding: 15px;
+            }
 
             .o_demo_background {
 

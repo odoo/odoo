@@ -9,6 +9,7 @@
         <div class="o_dashboards">
             <div class="container-fluid o_website_dashboard">
                 <t t-call="website.dashboard_header"/>
+                <div class="o_website_dashboard_content"/>
             </div>
         </div>
     </t>
@@ -22,17 +23,54 @@
                         Go to Website
                     </div>
                 </a>
+                <t t-if="widget.groups.system">
+                    <t t-set="apps" t-value="{
+                        'website_crm':              {'icon': 'fa-file-text-o', 'help': _('Add a contact form to your Contact Us page.')},
+                        'website_sale':             {'icon': 'fa-shopping-cart', 'help': _('Sell online to reach new customers.')},
+                        'website_blog':             {'icon': 'fa-rss-square', 'help': _('Build up a community with an efficient content strategy.')},
+                        'website_hr_recruitment':   {'icon': 'fa-suitcase', 'help': _('Promote your job announces to attract new talents.')},
+                        'website_event':            {'icon': 'fa-ticket', 'help': _('Promote your events, manage attendance and sell tickets.')},
+                        'im_livechat':              {'icon': 'fa-comments-o', 'help': _('Chat with your visitors in real time.')},
+                    }"/>
+                </t>
+                <t t-if="! widget.groups.system"><t t-set="apps" t-value="{}"/></t>
+                <t t-set="vignette_max" t-value="6"/>
+                <t t-set="vignette_nbr" t-value="1"/>
+                <t t-foreach="apps" t-as="app">
+                    <t t-set="app_data" t-value="widget.dashboards_data.apps_data[app]"/>
+                    <t t-set="app_dashboard" t-value="apps[app]"/>
+                    <t t-if="vignette_nbr &lt; vignette_max &amp;&amp; widget.hidden_apps.indexOf(app_data['id']) == -1 &amp;&amp; app_data['state'] == 'uninstalled'">
+                        <t t-set="vignette_nbr" t-value="vignette_nbr + 1"/>
+                        <a href="#" class="o_box_item o_dashboard_action_form"
+                                name="Apps"
+                                data-res_model="ir.module.module"
+                                t-att-data-res_id="app_data['id']"
+                                t-att-title="app_dashboard['help']">
+                            <div class="o_inner_box o_apps">
+                                <div class="o_apps_show">
+                                    <i t-attf-class="fa #{app_dashboard['icon']} fa-3x"></i><br/>
+                                    <t t-esc="app_data['shortdesc']"/>
+                                </div>
+                                <div class="o_apps_hidden">
+                                    <i class="fa fa-plus-circle fa-3x"></i><br/>
+                                    Add this feature
+                                </div>
+                                <i class="o_apps_hidden o_dashboard_hide_panel fa fa-close" t-att-data-module_id="app_data['id']" title="Remove this suggestion from dashboard"/>
+                            </div>
+                        </a>
+                    </t>
+                </t>
             </div>
         </div>
     </t>
 
     <t t-name="website.dashboard_visits">
-        <div class="row o_dashboard_visits">
+        <div class="row o_dashboard_visits" t-if="widget.groups.website_designer">
             <div class="col-xs-12 o_box">
                 <h2>Visits</h2>
                 <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id">
                     <div class="row js_analytics_components"/>
-                    <a href="#" t-if="widget.groups.system" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
+                    <a href="#" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
                 </div>
                 <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)" class="col-md-12">
                     <div class="o_demo_background">
@@ -40,8 +78,7 @@
                         </div>
                         <div class="o_buttons text-center">
                             <h3>There is no data currently available.</h3>
-                            <button t-if="widget.groups.system" class="btn btn-sm btn-primary js_link_analytics_settings center-block mb8">Link my Analytics Account</button>
-                            <h5 t-if="!widget.groups.system">You do not have sufficient access rights to configure the Google Analytics account.</h5>
+                            <button class="btn btn-sm btn-primary js_link_analytics_settings center-block mb8">Link my Analytics Account</button>
                         </div>
                     </div>
                 </div>
@@ -60,10 +97,10 @@
     </div>
 
     <t t-name="website.DateRangeButtons">
-        <div class="btn-group btn-group-sm o_date_range_buttons">
-            <button class="btn btn-sm btn-default js_date_range active" data-date="week">Week</button>
-            <button class="btn btn-sm btn-default js_date_range" data-date="month">Month</button>
-            <button class="btn btn-sm btn-default js_date_range" data-date="year">Year</button>
+        <div class="btn-group btn-group-sm o_date_range_buttons pull-right">
+            <button class="btn btn-sm btn-default js_date_range active" data-date="week">Last Week</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="month">Last Month</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="year">Last Year</button>
         </div>
     </t>
 </templates>
