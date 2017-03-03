@@ -567,16 +567,6 @@ var FieldX2Many = AbstractRelationalField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * This function is meant to be overriden by the One2ManyField.
-     *
-     * @private
-     * @returns {Boolean} true if the 'Add an item' row should be available in
-     *   the list renderer, false otherwise
-     */
-    _hasCreateLine: function () {
-        return !this.isReadonly;
-    },
-    /**
      * Instanciates or updates the adequate renderer.
      *
      * @override
@@ -597,7 +587,7 @@ var FieldX2Many = AbstractRelationalField.extend({
             this.renderer = new ListRenderer(this, this.value, {
                 arch: arch,
                 mode: this.mode,
-                addCreateLine: this._hasCreateLine(),
+                addCreateLine: !this.isReadonly && this.activeActions.create,
                 addTrashIcon: !this.isReadonly,
             });
         }
@@ -784,16 +774,6 @@ var FieldOne2Many = FieldX2Many.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Overrides enable the 'Add an item' feature if the 'create' action is
-     * available.
-     *
-     * @override
-     * @private
-     */
-    _hasCreateLine: function () {
-        return this._super.apply(this, arguments) && this.activeActions.create;
-    },
     /**
      * Overrides to only render the buttons if the 'create' action is available.
      *

@@ -2035,11 +2035,9 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.ok(form.$('.o_form_field_x2many_list_row_add').length,
-            '"Add an item" link should be available in edit');
+        assert.ok(!form.$('.o_form_field_x2many_list_row_add').length,
+            '"Add an item" link should not be available in edit either');
 
-        // TODO: click on add an item and test that the select create dialog has no 'Create' button
-        // form.$('.o_form_field_x2many_list_row_add').click();
         form.destroy();
     });
 
