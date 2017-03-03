@@ -8,9 +8,6 @@
             <value>Module Events has been installed</value>
         </function>
 
-        <!-- Automatic confirmation of events by default -->
-        <function id="default_auto_confirmation" model="ir.values" name="set_default" eval="('event.config.settings', 'default_auto_confirmation', True)"/>
-
         <!-- Event Mail Scheduler-->
         <record model="ir.cron" forcecreate="True" id="event_mail_scheduler">
             <field name="name">Event: Mail Scheduler</field>
@@ -24,5 +21,18 @@
             <field name="doall" eval="False" />
         </record>
 
+        <record id="event_type_data_online" model="event.type">
+            <field name="name">Online</field>
+            <field name="is_online" eval="True"/>
+            <field name="auto_confirm" eval="True"/>
+            <field name="use_mail_schedule" eval="False"/>
+        </record>
+
+        <record id="event_type_data_physical" model="event.type">
+            <field name="name">Physical Event</field>
+            <field name="is_online" eval="False"/>
+            <field name="auto_confirm" eval="True"/>
+            <field name="use_mail_schedule" eval="False"/>
+        </record>
     </data>
 </odoo>

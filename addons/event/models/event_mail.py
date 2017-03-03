@@ -15,11 +15,39 @@ _INTERVALS = {
 }
 
 
+class EventTypeMail(models.Model):
+    """ Template of event.mail to attach to event.type. Those will be copied
+    upon all events created in that type to ease event creation. """
+    _name = 'event.type.mail'
+    _description = 'Mail Scheduling on Event Type'
+
+    event_type_id = fields.Many2one(
+        'event.type', string='Event Type',
+        ondelete='cascade', required=True)
+    interval_nbr = fields.Integer('Interval', default=1)
+    interval_unit = fields.Selection([
+        ('now', 'Immediately'),
+        ('hours', 'Hour(s)'), ('days', 'Day(s)'),
+        ('weeks', 'Week(s)'), ('months', 'Month(s)')],
+        string='Unit', default='hours', required=True)
+    interval_type = fields.Selection([
+        ('after_sub', 'After each registration'),
+        ('before_event', 'Before the event'),
+        ('after_event', 'After the event')],
+        string='Trigger', default="before_event", required=True)
+    template_id = fields.Many2one(
+        'mail.template', string='Email Template',
+        domain=[('model', '=', 'event.registration')], required=True, ondelete='restrict',
+        help='This field contains the template of the mail that will be automatically sent')
+
+
 class EventMailScheduler(models.Model):
     """ Event automated mailing. This model replaces all existing fields and
     configuration allowing to send emails on events since Odoo 9. A cron exists
     that periodically checks for mailing to run. """
     _name = 'event.mail'
+    _rec_name = 'event_id'
+    _description = 'Event Automated Mailing'
 
     event_id = fields.Many2one('event.event', string='Event', required=True, ondelete='cascade')
     sequence = fields.Integer('Display order')
@@ -33,9 +61,9 @@ class EventMailScheduler(models.Model):
         ('after_sub', 'After each registration'),
         ('before_event', 'Before the event'),
         ('after_event', 'After the event')],
-        string='When to Run ', default="before_event", required=True)
+        string='Trigger ', default="before_event", required=True)
     template_id = fields.Many2one(
-        'mail.template', string='Email to Send',
+        'mail.template', string='Email Template',
         domain=[('model', '=', 'event.registration')], required=True, ondelete='restrict',
         help='This field contains the template of the mail that will be automatically sent')
     scheduled_date = fields.Datetime('Scheduled Sent Mail', compute='_compute_scheduled_date', store=True)

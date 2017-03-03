@@ -9,7 +9,6 @@ class event_config_settings(models.TransientModel):
     module_event_sale = fields.Boolean("Tickets")
     module_website_event_track = fields.Boolean("Tracks and Agenda")
     module_website_event_questions = fields.Boolean("Registration Survey")
-    default_auto_confirmation = fields.Boolean("Auto Confirmation", default_model='event.config.settings')
     module_event_barcode = fields.Boolean("Barcode")
     module_website_event = fields.Boolean("Online Events")
     module_website_event_sale = fields.Boolean("Online Ticketing")

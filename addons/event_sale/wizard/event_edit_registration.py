@@ -55,7 +55,7 @@ class RegistrationEditor(models.TransientModel):
                 self.env['event.registration'].create(values)
         if self.env.context.get('active_model') == 'sale.order':
             for order in self.env['sale.order'].browse(self.env.context.get('active_ids', [])):
-                order.order_line._update_registrations(confirm=True)
+                order.order_line._update_registrations(confirm=False)
         return {'type': 'ir.actions.act_window_close'}
 
 

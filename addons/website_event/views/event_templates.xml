@@ -438,7 +438,12 @@
                     <td>
                         <select t-if="event.seats_available or event.seats_availability == 'unlimited'" name="nb_register-0" class="form-control">
                             <t t-foreach="range(0, (event.seats_availability == 'unlimited' or event.seats_available > 9) and 10 or event.seats_available+1)" t-as="nb">
-                                <option t-esc="nb"/>
+                                <t t-if="nb == 1">
+                                    <option t-esc="nb" selected="selected"/>
+                                </t>
+                                <t t-if="nb != 1">
+                                    <option t-esc="nb"/>
+                                </t>
                             </t>
                         </select>
                         <span t-if="event.seats_availability == 'limited' and not event.seats_available">Sold Out</span>

@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-
-        <record id="event_type" model="event.type">
-            <field name="name">Generic Events</field>
-        </record>
-
         <record id="product_product_event" model="product.product">
             <field name="list_price">10.0</field>
             <field name="event_ok" eval="True"/>
@@ -17,6 +12,12 @@
             <field name="type">service</field>
         </record>
 
+        <record id="event_type_data_sale" model="event.type">
+            <field name="name">Ticketing</field>
+            <field name="auto_confirm" eval="False"/>
+            <field name="use_mail_schedule" eval="True"/>
+            <field name="use_ticketing" eval="True"/>
+        </record>
     </data>
 </odoo>
 

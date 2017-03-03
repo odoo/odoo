@@ -22,14 +22,14 @@ Adds support for:
     'depends': ['website_event'],
     'data': [
         'security/ir.model.access.csv',
-        'security/website_event_track_security.xml',
-        'data/website_event_track_data.xml',
-        'views/website_event_track_templates.xml',
-        'views/website_event_track_views.xml',
+        'security/event_track_security.xml',
+        'data/event_data.xml',
+        'data/event_track_data.xml',
+        'views/event_track_templates.xml',
+        'views/event_track_views.xml',
         'views/event_views.xml',
     ],
     'demo': [
         'data/event_demo.xml',
-        'data/website_event_track_demo.xml'
     ],
 }
