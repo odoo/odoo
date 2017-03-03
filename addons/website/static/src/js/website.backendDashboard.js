@@ -19,6 +19,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     template: "website.WebsiteDashboardMain",
     events: {
         'click .js_link_analytics_settings': 'on_link_analytics_settings',
+        'click .o_dashboard_action': 'on_dashboard_action_clicked',
     },
 
     init: function(parent, context) {
@@ -215,6 +216,23 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     on_reverse_breadcrumb: function() {
         web_client.do_push_state({});
         this.update_cp();
+    },
+
+    on_dashboard_action_clicked: function (ev) {
+        ev.preventDefault();
+        var $action = $(ev.currentTarget);
+        var additional_context = {};
+        if (this.date_range === 'week') {
+            additional_context = {'search_default_week': true}
+        } else if (this.date_range === 'month') {
+            additional_context = {'search_default_month': true}
+        } else if (this.date_range === 'year') {
+            additional_context = {'search_default_year': true}
+        }
+        this.do_action($action.attr('name'), {
+            additional_context: additional_context,
+            on_reverse_breadcrumb: this.on_reverse_breadcrumb
+        });
     },
 
     update_cp: function() {

@@ -8,6 +8,20 @@
     <t t-name="website.WebsiteDashboardMain">
         <div class="o_dashboards">
             <div class="container-fluid o_website_dashboard">
+                <t t-call="website.dashboard_header"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.dashboard_header">
+        <div class="row o_dashboard_common">
+            <div class="o_box">
+                <a href="#" class="o_box_item o_dashboard_action" name="website.action_website" title="Go to Website">
+                    <div class="o_inner_box o_primary">
+                        <i class="fa fa-globe fa-3x"></i><br/>
+                        Go to Website
+                    </div>
+                </a>
             </div>
         </div>
     </t>
