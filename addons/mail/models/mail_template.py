@@ -20,6 +20,8 @@ _logger = logging.getLogger(__name__)
 
 
 def format_date(pool, cr, uid, date, pattern=False, context=None):
+    if not date:
+        return ''
     date = datetime.datetime.strptime(date[:10], openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
     lang_code = context.get('lang') or 'en_US'
     if not pattern:
