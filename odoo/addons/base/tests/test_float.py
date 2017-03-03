@@ -4,7 +4,7 @@
 from math import log10
 
 from odoo.tests.common import TransactionCase
-from odoo.tools import float_compare, float_is_zero, float_repr, float_round
+from odoo.tools import float_compare, float_is_zero, float_repr, float_round, float_split_str
 
 
 class TestFloatPrecision(TransactionCase):
@@ -164,6 +164,21 @@ class TestFloatPrecision(TransactionCase):
         try_roundtrip(-2.6748955, -2.674896)
         try_roundtrip(10000.999999, 10000.999999)
         try_roundtrip(-10000.999999, -10000.999999)
+
+    def test_float_split_05(self):
+        """ Test split method with 2 digits. """
+        currency = self.env.ref('base.EUR')
+
+        def try_split(value, expected):
+            digits = max(0, -int(log10(currency.rounding)))
+            result = float_split_str(value, precision_digits=digits)
+            self.assertEqual(result, expected, 'Split error: got %s, expected %s' % (result, expected))
+
+        try_split(2.674, ('2', '67'))
+        try_split(2.675, ('2', '68'))   # in Python 2.7.2, round(2.675,2) gives 2.67
+        try_split(-2.675, ('-2', '68')) # in Python 2.7.2, round(2.675,2) gives 2.67
+        try_split(0.001, ('0', '00'))
+        try_split(-0.001, ('-0', '00'))
 
     def test_rounding_invalid(self):
         """ verify that invalid parameters are forbidden """
