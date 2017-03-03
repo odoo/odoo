@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="isr_invoice_form" model="ir.ui.view">
+            <field name="name">l10n_ch.account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_bank_id']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="isr_invoice_search_view" model="ir.ui.view">
+            <field name="name">l10n_ch.invoice.select</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <field name="l10n_ch_isr_number" string="ISR reference number"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--Overridden action (and primary child view), so the filter are only
+        available for customer invoices-->
+        <record id="account.action_invoice_tree1" model="ir.actions.act_window">
+            <field name="name">Customer Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="search_view_id" ref="isr_invoice_search_view"/>
+        </record>
+    </data>
+</odoo>
