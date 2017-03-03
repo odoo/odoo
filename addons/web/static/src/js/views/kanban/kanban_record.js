@@ -7,11 +7,11 @@ var field_registry = require('web.field_registry');
 var field_utils = require('web.field_utils');
 var framework = require('web.framework');
 var session = require('web.session');
-var time = require('web.time');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 var KanbanRecord = Widget.extend({
     template: 'KanbanView.record',
@@ -96,27 +96,34 @@ var KanbanRecord = Widget.extend({
                     // the widget doesn't exist yet, so instanciate it
                     var Widget = field_registry.getAny(['kanban.' + field_widget, field_widget]);
 
-                    // some field's attrs might be record dependent (they start with
-                    // 't-att-') and should thus be evaluated, which is done by qweb
-                    // we here replace those attrs in the dict of attrs of the state
-                    // by their evaluted value, to make it transparent from the
-                    // field's widgets point of view
-                    // that dict being shared between records, we don't modify it
-                    // in place
-                    var attrs = Object.create(null);
-                    _.each(self.state.fieldAttrs[field_name], function (value, key) {
-                        if (_.str.startsWith(key, 't-att-')) {
-                            key = key.slice(6);
-                            value = $field.attr(key);
-                        }
-                        attrs[key] = value;
-                    });
-                    self.state.fieldAttrs[field_name] = attrs;
+                    if (Widget) {
+                        // some field's attrs might be record dependent (they start with
+                        // 't-att-') and should thus be evaluated, which is done by qweb
+                        // we here replace those attrs in the dict of attrs of the state
+                        // by their evaluted value, to make it transparent from the
+                        // field's widgets point of view
+                        // that dict being shared between records, we don't modify it
+                        // in place
+                        var attrs = Object.create(null);
+                        _.each(self.state.fieldAttrs[field_name], function (value, key) {
+                            if (_.str.startsWith(key, 't-att-')) {
+                                key = key.slice(6);
+                                value = $field.attr(key);
+                            }
+                            attrs[key] = value;
+                        });
+                        self.state.fieldAttrs[field_name] = attrs;
 
-                    widget = new Widget(self, field_name, self.state, self.options);
-                    self.sub_widgets[field_name] = widget;
-                    self._set_field_display(widget, field_name);
-                    widget.replace($field);
+                        widget = new Widget(self, field_name, self.state, self.options);
+                        self.sub_widgets[field_name] = widget;
+                        self._set_field_display(widget, field_name);
+                        widget.replace($field);
+                    } else if (core.debug) {
+                        // the widget is not implemented
+                        $field.replaceWith($('<span>', {
+                            text: _.str.sprintf(_t('[No widget %s]'), field_widget),
+                        }));
+                    }
                 } else {
                     // a widget already exists for that field, so reset it with the new state
                     widget.reset(self.state);

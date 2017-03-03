@@ -119,6 +119,7 @@ var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
     events: _.extend({}, FieldBoolean.prototype.events, {
         'click input': '_onInputClicked',
     }),
+    supported_field_types: [],
 
     //--------------------------------------------------------------------------
     // Private
@@ -142,6 +143,7 @@ var UpgradeRadio = FieldRadio.extend(AbstractFieldUpgrade, {
     events: _.extend({}, FieldRadio.prototype.events, {
         'click input:last': '_onInputClicked',
     }),
+    supported_field_types: [],
 
     //--------------------------------------------------------------------------
     // Public

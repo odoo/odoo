@@ -10,7 +10,6 @@ var _t = core._t;
 
 var PresenceIndicator = AbstractField.extend({
     template: 'PresenceIndicator',
-    supportedFieldTypes: ['selection'],
 
     start: function() {
         this.$el.tooltip({title: _t("Employee Presence<br/>Green: checked in<br/>Red: checked out"), trigger: 'hover'});

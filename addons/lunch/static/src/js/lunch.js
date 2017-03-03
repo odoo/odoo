@@ -14,6 +14,7 @@ var LunchPreviousOrdersWidget = FieldMany2Many.extend({
     events: {
         'click .o_add_button': 'set_order_line',
     },
+    supported_field_types: [],
     init: function() {
         this._super.apply(this, arguments);
         this.lunch_data = {};
