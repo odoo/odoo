@@ -1,10 +1,12 @@
 odoo.define('website_sale.backend', function (require) {
 "use strict";
 
+var core = require('web.core');
 var WebsiteBackend = require('website.backendDashboard');
 
-WebsiteBackend.include({
+var QWeb = core.qweb;
 
+WebsiteBackend.include({
     events: _.defaults({
         'click tr.o_product_template': 'on_product_template',
     }, WebsiteBackend.prototype.events),
@@ -12,10 +14,18 @@ WebsiteBackend.include({
     init: function(parent, context) {
         this._super(parent, context);
 
-        this.dashboards_templates.push('website_sale.dashboard_sales');
         this.graphs.push({'name': 'sales', 'group': 'sale_salesman'});
     },
-
+    render_dashboards: function() {
+        this._super()
+        this.$('.o_dashboard_common').after(QWeb.render('website_sale.dashboard_sales', {widget: this}));
+    },
+    render_graph: function (div_to_display, chart_values) {
+        if (!this.date_range) {
+            delete this.dashboards_data.sales.graph[1];
+        }
+        return this._super(div_to_display, chart_values);
+    },
     on_product_template: function(ev) {
         ev.preventDefault();
 

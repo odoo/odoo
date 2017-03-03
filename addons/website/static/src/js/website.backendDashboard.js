@@ -6,6 +6,7 @@ var ajax = require('web.ajax');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var formats = require('web.formats');
 var Model = require('web.Model');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -19,6 +20,9 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     template: "website.WebsiteDashboardMain",
     events: {
         'click .js_link_analytics_settings': 'on_link_analytics_settings',
+        'click .o_dashboard_action': 'on_dashboard_action_clicked',
+        'click .o_dashboard_menu_action': 'on_dashboard_menu_action_clicked',
+        'click .o_apps_hide_panel': 'on_dashboard_hide_panel',
     },
 
     init: function(parent, context) {
@@ -48,20 +52,38 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             self.render_dashboards();
             self.render_graphs();
             self.$el.parent().addClass('oe_background_grey');
+            self.update_ghost();
         });
+    },
+
+    update_ghost: function() {
+        this.$('.o_ghost').hide();
+        var flex_items = this.$('.o_box_item:not(.o_ghost)');
+        this.$('.o_ghost').each(function(index) {
+            if (flex_items.length < 6 && index < (6 - flex_items.length)) {
+                $(this).show();
+            }
+        })
     },
 
     fetch_data: function() {
         var self = this;
-        return ajax.jsonRpc('/website/fetch_dashboard_data', 'call', {
-            'date_from': this.date_from.format('YYYY-MM-DD'),
+        var def = $.Deferred();
+        ajax.jsonRpc('/website/fetch_dashboard_data', 'call', {
+            'date_from': this.date_from && this.date_from.format('YYYY-MM-DD'),
             'date_to': this.date_to.format('YYYY-MM-DD'),
         }).done(function(result) {
-            self.data = result;
-            self.dashboards_data = result.dashboards;
-            self.currency_id = result.currency_id;
-            self.groups = result.groups;
+            if (!result.groups) {
+                self.do_action('website.action_website');
+            } else {
+                self.data = result;
+                self.dashboards_data = result.dashboards;
+                self.currency_id = result.currency_id;
+                self.groups = result.groups;
+                def.resolve();
+            }
         });
+        return def;
     },
 
     on_link_analytics_settings: function(ev) {
@@ -105,6 +127,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
     render_dashboards: function() {
         var self = this;
+        this.$('.o_website_dashboard').prepend(QWeb.render('website.dashboard_common', {widget: this}));
         _.each(this.dashboards_templates, function(template) {
             self.$('.o_website_dashboard').append(QWeb.render(template, {widget: self}));
         });
@@ -139,7 +162,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                 .append("svg");
 
             svg
-                .attr("height", '20em')
+                .attr("height", '27em')
                 .datum(chart_values)
                 .call(chart);
 
@@ -155,7 +178,9 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                 self.render_graph('#o_graph_' + e.name, self.dashboards_data[e.name].graph);
             }
         });
-        this.render_graph_analytics(this.dashboards_data.visits.ga_client_id);
+        if (this.data.groups.system) {
+            this.render_graph_analytics(this.dashboards_data.visits.ga_client_id);
+        }
     },
 
     render_graph_analytics: function(client_id) {
@@ -198,8 +223,11 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         } else if (date_range === 'year') {
             this.date_range = 'year';
             this.date_from = moment().subtract(1, 'years');
+        } else if (date_range === 'no_filter') {
+            this.date_range = false;
+            this.date_from = false;
         } else {
-            console.log('Unknown date range. Choose between [week, month, year]');
+            console.log('Unknown date range');
             return;
         }
 
@@ -208,6 +236,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             self.$('.o_website_dashboard').empty();
             self.render_dashboards();
             self.render_graphs();
+            self.update_ghost();
         });
 
     },
@@ -215,6 +244,61 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     on_reverse_breadcrumb: function() {
         web_client.do_push_state({});
         this.update_cp();
+    },
+
+    on_dashboard_action_clicked: function(ev) {
+        ev.preventDefault();
+        var $action = $(ev.currentTarget);
+        var action_name = $action.attr('name');
+        var additional_context = {};
+        if (this.date_range === 'week') {
+            additional_context = {'search_default_week': true}
+        } else if (this.date_range === 'month') {
+            additional_context = {'search_default_month': true}
+        } else if (this.date_range === 'year') {
+            additional_context = {'search_default_year': true}
+        }
+        this.do_action(action_name, {
+            additional_context: additional_context,
+            on_reverse_breadcrumb: this.on_reverse_breadcrumb
+        });
+    },
+
+    on_dashboard_menu_action_clicked: function(ev) {
+        ev.preventDefault();
+        var $action = $(ev.currentTarget);
+        var module_id = $action.data('module_id');
+        this.do_action({
+            name: _t('Apps'),
+            res_model: 'ir.module.module',
+            res_id: module_id,
+            views: [[false, 'form']],
+            type: 'ir.actions.act_window',
+        }, {
+            on_reverse_breadcrumb: this.on_reverse_breadcrumb
+        });
+    },
+
+    on_dashboard_hide_panel: function(ev) {
+        ev.preventDefault();
+        var $action = $(ev.currentTarget);
+        var cookie_data = utils.get_cookie('o_dashboard_hide_panel');
+        var module_list = []
+        if (cookie_data) {
+            module_list = JSON.parse(cookie_data) || [];
+        }
+        module_list.push(JSON.parse($action.data('module_id')));
+        utils.set_cookie('o_dashboard_hide_panel', JSON.stringify(module_list), 15*24*60*60); //15 days cookie
+        $action.closest(".o_box_item").remove();
+
+        var self = this;
+        $.when(this.fetch_data()).then(function() {
+            self.$('.o_website_dashboard').empty();
+            self.render_dashboards();
+            self.render_graphs();
+            self.update_ghost();
+        });
+        return false;
     },
 
     update_cp: function() {
@@ -517,16 +601,15 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             return i % keep_one_of === 0;
         });
     },
-    format_number: function(value, symbol) {
-        value = utils.human_number(value);
-        if (symbol === 'currency') {
-            return this.render_monetary_field(value, this.currency_id);
-        } else {
-            return value + (symbol || '');
-        }
+    format_number: function(value, currency_id, symbol) {
+        var currency = session.get_currency(currency_id);
+        var digits_precision = currency && currency.digits;
+        return formats.format_value(value || 0, {type: "float", digits: digits_precision}) + symbol;
     },
     render_monetary_field: function(value, currency_id) {
         var currency = session.get_currency(currency_id);
+        var digits_precision = currency && currency.digits;
+        value = formats.format_value(value || 0, {type: "float", digits: digits_precision});
         if (currency) {
             if (currency.position === "after") {
                 value += currency.symbol;

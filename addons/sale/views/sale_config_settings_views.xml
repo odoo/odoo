@@ -5,6 +5,7 @@
         <field name="name">sale.config.settings.inherit.sale</field>
         <field name="model">sale.config.settings</field>
         <field name="inherit_id" ref="sales_team.sale_config_settings_view_form"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_user'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//h2[@id='integration_h2']" position="before">
                 <field name="company_id" invisible="1"/>

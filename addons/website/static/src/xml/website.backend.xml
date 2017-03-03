@@ -12,27 +12,66 @@
         </div>
     </t>
 
+    <t t-name="website.dashboard_common">
+        <div class="row o_dashboard_common">
+            <div class="o_box">
+                <a href="#" class="o_box_item o_dashboard_action" name="website.action_website" title="Go to Website">
+                    <div class="o_inner_box o_primary">
+                        <i class="fa fa-globe fa-3x"></i><br/>
+                        Go to Website
+                    </div>
+                </a>
+                <t class="o_dashboard_smart_button">
+                    <t t-if="widget.groups.is_admin">
+                        <t t-foreach="widget.dashboards_data.apps" t-as="app">
+                            <a href="#" class="o_box_item o_dashboard_menu_action" t-att-data-module_id="app.id" t-attf-title="#{widget.dashboards_data.apps_icon[app.name].help}">
+                                <div class="o_inner_box o_apps">
+                                    <div class="o_apps_show">
+                                        <i t-attf-class="fa #{widget.dashboards_data.apps_icon[app.name].icon} fa-3x"></i><br/>
+                                        <t t-esc="app.shortdesc"/>
+                                    </div>
+                                    <div class="o_apps_hidden">
+                                        <i class="fa fa-plus-circle fa-3x"></i><br/>
+                                        Add this feature
+                                    </div>
+                                    <i class="o_apps_hidden o_apps_hide_panel fa fa-close" t-att-data-module_id="app.id" title="Remove this suggestion from dashboard"/>
+                                </div>
+                            </a>
+                        </t>
+                    </t>
+                </t>
+                <a class="o_ghost o_box_item"></a>
+                <a class="o_ghost o_box_item"></a>
+                <a class="o_ghost o_box_item"></a>
+                <a class="o_ghost o_box_item"></a>
+                <a class="o_ghost o_box_item"></a>
+                <a class="o_ghost o_box_item"></a>
+            </div>
+        </div>
+    </t>
+
     <t t-name="website.dashboard_visits">
-        <div class="row o_dashboard_visits">
-            <div class="col-xs-12 o_box">
-                <h2>Visits</h2>
-                <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id">
-                    <div class="row js_analytics_components"/>
-                    <a href="#" t-if="widget.groups.system" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
-                </div>
-                <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)" class="col-md-12">
-                    <div class="o_demo_background">
-                        <div class="o_layer">
-                        </div>
-                        <div class="o_buttons text-center">
-                            <h3>There is no data currently available.</h3>
-                            <button t-if="widget.groups.system" class="btn btn-sm btn-primary js_link_analytics_settings center-block mb8">Link my Analytics Account</button>
-                            <h5 t-if="!widget.groups.system">You do not have sufficient access rights to configure the Google Analytics account.</h5>
+        <t t-if="widget.groups.system">
+            <div class="row o_dashboard_visits">
+                <div class="col-xs-12 o_box">
+                    <h2>Visits</h2>
+                    <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id">
+                        <div class="row js_analytics_components"/>
+                        <a href="#" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
+                    </div>
+                    <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)" class="col-md-12">
+                        <div class="o_demo_background">
+                            <div class="o_layer">
+                            </div>
+                            <div class="o_buttons text-center">
+                                <h3>There is no data currently available.</h3>
+                                <button class="btn btn-sm btn-primary js_link_analytics_settings center-block mb8">Link my Analytics Account</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </t>
     </t>
 
     <div t-name="website.unauthorized_analytics" class="col-xs-12 js_unauthorized_message mb16">
@@ -42,14 +81,15 @@
 
     <div t-name="website.ga_dialog_content">
         Your Google Analytic Client ID: <input type="text" name="ga_client_id" t-att-value="ga_key" style="width: 100%"></input>
-        <br/>Go to our <a href="https://www.odoo.com/documentation/user/online/website/google_analytics.html" target="_blank">User Documentation</a> to get more information.
+        <br/>Go to our <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics.html" target="_blank">User Documentation</a> to get more information.
     </div>
 
     <t t-name="website.DateRangeButtons">
-        <div class="btn-group btn-group-sm o_date_range_buttons">
-            <button class="btn btn-sm btn-default js_date_range active" data-date="week">Week</button>
-            <button class="btn btn-sm btn-default js_date_range" data-date="month">Month</button>
-            <button class="btn btn-sm btn-default js_date_range" data-date="year">Year</button>
+        <div class="btn-group btn-group-sm o_date_range_buttons pull-right">
+            <button class="btn btn-sm btn-default js_date_range active" data-date="week">Last Week</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="month">Last Month</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="year">Last Year</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="no_filter">No Filter</button>
         </div>
     </t>
 </templates>
