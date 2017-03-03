@@ -37,43 +37,45 @@ class FleetVehicle(models.Model):
 
     @api.depends('fuel_type', 'car_value', 'acquisition_date')
     def _compute_car_atn(self):
-        # Compute the correction coefficient from the age of the car
         for car in self:
-            now = Datetime.from_string(Datetime.now())
-            start = Datetime.from_string(car.acquisition_date)
-            if start:
-                number_of_month = (now.year - start.year) * 12.0 + now.month - start.month + int(bool(now.day - start.day + 1))
-                print number_of_month
-                if number_of_month <= 12:
-                    age_coefficient = 1.00
-                elif number_of_month <= 24:
-                    age_coefficient = 0.94
-                elif number_of_month <= 36:
-                    age_coefficient = 0.88
-                elif number_of_month <= 48:
-                    age_coefficient = 0.82
-                elif number_of_month <= 60:
-                    age_coefficient = 0.76
-                else:
-                    age_coefficient = 0.70
-                car_value = car.car_value * age_coefficient
-                print car_value
-                print car.fuel_type
-                # Compute atn value from corrected car_value
-                magic_coeff = 6.0 / 7.0  # Don't ask me why
-                if car.fuel_type == 'electric':
-                    atn = 0.0
-                else:
-                    if car.fuel_type in ['diesel', 'hybrid']:
-                        reference = 87.0
-                    else:
-                        reference = 105.0
+            car.atn = car._get_car_atn(car.acquisition_date, car.car_value, car.fuel_type, car.co2)
 
-                    if car.co2 <= reference:
-                        atn = car_value * max(0.04, (0.055 - 0.001 * (reference - car.co2))) * magic_coeff
-                    else:
-                        atn = car_value * min(0.18, (0.055 + 0.001 * (car.co2 - reference))) * magic_coeff
-                car.atn = max(1280, atn) / 12.0
+    def _get_car_atn(self, acquisition_date, car_value, fuel_type, co2):
+        # Compute the correction coefficient from the age of the car
+        now = Datetime.from_string(Datetime.now())
+        start = Datetime.from_string(acquisition_date)
+        if start:
+            number_of_month = (now.year - start.year) * 12.0 + now.month - start.month + int(bool(now.day - start.day + 1))
+            print number_of_month
+            if number_of_month <= 12:
+                age_coefficient = 1.00
+            elif number_of_month <= 24:
+                age_coefficient = 0.94
+            elif number_of_month <= 36:
+                age_coefficient = 0.88
+            elif number_of_month <= 48:
+                age_coefficient = 0.82
+            elif number_of_month <= 60:
+                age_coefficient = 0.76
+            else:
+                age_coefficient = 0.70
+            car_value = car_value * age_coefficient
+            # Compute atn value from corrected car_value
+            magic_coeff = 6.0 / 7.0  # Don't ask me why
+            if fuel_type == 'electric':
+                atn = 0.0
+            else:
+                if fuel_type in ['diesel', 'hybrid']:
+                    reference = 87.0
+                else:
+                    reference = 105.0
+
+                if co2 <= reference:
+                    atn = car_value * max(0.04, (0.055 - 0.001 * (reference - co2))) * magic_coeff
+                else:
+                    atn = car_value * min(0.18, (0.055 + 0.001 * (co2 - reference))) * magic_coeff
+            return max(1280, atn) / 12.0
+
 
 class FleetVehicleLogContract(models.Model):
     _inherit = 'fleet.vehicle.log.contract'
@@ -89,7 +91,9 @@ class FleetVehicleLogContract(models.Model):
 class FleetVehicleModel(models.Model):
     _inherit = 'fleet.vehicle.model'
 
-    default_recurring_cost_amount_depreciated = fields.Float(string="Default Recurring Cost Amount (depreciated)",
+    default_recurring_cost_amount_depreciated = fields.Float(string="Default recurring cost amount (depreciated)",
         help="Default recurring cost amount that should be applied to a new car from this model")
     default_co2 = fields.Float(string="Default CO2 emissions")
+    default_fuel_type = fields.Selection([('gasoline', 'Gasoline'), ('diesel', 'Diesel'), ('electric', 'Electric'), ('hybrid', 'Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle')
+    default_car_value = fields.Float(string="Default car value")
     can_be_requested = fields.Boolean(string="Can be requested", help="Can be requested on a contract as a new car")
