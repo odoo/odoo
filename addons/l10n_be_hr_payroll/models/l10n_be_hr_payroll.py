@@ -43,7 +43,7 @@ class HrContract(models.Model):
     structural_reductions = fields.Float(compute='_compute_structural_reductions', string='Structural Reductions')
     social_security_contributions = fields.Float(compute='_compute_social_security_contributions', string="Social Security Contributions")
     yearly_cost_before_charges = fields.Float(compute='_compute_yearly_cost_before_charges', string="Yearly Costs Before Charges")
-    meal_voucher_paid_by_employer = fields.Float(compute_='_compute_meal_voucher_paid_by_employer', string="Meal Voucher Paid by Employer")
+    meal_voucher_paid_by_employer = fields.Float(compute='_compute_meal_voucher_paid_by_employer', string="Meal Voucher Paid by Employer")
     company_car_total_depreciated_cost = fields.Float(related='car_id.total_depreciated_cost')
 
     @api.depends('name')
@@ -53,7 +53,6 @@ class HrContract(models.Model):
 
     @api.depends('wage', 'advantage_ids', 'company_car_total_depreciated_cost')
     def _compute_yearly_cost_before_charges(self):
-        # import pdb; pdb.set_trace()
         for contract in self:
             contract.yearly_cost_before_charges = 12.0 * (
                 contract.wage * (1.0 + 1.0 / 12.0) +

@@ -30,10 +30,13 @@ class FleetVehicle(models.Model):
             else:
                 car.total_depreciated_cost = car.co2_fee + car.model_id.default_recurring_cost_amount_depreciated
 
+    def _get_co2_fee(self, co2):
+        return max((((co2 * 9.0) - 600.0) * 1.1641) / 12.0, 0.0)
+
     @api.depends('co2')
     def _compute_co2_fee(self):
         for car in self:
-            car.co2_fee = max((((car.co2 * 9.0) - 600.0) * 1.1641) / 12.0, 0.0)
+            car.co2_fee = self._get_co2_fee(car.co2)
 
     @api.depends('fuel_type', 'car_value', 'acquisition_date')
     def _compute_car_atn(self):
@@ -97,3 +100,10 @@ class FleetVehicleModel(models.Model):
     default_fuel_type = fields.Selection([('gasoline', 'Gasoline'), ('diesel', 'Diesel'), ('electric', 'Electric'), ('hybrid', 'Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle')
     default_car_value = fields.Float(string="Default car value")
     can_be_requested = fields.Boolean(string="Can be requested", help="Can be requested on a contract as a new car")
+    default_atn = fields.Float(compute='_compute_atn', string="Default car ATN")
+
+    @api.depends('default_car_value', 'default_co2', 'default_fuel_type')
+    def _compute_atn(self):
+        now = Datetime.from_string(Datetime.now())
+        for model in self:
+            model.default_atn = self.env['fleet.vehicle']._get_car_atn(now, model.default_car_value, model.default_fuel_type, model.default_co2)
