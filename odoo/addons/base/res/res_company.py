@@ -174,7 +174,7 @@ class Company(models.Model):
             address_data = company.partner_id.sudo().address_get(adr_pref=['contact'])
             if address_data['contact']:
                 partner = company.partner_id.browse(address_data['contact']).sudo()
-                company.write(company._get_company_address_fields(partner))
+                company.update(company._get_company_address_fields(partner))
 
     def _inverse_street(self):
         for company in self:
