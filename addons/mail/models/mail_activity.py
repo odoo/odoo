@@ -102,6 +102,20 @@ class MailActivity(models.Model):
                 self.summary = self.activity_type_id.summary
             self.date_deadline = (datetime.now() + timedelta(days=self.activity_type_id.days))
 
+    @api.model
+    def create(self, values):
+        activity = super(MailActivity, self).create(values)
+        self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
+        return activity
+
+    @api.multi
+    def write(self, values):
+        res = super(MailActivity, self).write(values)
+        if values.get('user_id'):
+            for activity in self:
+                self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
+        return res
+
     @api.multi
     def action_done(self):
         message = self.env['mail.message']
