@@ -634,6 +634,7 @@ ListView.include(/** @lends instance.web.ListView# */{
      * @return {*}
      */
     _next: function (next_record, options) {
+        var options = options || {};
         next_record = next_record || 'succ';
         var self = this;
         return this.save_edition().then(function (saveInfo) {
