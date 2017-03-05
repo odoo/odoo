@@ -5,6 +5,7 @@ var core = require('web.core');
 var data = require('web.data');
 var ListView = require('web.ListView');
 var Model = require('web.DataModel');
+var view_registry = require('web.view_registry');
 
 var QWeb = core.qweb;
 
@@ -99,6 +100,7 @@ var QuickAddListView = ListView.extend({
         return self.old_search(compound_domain, self.last_context, self.last_group_by);
     },
 });
-core.view_registry.add('tree_account_move_line_quickadd', QuickAddListView);
+
+view_registry.add('tree_account_move_line_quickadd', QuickAddListView);
 
 });
