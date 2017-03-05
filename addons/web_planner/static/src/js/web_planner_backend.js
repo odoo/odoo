@@ -2,7 +2,6 @@ odoo.define('web.planner', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.Model');
 var SystrayMenu = require('web.SystrayMenu');
 var planner = require('web.planner.common');
 var session = require('web.session');
@@ -14,12 +13,14 @@ var PlannerLauncher = planner.PlannerLauncher.extend({
     },
     _fetch_planner_data: function () {
         var planner_by_menu = this.planner_by_menu = {};
-        return (new Model('web.planner')).query().all().then(function (res) {
-            _.each(res, function (planner) {
-                planner.data = $.parseJSON(planner.data) || {};
-                planner_by_menu[planner.menu_id[0]] = planner;
+        return this.rpc('web.planner', 'search_read')
+            .exec()
+            .then(function (res) {
+                _.each(res.records, function (planner) {
+                    planner.data = $.parseJSON(planner.data) || {};
+                    planner_by_menu[planner.menu_id[0]] = planner;
+                });
             });
-        });
     },
     on_menu_clicked: function (menu_id) {
         if (this.planner_by_menu[menu_id]) {

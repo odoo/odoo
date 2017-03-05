@@ -219,7 +219,10 @@ var Followers = AbstractField.extend({
             partner_ids: [this.partnerID],
             context: {}, // new Context(this.build_context(), {}) // fixme
         };
-        this.performModelRPC(this.model, 'message_subscribe', [[this.res_id]], kwargs)
+        this.rpc(this.model, 'message_subscribe')
+            .args([[this.res_id]])
+            .kwargs(kwargs)
+            .exec()
             .then(this._reload.bind(this));
     },
     /**
@@ -239,7 +242,9 @@ var Followers = AbstractField.extend({
                     ids.channel_ids,
                     {}, // new Context(self.build_context(), {}) // fixme
                 ];
-                self.performModelRPC(self.model, 'message_unsubscribe', args)
+                self.rpc(self.model, 'message_unsubscribe')
+                    .args(args)
+                    .exec()
                     .then(self._reload.bind(self));
                 def.resolve();
             },
@@ -281,7 +286,10 @@ var Followers = AbstractField.extend({
             var kwargs = _.extend({}, ids);
             kwargs.subtype_ids = checklist;
             kwargs.context = {}; // new Context(this.build_context(), {}); // fixme
-            this.performModelRPC(this.model, 'message_subscribe', [[this.res_id]], kwargs)
+            this.rpc(this.model, 'message_subscribe')
+                .args([[this.res_id]])
+                .kwargs(kwargs)
+                .exec()
                 .then(this._reload.bind(this));
         }
     },

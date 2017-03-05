@@ -227,14 +227,14 @@ var FieldMany2One = AbstractRelationalField.extend({
         var self = this;
         var slowCreate = this._searchCreatePopup.bind(this, "form", false, this._createContext(name));
         if (this.nodeOptions.quick_create) {
-            this.performModelRPC(this.field.relation, "name_create", [name]).then(
-                function (result) {
+            this.rpc(this.field.relation, "name_create")
+                .args([name])
+                .exec()
+                .then(function (result) {
                     if (self.mode === "edit") {
                         self.reinitialize({id: result[0], display_name: result[1]});
                     }
-                },
-                slowCreate
-            );
+                }, slowCreate);
         } else {
             slowCreate();
         }

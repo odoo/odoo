@@ -7,7 +7,6 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
 var framework = require('web.framework');
-var Model = require('web.Model');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var utils = require('web.utils');
@@ -18,8 +17,6 @@ var Widget = require('web.Widget');
 var QWeb = core.qweb;
 var _t = core._t;
 
-var ADD = function (id) { return [4, id, false]; },
-    REMOVE = function (id) { return [3, id, false]; };
 /**
  * DebugManager base + general features (applicable to any context)
  */
@@ -66,9 +63,9 @@ var DebugManager = Widget.extend({
         // whether the current user is an administrator
         this._is_admin = session.is_system;
         return $.when(
-            new Model('res.users').call('check_access_rights', {operation: 'write', raise_exception: false}),
+            this.performModelRPC('res.users', 'check_access_rights', {operation: 'write', raise_exception: false}),
             session.user_has_group('base.group_no_one'),
-            new Model('ir.model.data').call('xmlid_to_res_id', {xmlid: 'base.group_no_one'}),
+            this.performModelRPC('ir.model.data', 'xmlid_to_res_id', {xmlid: 'base.group_no_one'}),
             this._super()
         ).then(function (can_write_user, has_group_no_one, group_no_one_id) {
             this._features_group = can_write_user && group_no_one_id;
@@ -164,11 +161,7 @@ var DebugManager = Widget.extend({
             title: _t('Select a view'),
             disable_multiple_selection: true,
             on_selected: function (element_ids) {
-                new Model('ir.ui.view')
-                    .query(['name', 'model', 'type'])
-                    .filter([['id', '=', element_ids[0]]])
-                    .first()
-                    .then(function (view) {
+                self.performModelRPC('ir.ui.view', [[['id', '=', element_ids[0]]], ['name', 'model', 'type']], {limit: 1}).then(function (view) {
                         self.do_action({
                             type: 'ir.actions.act_window',
                             name: view.name,
@@ -226,7 +219,7 @@ DebugManager.include({
     get_view_fields: function () {
         var self = this;
         var model = this._action.res_model;
-        new Model(model).call('fields_get', {
+        this.performModelRPC(model, 'fields_get', [], {
             attributes: ['string', 'searchable', 'required', 'readonly', 'type', 'store', 'sortable', 'relation', 'help']
         }).done(function (fields) {
             new Dialog(self, {
@@ -262,9 +255,7 @@ DebugManager.include({
     },
     translate: function() {
         var model = this._action.res_model;
-        new Model("ir.translation")
-                .call('get_technical_translations', [model])
-                .then(this.do_action);
+        this.performModelRPC("ir.translation", 'get_technical_translations', [model]).then(this.do_action);
     }
 });
 
@@ -278,9 +269,8 @@ DebugManager.include({
         this._can_edit_views = false;
         return $.when(
             this._super(),
-            new Model('ir.ui.view').call(
-                'check_access_rights', {operation: 'write', raise_exception: false}
-            ).then(function (ar) {
+            this.performModelRPC('ir.ui.view', 'check_access_rights', {operation: 'write', raise_exception: false})
+            .then(function (ar) {
                 this._can_edit_views = ar;
             }.bind(this))
         );

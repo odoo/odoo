@@ -1,7 +1,7 @@
 odoo.define('crm.partner_assign', function (require) {
 'use strict';
 
-var Model = require('web.Model');
+var model = require('website.model');
 var website = require('website.website');
 /*
  * This file is intended to add interactivity to survey forms rendered by
@@ -21,8 +21,8 @@ $('.interested_partner_assign_confirm').on('click',function(e){
     var $btn = $(this);
     if ($('.interested_partner_assign_form .comment_interested').val() && $('.interested_partner_assign_form .contacted_interested').prop('checked')){
         $btn.prop('disabled', true);
-        new Model('crm.lead')
-            .call("partner_interested",[[parseInt($('.interested_partner_assign_form .assign_lead_id').val())], $('.interested_partner_assign_form .comment_interested').val()])
+        model.performModelRPC('crm.lead', "partner_interested", 
+                [[parseInt($('.interested_partner_assign_form .assign_lead_id').val())], $('.interested_partner_assign_form .comment_interested').val()])
             .then(function(){
                 window.location.href = '/my/leads';
             })
@@ -39,8 +39,7 @@ $('.interested_partner_assign_confirm').on('click',function(e){
 $('.desinterested_partner_assign_confirm').on('click',function(){
     var $btn = $(this);
     $btn.prop('disabled', true);
-    new Model('crm.lead')
-        .call("partner_desinterested",
+    model.performModelRPC('crm.lead', "partner_desinterested",
             [[parseInt($('.desinterested_partner_assign_form .assign_lead_id').val())],
             $('.desinterested_partner_assign_form .comment_desinterested').val(),
             $('.desinterested_partner_assign_form .contacted_desinterested').prop('checked'),
@@ -57,8 +56,7 @@ $('.desinterested_partner_assign_confirm').on('click',function(){
 opp_stage_buttons.on('click',function(e){
     var $btn = $(this);
     $btn.prop('disabled', true);
-    new Model('crm.lead')
-        .call("write", [[parseInt(e.currentTarget.getAttribute('opp'))],{
+    model.performModelRPC('crm.lead', "write", [[parseInt(e.currentTarget.getAttribute('opp'))],{
             stage_id: parseInt(e.currentTarget.getAttribute('data')),
         },], {context: {website_partner_assign:1}})
         .fail(function() {
@@ -78,8 +76,7 @@ $('.edit_contact_form .country_id').on('change', function(){
 $('.edit_contact_confirm').on('click',function(){
     var $btn = $(this);
     $btn.prop('disabled', true);
-    new Model('crm.lead')
-        .call("write", [[parseInt($('.edit_contact_form .opportunity_id').val())],{
+    model.performModelRPC('crm.lead', "write", [[parseInt($('.edit_contact_form .opportunity_id').val())],{
             partner_name: $('.edit_contact_form .partner_name').val(),
             phone: $('.edit_contact_form .phone').val(),
             mobile: $('.edit_contact_form .mobile').val(),
@@ -103,8 +100,7 @@ $('.edit_contact_confirm').on('click',function(){
 $('.new_opp_confirm').on('click',function(e){
     var $btn = $(this);
     $btn.prop('disabled', true);
-    new Model('crm.lead')
-        .call("create_opp_portal", [{
+    model.performModelRPC('crm.lead', "create_opp_portal", [{
             contact_name: $('.new_opp_form .contact_name').val(),
             title: $('.new_opp_form .title').val(),
             description: $('.new_opp_form .description').val(),
@@ -129,8 +125,7 @@ $('.new_opp_confirm').on('click',function(e){
 $('.edit_opp_confirm').on('click',function(){
     var $btn = $(this);
     $btn.prop('disabled', true);
-    new Model('crm.lead')
-        .call("update_lead_portal", [[parseInt($('.edit_opp_form .opportunity_id').val())],{
+    model.performModelRPC('crm.lead', "update_lead_portal", [[parseInt($('.edit_opp_form .opportunity_id').val())],{
             date_deadline: $('.edit_opp_form .date_deadline').val(),
             planned_revenue: parseFloat($('.edit_opp_form .planned_revenue').val()),
             probability: parseFloat($('.edit_opp_form .probability').val()),

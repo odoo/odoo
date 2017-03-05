@@ -62,7 +62,6 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, mixins.ServicesMixin, {
     className: null,
     attributes: {},
     events: {},
-    custom_events: {},
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -93,7 +92,6 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, mixins.ServicesMixin, {
         }
         // FIXME: this should not be
         this.setElement(this._make_descriptive());
-        this.delegateCustomEvents();
     },
     /**
      * Method called between init and start. Performs asynchronous calls required by start.
@@ -315,15 +313,6 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, mixins.ServicesMixin, {
             }
         }
     },
-    delegateCustomEvents: function () {
-        if (_.isEmpty(this.custom_events)) { return; }
-        for (var key in this.custom_events) {
-            if (!this.custom_events.hasOwnProperty(key)) { continue; }
-
-            var method = this.proxy(this.custom_events[key]);
-            this.on(key, this, method);
-        }
-    },
     undelegateEvents: function () {
         this.$el.off('.widget_events');
     },
@@ -360,35 +349,6 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, mixins.ServicesMixin, {
         } else {
             this.$el.hasClass('o_hidden') ? this.do_show() : this.do_hide();
         }
-    },
-    /**
-     * Proxies a method of the object, in order to keep the right ``this`` on
-     * method invocations.
-     *
-     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
-     * even more so to ``jQuery.proxy`` with a fundamental difference: its
-     * resolution of the method being called is lazy, meaning it will use the
-     * method as it is when the proxy is called, not when the proxy is created.
-     *
-     * Other methods will fix the bound method to what it is when creating the
-     * binding/proxy, which is fine in most javascript code but problematic in
-     * OpenERP Web where developers may want to replace existing callbacks with
-     * theirs.
-     *
-     * The semantics of this precisely replace closing over the method call.
-     *
-     * @param {String|Function} method function or name of the method to invoke
-     * @returns {Function} proxied method
-     */
-    proxy: function (method) {
-        var self = this;
-        return function () {
-            var fn = (typeof method === 'string') ? self[method] : method;
-            if (fn === void 0) {
-                throw new Error("Couldn't find method '" + method + "' in widget " + self);
-            }
-            return fn.apply(self, arguments);
-        };
     },
 });
 

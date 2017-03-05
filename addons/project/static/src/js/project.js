@@ -2,12 +2,7 @@ odoo.define('project.update_kanban', function (require) {
 'use strict';
 
 var core = require('web.core');
-var data = require('web.data');
 var Dialog = require('web.Dialog');
-var Model = require('web.Model');
-var session = require('web.session');
-
-var KanbanView = require('web.KanbanView');
 var KanbanRecord = require('web.KanbanRecord');
 
 var QWeb = core.qweb;
@@ -26,9 +21,12 @@ KanbanRecord.include({
         if (this.modelName === 'project.task' && $(ev.currentTarget).data('type') === 'set_cover') {
             ev.preventDefault();
 
-            new Model('ir.attachment').query(['id', 'name'])
-               .filter([['res_model', '=', 'project.task'], ['res_id', '=', this.id], ['mimetype', 'ilike', 'image']])
-               .all().then(open_cover_images_dialog);
+            var domain = [['res_model', '=', 'project.task'], ['res_id', '=', this.id], ['mimetype', 'ilike', 'image']];
+            this.rpc('ir.attachment', 'search_read')
+                .withDomain(domain)
+                .withFields(['id', 'name'])
+                .exec()
+                .then(open_cover_images_dialog);
         } else {
             this._super.apply(this, arguments, ev);
         }

@@ -52,14 +52,18 @@ var AbstractActivityField = AbstractField.extend({
 
     // private
     _markActivityDone: function (id) {
-        return this.performModelRPC('mail.activity', 'action_done', [[id]]);
+        return this.rpc('mail.activity', 'action_done')
+            .args([[id]])
+            .exec();
     },
     _readActivities: function () {
         var self = this;
         var missing_ids = _.difference(this.value.res_ids, _.pluck(this.activities, 'id'));
         var fetch_def;
         if (missing_ids.length) {
-            fetch_def = this.performModelRPC('mail.activity', 'read', [missing_ids]);
+            fetch_def = this.rpc('mail.activity', 'read')
+                .args([missing_ids])
+                .exec();
         }
         return $.when(fetch_def).then(function (results) {
             // filter out activities that are no longer linked to this record
@@ -164,8 +168,9 @@ var Activity = AbstractActivityField.extend({
     _onUnlinkActivity: function (event) {
         event.preventDefault();
         var activity_id = $(event.currentTarget).data('activity-id');
-        return this
-            .performModelRPC('mail.activity', 'unlink', [[activity_id]])
+        return this.rpc('mail.activity', 'unlink')
+            .args([[activity_id]])
+            .exec()
             .then(this._reload.bind(this, {activity: true}));
     },
     _onMarkActivityDone: function (event) {

@@ -2,13 +2,11 @@ odoo.define('web.DataManager', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.DataModel');
 var session = require('web.session');
 var utils = require('web.utils');
 
 return core.Class.extend({
     init: function () {
-        this.Filters = new Model('ir.filters');
         this._init_cache();
     },
 
@@ -128,8 +126,13 @@ return core.Class.extend({
     load_filters: function (dataset, action_id) {
         var key = this._gen_key(dataset.model, action_id);
         if (!this._cache.filters[key]) {
-            this._cache.filters[key] = this.Filters.call('get_filters', [dataset.model, action_id], {
-                context: dataset.get_context(),
+            this._cache.filters[key] = session.rpc('/web/dataset/call_kw/ir.filters/get_filters', {
+                args: [dataset.model, action_id],
+                kwargs: {
+                    context: dataset.get_context(),
+                },
+                model: 'ir.filters',
+                method: 'get_filters',
             }).fail(this._invalidate.bind(this, this._cache.filters, key));
         }
         return this._cache.filters[key];
@@ -143,8 +146,11 @@ return core.Class.extend({
      */
     create_filter: function (filter) {
         var self = this;
-        return this.Filters
-            .call('create_or_replace', [filter])
+        return session.rpc('/web/dataset/call_kw/ir.filters/create_or_replace', {
+                args: [filter],
+                model: 'ir.filters',
+                method: 'create_or_replace',
+            })
             .then(function (filter_id) {
                 var key = [
                     filter.model_id,
@@ -163,8 +169,11 @@ return core.Class.extend({
      */
     delete_filter: function (filter) {
         var self = this;
-        return this.Filters
-            .call('unlink', [filter.id])
+        return session.rpc('/web/dataset/call_kw/ir.filters/unlink', {
+                args: [filter.id],
+                model: 'ir.filters',
+                method: 'unlink',
+            })
             .then(function () {
                 self._cache.filters = {}; // invalidate cache
             });

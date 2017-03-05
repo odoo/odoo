@@ -6,7 +6,6 @@ var ajax = require('web.ajax');
 var Class = require('web.Class');
 var Dialog = require('web.Dialog');
 var mixins = require('web.mixins');
-var Model = require('web.Model');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var website = require('website.website');
@@ -491,7 +490,7 @@ var Configurator = Dialog.extend({
             def.resolve(null);
         } else {
             var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'];
-            var model = new Model(obj.model).call('read', [[obj.id], fields, base.get_context()]).then(function (data) {
+            this.performModelRPC(obj.model, 'read', [[obj.id], fields, base.get_context()]).then(function (data) {
                 if (data.length) {
                     var meta = data[0];
                     meta.model = obj.model;
@@ -510,7 +509,7 @@ var Configurator = Dialog.extend({
         if (!obj) {
             return $.Deferred().reject();
         } else {
-            return new Model(obj.model).call('write', [[obj.id], data, base.get_context()]);
+            return this.performModelRPC(obj.model, 'write', [[obj.id], data, base.get_context()]);
         }
     },
     titleChanged: function () {

@@ -3,7 +3,6 @@ odoo.define('website_blog.new_blog_post', function (require) {
 
 var core = require('web.core');
 var base = require('web_editor.base');
-var Model = require('web.Model');
 var website = require('website.website');
 var contentMenu = require('website.contentMenu');
 
@@ -11,8 +10,7 @@ var _t = core._t;
 
 contentMenu.TopBar.include({
     new_blog_post: function () {
-        var model = new Model('blog.blog');
-        model.call('name_search', [], { context: base.get_context() }).then(function (blog_ids) {
+        this.performModelRPC('blog.blog', 'name_search', [], { context: base.get_context() }).then(function (blog_ids) {
             if (blog_ids.length === 1) {
                 document.location = '/blog/' + blog_ids[0][0] + '/post/new';
             } else if (blog_ids.length > 1) {

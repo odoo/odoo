@@ -7,7 +7,6 @@ odoo.define('point_of_sale.gui', function (require) {
 // it is available to all pos objects trough the '.gui' field.
 
 var core = require('web.core');
-var Model = require('web.DataModel');
 var field_utils = require('web.field_utils');
 var session = require('web.session');
 

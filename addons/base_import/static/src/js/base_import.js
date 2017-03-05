@@ -6,7 +6,6 @@ var core = require('web.core');
 var time = require('web.time');
 var ListView = require('web.ListView');
 var ListController = require('web.ListController');
-var Model = require('web.DataModel');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
@@ -151,7 +150,6 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         this.parent_context = action.params.context || {};
         // import object id
         this.id = null;
-        this.Import = new Model('base_import.import');
         this.session = session;
         action.display_name = _t('Import a File'); // Displayed in the breadcrumbs
         this.do_not_change_match = false;
@@ -178,9 +176,9 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         );
     },
     create_model: function() {
-        return this.Import.call('create', [{
-                'res_model': this.res_model
-            }]);
+        return this.rpc('base_import.import', 'create')
+            .args([{res_model: this.res_model}])
+            .exec();
     },
     renderButtons: function() {
         var self = this;

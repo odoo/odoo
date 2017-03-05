@@ -7,7 +7,6 @@ var utils = require('mail.utils');
 var core = require('web.core');
 var data = require('web.data');
 var dom = require('web.dom');
-var Model = require('web.Model');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
@@ -417,9 +416,6 @@ var BasicComposer = Widget.extend(chat_mixin, {
 
         // Emojis
         this.emoji_container_classname = 'o_composer_emoji';
-
-        this.PartnerModel = new Model('res.partner');
-        this.ChannelModel = new Model('mail.channel');
     },
 
     start: function () {
@@ -665,18 +661,22 @@ var BasicComposer = Widget.extend(chat_mixin, {
 
     // Mention
     mention_fetch_throttled: function (model, method, kwargs) {
+        var self = this;
         // Delays the execution of the RPC to prevent unnecessary RPCs when the user is still typing
         var def = $.Deferred();
         clearTimeout(this.mention_fetch_timer);
         this.mention_fetch_timer = setTimeout(function () {
-            return model.call(method, kwargs).then(function (results) {
-                def.resolve(results);
-            });
+            return self.rpc(model, method)
+                .kwargs(kwargs)
+                .exec()
+                .then(function (results) {
+                    def.resolve(results);
+                });
         }, 200);
         return def;
     },
     mention_fetch_channels: function (search) {
-        return this.mention_fetch_throttled(this.ChannelModel, 'get_mention_suggestions', {
+        return this.mention_fetch_throttled('mail.channel', 'get_mention_suggestions', {
             limit: this.options.mention_fetch_limit,
             search: search,
         }).then(function (suggestions) {
@@ -706,7 +706,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
             });
             if (!suggestions.length && !self.options.mention_partners_restricted) {
                 // no result found among prefetched partners, fetch other suggestions
-                suggestions = self.mention_fetch_throttled(self.PartnerModel, 'get_mention_suggestions', {
+                suggestions = mention_fetch_throttled('res.partner', 'get_mention_suggestions', {
                     limit: limit,
                     search: search,
                 });

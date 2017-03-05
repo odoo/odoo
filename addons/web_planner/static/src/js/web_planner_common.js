@@ -4,7 +4,6 @@ odoo.define('web.planner.common', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
-var Model = require('web.Model');
 var Widget = require('web.Widget');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -67,14 +66,13 @@ var PlannerDialog = Dialog.extend({
      * Fetch the planner's rendered template
      */
     willStart: function() {
-        var def = (new Model('web.planner')).call('render', [
-            this.planner.view_id[0],
-            this.planner.planner_application
-        ], {
-            context: session.user_context
-        }).then((function (template) {
-            this.$template = $(template);
-        }).bind(this));
+        var def = this.rpc('web.planner', 'render')
+            .args([this.planner.view_id[0], this.planner.planner_application])
+            .withContext(session.user_context)
+            .exec()
+            .then((function (template) {
+                this.$template = $(template);
+            }).bind(this));
 
         return $.when(this._super.apply(this, arguments), def);
     },
@@ -353,17 +351,23 @@ var PlannerDialog = Dialog.extend({
         this._save_planner_data();
     },
     _save_planner_data: function() {
-        return (new Model('web.planner')).call('write', [this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}]);
+        return this.rpc('web.planner', 'write')
+            .args([this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}])
+            .exec();
     },
     show_enterprise: function () {
+        var self = this;
         var buttons = [{
             text: _t("Upgrade now"),
             classes: 'btn-primary',
             close: true,
             click: function () {
-                new Model("res.users").call("search_count", [[["share", "=", false]]]).then(function (data) {
-                    window.location = "https://www.odoo.com/odoo-enterprise/upgrade?utm_medium=community_upgrade&num_users=" + data;
-                });
+                self.rpc("res.users", "search_count")
+                    .args([[["share", "=", false]]])
+                    .exec()
+                    .then(function (data) {
+                        window.location = "https://www.odoo.com/odoo-enterprise/upgrade?utm_medium=community_upgrade&num_users=" + data;
+                    });
             },
         }, {
             text: _t("Cancel"),

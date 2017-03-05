@@ -5,7 +5,6 @@ var Context = require('web.Context');
 var core = require('web.core');
 var data = require('web.data');
 var field_utils = require('web.field_utils');
-var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var time = require('web.time');
 var utils = require('web.utils');
@@ -394,7 +393,6 @@ var ManyToOneField = CharField.extend({
     default_operator: {},
     init: function (view_section, field, parent) {
         this._super(view_section, field, parent);
-        this.model = new Model(this.attrs.relation);
         this.searchview = parent;
     },
 
@@ -428,20 +426,23 @@ var ManyToOneField = CharField.extend({
                 args = [];
             }
         }
-        return this.model.call('name_search', [], {
-            name: needle,
-            args: args,
-            limit: 8,
-            context: context
-        }).then(function (results) {
-            if (_.isEmpty(results)) { return null; }
-            return _(results).map(function (result) {
-                return {
-                    label: _.escape(result[1]),
-                    facet: facet_from(self, result)
-                };
+        return this.rpc(this.attrs.relation, 'name_search')
+            .kwargs({
+                name: needle,
+                args: args,
+                limit: 8,
+                context: context
+            })
+            .exec()
+            .then(function (results) {
+                if (_.isEmpty(results)) { return null; }
+                return _(results).map(function (result) {
+                    return {
+                        label: _.escape(result[1]),
+                        facet: facet_from(self, result)
+                    };
+                });
             });
-        });
     },
     facet_for: function (value) {
         var self = this;
@@ -456,10 +457,15 @@ var ManyToOneField = CharField.extend({
             value = value[0];
         }
         var context = pyeval.eval('contexts', [this.searchview.dataset.get_context()]);
-        return this.model.call('name_get', [value], {context: context}).then(function (names) {
-            if (_(names).isEmpty()) { return null; }
-            return facet_from(self, names[0]);
-        });
+
+        return this.rpc(this.attrs.relation, 'name_get')
+            .args([value])
+            .withContext(context)
+            .exec()
+            .then(function (names) {
+                if (_(names).isEmpty()) { return null; }
+                return facet_from(self, names[0]);
+            });
     },
     value_from: function (facetValue) {
         return facetValue.get('label');

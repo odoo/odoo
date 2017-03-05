@@ -4,7 +4,6 @@ odoo.define('web_tour.DebugManager', function (require) {
 var core = require("web.core");
 var DebugManager = require('web.DebugManager');
 var Dialog = require("web.Dialog");
-var Model = require('web.Model');
 
 var tour = require('web_tour.tour');
 
@@ -20,9 +19,12 @@ DebugManager.include({
     consume_tours: function () {
         var active_tours = get_active_tours();
         if (active_tours.length > 0) { // tours might have been consumed meanwhile
-            new Model('web_tour.tour').call('consume', [active_tours]).then(function () {
-                window.location.reload();
-            });
+            this.rpc('web_tour.tour', 'consume')
+                .args([active_tours])
+                .exec()
+                .then(function () {
+                    window.location.reload();
+                });
         }
     },
     start_tour: function() {

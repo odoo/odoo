@@ -7,6 +7,7 @@ var BarcodeEvents = require('barcodes.BarcodeEvents');
 var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
 var KanbanRecord = require('web.KanbanRecord');
 var Dialog = require('web.Dialog');
+var AbstractField = require('web.AbstractField');
 
 var _t = core._t;
 
@@ -22,7 +23,7 @@ KanbanRecord.include({
     },
 });
 
-var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
+var FormViewBarcodeHandler = AbstractField.extend(BarcodeHandlerMixin, {
     init: function(parent, context) {
         this.__quantity_listener = _.bind(this._set_quantity_listener, this);
         BarcodeHandlerMixin.init.apply(this, arguments);

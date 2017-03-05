@@ -4,7 +4,7 @@ odoo.define('website_links.charts', function (require) {
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var website = require('website.website');
-var Model = require('web.Model');
+var model = require('website.model');
 
 var exports = {};
 
@@ -130,7 +130,6 @@ if(!$('.o_website_links_chart').length) {
         // Get the code of the link
         var link_id = $('#link_id').val();
 
-        var clicks = new Model('link.tracker.click');
         var links_domain = ['link_id', '=', parseInt(link_id)];
 
         var total_clicks = function() {
@@ -138,24 +137,24 @@ if(!$('.o_website_links_chart').length) {
         };
 
         var clicks_by_day = function() {
-            return clicks.call('read_group', [[links_domain], ['create_date']],
+            return model.performModelRPC('link.tracker.click', 'read_group', [[links_domain], ['create_date']],
                                {'groupby':'create_date:day'});
         };
 
         var clicks_by_country = function() {
-            return clicks.call('read_group',  [[links_domain], ['country_id']], 
+            return model.performModelRPC('link.tracker.click', 'read_group',  [[links_domain], ['country_id']], 
                                {'groupby':'country_id'});
         };
 
         var last_week_clicks_by_country = function() {
             var interval = moment().subtract(7, 'days').format("YYYY-MM-DD");
-            return clicks.call('read_group', [[links_domain, ['create_date', '>', interval]], ['country_id']],
+            return model.performModelRPC('link.tracker.click', 'read_group', [[links_domain, ['create_date', '>', interval]], ['country_id']],
                                {'groupby':'country_id'});
         };
 
         var last_month_clicks_by_country = function() {
             var interval = moment().subtract(30, 'days').format("YYYY-MM-DD");
-            return clicks.call('read_group', [[links_domain, ['create_date', '>', interval]], ['country_id']],
+            return model.performModelRPC('link.tracker.click', 'read_group', [[links_domain, ['create_date', '>', interval]], ['country_id']],
                                {'groupby':'country_id'});
         };
 

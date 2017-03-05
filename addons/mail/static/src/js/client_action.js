@@ -12,7 +12,6 @@ var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
-var Model = require('web.Model');
 
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
@@ -70,8 +69,10 @@ var PartnerInviteDialog = Dialog.extend({
         var self = this;
         var data = this.$input.select2('data');
         if(data.length >= 1){
-            var ChannelModel = new Model('mail.channel');
-            return ChannelModel.call('channel_invite', [this.channel_id], {partner_ids: _.pluck(data, 'id')})
+            return this.rpc('mail.channel', 'channel_invite')
+                .args([this.channel_id])
+                .kwargs({partner_ids: _.pluck(data, 'id')})
+                .exec()
                 .then(function(){
                     var names = _.escape(_.pluck(data, 'text').join(', '));
                     var notification = _.str.sprintf(_t('You added <b>%s</b> to the conversation.'), names);
@@ -380,18 +381,20 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     do_search_channel: function(search_val){
-        var Channel = new Model("mail.channel");
-        return Channel.call('channel_search_to_join', [search_val]).then(function(result){
-            var values = [];
-            _.each(result, function(channel){
-                var escaped_name = _.escape(channel.name);
-                values.push(_.extend(channel, {
-                    'value': escaped_name,
-                    'label': escaped_name,
-                }));
+        return this.rpc('mail.channel', 'channel_search_to_join')
+            .args([search_val])
+            .exec()
+            .then(function(result){
+                var values = [];
+                _.each(result, function(channel){
+                    var escaped_name = _.escape(channel.name);
+                    values.push(_.extend(channel, {
+                        'value': escaped_name,
+                        'label': escaped_name,
+                    }));
+                });
+                return values;
             });
-            return values;
-        });
     },
 
     set_channel: function (channel) {

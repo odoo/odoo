@@ -3,7 +3,6 @@ odoo.define('web_settings_dashboard', function (require) {
 
 var core = require('web.core');
 var framework = require('web.framework');
-var Model = require('web.Model');
 var PlannerCommon = require('web.planner.common');
 var PlannerDialog = PlannerCommon.PlannerDialog;
 var Widget = require('web.Widget');
@@ -89,8 +88,9 @@ var DashboardInvitations = Widget.extend({
             $target.prop('disabled', true);
             $target.find('i.fa-cog').removeClass('hidden');
             // Try to create user accountst
-            new Model("res.users")
-                .call("web_dashboard_create_users", [user_emails])
+            this.rpc("res.users", "web_dashboard_create_users")
+                .args([user_emails])
+                .exec()
                 .then(function() {
                     self.reload();
                 })
@@ -165,14 +165,16 @@ var DashboardPlanner = Widget.extend({
 
     willStart: function () {
         var self = this;
-        return new Model('web.planner').query().all().then(function(res) {
-            self.planners = res;
-            _.each(self.planners, function(planner) {
-                self.planner_by_menu[planner.menu_id[0]] = planner;
-                self.planner_by_menu[planner.menu_id[0]].data = $.parseJSON(planner.data) || {};
+        return this.rpc('web.planner', 'search_read')
+            .exec()
+            .then(function(res) {
+                self.planners = res.records;
+                _.each(self.planners, function(planner) {
+                    self.planner_by_menu[planner.menu_id[0]] = planner;
+                    self.planner_by_menu[planner.menu_id[0]].data = $.parseJSON(planner.data) || {};
+                });
+                self.set_overall_progress();
             });
-            self.set_overall_progress();
-        });
     },
 
     update_planner_progress: function(){
