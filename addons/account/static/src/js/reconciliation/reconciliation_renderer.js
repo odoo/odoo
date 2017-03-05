@@ -1,0 +1,631 @@
+odoo.define('account.ReconciliationRenderer', function (require) {
+"use strict";
+
+var Widget = require('web.Widget');
+var FieldManagerMixin = require('web.FieldManagerMixin');
+var relational_fields = require('web.relational_fields');
+var basic_fields = require('web.basic_fields');
+var core = require('web.core');
+var time = require('web.time');
+var qweb = core.qweb;
+var _t = core._t;
+
+
+/**
+ * rendering of the bank statement action contains progress bar, title and
+ * auto reconciliation button
+ */
+var StatementRenderer = Widget.extend(FieldManagerMixin, {
+    template: 'reconciliation.statement',
+    events: {
+        'click div:first button.o_automatic_reconciliation': '_onAutoReconciliation',
+        'click div:first h1.statement_name': '_onClickStatementName',
+        'click div:first h1.statement_name_edition button': '_onValidateName',
+        "click *[rel='do_action']": "_onDoAction",
+    },
+    /**
+     * @override
+     */
+    init: function (parent, model, state) {
+        this._super(parent);
+        this.model = model;
+        this._initialState = state;
+    },
+    /**
+     * display iniial state and create the name statement field
+     *
+     * @override
+     */
+    start: function () {
+        this._super();
+        this.time = Date.now();
+        this.$progress = this.$('.progress');
+
+        if (this._initialState.bank_statement_id) {
+            this.handleNameRecord = this.model.makeRecord("account.bank.statement", [{
+                type: 'char',
+                name: 'name',
+                attrs: {string: ""},
+                value: this._initialState.bank_statement_id.display_name
+            }]);
+            this.name = new basic_fields.FieldChar(this,
+                'name', this.model.get(this.handleNameRecord),
+                {mode: 'edit', required: true});
+
+            this.name.appendTo(this.$('.statement_name_edition'));
+            this.$('.statement_name').text(this._initialState.bank_statement_id.display_name);
+        }
+
+        this.$('h1.statement_name').text(this._initialState.title);
+
+        delete this._initialState;
+
+        this.enterHandler = function (e) {
+            if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
+                this.trigger_up('validate_all_balanced');
+            }
+        }.bind(this);
+        $('body').on('keyup', this.enterHandler);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super();
+        $('body').off('keyup', this.enterHandler);
+    },
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+    /**
+     * update the statement rendering
+     *
+     * @param {object} state - statement data
+     * @param {integer} state.valuenow - for the progress bar
+     * @param {integer} state.valuemax - for the progress bar
+     * @param {string} state.title - for the progress bar
+     * @param {[object]} [state.notifications]
+     */
+    update: function (state) {
+        this.$progress.find('.valuenow').text(state.valuenow);
+        this.$progress.find('.valuemax').text(state.valuemax);
+        this.$progress.find('.progress-bar')
+            .attr('aria-valuenow', state.valuenow)
+            .attr('aria-valuemax', state.valuemax)
+            .css('width', (state.valuenow/state.valuemax*100) + '%');
+
+        if (state.valuenow === state.valuemax) {
+            var dt = Date.now()-this.time;
+            var $done = $(qweb.render("reconciliation.done", {
+                'duration': moment(dt).utc().format(time.strftime_to_moment_format(_t.database.parameters.time_format)),
+                'number': state.valuenow,
+                'timePerTransaction': Math.round(dt/1000/state.valuemax)
+            }));
+            $done.appendTo(this.$el.first());
+            this.$('.o_automatic_reconciliation').hide();
+        }
+
+        if (state.notifications) {
+            this._renderNotifications(state.notifications);
+        }
+
+        this.$('h1.statement_name').text(state.title);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    /**
+     * render the notifications
+     *
+     * @param {[object]} notifications
+     */
+    _renderNotifications: function(notifications) {
+        for (var i=0; i<notifications.length; i++) {
+            var $notification = $(qweb.render("reconciliation.notification", {
+                type: notifications[i].type,
+                message: notifications[i].message,
+                details: notifications[i].details,
+            })).hide();
+            $notification.appendTo(this.$(".notification_area")).slideDown(300);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onAutoReconciliation: function () {
+        this.trigger_up('auto_reconciliation');
+    },
+    /**
+     * @private
+     */
+    _onClickStatementName: function () {
+        this.$('.statement_name, .statement_name_edition').toggle();
+    },
+    /**
+     * @private
+     */
+    _onValidateName: function () {
+        var name = this.model.get(this.handleNameRecord).data.name;
+        this.trigger_up('change_name', {'data': name});
+        this.$('.statement_name, .statement_name_edition').toggle();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onDoAction: function(e) {
+        e.preventDefault();
+        var name = e.currentTarget.dataset.action_name;
+        var model = e.currentTarget.dataset.model;
+        var ids = e.currentTarget.dataset.ids.split(",").map(Number);
+        this.do_action({
+            name: name,
+            res_model: model,
+            domain: [['id', 'in', ids]],
+            views: [[false, 'list'], [false, 'form']],
+            type: 'ir.actions.act_window',
+            view_type: "list",
+            view_mode: "list"
+        });
+    },
+});
+
+
+/**
+ * rendering of the bank statement line, contains line data, proposition and
+ * view for 'match' and 'create' mode
+ */
+var LineRenderer = Widget.extend(FieldManagerMixin, {
+    template: "reconciliation.line",
+    events: {
+        'click .accounting_view caption .o_buttons button': '_onValidate',
+        'click .accounting_view thead td': '_onTogglePanel',
+        'click .accounting_view tfoot td': '_onShowPanel',
+        'input input.filter': '_onFilterChange',
+        'click .match_controls .fa-chevron-left:not(.disabled)': '_onPrevious',
+        'click .match_controls .fa-chevron-right:not(.disabled)': '_onNext',
+        'click .match .mv_line td': '_onSelectMoveLine',
+        'click .accounting_view tbody .mv_line td': '_onSelectProposition',
+        'click .o_reconcile_models button': '_onQuickCreateProposition',
+        'click .create .add_line': '_onCreateProposition',
+        'click .accounting_view .cell_right .line_info_button': '_onTogglePartialReconcile',
+    },
+    custom_events: _.extend({}, FieldManagerMixin.custom_events, {
+        'field_changed': '_onFieldChanged',
+    }),
+
+    /**
+     * create partner_id field in editable mode
+     *
+     * @override
+     */
+    init: function (parent, model, state) {
+        this._super(parent);
+        FieldManagerMixin.init.call(this);
+
+        this.model = model;
+        this._initialState = state;
+
+        this.fields = {
+            'partner_id' : new relational_fields.FieldMany2One(this,
+                'partner_id',
+                this._makePartnerRecord(state.st_line.partner_id, state.st_line.partner_name),
+                {mode: 'edit'}
+            )
+        };
+    },
+
+    /**
+     * @override
+     */
+    start: function () {
+        this.fields.partner_id.appendTo(this.$('.accounting_view caption'));
+        this.$('thead .line_info_button').attr("data-content", qweb.render('reconciliation.line.statement_line.details', {'state': this._initialState}));
+        this.$el.popover({
+            'selector': '.line_info_button',
+            'placement': 'left',
+            'container': this.$el,
+            'html': true,
+            'trigger': 'hover',
+            'animation': false,
+            'toggle': 'popover'
+        });
+        delete this._initialState;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * update the statement line rendering
+     *
+     * @param {object} state - statement line
+     */
+    update: function (state) {
+        // isValid
+        this.$('caption .o_buttons button.o_validate').toggleClass('hidden', !!state.balance.type);
+        this.$('caption .o_buttons button.o_reconcile').toggleClass('hidden', state.balance.type <= 0);
+        this.$('caption .o_buttons .o_no_valid').toggleClass('hidden', state.balance.type >= 0);
+
+        // parnter_id
+        var record = this._makePartnerRecord(state.st_line.partner_id, state.st_line.partner_name);
+        this.fields.partner_id.reset(record);
+        this.$el.attr('data-partner', state.st_line.partner_id);
+
+        // mode
+        this.$('.create, .match').each(function () {
+            var $panel = $(this);
+            $panel.css('-webkit-transition', 'none');
+            $panel.css('-moz-transition', 'none');
+            $panel.css('-o-transition', 'none');
+            $panel.css('transition', 'none');
+            $panel.css('max-height', $panel.height());
+            $panel.css('-webkit-transition', '');
+            $panel.css('-moz-transition', '');
+            $panel.css('-o-transition', '');
+            $panel.css('transition', '');
+        });
+        this.$el.data('mode', state.mode).attr('data-mode', state.mode);
+        this.$('.create, .match').each(function () {
+            $(this).removeAttr('style');
+        });
+
+        // reconciliation_proposition
+        var $props = this.$('.accounting_view tbody').empty();
+        var props = _.filter(state.reconciliation_proposition, {'display': true});
+        _.each(props, function (line) {
+            var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
+            if (!isNaN(line.id)) {
+                $('<span class="line_info_button fa fa-info-circle"/>')
+                    .appendTo($line.find('.cell_info_popover'))
+                    .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
+            }
+
+            if (state.balance.amount < 0 && props.length === 1) {
+                var text = !line.partial_reconcile ?
+                    _t("This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open."):
+                    _t("Undo the partial reconciliation.");
+                $('<span class="do_partial_reconcile_'+(!line.partial_reconcile)+' line_info_button fa fa-exclamation-triangle"/>')
+                    .prependTo($line.find('.cell_right'))
+                    .attr("data-content", text);
+            }
+            $props.append($line);
+        });
+
+        // mv_lines
+        var $mv_lines = this.$('.match table tbody').empty();
+        _.each(state.mv_lines.slice(0,5), function (line) {
+            var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
+            if (!isNaN(line.id)) {
+                $('<span class="line_info_button fa fa-info-circle"/>')
+                    .appendTo($line.find('.cell_info_popover'))
+                    .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
+            }
+            $mv_lines.append($line);
+        });
+        this.$('.match .fa-chevron-right').toggleClass('disabled', state.mv_lines.length <= 5);
+        this.$('.match .fa-chevron-left').toggleClass('disabled', !state.offset);
+        this.$('.match').css('max-height', !state.mv_lines.length && !state.filter.length ? '0px' : '');
+
+        // balance
+        this.$('table tfoot').html(qweb.render("reconciliation.line.balance", {'state': state}));
+
+        // create form
+        if (state.createForm) {
+            if (!this.fields.account_id) {
+                this._renderCreate(state);
+            }
+            var data = this.model.get(this.handleCreateRecord).data;
+            this.model.notifyChanges(this.handleCreateRecord, state.createForm);
+            record = this.model.get(this.handleCreateRecord);
+            _.each(this.fields, function (field, fieldName) {
+                if (fieldName === "partner_id") return;
+                if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
+                    field.reset(record);
+                }
+            });
+        }
+        this.$('.create .add_line').toggle(!!state.balance.amount);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {integer} partnerID
+     * @param {string} partnerName
+     * @returns {object} dataPoint
+     */
+    _makePartnerRecord: function (partnerID, partnerName) {
+        var recordID = this.model.makeRecord('account.bank.statement.line', [{
+                relation: 'res.partner',
+                type: 'many2one',
+                name: 'partner_id',
+                value: [partnerID, partnerName]
+        }]);
+        return this.model.get(recordID);
+    },
+
+    /**
+     * create account_id, tax_id, analytic_account_id, label and amount field
+     *
+     * @private
+     * @param {object} state - statement line
+     */
+    _renderCreate: function (state) {
+        this.handleCreateRecord = this.model.makeRecord('account.bank.statement.line', [{
+            relation: 'account.account',
+            type: 'many2one',
+            name: 'account_id',
+        }, {
+            relation: 'account.journal',
+            type: 'many2one',
+            name: 'journal_id',
+        }, {
+            relation: 'account.tax',
+            type: 'many2one',
+            name: 'tax_id',
+        }, {
+            relation: 'account.analytic.account',
+            type: 'many2one',
+            name: 'analytic_account_id',
+        }, {
+            type: 'char',
+            name: 'label',
+            attrs: {string: ""}
+        }, {
+            type: 'float',
+            name: 'amount',
+            attrs: {string: ""},
+        }]);
+        var record = this.model.get(this.handleCreateRecord);
+
+        this.fields.account_id = new relational_fields.FieldMany2One(this,
+            'account_id', record, {mode: 'edit', required: true});
+
+        this.fields.journal_id = new relational_fields.FieldMany2One(this,
+            'journal_id', record, {mode: 'edit', required: true});
+
+        this.fields.tax_id = new relational_fields.FieldMany2One(this,
+            'tax_id', record, {mode: 'edit'});
+
+        this.fields.analytic_account_id = new relational_fields.FieldMany2One(this,
+            'analytic_account_id', record, {mode: 'edit'});
+
+        this.fields.label = new basic_fields.FieldChar(this,
+            'label', record, {mode: 'edit', required: true});
+
+        this.fields.amount = new basic_fields.FieldFloat(this,
+            'amount', record, {mode: 'edit', required: true});
+
+        var $create = $(qweb.render("reconciliation.line.create", {'state': state}));
+        this.fields.account_id.appendTo($create.find('.create_account_id .o_td_field'));
+        this.fields.journal_id.appendTo($create.find('.create_journal_id .o_td_field'));
+        this.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
+        this.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
+        this.fields.label.appendTo($create.find('.create_label .o_td_field'));
+        this.fields.amount.appendTo($create.find('.create_amount .o_td_field'));
+        this.$('.create').append($create);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onFieldChanged: function (event) {
+        event.stopPropagation();
+        var fieldName = event.target.name;
+        if (fieldName === 'partner_id') {
+            var partner_id = event.data.changes.partner_id;
+            this.trigger_up('change_partner', {'data': partner_id});
+        } else {
+            if (event.data.changes.amount && isNaN(event.data.changes.amount)) {
+                return;
+            }
+            this.trigger_up('update_proposition', {'data': event.data.changes});
+        }
+    },
+    /**
+     * @private
+     */
+    _onTogglePanel: function () {
+        var mode = this.$el.data('mode') === 'inactive' ? 'match' : 'inactive';
+        this.trigger_up('change_mode', {'data': mode});
+    },
+    /**
+     * @private
+     */
+    _onShowPanel: function () {
+        var mode = (this.$el.data('mode') === 'inactive' || this.$el.data('mode') === 'match') ? 'create' : 'match';
+        this.trigger_up('change_mode', {'data': mode});
+    },
+    /**
+     * @private
+     */
+    _onFilterChange: function () {
+        this.trigger_up('change_filter', {'data': _.str.strip($(event.target).val())});
+    },
+    /**
+     * @private
+     */
+    _onPrevious: function () {
+        this.trigger_up('change_offset', {'data': -5});
+    },
+    /**
+     * @private
+     */
+    _onNext: function () {
+        this.trigger_up('change_offset', {'data': 5});
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onSelectMoveLine: function (event) {
+        var mv_line_id = $(event.target).closest('.mv_line').data('line-id');
+        this.trigger_up('add_proposition', {'data': mv_line_id});
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onSelectProposition: function (event) {
+        var mv_line_id = $(event.target).closest('.mv_line').data('line-id');
+        this.trigger_up('remove_proposition', {'data': mv_line_id});
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onQuickCreateProposition: function (event) {
+        document.activeElement && document.activeElement.blur();
+        this.trigger_up('quick_create_proposition', {'data': $(event.target).data('reconcile-model-id')});
+    },
+    /**
+     * @private
+     */
+    _onCreateProposition: function () {
+        document.activeElement && document.activeElement.blur();
+        this.trigger_up('create_proposition');
+    },
+    /**
+     * @private
+     */
+    _onValidate: function () {
+        this.trigger_up('validate');
+    },
+    /**
+     * @private
+     */
+    _onTogglePartialReconcile: function (e) {
+        e.stopPropagation();
+        var popover = $(e.target).data('bs.popover');
+        popover && popover.destroy();
+        this.trigger_up('toggle_partial_reconcile');
+    }
+});
+
+
+/**
+ * rendering of the manual reconciliation action contains progress bar, title
+ * and auto reconciliation button
+ */
+var ManualRenderer = StatementRenderer.extend({
+    template: "reconciliation.manual.statement",
+
+    /**
+     * avoid statement name edition
+     *
+     * @override
+     * @private
+     */
+    _onClickStatementName: function () {}
+});
+
+
+/**
+ * rendering of the manual reconciliation, contains line data, proposition and
+ * view for 'match' mode
+ */
+var ManualLineRenderer = LineRenderer.extend({
+    template: "reconciliation.manual.line",
+
+    /**
+     * create partner_id field in readonly mode
+     *
+     * @override
+     */
+    init: function (parent, model, state) {
+        this._super.apply(this, arguments);
+        if (state.partner_id) {
+            this.fields.partner_id = new relational_fields.FieldMany2One(this,
+                'partner_id',
+                this._makePartnerRecord(state.partner_id, state.partner_name),
+                {mode: 'readonly'}
+            );
+        } else {
+            this.fields.title_account_id = new relational_fields.FieldMany2One(this,
+                'account_id',
+                this.model.get(this.model.makeRecord('account.move.line', [{
+                    relation: 'account.account',
+                    type: 'many2one',
+                    name: 'account_id',
+                    value: [state.account_id.id, state.account_id.display_name]
+                }])),
+                {mode: 'readonly'}
+            );
+        }
+    },
+     /**
+     * @override
+     * @param {string} handle
+     * @param {number} proposition id (move line id)
+     * @returns {Deferred}
+     */
+    removeProposition: function (handle, id) {
+        if (!id) {
+            return $.when();
+        }
+        return this._super(handle, id);
+    },
+    /**
+     * move the partner field
+     *
+     * @override
+     */
+    start: function () {
+        this._super();
+        if (!this.fields.title_account_id) {
+            this.fields.partner_id.$el.prependTo(this.$('.accounting_view thead td:eq(1) span:first'));
+        } else {
+            this.fields.partner_id.destroy();
+            this.fields.title_account_id.appendTo(this.$('.accounting_view thead td:eq(1) span:first'));
+        }
+    },
+    /**
+     * @override
+     */
+    update: function (state) {
+        this._super(state);
+        var props = _.filter(state.reconciliation_proposition, {'display': true});
+        if (!props.length) {
+            var $line = $(qweb.render("reconciliation.line.mv_line", {'line': {}, 'state': state}));
+            this.$('.accounting_view tbody').append($line);
+        }
+    },
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+    /**
+     * display journal_id field
+     *
+     * @override
+     */
+    _renderCreate: function (state) {
+        this._super(state);
+        this.$('.create .create_journal_id').show();
+    },
+
+});
+
+
+return {
+    StatementRenderer: StatementRenderer,
+    ManualRenderer: ManualRenderer,
+    LineRenderer: LineRenderer,
+    ManualLineRenderer: ManualLineRenderer,
+};
+});

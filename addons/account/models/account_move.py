@@ -596,7 +596,7 @@ class AccountMoveLine(models.Model):
                 AND NOT a.reconciled AND NOT b.reconciled
                 AND a.account_id = %(account_id)s AND b.account_id = %(account_id)s
                 {partner_id_condition}
-                ORDER BY a.date asc
+                ORDER BY a.date desc
                 LIMIT 10
             """.format(**locals())
         self.env.cr.execute(query, locals())
@@ -615,62 +615,50 @@ class AccountMoveLine(models.Model):
         return []
 
     @api.model
-    def domain_move_lines_for_reconciliation(self, excluded_ids=None, str=False):
-        """ Returns the domain which is common to both manual and bank statement reconciliation.
-
-            :param excluded_ids: list of ids of move lines that should not be fetched
+    def domain_move_lines_for_reconciliation(self, str):
+        """ Returns the domain from the str search
             :param str: search string
         """
-        context = (self._context or {})
-        if excluded_ids is None:
-            excluded_ids = []
-        domain = []
-
-        if excluded_ids:
-            domain = expression.AND([domain, [('id', 'not in', excluded_ids)]])
-        if str:
-            str_domain = [
-                '|', ('move_id.name', 'ilike', str),
-                '|', ('move_id.ref', 'ilike', str),
-                '|', ('date_maturity', 'like', str),
-                '&', ('name', '!=', '/'), ('name', 'ilike', str)
+        if not str:
+            return []
+        str_domain = [
+            '|', ('move_id.name', 'ilike', str),
+            '|', ('move_id.ref', 'ilike', str),
+            '|', ('date_maturity', 'like', str),
+            '&', ('name', '!=', '/'), ('name', 'ilike', str)
+        ]
+        try:
+            amount = float(str)
+            amount_domain = [
+                '|', ('amount_residual', '=', amount),
+                '|', ('amount_residual_currency', '=', amount),
+                '|', ('amount_residual', '=', -amount),
+                '|', ('amount_residual_currency', '=', -amount),
+                '&', ('account_id.internal_type', '=', 'liquidity'),
+                '|', '|', ('debit', '=', amount), ('credit', '=', amount), ('amount_currency', '=', amount),
             ]
-            try:
-                amount = float(str)
-                amount_domain = [
-                    '|', ('amount_residual', '=', amount),
-                    '|', ('amount_residual_currency', '=', amount),
-                    '|', ('amount_residual', '=', -amount),
-                    '|', ('amount_residual_currency', '=', -amount),
-                    '&', ('account_id.internal_type', '=', 'liquidity'),
-                    '|', '|', ('debit', '=', amount), ('credit', '=', amount), ('amount_currency', '=', amount),
-                ]
-                str_domain = expression.OR([str_domain, amount_domain])
-            except:
-                pass
-
-            # When building a domain for the bank statement reconciliation, if there's no partner
-            # and a search string, search also a match in the partner names
-            if 'bank_statement_line' in context and not context['bank_statement_line'].partner_id.id:
-                str_domain = expression.OR([str_domain, [('partner_id.name', 'ilike', str)]])
-
-            domain = expression.AND([domain, str_domain])
-        return domain
+            str_domain = expression.OR([str_domain, amount_domain])
+        except:
+            pass
+        return str_domain
 
     def _domain_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, str=False):
         """ Create domain criteria that are relevant to manual reconciliation. """
         domain = ['&', ('reconciled', '=', False), ('account_id', '=', account_id)]
         if partner_id:
             domain = expression.AND([domain, [('partner_id', '=', partner_id)]])
-        generic_domain = self.domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str)
-
-        return expression.AND([generic_domain, domain])
+        if excluded_ids:
+            domain = expression.AND([[('id', 'not in', excluded_ids)], domain])
+        if str:
+            str_domain = self.domain_move_lines_for_reconciliation(str=str)
+            domain = expression.AND([domain, str_domain])
+        return domain
 
     @api.model
     def get_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, str=False, offset=0, limit=None, target_currency_id=False):
         """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
         domain = self._domain_move_lines_for_manual_reconciliation(account_id, partner_id, excluded_ids, str)
-        lines = self.search(domain, offset=offset, limit=limit, order="date_maturity asc, id asc")
+        lines = self.search(domain, offset=offset, limit=limit, order="date_maturity desc, id desc")
         if target_currency_id:
             target_currency = self.env['res.currency'].browse(target_currency_id)
         else:
@@ -700,13 +688,14 @@ class AccountMoveLine(models.Model):
                 'ref': line.move_id.ref or '',
                 # For reconciliation between statement transactions and already registered payments (eg. checks)
                 # NB : we don't use the 'reconciled' field because the line we're selecting is not the one that gets reconciled
+                'account_id': [line.account_id.id, line.account_id.display_name],
                 'already_paid': line.account_id.internal_type == 'liquidity',
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.internal_type,
                 'date_maturity': line.date_maturity,
                 'date': line.date,
-                'journal_name': line.journal_id.name,
+                'journal_id': [line.journal_id.id, line.journal_id.display_name],
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
                 'currency_id': (line.currency_id and line.amount_currency) and line.currency_id.id or False,
@@ -750,8 +739,9 @@ class AccountMoveLine(models.Model):
                 actual_credit = credit > 0 and -amount or 0.0
                 currency = company_currency
             if line_currency != target_currency:
-                amount_currency_str = formatLang(self.env, abs(actual_debit or actual_credit), currency_obj=line_currency)
-                total_amount_currency_str = formatLang(self.env, total_amount, currency_obj=line_currency)
+                target_currency.compute(total_amount, line_currency)
+                amount_currency_str = formatLang(self.env, target_currency.compute(abs(actual_debit or actual_credit), line_currency), currency_obj=line_currency)
+                total_amount_currency_str = formatLang(self.env, target_currency.compute(total_amount, line_currency), currency_obj=line_currency)
             if currency != target_currency:
                 ctx = context.copy()
                 ctx.update({'date': target_date or line.date})
@@ -781,7 +771,7 @@ class AccountMoveLine(models.Model):
         """
         for datum in data:
             if len(datum['mv_line_ids']) >= 1 or len(datum['mv_line_ids']) + len(datum['new_mv_line_dicts']) >= 2:
-                self.process_reconciliation(datum['mv_line_ids'], datum['new_mv_line_dicts'])
+                self.browse(datum['mv_line_ids']).process_reconciliation(datum['new_mv_line_dicts'])
 
             if datum['type'] == 'partner':
                 partners = self.env['res.partner'].browse(datum['id'])
