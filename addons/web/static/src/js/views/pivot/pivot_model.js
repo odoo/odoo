@@ -82,13 +82,13 @@ var PivotModel = AbstractModel.extend({
         }
 
         return $.when.apply(null, groupbys.map(function (groupBy) {
-            return self.performModelRPC(self.modelName, 'read_group', [], {
-                context: self.data.context,
-                domain: header.domain.length ? header.domain : self.data.domain,
-                fields: _.map(fields, function (field) { return field.split(':')[0]; }),
-                groupby: groupBy,
-                lazy: false,
-            });
+            return self.rpc(self.modelName, 'read_group')
+                .withContext(self.data.context)
+                .withDomain(header.domain.length ? header.domain : self.data.domain)
+                .withFields(_.map(fields, function (field) { return field.split(':')[0]; }))
+                .groupBy(groupBy)
+                .lazy(false)
+                .exec();
         })).then(function () {
             var data = Array.prototype.slice.call(arguments);
             var datapt, attrs, j, l, row, col, cell_value, groupBys;
@@ -513,13 +513,13 @@ var PivotModel = AbstractModel.extend({
         }
 
         return $.when.apply(null, groupBys.map(function (groupBy) {
-            return self.performModelRPC(self.modelName, 'read_group', [], {
-                context: self.data.context,
-                domain: self.data.domain,
-                fields: _.map(fields, function (field) { return field.split(':')[0]; }),
-                groupby: groupBy,
-                lazy: false,
-            });
+            return self.rpc(self.modelName, 'read_group')
+                .withContext(self.data.context)
+                .withDomain(self.data.domain)
+                .withFields(_.map(fields, function (field) { return field.split(':')[0]; }))
+                .groupBy(groupBy)
+                .lazy(false)
+                .exec();
         })).then(function () {
             var data = Array.prototype.slice.call(arguments);
             if (data[0][0].__count === 0) {

@@ -317,12 +317,14 @@ var ModelFieldSelector = Widget.extend({
     _getModelFieldsFromCache: function (model, filters) {
         var def = modelFieldsCache.cacheDefs[model];
         if (!def) {
-            def = modelFieldsCache.cacheDefs[model] = this.performModelRPC(model, "fields_get", [
-                false,
-                ["store", "searchable", "type", "string", "relation", "selection", "related"],
-            ]).then((function (fields) {
-                modelFieldsCache.cache[model] = sortFields(fields);
-            }).bind(this));
+            def = modelFieldsCache.cacheDefs[model] = this.rpc(model, "fields_get")
+                .args([
+                    false,
+                    ["store", "searchable", "type", "string", "relation", "selection", "related"]])
+                .exec()
+                .then((function (fields) {
+                    modelFieldsCache.cache[model] = sortFields(fields);
+                }).bind(this));
         }
         return def.then((function () {
             return _.filter(modelFieldsCache.cache[model], function (f) {

@@ -98,28 +98,30 @@ return BasicModel.extend({
         if (!groupByField || groupByField.type !== 'many2one') {
             return $.Deferred().reject(); // only supported when grouped on m2o
         }
-        return this.performModelRPC(groupByField.relation, 'name_create', [name], {
-            context: parent.context, // todo: combine with view context
-        }).then(function (result) {
-            var newGroup = self._makeDataPoint({
-                modelName: parent.model,
-                context: parent.context,
-                domain: parent.domain.concat([[groupBy,"=",result[0]]]),
-                fields: parent.fields,
-                fieldNames: parent.fieldNames,
-                groupedBy: parent.groupedBy,
-                isOpen: true,
-                limit: parent.limit,
-                openGroupByDefault: true,
-                orderedBy: parent.orderedBy,
-                value: result,
-            });
+        return this.rpc(groupByField.relation, 'name_create')
+            .args([name])
+            .withContext(parent.context) // todo: combine with view context
+            .exec()
+            .then(function (result) {
+                var newGroup = self._makeDataPoint({
+                    modelName: parent.model,
+                    context: parent.context,
+                    domain: parent.domain.concat([[groupBy,"=",result[0]]]),
+                    fields: parent.fields,
+                    fieldNames: parent.fieldNames,
+                    groupedBy: parent.groupedBy,
+                    isOpen: true,
+                    limit: parent.limit,
+                    openGroupByDefault: true,
+                    orderedBy: parent.orderedBy,
+                    value: result,
+                });
 
-            // newGroup.is_open = true;
-            parent.data.push(newGroup.id);
-            parent.count++;
-            return newGroup.id;
-        });
+                // newGroup.is_open = true;
+                parent.data.push(newGroup.id);
+                parent.count++;
+                return newGroup.id;
+            });
     },
 });
 

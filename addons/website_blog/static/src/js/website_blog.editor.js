@@ -1,7 +1,9 @@
 odoo.define('website_blog.new_blog_post', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var core = require('web.core');
+var rpc = require('web.rpc');
 var base = require('web_editor.base');
 var website = require('website.website');
 var contentMenu = require('website.contentMenu');
@@ -10,22 +12,25 @@ var _t = core._t;
 
 contentMenu.TopBar.include({
     new_blog_post: function () {
-        this.performModelRPC('blog.blog', 'name_search', [], { context: base.get_context() }).then(function (blog_ids) {
-            if (blog_ids.length === 1) {
-                document.location = '/blog/' + blog_ids[0][0] + '/post/new';
-            } else if (blog_ids.length > 1) {
-                website.prompt({
-                    id: "editor_new_blog",
-                    window_title: _t("New Blog Post"),
-                    select: "Select Blog",
-                    init: function (field) {
-                        return blog_ids;
-                    },
-                }).then(function (blog_id) {
-                    document.location = '/blog/' + blog_id + '/post/new';
-                });
-            }
-        });
+        rpc.query({model: 'blog.blog', method: 'name_search'})
+            .withContext(base.get_context())
+            .exec({callback: ajax.rpc.bind(ajax)})
+            .then(function (blog_ids) {
+                if (blog_ids.length === 1) {
+                    document.location = '/blog/' + blog_ids[0][0] + '/post/new';
+                } else if (blog_ids.length > 1) {
+                    website.prompt({
+                        id: "editor_new_blog",
+                        window_title: _t("New Blog Post"),
+                        select: "Select Blog",
+                        init: function (field) {
+                            return blog_ids;
+                        },
+                    }).then(function (blog_id) {
+                        document.location = '/blog/' + blog_id + '/post/new';
+                    });
+                }
+            });
     },
 });
 });

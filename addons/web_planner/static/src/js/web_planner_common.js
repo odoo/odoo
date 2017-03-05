@@ -1,12 +1,14 @@
 odoo.define('web.planner.common', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
-var Widget = require('web.Widget');
+var rpc = require('web.rpc');
 var session = require('web.session');
 var utils = require('web.utils');
+var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 
@@ -66,10 +68,10 @@ var PlannerDialog = Dialog.extend({
      * Fetch the planner's rendered template
      */
     willStart: function() {
-        var def = this.rpc('web.planner', 'render')
+        var def = rpc.query({model: 'web.planner', method: 'render'})
             .args([this.planner.view_id[0], this.planner.planner_application])
             .withContext(session.user_context)
-            .exec()
+            .exec({callback: ajax.rpc.bind(ajax)})
             .then((function (template) {
                 this.$template = $(template);
             }).bind(this));
@@ -351,20 +353,19 @@ var PlannerDialog = Dialog.extend({
         this._save_planner_data();
     },
     _save_planner_data: function() {
-        return this.rpc('web.planner', 'write')
+        return rpc.query({model: 'web.planner', method: 'write'})
             .args([this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}])
-            .exec();
+            .exec({callback: ajax.rpc.bind(ajax)});
     },
     show_enterprise: function () {
-        var self = this;
         var buttons = [{
             text: _t("Upgrade now"),
             classes: 'btn-primary',
             close: true,
             click: function () {
-                self.rpc("res.users", "search_count")
+                rpc.query({model: "res.users", method: "search_count"})
                     .args([[["share", "=", false]]])
-                    .exec()
+                    .exec({callback: ajax.rpc.bind(ajax)})
                     .then(function (data) {
                         window.location = "https://www.odoo.com/odoo-enterprise/upgrade?utm_medium=community_upgrade&num_users=" + data;
                     });
@@ -391,6 +392,9 @@ var PlannerLauncher = Widget.extend({
     sequence: 100, // force it to be the left-most item in the systray to prevent flickering as it is not displayed in all apps
     events: {
         "click": "show_dialog"
+    },
+    init: function () {
+        this._super.apply(this, arguments);
     },
     start: function () {
         this.$progress = this.$(".progress");
