@@ -248,6 +248,9 @@ msgid ""
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
 msgstr ""
+"<p><b>Čavrljajte sa suradnicima</b> u stvarnom vremenu koristeći direktne "
+"poruke.</p><p><i>Možda ćete prvo trebati pozvati korisnike iz aplikacije "
+"Postavke.</i></p>"
 
 #. module: mail
 #. openerp-web
@@ -258,6 +261,10 @@ msgid ""
 " notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
+"<p><b>Napišite poruku</b> za članove kanala ovdje.</p> <p>Možete "
+"obavijestiti nekoga sa <i>'@'</i> ili staviti link za drugi kanal sa "
+"<i>'#'</i>. Započnite svoju poruku sa <i>'/'</i> kako biste dobili popis "
+"mogućih naredbi.</p>"
 
 #. module: mail
 #. openerp-web
@@ -912,7 +919,7 @@ msgstr "Mod sastavljanja"
 #: code:addons/mail/static/src/xml/thread.xml:24
 #, python-format
 msgid "Congratulations, your inbox is empty"
-msgstr ""
+msgstr "Čestitamo! Vaš inbox je prazan"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -2376,7 +2383,7 @@ msgstr "Slušatelji"
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Livechat Conversation"
-msgstr ""
+msgstr "Livechat razgovor"
 
 #. module: mail
 #. openerp-web
@@ -2684,6 +2691,8 @@ msgstr "Pretraga poruka"
 #, python-format
 msgid "Messages can be <b>starred</b> to remind you to check back later."
 msgstr ""
+"Poruke se mogu <b>označiti zvjezdicom</b> kako bi Vas podsjetilo ih da "
+"kasnije ponovno pregledate."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_internal
@@ -2902,7 +2911,7 @@ msgstr "Obavijesti sljedbenike"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_notify
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_notify
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "Obavijesti pratitelje dokumenta (samo masovna pošta)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_needaction_counter
@@ -3396,7 +3405,7 @@ msgstr "Trajno obriši ovaj e-mail nakon slanja, radi uštede prostora"
 #: code:addons/mail/static/src/js/client_action.js:128
 #, python-format
 msgid "Permission denied"
-msgstr ""
+msgstr "Dozvola odbijena"
 
 #. module: mail
 #. openerp-web
@@ -4071,7 +4080,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "Tip dokumenta s kojim se može koristiti ovaj predložak"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4139,7 +4148,7 @@ msgstr "Za:"
 #: code:addons/mail/static/src/xml/chatter.xml:20
 #, python-format
 msgid "To: Followers of"
-msgstr ""
+msgstr "Za: Pratitelji od"
 
 #. module: mail
 #. openerp-web
@@ -4213,6 +4222,7 @@ msgstr "UUID"
 #, python-format
 msgid "Unable to send email, please configure the sender's email address."
 msgstr ""
+"E-mail se ne može poslati, molimo postavite e-mail adresu pošiljatelja"
 
 #. module: mail
 #. openerp-web
@@ -4395,7 +4405,7 @@ msgstr "Odjava"
 #: code:addons/mail/static/src/xml/client_action.xml:137
 #, python-format
 msgid "Unsubscribe from channel"
-msgstr ""
+msgstr "Odjavi pretplatu s kanala"
 
 #. module: mail
 #. openerp-web
@@ -4444,7 +4454,7 @@ msgstr "Korisnici"
 #: code:addons/mail/models/mail_channel.py:676
 #, python-format
 msgid "Users in this channel: %s %s and you."
-msgstr ""
+msgstr "Korisnici na ovom kanalu: %s %s i Vi."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:672
@@ -4529,7 +4539,7 @@ msgstr "Vi ste u privatnom razgovoru sa <b>@%s</b>."
 #: code:addons/mail/models/mail_channel.py:637
 #, python-format
 msgid "You are in channel <b>#%s</b>."
-msgstr ""
+msgstr "Vi ste u kanalu <b>#%s</b>."
 
 #. module: mail
 #. openerp-web
@@ -4538,6 +4548,8 @@ msgstr ""
 msgid ""
 "You can mark any message as 'starred', and it shows up in this channel."
 msgstr ""
+"Možete označiti bilo koju poruku zvjezdicom i one će se pojaviti u ovom "
+"kanalu."
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:45
@@ -4682,7 +4694,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been"
-msgstr ""
+msgstr "je bio"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -4715,13 +4727,13 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:943
 #, python-format
 msgid "model %s does not accept document creation"
-msgstr ""
+msgstr "model %s ne prihvaća kreiranje dokumenta"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:938
 #, python-format
 msgid "model %s does not accept document update"
-msgstr ""
+msgstr "model %s ne prihvaća promjenu dokumenta"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:931

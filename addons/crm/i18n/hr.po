@@ -147,6 +147,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>Poštovani ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Prilika <strong>${object.name}</strong> nije imala nijednu aktivnost najmanje 5 dana.</p>\n"
+"%if object.description:\n"
+"<p>Ovdje je opis prilike: </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Hvala Vam!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -234,6 +241,12 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"<p>Poštovani ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Prilika <strong>${object.name}</strong> nije imala nijednu aktivnost najmanje 5 dana.</p>\n"
+"%if object.description:\n"
+"<p>Ovdje je opis prilike: </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Hvala Vam!</p>\n"
 
 #. module: crm
 #. openerp-web
@@ -245,6 +258,10 @@ msgid ""
 "after</li><li>second call 3 days after, ...</li></ol><p "
 "class='mb0'><i>Select a standard activity for now on.</i></p>"
 msgstr ""
+"<p>Moći ćete prilagoditi svoje sljedeće aktivnosti. "
+"Primjeri:</p><ol><li>uvodni e-mail</li><li>poziv nakon 10 dana</li><li>drugi"
+" poziv nakon 3 dana, ...</li></ol><p class='mb0'><i>Odaberite standardnu "
+"aktivnost za sada.</i></p>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2795,6 +2812,8 @@ msgstr "Sastanak zakazan u '%s' <br> Naslov: %s <br> Duration: %s hour(s)"
 #, python-format
 msgid "Meeting with a demo. Set Fields: expected revenue, closing date"
 msgstr ""
+"Prezentacija demo rješenja. Postavite polja: očekivani prihod, datum "
+"završetka"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -3399,7 +3418,7 @@ msgstr "Vlasnik"
 #: code:addons/crm/static/src/js/web_planner_crm.js:28
 #, python-format
 msgid "POC Sold"
-msgstr ""
+msgstr "POC prodan"
 
 #. module: crm
 #. openerp-web
