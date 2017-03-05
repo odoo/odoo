@@ -1,13 +1,13 @@
 odoo.define('hr_timesheet_sheet.sheet', function (require) {
 "use strict";
 
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var data = require('web.data');
-var form_common = require('web.form_common');
+var form_common = require('web.view_dialogs');
 var formats = require('web.formats');
 var Model = require('web.DataModel');
 var time = require('web.time');
-var utils = require('web.utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -38,8 +38,8 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
             this.set({"user_id": this.field_manager.get_field_value("user_id")});
         });
         this.on("change:sheets", this, this.update_sheets);
-        this.res_o2m_drop = new utils.DropMisordered();
-        this.render_drop = new utils.DropMisordered();
+        this.res_o2m_drop = new concurrency.DropMisordered();
+        this.render_drop = new concurrency.DropMisordered();
         this.description_line = _t("/");
     },
     go_to: function(event) {

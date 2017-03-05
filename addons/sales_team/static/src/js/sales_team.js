@@ -1,8 +1,8 @@
 odoo.define('sales_team.update_kanban', function (require) {
 "use strict";
 
-var KanbanView = require('web_kanban.KanbanView');
-var KanbanRecord = require('web_kanban.Record');
+var KanbanView = require('web.KanbanView');
+var KanbanRecord = require('web.KanbanRecord');
 var data = require('web.data');
 var session = require('web.session');
 

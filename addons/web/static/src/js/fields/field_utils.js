@@ -1,0 +1,240 @@
+odoo.define('web.field_utils', function (require) {
+"use strict";
+
+/**
+ * Field Utils
+ *
+ * This file contains two types of functions: formatting functions and parsing
+ * functions.
+ *
+ * Each field type has to display in string form at some point, but it should be
+ * stored in memory with the actual value.  For example, a float value of 0.5 is
+ * represented as the string "0.5".
+ */
+
+var core = require('web.core');
+var session = require('web.session');
+var time = require('web.time');
+var utils = require('web.utils');
+
+function format_boolean(value) {
+    var $input = $('<input type="checkbox">')
+                .prop('checked', value)
+                .prop('disabled', true);
+    return $('<div>')
+                .addClass('o_checkbox')
+                .append($input)
+                .append($('<span>'));
+}
+
+function format_char(value) {
+    return typeof value === 'string' ? value : '';
+}
+
+function format_date(value) {
+    var l10n = core._t.database.parameters;
+    var date_format = time.strftime_to_moment_format(l10n.date_format);
+    return value && moment(time.str_to_date(value)).format(date_format);
+}
+
+function format_datetime(value) {
+    var l10n = core._t.database.parameters;
+    var date_format = time.strftime_to_moment_format(l10n.date_format);
+    var time_format = time.strftime_to_moment_format(l10n.time_format);
+    var datetime_format = date_format + ' ' + time_format;
+    return value && moment(time.str_to_datetime(value)).format(datetime_format);
+}
+
+// Format a float, according to the local settings
+// Params:
+// * value: a number describing the raw value of the float
+// * field [optional]: a description of a field, that may contains extra
+//   information, such as a given precision
+function format_float(value, field) {
+    var l10n = core._t.database.parameters;
+    var precision = (field && field.digits) ? field.digits[1] : 2;
+    var formatted = _.str.sprintf('%.' + precision + 'f', value || 0).split('.');
+    formatted[0] = utils.insert_thousand_seps(formatted[0]);
+    return formatted.join(l10n.decimal_point);
+}
+
+function format_float_time(value) {
+    var pattern = '%02d:%02d';
+    if (value < 0) {
+        value = Math.abs(value);
+        pattern = '-' + pattern;
+    }
+    var hour = Math.floor(value);
+    var min = Math.round((value % 1) * 60);
+    if (min === 60){
+        min = 0;
+        hour = hour + 1;
+    }
+    return _.str.sprintf(pattern, hour, min);
+}
+
+
+function format_id(value) {
+    return value ? value.toString() : false;
+}
+
+function format_integer(value) {
+    if (!value && value !== 0) {
+        // previously, it returned 'false'. I don't know why.  But for the Pivot
+        // view, I want to display the concept of 'no value' with an empty
+        // string.
+        return "";
+    }
+    return utils.insert_thousand_seps(_.str.sprintf('%d', value));
+}
+
+function format_many2one(value) {
+    return value && (_.isArray(value) ? value[1] : value.data.display_name) || '';
+}
+
+function format_many2many(value) {
+    var names = _.map(value.data, function(p) {
+        return p.data.display_name;
+    });
+    return names.join(', ');
+}
+
+function format_monetary(value, field, options) {
+    options = options || {};
+    var currency_id = options.currency_id;
+    if (!currency_id && options.data) {
+        var currency_field = options.currency_field || field.currency_field || 'currency_id';
+        currency_id = options.data[currency_field] && options.data[currency_field].res_id;
+    }
+    var currency = session.get_currency(currency_id);
+
+    var digits_precision = (currency && currency.digits) || [69,2];
+    var precision = digits_precision[1];
+    var formatted = _.str.sprintf('%.' + precision + 'f', value || 0).split('.');
+    formatted[0] = utils.insert_thousand_seps(formatted[0]);
+    var l10n = core._t.database.parameters;
+    var formatted_value = formatted.join(l10n.decimal_point);
+
+    if (!currency) {
+        return formatted_value;
+    }
+    if (currency.position === "after") {
+        return formatted_value += '&nbsp;' + currency.symbol;
+    } else {
+        return currency.symbol + '&nbsp;' + formatted_value;
+    }
+}
+
+function format_field(value, field, options) {
+    var formatter = result['format_' + field.type];
+    return formatter(value, field, options);
+}
+
+function format_selection(value, field) {
+    if (!value) {
+        return '';
+    }
+    var val = _.find(field.selection, function(option) {
+        return option[0] === value;
+    });
+    return val[1];
+}
+
+function parse_field(value, field) {
+    var parser = result['parse_' + field.type];
+    return parser(value, field);
+}
+
+
+function parse_float(value) {
+    value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
+    value = value.replace(core._t.database.parameters.decimal_point, '.');
+    var parsed = Number(value);
+    if (isNaN(parsed)) {
+        throw new Error(_.str.sprintf(core._t("'%s' is not a correct float"), value));
+    }
+    return parsed;
+}
+
+function parse_float_time(value) {
+    var factor = 1;
+    if (value[0] === '-') {
+        value = value.slice(1);
+        factor = -1;
+    }
+    var float_time_pair = value.split(":");
+    if (float_time_pair.length !== 2)
+        return factor * parse_float(value);
+    var hours = parse_integer(float_time_pair[0]);
+    var minutes = parse_integer(float_time_pair[1]);
+    return factor * (hours + (minutes / 60));
+}
+
+function parse_integer(value) {
+    value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
+    var parsed = Number(value);
+    // do not accept not numbers or float values
+    if (isNaN(parsed) || parsed % 1) {
+        throw new Error(_.str.sprintf(core._t("'%s' is not a correct integer"), value));
+    }
+    return parsed;
+}
+
+function parse_monetary(formatted_value) {
+    var l10n = core._t.database.parameters;
+    var value = formatted_value.replace(l10n.thousands_sep, '')
+        .replace(l10n.decimal_point, '.')
+        .match(/([0-9]+(\.[0-9]*)?)/)[1];
+    return parseFloat(value);
+}
+
+function identity(value) {
+    return value;
+}
+
+var result = {
+    format_binary: identity, // todo
+    format_boolean: format_boolean,
+    format_char: format_char,
+    format_date: format_date,
+    format_datetime: format_datetime,
+    format_float: format_float,
+    format_float_time: format_float_time,
+    format_html: identity, // todo
+    format_id: format_id,
+    format_integer: format_integer,
+    format_many2many: format_many2many,
+    format_many2one: format_many2one,
+    format_monetary: format_monetary,
+    format_one2many: identity, // todo
+    format_reference: identity, // todo
+    format_selection: format_selection,
+    format_text: format_char,
+
+    format_field: format_field,
+
+    parse_binary: identity, // todo
+    parse_boolean: identity, // todo
+    parse_char: identity, // todo
+    parse_date: identity, // todo
+    parse_datetime: identity, // todo
+    parse_float: parse_float,
+    parse_float_time: parse_float_time,
+    parse_html: identity, // todo
+    parse_id: identity,
+    parse_integer: parse_integer,
+    parse_many2many: identity, // todo
+    parse_many2one: identity,
+    parse_monetary: parse_monetary,
+    parse_one2many: identity,
+    parse_reference: identity, // todo
+    parse_selection: identity, // todo
+    parse_text: identity, // todo
+
+    parse_field: parse_field,
+
+};
+
+return result;
+
+});

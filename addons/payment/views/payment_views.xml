@@ -146,7 +146,7 @@
                                 </div>
                                 <div class="o_payment_acquirer_bottom">
                                     <t t-if="installed">
-                                        <field name="environment" widget="kanban_label_selection" options="{'classes': {'test': 'warning', 'production': 'success'}}"/>
+                                        <field name="environment" widget="label_selection" options="{'classes': {'test': 'warning', 'production': 'success'}}"/>
                                     </t>
                                     <button t-if="!installed" type="object" class="btn btn-default pull-right btn-sm" name="button_immediate_install">Install</button>
                                     <button t-if="installed" type="edit" class="btn btn-primary pull-right btn-sm">Configure</button>

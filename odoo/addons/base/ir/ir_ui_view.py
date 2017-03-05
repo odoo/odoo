@@ -793,9 +793,12 @@ actual arch.
             in_tree_view = node.tag == 'tree'
 
         elif node.tag == 'calendar':
-            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day', 'attendee'):
+            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day'):
                 if node.get(additional_field):
-                    fields[node.get(additional_field)] = {}
+                    fields[node.get(additional_field).split('.', 1)[0]] = {}
+            for f in node:
+                if f.tag == 'filter':
+                    fields[f.get('name')] = {}
 
         if not self._apply_group(model, node, modifiers, fields):
             # node must be removed, no need to proceed further with its children

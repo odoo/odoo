@@ -113,10 +113,11 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="date_planned" color="partner_id">
+                <calendar string="Calendar View" date_start="date_planned">
                     <field name="name"/>
                     <field name="amount_total" widget="monetary"/>
                     <field name="partner_id"/>
+                    <filter name="partner_id" color="True" avatar_field="image_small"/>
                 </calendar>
             </field>
         </record>
@@ -373,7 +374,7 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right text-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'done': 'success', 'approved': 'warning'}}"/>
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'done': 'success', 'approved': 'warning'}}"/>
                                         </span>
                                     </div>
                                 </div>

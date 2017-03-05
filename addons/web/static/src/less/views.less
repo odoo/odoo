@@ -66,6 +66,23 @@
     }
 }
 
+.o_status {
+    display: inline-block;
+    height: 12px;
+    width: 12px;
+    border-radius: 6px;
+    vertical-align: middle;
+
+    background-color: @odoo-brand-secondary;
+
+    &.o_status_green {
+        background-color: @brand-success;
+    }
+    &.o_status_red {
+        background-color: @brand-danger;
+    }
+}
+
 // No content helper
 .oe_view_nocontent {
     a {

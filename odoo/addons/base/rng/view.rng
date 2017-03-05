@@ -629,22 +629,16 @@
     <rng:define name="calendar">
         <rng:element name="calendar">
             <rng:optional><rng:attribute name="string" /></rng:optional>
-            <rng:optional><rng:attribute name="color" /></rng:optional>
             <rng:optional><rng:attribute name="date_start" /></rng:optional>
             <rng:optional><rng:attribute name="date_stop" /></rng:optional>
-            <rng:optional><rng:attribute name="day_length" /></rng:optional>
             <rng:optional><rng:attribute name="date_delay" /></rng:optional>
             <rng:optional><rng:attribute name="all_day" /></rng:optional>
-            <rng:optional><rng:attribute name="event_open_popup" /></rng:optional>            
-            <rng:optional><rng:attribute name="attendee" /></rng:optional>
-            <rng:optional><rng:attribute name="color_is_attendee" /></rng:optional>
-            <rng:optional><rng:attribute name="avatar_filter" /></rng:optional>
-            <rng:optional><rng:attribute name="avatar_model" /></rng:optional>
-            <rng:optional><rng:attribute name="avatar_title" /></rng:optional>
-            <rng:optional><rng:attribute name="use_contacts" /></rng:optional>
+            <rng:optional><rng:attribute name="readonly_form_view_id" /></rng:optional>
+            <rng:optional><rng:attribute name="form_view_id" /></rng:optional>
+            <rng:optional><rng:attribute name="event_limit" /></rng:optional>
             <rng:optional><rng:attribute name="quick_add" /></rng:optional>
-            <rng:optional><rng:attribute name="display" /></rng:optional>            
-            <rng:optional><rng:attribute name="type" /></rng:optional>
+            <rng:optional><rng:attribute name="color" /></rng:optional>
+            <rng:optional><rng:attribute name="decoration-highlight" /></rng:optional>
             <rng:optional>
                 <rng:attribute name="mode">
                     <rng:choice>
@@ -654,12 +648,24 @@
                     </rng:choice>
                 </rng:attribute>
             </rng:optional>
-            <rng:oneOrMore>
-                <rng:ref name="field"/>
-            </rng:oneOrMore>
             <rng:zeroOrMore>
-                <rng:ref name="html"/>
+                <rng:ref name="field"/>
             </rng:zeroOrMore>
+            <rng:zeroOrMore>
+                <rng:element name="filter">
+                    <rng:attribute name="name" />
+                    <rng:optional><rng:attribute name="avatar_field" /></rng:optional>
+                    <rng:optional><rng:attribute name="write_model" /></rng:optional>
+                    <rng:optional><rng:attribute name="write_field" /></rng:optional>
+                </rng:element>
+            </rng:zeroOrMore>
+            <rng:optional>
+                <rng:element name="template">
+                    <rng:oneOrMore>
+                        <rng:ref name="any"/>
+                    </rng:oneOrMore>
+                </rng:element>
+            </rng:optional>
         </rng:element>
     </rng:define>
 

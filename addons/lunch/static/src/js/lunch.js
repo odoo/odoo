@@ -2,55 +2,79 @@ odoo.define('lunch.previous_orders', function (require) {
 "use strict";
 
 var core = require('web.core');
-var form_common = require('web.form_common');
-var formats = require('web.formats');
-var Model = require('web.Model');
-
+var field_utils = require('web.field_utils');
+var field_registry = require('web.field_registry');
+var relational_fields = require('web.relational_fields');
 var QWeb = core.qweb;
 
-var LunchPreviousOrdersWidget = form_common.AbstractField.extend({
+var FieldMany2Many = relational_fields.FieldMany2Many;
+
+var LunchPreviousOrdersWidget = FieldMany2Many.extend({
+    className: 'row o_lunch_last_orders',
     events: {
-        'click .o_add_button': 'add_order_line',
+        'click .o_add_button': 'set_order_line',
     },
-    render_value: function() {
-        this.lunch_data = JSON.parse(this.get('value'));
-        if (this.lunch_data !== false) {
-            // Similar to format_value of FieldMonetary
-            _.each(this.lunch_data, function(k, v) {
-                k.price_format = formats.format_value(k.price, {type: "float", digits: k.digits});
-            });
-
-            // Group data by supplier for display
-            var categories = _.groupBy(this.lunch_data, function(p) {
-                return p['supplier'];
-            });
-            this.$el.html(QWeb.render('LunchPreviousOrdersWidgetList', {'categories': categories}));
-        } else {
-            return this.$el.html(QWeb.render('LunchPreviousOrdersWidgetNoOrder'));
-        }
+    init: function() {
+        this._super.apply(this, arguments);
+        this.lunch_data = {};
+        this.fields_to_read = ['product_id', 'supplier', 'note', 'price', 'category_id', 'currency_id'];
+        this.format_value = function (value) {
+            var options = _.extend({}, this.nodeOptions, { data: this.recordData });
+            return field_utils.format_monetary(value, this.field, options);
+        };
     },
-    add_order_line: function(event) {
-        // Get order details from line
-        var line_id = parseInt($(event.currentTarget).data('id'));
-        if (!line_id) {
-            return;
+    get_line_value: function(id) {
+        var data = _.clone(this.lunch_data[id]);
+        if (typeof this.lunch_data[id].product_id[0] !== 'undefined'){
+            data.product_id = this.lunch_data[id].product_id[0];
         }
-        var values = {
-            'product_id': this.lunch_data[line_id].product_id,
-            'note': this.lunch_data[line_id].note,
-            'price': this.lunch_data[line_id].price,
+        if (typeof this.lunch_data[id].supplier[0] !== 'undefined'){
+            data.supplier = this.lunch_data[id].supplier[0];
         }
-
-        // Create new order line and reload view
-        var order_line_ids = this.field_manager.fields.order_line_ids;
-        order_line_ids.data_create(values)
-            .then(function (p) {
-                order_line_ids.reload_current_view();
+        if (typeof this.lunch_data[id].category_id[0] !== 'undefined'){
+            data.category_id = this.lunch_data[id].category_id[0];
+        }
+        return data;
+    },
+    set_order_line: function() {
+        // FIXME: This is the true functionality of this widget in edit mode
+        // var data = this.get_line_value(parseInt($(event.currentTarget).data('id')));
+        // var order_line_ids = this.field_manager.fields.order_line_ids;
+        // order_line_ids.data_create(data);
+        // order_line_ids.reload_current_view();
+    },
+    render: function() {
+        var self = this;
+        // Fetch values
+        // FIXME: this might be replaced when we implement a way for widgets
+        //        to declare which fields they need from the relational data
+        this.trigger_up('perform_model_rpc', {
+            model: 'lunch.order.line',
+            method: 'read',
+            args: [
+                this.value,
+                this.fields_to_read
+            ],
+            on_success: function (orders) {
+                if (_.isEmpty(orders)) {
+                    self.$el.html(QWeb.render("LunchPreviousOrdersWidgetNoOrder"));
+                } else {
+                    _.each(orders, function(order) {
+                        self.lunch_data[order.id] = order;
+                    });
+                    var categories = _.groupBy(orders, function(o){ return o.supplier[1]; });
+                    return self.$el.html(QWeb.render("LunchPreviousOrdersWidgetList", {'widget': self, 'categories': categories}));
+                }
             }
-        );
+        });
+    },
+    has_no_value: function() {
+        return false;
     },
 });
 
-core.form_widget_registry.add('previous_order', LunchPreviousOrdersWidget);
+field_registry.add('previous_order', LunchPreviousOrdersWidget);
+
+return LunchPreviousOrdersWidget;
 
 });

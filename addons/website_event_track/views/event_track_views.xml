@@ -60,9 +60,10 @@
             <field name="model">event.track</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="location_id" date_start="date" date_delay="duration" string="Event Tracks">
+                <calendar date_start="date" date_delay="duration" string="Event Tracks">
                     <field name="name"/>
                     <field name="event_id"/>
+                    <filter name="location_id" color="True"/>
                 </calendar>
             </field>
         </record>

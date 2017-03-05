@@ -1,0 +1,80 @@
+<template>
+    <div t-name="CalendarView" class="o_calendar_container">
+        <div class="o_calendar_view">
+            <div class="o_calendar_buttons"/>
+            <div class="o_calendar_widget" />
+        </div>
+        <div class="o_calendar_sidebar_container hidden-xs">
+            <i class="o_calendar_sidebar_toggler fa"/>
+            <div class="o_calendar_sidebar">
+                <div class="o_calendar_mini"/>
+            </div>
+        </div>
+    </div>
+
+    <t t-name="calendar-box">
+        <t t-set="color" t-value="widget.getColor(event.color_index)"/>
+        <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{record.is_highlighted &amp;&amp; record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
+            <div class="fc-time"/>
+            <div class="o_fields">
+                <t t-foreach="widget.displayFields" t-as="name">
+                    <div t-attf-class="o_field_#{name} o_field_type_#{fields[name].type}">
+                        <t t-if="widget.displayFields[name].avatar_field">
+                            <t t-esc="fields[name].string"/>: <t t-foreach="widget.getAvatars(record, name, widget.displayFields[name].avatar_field).slice(0,5)" t-as="image"><t t-raw="image"/></t>
+                        </t>
+                        <t t-else="">
+                            <t t-esc="format(record, name)"/>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CalendarView.sidebar.filter">
+        <div class="o_calendar_filter">
+            <h3 t-if="widget.title"><t t-esc="widget.title"/></h3>
+            <div class="o_calendar_filter_items">
+                <div t-foreach="widget.filters" t-as="filter" t-if="filter.display == null || filter.display" class="o_calendar_filter_item" t-att-data-value="filter.value" t-att-data-id="filter.id">
+                    <div class="o_checkbox">
+                        <input type="checkbox" name="selection" t-att-checked="(filter.active ? true : undefined)"/><span/>
+                    </div>
+                    <t t-if="filter.value == 'all'">
+                        <span><i class="fa fa-users fa-fw o_cal_avatar"/></span>
+                    </t>
+                    <t t-if="widget.avatar_field &amp;&amp; (filter.value != 'all')">
+                        <img t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field || 'image_small'}" class="o_cal_avatar"/>
+                    </t>
+                    <t t-set="color" t-value="widget.getColor(filter.color_index)"/>
+                    <span t-if="typeof color === 'number'" t-attf-class="color_filter o_underline_color_#{widget.getColor(filter.color_index)}"><t t-esc="filter.label"/></span>
+                    <span t-elif="color" t-attf-style="border-bottom: 4px solid #{color};"><t t-esc="filter.label"/></span>
+                    <span t-else=""><t t-esc="filter.label"/></span>
+                    <t t-if="filter.id">
+                        <span class="o_remove fa fa-times" title="Remove this favorite from the list"/>
+                   </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CalendarView.buttons">
+        <div class="o_calendar_buttons">
+            <button class="o_calendar_button_prev btn btn-sm btn-primary"><span class="fa fa-arrow-left"/></button>
+            <button class="o_calendar_button_today btn btn-sm btn-primary">Today</button>
+            <button class="o_calendar_button_next btn btn-sm btn-primary"><span class="fa fa-arrow-right"/></button>
+
+            <div class="btn-group btn-group-sm">
+                <button type="button" class="o_calendar_button_day btn btn-sm btn-default">Day</button>
+                <button type="button" class="o_calendar_button_week btn btn-sm btn-default">Week</button>
+                <button type="button" class="o_calendar_button_month btn btn-sm btn-default">Month</button>
+            </div>
+        </div>
+    </t>
+
+    <div t-name="CalendarView.quick_create" class="o_calendar_quick_create">
+        <div class="form-group">
+            <label for='name' class='control-label'>Summary:</label>
+            <input type='text' name='name'/>
+        </div>
+    </div>
+</template>

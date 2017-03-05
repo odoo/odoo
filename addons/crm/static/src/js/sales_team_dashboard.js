@@ -1,15 +1,12 @@
 odoo.define('crm.sales_team_dashboard', function (require) {
 "use strict";
 
-var SalesTeamDashboardView = require('sales_team.dashboard');
-var Model = require('web.Model');
+var SalesTeamDashboard = require('sales_team.dashboard');
 
-SalesTeamDashboardView.include({
-
-    fetch_data: function() {
-        return new Model('crm.lead')
-            .call('retrieve_sales_dashboard', []);
-    }
+SalesTeamDashboard.Model.include({
+    _fetchDashboardData: function() {
+        return this.performModelRPC('crm.lead', 'retrieve_sales_dashboard');
+    },
 });
 
 });

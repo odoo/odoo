@@ -3,7 +3,7 @@ odoo.define('web_editor.rte', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
-var utils = require('web.utils');
+var concurrency = require('web.concurrency');
 var Widget = require('web.Widget');
 var summernote = require('web_editor.summernote');
 var base = require('web_editor.base');
@@ -292,7 +292,7 @@ var RTE = Widget.extend({
     start: function () {
         var self = this;
 
-        this.saving_mutex = new utils.Mutex();
+        this.saving_mutex = new concurrency.Mutex();
 
         $.fn.carousel = this.edit_bootstrap_carousel;
 

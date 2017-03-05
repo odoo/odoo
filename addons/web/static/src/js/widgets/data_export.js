@@ -244,9 +244,9 @@ var DataExport = Dialog.extend({
         }).eq(0).change();
         waitFor.push(got_fields);
 
-        waitFor.push(this.getParent().get_active_domain().then(function (domain) {
+        waitFor.push(this.getParent().getActiveDomain().then(function (domain) {
             if (domain === undefined) {
-                self.ids_to_export = self.getParent().get_selected_ids();
+                self.ids_to_export = self.getParent().getSelectedIds();
                 self.domain = self.dataset.domain;
             } else {
                 self.ids_to_export = false;

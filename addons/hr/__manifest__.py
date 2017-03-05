@@ -31,7 +31,7 @@ You can manage:
         'base_setup',
         'mail',
         'resource',
-        'web_kanban',
+        'web',
     ],
     'data': [
         'security/hr_security.xml',

@@ -1,9 +1,10 @@
 odoo.define('barcodes.FieldFloatScannable', function(require) {
 "use strict";
 
-var core = require('web.core');
-var formats = require('web.formats');
-var form_widgets = require('web.form_widgets');
+return;
+
+var AbstractField = require('web.AbstractField');
+var field_registry = require('web.field_registry');
 
 // Field in which the user can both type normally and scan barcodes
 
@@ -52,7 +53,7 @@ var FieldFloatScannable = form_widgets.FieldFloat.extend({
 core.form_widget_registry.add('field_float_scannable', FieldFloatScannable);
 
 return {
-    FieldFloatScannable: FieldFloatScannable,
+    FieldFloatScannable: AbstractField,
 };
 
 });

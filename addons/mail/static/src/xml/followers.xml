@@ -48,7 +48,7 @@
                t-att-data-follower-id="record.id"
                t-att-data-oe-id="record.res_id"
                t-att-data-oe-model="record.res_model"/>
-            <i t-if="widget.view_is_editable" class="fa fa-remove o_remove_follower"
+            <i t-if="widget.isEditable" class="fa fa-remove o_remove_follower"
                title="Remove this follower"/>
         </li>
     </t>
@@ -57,7 +57,7 @@
         'Add followers' and 'Add channels' buttons
     -->
     <t t-name="mail.Followers.add_more">
-        <t t-if="widget.view_is_editable">
+        <t t-if="widget.isEditable">
             <li class="o_add_follower">
                 <a href="#"> Add Followers </a>
             </li>

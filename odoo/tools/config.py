@@ -111,7 +111,7 @@ class configmanager(object):
         group.add_option("--addons-path", dest="addons_path",
                          help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
-        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='web,web_kanban')
+        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='web')
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
                          help="Directory where to store Odoo data")
@@ -374,7 +374,7 @@ class configmanager(object):
             self.options['pidfile'] = False
         # and the server_wide_modules
         if self.options['server_wide_modules'] in ('', 'None', 'False'):
-            self.options['server_wide_modules'] = 'web,web_kanban'
+            self.options['server_wide_modules'] = 'web'
 
         # if defined dont take the configfile value even if the defined value is None
         keys = ['xmlrpc_interface', 'xmlrpc_port', 'longpolling_port',

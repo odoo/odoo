@@ -2,16 +2,15 @@ odoo.define('barcodes.FormViewBarcodeHandler', function(require) {
 "use strict";
 
 var core = require('web.core');
-var utils = require('web.utils');
-var common = require('web.form_common');
+var concurrency = require('web.concurrency');
 var BarcodeEvents = require('barcodes.BarcodeEvents');
 var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
-var KanbanRecord = require('web_kanban.Record');
+var KanbanRecord = require('web.KanbanRecord');
 var Dialog = require('web.Dialog');
 
 var _t = core._t;
 
-// web_kanban.Record and web.list_common.Record do not implement the
+// web.KanbanRecord and web.list_common.Record do not implement the
 // same interface and are thus inherently incompatible with each
 // other. Luckily barcodes keeps things pretty simple when it comes to
 // the records it wants to use. So if we give the KanbanRecord a get()
@@ -28,7 +27,7 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
         this.__quantity_listener = _.bind(this._set_quantity_listener, this);
         BarcodeHandlerMixin.init.apply(this, arguments);
 
-        this.process_barcode_mutex = new utils.Mutex();
+        this.process_barcode_mutex = new concurrency.Mutex();
 
         return this._super.apply(this, arguments);
     },
@@ -165,7 +164,7 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
                 // before setting the barcode field with the received barcode, we commit
                 // every fields of the form view and we wait for their hypothetical ongoing
                 // onchanges to finish
-                var commit_mutex = new utils.Mutex();
+                var commit_mutex = new concurrency.Mutex();
                 _.each(self.form_view.fields, function (field) {
                     commit_mutex.exec(function () {
                         return field.commit_value();

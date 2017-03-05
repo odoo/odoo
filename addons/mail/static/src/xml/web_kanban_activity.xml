@@ -4,7 +4,7 @@
 <t t-name="mail.KanbanActivity">
     <div class="o_kanban_inline_block dropdown o_kanban_selection o_mail_activity">
         <a class="dropdown-toggle o_activity_btn" data-toggle="dropdown">
-            <span t-attf-class="fa o_activity_color_#{widget.activity_state or 'default'} fa-chevron-circle-right fa-lg"/>
+            <span class="fa fa-chevron-circle-right fa-lg"/>
         </a>
         <ul class="dropdown-menu o_activity" role="menu">
         </ul>
@@ -27,7 +27,7 @@
                 <t t-set="logs" t-value="records[key]" />
                 <li class="o_activity_label">
                     <strong t-attf-class="o_activity_color_#{key}">
-                        <t t-esc="selection[key]" /> (<span t-esc="logs.length" />)
+                        <t t-esc="selection[key]" /> (<t t-esc="logs.length"/>)
                     </strong>
                 </li>
                 <li t-foreach="logs" t-as="log" t-att-data-activity-id="log.id" class="o_schedule_activity">

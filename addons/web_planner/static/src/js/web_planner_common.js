@@ -3,7 +3,7 @@ odoo.define('web.planner.common', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var dom_utils = require('web.dom_utils');
+var dom = require('web.dom');
 var Model = require('web.Model');
 var Widget = require('web.Widget');
 var session = require('web.session');
@@ -262,7 +262,7 @@ var PlannerDialog = Dialog.extend({
         this.$el.scrollTop("0");
 
         this.$('textarea').each(function () {
-            dom_utils.autoresize($(this), {parent: self});
+            dom.autoresize($(this), {parent: self});
         });
     },
     // planner data functions

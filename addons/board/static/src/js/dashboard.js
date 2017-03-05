@@ -6,7 +6,7 @@ var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var FavoriteMenu = require('web.FavoriteMenu');
-var form_common = require('web.form_common');
+var form_common = require('web.view_dialogs');
 var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var ViewManager = require('web.ViewManager');
@@ -183,6 +183,8 @@ var DashBoard = form_common.FormWidget.extend({
 
         if (!action) { return; }
 
+        var user_context = this.getSession().user_context;
+        action_attrs.context = _.extend(user_context, action_attrs.context);
         // evaluate action_attrs context and domain
         action_attrs.context_string = action_attrs.context;
         action_attrs.context = pyeval.eval(
@@ -252,7 +254,7 @@ var DashBoard = form_common.FormWidget.extend({
                         action_orig.res_id = id;
                         action_orig.flags = {
                             form: {
-                                "initial_mode": editable ? "edit" : "view",
+                                "initial_mode": editable ? "edit" : "readonly",
                             }
                         };
                         self.do_action(action_orig);
@@ -410,9 +412,8 @@ FavoriteMenu.include({
         }
         this.toggle_dashboard_menu(false);
         c.dashboard_merge_domains_contexts = false;
-        var d = pyeval.eval('domain', domain),
-            board = new Model('board.board'),
-            name = self.$add_dashboard_input.val();
+        var d = pyeval.eval('domain', domain);
+        var name = self.$add_dashboard_input.val();
         
         return self.rpc('/board/add_to_dashboard', {
             action_id: self.action_id || false,

@@ -4,6 +4,7 @@ odoo.define('point_of_sale.models', function (require) {
 var BarcodeParser = require('barcodes.BarcodeParser');
 var PosDB = require('point_of_sale.DB');
 var devices = require('point_of_sale.devices');
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Model = require('web.DataModel');
 var formats = require('web.formats');
@@ -13,7 +14,7 @@ var utils = require('web.utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
-var Mutex = utils.Mutex;
+var Mutex = concurrency.Mutex;
 var round_di = utils.round_decimals;
 var round_pr = utils.round_precision;
 var Backbone = window.Backbone;

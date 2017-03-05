@@ -2,7 +2,7 @@ odoo.define('sale.sales_team_dashboard', function (require) {
 "use strict";
 
 var core = require('web.core');
-var KanbanRecord = require('web_kanban.Record');
+var KanbanRecord = require('web.KanbanRecord');
 var Model = require('web.Model');
 var _t = core._t;
 

@@ -264,13 +264,12 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <calendar string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday"
-                         display="[name]" color="color_partner_id" attendee="partner_ids" avatar_model="res.partner"
-                         use_contacts="True" event_open_popup="%(calendar.view_calendar_event_form_popup)s">
+                readonly_form_view_id="%(calendar.view_calendar_event_form_popup)s" event_limit="3"
+                color="user_id.partner_id">
                 <field name="name"/>
-                <field name="user_id"/>
-                <field name="color_partner_id"/>
-                <field name="partner_ids"/>
-                <field name="is_highlighted"/>
+                <field name="partner_ids" avatar_field="image_small"/>
+                <field name="is_highlighted" invisible="1"/>
+                <filter name="partner_ids" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_small"/>
             </calendar>
         </field>
     </record>

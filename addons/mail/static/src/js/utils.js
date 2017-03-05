@@ -2,19 +2,17 @@ odoo.define('mail.utils', function (require) {
 "use strict";
 
 var bus = require('bus.bus').bus;
-var session = require('web.session');
-var web_client = require('web.web_client');
 
 
-function send_notification(title, content) {
+function send_notification(widget, title, content) {
     if (Notification && Notification.permission === "granted") {
         if (bus.is_master) {
             _send_native_notification(title, content);
         }
     } else {
-        web_client.do_notify(title, content);
+        widget.do_notify(title, content);
         if (bus.is_master) {
-            _beep();
+            _beep(widget);
         }
     }
 }
@@ -34,10 +32,11 @@ var _beep = (function () {
         return function () {};
     }
     var audio;
-    return function () {
+    return function (widget) {
         if (!audio) {
             audio = new Audio();
             var ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
+            var session = widget.getSession();
             audio.src = session.url("/mail/static/src/audio/ting" + ext);
         }
         audio.play();

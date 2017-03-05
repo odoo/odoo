@@ -33,7 +33,7 @@
                 <t t-set="multi_upload" t-value="true"/>
                 <input type="hidden" name="model" value="mail.compose.message"/>
                 <input type="hidden" name="id" value="0"/>
-                <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+                <input type="hidden" name="session_id" t-att-value="widget.getSession().session_id"/>
             </t>
          </span>
          <span t-att-class="widget.emoji_container_classname"></span>

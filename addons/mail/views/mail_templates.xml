@@ -11,14 +11,18 @@
                 <script type="text/javascript" src="/mail/static/src/js/composer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chat_manager.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chatter.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/chatter_composer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/followers.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/form_renderer.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/basic_view.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/thread_field.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/systray.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/window_manager.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/activity.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/web_kanban_activity.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/chat_mixin.js"></script>
 
                 <link rel="stylesheet" href="/mail/static/src/less/announcement.less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/client_action.less" type="text/less"/>
@@ -30,6 +34,12 @@
                 <link rel="stylesheet" href="/mail/static/src/less/thread.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/systray.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/mail_activity.less"/>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite">
+            <xpath expr="//t[@t-set='head']" position="inside">
+                <script type="text/javascript" src="/mail/static/tests/chatter_tests.js"></script>
             </xpath>
         </template>
 

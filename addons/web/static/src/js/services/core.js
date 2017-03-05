@@ -45,7 +45,6 @@ return {
     one2many_view_registry: new Registry(),
     search_filters_registry: new Registry(),
     search_widgets_registry: new Registry(),
-    view_registry: new Registry(),
 
     csrf_token: odoo.csrf_token,
 };

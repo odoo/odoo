@@ -82,9 +82,5 @@ class Job(models.Model):
         return action
 
     @api.multi
-    def action_set_no_of_recruitment(self, value):
-        return self.write({'no_of_recruitment': value})
-
-    @api.multi
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}

@@ -364,7 +364,7 @@ action = model.activate_sample_project()
                                 options='{"terminology": "archive"}'/>
                         </button>
                     </div>
-                    <field name="kanban_state" widget="kanban_state_selection"/>
+                    <field name="kanban_state" widget="state_selection"/>
                     <div class="oe_title">
                         <h1 class="o_row">
                             <field name="priority" widget="priority"/>
@@ -478,7 +478,7 @@ action = model.activate_sample_project()
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left mr4">
                                         <field name="activity_ids" widget="kanban_activity"/>
-                                        <field name="kanban_state" widget="kanban_state_selection" groups="base.group_user"/>
+                                        <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
                                     </div>
                                 </div>
                             </div>
@@ -530,9 +530,10 @@ action = model.activate_sample_project()
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="user_id" date_start="date_deadline" string="Tasks" mode="month">
+                <calendar date_start="date_deadline" string="Tasks" mode="month" color="user_id">
                     <field name="name"/>
-                    <field name="project_id"/>
+                    <filter name="user_id" avatar_field="image_small"/>
+                    <filter name="project_id"/>
                 </calendar>
             </field>
         </record>
@@ -704,11 +705,11 @@ action = model.activate_sample_project()
                                 You can define here labels that will be displayed for the state instead
                                 of the default labels.
                             </p>
-                            <label for="legend_normal" string=" " class="oe_kanban_status oe_project_kanban_legend"/>
+                            <label for="legend_normal" string=" " class="o_status oe_project_kanban_legend"/>
                             <field name="legend_normal" nolabel="1"/>
-                            <label for="legend_blocked" string=" " class="oe_kanban_status oe_kanban_status_red oe_project_kanban_legend"/>
+                            <label for="legend_blocked" string=" " class="o_status o_status_red oe_project_kanban_legend"/>
                             <field name="legend_blocked" nolabel="1"/>
-                            <label for="legend_done" string=" " class="oe_kanban_status oe_kanban_status_green oe_project_kanban_legend"/>
+                            <label for="legend_done" string=" " class="o_status o_status_green oe_project_kanban_legend"/>
                             <field name="legend_done" nolabel="1"/>
 
                             <p class="text-muted" colspan="2">
