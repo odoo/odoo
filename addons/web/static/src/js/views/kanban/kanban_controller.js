@@ -300,26 +300,28 @@ var KanbanController = BasicController.extend({
         }
         data.context['default_' + data.groupedBy[0]] = column.id;
 
-        this.performModelRPC(data.model, "name_create", [event.data.value], {
-            context: data.context,
-        }).then(
-            add_record,
-            function (event) {
-                event.preventDefault();
-                var popup = new form_common.SelectCreatePopup(this);
-                popup.select_element(
-                    data.model,
-                    {
-                        title: _t("Create: "),
-                        initial_view: "form",
-                        disable_multiple_selection: true,
-                    },
-                    [],
-                    { default_name: event.data.value }
-                );
-                popup.on("elements_selected", null, add_record);
-            }
-        );
+        this.rpc(data.model, "name_create")
+            .args([event.data.value])
+            .withContext(data.context)
+            .exec()
+            .then(
+                add_record,
+                function (event) {
+                    event.preventDefault();
+                    var popup = new form_common.SelectCreatePopup(this);
+                    popup.select_element(
+                        data.model,
+                        {
+                            title: _t("Create: "),
+                            initial_view: "form",
+                            disable_multiple_selection: true,
+                        },
+                        [],
+                        { default_name: event.data.value }
+                    );
+                    popup.on("elements_selected", null, add_record);
+                }
+            );
     },
     /**
      * @param {OdooEvent} event

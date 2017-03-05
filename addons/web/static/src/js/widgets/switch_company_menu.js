@@ -18,9 +18,12 @@ var SwitchCompanyMenu = Widget.extend({
         this.$el.on('click', '.dropdown-menu li a[data-menu]', _.debounce(function(ev) {
             ev.preventDefault();
             var company_id = $(ev.currentTarget).data('company-id');
-            self.performModelRPC('res.users', 'write', [[session.uid], {'company_id': company_id}]).then(function() {
-                location.reload();
-            });
+            self.rpc('res.users', 'write')
+                .args([[session.uid], {'company_id': company_id}])
+                .exec()
+                .then(function() {
+                    location.reload();
+                });
         }, 1500, true));
 
         self.$('.oe_topbar_name').text(session.user_companies.current_company[1]);

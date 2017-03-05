@@ -267,68 +267,74 @@ var FieldMany2One = AbstractField.extend({
             domain.push(['id', 'not in', blacklisted_ids]);
         }
 
-        this.performModelRPC(this.field.relation, "name_search", [], {
-            name: search_val,
-            args: domain,
-            operator: "ilike",
-            limit: this.limit + 1,
-            context: context,
-        }).then(function (result) {
-            // possible selections for the m2o
-            var values = _.map(result, function (x) {
-                x[1] = x[1].split("\n")[0];
-                return {
-                    label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
-                    value: x[1],
-                    name: x[1],
-                    id: x[0],
-                };
+        this.rpc(this.field.relation, "name_search")
+            .kwargs({
+                name: search_val,
+                args: domain,
+                operator: "ilike",
+                limit: this.limit + 1,
+                context: context,
+            })
+            .exec()
+            .then(function (result) {
+                // possible selections for the m2o
+                var values = _.map(result, function (x) {
+                    x[1] = x[1].split("\n")[0];
+                    return {
+                        label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
+                        value: x[1],
+                        name: x[1],
+                        id: x[0],
+                    };
+                });
+
+                // search more... if more results than limit
+                if (values.length > self.limit) {
+                    values = values.slice(0, self.limit);
+                    values.push({
+                        label: _t("Search More..."),
+                        action: function () {
+                            self.rpc(self.field.relation, "name_search")
+                                .kwargs({
+                                name: search_val,
+                                args: domain,
+                                operator: "ilike",
+                                limit: 160,
+                                context: context,
+                            })
+                            .exec()
+                            .then(self._searchCreatePopup.bind(self, "search"));
+                        },
+                        classname: 'o_m2o_dropdown_option',
+                    });
+                }
+                var create_enabled = self.can_create && !self.nodeOptions.no_create;
+                // quick create
+                var raw_result = _.map(result, function (x) { return x[1]; });
+                if (create_enabled && !self.nodeOptions.no_quick_create &&
+                    search_val.length > 0 && !_.contains(raw_result, search_val)) {
+                    values.push({
+                        label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
+                            $('<span />').text(search_val).html()),
+                        action: self._quickCreate.bind(self, search_val),
+                        classname: 'o_m2o_dropdown_option'
+                    });
+                }
+                // create and edit ...
+                if (create_enabled && !self.nodeOptions.no_create_edit) {
+                    values.push({
+                        label: _t("Create and Edit..."),
+                        action: self._searchCreatePopup.bind(self, "form", false, self._createContext(search_val)),
+                        classname: 'o_m2o_dropdown_option',
+                    });
+                } else if (values.length === 0) {
+                    values.push({
+                        label: _t("No results to show..."),
+                    });
+                }
+
+                def.resolve(values);
             });
-
-            // search more... if more results than limit
-            if (values.length > self.limit) {
-                values = values.slice(0, self.limit);
-                values.push({
-                    label: _t("Search More..."),
-                    action: function () {
-                        self.performModelRPC(self.field.relation, "name_search", {
-                            name: search_val,
-                            args: domain,
-                            operator: "ilike",
-                            limit: 160,
-                            context: context,
-                        }).then(self._searchCreatePopup.bind(self, "search"));
-                    },
-                    classname: 'o_m2o_dropdown_option',
-                });
-            }
-            var create_enabled = self.can_create && !self.nodeOptions.no_create;
-            // quick create
-            var raw_result = _.map(result, function (x) { return x[1]; });
-            if (create_enabled && !self.nodeOptions.no_quick_create &&
-                search_val.length > 0 && !_.contains(raw_result, search_val)) {
-                values.push({
-                    label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
-                        $('<span />').text(search_val).html()),
-                    action: self._quickCreate.bind(self, search_val),
-                    classname: 'o_m2o_dropdown_option'
-                });
-            }
-            // create and edit ...
-            if (create_enabled && !self.nodeOptions.no_create_edit) {
-                values.push({
-                    label: _t("Create and Edit..."),
-                    action: self._searchCreatePopup.bind(self, "form", false, self._createContext(search_val)),
-                    classname: 'o_m2o_dropdown_option',
-                });
-            } else if (values.length === 0) {
-                values.push({
-                    label: _t("No results to show..."),
-                });
-            }
-
-            def.resolve(values);
-        });
 
         return def;
     },
@@ -379,13 +385,13 @@ var FieldMany2One = AbstractField.extend({
         if (this.mode === 'readonly' && !this.nodeOptions.no_open) {
             event.preventDefault();
             event.stopPropagation();
-            this.performModelRPC(this.field.relation, 'get_formview_action', [
-                [this.value.res_id]
-            ], {
-                context: this.record.getContext({fieldName: this.name}),
-            }).then(function (action) {
-                self.trigger_up('do_action', {action: action});
-            });
+            this.rpc(this.field.relation, 'get_formview_action')
+                .args([[this.value.res_id]])
+                .withContext(this.record.getContext({fieldName: this.name}))
+                .exec()
+                .then(function (action) {
+                    self.trigger_up('do_action', {action: action});
+                });
         }
     },
     /**
@@ -397,26 +403,24 @@ var FieldMany2One = AbstractField.extend({
             return;
         }
         var self = this;
-        var model = this.field.relation;
-        var method = 'get_formview_id';
         var context = this.record.getContext({fieldName: this.name});
-        this.performModelRPC(model, method, [
-            [this.value.res_id]
-        ], {
-            context: context,
-        }).then(function (view_id) {
-            new dialogs.FormViewDialog(self, {
-                res_model: self.field.relation,
-                res_id: self.value.res_id,
-                context: context,
-                title: _t("Open: ") + self.string,
-                view_id: view_id,
-                readonly: !self.can_write,
-                on_saved: function () {
-                    self.trigger_up('reload', {db_id: self.value.id});
-                },
-            }).open();
-        });
+        this.rpc(this.field.relation, 'get_formview_id')
+            .args([[this.value.res_id]])
+            .withContext(context)
+            .exec()
+            .then(function (view_id) {
+                new dialogs.FormViewDialog(self, {
+                    res_model: self.field.relation,
+                    res_id: self.value.res_id,
+                    context: context,
+                    title: _t("Open: ") + self.string,
+                    view_id: view_id,
+                    readonly: !self.can_write,
+                    on_saved: function () {
+                        self.trigger_up('reload', {db_id: self.value.id});
+                    },
+                }).open();
+            });
     },
     /**
      * @private
