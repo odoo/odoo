@@ -149,14 +149,14 @@
         <li class="divider"/>
         <t t-if="view.type === 'form'">
             <li><a href="#" data-action="set_defaults">Set Defaults</a></li>
-            <t t-if="view.controller.get_selected_ids().length === 1">
+            <t t-if="view.controller.getSelectedIds().length === 1">
                 <li><a href="#" data-action="get_metadata">View Metadata</a></li>
                 <li><a href="#" data-action="print_workflow">Print Workflow</a></li>
             </t>
         </t>
         <li><a href="#" data-action="fvg">Fields View Get</a></li>
         <t t-if="can_edit">
-            <li><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.controller.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.controller.fields_view.type)"/>View</a></li>
+            <li><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.type)"/>View</a></li>
             <li t-if="searchview and searchview.$el.is(':visible')"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="searchview.fields_view.view_id">Edit SearchView</a></li>
         </t>
     </t>
@@ -335,21 +335,19 @@
 </div>
 
 <t t-name="ListView.buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
-        <div class="o_list_buttons">
-            <t t-if="widget.options.addable and widget.is_action_enabled('create')">
-                <button type="button" class="btn btn-primary btn-sm o_list_button_add" accesskey="c">
-                    <t t-esc="widget.options.addable"/>
-                </button>
-            </t>
-            <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="s">
-                Save
+    <div class="o_list_buttons">
+        <t t-if="widget.is_action_enabled('create')">
+            <button type="button" class="btn btn-primary btn-sm o_list_button_add" accesskey="c">
+                Create
             </button>
-            <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="j">
-                Discard
-            </button>
-        </div>
-    </t>
+        </t>
+        <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="s">
+            Save
+        </button>
+        <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="j">
+            Discard
+        </button>
+    </div>
 </t>
 
 <t t-name="ListView.rows" t-foreach="records.length" t-as="index">
@@ -569,7 +567,7 @@
                 <a href="#"><t t-esc="measure[1].string"/></a>
             </li>
             <li class="divider"></li>
-            <li data-field="__count__"><a href="#">Count</a></li>
+            <li data-field="__count"><a href="#">Count</a></li>
         </ul>
     </div>
     <div class="btn-group btn-group-sm">
@@ -624,7 +622,7 @@
     <input t-if="!widget.get('effective_readonly')" class="o_form_input"
         t-att-barcode_events="widget.options.barcode_events"
         t-att-type="widget.password ? 'password' : 'text'"
-        t-att-id="widget.id_for_label"
+        t-att-id="widget.idForLabel"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
         t-att-placeholder="widget.node.attrs.placeholder"
@@ -632,8 +630,8 @@
         t-att-maxlength="widget.field.size"/>
 </t>
 <t t-name="FormSelection">
-    <div class="btn-group o_kanban_selection">
-        <a href="#" data-toggle="dropdown"><span class="oe_kanban_status"/></a>
+    <div class="btn-group o_selection">
+        <a href="#" data-toggle="dropdown"><span class="o_status"/></a>
         <ul class="dropdown-menu state" role="menu">
         </ul>
     </div>
@@ -641,15 +639,11 @@
 <t t-name="FormSelection.items">
     <li t-foreach="states" t-as="rec" t-att-data-value="rec.name">
         <a href="#">
-            <span t-att-class="'oe_kanban_status ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
+            <span t-att-class="'o_status ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
             <t t-raw="rec.state_name"/>
         </a>
     </li>
 </t>
-<div t-name="Priority" class="o_priority">
-    <a t-if="!widget.readonly" t-foreach="widget.values.slice(1)" t-as="v" href="#" t-att-data-value="v[0]" t-att-title="v[1]" class="o_priority_star fa"/>
-    <span t-if="widget.readonly" t-foreach="widget.values.slice(1)" t-as="v" t-att-data-value="v[0]" t-att-title="v[1]" class="o_priority_star fa"/>
-</div>
 <t t-name="FieldEmail" t-extend="FieldChar">
     <t t-jquery="span" t-operation="replace">
         <t t-if="widget.get('effective_readonly')">
@@ -841,41 +835,41 @@
     </div>
 </t>
 <t t-name="FieldSelection">
-    <span t-if="widget.get('effective_readonly')"/>
+    <span t-if="widget.mode === 'readonly'"/>
 
-    <select t-if="!widget.get('effective_readonly')"
+    <select t-if="widget.mode !== 'readonly'"
         class="o_form_input"
         t-att-name="widget.name"
-        t-att-tabindex="widget.node.attrs.tabindex"
-        t-att-autofocus="widget.node.attrs.autofocus"
-        t-att-id="widget.id_for_label"/>
+        t-att-tabindex="widget.attrs.tabindex"
+        t-att-autofocus="widget.attrs.autofocus"
+        t-att-id="widget.idForLabel"/>
 </t>
 <t t-name="FieldRadio">
-    <span t-if="widget.get('effective_readonly')"/>
+    <span t-if="widget.mode === 'readonly'"/>
 
-    <div t-if="!widget.get('effective_readonly')" t-attf-class="o_form_field_radio #{widget.options.horizontal ? 'o_horizontal' : 'o_vertical'}">
-        <div t-foreach="widget.selection" t-as="selection" class="o_radio_item">
-            <input type="radio" class="o_form_radio" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-name="widget.uniqueId" t-att-value="selection[0]"/>
-            <label t-if="!widget.options.no_radiolabel" class="o_form_label" t-att-for="widget.uniqueId + '_' + selection[0]"><t t-esc="selection[1]"/></label>
+    <div t-if="widget.mode !== 'readonly'" t-attf-class="o_form_field_radio #{widget.nodeOptions.horizontal ? 'o_horizontal' : 'o_vertical'}">
+        <div t-foreach="widget.values" t-as="value" class="o_radio_item">
+            <input type="radio" class="o_form_radio" t-att-id="widget.unique_id + '_' + value[0]" t-att-name="widget.unique_id" t-att-data-value="value[0]"/>
+            <label t-if="!widget.nodeOptions.no_radiolabel" class="o_form_label" t-att-for="widget.unique_id + '_' + value[0]"><t t-esc="value[1]"/></label>
         </div>
     </div>
 </t>
 <t t-name="FieldMany2One">
-    <t t-if="widget.get('effective_readonly')">
-        <a t-if="!widget.options.no_open" class="o_form_uri" href="#"/>
-        <span t-if="widget.options.no_open"/>
+    <t t-if="widget.mode === 'readonly'">
+        <a t-if="!widget.nodeOptions.no_open" class="o_form_uri" href="#"/>
+        <span t-if="widget.nodeOptions.no_open"/>
     </t>
-    <div t-if="!widget.get('effective_readonly')" t-att-class="'o_form_field_many2one' + ((widget.options.no_open)? '' : ' o_with_button')">
+    <div t-if="widget.mode === 'edit'" class="o_form_field o_form_field_many2one">
         <div class="o_form_input_dropdown">
             <input type="text" class="o_form_input"
-                t-att-barcode_events="widget.options.barcode_events"
-                t-att-id="widget.id_for_label"
-                t-att-tabindex="widget.node.attrs.tabindex"
-                t-att-autofocus="widget.node.attrs.autofocus"
-                t-att-placeholder="widget.node.attrs.placeholder"/>
+                t-att-barcode_events="widget.nodeOptions.barcode_events"
+                t-att-tabindex="widget.attrs.tabindex"
+                t-att-autofocus="widget.attrs.autofocus"
+                t-att-placeholder="widget.attrs.placeholder"
+                t-att-id="widget.idForLabel"/>
             <span class="o_dropdown_button" draggable="false"/>
         </div>
-        <button type="button" t-if="!widget.options.no_open" class="fa fa-external-link btn btn-default o_external_button" tabindex="-1" draggable="false"/>
+        <button type="button" t-if="!widget.nodeOptions.no_open" class="fa fa-external-link btn btn-default o_external_button" tabindex="-1" draggable="false"/>
     </div>
 </t>
 <t t-name="Many2OneButton.cell">
@@ -884,7 +878,7 @@
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
         <span t-attf-class="badge dropdown o_tag_color_#{el.color || 10}" t-att-data-color="el.color || 10" t-att-data-index="el_index" t-att-data-id="el.id">
-            <span class="o_badge_text"><t t-raw="el['display_name']"/></span>
+            <span class="o_badge_text"><t t-raw="el.display_name"/></span>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
     </t>
@@ -905,7 +899,7 @@
 <t t-name="FieldBoolean">
     <div class="o_checkbox o_form_field_boolean">
         <input type="checkbox"
-            t-att-id="widget.id_for_label"
+            t-att-id="widget.idForLabel"
             t-att-name="widget.name"
             t-att-tabindex="widget.node.attrs.tabindex"
             t-att-autofocus="widget.node.attrs.autofocus"/>
@@ -919,7 +913,7 @@
     <div class="o_progressbar">
         <div t-if="widget.title" class="o_progressbar_title"><t t-esc="widget.title"/></div><div class="o_progress">
             <div class="o_progressbar_complete"/>
-        </div><div t-if="widget.readonly" class="o_progressbar_value"/><input t-if="!widget.readonly" class="o_progressbar_value" type="text"/>
+        </div><div class="o_progressbar_value"/>
     </div>
 </t>
 <t t-name="FieldPercentPie">
@@ -933,37 +927,47 @@
     </div>
 </t>
 <t t-name="FieldStatus">
-    <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_status_clickable' : 'oe_form_status')" t-att-style="widget.node.attrs.style"/>
+    <ul class="o_statusbar_status" t-att-style="widget.attrs.style"/>
 </t>
-<t t-name="FieldStatus.content">
-    <t t-foreach="widget.selection.unfolded" t-as="i">
-        <li t-att-class="i[0] === widget.get('value') ? 'oe_active' : ''" t-att-data-id="i[0]">
-            <span class="label"><t t-esc="i[1]"/></span>
-            <!-- are you mit ? -->
-            <span class="arrow"><span></span></span>
-        </li>
+<t t-name="FieldStatus.content.desktop">
+    <t t-foreach="selection_unfolded" t-as="i">
+        <t t-call="FieldStatus.content.button"/>
     </t>
-    <t t-if="widget.selection.folded.length">
-        <li>
-            <span class="label oe_dropdown_toggle oe_dropdown_arrow">More</span>
-            <ul class="oe_dropdown_menu">
-                <t t-foreach="widget.selection.folded" t-as="i">
-                    <li t-att-class="i[0] === widget.get('value') ? 'oe_active' : ''" t-att-data-id="i[0]">
-                        <span class="label"><t t-esc="i[1]"/></span>
-                    </li>
-                </t>
-            </ul>
-        </li>
+    <t t-if="selection_folded.length">
+        <ul class="dropdown-menu o-status-more" role="menu">
+            <li t-foreach="selection_folded" t-as="i">
+                <t t-call="FieldStatus.content.button"/>
+            </li>
+        </ul>
+        <button type="button" class="btn btn-sm o_arrow_button btn-default dropdown-toggle" data-toggle="dropdown">More <span class="caret"/></button>
     </t>
+</t>
+<t t-name="FieldStatus.content.mobile">
+    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+        <t t-foreach="selection_unfolded" t-as="i">
+            <t t-if="i.id === value">
+                <t t-esc="i.display_name"/>
+            </t>
+        </t>
+    </button>
+    <ul class="dropdown-menu o-status-more" role="menu">
+        <li t-foreach="selection_unfolded" t-as="i">
+            <t t-call="FieldStatus.content.button"/>
+        </li>
+        <li t-foreach="selection_folded" t-as="i">
+            <t t-call="FieldStatus.content.button"/>
+        </li>
+    </ul>
 </t>
 <t t-name="FieldStatus.content.button">
-    <button type="button" t-attf-class="btn btn-sm o_arrow_button #{i[0] === widget.get('value') ? 'btn-primary' : 'btn-default'} #{!widget.options.clickable || i[0] === widget.get('value') ? 'disabled' : ''}" t-att-data-id="i[0]">
-        <t t-esc="i[1]"/>
+    <button type="button" t-att-data-value="i.id"
+        t-attf-class="btn btn-sm o_arrow_button #{i.selected ? 'btn-primary disabled' : 'btn-default'} #{!clickable ? 'disabled' : ''}">
+        <t t-esc="i.display_name"/>
     </button>
 </t>
 <t t-name="FieldBinaryImage">
     <div class="o_form_field_image">
-        <t t-if="!widget.get('effective_readonly')">
+        <t t-if="widget.mode !== 'readonly'">
             <div class="o_form_image_controls">
                 <span class="fa fa-pencil fa-lg pull-left o_select_file_button" title="Edit"/>
                 <span class="fa fa-trash-o fa-lg pull-right o_clear_file_button" title="Clear"/>
@@ -984,15 +988,20 @@
         t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
         t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"/>
 </t>
+<t t-name="AttachmentImage">
+    <div class="o_attachment_image">
+        <img t-att-src="'/web/image/' + widget.value + '?unique=1'"/>
+    </div>
+</t>
 <t t-name="FieldBinaryFile">
-    <a t-if="widget.get('effective_readonly')" href="javascript:void(0)" class="o_form_uri"/>
+    <a t-if="widget.mode === 'readonly'" href="javascript:void(0)" class="o_form_uri"/>
 
-    <div t-if="!widget.get('effective_readonly')" class="o_form_field_binary_file">
+    <div t-if="widget.mode !== 'readonly'" class="o_form_field_binary_file">
         <input type="text" class="o_form_input"
             readonly="readonly"
             t-att-name="widget.name"
-            t-att-tabindex="widget.node.attrs.tabindex"
-            t-att-autofocus="widget.node.attrs.autofocus"/>
+            t-att-tabindex="widget.attrs.tabindex"
+            t-att-autofocus="widget.attrs.autofocus"/>
 
         <button type="button" class="btn btn-sm btn-primary o_select_file_button" title="Select">Upload your file</button>
         <button type="button" class="btn btn-sm btn-default fa fa-pencil o_select_file_button" title="Select"/>
@@ -1010,7 +1019,7 @@
         <form class="o_form_binary_form" t-att-target="fileupload_id"
               method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
-            <input type="hidden" name="session_id" value="" t-if="widget.session.override_session"/>
+            <input type="hidden" name="session_id" value="" t-if="widget.getSession().override_session"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
             <input t-if="widget.widget!='image'" type="file" class="o_form_input_file" name="ufile" t-att="{'multiple': multi_upload ? 'multiple' : null}"/>
             <input t-if="widget.widget=='image'" type="file" class="o_form_input_file" name="ufile" accept="image/*"/>
@@ -1029,7 +1038,7 @@
             <t t-set="multi_upload" t-value="true"/>
             <input type="hidden" name="model" t-att-value="widget.view.model"/>
             <input type="hidden" name="id" value="0"/>
-            <input t-if="widget.session.override_session" type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+            <input t-if="widget.getSession().override_session" type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
         </t>
     </div>
 </div>
@@ -1204,7 +1213,7 @@
 </div>
 <t t-name="GroupByMenuSelector">
     <li><select class="o_add_group o_group_selector">
-        <t t-foreach="groupable_fields" t-as="field">
+        <t t-foreach="groupableFields" t-as="field">
             <option t-att-data-name="field.name"><t t-esc="field.string"/></option>
         </t>
     </select></li>
@@ -1334,13 +1343,14 @@
     </t>
 </t>
 <t t-name="FieldMany2ManyCheckBoxes">
-    <div t-foreach="widget.get('records')" t-as="record">
-        <div class="o_checkbox">
-            <input t-if="widget.get('value').indexOf(record[0]) !== -1" type="checkbox" t-att-data-record-id="JSON.stringify(record[0])" checked="checked"/>
-            <input t-if="widget.get('value').indexOf(record[0]) === -1" type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"/>
-            <span/>
+    <div>
+        <div t-foreach="widget.m2mValues" t-as="m2m_value">
+            <div class="o_checkbox">
+                <input type="checkbox" t-att-data-record-id="JSON.stringify(m2m_value[0])"/>
+                <span/>
+            </div>
+            <label class="o_form_label"><t t-esc="m2m_value[1]"/></label>
         </div>
-        <label class="o_form_label"><t t-esc="record[1]"/></label>
     </div>
 </t>
 <t t-name="X2ManyCounter">
@@ -1374,7 +1384,7 @@
     </span>
     <span class="btn-group btn-group-sm">
         <!-- accesskeys not wanted in X2Many widgets -->
-        <t t-if="!widget.getParent().x2m">
+        <t t-if="widget.options.withAccessKey">
             <t t-set="att_prev" t-value="{'accesskey': 'p'}" />
             <t t-set="att_next" t-value="{'accesskey': 'n'}" />
         </t>
@@ -1384,16 +1394,9 @@
 </div>
 
 <t t-name="AceEditor">
-    <t t-if="!widget.get('effective_readonly')">
-        <div class="oe_form_field o_ace_view_editor oe_ace_open">
-            <div class="ace-view-editor"/>
-        </div>
-    </t>
-    <t t-if="widget.get('effective_readonly')">
-        <div class="oe_form_field oe_form_field_text" t-att-style="widget.node.attrs.style">
-            <span class="oe_form_text_content"></span>
-        </div>
-    </t>
+    <div class="oe_form_field o_ace_view_editor oe_ace_open">
+        <div class="ace-view-editor"/>
+    </div>
 </t>
 
 <t t-name="notification-box">

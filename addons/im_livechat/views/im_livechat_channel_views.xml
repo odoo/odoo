@@ -25,6 +25,7 @@
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
                 <kanban>
+                    <field name="id"/>
                     <field name="name"/>
                     <field name="web_page" widget="url"/>
                     <field name="are_you_inside"/>
@@ -89,6 +90,7 @@
                         <group string="Operators">
                             <field name="user_ids" widget="many2many_kanban" nolabel="1" colspan="2">
                                 <kanban>
+                                    <field name="id"/>
                                     <field name="name"/>
                                     <templates>
                                         <t t-name="kanban-box">

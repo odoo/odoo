@@ -1,12 +1,12 @@
 odoo.define('mail.composer', function (require) {
 "use strict";
 
-var chat_manager = require('mail.chat_manager');
+var chat_mixin = require('mail.chat_mixin');
 var utils = require('mail.utils');
 
 var core = require('web.core');
 var data = require('web.data');
-var dom_utils = require('web.dom_utils');
+var dom = require('web.dom');
 var Model = require('web.Model');
 var session = require('web.session');
 var Widget = require('web.Widget');
@@ -346,7 +346,7 @@ var MentionManager = Widget.extend({
 
 });
 
-var BasicComposer = Widget.extend({
+var BasicComposer = Widget.extend(chat_mixin, {
     template: "mail.ChatComposer",
 
     events: {
@@ -432,7 +432,7 @@ var BasicComposer = Widget.extend({
             self.trigger('input_focused');
         });
         this.$input.val(this.options.default_body);
-        dom_utils.autoresize(this.$input, {parent: this, min_height: this.options.input_min_height});
+        dom.autoresize(this.$input, {parent: this, min_height: this.options.input_min_height});
 
         // Attachments
         $(window).on(this.fileupload_id, this.on_attachment_loaded);
@@ -444,7 +444,7 @@ var BasicComposer = Widget.extend({
             content: function() {
                 if (!self.$emojis) { // lazy rendering
                     self.$emojis = $(QWeb.render('mail.ChatComposer.emojis', {
-                        emojis: chat_manager.get_emojis(),
+                        emojis: self._getEmojis(),
                     }));
                     self.$emojis.filter('.o_mail_emoji').on('click', self, self.on_click_emoji_img);
                 }
@@ -719,7 +719,7 @@ var BasicComposer = Widget.extend({
         var def = $.Deferred();
         clearTimeout(this.canned_timeout);
         this.canned_timeout = setTimeout(function() {
-            var canned_responses = chat_manager.get_canned_responses();
+            var canned_responses = self._getCannedResponses();
             var matches = fuzzy.filter(utils.unaccent(search), _.pluck(canned_responses, 'source'));
             var indexes = _.pluck(matches.slice(0, self.options.mention_fetch_limit), 'index');
             def.resolve(_.map(indexes, function (i) {

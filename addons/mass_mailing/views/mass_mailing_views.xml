@@ -456,7 +456,7 @@
                                                 </div>
                                             </div>
                                             <div class='o_kanban_primary_bottom'>
-                                                <field name="delivered" widget="progress" title="Delivered" options="{'current_value': 'delivered', 'max_value': 'total', 'editable': false}"/>
+                                                <field name="delivered" widget="progressbar" title="Delivered" options="{'current_value': 'delivered', 'max_value': 'total', 'editable': false}"/>
                                             </div>
                                         </t>
                                     </div>
@@ -761,8 +761,7 @@
                                     <div class="oe_clear"></div>
                                     <div>
                                         <div style="display: inline-block">
-                                            <field name="delivered" widget="gauge" style="width:120px; height: 90px;"
-                                                options="{'max_field': 'total'}"/>
+                                            <field name="delivered" widget="gauge" options="{'max_field': 'total', 'style': 'width:120px; height: 90px;'}"/>
                                         </div>
                                         <div style="display: inline-block; vertical-align: top;">
                                             <strong>Opened</strong> <field name="opened_ratio"/> %<br />

@@ -1455,7 +1455,9 @@ class Meeting(models.Model):
 
     @api.multi
     def read(self, fields=None, load='_classic_read'):
-        fields2 = fields and fields[:] or None
+        if not fields:
+            fields = list(self._fields)
+        fields2 = fields and fields[:]
         EXTRAFIELDS = ('privacy', 'user_id', 'duration', 'allday', 'start', 'start_date', 'start_datetime', 'rrule')
         for f in EXTRAFIELDS:
             if fields and (f not in fields):

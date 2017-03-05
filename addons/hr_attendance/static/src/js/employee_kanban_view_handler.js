@@ -2,7 +2,7 @@
 odoo.define('hr_attendance.employee_kanban_view_handler', function(require) {
 "use strict";
 
-var KanbanRecord = require('web_kanban.Record');
+var KanbanRecord = require('web.KanbanRecord');
 
 KanbanRecord.include({
     on_card_clicked: function() {

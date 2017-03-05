@@ -1,8 +1,8 @@
 odoo.define('barcodes.BarcodeHandlerMixin', function(require) {
 "use strict";
 
+var AbstractView = require('web.AbstractView');
 var core = require('web.core');
-var View = require('web.View');
 
 // Mixin implementing the common basis for barcode handlers.
 // The object on which this mixin is applied must also include ParentedMixin. Example :
@@ -23,7 +23,7 @@ return {
         };
         this.start_listening();
         // Handlers inside a View managed by a ViewManager only listen to barcode events while their view is displayed
-        var view = this.findAncestor(function(ancestor) { return ancestor instanceof View });
+        var view = this.findAncestor(function(ancestor) { return ancestor instanceof AbstractView });
         if (view) {
             view.on('attached', this, this.start_listening);
             view.on('detached', this, this.stop_listening);

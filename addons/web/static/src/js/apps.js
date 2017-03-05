@@ -5,13 +5,11 @@ var core = require('web.core');
 var framework = require('web.framework');
 var Model = require('web.DataModel');
 var session = require('web.session');
-var web_client = require('web.web_client');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 
 var apps_client = null;
-var qweb = core.qweb;
 
 var Apps = Widget.extend({
     template: 'EmptyComponent',
@@ -25,7 +23,8 @@ var Apps = Widget.extend({
     },
 
     get_client: function() {
-        // return the client via a deferred, resolved or rejected depending if the remote host is available or not.
+        // return the client via a deferred, resolved or rejected depending if
+        // the remote host is available or not.
         var check_client_available = function(client) {
             var d = $.Deferred();
             var i = new Image();

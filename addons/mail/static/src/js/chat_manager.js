@@ -67,7 +67,7 @@ function notify_incoming_message (msg, options) {
         web_client.set_title_part("_chat", tab_title);
     }
 
-    utils.send_notification(title, content);
+    utils.send_notification(web_client, title, content);
 }
 
 // Message and channel manipulation helpers

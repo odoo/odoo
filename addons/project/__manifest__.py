@@ -14,7 +14,7 @@
         'analytic',
         'mail',
         'resource',
-        'web_kanban',
+        'web',
         'web_planner',
         'web_tour',
     ],

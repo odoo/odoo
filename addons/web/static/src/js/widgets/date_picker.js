@@ -54,8 +54,9 @@ var DateWidget = Widget.extend({
     },
     set_value: function(value) {
         this.set({'value': value});
-        this.$input.val((value)? this.format_client(value) : '');
-        this.picker.date(this.format_client(value));
+        var formatted_value = value ? this.format_client(value) : null;
+        this.$input.val(formatted_value);
+        this.picker.date(formatted_value);
     },
     get_value: function() {
         return this.get('value');
@@ -102,9 +103,6 @@ var DateWidget = Widget.extend({
             this.set_value_from_ui();
             this.trigger("datetime_changed");
         }
-    },
-    commit_value: function() {
-        this.change_datetime();
     },
     destroy: function() {
         this.picker.destroy();

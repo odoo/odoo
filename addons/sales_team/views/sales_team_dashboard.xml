@@ -9,6 +9,7 @@
                 <field name="user_id"/>
                 <field name="member_ids"/>
                 <field name="color"/>
+                <field name="dashboard_graph_type"/>
                 <field name="currency_id"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -71,8 +72,7 @@
                     </t>
                     <t t-name="SalesTeamDashboardGraph">
                         <div t-if="record.dashboard_graph_data.raw_value" class="o_sales_team_kanban_graph_section">
-                            <field name="dashboard_graph_type" invisible="1"/>
-                            <field name="dashboard_graph_data" t-att-graph_type="record.dashboard_graph_type.raw_value" widget="dashboard_graph"/>
+                            <field name="dashboard_graph_data" widget="dashboard_graph" t-att-graph_type="record.dashboard_graph_type.raw_value"/>
                         </div>
                     </t>
                 </templates>

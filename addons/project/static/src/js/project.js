@@ -7,8 +7,8 @@ var Dialog = require('web.Dialog');
 var Model = require('web.Model');
 var session = require('web.session');
 
-var KanbanView = require('web_kanban.KanbanView');
-var KanbanRecord = require('web_kanban.Record');
+var KanbanView = require('web.KanbanView');
+var KanbanRecord = require('web.KanbanRecord');
 
 var QWeb = core.qweb;
 var _t = core._t;

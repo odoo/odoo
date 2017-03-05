@@ -212,10 +212,11 @@
             <field name="model">mrp.production</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="routing_id" date_start="date_planned_start" string="Manufacturing Orders">
+                <calendar date_start="date_planned_start" string="Manufacturing Orders">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
+                    <filter name="routing_id" color="True"/>
                 </calendar>
             </field>
         </record>

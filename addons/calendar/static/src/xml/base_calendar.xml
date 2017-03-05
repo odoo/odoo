@@ -20,12 +20,4 @@
         </t>
     </t>
 
-    <t t-extend="CalendarView.sidebar.contacts">
-        <t t-jquery="span[t-attf-class*='color_filter']" t-operation="after">
-            <t t-if="(filters_value.value != -1) &amp;&amp; (filters_value.can_be_removed)">
-                <span class="o_remove_contact fa fa-times" title="Remove this favorite from the list" t-att-data-id="filters_value.value"/>
-           </t>
-        </t>
-    </t>
-
 </template>

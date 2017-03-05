@@ -5,7 +5,7 @@ var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var time = require('web.time');
 var ListView = require('web.ListView');
-var KanbanView = require('web_kanban.KanbanView');
+var ListController = require('web.ListController');
 var Model = require('web.DataModel');
 var session = require('web.session');
 var Widget = require('web.Widget');
@@ -47,73 +47,45 @@ function jsonp(form, attributes, callback) {
     $(form).ajaxSubmit(attributes);
 }
 
-function execute_import_action () {
-    var self = this;
-    this.do_action({
-        type: 'ir.actions.client',
-        tag: 'import',
-        params: {
-            model: this.dataset.model,
-            // this.dataset.get_context() could be a compound?
-            // not sure. action's context should be evaluated
-            // so safer bet. Odd that timezone & al in it
-            // though
-            context: this.getParent().action.context,
-        }
-    }, {
-        on_reverse_breadcrumb: function () {
-            return self.reload();
-        },
-    });
-    return false;
-}
-
 // if true, the 'Import', 'Export', etc... buttons will be shown
-ListView.prototype.defaults.import_enabled = true;
 ListView.include({
-    /**
-     * Extend the render_buttons function of ListView by adding an event listener
-     * on the import button.
-     * @return {jQuery} the rendered buttons
-     */
-    render_buttons: function() {
-        var self = this;
-        var add_button = false;
-        if (!this.$buttons) { // Ensures that this is only done once
-            add_button = true;
-        }
-        this._super.apply(this, arguments); // Sets this.$buttons
-        if(add_button) {
-            this.$buttons.on('click', '.o_button_import', execute_import_action.bind(this));
-        }
-    }
+    init: function(arch, fields, params) {
+        this._super.apply(this, arguments);
+        var importEnabled = 'import_enabled' in params ? params.import_enabled : true;
+        this.controllerParams.importEnabled = importEnabled;
+    },
 });
 
-// Enable import button on kanban view.
-KanbanView.prototype.defaults.import_enabled = true;
-KanbanView.include({
+ListController.include({
+    init: function(parent, model, renderer, params) {
+        this._super.apply(this, arguments);
+        this.importEnabled = params.importEnabled;
+    },
     /**
-     * Extend the render_buttons function of KanbanView by adding an event listener
+     * Extend the renderButtons function of ListView by adding an event listener
      * on the import button.
      * @return {jQuery} the rendered buttons
      */
-    render_buttons: function() {
-        var self = this;
-        var add_button = false;
-        if (!this.$buttons) { // Ensures that this is only done once
-            add_button = true;
-        }
+    renderButtons: function() {
         this._super.apply(this, arguments); // Sets this.$buttons
-        if(add_button && this.$buttons) {
-            this.$buttons.on('click', '.o_button_import', execute_import_action.bind(this));
-        }
-    },
 
-    set_default_options: function (options) {
-        this._super(_.defaults(options || {}, {
-            import_enabled: true,
+        if (!this.$buttons) { return; }
+
+        this.$buttons.on('click', '.o_button_import', this.do_action.bind(this, {
+            type: 'ir.actions.client',
+            tag: 'import',
+            params: {
+                model: this.modelName,
+                // this.dataset.get_context() could be a compound?
+                // not sure. action's context should be evaluated
+                // so safer bet. Odd that timezone & al in it
+                // though
+                context: this.context,
+            }
+        }, {
+            on_reverse_breadcrumb: this.reload.bind(this),
         }));
-    },
+    }
 });
 
 var DataImport = Widget.extend(ControlPanelMixin, {
@@ -196,7 +168,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 self.id = id;
                 self.$('input[name=import_id]').val(id);
 
-                self.render_buttons();
+                self.renderButtons();
                 var status = {
                     breadcrumbs: self.action_manager.get_breadcrumbs(),
                     cp_content: {$buttons: self.$buttons},
@@ -210,7 +182,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 'res_model': this.res_model
             }]);
     },
-    render_buttons: function() {
+    renderButtons: function() {
         var self = this;
         this.$buttons = $(QWeb.render("ImportView.buttons", this));
         this.$buttons.filter('.o_import_validate').on('click', this.validate.bind(this));
@@ -524,7 +496,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
             return $(el).select2('val') || false;
         }).get();
         var tracking_disable = 'tracking_disable' in kwargs ? kwargs.tracking_disable : !this.$('#oe_import_tracking').prop('checked')
-        delete kwargs.tracking_disable
+        delete kwargs.tracking_disable;
         kwargs.context = _.extend(
             {}, this.parent_context,
             {tracking_disable: tracking_disable}

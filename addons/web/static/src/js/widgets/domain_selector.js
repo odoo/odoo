@@ -3,7 +3,7 @@ odoo.define("web.DomainSelector", function (require) {
 
 var core = require("web.core");
 var datepicker = require("web.datepicker");
-var domainUtils = require("web.domainUtils");
+var Domain = require("web.Domain");
 var formats = require ("web.formats");
 var ModelFieldSelector = require("web.ModelFieldSelector");
 var Widget = require("web.Widget");
@@ -108,9 +108,9 @@ var DomainTree = DomainNode.extend({
     /// The initialization of a DomainTree creates a "children" array attribute which will contain the
     /// the DomainNode children. It also deduces the operator from the domain (default to "&").
     /// @see DomainTree._addFlattenedChildren
-    init: function (parent, model, domain, options) {
+    init: function (parent, model, domainStr, options) {
         this._super.apply(this, arguments);
-        this._initialize(domainUtils.stringToDomain(domain));
+        this._initialize(Domain.prototype.stringToArray(domainStr));
     },
     /// @see DomainTree.init
     _initialize: function (domain) {
@@ -257,14 +257,14 @@ var DomainSelector = DomainTree.extend({
         /// the widget is re-rendered and notifies the parents. If not, a warning is shown to the
         /// user and the input is ignored.
         "change .o_domain_debug_input": function (e) {
-            var domain;
+            var currentDomain;
             try {
-                domain = domainUtils.stringToDomain($(e.currentTarget).val());
+                currentDomain = Domain.prototype.stringToArray($(e.currentTarget).val());
             } catch (err) {
                 this.do_warn(_t("Syntax error"), _t("The domain you entered is not properly formed"));
                 return;
             }
-            this._redraw(domain).then((function () {
+            this._redraw(currentDomain).then((function () {
                 this.trigger_up("domain_changed", {child: this, alreadyRedrawn: true});
             }).bind(this));
         },
@@ -307,7 +307,7 @@ var DomainSelector = DomainTree.extend({
         // Display technical domain if in debug mode
         this.$debugInput = this.$(".o_domain_debug_input");
         if (this.$debugInput.length) {
-            this.$debugInput.val(domainUtils.domainToString(this.getDomain()));
+            this.$debugInput.val(Domain.prototype.arrayToString(this.getDomain()));
         }
     },
 });
@@ -335,13 +335,13 @@ var DomainLeaf = DomainNode.extend({
         },
     },
     /// @see DomainNode.init
-    init: function (parent, model, domain, options) {
+    init: function (parent, model, domainStr, options) {
         this._super.apply(this, arguments);
 
-        domain = domainUtils.stringToDomain(domain);
-        this.chain = domain[0][0];
-        this.operator = domain[0][1];
-        this.value = domain[0][2];
+        var currentDomain = Domain.prototype.stringToArray(domainStr);
+        this.chain = currentDomain[0][0];
+        this.operator = currentDomain[0][1];
+        this.value = currentDomain[0][2];
 
         this.operator_mapping = operator_mapping;
     },

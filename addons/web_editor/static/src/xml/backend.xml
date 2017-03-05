@@ -8,7 +8,7 @@
     </t>
 
     <t t-name="web_editor.FieldTextHtml">
-        <div class="oe_form_field oe_form_field_html oe_form_embedded_html" t-att-style="widget.node.attrs.style">
+        <div class="oe_form_field oe_form_field_html oe_form_embedded_html" t-att-style="widget.attrs.style">
             <iframe/>
         </div>
     </t>
@@ -28,7 +28,7 @@
     </t>
 
     <t t-name="web_editor.FieldTextHtml.translate">
-        <div t-if="widget.view.datarecord.id &amp;&amp; widget.languages.length" style="margin: 5px; position: fixed; top: 0; left: 0; z-index: 2000;">
+        <div t-if="widget.recordData.id &amp;&amp; widget.languages.length" style="margin: 5px; position: fixed; top: 0; left: 0; z-index: 2000;">
             <select style="
                     width: 148px;
                     height: 22px;

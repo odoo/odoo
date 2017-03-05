@@ -2,7 +2,7 @@ odoo.define('web.DebugManager', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
-var common = require('web.form_common');
+var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var formats = require('web.formats');
@@ -159,7 +159,7 @@ var DebugManager = Widget.extend({
     },
     select_view: function () {
         var self = this;
-        new common.SelectCreateDialog(this, {
+        new dialogs.SelectCreateDialog(this, {
             res_model: 'ir.ui.view',
             title: _t('Select a view'),
             disable_multiple_selection: true,
@@ -288,6 +288,9 @@ DebugManager.include({
     update: function (tag, descriptor, widget) {
         switch (tag) {
         case 'action':
+            if (this._view_manager) {
+                this._view_manager.off('switch_mode', this);
+            }
             if (!(widget instanceof ViewManager)) {
                 this._active_view = null;
                 this._view_manager = null;
@@ -314,11 +317,11 @@ DebugManager.include({
 
     get_metadata: function() {
         var ds = this._view_manager.dataset;
-        if (!this._active_view.controller.get_selected_ids().length) {
+        if (!this._active_view.controller.getSelectedIds().length) {
             console.warn(_t("No metadata available"));
             return
         }
-        ds.call('get_metadata', [this._active_view.controller.get_selected_ids()]).done(function(result) {
+        ds.call('get_metadata', [this._active_view.controller.getSelectedIds()]).done(function(result) {
             new Dialog(this, {
                 title: _.str.sprintf(_t("Metadata (%s)"), ds.model),
                 size: 'medium',
@@ -335,11 +338,11 @@ DebugManager.include({
     fvg: function() {
         var dialog = new Dialog(this, { title: _t("Fields View Get") }).open();
         $('<pre>').text(utils.json_node_to_xml(
-            this._active_view.controller.fields_view.arch, true)
+            this._active_view.controller.renderer.arch, true)
         ).appendTo(dialog.$el);
     },
     print_workflow: function() {
-        var ids = this._active_view.controller.get_selected_ids();
+        var ids = this._active_view.controller.getSelectedIds();
         framework.blockUI();
         var action = {
             context: { active_ids: ids },

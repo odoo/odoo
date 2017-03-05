@@ -144,18 +144,13 @@
         <t t-if="error.moreinfo" t-raw="info(error.moreinfo)"/>
     </t>
     <t t-name="ImportView.import_button">
-        <button t-if='widget.options.import_enabled' type="button" class="btn btn-sm btn-default o_button_import">
+        <button t-if='widget.importEnabled' type="button" class="btn btn-sm btn-default o_button_import">
             Import
         </button>
     </t>
     <t t-extend="ListView.buttons">
         <t t-jquery="button.o_list_button_add" t-operation="after">
            <t t-call="ImportView.import_button"/>
-        </t>
-    </t>
-    <t t-extend="KanbanView.buttons">
-        <t t-jquery="button.o-kanban-button-new" t-operation="after">
-            <t t-call="ImportView.import_button"/>
         </t>
     </t>
 </templates>

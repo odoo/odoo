@@ -61,7 +61,7 @@ odoo.define('web.test.x2many', function (require) {
         trigger: 'tr:has(td[data-field="name"]:containsExact(Administrator)) .o_list_record_selector input[type="checkbox"]'
     }, {
         content: "save selected participants",
-        trigger: '.o_selectcreatepopup_search_select',
+        trigger: '.o_select_button',
         extra_trigger: 'tr:has(td[data-field="name"]:containsExact(Administrator)) .o_list_record_selector input[type="checkbox"]:propChecked',
     }, { // save
         content: "save discussion",
@@ -145,7 +145,7 @@ odoo.define('web.test.x2many', function (require) {
         trigger: 'tr:has(td[data-field="name"]:containsExact(Demo User)) .o_list_record_selector input[type="checkbox"]',
     }, {
         content: "save selected participants",
-        trigger: '.o_selectcreatepopup_search_select',
+        trigger: '.o_select_button',
         extra_trigger: 'tr:has(td[data-field="name"]:containsExact(Demo User)) .o_list_record_selector input[type="checkbox"]:propChecked',
     }, { // save
         content: "save discussion",
