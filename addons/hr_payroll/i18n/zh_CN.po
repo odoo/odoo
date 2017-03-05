@@ -123,7 +123,7 @@ msgid ""
 "A contribution register is a third party involved in the salary\n"
 "                payment of the employees. It can be the social security, the\n"
 "                estate or anyone that collect or inject money on payslips."
-msgstr "一个供款登记是第三个参与的雇员付款，它可以是社保财产或者工资单上添加或者减去的项."
+msgstr "一个捐献登记册是在员工薪资支付中涉及的第三方，它可以是社保，不动产，或者任何工资单上收集的或者注入的钱."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -190,7 +190,7 @@ msgstr "显示在工资单"
 msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
 "condition like basic > 1000."
-msgstr "如果表达式为真，适用这个规则。你可以输入条件，例如 basic > 1000。"
+msgstr "如果条件为真，为计算应用这个规则。你可以指定条件，例如 basic > 1000。"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
@@ -200,7 +200,7 @@ msgstr "应用"
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Bi-monthly"
-msgstr "每两个月"
+msgstr "每两月"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -227,7 +227,7 @@ msgstr "取消工资单"
 #: code:addons/hr_payroll/models/hr_payroll.py:238
 #, python-format
 msgid "Cannot cancel a payslip that is done."
-msgstr ""
+msgstr "不能取消完成的工资单"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
@@ -261,7 +261,7 @@ msgstr "下级定义"
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid "Click to add a new contribution register."
-msgstr "点击添加一个新的供款登记"
+msgstr "点击添加一个新的捐献登记册"
 
 #. module: hr_payroll
 #: selection:hr.payslip.run,state:0
@@ -300,7 +300,7 @@ msgstr "公司"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Company Contribution"
-msgstr "公司供款"
+msgstr "公司捐献"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -350,7 +350,7 @@ msgstr "合约"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
 msgid "Contribution"
-msgstr "供款"
+msgstr "捐献"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contribution_register
@@ -358,12 +358,12 @@ msgstr "供款"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_register_id
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Contribution Register"
-msgstr "供款记录"
+msgstr "捐献登记册"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Contribution Register's Payslip Lines"
-msgstr "供款记录的工资单明细"
+msgstr "捐献登记册的工资单明细"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
@@ -371,7 +371,7 @@ msgstr "供款记录的工资单明细"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_filter
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
 msgid "Contribution Registers"
-msgstr "供款记录"
+msgstr "捐献登记册"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
@@ -563,7 +563,7 @@ msgstr "错误!你不能创建递归的薪资结构。"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_register_id
 msgid "Eventual third party involved in the salary payment of the employees."
-msgstr "偶然第三方参与的员工薪资支付."
+msgstr "员工薪资支付中涉及的最终第三方"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -755,7 +755,7 @@ msgstr "薪资类别的父级类别只用于报告目的"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
 msgid "Made Payment Order ? "
-msgstr "建立付款单？ "
+msgstr "已建立付款命令？ "
 
 #. module: hr_payroll
 #: model:res.groups,name:hr_payroll.group_hr_payroll_manager
@@ -878,12 +878,12 @@ msgstr "工资单明细按供款记录"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "PaySlip Lines by Contribution Register"
-msgstr "工资单明细按供款记录"
+msgstr "工资单明细行，按捐献登记册"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
 msgid "PaySlip Lines by Contribution Registers"
-msgstr "工资单明细按供款记录"
+msgstr "工资单明细行，按捐献登记册"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -955,7 +955,7 @@ msgstr "工资单明细"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Payslip Lines by Contribution Register"
-msgstr "按供款记录的工资单明细"
+msgstr "工资单明细行，按捐献登记册"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
