@@ -2,6 +2,7 @@ odoo.define('web.mixins', function (require) {
 "use strict";
 
 var Class = require('web.Class');
+var rpc = require('web.rpc');
 var utils = require('web.utils');
 var AbstractService = require('web.AbstractService');
 
@@ -237,10 +238,50 @@ var Events = Class.extend({
 */
 var EventDispatcherMixin = _.extend({}, ParentedMixin, {
     __eventDispatcherMixin: true,
+    custom_events: {},
     init: function () {
         ParentedMixin.init.call(this);
         this.__edispatcherEvents = new Events();
         this.__edispatcherRegisteredEvents = [];
+        this._delegateCustomEvents();
+    },
+    /**
+     * Proxies a method of the object, in order to keep the right ``this`` on
+     * method invocations.
+     *
+     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
+     * even more so to ``jQuery.proxy`` with a fundamental difference: its
+     * resolution of the method being called is lazy, meaning it will use the
+     * method as it is when the proxy is called, not when the proxy is created.
+     *
+     * Other methods will fix the bound method to what it is when creating the
+     * binding/proxy, which is fine in most javascript code but problematic in
+     * OpenERP Web where developers may want to replace existing callbacks with
+     * theirs.
+     *
+     * The semantics of this precisely replace closing over the method call.
+     *
+     * @param {String|Function} method function or name of the method to invoke
+     * @returns {Function} proxied method
+     */
+    proxy: function (method) {
+        var self = this;
+        return function () {
+            var fn = (typeof method === 'string') ? self[method] : method;
+            if (fn === void 0) {
+                throw new Error("Couldn't find method '" + method + "' in widget " + self);
+            }
+            return fn.apply(self, arguments);
+        };
+    },
+    _delegateCustomEvents: function () {
+        if (_.isEmpty(this.custom_events)) { return; }
+        for (var key in this.custom_events) {
+            if (!this.custom_events.hasOwnProperty(key)) { continue; }
+
+            var method = this.proxy(this.custom_events[key]);
+            this.on(key, this, method);
+        }
     },
     on: function (events, dest, func) {
         var self = this;
@@ -373,6 +414,21 @@ var ServicesMixin = {
         });
         return result;
     },
+    /**
+     * Build a RPC query
+     *
+     * @param {string} arg1 either a route or a model
+     * @param {string} method if a model is given, this argument is a method
+     * @returns {RPCBuilder}
+     */
+    rpc: function (arg1, method) {
+        return rpc.query({
+            method: method,
+            model: method && arg1,
+            parent: this,
+            route: !method && arg1,
+        });
+    },
     // AJAX calls
     performRPC: function (route, args, options) {
         return this.call('ajax', 'rpc', route, args || {}, options || {});
@@ -452,6 +508,7 @@ var ServiceProvider = {
             var service = new Service();
             self.services[service.name] = service;
         });
+        this.custom_events = _.clone(this.custom_events);
         this.custom_events.call_service = this._call_service.bind(this);
     },
     _call_service: function (event) {

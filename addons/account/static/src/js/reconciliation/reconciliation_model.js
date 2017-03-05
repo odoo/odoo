@@ -147,18 +147,21 @@ var StatementModel = BasicModel.extend({
     autoReconciliation: function () {
         var self = this;
         var ids = _.pluck(_.filter(_.values(this.lines), {'reconciled': false}), 'id');
-        return this.performModelRPC("account.bank.statement.line", 'reconciliation_widget_auto_reconcile', [ids, self.valuenow]).then(function (result) {
-            var reconciled_ids = _.difference(ids, result.st_lines_ids);
-            self.valuenow += reconciled_ids.length;
-            result.handles = [];
-            _.each(self.lines, function (line, handle) {
-                if (reconciled_ids.indexOf(line.id) !== -1) {
-                    line.reconciled = true;
-                    result.handles.push(handle);
-                }
+        return this.rpc("account.bank.statement.line", 'reconciliation_widget_auto_reconcile')
+            .args([ids, self.valuenow])
+            .exec()
+            .then(function (result) {
+                var reconciled_ids = _.difference(ids, result.st_lines_ids);
+                self.valuenow += reconciled_ids.length;
+                result.handles = [];
+                _.each(self.lines, function (line, handle) {
+                    if (reconciled_ids.indexOf(line.id) !== -1) {
+                        line.reconciled = true;
+                        result.handles.push(handle);
+                    }
+                });
+                return result;
             });
-            return result;
-        });
     },
     /**
      * change the filter for the target line and fetch the new matched lines
@@ -209,8 +212,9 @@ var StatementModel = BasicModel.extend({
      * @returns {Deferred}
      */
     changeName: function (name) {
-        return this.performModelRPC("account.bank.statement", "write",
-            [this.bank_statement_id.id, {name: name}]);
+        return this.rpc("account.bank.statement", "write")
+            .args([this.bank_statement_id.id, {name: name}])
+            .exec();
     },
     /**
      * change the offset for the matched lines, and fetch the new matched lines
@@ -289,7 +293,9 @@ var StatementModel = BasicModel.extend({
         if (!statement_ids) {
             return $.when();
         }
-        var def_statement = this.performModelRPC("account.bank.statement", 'reconciliation_widget_preprocess', [statement_ids])
+        var def_statement = this.rpc("account.bank.statement", 'reconciliation_widget_preprocess')
+            .args([statement_ids])
+            .exec()
             .then(function (statement) {
                 self.bank_statement_id = statement_ids.length === 1 ? {id: statement_ids[0], display_name: statement.statement_name} : false;
                 self.valuenow = 0;
@@ -318,7 +324,9 @@ var StatementModel = BasicModel.extend({
                 line.reconcileModels = self.reconcileModels;
             });
             var ids = _.pluck(self.lines, 'id');
-            return  self.performModelRPC("account.bank.statement.line", 'get_data_for_reconciliation_widget', [ids])
+            return self.rpc("account.bank.statement.line", 'get_data_for_reconciliation_widget')
+                .args([ids])
+                .exec()
                 .then(self._formatLine.bind(self));
         });
     },
@@ -469,9 +477,12 @@ var StatementModel = BasicModel.extend({
             self.valuenow++;
         });
 
-        return this.performModelRPC("account.bank.statement.line", 'process_reconciliations', [ids, values]).then(function () {
-            return {handles: handles};
-        });
+        return this.rpc("account.bank.statement.line", 'process_reconciliations')
+            .args([ids, values])
+            .exec()
+            .then(function () {
+                return {handles: handles};
+            });
     },
 
     //--------------------------------------------------------------------------
@@ -530,28 +541,31 @@ var StatementModel = BasicModel.extend({
                 });
 
                 var args = [[prop.tax_id.id], prop.base_amount, line.st_line.currency_id];
-                tax_defs.push(self.performModelRPC("account.tax", 'json_friendly_compute_all', args).then(function (result) {
-                    var tax = result.taxes[0];
-                    var tax_prop = self._formatQuickCreate(line, {
-                        'link': prop.id,
-                        'tax_id': tax.id,
-                        'amount': tax.amount,
-                        'label': tax.name,
-                        'account_id': tax.account_id ? [tax.account_id, null] : prop.account_id,
-                        'analytic': tax.analytic,
-                        'is_tax': true,
-                        '__focus': false
-                    });
+                tax_defs.push(self.rpc("account.tax", 'json_friendly_compute_all')
+                    .args(args)
+                    .exec()
+                    .then(function (result) {
+                        var tax = result.taxes[0];
+                        var tax_prop = self._formatQuickCreate(line, {
+                            'link': prop.id,
+                            'tax_id': tax.id,
+                            'amount': tax.amount,
+                            'label': tax.name,
+                            'account_id': tax.account_id ? [tax.account_id, null] : prop.account_id,
+                            'analytic': tax.analytic,
+                            'is_tax': true,
+                            '__focus': false
+                        });
 
-                    prop.amount = tax.base;
-                    prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, format_options);
-                    prop.invalid = !self._isValid(prop);
+                        prop.amount = tax.base;
+                        prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, format_options);
+                        prop.invalid = !self._isValid(prop);
 
-                    tax_prop.amount_str = field_utils.format.monetary(Math.abs(tax_prop.amount), {}, format_options);
-                    tax_prop.invalid = prop.invalid;
+                        tax_prop.amount_str = field_utils.format.monetary(Math.abs(tax_prop.amount), {}, format_options);
+                        tax_prop.invalid = prop.invalid;
 
-                    reconciliation_proposition.push(tax_prop);
-                }));
+                        reconciliation_proposition.push(tax_prop);
+                    }));
             } else {
                 var currencyData = {
                     currency_id: line.st_line.currency_id
@@ -761,7 +775,9 @@ var StatementModel = BasicModel.extend({
         var offset = line.offset;
         var limit = 6;
         var args = [line.id, line.st_line.partner_id, excluded_ids, filter, offset, limit];
-        return this.performModelRPC("account.bank.statement.line", 'get_move_lines_for_reconciliation_widget', args)
+        return this.rpc("account.bank.statement.line", 'get_move_lines_for_reconciliation_widget')
+            .args(args)
+            .exec()
             .then(this._formatMoveLine.bind(this, handle));
     },
     /**
@@ -829,7 +845,9 @@ var ManualModel = StatementModel.extend({
                 case 'suppliers':
                     var mode = context.mode === 'customers' ? 'receivable' : 'payable';
                     var args = ['partner', context.partner_ids || null, mode];
-                    return self.performModelRPC("account.move.line", 'get_data_for_manual_reconciliation', args )
+                    return self.rpc("account.move.line", 'get_data_for_manual_reconciliation')
+                        .args(args)
+                        .exec()
                         .then(function (result) {
                             var defs = _.map(result, self._formatLine.bind(self, context.mode));
                             self.valuenow = 0;
@@ -838,7 +856,9 @@ var ManualModel = StatementModel.extend({
                         });
                 case 'accounts': 
                     var args = ['account', self.account_ids];
-                    return self.performModelRPC("account.move.line", 'get_data_for_manual_reconciliation', args)
+                    return self.rpc("account.move.line", 'get_data_for_manual_reconciliation')
+                        .args(args)
+                        .exec()
                         .then(function (result) {
                             var defs = _.map(result, self._formatLine.bind(self, 'accounts'));
                             self.valuenow = 0;
@@ -853,7 +873,9 @@ var ManualModel = StatementModel.extend({
                     account_ids = null; // TOFIX: REMOVE ME
                     partner_ids = null; // TOFIX: REMOVE ME
                     var args = [partner_ids, account_ids];
-                    return self.performModelRPC("account.move.line", 'get_data_for_manual_reconciliation_widget', args)
+                    return self.rpc("account.move.line", 'get_data_for_manual_reconciliation_widget')
+                        .args(args)
+                        .exec()
                         .then(function (result) {
                             var defs = _.map(result.accounts, self._formatLine.bind(self, 'accounts'));
                             defs = defs.concat(_.map(result.customers, self._formatLine.bind(self, 'customers')));
@@ -917,7 +939,9 @@ var ManualModel = StatementModel.extend({
         });
 
         if (process_reconciliations.length) {
-            def = self.performModelRPC("account.move.line", 'process_reconciliations', [process_reconciliations]);
+            def = self.rpc("account.move.line", 'process_reconciliations')
+                .args([process_reconciliations])
+                .exec();
         }
 
         return def.then(function() {
@@ -944,10 +968,14 @@ var ManualModel = StatementModel.extend({
             });
             return $.when(defs).then(function() {
                 if (account_ids.length) {
-                    self.performModelRPC("account.account", 'mark_as_reconciled', [account_ids]);
+                    self.rpc("account.account", 'mark_as_reconciled')
+                        .args([account_ids])
+                        .exec();
                 }
                 if (partner_ids.length) {
-                    self.performModelRPC("res.partner", 'mark_as_reconciled', [partner_ids]);
+                    self.rpc("res.partner", 'mark_as_reconciled')
+                        .args([partner_ids])
+                        .exec();
                 }
                 return {reconciled: reconciled, updated: _.difference(handles, reconciled)};
             });
@@ -1057,7 +1085,9 @@ var ManualModel = StatementModel.extend({
         var offset = line.offset;
         var limit = 6;
         var args = [line.account_id.id, line.partner_id, excluded_ids, filter, offset, limit];
-        return this.performModelRPC("account.move.line", 'get_move_lines_for_manual_reconciliation', args)
+        return this.rpc("account.move.line", 'get_move_lines_for_manual_reconciliation')
+            .args(args)
+            .exec()
             .then(this._formatMoveLine.bind(this, handle));
     },
 });

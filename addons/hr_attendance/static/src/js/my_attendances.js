@@ -2,7 +2,6 @@ odoo.define('hr_attendance.my_attendances', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.Model');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -20,10 +19,9 @@ var MyAttendances = Widget.extend({
     start: function () {
         var self = this;
 
-        var hr_employee = new Model('hr.employee');
-        hr_employee.query(['attendance_state', 'name'])
-            .filter([['user_id', '=', self.session.uid]])
-            .all()
+        this.rpc('hr.employee', 'search_read')
+            .args([[['user_id', '=', self.session.uid]], ['attendance_state', 'name']])
+            .exec()
             .then(function (res) {
                 if (_.isEmpty(res) ) {
                     self.$('.o_hr_attendance_employee').append(_t("Error : Could not find employee linked to user"));
@@ -38,8 +36,9 @@ var MyAttendances = Widget.extend({
 
     update_attendance: function () {
         var self = this;
-        var hr_employee = new Model('hr.employee');
-        hr_employee.call('attendance_manual', [[self.employee.id], 'hr_attendance.hr_attendance_action_my_attendances'])
+        this.rpc('hr.employee', 'attendance_manual')
+            .args([[self.employee.id], 'hr_attendance.hr_attendance_action_my_attendances'])
+            .exec()
             .then(function(result) {
                 if (result.action) {
                     self.do_action(result.action);

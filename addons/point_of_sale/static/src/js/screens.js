@@ -30,8 +30,9 @@ odoo.define('point_of_sale.screens', function (require) {
 var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
 var models = require('point_of_sale.models');
+var ajax = require('web.ajax');
 var core = require('web.core');
-var Model = require('web.DataModel');
+var rpc = require('web.rpc');
 var utils = require('web.utils');
 var field_utils = require('web.field_utils');
 
@@ -1209,15 +1210,18 @@ var ClientListScreenWidget = ScreenWidget.extend({
         fields.id           = partner.id || false;
         fields.country_id   = fields.country_id || false;
 
-        new Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
-            self.saved_client_details(partner_id);
-        },function(err,event){
-            event.preventDefault();
-            self.gui.show_popup('error',{
-                'title': _t('Error: Could not Save Changes'),
-                'body': _t('Your Internet connection is probably down.'),
+        rpc.query({model: 'res.partner', method: 'create_from_ui'})
+            .args([fields])
+            .exec({callback: ajax.rpc.bind(ajax)})
+            .then(function(partner_id){
+                self.saved_client_details(partner_id);
+            },function(err,event){
+                event.preventDefault();
+                self.gui.show_popup('error',{
+                    'title': _t('Error: Could not Save Changes'),
+                    'body': _t('Your Internet connection is probably down.'),
+                });
             });
-        });
     },
     
     // what happens when we've just pushed modifications for a partner of id partner_id

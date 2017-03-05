@@ -2,13 +2,10 @@ odoo.define('hr_attendance.kiosk_mode', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.Model');
 var Widget = require('web.Widget');
 var Session = require('web.session');
 var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
-
 var QWeb = core.qweb;
-var _t = core._t;
 
 
 var KioskMode = Widget.extend(BarcodeHandlerMixin, {
@@ -26,13 +23,12 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
     start: function () {
         var self = this;
         self.session = Session;
-        var res_company = new Model('res.company');
-        res_company.query(['name'])
-           .filter([['id', '=', self.session.company_id]])
-           .all()
-           .then(function (companies){
+        this.rpc('res.company', 'search_read')
+            .args([[['id', '=', self.session.company_id]], ['name']])
+            .exec()
+            .then(function (companies){
                 self.company_name = companies[0].name;
-                self.company_image_url = self.session.url('/web/image', {model: 'res.company', id: self.session.company_id, field: 'logo',})
+                self.company_image_url = self.session.url('/web/image', {model: 'res.company', id: self.session.company_id, field: 'logo',});
                 self.$el.html(QWeb.render("HrAttendanceKioskMode", {widget: self}));
                 self.start_clock();
             });
@@ -41,8 +37,9 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
 
     on_barcode_scanned: function(barcode) {
         var self = this;
-        var hr_employee = new Model('hr.employee');
-        hr_employee.call('attendance_scan', [barcode, ])
+        this.rpc('hr.employee', 'attendance_scan')
+            .args([barcode, ])
+            .exec()
             .then(function (result) {
                 if (result.action) {
                     self.do_action(result.action);

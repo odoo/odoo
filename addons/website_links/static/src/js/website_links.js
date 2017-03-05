@@ -6,7 +6,7 @@ var core = require('web.core');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var website = require('website.website');
-var Model = require('web.Model');
+var model = require('website.model');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -20,7 +20,7 @@ if(!$('.o_website_links_create_tracked_url').length) {
 
     var SelectBox = Widget.extend({
         init: function(obj) {
-            this.obj = new Model(obj);
+            this.obj = obj;
         },
         start: function(element, placeholder) {
             var self = this;
@@ -49,7 +49,7 @@ if(!$('.o_website_links_create_tracked_url').length) {
             });
         },
         fetch_objects: function() {
-            return this.obj.call('search_read', [[]]).then(function(result) {
+            return model.performModelRPC(this.obj, 'search_read', [[]]).then(function(result) {
                 return _.map(result, function(val) {
                     return {id: val.id, text:val.name};
                 });
@@ -68,7 +68,7 @@ if(!$('.o_website_links_create_tracked_url').length) {
         create_object: function(name) {
             var self = this;
 
-            return this.obj.call('create', [{name:name}]).then(function(record) {
+            return model.performModelRPC(this.obj, 'create', [{name:name}]).then(function(record) {
                 self.element.attr('value', record);
                 self.objects.push({'id': record, 'text': name});
             });

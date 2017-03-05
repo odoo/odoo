@@ -1299,19 +1299,17 @@ var FieldDomain = AbstractField.extend({
         var self = this;
         return def.then(function () {
             var context = {}; // FIXME ?
-            return self.performModelRPC(self.domainModel, "search_count", [
-                domain,
-                context
-            ]).then(
-                function (data) {
+            return self.rpc(self.domainModel, "search_count")
+                .args([domain,context])
+                .exec()
+                .then(function (data) {
                     self._isValidForModel = true;
                     return data;
-                },
-                function (error, e) {
+                }, function (error, e) {
                     e.preventDefault();
                     self._isValidForModel = false;
-                }
-            ).always(self._replaceContent.bind(self));
+                })
+                .always(self._replaceContent.bind(self));
         });
     },
     /**

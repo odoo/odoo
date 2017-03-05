@@ -193,17 +193,17 @@ var SalesTeamDashboardController = KanbanController.extend({
      * @param {OdooEvent} e
      */
     _onDashboardEditTarget: function (e) {
-        var target_name = e.data.target_name;
-        var target_value = e.data.target_value;
-        if(isNaN(target_value)) {
+        var targetName = e.data.target_name;
+        var targetValue = e.data.target_value;
+        if(isNaN(targetValue)) {
             this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
         } else {
-            var args = [target_name, parseInt(target_value)];
-            this.performModelRPC('crm.lead', 'modify_target_sales_dashboard', args)
+            this.rpc('crm.lead', 'modify_target_sales_dashboard')
+                .args([targetName, parseInt(targetValue)])
+                .exec()
                 .then(this.reload.bind(this));
         }
     },
-
     /**
      * @private
      * @param {OdooEvent} e
@@ -215,7 +215,6 @@ var SalesTeamDashboardController = KanbanController.extend({
             additional_context: action_context,
         });
     },
-
 });
 
 var SalesTeamDashboardView = KanbanView.extend({

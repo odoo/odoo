@@ -182,7 +182,7 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
-     * Delete a list of records, then, if a parent_id is given, reload the
+     * Delete a list of records, then, if a parentID is given, reload the
      * parent.
      *
      * @todo we should remove the deleted records from the localData
@@ -193,24 +193,26 @@ var BasicModel = AbstractModel.extend({
      * @param {string[]} recordIds list of local resources ids. They should all
      *   be of type 'record', and of the same model
      * @param {string} modelName
-     * @param {string} parent_id
+     * @param {string} parentID
      * @returns {Deferred}
      */
-    deleteRecords: function (recordIds, modelName, parent_id) {
+    deleteRecords: function (recordIds, modelName, parentID) {
         var self = this;
         var records = _.map(recordIds, function (id) { return self.localData[id]; });
-        return this.performModelRPC(modelName, 'unlink', [_.pluck(records, 'res_id')], {
-            context: session.user_context, // todo: combine with view context
-        }).then(function () {
-            _.each(records, function (record) {
-                record.res_ids.splice(record.offset, 1)[0];
-                record.res_id = record.res_ids[record.offset];
-                record.count--;
+        return this.rpc(modelName, 'unlink')
+            .args([_.pluck(records, 'res_id')])
+            .withContext(session.user_context) // todo: combine with view context
+            .exec()
+            .then(function () {
+                _.each(records, function (record) {
+                    record.res_ids.splice(record.offset, 1)[0];
+                    record.res_id = record.res_ids[record.offset];
+                    record.count--;
+                });
+                if (parentID) {
+                    return self.reload(parentID);
+                }
             });
-            if (parent_id) {
-                return self.reload(parent_id);
-            }
-        });
     },
     /**
      * Discard all changes in a local resource.  Basically, it removes
@@ -233,20 +235,22 @@ var BasicModel = AbstractModel.extend({
     duplicateRecord: function (recordID) {
         var self = this;
         var record = this.localData[recordID];
-        return this.performModelRPC(record.model, 'copy', [record.data.id], {
-            context: this._getContext(record),
-        }).then(function (res_id) {
-            var index = record.res_ids.indexOf(record.res_id);
-            record.res_ids.splice(index + 1, 0, res_id);
-            return self.load({
-                fieldAttrs: record.fieldAttrs,
-                fieldNames: record.fieldNames,
-                fields: record.fields,
-                modelName: record.model,
-                res_id: res_id,
-                res_ids: record.res_ids.slice(0),
+        return this.rpc(record.model, 'copy')
+            .args([record.data.id])
+            .withContext(this._getContext(record))
+            .exec()
+            .then(function (res_id) {
+                var index = record.res_ids.indexOf(record.res_id);
+                record.res_ids.splice(index + 1, 0, res_id);
+                return self.load({
+                    fieldAttrs: record.fieldAttrs,
+                    fieldNames: record.fieldNames,
+                    fields: record.fields,
+                    modelName: record.model,
+                    res_id: res_id,
+                    res_ids: record.res_ids.slice(0),
+                });
             });
-        });
     },
     /**
      * The get method first argument is the handle returned by the load method.
@@ -442,156 +446,158 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var fields_key = _.without(params.fieldNames, '__last_update');
 
-        return this.performModelRPC(modelName, 'default_get', [fields_key], {
-            context: params.context,
-        }).then(function (result) {
-            // fill default values for missing fields
-            for (var i = 0; i < params.fieldNames.length; i++) {
-                var fieldName = params.fieldNames[i];
-                if (!(fieldName in result)) {
-                    var field = params.fields[fieldName];
-                    if (field.type === 'one2many' || field.type === 'many2many') {
-                        result[fieldName] = [];
-                    } else {
-                        result[fieldName] = null;
+        return this.rpc(modelName, 'default_get')
+            .args([fields_key])
+            .withContext(params.context)
+            .exec()
+            .then(function (result) {
+                // fill default values for missing fields
+                for (var i = 0; i < params.fieldNames.length; i++) {
+                    var fieldName = params.fieldNames[i];
+                    if (!(fieldName in result)) {
+                        var field = params.fields[fieldName];
+                        if (field.type === 'one2many' || field.type === 'many2many') {
+                            result[fieldName] = [];
+                        } else {
+                            result[fieldName] = null;
+                        }
                     }
                 }
-            }
 
-            var data = {};
-            var record = self._makeDataPoint({
-                modelName: modelName,
-                data: data,
-                fields: params.fields,
-                fieldNames: params.fieldNames,
-                fieldAttrs: params.fieldAttrs,
-                context: params.context,
-                parentID: params.parentID,
-                relationField: params.relationField,
-                res_ids: params.res_ids,
-            });
+                var data = {};
+                var record = self._makeDataPoint({
+                    modelName: modelName,
+                    data: data,
+                    fields: params.fields,
+                    fieldNames: params.fieldNames,
+                    fieldAttrs: params.fieldAttrs,
+                    context: params.context,
+                    parentID: params.parentID,
+                    relationField: params.relationField,
+                    res_ids: params.res_ids,
+                });
 
-            var defs = [];  // FIXME: remove defs?
-            _.each(params.fieldNames, function (name) {
-                var field = params.fields[name];
-                data[name] = null;
-                record._changes = record._changes || {};
-                if (field.type === 'many2one' && result[name]) {
-                    var rec = self._makeDataPoint({
-                        context: record.context,
-                        data: {id: result[name]},
-                        modelName: field.relation,
-                    });
-                    record._changes[name] = rec.id;
-                } else if (field.type === 'one2many' || field.type === 'many2many') {
-                    var attrs = record.fieldAttrs[name];
-                    var x2manyList = self._makeDataPoint({
-                        context: record.context,
-                        fieldAttrs: field.fieldAttrs,
-                        fields: field.relatedFields,
-                        limit: field.limit,
-                        modelName: field.relation,
-                        parentID: record.id,
-                        rawContext: attrs && attrs.context,
-                        relationField: field.relation_field,
-                        res_ids: [],
-                        static: true,
-                        type: 'list',
-                    });
-                    record._changes[name] = x2manyList.id;
-                    var many2ones = {};
-                    var r;
-                    _.each(result[name], function (value) {
-                        if (_.isArray(value)) {
-                            // value is a command
-                            if (value[0] === 0) {
-                                // CREATE
+                var defs = [];  // FIXME: remove defs?
+                _.each(params.fieldNames, function (name) {
+                    var field = params.fields[name];
+                    data[name] = null;
+                    record._changes = record._changes || {};
+                    if (field.type === 'many2one' && result[name]) {
+                        var rec = self._makeDataPoint({
+                            context: record.context,
+                            data: {id: result[name]},
+                            modelName: field.relation,
+                        });
+                        record._changes[name] = rec.id;
+                    } else if (field.type === 'one2many' || field.type === 'many2many') {
+                        var attrs = record.fieldAttrs[name];
+                        var x2manyList = self._makeDataPoint({
+                            context: record.context,
+                            fieldAttrs: field.fieldAttrs,
+                            fields: field.relatedFields,
+                            limit: field.limit,
+                            modelName: field.relation,
+                            parentID: record.id,
+                            rawContext: attrs && attrs.context,
+                            relationField: field.relation_field,
+                            res_ids: [],
+                            static: true,
+                            type: 'list',
+                        });
+                        record._changes[name] = x2manyList.id;
+                        var many2ones = {};
+                        var r;
+                        _.each(result[name], function (value) {
+                            if (_.isArray(value)) {
+                                // value is a command
+                                if (value[0] === 0) {
+                                    // CREATE
+                                    r = self._makeDataPoint({
+                                        modelName: x2manyList.model,
+                                        context: x2manyList.context,
+                                        fields: field.relatedFields,
+                                        fieldAttrs: field.fieldAttrs,
+                                    });
+                                    x2manyList._changes.push(r.id);
+                                    r._changes = value[2];
+
+                                    // this is necessary so the fields are initialized
+                                    for (var fieldName in value[2]) {
+                                        r.data[fieldName] = null;
+                                    }
+
+                                    for (var name in r._changes) {
+                                        if (r.fields[name].type === 'many2one') {
+                                            var rec = self._makeDataPoint({
+                                                context: r.context,
+                                                modelName: r.fields[name].relation,
+                                                data: {id: r._changes[name]}
+                                            });
+                                            r._changes[name] = rec.id;
+                                            many2ones[name] = true;
+                                        }
+                                    }
+                                }
+                                if (value[0] === 6) {
+                                    // REPLACE_WITH
+                                    x2manyList._changes = [];
+                                }
+                            } else {
+                                // value is an id
                                 r = self._makeDataPoint({
                                     modelName: x2manyList.model,
                                     context: x2manyList.context,
                                     fields: field.relatedFields,
                                     fieldAttrs: field.fieldAttrs,
+                                    res_id: value,
                                 });
+                                if (!x2manyList._changes) {
+                                    x2manyList._changes = [];
+                                }
                                 x2manyList._changes.push(r.id);
-                                r._changes = value[2];
-
-                                // this is necessary so the fields are initialized
-                                for (var fieldName in value[2]) {
-                                    r.data[fieldName] = null;
-                                }
-
-                                for (var name in r._changes) {
-                                    if (r.fields[name].type === 'many2one') {
-                                        var rec = self._makeDataPoint({
-                                            context: r.context,
-                                            modelName: r.fields[name].relation,
-                                            data: {id: r._changes[name]}
-                                        });
-                                        r._changes[name] = rec.id;
-                                        many2ones[name] = true;
-                                    }
-                                }
                             }
-                            if (value[0] === 6) {
-                                // REPLACE_WITH
-                                x2manyList._changes = [];
-                            }
-                        } else {
-                            // value is an id
-                            r = self._makeDataPoint({
-                                modelName: x2manyList.model,
-                                context: x2manyList.context,
-                                fields: field.relatedFields,
-                                fieldAttrs: field.fieldAttrs,
-                                res_id: value,
-                            });
-                            if (!x2manyList._changes) {
-                                x2manyList._changes = [];
-                            }
-                            x2manyList._changes.push(r.id);
-                        }
-                    });
+                        });
 
-                    // fetch many2ones display_name
-                    _.each(_.keys(many2ones), function (name) {
-                        defs.push(self._fetchNameGets(x2manyList, name));
-                    });
-                } else if (field.type === 'date') {
-                    // process date: convert into a moment instance
-                    record._changes[name] = fieldUtils.parse.date(result[name]);
-                } else if (field.type === 'datetime') {
-                    // process datetime: convert into a moment instance
-                    record._changes[name] = fieldUtils.parse.datetime(result[name]);
-                } else {
-                    record._changes[name] = result[name];
-                }
-            });
-            return $.when.apply($, defs)
-                .then(function () {
-                    var shouldApplyOnchange = false;
-                    var field;
-                    for (var field_name in record.data) {
-                        field = record.fields[field_name];
-                        if (field.onChange) {
-                            shouldApplyOnchange = true;
-                        }
-                    }
-                    if (shouldApplyOnchange) {
-                        return self._applyOnChange(record, fields_key);
+                        // fetch many2ones display_name
+                        _.each(_.keys(many2ones), function (name) {
+                            defs.push(self._fetchNameGets(x2manyList, name));
+                        });
+                    } else if (field.type === 'date') {
+                        // process date: convert into a moment instance
+                        record._changes[name] = fieldUtils.parse.date(result[name]);
+                    } else if (field.type === 'datetime') {
+                        // process datetime: convert into a moment instance
+                        record._changes[name] = fieldUtils.parse.datetime(result[name]);
                     } else {
-                        return $.when();
+                        record._changes[name] = result[name];
                     }
-                })
-                .then(function () {
-                    return self._fetchRelationalData(record);
-                })
-                .then(function () {
-                    return self._postprocess(record);
-                })
-                .then(function () {
-                    return record.id;
                 });
-        });
+                return $.when.apply($, defs)
+                    .then(function () {
+                        var shouldApplyOnchange = false;
+                        var field;
+                        for (var field_name in record.data) {
+                            field = record.fields[field_name];
+                            if (field.onChange) {
+                                shouldApplyOnchange = true;
+                            }
+                        }
+                        if (shouldApplyOnchange) {
+                            return self._applyOnChange(record, fields_key);
+                        } else {
+                            return $.when();
+                        }
+                    })
+                    .then(function () {
+                        return self._fetchRelationalData(record);
+                    })
+                    .then(function () {
+                        return self._postprocess(record);
+                    })
+                    .then(function () {
+                        return record.id;
+                    });
+            });
     },
     /**
      * This helper method is designed to help developpers that want to use a
@@ -808,21 +814,23 @@ var BasicModel = AbstractModel.extend({
             // in the case of a write, only perform the RPC if there are changes to save
             if (method === 'create' || Object.keys(changes).length) {
                 var args = method === 'write' ? [[record.data.id], changes] : [changes];
-                return self.performModelRPC(record.model, method, args, {
-                    context: session.user_context, // todo: combine with view context
-                }).then(function (id) {
-                    if (method === 'create') {
-                        record.res_id = id;  // create returns an id, write returns a boolean
-                        record.data.id = id;
-                        record.offset = record.res_ids.length;
-                        record.res_ids.push(id);
-                        record.count++;
-                    }
-                    // erase changes as they have been applied
-                    record._changes = {};
+                return self.rpc(record.model, method)
+                    .args(args)
+                    .withContext(session.user_context) // todo: combine with view context
+                    .exec()
+                    .then(function (id) {
+                        if (method === 'create') {
+                            record.res_id = id;  // create returns an id, write returns a boolean
+                            record.data.id = id;
+                            record.offset = record.res_ids.length;
+                            record.res_ids.push(id);
+                            record.count++;
+                        }
+                        // erase changes as they have been applied
+                        record._changes = {};
 
-                    return shouldReload ? self._fetchRecord(record) : false;
-                });
+                        return shouldReload ? self._fetchRecord(record) : false;
+                    });
             } else {
                 return $.when(record_id);
             }
@@ -881,7 +889,7 @@ var BasicModel = AbstractModel.extend({
      * @param {Array} recordIDs local ids of the records to (un)archive
      * @param {boolean} value false to archive, true to unarchive (value of the active field)
      * @param {string} parentID id of the parent resource to reload
-     * @returns {Deferred -> string} resolves to the parent id
+     * @returns {Deferred<string>} resolves to the parent id
      */
     toggleActive: function (recordIDs, value, parentID) {
         var self = this;
@@ -889,8 +897,9 @@ var BasicModel = AbstractModel.extend({
         var resIDs = _.map(recordIDs, function (recordID) {
             return self.localData[recordID].res_id;
         });
-        return this
-            .performModelRPC(parent.model, 'write', [resIDs, { active: value }])
+        return this.rpc(parent.model, 'write')
+            .args([resIDs, { active: value }])
+            .exec()
             .then(this.reload.bind(this, parentID));
 
     },
@@ -960,11 +969,13 @@ var BasicModel = AbstractModel.extend({
         var def;
         if (!('display_name' in rel_data)) {
             var field = record.fields[fieldName];
-            def = this.performModelRPC(field.relation, 'name_get', [data.id], {
-                context: record.context,
-            }).then(function (result) {
-                rel_data.display_name = result[0][1];
-            });
+            def = this.rpc(field.relation, 'name_get')
+                .args([data.id])
+                .withContext(record.context)
+                .exec()
+                .then(function (result) {
+                    rel_data.display_name = result[0][1];
+                });
         }
         return $.when(def).then(function () {
             var rec = self._makeDataPoint({
@@ -1010,96 +1021,98 @@ var BasicModel = AbstractModel.extend({
             fields = fields[0];
         }
         return this.mutex.exec(function () {
-            var args = [idList, currentData, fields, onchange_spec, context];
-            return self.performModelRPC(record.model, 'onchange', args, {}).then(function (result) {
-                if (result.warning) {
-                    self.trigger_up('warning', {
-                        message: result.warning.message,
-                        title: result.warning.title,
-                        type: 'dialog',
-                    });
-                }
-                var defs = [];
-                _.each(result.value, function (val, name) {
-                    var field = record.fields[name];
-                    if (!field) { return; } // ignore changes of unknown fields
-
-                    var rec;
-                    if (field.type === 'many2one' ) {
-                        // in some case, the value returned by the onchange can
-                        // be false (no value), so we need to avoid creating a
-                        // local record for that.
-                        // FIXME: shouldn't we erase the value in that case?
-                        if (val) {
-                            // when the value isn't false, it can be either
-                            // an array [id, display_name] or just an id.
-                            var data = _.isArray(val) ?
-                                {id: val[0], display_name: val[1]} :
-                                {id: val};
-                            rec = self._makeDataPoint({
-                                context: context,
-                                data: data,
-                                modelName: field.relation,
-                            });
-                            record._changes[name] = rec.id;
-                        }
-                    } else if (field.type === 'one2many' || field.type === 'many2many') {
-                        record._changes = record._changes || {};
-                        var listId = record._changes[name] || record.data[name];
-                        var list = self.localData[listId];
-                        _.each(val, function (command) {
-                            if (command[0] === 0 || command[0] === 1) {
-                                // CREATE or UPDATE
-                                var params = {
-                                    context: context,
-                                    fields: list.fields,
-                                    fieldAttrs: list.fieldAttrs,
-                                    modelName: list.model,
-                                    fieldNames: _.keys(command[2]),
-                                };
-                                if (command[0] === 1) {
-                                    params.res_id = command[1];
-                                }
-                                rec = self._makeDataPoint(params);
-                                var data = command[2];
-                                _.each(rec.fieldNames, function (name) {
-                                    var field = rec.fields[name];
-                                    if (field.type === 'many2one') {
-                                        var r = self._makeDataPoint({
-                                            modelName: field.relation,
-                                            data: {
-                                                id: data[name][0],
-                                                display_name: data[name][1],
-                                            },
-                                        });
-                                        data[name] = r.id;
-                                    }
-                                });
-                                rec._changes = data;
-                                for (var f in rec._changes) {
-                                    rec.data[f] = null;
-                                }
-                                list._changes.push(rec.id);
-                            }
-                            if (command[0] === 5) {
-                                // DELETE ALL
-                                list._changes = [];
-                            }
+            return self.rpc(record.model, 'onchange')
+                .args([idList, currentData, fields, onchange_spec, context])
+                .exec()
+                .then(function (result) {
+                    if (result.warning) {
+                        self.trigger_up('warning', {
+                            message: result.warning.message,
+                            title: result.warning.title,
+                            type: 'dialog',
                         });
-                    } else if (field.type === 'date') {
-                        // process data: convert into a moment instance
-                        record._changes[name] = fieldUtils.parse.date(val);
-                    } else if (field.type === 'datetime') {
-                        // process datetime: convert into a moment instance
-                        record._changes[name] = fieldUtils.parse.datetime(val);
-                    } else {
-                        record._changes[name] = val;
                     }
+                    var defs = [];
+                    _.each(result.value, function (val, name) {
+                        var field = record.fields[name];
+                        if (!field) { return; } // ignore changes of unknown fields
+
+                        var rec;
+                        if (field.type === 'many2one' ) {
+                            // in some case, the value returned by the onchange can
+                            // be false (no value), so we need to avoid creating a
+                            // local record for that.
+                            // FIXME: shouldn't we erase the value in that case?
+                            if (val) {
+                                // when the value isn't false, it can be either
+                                // an array [id, display_name] or just an id.
+                                var data = _.isArray(val) ?
+                                    {id: val[0], display_name: val[1]} :
+                                    {id: val};
+                                rec = self._makeDataPoint({
+                                    context: context,
+                                    data: data,
+                                    modelName: field.relation,
+                                });
+                                record._changes[name] = rec.id;
+                            }
+                        } else if (field.type === 'one2many' || field.type === 'many2many') {
+                            record._changes = record._changes || {};
+                            var listId = record._changes[name] || record.data[name];
+                            var list = self.localData[listId];
+                            _.each(val, function (command) {
+                                if (command[0] === 0 || command[0] === 1) {
+                                    // CREATE or UPDATE
+                                    var params = {
+                                        context: context,
+                                        fields: list.fields,
+                                        fieldAttrs: list.fieldAttrs,
+                                        modelName: list.model,
+                                        fieldNames: _.keys(command[2]),
+                                    };
+                                    if (command[0] === 1) {
+                                        params.res_id = command[1];
+                                    }
+                                    rec = self._makeDataPoint(params);
+                                    var data = command[2];
+                                    _.each(rec.fieldNames, function (name) {
+                                        var field = rec.fields[name];
+                                        if (field.type === 'many2one') {
+                                            var r = self._makeDataPoint({
+                                                modelName: field.relation,
+                                                data: {
+                                                    id: data[name][0],
+                                                    display_name: data[name][1],
+                                                },
+                                            });
+                                            data[name] = r.id;
+                                        }
+                                    });
+                                    rec._changes = data;
+                                    for (var f in rec._changes) {
+                                        rec.data[f] = null;
+                                    }
+                                    list._changes.push(rec.id);
+                                }
+                                if (command[0] === 5) {
+                                    // DELETE ALL
+                                    list._changes = [];
+                                }
+                            });
+                        } else if (field.type === 'date') {
+                            // process data: convert into a moment instance
+                            record._changes[name] = fieldUtils.parse.date(val);
+                        } else if (field.type === 'datetime') {
+                            // process datetime: convert into a moment instance
+                            record._changes[name] = fieldUtils.parse.datetime(val);
+                        } else {
+                            record._changes[name] = val;
+                        }
+                    });
+                    return $.when.apply($, defs).then(function () {
+                        return result;
+                    });
                 });
-                return $.when.apply($, defs).then(function () {
-                    return result;
-                });
-            });
         });
     },
     /**
@@ -1158,8 +1171,9 @@ var BasicModel = AbstractModel.extend({
                 // _changes so this is a very specific case)
                 // this could be optimized by registering the fetched records in the list's _cache
                 // so that if a record is removed and then re-added, it won't be fetched twice
-                var def = this
-                    .performModelRPC(list.model, 'read', [_.pluck(data, 'id'), list.fieldNames], {})
+                var def = this.rpc(list.model, 'read')
+                    .args([_.pluck(data, 'id'), list.fieldNames])
+                    .exec()
                     .then(function (records) {
                         _.each(records, function (record) {
                             list_records[record.id].data = record;
@@ -1241,14 +1255,16 @@ var BasicModel = AbstractModel.extend({
     _fetchMany2OneGroup: function (group) {
         var ids = _.uniq(_.pluck(group, 'res_id'));
 
-        return this.performModelRPC(group[0].model, 'name_get', [ids], {
-            context: group[0].context,
-        }).then(function (name_gets) {
-            _.each(group, function (record) {
-                var nameGet = _.find(name_gets, function (n) { return n[0] === record.res_id;});
-                record.data.display_name = nameGet[1];
+        return this.rpc(group[0].model, 'name_get')
+            .args([ids])
+            .withContext(group[0].context)
+            .exec()
+            .then(function (name_gets) {
+                _.each(group, function (record) {
+                    var nameGet = _.find(name_gets, function (n) { return n[0] === record.res_id;});
+                    record.data.display_name = nameGet[1];
+                });
             });
-        });
     },
     _fetchNameGets: function (list, fieldName) {
         var self = this;
@@ -1263,13 +1279,15 @@ var BasicModel = AbstractModel.extend({
             model = many2oneRecord.model;
             return many2oneRecord.res_id;
         });
-        return this.performModelRPC(model, 'name_get', [ids], {
-            context: list.context,
-        }).then(function (name_gets) {
-            for (var i = 0; i < name_gets.length; i++) {
-                records[i].data.display_name = name_gets[i][1];
-            }
-        });
+        return this.rpc(model, 'name_get')
+            .args([ids])
+            .withContext(list.context)
+            .exec()
+            .then(function (name_gets) {
+                for (var i = 0; i < name_gets.length; i++) {
+                    records[i].data.display_name = name_gets[i][1];
+                }
+            });
     },
     /**
      * For a given resource of type 'record', fetch all data.
@@ -1283,45 +1301,47 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         fieldNames = fieldNames || _.uniq(record.fieldNames.concat(['display_name']));
         var oldData = record.data;
-        return this.performModelRPC(record.model, 'read', [record.res_id, fieldNames], {
-            // context: { 'bin_size': true }, // FIXME: when editing a subrecord in the partner form view, it tries to write the bin_size on the image field
-        }).then(function (result) {
-            result = result[0];
-            record.data = _.extend({}, record.data, result);
-        }).then(function () {
-            return self._fetchX2Manys(record, oldData, fieldNames).then(function () {
-                return self._postprocess(record);
-            });
-        }).then(function (record) {
-            _.each(fieldNames, function (name) {
-                var field = record.fields[name];
-                var val = record.data[name];
-                if (field.type === 'many2one') {
-                    // process many2one: split [id, nameget] and create corresponding record
-                    if (val !== false) {
-                        // the many2one value is of the form [id, display_name]
-                        var r = self._makeDataPoint({
-                            modelName: field.relation,
-                            data: {
-                                display_name: val[1],
-                                id: val[0],
-                            },
-                        });
-                        record.data[name] = r.id;
-                    } else {
-                        // no value for the many2one
-                        record.data[name] = false;
+        return this.rpc(record.model, 'read')
+            .args([[record.res_id], fieldNames])
+            // .withContext({ bin_size: true })  // FIXME: when editing a subrecord in the partner form view, it tries to write the bin_size on the image field
+            .exec()
+            .then(function (result) {
+                result = result[0];
+                record.data = _.extend({}, record.data, result);
+            }).then(function () {
+                return self._fetchX2Manys(record, oldData, fieldNames).then(function () {
+                    return self._postprocess(record);
+                });
+            }).then(function (record) {
+                _.each(fieldNames, function (name) {
+                    var field = record.fields[name];
+                    var val = record.data[name];
+                    if (field.type === 'many2one') {
+                        // process many2one: split [id, nameget] and create corresponding record
+                        if (val !== false) {
+                            // the many2one value is of the form [id, display_name]
+                            var r = self._makeDataPoint({
+                                modelName: field.relation,
+                                data: {
+                                    display_name: val[1],
+                                    id: val[0],
+                                },
+                            });
+                            record.data[name] = r.id;
+                        } else {
+                            // no value for the many2one
+                            record.data[name] = false;
+                        }
+                    } else if (field.type === 'date') {
+                        // process data: convert into a moment instance
+                        record.data[name] = fieldUtils.parse.date(val);
+                    } else if (field.type === 'datetime') {
+                        // process datetime: convert into a moment instance
+                        record.data[name] = fieldUtils.parse.datetime(val);
                     }
-                } else if (field.type === 'date') {
-                    // process data: convert into a moment instance
-                    record.data[name] = fieldUtils.parse.date(val);
-                } else if (field.type === 'datetime') {
-                    // process datetime: convert into a moment instance
-                    record.data[name] = fieldUtils.parse.datetime(val);
-                }
+                });
+                return record;
             });
-            return record;
-        });
     },
     /**
      * This method is incorrectly named.  It should be named something like
@@ -1473,33 +1493,35 @@ var BasicModel = AbstractModel.extend({
         }
 
         // step 2: fetch data from server
-        return this.performModelRPC(field.relation, 'read', [ids, _.keys(field.relatedFields)], {
-            context: {}, // FIXME
-        }).then(function (results) {
-            // step 3: assign values to correct datapoints
-            var dataPoints = _.map(results, function (result) {
-                return self._makeDataPoint({
-                    modelName: field.relation,
-                    data: result,
-                    fields: field.relatedFields,
-                    fieldAttrs: field.fieldAttrs,
-                });
-            });
-
-            _.each(list.data, function (dataPoint) {
-                var record = self.localData[dataPoint];
-                var m2mList = self.localData[record.data[fieldName]];
-
-                m2mList.data = [];
-                _.each(m2mList.res_ids, function (res_id) {
-                    var dataPoint = _.find(dataPoints, function (d) {
-                        return d.res_id === res_id;
+        return this.rpc(field.relation, 'read')
+            .args([ids, _.keys(field.relatedFields)])
+            .withContext({}) // FIXME
+            .exec()
+            .then(function (results) {
+                // step 3: assign values to correct datapoints
+                var dataPoints = _.map(results, function (result) {
+                    return self._makeDataPoint({
+                        modelName: field.relation,
+                        data: result,
+                        fields: field.relatedFields,
+                        fieldAttrs: field.fieldAttrs,
                     });
-                    m2mList.data.push(dataPoint.id);
-                    m2mList.count++;
+                });
+
+                _.each(list.data, function (dataPoint) {
+                    var record = self.localData[dataPoint];
+                    var m2mList = self.localData[record.data[fieldName]];
+
+                    m2mList.data = [];
+                    _.each(m2mList.res_ids, function (res_id) {
+                        var dataPoint = _.find(dataPoints, function (d) {
+                            return d.res_id === res_id;
+                        });
+                        m2mList.data.push(dataPoint.id);
+                        m2mList.count++;
+                    });
                 });
             });
-        });
     },
     /**
      * batch request for x2ms for datapoint of type list
@@ -1740,46 +1762,50 @@ var BasicModel = AbstractModel.extend({
                 var _domain = new data.CompoundDomain(field.domain || {}).set_eval_context(field_values);
                 var domain = pyeval.eval('domain', _domain);
                 var fold_field = pyeval.py_eval(attrs.options || '{}').fold_field;
-                var fetch_status_information = self.performRPC('/web/dataset/search_read', {
-                    model: field.relation,
-                    fields: ['id'].concat(fold_field ? [fold_field] : []),
-                    domain: domain,
-                }).then(function (result) {
-                    var ids = _.pluck(result.records, 'id');
-                    return self.performModelRPC(field.relation, 'name_get', [ids], {
-                        context: self._getContext(record, {fieldName: name}),
-                    }).then(function (name_gets) {
-                        _.each(result.records, function (record) {
-                            var name_get = _.find(name_gets, function (n) {
-                                return n[0] === record.id;
+                var fetch_status_information = self.rpc(field.relation, 'search_read')
+                    .withFields(['id'].concat(fold_field ? [fold_field] : []))
+                    .withDomain(domain)
+                    .exec()
+                    .then(function (result) {
+                        var ids = _.pluck(result.records, 'id');
+                        return self.rpc(field.relation, 'name_get')
+                            .args([ids])
+                            .withContext(self._getContext(record, {fieldName: name}))
+                            .exec()
+                            .then(function (name_gets) {
+                                _.each(result.records, function (record) {
+                                    var name_get = _.find(name_gets, function (n) {
+                                        return n[0] === record.id;
+                                    });
+                                    record.display_name = name_get[1];
+                                });
+                                field.__status_information = result.records;
                             });
-                            record.display_name = name_get[1];
-                        });
-                        field.__status_information = result.records;
                     });
-                });
                 defs.push(fetch_status_information);
             }
             if (field.__always_reload) {
                 if (record.data[name] instanceof Array) {
-                    defs.push(self.performModelRPC(field.relation, 'name_get', [record.data[name][0]], {
-                        context: self._getContext(record, {fieldName: name}),
-                    }).then(function (result) {
-                        record.data[name] = result[0];
-                    }));
+                    defs.push(self.rpc(field.relation, 'name_get')
+                        .args([record.data[name][0]])
+                        .withContext(self._getContext(record, {fieldName: name}))
+                        .exec()
+                        .then(function (result) {
+                            record.data[name] = result[0];
+                        }));
                 }
             }
             if (field.__fetch_selection && !self.many2ones[field.relation]) {
-                var fetchSelection = self
-                    .performModelRPC(field.relation, 'name_search', [], {})
+                var fetchSelection = self.rpc(field.relation, 'name_search')
+                    .exec()
                     .then(function (result) {
                         self.many2ones[field.relation] = result;
                     });
                 defs.push(fetchSelection);
             }
             if (field.__fetch_many2manys) {
-                var fetchMany2Manys = self
-                    .performModelRPC(field.relation, 'name_search', [], {})
+                var fetchMany2Manys = self.rpc(field.relation, 'name_search')
+                    .exec()
                     .then(function (result) {
                         self.many2manys[field.relation] = result;
                     });
@@ -1802,69 +1828,68 @@ var BasicModel = AbstractModel.extend({
     _readGroup: function (list) {
         var self = this;
         var fields = _.uniq(list.fieldNames.concat(list.groupedBy));
-        return this.performModelRPC(list.model, 'read_group', [], {
-            fields: fields,
-            context: list.context,
-            groupby: list.groupedBy,
-            domain: list.domain,
-            orderby: false,
-            lazy: true,
-        }).then(function (groups) {
-            var rawGroupBy = list.groupedBy[0].split(':')[0];
-            var previousGroups = _.map(list.data, function (groupID) {
-                return self.localData[groupID];
-            });
-            list.data = [];
-            list.count = groups.length;
-            var defs = [];
+        return this.rpc(list.model, 'read_group')
+            .withFields(fields)
+            .withContext(list.context)
+            .groupBy(list.groupedBy)
+            .lazy(true)
+            .exec()
+            .then(function (groups) {
+                var rawGroupBy = list.groupedBy[0].split(':')[0];
+                var previousGroups = _.map(list.data, function (groupID) {
+                    return self.localData[groupID];
+                });
+                list.data = [];
+                list.count = groups.length;
+                var defs = [];
 
-            _.each(groups, function (group) {
-                var aggregateValues = {};
-                _.each(group, function (value, key) {
-                    if (_.contains(fields, key) && key !== list.groupedBy[0]) {
-                        aggregateValues[key] = value;
+                _.each(groups, function (group) {
+                    var aggregateValues = {};
+                    _.each(group, function (value, key) {
+                        if (_.contains(fields, key) && key !== list.groupedBy[0]) {
+                            aggregateValues[key] = value;
+                        }
+                    });
+                    var newGroup = self._makeDataPoint({
+                        modelName: list.model,
+                        count: group[rawGroupBy + '_count'],
+                        domain: group.__domain,
+                        context: list.context,
+                        fields: list.fields,
+                        fieldNames: list.fieldNames,
+                        fieldAttrs: list.fieldAttrs,
+                        value: group[rawGroupBy],
+                        aggregateValues: aggregateValues,
+                        groupedBy: list.groupedBy.slice(1),
+                        orderedBy: list.orderedBy,
+                        limit: list.limit,
+                        openGroupByDefault: list.openGroupByDefault,
+                        type: 'list', // nested groupedBys not handled yet
+                    });
+                    list.data.push(newGroup.id);
+                    var old_group = _.find(previousGroups, function (g) {
+                        return g.res_id === newGroup.res_id && g.value === newGroup.value;
+                    });
+                    if (old_group) {
+                        newGroup.isOpen = old_group.isOpen;
+                    } else if (!newGroup.openGroupByDefault) {
+                        newGroup.isOpen = false;
+                    } else {
+                        newGroup.isOpen = '__fold' in group ? !group.__fold : true;
+                    }
+                    if (newGroup.isOpen && newGroup.count > 0) {
+                        defs.push(self._fetchUngroupedList(newGroup));
                     }
                 });
-                var newGroup = self._makeDataPoint({
-                    modelName: list.model,
-                    count: group[rawGroupBy + '_count'],
-                    domain: group.__domain,
-                    context: list.context,
-                    fields: list.fields,
-                    fieldNames: list.fieldNames,
-                    fieldAttrs: list.fieldAttrs,
-                    value: group[rawGroupBy],
-                    aggregateValues: aggregateValues,
-                    groupedBy: list.groupedBy.slice(1),
-                    orderedBy: list.orderedBy,
-                    limit: list.limit,
-                    openGroupByDefault: list.openGroupByDefault,
-                    type: 'list', // nested groupedBys not handled yet
+                return $.when.apply($, defs).then(function () {
+                    // generate the res_ids of the main list, being the concatenation
+                    // of the fetched res_ids in each group
+                    list.res_ids = _.flatten(_.map(arguments, function (group) {
+                        return group ? group.res_ids : [];
+                    }));
+                    return list;
                 });
-                list.data.push(newGroup.id);
-                var old_group = _.find(previousGroups, function (g) {
-                    return g.res_id === newGroup.res_id && g.value === newGroup.value;
-                });
-                if (old_group) {
-                    newGroup.isOpen = old_group.isOpen;
-                } else if (!newGroup.openGroupByDefault) {
-                    newGroup.isOpen = false;
-                } else {
-                    newGroup.isOpen = '__fold' in group ? !group.__fold : true;
-                }
-                if (newGroup.isOpen && newGroup.count > 0) {
-                    defs.push(self._fetchUngroupedList(newGroup));
-                }
             });
-            return $.when.apply($, defs).then(function () {
-                // generate the res_ids of the main list, being the concatenation
-                // of the fetched res_ids in each group
-                list.res_ids = _.flatten(_.map(arguments, function (group) {
-                    return group ? group.res_ids : [];
-                }));
-                return list;
-            });
-        });
     },
     /**
      * For 'static' list, such as one2manys in a form view, we can do a /read
@@ -1887,9 +1912,10 @@ var BasicModel = AbstractModel.extend({
             }
         }
         if (missingIds.length) {
-            def = this.performModelRPC(list.model, 'read', [missingIds, list.fieldNames], {
-                context: {}, // FIXME
-            });
+            def = this.rpc(list.model, 'read')
+                .args([missingIds, list.fieldNames])
+                .withContext({}) // FIXME
+                .exec();
         } else {
             def = $.when();
         }
@@ -1946,67 +1972,52 @@ var BasicModel = AbstractModel.extend({
      */
     _searchReadUngroupedList: function (list) {
         var self = this;
-        return this.performRPC('/web/dataset/search_read', {
-            model: list.model,
-            fields: list.fieldNames,
-            domain: list.domain || [],
-            offset: list.offset,
-            limit: list.limit,
-            sort: this._serializeSort(list.orderedBy),
-        }).then(function (result) {
-            list.count = result.length;
-            var data = _.map(result.records, function (record) {
-                var dataPoint = self._makeDataPoint({
-                    data: record,
-                    fields: list.fields,
-                    fieldNames: list.fieldNames,
-                    fieldAttrs: list.fieldAttrs,
-                    modelName: list.model,
-                    parentID: list.id,
-                });
+        return this.rpc(list.model, 'search_read')
+            .withFields(list.fieldNames)
+            .withDomain(list.domain || [])
+            .withLimit(list.limit)
+            .withOffset(list.offset)
+            .orderBy(list.orderedBy)
+            .exec()
+            .then(function (result) {
+                list.count = result.length;
+                var data = _.map(result.records, function (record) {
+                    var dataPoint = self._makeDataPoint({
+                        data: record,
+                        fields: list.fields,
+                        fieldNames: list.fieldNames,
+                        fieldAttrs: list.fieldAttrs,
+                        modelName: list.model,
+                        parentID: list.id,
+                    });
 
-                // add many2one records
-                _.each(dataPoint.fieldNames, function (name) {
-                    var field = dataPoint.fields[name];
-                    if (field.type === 'many2one') {
-                        var r = self._makeDataPoint({
-                            modelName: field.relation,
-                            data: {
-                                id: dataPoint.data[name][0],
-                                display_name: dataPoint.data[name][1],
-                            }
-                        });
+                    // add many2one records
+                    _.each(dataPoint.fieldNames, function (name) {
+                        var field = dataPoint.fields[name];
+                        if (field.type === 'many2one') {
+                            var r = self._makeDataPoint({
+                                modelName: field.relation,
+                                data: {
+                                    id: dataPoint.data[name][0],
+                                    display_name: dataPoint.data[name][1],
+                                }
+                            });
 
-                        dataPoint.data[name] = r.id;
-                    }
-                    if (field.type === 'date') {
-                        dataPoint.data[name] = fieldUtils.parse.date(dataPoint.data[name]);
-                    }
-                    if (field.type === 'datetime') {
-                        dataPoint.data[name] = fieldUtils.parse.datetime(dataPoint.data[name]);
-                    }
+                            dataPoint.data[name] = r.id;
+                        }
+                        if (field.type === 'date') {
+                            dataPoint.data[name] = fieldUtils.parse.date(dataPoint.data[name]);
+                        }
+                        if (field.type === 'datetime') {
+                            dataPoint.data[name] = fieldUtils.parse.datetime(dataPoint.data[name]);
+                        }
+                    });
+                    return dataPoint.id;
                 });
-                return dataPoint.id;
+                list.data = data;
+                list.res_ids = _.pluck(result.records, 'id');
+                return list;
             });
-            list.data = data;
-            list.res_ids = _.pluck(result.records, 'id');
-            return list;
-        });
-    },
-    /**
-     * Helper method, generates a string to describe a ordered by sequence for
-     * SQL.
-     *
-     * For example, [{name: 'foo', asc: true}, {name: 'bar', asc: false}] will
-     * be converted into 'foo ASC, bar DESC'
-     *
-     * @param {Object[]} orderBy list of objects {name:..., asc: ...}
-     * @returns {string}
-     */
-    _serializeSort: function (orderBy) {
-        return _.map(orderBy, function (order) {
-            return order.asc ? order.name + ' ASC' : order.name + ' DESC';
-        }).join(', ');
     },
     /**
      * Change the offset of a record. Note that this does not reload the data.

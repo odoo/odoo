@@ -4,7 +4,6 @@ odoo.define('hr_attendance.greeting_message', function (require) {
 var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
 
 var core = require('web.core');
-var Model = require('web.Model');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -132,8 +131,9 @@ var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
         if (this.return_to_main_menu) {  // in case of multiple scans in the greeting message view, delete the timer, a new one will be created.
             clearTimeout(this.return_to_main_menu);
         }
-        var hr_employee = new Model('hr.employee');
-        hr_employee.call('attendance_scan', [barcode, ])
+        this.rpc('hr.employee', 'attendance_scan')
+            .args([barcode, ])
+            .exec()
             .then(function (result) {
                 if (result.action) {
                     self.do_action(result.action);

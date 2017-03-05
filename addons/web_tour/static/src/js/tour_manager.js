@@ -3,7 +3,7 @@ odoo.define('web_tour.TourManager', function(require) {
 
 var core = require('web.core');
 var local_storage = require('web.local_storage');
-var Model = require('web.Model');
+var mixins = require('web.mixins');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
 
@@ -187,15 +187,17 @@ var RunningTourActionHelper = core.Class.extend({
     },
 });
 
-return core.Class.extend({
-    init: function(consumed_tours) {
+return core.Class.extend(mixins.EventDispatcherMixin, mixins.ServicesMixin, {
+    init: function(parent, consumed_tours) {
+        mixins.EventDispatcherMixin.init.call(this);
+        this.setParent(parent);
+
         this.$body = $('body');
         this.active_tooltips = {};
         this.tours = {};
         this.consumed_tours = consumed_tours || [];
         this.running_tour = local_storage.getItem(get_running_key());
         this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 10;
-        this.TourModel = new Model('web_tour.tour');
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
         this._log = [];
     },
@@ -447,9 +449,13 @@ return core.Class.extend({
             }
             this._log = [];
         } else {
-            this.TourModel.call('consume', [[tour_name]]).then((function () {
-                this.consumed_tours.push(tour_name);
-            }).bind(this));
+            var self = this;
+            this.rpc('web_tour.tour', 'consume')
+                .args([[tour_name]])
+                .exec()
+                .then(function () {
+                    self.consumed_tours.push(tour_name);
+                });
         }
     },
     _set_running_tour_timeout: function (tour_name, step) {
@@ -509,4 +515,5 @@ return core.Class.extend({
         },
     },
 });
+
 });

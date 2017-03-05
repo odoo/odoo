@@ -7,7 +7,6 @@ var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var formats = require('web.formats');
-var Model = require('web.Model');
 var session = require('web.session');
 var web_client = require('web.web_client');
 var Widget = require('web.Widget');
@@ -104,7 +103,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         }
 
         var self = this;
-        new Model('ir.config_parameter').call('set_param', ['google_management_client_id', ga_client_id]).then(function(){
+        this.performModelRPC('ir.config_parameter', 'set_param', ['google_management_client_id', ga_client_id]).then(function(){
             self.on_date_range_button('week');
         });
     },

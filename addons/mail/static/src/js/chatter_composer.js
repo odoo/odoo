@@ -125,7 +125,9 @@ var ChatterComposer = composer.BasicComposer.extend({
         var def;
         if (names_to_find.length > 0) {
             var args = [[this.context.default_res_id], names_to_find];
-            def = this.performModelRPC(this.model, 'message_partner_info_from_emails', args);
+            def = this.rpc(this.model, 'message_partner_info_from_emails')
+                .args(args)
+                .exec();
         }
 
         // for unknown names + incomplete partners -> open popup - cancel = remove from recipients
@@ -171,7 +173,9 @@ var ChatterComposer = composer.BasicComposer.extend({
                 var def;
                 if (new_names_to_find.length > 0) {
                     var args = [[self.context.default_res_id], new_names_to_find, true];
-                    self.performModelRPC(self.model, 'message_partner_info_from_emails', args);
+                    self.rpc(self.model, 'message_partner_info_from_emails')
+                        .args(args)
+                        .exec();
                 }
                 $.when(def).pipe(function (result) {
                     result = result || [];

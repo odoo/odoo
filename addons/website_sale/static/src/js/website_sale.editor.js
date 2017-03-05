@@ -3,7 +3,7 @@ odoo.define('website_sale.editor', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
-var Model = require('web.Model');
+var model = require('website.model');
 var contentMenu = require('website.contentMenu');
 var options = require('web_editor.snippets.options');
 
@@ -44,8 +44,7 @@ options.registry.website_sale = options.Class.extend({
         if (size_y >= 4) $select = $select.add($size.find('tr:eq(3) td:lt('+size_x+')'));
         $select.addClass("selected");
 
-        new Model('product.style')
-            .call('search_read', [[]])
+        model.performModelRPC('product.style', 'search_read', [[]])
                 .then(function (data) {
                     var $ul = self.$el.find('ul[name="style"]');
                     for (var k in data) {

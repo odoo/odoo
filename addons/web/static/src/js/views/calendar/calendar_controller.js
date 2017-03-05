@@ -103,7 +103,7 @@ var CalendarController = AbstractController.extend({
     _updateRecord: function (record) {
         // Cannot modify actual name yet
         var data = _.omit(this.model.calendarEventToRecord(record), 'name');
-        this.performModelRPC(this.model, 'write', [record.id, data])
+        this.performModelRPC(this.model.modelName, 'write', [record.id, data])
             .then(this.reload.bind(this));
     },
 

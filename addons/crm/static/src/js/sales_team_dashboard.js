@@ -5,7 +5,7 @@ var SalesTeamDashboard = require('sales_team.dashboard');
 
 SalesTeamDashboard.Model.include({
     _fetchDashboardData: function() {
-        return this.performModelRPC('crm.lead', 'retrieve_sales_dashboard');
+        return this.rpc('crm.lead', 'retrieve_sales_dashboard').exec();
     },
 });
 

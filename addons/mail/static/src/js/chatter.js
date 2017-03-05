@@ -245,25 +245,28 @@ var Chatter = Widget.extend(chat_mixin, {
             this.suggested_partners_def = $.Deferred();
             var method = 'message_get_suggested_recipients';
             var args = [[this.context.default_res_id], this.context];
-            this.performModelRPC(this.record.model, method, args).then(function (result) {
-                if (!self.suggested_partners_def) {
-                    return; // widget has been reset (e.g. we just switched to another record)
-                }
-                var suggested_partners = [];
-                var thread_recipients = result[self.context.default_res_id];
-                _.each(thread_recipients, function (recipient) {
-                    var parsed_email = utils.parse_email(recipient[1]);
-                    suggested_partners.push({
-                        checked: true,
-                        partner_id: recipient[0],
-                        full_name: recipient[1],
-                        name: parsed_email[0],
-                        email_address: parsed_email[1],
-                        reason: recipient[2],
+            this.rpc(this.record.model, method)
+                .args(args)
+                .exec()
+                .then(function (result) {
+                    if (!self.suggested_partners_def) {
+                        return; // widget has been reset (e.g. we just switched to another record)
+                    }
+                    var suggested_partners = [];
+                    var thread_recipients = result[self.context.default_res_id];
+                    _.each(thread_recipients, function (recipient) {
+                        var parsed_email = utils.parse_email(recipient[1]);
+                        suggested_partners.push({
+                            checked: true,
+                            partner_id: recipient[0],
+                            full_name: recipient[1],
+                            name: parsed_email[0],
+                            email_address: parsed_email[1],
+                            reason: recipient[2],
+                        });
                     });
+                    self.suggested_partners_def.resolve(suggested_partners);
                 });
-                self.suggested_partners_def.resolve(suggested_partners);
-            });
         }
         this.suggested_partners_def.then(function (suggested_partners) {
             self._openComposer({ is_log: false, suggested_partners: suggested_partners });

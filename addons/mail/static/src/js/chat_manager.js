@@ -7,21 +7,17 @@ var config = require('web.config');
 var Bus = require('web.Bus');
 var core = require('web.core');
 var data = require('web.data');
-var Model = require('web.Model');
 var session = require('web.session');
 var time = require('web.time');
 var web_client = require('web.web_client');
+var Class = require('web.Class');
+var Mixins = require('web.mixins');
 
 var _t = core._t;
 var _lt = core._lt;
 var LIMIT = 25;
 var preview_msg_max_size = 350;  // optimal for native english speakers
 var ODOOBOT_ID = "ODOOBOT";
-
-var MessageModel = new Model('mail.message', session.user_context);
-var ChannelModel = new Model('mail.channel', session.user_context);
-var UserModel = new Model('res.users', session.user_context);
-var PartnerModel = new Model('res.partner', session.user_context);
 
 // Private model
 //----------------------------------------------------------------------------------
@@ -367,62 +363,6 @@ function remove_message_from_channel (channel_id, message) {
     });
 }
 
-// options: domain, load_more
-function fetch_from_channel (channel, options) {
-    options = options || {};
-    var domain =
-        (channel.id === "channel_inbox") ? [['needaction', '=', true]] :
-        (channel.id === "channel_starred") ? [['starred', '=', true]] :
-                                            [['channel_ids', 'in', channel.id]];
-    var cache = get_channel_cache(channel, options.domain);
-
-    if (options.domain) {
-        domain = new data.CompoundDomain(domain, options.domain || []);
-    }
-    if (options.load_more) {
-        var min_message_id = cache.messages[0].id;
-        domain = new data.CompoundDomain([['id', '<', min_message_id]], domain);
-    }
-
-    return MessageModel.call('message_fetch', [domain], {limit: LIMIT, context: session.user_context}).then(function (msgs) {
-        if (!cache.all_history_loaded) {
-            cache.all_history_loaded =  msgs.length < LIMIT;
-        }
-        cache.loaded = true;
-
-        _.each(msgs, function (msg) {
-            add_message(msg, {channel_id: channel.id, silent: true, domain: options.domain});
-        });
-        var channel_cache = get_channel_cache(channel, options.domain || []);
-        return channel_cache.messages;
-    });
-}
-
-// options: force_fetch
-function fetch_document_messages (ids, options) {
-    var loaded_msgs = _.filter(messages, function (message) {
-        return _.contains(ids, message.id);
-    });
-    var loaded_msg_ids = _.pluck(loaded_msgs, 'id');
-
-    options = options || {};
-    if (options.force_fetch || _.difference(ids.slice(0, LIMIT), loaded_msg_ids).length) {
-        var ids_to_load = _.difference(ids, loaded_msg_ids).slice(0, LIMIT);
-
-        return MessageModel.call('message_format', [ids_to_load], {context: session.user_context}).then(function (msgs) {
-            var processed_msgs = [];
-            _.each(msgs, function (msg) {
-                processed_msgs.push(add_message(msg, {silent: true}));
-            });
-            return _.sortBy(loaded_msgs.concat(processed_msgs), function (msg) {
-                return msg.id;
-            });
-        });
-    } else {
-        return $.when(loaded_msgs);
-    }
-}
-
 function update_channel_unread_counter (channel, counter) {
     if (channel.unread_counter > 0 && counter === 0) {
         unread_conversation_counter = Math.max(0, unread_conversation_counter-1);
@@ -435,10 +375,6 @@ function update_channel_unread_counter (channel, counter) {
     channel.unread_counter = counter;
     chat_manager.bus.trigger("update_channel_unread_counter", channel);
 }
-
-var channel_seen = _.throttle(function (channel) {
-    return ChannelModel.call('channel_seen', [[channel.id]], {}, {shadow: true});
-}, 3000);
 
 // Notification handlers
 // ---------------------------------------------------------------------------------
@@ -657,12 +593,137 @@ function on_transient_message_notification (data) {
 
 // Public interface
 //----------------------------------------------------------------------------------
-var chat_manager = {
+var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, Mixins.ServicesMixin, {
     // these two functions are exposed for extensibility purposes and shouldn't be called by other modules
     make_message: make_message,
     make_channel: make_channel,
 
+    init: function (parent) {
+        var self = this;
+        Mixins.EventDispatcherMixin.init.call(this);
+        this.setParent(parent);
+
+        this.bus = new Bus();
+        this.bus.on('client_action_open', null, function (open) {
+            client_action_open = open;
+        });
+
+        bus.on('notification', null, on_notification);
+
+        this.channel_seen = _.throttle(function (channel) {
+            return self.rpc('mail.channel', 'channel_seen')
+                .args([[channel.id]])
+                .exec({shadow: true});
+        }, 3000);
+    },
+
+    start: function () {
+        this.is_ready = session.is_bound.then(function(){
+                return session.rpc('/mail/client_action');
+            }).then(this._onMailClientAction.bind(this));
+
+        add_channel({
+            id: "channel_inbox",
+            name: _lt("Inbox"),
+            type: "static",
+        }, { display_needactions: true });
+
+        add_channel({
+            id: "channel_starred",
+            name: _lt("Starred"),
+            type: "static"
+        });
+    },
+
+    _onMailClientAction: function (result) {
+        _.each(result.channel_slots, function (channels) {
+            _.each(channels, add_channel);
+        });
+        needaction_counter = result.needaction_inbox_counter;
+        starred_counter = result.starred_counter;
+        commands = _.map(result.commands, function (command) {
+            return _.extend({ id: command.name }, command);
+        });
+        mention_partner_suggestions = result.mention_partner_suggestions;
+        discuss_menu_id = result.menu_id;
+
+        // Shortcodes: canned responses and emojis
+        _.each(result.shortcodes, function (s) {
+            if (s.shortcode_type === 'text') {
+                canned_responses.push(_.pick(s, ['id', 'source', 'substitution']));
+            } else {
+                emojis.push(_.pick(s, ['id', 'source', 'substitution', 'description']));
+                emoji_substitutions[_.escape(s.source)] = s.substitution;
+            }
+        });
+        bus.start_polling();
+    },
+
+    // options: domain, load_more
+    _fetchFromChannel: function (channel, options) {
+        options = options || {};
+        var domain =
+            (channel.id === "channel_inbox") ? [['needaction', '=', true]] :
+            (channel.id === "channel_starred") ? [['starred', '=', true]] :
+                                                [['channel_ids', 'in', channel.id]];
+        var cache = get_channel_cache(channel, options.domain);
+
+        if (options.domain) {
+            domain = new data.CompoundDomain(domain, options.domain || []).eval();
+        }
+        if (options.load_more) {
+            var min_message_id = cache.messages[0].id;
+            domain = new data.CompoundDomain([['id', '<', min_message_id]], domain).eval();
+        }
+
+        return this.rpc('mail.message', 'message_fetch')
+            .args([domain])
+            .kwargs({limit: LIMIT, context: session.user_context})
+            .exec()
+            .then(function (msgs) {
+                if (!cache.all_history_loaded) {
+                    cache.all_history_loaded =  msgs.length < LIMIT;
+                }
+                cache.loaded = true;
+
+                _.each(msgs, function (msg) {
+                    add_message(msg, {channel_id: channel.id, silent: true, domain: options.domain});
+                });
+                var channel_cache = get_channel_cache(channel, options.domain || []);
+                return channel_cache.messages;
+            });
+    },
+    // options: force_fetch
+    _fetchDocumentMessages : function (ids, options) {
+        var loaded_msgs = _.filter(messages, function (message) {
+            return _.contains(ids, message.id);
+        });
+        var loaded_msg_ids = _.pluck(loaded_msgs, 'id');
+
+        options = options || {};
+        if (options.force_fetch || _.difference(ids.slice(0, LIMIT), loaded_msg_ids).length) {
+            var ids_to_load = _.difference(ids, loaded_msg_ids).slice(0, LIMIT);
+
+            return this.rpc('mail.message', 'message_format')
+                .args([ids_to_load])
+                .kwargs({context: session.user_context})
+                .exec()
+                .then(function (msgs) {
+                    var processed_msgs = [];
+                    _.each(msgs, function (msg) {
+                        processed_msgs.push(add_message(msg, {silent: true}));
+                    });
+                    return _.sortBy(loaded_msgs.concat(processed_msgs), function (msg) {
+                        return msg.id;
+                    });
+                });
+        } else {
+            return $.when(loaded_msgs);
+        }
+    },
+
     post_message: function (data, options) {
+        var self = this;
         options = options || {};
 
         // This message will be received from the mail composer as html content subtype
@@ -682,12 +743,15 @@ var chat_manager = {
         }
         if ('channel_id' in options) {
             // post a message in a channel or execute a command
-            return ChannelModel.call(data.command ? 'execute_command' : 'message_post', [options.channel_id], _.extend(msg, {
-                message_type: 'comment',
-                content_subtype: 'html',
-                subtype: 'mail.mt_comment',
-                command: data.command,
-            }));
+            return this.rpc('mail.channel', data.command ? 'execute_command' : 'message_post')
+                .args([options.channel_id])
+                .kwargs(_.extend(msg, {
+                    message_type: 'comment',
+                    content_subtype: 'html',
+                    subtype: 'mail.mt_comment',
+                    command: data.command,
+                }))
+                .exec();
         }
         if ('model' in options && 'res_id' in options) {
             // post a message in a chatter
@@ -699,14 +763,20 @@ var chat_manager = {
                 subtype_id: data.subtype_id,
             });
 
-            var model = new Model(options.model);
-            return model.call('message_post', [options.res_id], msg).then(function (msg_id) {
-                return MessageModel.call('message_format', [msg_id]).then(function (msgs) {
-                    msgs[0].model = options.model;
-                    msgs[0].res_id = options.res_id;
-                    add_message(msgs[0]);
+            return this.rpc(options.model, 'message_post')
+                .args([options.res_id])
+                .kwargs(msg)
+                .exec()
+                .then(function (msg_id) {
+                    return self.rpc('mail.message', 'message_format')
+                        .args([msg_id])
+                        .exec()
+                        .then(function (msgs) {
+                            msgs[0].model = options.model;
+                            msgs[0].res_id = options.res_id;
+                            add_message(msgs[0]);
+                        });
                 });
-            });
         }
     },
 
@@ -719,7 +789,7 @@ var chat_manager = {
         if ('channel_id' in options && options.load_more) {
             // get channel messages, force load_more
             channel = this.get_channel(options.channel_id);
-            return fetch_from_channel(channel, {domain: options.domain || {}, load_more: true});
+            return this._fetchFromChannel(channel, {domain: options.domain || {}, load_more: true});
         }
         if ('channel_id' in options) {
             // channel message, check in cache first
@@ -728,12 +798,12 @@ var chat_manager = {
             if (channel_cache.loaded) {
                 return $.when(channel_cache.messages);
             } else {
-                return fetch_from_channel(channel, {domain: options.domain});
+                return this._fetchFromChannel(channel, {domain: options.domain});
             }
         }
         if ('ids' in options) {
             // get messages from their ids (chatter is the main use case)
-            return fetch_document_messages(options.ids, options).then(function(result) {
+            return this._fetchDocumentMessages(options.ids, options).then(function(result) {
                 chat_manager.mark_as_read(options.ids);
                 return result;
             });
@@ -742,16 +812,24 @@ var chat_manager = {
             // get messages for a chatter, when it doesn't know the ids (use
             // case is when using the full composer)
             var domain = [['model', '=', options.model], ['res_id', '=', options.res_id]];
-            MessageModel.call('message_fetch', [domain], {limit: 30}).then(function (msgs) {
-                return _.map(msgs, add_message);
-            });
+            this.rpc('mail.message', 'message_fetch')
+                .args([domain])
+                .kwargs({limit: 30})
+                .exec()
+                .then(function (msgs) {
+                    return _.map(msgs, add_message);
+                });
         }
     },
     toggle_star_status: function (message_id) {
-        return MessageModel.call('toggle_message_starred', [[message_id]]);
+        return this.rpc('mail.message', 'toggle_message_starred')
+            .args([[message_id]])
+            .exec();
     },
     unstar_all: function () {
-        return MessageModel.call('unstar_all', [[]], {});
+        return this.rpc('mail.message', 'unstar_all')
+            .args([[]])
+            .exec();
     },
     mark_as_read: function (message_ids) {
         var ids = _.filter(message_ids, function (id) {
@@ -760,24 +838,30 @@ var chat_manager = {
             return !message || message.is_needaction;
         });
         if (ids.length) {
-            return MessageModel.call('set_message_done', [ids]);
+            return this.rpc('mail.message', 'set_message_done')
+                .args([ids])
+                .exec();
         } else {
             return $.when();
         }
     },
     mark_all_as_read: function (channel, domain) {
         if ((channel.id === "channel_inbox" && needaction_counter) || (channel && channel.needaction_counter)) {
-            return MessageModel.call('mark_all_as_read', [], {channel_ids: channel.id !== "channel_inbox" ? [channel.id] : [], domain: domain});
+            return this.rpc('mail.message', 'mark_all_as_read')
+                .kwargs({channel_ids: channel.id !== "channel_inbox" ? [channel.id] : [], domain: domain})
+                .exec();
         }
         return $.when();
     },
     undo_mark_as_read: function (message_ids, channel) {
-        return MessageModel.call('mark_as_unread', [message_ids, [channel.id]]);
+        return this.rpc('mail.message', 'mark_as_unread')
+            .args([message_ids, [channel.id]])
+            .exec();
     },
     mark_channel_as_seen: function (channel) {
         if (channel.unread_counter > 0 && channel.type !== 'static') {
             update_channel_unread_counter(channel, 0);
-            channel_seen(channel);
+            this.channel_seen(channel);
         }
     },
 
@@ -802,8 +886,9 @@ var chat_manager = {
             return mention_partner_suggestions;
         }
         if (!channel.members_deferred) {
-            channel.members_deferred = ChannelModel
-                .call("channel_fetch_listeners", [channel.uuid], {}, {shadow: true})
+            channel.members_deferred = this.rpc('mail.channel', "channel_fetch_listeners")
+                .args([channel.uuid])
+                .exec({shadow: true})
                 .then(function (members) {
                     var suggestions = [];
                     _.each(mention_partner_suggestions, function (partners) {
@@ -864,21 +949,23 @@ var chat_manager = {
     },
 
     detach_channel: function (channel) {
-        return ChannelModel.call("channel_minimize", [channel.uuid, true], {}, {shadow: true});
+        return this.rpc('mail.channel', "channel_minimize")
+            .args([channel.uuid, true])
+            .exec({shadow: true});
     },
     remove_chatter_messages: function (model) {
         messages = _.reject(messages, function (message) {
             return message.channel_ids.length === 0 && message.model === model;
         });
     },
-    bus: new Bus(),
 
     create_channel: function (name, type) {
         var method = type === "dm" ? "channel_get" : "channel_create";
         var args = type === "dm" ? [[name]] : [name, type];
 
-        return ChannelModel
-            .call(method, args)
+        return this.rpc('mail.channel', method)
+            .args(args)
+            .exec()
             .then(add_channel);
     },
     join_channel: function (channel_id, options) {
@@ -891,8 +978,9 @@ var chat_manager = {
             // channel already joined
             channel_defs[channel_id] = $.when(channel);
         } else {
-            channel_defs[channel_id] = ChannelModel
-                .call('channel_join_and_get_info', [[channel_id]])
+            channel_defs[channel_id] = this.rpc('mail.channel', 'channel_join_and_get_info')
+                .args([[channel_id]])
+                .exec()
                 .then(function (result) {
                     return add_channel(result, options);
                 });
@@ -900,7 +988,10 @@ var chat_manager = {
         return channel_defs[channel_id];
     },
     open_and_detach_dm: function (partner_id) {
-        return ChannelModel.call('channel_get_and_minimize', [[partner_id]]).then(add_channel);
+        return this.rpc('mail.channel', 'channel_get_and_minimize')
+            .args([[partner_id]])
+            .exec()
+            .then(add_channel);
     },
     open_channel: function (channel) {
         chat_manager.bus.trigger(client_action_open ? 'open_channel' : 'detach_channel', channel);
@@ -908,14 +999,20 @@ var chat_manager = {
 
     unsubscribe: function (channel) {
         if (_.contains(['public', 'private'], channel.type)) {
-            return ChannelModel.call('action_unfollow', [[channel.id]]);
+            return this.rpc('mail.channel', 'action_unfollow')
+                .args([[channel.id]])
+                .exec();
         } else {
-            return ChannelModel.call('channel_pin', [channel.uuid, false]);
+            return this.rpc('mail.channel', 'channel_pin')
+                .args([channel.uuid, false])
+                .exec();
         }
     },
     close_chat_session: function (channel_id) {
         var channel = this.get_channel(channel_id);
-        ChannelModel.call("channel_fold", [], {uuid : channel.uuid, state : "closed"}, {shadow: true});
+        this.rpc('mail.channel', "channel_fold")
+            .kwargs({uuid : channel.uuid, state : "closed"})
+            .exec({shadow: true});
     },
     fold_channel: function (channel_id, folded) {
         var args = {
@@ -924,7 +1021,9 @@ var chat_manager = {
         if (_.isBoolean(folded)) {
             args.state = folded ? 'folded' : 'open';
         }
-        return ChannelModel.call("channel_fold", [], args, {shadow: true});
+        return this.rpc('mail.channel', "channel_fold")
+            .kwargs(args)
+            .exec({shadow: true});
     },
     /**
      * Special redirection handling for given model and id
@@ -947,17 +1046,23 @@ var chat_manager = {
         };
         if (res_model === "res.partner") {
             var domain = [["partner_id", "=", res_id]];
-            UserModel.call("search", [domain]).then(function (user_ids) {
-                if (user_ids.length && user_ids[0] !== session.uid && dm_redirection_callback) {
-                    self.create_channel(res_id, 'dm').then(dm_redirection_callback);
-                } else {
-                    redirect_to_document(res_model, res_id);
-                }
-            });
+            this.rpc('res.users', "search")
+                .args([domain])
+                .exec()
+                .then(function (user_ids) {
+                    if (user_ids.length && user_ids[0] !== session.uid && dm_redirection_callback) {
+                        self.create_channel(res_id, 'dm').then(dm_redirection_callback);
+                    } else {
+                        redirect_to_document(res_model, res_id);
+                    }
+                });
         } else {
-            new Model(res_model).call('get_formview_id', [[res_id], session.user_context]).then(function (view_id) {
-                redirect_to_document(res_model, res_id, view_id);
-            });
+            this.rpc(res_model, 'get_formview_id')
+                .args([[res_id], session.user_context])
+                .exec()
+                .then(function (view_id) {
+                    redirect_to_document(res_model, res_id, view_id);
+                });
         }
     },
 
@@ -978,7 +1083,9 @@ var chat_manager = {
         if (!channels_preview_def) {
             if (missing_channels.length) {
                 var missing_channel_ids = _.pluck(missing_channels, 'id');
-                channels_preview_def = ChannelModel.call('channel_fetch_preview', [missing_channel_ids], {}, {shadow: true});
+                channels_preview_def = this.rpc('mail.channel', 'channel_fetch_preview')
+                    .args([missing_channel_ids])
+                    .exec({shadow: true});
             } else {
                 channels_preview_def = $.when();
             }
@@ -1013,7 +1120,9 @@ var chat_manager = {
         });
         if (!values.length) {
             // extend the research to all users
-            def = PartnerModel.call('im_search', [search_val, limit || 20], {}, {shadow: true});
+            def = this.rpc('res.partner', 'im_search')
+                .args([search_val, limit || 20])
+                .exec({shadow: true});
         } else {
             def = $.when(values);
         }
@@ -1024,58 +1133,16 @@ var chat_manager = {
             return _.sortBy(autocomplete_data, 'label');
         });
     },
-};
-
-chat_manager.bus.on('client_action_open', null, function (open) {
-    client_action_open = open;
 });
 
-// Initialization
-// ---------------------------------------------------------------------------------
-function init () {
-    add_channel({
-        id: "channel_inbox",
-        name: _lt("Inbox"),
-        type: "static",
-    }, { display_needactions: true });
-
-    add_channel({
-        id: "channel_starred",
-        name: _lt("Starred"),
-        type: "static"
-    });
-
-    bus.on('notification', null, on_notification);
-
-    return session.is_bound.then(function(){
-        return session.rpc('/mail/client_action');
-    }).then(function (result) {
-        _.each(result.channel_slots, function (channels) {
-            _.each(channels, add_channel);
-        });
-        needaction_counter = result.needaction_inbox_counter;
-        starred_counter = result.starred_counter;
-        commands = _.map(result.commands, function (command) {
-            return _.extend({ id: command.name }, command);
-        });
-        mention_partner_suggestions = result.mention_partner_suggestions;
-        discuss_menu_id = result.menu_id;
-
-        // Shortcodes: canned responses and emojis
-        _.each(result.shortcodes, function (s) {
-            if (s.shortcode_type === 'text') {
-                canned_responses.push(_.pick(s, ['id', 'source', 'substitution']));
-            } else {
-                emojis.push(_.pick(s, ['id', 'source', 'substitution', 'description']));
-                emoji_substitutions[_.escape(s.source)] = s.substitution;
-            }
-        });
-
-        bus.start_polling();
-    });
-}
-
-chat_manager.is_ready = init();
+var CallService = Class.extend(Mixins.EventDispatcherMixin, Mixins.ServiceProvider, {
+    init: function () {
+        Mixins.ServiceProvider.init.call(this);
+        Mixins.EventDispatcherMixin.init.call(this);
+    },
+});
+var chat_manager = new ChatManager(new CallService());
+chat_manager.start();
 
 return chat_manager;
 

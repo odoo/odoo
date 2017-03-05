@@ -2,12 +2,9 @@ odoo.define('hr_timesheet_sheet.sheet', function (require) {
 "use strict";
 
 var concurrency = require('web.concurrency');
-var Context = require('web.Context');
 var core = require('web.core');
-var data = require('web.data');
 var form_common = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
-var Model = require('web.DataModel');
 var time = require('web.time');
 
 var QWeb = core.qweb;
@@ -59,8 +56,10 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         this.querying = true;
         var commands = this.field_manager.get_field_value("timesheet_ids");
         var self = this;
-        this.res_o2m_drop.add(new Model(this.view.model).call("resolve_2many_commands", 
-                ["timesheet_ids", commands, [], new Context()]))
+
+        this.rpc(this.view.model, "resolve_2many_commands")
+            .args(["timesheet_ids", commands, []])
+            .exec()
             .done(function(result) {
                 self.set({sheets: result});
                 self.querying = false;
@@ -111,10 +110,12 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         var project_names;
         var default_get;
         var self = this;
-        return this.render_drop.add(new Model("account.analytic.line").call("default_get", [
-            ['account_id','general_account_id','journal_id','date','name','user_id','product_id','product_uom_id','amount','unit_amount','project_id'],
-            new Context({'user_id': self.get('user_id')})
-        ]).then(function(result) {
+        return this.render_drop.add(
+            this.rpc("account.analytic.line", "default_get")
+                .args([['account_id','general_account_id','journal_id','date','name','user_id','product_id','product_uom_id','amount','unit_amount','project_id']])
+                .withContext({'user_id': self.get('user_id')} )
+                .exec()
+                .then(function(result) {
             default_get = result;
             // calculating dates
             dates = [];
@@ -135,8 +136,6 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                 }
             })
             .groupBy("project_id").value();
-
-            var project_ids = _.map(_.keys(projects), function(el) { return el === "false" ? false : Number(el); });
 
             projects = _(projects).chain().map(function(lines, project_id) {
                 var projects_defaults = _.extend({}, default_get, (projects[project_id] || {}).value || {});
@@ -164,17 +163,19 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
             }).value();
 
             // we need the name_get of the projects
-            return new Model("project.project").call("name_get", [_.pluck(projects, "project"),
-                new Context()]).then(function(result) {
-                project_names = {};
-                _.each(result, function(el) {
-                    project_names[el[0]] = el[1];
+            this.rpc("project.project", "name_get")
+                .args([_.pluck(projects, "project")])
+                .exec()
+                .then(function(result) {
+                    project_names = {};
+                    _.each(result, function(el) {
+                        project_names[el[0]] = el[1];
+                    });
+                    projects = _.sortBy(projects, function(el) {
+                        return project_names[el.project];
+                    });
                 });
-                projects = _.sortBy(projects, function(el) {
-                    return project_names[el.project];
-                });
-            });
-        })).then(function(result) {
+        })).then(function () {
             // we put all the gathered data in self, then we render
             self.dates = dates;
             self.projects = projects;
@@ -219,8 +220,6 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                             $(this).val(self.sum_box(project, day_count, true));
                         } else {
                             project.days[day_count].lines[0].unit_amount += num - self.sum_box(project, day_count);
-                            var product = (project.days[day_count].lines[0].product_id instanceof Array) ? project.days[day_count].lines[0].product_id[0] : project.days[day_count].lines[0].product_id;
-                            var journal = (project.days[day_count].lines[0].journal_id instanceof Array) ? project.days[day_count].lines[0].journal_id[0] : project.days[day_count].lines[0].journal_id;
 
                             if(!isNaN($(this).val())){
                                 $(this).val(self.sum_box(project, day_count, true));

@@ -6,7 +6,6 @@ var core = require('web.core');
 var data_manager = require('web.data_manager');
 var framework = require('web.framework');
 var Menu = require('web.Menu');
-var Model = require('web.DataModel');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var UserMenu = require('web.UserMenu');
@@ -66,25 +65,31 @@ return AbstractWebClient.extend({
     logo_edit: function(ev) {
         var self = this;
         ev.preventDefault();
-        self.alive(new Model("res.users").call("read", [[session.uid], ["company_id"]])).then(function(data) {
-            self.rpc("/web/action/load", { action_id: "base.action_res_company_form" }).done(function(result) {
-                result.res_id = data[0].company_id[0];
-                result.target = "new";
-                result.views = [[false, 'form']];
-                result.flags = {
-                    action_buttons: true,
-                    headless: true,
-                };
-                self.action_manager.do_action(result).then(function () {
-                    var form = self.action_manager.dialog_widget.views.form.controller;
-                    form.on("on_button_cancel", self.action_manager, self.action_manager.dialog_stop);
-                    form.on('record_saved', self, function() {
-                        self.action_manager.dialog_stop();
-                        self.update_logo();
+        this.rpc("res.users", "read")
+            .args([[session.uid], ["company_id"]])
+            .exec()
+            .then(function(data) {
+                self.rpc("/web/action/load")
+                    .kwargs({ action_id: "base.action_res_company_form" })
+                    .exec()
+                    .done(function(result) {
+                        result.res_id = data[0].company_id[0];
+                        result.target = "new";
+                        result.views = [[false, 'form']];
+                        result.flags = {
+                            action_buttons: true,
+                            headless: true,
+                        };
+                        self.action_manager.do_action(result).then(function () {
+                            var form = self.action_manager.dialog_widget.views.form.controller;
+                            form.on("on_button_cancel", self.action_manager, self.action_manager.dialog_stop);
+                            form.on('record_saved', self, function() {
+                                self.action_manager.dialog_stop();
+                                self.update_logo();
+                            });
+                        });
                     });
-                });
             });
-        });
         return false;
     },
     bind_hashchange: function() {
@@ -94,18 +99,21 @@ return AbstractWebClient.extend({
         var state = $.bbq.getState(true);
         if (_.isEmpty(state) || state.action === "login") {
             self.menu.is_bound.done(function() {
-                new Model("res.users").call("read", [[session.uid], ["action_id"]]).done(function(result) {
-                    var data = result[0];
-                    if(data.action_id) {
-                        self.action_manager.do_action(data.action_id[0]);
-                        self.menu.open_action(data.action_id[0]);
-                    } else {
-                        var first_menu_id = self.menu.$el.find("a:first").data("menu");
-                        if(first_menu_id) {
-                            self.menu.menu_click(first_menu_id);
+                self.rpc("res.users", "read")
+                    .args([[session.uid], ["action_id"]])
+                    .exec()
+                    .done(function(result) {
+                        var data = result[0];
+                        if(data.action_id) {
+                            self.action_manager.do_action(data.action_id[0]);
+                            self.menu.open_action(data.action_id[0]);
+                        } else {
+                            var first_menu_id = self.menu.$el.find("a:first").data("menu");
+                            if(first_menu_id) {
+                                self.menu.menu_click(first_menu_id);
+                            }
                         }
-                    }
-                });
+                    });
             });
         } else {
             $(window).trigger('hashchange');

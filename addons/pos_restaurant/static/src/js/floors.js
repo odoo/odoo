@@ -6,8 +6,9 @@ var chrome = require('point_of_sale.chrome');
 var gui = require('point_of_sale.gui');
 var models = require('point_of_sale.models');
 var screens = require('point_of_sale.screens');
+var ajax = require('web.ajax');
 var core = require('web.core');
-var Model = require('web.DataModel');
+var rpc = require('web.rpc');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -235,7 +236,6 @@ var TableWidget = PosBaseWidget.extend({
     // sends the table's modification to the server
     save_changes: function(){
         var self   = this;
-        var model  = new Model('restaurant.table');
         var fields = _.find(this.pos.models,function(model){ return model.model === 'restaurant.table'; }).fields;
 
         // we need a serializable copy of the table, containing only the fields defined on the server
@@ -248,58 +248,67 @@ var TableWidget = PosBaseWidget.extend({
         // and the id ...
         serializable_table.id = this.table.id;
 
-        model.call('create_from_ui',[serializable_table]).then(function(table_id){
-            model.query(fields).filter([['id','=',table_id]]).first().then(function(table){
-                for (var field in table) {
-                    self.table[field] = table[field];
-                }
-                self.renderElement();
+        rpc.query({model: 'restaurant.table', method: 'create_from_ui'})
+            .args([serializable_table])
+            .exec({callback: ajax.rpc.bind(ajax)})
+            .then(function (table_id){
+                rpc.query({model: 'restaurant.table', method: 'search_read'})
+                    .args([[['id', '=', table_id]], fields])
+                    .withLimit(1)
+                    .exec({callback: ajax.rpc.bind(this)})
+                    .then(function (table){
+                        for (var field in table) {
+                            self.table[field] = table[field];
+                        }
+                        self.renderElement();
+                    });
+            }, function(err,event) {
+                self.gui.show_popup('error',{
+                    'title':_t('Changes could not be saved'),
+                    'body': _t('You must be connected to the internet to save your changes.'),
+                });
+                event.stopPropagation();
+                event.preventDefault();
             });
-        }, function(err,event) {
-            self.gui.show_popup('error',{
-                'title':_t('Changes could not be saved'),
-                'body': _t('You must be connected to the internet to save your changes.'),
-            });
-            event.stopPropagation();
-            event.preventDefault();
-        });
     },
     // destroy the table.  We do not really destroy it, we set it
     // to inactive so that it doesn't show up anymore, but it still
     // available on the database for the orders that depend on it.
     trash: function(){
         var self  = this;
-        var model = new Model('restaurant.table');
-        return model.call('create_from_ui',[{'active':false,'id':this.table.id}]).then(function(table_id){
-            // Removing all references from the table and the table_widget in in the UI ...
-            for (var i = 0; i < self.pos.floors.length; i++) {
-                var floor = self.pos.floors[i];
-                for (var j = 0; j < floor.tables.length; j++) {
-                    if (floor.tables[j].id === table_id) {
-                        floor.tables.splice(j,1);
-                        break;
+        rpc.query({model: 'restaurant.table', method: 'create_from_ui'})
+            .args([{'active':false,'id':this.table.id}])
+            .exec(ajax.rpc.bind(rpc))
+            .then(function (table_id){
+                // Removing all references from the table and the table_widget in in the UI ...
+                for (var i = 0; i < self.pos.floors.length; i++) {
+                    var floor = self.pos.floors[i];
+                    for (var j = 0; j < floor.tables.length; j++) {
+                        if (floor.tables[j].id === table_id) {
+                            floor.tables.splice(j,1);
+                            break;
+                        }
                     }
                 }
-            }
-            var floorplan = self.getParent();
-            for (var i = 0; i < floorplan.table_widgets.length; i++) {
-                if (floorplan.table_widgets[i] === self) {
-                    floorplan.table_widgets.splice(i,1);
+                var floorplan = self.getParent();
+                for (var i = 0; i < floorplan.table_widgets.length; i++) {
+                    if (floorplan.table_widgets[i] === self) {
+                        floorplan.table_widgets.splice(i,1);
+                    }
                 }
-            }
-            if (floorplan.selected_table === self) {
-                floorplan.selected_table = null;
-            }
-            floorplan.update_toolbar();
-            self.destroy();
-        }, function(err, event) {
-            self.gui.show_popup('error', {
-                'title':_t('Changes could not be saved'),
-                'body': _t('You must be connected to the internet to save your changes.'),
+                if (floorplan.selected_table === self) {
+                    floorplan.selected_table = null;
+                }
+                floorplan.update_toolbar();
+                self.destroy();
+            }, function(err, event) {
+                self.gui.show_popup('error', {
+                    'title':_t('Changes could not be saved'),
+                    'body': _t('You must be connected to the internet to save your changes.'),
+                });
+                event.stopPropagation();
+                event.preventDefault();
             });
-            event.stopPropagation();
-            event.preventDefault();
-        });
     },
     get_notifications: function(){  //FIXME : Make this faster
         var orders = this.pos.get_table_orders(this.table);
@@ -405,8 +414,10 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
     set_background_color: function(background) {
         var self = this;
         this.floor.background_color = background;
-        (new Model('restaurant.floor'))
-            .call('write',[[this.floor.id], {'background_color': background}]).fail(function(err, event){
+        rpc.query({model: 'restaurant.floor', method: 'write'})
+            .args([[this.floor.id], {'background_color': background}])
+            .exec({callback: ajax.rpc.bind(ajax)})
+            .fail(function (err, event){
                 self.gui.show_popup('error',{
                     'title':_t('Changes could not be saved'),
                     'body': _t('You must be connected to the internet to save your changes.'),

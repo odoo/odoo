@@ -1,8 +1,9 @@
 odoo.define('point_of_sale.devices', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var core = require('web.core');
-var Model = require('web.DataModel');
+var rpc = require('web.rpc');
 var Session = require('web.Session');
 
 var QWeb = core.qweb;
@@ -440,19 +441,21 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
 
     print_sale_details: function() { 
         var self = this;
-        new Model('report.point_of_sale.report_saledetails').call('get_sale_details').then(function(result){
-            var env = {
-                company: self.pos.company,
-                pos: self.pos,
-                products: result.products,
-                payments: result.payments,
-                taxes: result.taxes,
-                total_paid: result.total_paid,
-                date: (new Date()).toLocaleString(),
-            };
-            var report = QWeb.render('SaleDetailsReport', env);
-            self.print_receipt(report);
-        })
+        rpc.query({model: 'report.point_of_sale.report_saledetails', method: 'get_sale_details'})
+            .exec({callback: ajax.rpc.bind(ajax)})
+            .then(function(result){
+                var env = {
+                    company: self.pos.company,
+                    pos: self.pos,
+                    products: result.products,
+                    payments: result.payments,
+                    taxes: result.taxes,
+                    total_paid: result.total_paid,
+                    date: (new Date()).toLocaleString(),
+                };
+                var report = QWeb.render('SaleDetailsReport', env);
+                self.print_receipt(report);
+            });
     },
 
     update_customer_facing_display: function(html) {
