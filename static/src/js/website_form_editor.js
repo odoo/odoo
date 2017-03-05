@@ -3,6 +3,7 @@ odoo.define('website_form_editor', function (require) {
 
     var core = require('web.core');
     var ajax      = require('web.ajax');
+    var rpc      = require('web.rpc');
     var base = require('web_editor.base');
     var options = require('web_editor.snippets.options');
 
@@ -60,10 +61,10 @@ odoo.define('website_form_editor', function (require) {
         fetch_model_fields: function() {
             var self = this;
             this.fields_deferred = new $.Deferred();
-            this.rpc("ir.model", "get_authorized_fields")
+            rpc.query({model: "ir.model", method: "get_authorized_fields"})
                 .args([this.$target.closest('form').attr('data-model_name')])
                 .withContext(base.get_context())
-                .exec()
+                .exec({callback: ajax.rpc.bind(ajax)})
                 .then(function(fields) {
                     // The get_fields function doesn't return the name
                     // in the field dict since it uses it has the key
@@ -83,13 +84,13 @@ odoo.define('website_form_editor', function (require) {
             if (type !== 'click') return;
 
             var self = this;
-            this.rpc("ir.model", "search_read")
+            rpc.query({model: "ir.model", method: "search_read"})
                 .args([
                     [['website_form_access', '=', true]],
                     ['id', 'model', 'name', 'website_form_label']
                 ])
                 .withContext(base.get_context())
-                .exec()
+                .exec({callback: ajax.rpc.bind(ajax)})
                 .then(function(models) {
                     // Models selection input
                     var model_selection = qweb.render("website_form_editor.field_many2one", {
@@ -341,9 +342,9 @@ odoo.define('website_form_editor', function (require) {
                 if (fields.length) {
                     // ideally we'd only do this if saving the form
                     // succeeds... but no idea how to do that
-                    this.rpc('ir.model.fields', 'formbuilder_whitelist')
+                    rpc.query({model: 'ir.model.fields', method: 'formbuilder_whitelist'})
                         .args([model, _.uniq(fields)])
-                        .exec();
+                        .exec({callback: ajax.rpc.bind(ajax)});
                 }
             }
 
