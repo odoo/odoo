@@ -6,7 +6,7 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
-# francescbassas <francesc@babu.cat>, 2016
+# Francesc Bassas i Bullich <francesc@babu.cat>, 2016
 # Bàrbara Partegàs <barbararof@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Josep Sànchez <papapep@gmx.com>, 2016
@@ -3543,6 +3543,14 @@ msgid ""
 "      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
 "    "
 msgstr ""
+"\n"
+"Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.\n"
+"==========================================================\n"
+"\n"
+"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
+"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
+"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae
@@ -3636,6 +3644,18 @@ msgid ""
 "* Show all costs associated to a vehicle or to a type of service\n"
 "* Analysis graph for costs\n"
 msgstr ""
+"\n"
+"Vehicles, lloguer, assegurances, costos\n"
+"===================================\n"
+"Amb aquest mòdul, Odoo l'ajuda a gestionar tots els seus vehicles, el contracte associat amb aquests vehicles i els seus serveis, registre de combustible, costos i altres moltes característiques necessàries per a la gestió de la seva flota de vehicle(s).\n"
+"Característiques principals\n"
+"----------------------------------\n"
+"* Afegir vehicles a la seva flota\n"
+"* Gestionar contractes per vehicle\n"
+"* Recordatoris quan un contracte arriba a la seva data d'expiració\n"
+"* Afegir serveis, registres de combustible, valors d'hodòmetre per tots els vehicles\n"
+"* Mostrar tots els costos associats a un vehicle o a un tipus de servei\n"
+"* Gràfics d'anàlisis per a costos\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -3655,6 +3675,19 @@ msgid ""
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
 msgstr ""
+"\n"
+"Mòdul de comptabilitat del SGA\n"
+"=========================\n"
+"Aquest mòdul serveix de pont entre els mòduls 'stock' i 'account' i li permet crear assentaments comptables per valorar els moviments d'existències.\n"
+"\n"
+"Característiques clau\n"
+"---------------------------\n"
+"* Valoració d'existències (periòdica o automàtica)\n"
+"* Facturació d'aquest albarà\n"
+"\n"
+"El taulell / els informes per la gestió de magatzem inclou:\n"
+"-------------------------------------------------------------------------\n"
+"* Valoració d'existències en una data donada (suporta dates en el passat)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -5267,7 +5300,7 @@ msgstr "Instal·lació automàtica "
 #: code:addons/base/module/module.py:650
 #, python-format
 msgid "Automatic install of downloaded Apps is currently disabled."
-msgstr ""
+msgstr "Instal·lació automàtica d'Apps descarregades està desactivada."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
@@ -8218,6 +8251,46 @@ msgid ""
 "* Alexis de Lattre <alexis.delattre@akretion.com>\n"
 "\n"
 msgstr ""
+"Fichier d'Échange Informatisé (FEC) pour la France\n"
+"==================================================\n"
+"\n"
+"Ce module permet de générer le fichier FEC tel que définit par `l'arrêté du 29\n"
+"Juillet 2013 <http://legifrance.gouv.fr/eli/arrete/2013/7/29/BUDE1315492A/jo/texte>`\n"
+"portant modification des dispositions de l'article A. 47 A-1 du\n"
+"livre des procédures fiscales.\n"
+"\n"
+"Cet arrêté prévoit l'obligation pour les sociétés ayant une comptabilité\n"
+"informatisée de pouvoir fournir à l'administration fiscale un fichier\n"
+"regroupant l'ensemble des écritures comptables de l'exercice. Le format de ce\n"
+"fichier, appelé *FEC*, est définit dans l'arrêté.\n"
+"\n"
+"Le détail du format du FEC est spécifié dans le bulletin officiel des finances publiques `BOI-CF-IOR-60-40-20-20131213 <http://bofip.impots.gouv.fr/bofip/ext/pdf/createPdfWithAnnexePermalien/BOI-CF-IOR-60-40-20-20131213.pdf?doc=9028-PGP&identifiant=BOI-CF-IOR-60-40-20-20131213>` du 13 Décembre 2013. Ce module implémente le fichier\n"
+"FEC au format texte et non au format XML, car le format texte sera facilement\n"
+"lisible et vérifiable par le comptable en utilisant un tableur.\n"
+"\n"
+"La structure du fichier FEC généré par ce module a été vérifiée avec le logiciel\n"
+"*Test Compta Demat* version 1_00_05 disponible sur\n"
+"`le site de la direction générale des finances publiques <http://www.economie.gouv.fr/dgfip/outil-test-des-fichiers-des-ecritures-comptables-fec>`\n"
+"en utilisant une base de donnée Odoo réelle.\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"Aucune configuration n'est nécessaire.\n"
+"\n"
+"Utilisation\n"
+"===========\n"
+"\n"
+"Pour générer le *FEC*, allez dans le menu *Accounting > Reporting > French Statements > FEC* qui va démarrer l'assistant de génération du FEC.\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"Contributors\n"
+"------------\n"
+"\n"
+"* Alexis de Lattre <alexis.delattre@akretion.com>\n"
+"\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_model_object_field
@@ -15382,6 +15455,8 @@ msgstr "Per ser actualitzat"
 msgid ""
 "To enable it, make sure this directory exists and is writable on the server:"
 msgstr ""
+"Per activar-ho, estigues segur que aquesta carpeta existeix i hi tens "
+"permisos d'escriptura."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree

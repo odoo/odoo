@@ -15,7 +15,7 @@
 # Anja Funk <anja.funk@afimage.de>, 2016
 # Ermin Trevisan <trevi@twanda.com>, 2016
 # Falk Scholze <inactive+falkscholze@transifex.com>, 2016
-# Thomas A. Jaeger <tj@jamotion.ch>, 2016
+# Renzo Meister <info@jamotion.ch>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
 # Winfried Grieb <inactive+wigrieb@transifex.com>, 2016
 # Kontor Consulting <p.becker@kontor.consulting>, 2016
@@ -26,6 +26,7 @@
 # Henry Mineehen <info@mineehen.de>, 2016
 # Maik Steinfeld <info@streward.de>, 2016
 # Markus Mattes <mmattes87@gmail.com>, 2016
+# Felix Schubert <felix.schubert@go-erp.com>, 2016
 # Markus Menner <markus.menner@axxelia.com>, 2016
 # Christopher Westburry <cricsus99@gmail.com>, 2016
 # Sören Prilop <mail@soeren-prilop.de>, 2016
@@ -124,7 +125,7 @@ msgstr "# Positionen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
 msgid "# of Transaction"
-msgstr "Transaktionsnummer"
+msgstr "# Transaktionen"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -1764,7 +1765,7 @@ msgstr "Betrag"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
 msgid "Amount Currency"
-msgstr ""
+msgstr "Währungsbetrag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -1775,12 +1776,12 @@ msgstr "Fälliger Betrag"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
 msgid "Amount Due in Company Currency"
-msgstr ""
+msgstr "fälliger Betrag in Unternehmenswährung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
 msgid "Amount Due in Invoice Currency"
-msgstr ""
+msgstr "Fälliger Betrag in Rechnungswährung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
@@ -1952,7 +1953,7 @@ msgstr "Analytische Tags"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_exigible
 msgid "Appears in VAT report"
-msgstr ""
+msgstr "Erscheint im Umsatzsteuer Report"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_applicability
@@ -2163,7 +2164,7 @@ msgstr "Präfix für Bankkonten"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_bank_account_code_prefix
 msgid "Bank Accounts Prefix *"
-msgstr ""
+msgstr "Präfix für Bankkonten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_statements_source
@@ -2547,7 +2548,7 @@ msgstr "Präfix für Barkassen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_cash_account_code_prefix
 msgid "Cash Accounts Prefix *"
-msgstr ""
+msgstr "Präfix für Barkassen"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:203
@@ -2655,6 +2656,8 @@ msgid ""
 "Chart of Accounts has been\n"
 "                            installed. You should review it and create any additional accounts."
 msgstr ""
+"Der ausgewählte Kontenplan wurde erfolgreich installiert. Diesen sollten Sie"
+"  prüfen und ggf. zusätzliche Konten anlegen."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_list
@@ -3195,7 +3198,7 @@ msgstr "Rückerstattungsentwurf anlegen"
 #. module: account
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Create and post move"
-msgstr ""
+msgstr "Buchung anlegen und buchen"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:248
@@ -4466,12 +4469,12 @@ msgstr "Freie Referenz"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Payable accounts"
-msgstr ""
+msgstr "Von Kreditorenkonten"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Receivable accounts"
-msgstr ""
+msgstr "Von Debitorenkonten"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -4999,7 +5002,7 @@ msgstr "Importiere .qif-Dateien"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_csv
 msgid "Import in .csv format"
-msgstr ""
+msgstr "Importiere im .csv Format"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_ofx
@@ -5281,12 +5284,16 @@ msgstr "Rechnungs-ID"
 #, python-format
 msgid "Invoice must be a draft in order to set it to Pro-forma."
 msgstr ""
+"Die Rechnung muss im Status Entwurf sein, um sie auf Proforma setzen zu "
+"können."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:535
 #, python-format
 msgid "Invoice must be cancelled in order to reset it to draft."
 msgstr ""
+"Die Rechnung muss abgebrochen werden, um sie wieder auf Entwurf setzen zu "
+"könne."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:563
