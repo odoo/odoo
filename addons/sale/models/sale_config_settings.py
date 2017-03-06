@@ -51,8 +51,8 @@ class SaleConfiguration(models.TransientModel):
     group_proforma_sales = fields.Boolean(string="Pro-Forma", implied_group='sale.group_proforma_sales',
         help="Allows you to send pro-forma.")
     sale_show_tax = fields.Selection([
-        ('subtotal', 'Tax-Included Prices'),
-        ('total', 'Tax-Excluded Prices')], "Tax Display",
+        ('subtotal', 'Tax-Excluded Prices'),
+        ('total', 'Tax-Included Prices')], "Tax Display",
         default='subtotal',
         required=True)
     default_invoice_policy = fields.Selection([

@@ -1031,24 +1031,31 @@
         </xpath>
     </template>
 
-    <template id="reduction_code" inherit_id="website_sale.cart" active="True" customize_show="True" name="Coupon Code">
+    <template id='coupon_form' name='Coupon form'>
+        <t t-if="request.params.get('code_not_available')" name="code_not_available">
+            <p class="bg-warning">This promo code is not available</p>
+        </t>
+        <form t-if="website_sale_order and website_sale_order.website_order_line" t-att-action="'/shop/pricelist%s' % (redirect and '?r=' + redirect or '')"
+            method="post" class="mb32" name="coupon_code">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+            <div class="input-group">
+                <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None" />
+                <div class="input-group-btn">
+                    <a class="btn btn-default a-submit">Apply</a>
+                </div>
+            </div>
+        </form>
+    </template>
+
+    <template id="reduction_code" inherit_id="website_sale.cart" active="False" customize_show="True" name="Coupon Code">
         <xpath expr="//div[@id='right_column']" position="inside">
             <h4>Coupon Code</h4>
             <p>
               Have a coupon code? Fill in this field and apply.
             </p>
-            <t t-if="code_not_available" name="code_not_available">
-                <p class="bg-warning">This promo code is not available</p>
+            <t t-call='website_sale.coupon_form'>
+                <t t-set='redirect'>/shop/cart</t>
             </t>
-            <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist" method="post" class="mb32" name="coupon_code">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                <div class="input-group">
-                    <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None" />
-                    <div class="input-group-btn">
-                        <a class="btn btn-default a-submit">Apply</a>
-                    </div>
-                </div>
-            </form>
         </xpath>
     </template>
 
@@ -1157,26 +1164,26 @@
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="container oe_website_sale">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2 oe_cart">
                     <div class='row'>
                         <t t-call="website_sale.wizard_checkout">
                             <t t-set="step" t-value="20" />
                         </t>
                     </div>
-                    <div class="row">
-                        <div class="col-md-9 oe_cart">
                             <div class="row">
                                 <t t-if="mode == ('new', 'billing')">
-                                    <h2 class="page-header mt16 ml16">Your Address
+                                    <h3 class="page-header mt32 ml16">Your Address
                                         <small> or </small>
                                         <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', 'Sign Up') or ('login', 'Log In')"/>
                                         <a t-attf-href='/web/{{connect[0]}}?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px"><t t-esc='connect[1]'/></a>
-                                    </h2>
+                                    </h3>
                                 </t>
                                 <t t-if="mode == ('edit', 'billing')">
-                                    <h2 class="page-header mt16 ml16">Your Address</h2>
+                                    <h3 class="page-header mt32 ml16">Your Address</h3>
                                 </t>
                                 <t t-if="mode[1] == 'shipping'">
-                                    <h2 class="page-header mt16 ml16">Shipping Address </h2>
+                                    <h3 class="page-header mt32 ml16">Shipping Address </h3>
                                 </t>
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
                                     <h4 class="text-danger" t-esc="err" />
@@ -1200,11 +1207,11 @@
                                     <div class="clearfix" />
                                     <t t-if="mode == ('new', 'billing')">
                                         <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-md-6">
-                                            <label class="control-label" for="company_name">Company Name</label>
+                                            <label class="control-label font-weight-normal" for="company_name">Company Name</label>
                                             <input type="text" name="company_name" class="form-control" t-att-value="'company_name' in checkout and checkout['company_name']" />
                                         </div>
                                         <div t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-md-6 div_vat">
-                                            <label class="control-label" for="vat">TIN / VAT </label>
+                                            <label class="control-label font-weight-normal" for="vat">TIN / VAT </label>
                                             <input type="text" name="vat" class="form-control" t-att-value="'vat' in checkout and checkout['vat']" />
                                         </div>
                                     </t>
@@ -1271,17 +1278,12 @@
                                         <a t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-default mb32">
                                             <span class="fa fa-long-arrow-left" /> Back
                                         </a>
-                                        <a class="btn btn-default btn-primary pull-right mb32 a-submit">
+                                        <a class="btn btn-default btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
                                             <span>Next </span><span class="fa fa-long-arrow-right" />
                                         </a>
                                     </div>
                                 </form>
                             </div>
-                        </div>
-                        <div class="col-md-3 text-muted hidden-sm hidden-xs">
-                            <h2 class="page-header mt16 text-center">Your Order</h2>
-                            <t t-set="website_sale_order" t-value="website.sale_get_order()" />
-                            <t t-call="website_sale.total" />
                         </div>
                     </div>
                 </div>
@@ -1352,15 +1354,24 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-5 col-sm-4 col-md-4 text-muted" id="coupon_box"/>
+                            <div class="col-md-12">
+                                <div class="col-lg-5 col-sm-6 col-xs-12 text-muted" id="coupon_box">
+                                    <t t-if="request.env.ref('website_sale.reduction_code').active">
+                                        <p>
+                                          Have a coupon code? Fill in this field and apply.
+                                        </p>
+                                        <t t-call='website_sale.coupon_form'>
+                                            <t t-set='redirect'>/shop/payment</t>
+                                        </t>
+                                    </t>
+                                </div>
                                 <t t-call="website_sale.total">
                                     <t t-set='extra_class' t-value='"col-md-5 col-md-offset-7 col-xs-8 col-xs-offset-4"'/>
                                 </t>
                             </div>
                             <div class="clearfix" />
                             <div class="oe_structure" />
-                            <div class="js_payment mb64 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
+                            <div class="js_payment mb64 col-md-12 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
                                 <div class="col-lg-5 col-sm-6">
                                     <h4>Payment Method:</h4>
                                     <ul class="list-unstyled">
@@ -1439,26 +1450,6 @@
                 <div class="oe_structure" />
             </div>
         </t>
-    </template>
-
-    <template id="reduction_code_payment" inherit_id="website_sale.payment" active="True" customize_show="True" name="Coupon Code">
-        <xpath expr="//div[@id='coupon_box']" position="inside">
-            <p>
-              Have a coupon code? Fill in this field and apply.
-            </p>
-            <t t-if="code_not_available" name="code_not_available">
-                <p class="bg-warning">This promo code is not available</p>
-            </t>
-            <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist_payment" method="post" class="mb32" name="coupon_code">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                <div class="input-group">
-                    <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None" />
-                    <div class="input-group-btn">
-                        <a class="btn btn-default a-submit">Apply</a>
-                    </div>
-                </div>
-            </form>
-        </xpath>
     </template>
 
     <template id="payment_sale_note" inherit_id="payment" name="Accept Terms &amp; Conditions" customize_show="True" active="False">

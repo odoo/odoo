@@ -641,7 +641,7 @@ ListView.include(/** @lends instance.web.ListView# */{
             if (saveInfo.created) {
                 return self.start_edition();
             }
-            var options = { wraparound: !self.is_action_enabled('create') };
+            options.wraparound = !self.is_action_enabled('create');
             var record = self.records[next_record](saveInfo.record, options);
             if (record === undefined) {
                 return self.start_edition();

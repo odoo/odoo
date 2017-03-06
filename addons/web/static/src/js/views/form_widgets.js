@@ -707,11 +707,14 @@ var FieldBooleanButton = common.AbstractField.extend({
                 this.hover_false = _t("Open");
                 break;
             default:
-                var terms = typeof this.options["terminology"] === 'string' ? {} : this.options["terminology"];
-                this.string_true = _t(terms.string_true || "On");
-                this.hover_true = _t(terms.hover_true || terms.string_false || "Switch Off");
-                this.string_false = _t(terms.string_false || "Off");
-                this.hover_false = _t(terms.hover_false || terms.string_true || "Switch On");
+                var opt_terms = this.options["terminology"] || {};
+                if (typeof opt_terms === 'string') {
+                    opt_terms = {}; //unsupported terminology
+                }
+                this.string_true = _t(opt_terms.string_true) || _t("On");
+                this.hover_true = _t(opt_terms.hover_true) || _t("Switch Off");
+                this.string_false = _t(opt_terms.string_false) || _t("Off");
+                this.hover_false = _t(opt_terms.hover_false) || _t("Switch On");
         }
     },
     render_value: function() {

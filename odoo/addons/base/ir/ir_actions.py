@@ -617,12 +617,13 @@ class IrActionsServer(models.Model):
                 """, (self.env.uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
 
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
-        model = self.env[action.model_id.model]
+        model_name = action.model_id.sudo().model
+        model = self.env[model_name]
         record = None
         records = None
-        if self._context.get('active_model') == action.model_id.model and self._context.get('active_id'):
+        if self._context.get('active_model') == model_name and self._context.get('active_id'):
             record = model.browse(self._context['active_id'])
-        if self._context.get('active_model') == action.model_id.model and self._context.get('active_ids'):
+        if self._context.get('active_model') == model_name and self._context.get('active_ids'):
             records = model.browse(self._context['active_ids'])
         if self._context.get('onchange_self'):
             record = self._context['onchange_self']

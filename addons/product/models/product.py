@@ -96,7 +96,7 @@ class ProductPriceHistory(models.Model):
 
     company_id = fields.Many2one('res.company', default=_get_default_company_id, required=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete='cascade', required=True)
-    datetime = fields.Datetime('Date', default=fields.Datetime.now())
+    datetime = fields.Datetime('Date', default=fields.Datetime.now)
     cost = fields.Float('Cost', digits=dp.get_precision('Product Price'))
 
 

@@ -919,6 +919,11 @@ class SaleOrderLine(models.Model):
         product_currency = None
         if rule_id:
             pricelist_item = PricelistItem.browse(rule_id)
+            if pricelist_item.pricelist_id.discount_policy == 'without_discount':
+                while pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id and pricelist_item.base_pricelist_id.discount_policy == 'without_discount':
+                    price, rule_id = pricelist_item.base_pricelist_id.with_context(uom=uom.id).get_product_price_rule(product, qty, self.order_id.partner_id)
+                    pricelist_item = PricelistItem.browse(rule_id)
+
             if pricelist_item.base == 'standard_price':
                 field_name = 'standard_price'
             if pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id:
@@ -955,8 +960,8 @@ class SaleOrderLine(models.Model):
                 self.env.user.has_group('sale.group_discount_per_so_line')):
             return
 
-        context_partner = dict(self.env.context, partner_id=self.order_id.partner_id.id)
-        pricelist_context = dict(context_partner, uom=self.product_uom.id, date=self.order_id.date_order)
+        context_partner = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order)
+        pricelist_context = dict(context_partner, uom=self.product_uom.id)
 
         price, rule_id = self.order_id.pricelist_id.with_context(pricelist_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
@@ -965,8 +970,7 @@ class SaleOrderLine(models.Model):
         if price != 0 and new_list_price != 0:
             if self.product_id.company_id and self.order_id.pricelist_id.currency_id != self.product_id.company_id.currency_id:
                 # new_list_price is in company's currency while price in pricelist currency
-                ctx = dict(context_partner, date=self.order_id.date_order)
-                new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, self.order_id.pricelist_id.currency_id)
+                new_list_price = self.env['res.currency'].browse(currency_id).with_context(context_partner).compute(new_list_price, self.order_id.pricelist_id.currency_id)
             discount = (new_list_price - price) / new_list_price * 100
             if discount > 0:
                 self.discount = discount
