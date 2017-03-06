@@ -19,15 +19,16 @@ var Domain = collections.Tree.extend({
      *            * a boolean where the "true" domain match all records and the
      *              "false" domain does not match any records.
      *            * undefined, considered as the false boolean.
+     *            * a number, considered as true except 0 considered as false.
      * @param {Object} [evalContext] - in case the given domain is a string, an
      *                               evaluation context might be needed
      */
     init: function (domain, evalContext) {
         this._super.apply(this, arguments);
-        if (domain === true || domain === false || domain === undefined) {
-            this._data = domain || false;
-        } else {
+        if (_.isArray(domain) || _.isString(domain)) {
             this._parse(this.normalizeArray(_.clone(this.stringToArray(domain, evalContext))));
+        } else {
+            this._data = !!domain;
         }
     },
 
