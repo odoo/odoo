@@ -38,10 +38,11 @@ QUnit.module('Views', {
             },
             partner_type: {
                 fields: {
-                    display_name: {string: "Partner Type", type: "char"}
+                    display_name: {string: "Partner Type", type: "char"},
+                    date: {string: "Date Field", type: 'date'},
                 },
                 records: [
-                    {id: 12, display_name: "gold"},
+                    {id: 12, display_name: "gold", date: "2017-01-25"},
                     {id: 14, display_name: "silver"},
                     {id: 15, display_name: "bronze"}
                 ]
@@ -324,6 +325,30 @@ QUnit.module('Views', {
             record = model.get(resultID, {raw: true});
             assert.deepEqual(record.data.category, [12],
                 "with option raw, category should only return ids");
+        });
+        model.destroy();
+    });
+
+    QUnit.test('can use command add and get many2many value with date field', function (assert) {
+        assert.expect(2);
+
+        this.params.fieldNames = ['category'];
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var changes = {
+                category: {operation: 'ADD_M2M', ids: [{id: 12}]}
+            };
+            model.notifyChanges(resultID, changes).then(function () {
+                var record = model.get(resultID);
+                assert.strictEqual(record.data.category.data.length, 1, "should have added one category");
+                assert.strictEqual(record.data.category.data[0].data.date instanceof moment,
+                    true, "should have a date parsed in a moment object");
+            });
         });
         model.destroy();
     });
