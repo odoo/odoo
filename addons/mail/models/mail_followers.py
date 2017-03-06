@@ -50,7 +50,7 @@ class Followers(models.Model):
 
         followers = self.sudo().search([
             '&',
-            '&', ('res_model', '=', res_model), ('res_id', 'in', res_ids),
+            '&', ('res_model_id', '=', res_model_id), ('res_id', 'in', res_ids),
             '|', ('partner_id', 'in', partner_data.keys()), ('channel_id', 'in', channel_data.keys())])
 
         if force_mode:
