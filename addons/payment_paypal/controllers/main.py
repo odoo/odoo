@@ -8,6 +8,7 @@ import urllib2
 import werkzeug
 
 from odoo import http
+from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -86,7 +87,10 @@ class PaypalController(http.Controller):
     def paypal_ipn(self, **post):
         """ Paypal IPN. """
         _logger.info('Beginning Paypal IPN form_feedback with post data %s', pprint.pformat(post))  # debug
-        self.paypal_validate_data(**post)
+        try:
+            self.paypal_validate_data(**post)
+        except ValidationError:
+            _logger.exception('Unable to validate the Paypal payment')
         return ''
 
     @http.route('/payment/paypal/dpn', type='http', auth="none", methods=['POST', 'GET'], csrf=False)

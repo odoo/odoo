@@ -136,10 +136,8 @@ class IrModel(models.Model):
             for model in self:
                 if model.state != 'manual':
                     raise UserError(_("Model '%s' contains module data and cannot be removed!") % model.name)
-
-        # prevent screwing up fields that depend on these models' fields
-        for model in self:
-            model.field_id._prepare_update()
+                # prevent screwing up fields that depend on these models' fields
+                model.field_id._prepare_update()
 
         self._drop_table()
         res = super(IrModel, self).unlink()

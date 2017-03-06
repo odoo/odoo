@@ -88,8 +88,13 @@ class Inventory(models.Model):
     exhausted = fields.Boolean('Include Exhausted Products', readonly=True, states={'draft': [('readonly', False)]})
 
     @api.one
+    @api.depends('product_id', 'line_ids.product_qty')
     def _compute_total_qty(self):
-        self.total_qty = sum(self.mapped('line_ids').mapped('product_qty'))
+        """ For single product inventory, total quantity of the counted """
+        if self.product_id:
+            self.total_qty = sum(self.mapped('line_ids').mapped('product_qty'))
+        else:
+            self.total_qty = 0
 
     @api.model
     def _selection_filter(self):
