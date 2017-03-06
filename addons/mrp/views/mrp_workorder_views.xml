@@ -272,10 +272,9 @@
         <field name="name">mrp.production.work.order.calendar</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations">
+            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id">
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
-                <filter name="workcenter_id" color="True"/>
             </calendar>
         </field>
     </record>

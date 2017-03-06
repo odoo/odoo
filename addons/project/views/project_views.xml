@@ -532,8 +532,6 @@ action = model.activate_sample_project()
             <field name="arch" type="xml">
                 <calendar date_start="date_deadline" string="Tasks" mode="month" color="user_id">
                     <field name="name"/>
-                    <filter name="user_id" avatar_field="image_small"/>
-                    <filter name="project_id"/>
                 </calendar>
             </field>
         </record>

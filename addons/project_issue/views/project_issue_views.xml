@@ -153,10 +153,9 @@
             <field name="model">project.issue</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Issues" date_start="date" date_delay="duration">
+                <calendar string="Issues" date_start="date" date_delay="duration" color="user_id">
                     <field name="name"/>
                     <field name="partner_id"/>
-                    <filter name="user_id" color="True" avatar_field="image_small"/>
                 </calendar>
             </field>
         </record>

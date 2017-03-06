@@ -54,10 +54,8 @@
             <field name="model">ir.cron</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Scheduled Actions" date_start="nextcall">
+                <calendar string="Scheduled Actions" date_start="nextcall" color="user_id">
                     <field name="name"/>
-                    <field name="user_id"/>
-                    <filter name="user_id" color="True" avatar_field="image_small"/>
                 </calendar>
             </field>
         </record>

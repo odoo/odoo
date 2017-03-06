@@ -35,10 +35,9 @@
             <field name="name">sale.order.calendar</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <calendar string="Sales Orders" date_start="date_order">
+                <calendar string="Sales Orders" date_start="date_order" color="state">
                     <field name="partner_id"/>
                     <field name="amount_total" widget="monetary"/>
-                    <filter name="state" color="True"/>
                 </calendar>
             </field>
         </record>

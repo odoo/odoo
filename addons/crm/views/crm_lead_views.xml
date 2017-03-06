@@ -186,10 +186,9 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Leads Generation" date_start="activity_date_deadline">
+                <calendar string="Leads Generation" date_start="activity_date_deadline" color="user_id">
                     <field name="name"/>
                     <field name="partner_name"/>
-                    <filter name="user_id" color="True" avatar_field="image_small"/>
                 </calendar>
             </field>
         </record>

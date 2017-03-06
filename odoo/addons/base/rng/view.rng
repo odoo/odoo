@@ -649,10 +649,7 @@
                 </rng:attribute>
             </rng:optional>
             <rng:zeroOrMore>
-                <rng:ref name="field"/>
-            </rng:zeroOrMore>
-            <rng:zeroOrMore>
-                <rng:element name="filter">
+                <rng:element name="field">
                     <rng:attribute name="name" />
                     <rng:optional><rng:attribute name="avatar_field" /></rng:optional>
                     <rng:optional><rng:attribute name="write_model" /></rng:optional>

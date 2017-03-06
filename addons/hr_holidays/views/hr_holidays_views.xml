@@ -65,9 +65,8 @@
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <calendar string="Leave Request" date_start="date_from" date_stop="date_to" mode="month" quick_add="False">
+                <calendar string="Leave Request" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" color="employee_id">
                     <field name="display_name"/>
-                    <filter name="employee_id" color="True" avatar_field="image_small"/>
                 </calendar>
             </field>
         </record>

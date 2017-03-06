@@ -31,7 +31,7 @@ var CalendarView = AbstractView.extend({
         var attrs = arch.attrs;
 
         if (!attrs.date_start) {
-            throw new Error(_t("Calendar view has not defined 'date_start' attribute."));
+            throw new Error(_lt("Calendar view has not defined 'date_start' attribute."));
         }
 
         var mapping = {};
@@ -46,41 +46,58 @@ var CalendarView = AbstractView.extend({
             }
         });
 
-        if (attrs.color) {
-            fieldNames.push(attrs.color.split('.')[0]);
-        }
+        var filters = {};
 
         var eventLimit = attrs.event_limit !== null && (isNaN(+attrs.event_limit) ? _.str.toBool(attrs.event_limit) : +attrs.event_limit);
 
-        var filters = {};
-
+        var modelFilters = [];
         _.each(arch.children, function (child) {
-            switch (child.tag) {
-                case "filter":
-                    if (params.sidebar === false) break; // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
-                    var fieldName = child.attrs.name;
-                    filters[fieldName] = {
+            if (child.tag !== 'field') return;
+            var fieldName = child.attrs.name;
+            fieldNames.push(fieldName);
+            if (!child.attrs.invisible) {
+                displayFields[fieldName] = child.attrs;
+
+                if (params.sidebar === false) return; // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
+
+                if (child.attrs.avatar_field) {
+                    filters[fieldName] = filters[fieldName] || {
                         'title': fields[fieldName].string,
                         'fieldName': fieldName,
                         'filters': [],
                     };
-                    if (child.attrs.avatar_field) {
-                        filters[fieldName].avatar_field = child.attrs.avatar_field;
-                        filters[fieldName].avatar_model = fields[fieldName].relation;
-                    }
-                    if (child.attrs.write_model) {
-                        filters[fieldName].write_model = child.attrs.write_model;
-                        filters[fieldName].write_field = child.attrs.write_field; // can't use a x2many fields
-                    }
-                    fieldNames.push(child.attrs.name);
-                    break;
-                case "field":
-                    fieldNames.push(child.attrs.name);
-                    if (!child.attrs.invisible) {
-                        displayFields[child.attrs.name] = child.attrs;
-                    }
+                    filters[fieldName].avatar_field = child.attrs.avatar_field;
+                    filters[fieldName].avatar_model = fields[fieldName].relation;
+                }
+                if (child.attrs.write_model) {
+                    filters[fieldName] = filters[fieldName] || {
+                        'title': fields[fieldName].string,
+                        'fieldName': fieldName,
+                        'filters': [],
+                    };
+                    filters[fieldName].write_model = child.attrs.write_model;
+                    filters[fieldName].write_field = child.attrs.write_field; // can't use a x2many fields
+
+                    modelFilters.push(fields[fieldName].relation);
+                }
             }
         });
+
+        if (attrs.color) {
+            var fieldName = attrs.color;
+            fieldNames.push(fieldName);
+            filters[fieldName] = {
+                'title': fields[fieldName].string,
+                'fieldName': fieldName,
+                'filters': [],
+            };
+            if (fields[fieldName].relation) {
+                if (['res.users', 'res.partner'].indexOf(fields[fieldName].relation) !== -1) {
+                    filters[fieldName].avatar_field = 'image_small';
+                }
+                filters[fieldName].avatar_model = fields[fieldName].relation;
+            }
+        }
 
         if (_.isEmpty(displayFields)) {
             displayFields = fields.display_name ? {'display_name': {}} : [];

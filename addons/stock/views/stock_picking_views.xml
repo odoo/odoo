@@ -127,11 +127,10 @@
             <field name="model">stock.picking</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="min_date" date_stop="max_date">
+                <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
                     <field name="origin"/>
                     <field name="picking_type_id"/>
                     <field name="partner_id"/>
-                    <filter name="partner_id" color="True" avatar_field="image_small"/>
                 </calendar>
             </field>
         </record>
