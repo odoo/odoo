@@ -51,5 +51,12 @@ QUnit.module('core', {}, function () {
         assert.ok(new Domain(['!', ['a', '=', 3]]).compute(fields));
         assert.ok(new Domain(['!', ['group_method','=','count']]).compute(fields));
     });
+
+    QUnit.test("domains initialized with a number", function (assert) {
+        assert.expect(2);
+
+        assert.ok(new Domain(1).compute({}));
+        assert.notOk(new Domain(0).compute({}));
+    });
 });
 });
