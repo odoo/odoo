@@ -3,7 +3,8 @@
 
 import re
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_split_str
 from odoo.tools.misc import mod10r
 
@@ -23,6 +24,9 @@ class AccountInvoice(models.Model):
     l10n_ch_isr_optical_line = fields.Char(compute="_compute_l10n_ch_isr_optical_line", help='Optical reading line, as it will be printed on ISR')
 
     l10n_ch_isr_valid = fields.Boolean(compute='_compute_l10n_ch_isr_valid', help='Boolean value. True iff all the data required to generate the ISR are present')
+
+    l10n_ch_isr_sent = fields.Boolean(defaut=False, help="Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail.")
+    l10n_ch_currency_name = fields.Char(related='currency_id.name', help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
 
     @api.depends('partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
     def _compute_l10n_ch_isr_postal(self):
@@ -125,15 +129,40 @@ class AccountInvoice(models.Model):
                 record.l10n_ch_isr_postal and \
                 record.partner_bank_id and \
                 record.partner_bank_id.l10n_ch_postal and \
-                record.currency_id.name in ['EUR', 'CHF']
+                record.l10n_ch_currency_name in ['EUR', 'CHF']
 
-    def invoice_print(self):
-        """ Triggered by the 'print invoice' button. When printing the invoice, also print
-            the ISR if the invoice is compatible.
+    def split_total_amount(self):
+       """ Splits the total amount of this invoice in two parts, using the dot as
+       a separator, and taking two precision digits (always displayed).
+       These two parts are returned as the two elements of a tuple, as strings
+       to print in the report.
+
+       This function is needed on the model, as it must be called in the report
+       template, which cannot reference static functions
+       """
+       return float_split_str(self.amount_total, 2)
+
+    def isr_print(self):
+        """ Triggered by the 'Print ISR' button.
         """
         self.ensure_one()
-        invoice_report = super(AccountInvoice, self).invoice_print()
         if self.l10n_ch_isr_valid:
-            isr_report = self.env['report'].get_action(self, 'l10n_ch.isr_report_main')
-            invoice_report['next_report_to_generate'] = isr_report
-        return invoice_report
+            self.l10n_ch_isr_sent = True
+            return self.env['report'].get_action(self, 'l10n_ch.isr_report_main')
+        else:
+           raise ValidationError(_("""You cannot generate an ISR yet.\n
+                                   For this, you need to :\n
+                                   - set a valid postal account number (or an IBAN referencing one) for your company\n
+                                   - define its bank\n
+                                   - associate this bank with a postal reference for the currency used in this invoice\n
+                                   - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."""))
+
+    def action_invoice_sent(self):
+        """ Overridden. Triggered by the 'send by mail' button.
+        """
+        rslt = super(AccountInvoice, self).action_invoice_sent()
+
+        if self.l10n_ch_isr_valid:
+            rslt['context']['l10n_ch_mark_isr_as_sent'] = True
+
+        return rslt
