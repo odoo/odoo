@@ -20,7 +20,7 @@ var KanbanController = BasicController.extend({
         quick_create_add_column: '_onAddColumn',
         quick_create_record: '_onQuickCreateRecord',
         resequence_columns: '_onResequenceColumn',
-        kanban_do_action: '_onOpenAction',
+        button_clicked: '_onButtonClicked',
         kanban_record_delete: '_onRecordDelete',
         kanban_record_update: '_onUpdateRecord',
         kanban_column_delete: '_onDeleteColumn',
@@ -261,25 +261,27 @@ var KanbanController = BasicController.extend({
     /**
      * @param {OdooEvent} event
      */
-    _onOpenAction: function (event) {
+    _onButtonClicked: function (event) {
         var self = this;
-        var record = event.target;
-        if (event.data.context) {
-            event.data.context = new Context(event.data.context)
+        var attrs = event.data.attrs;
+        var record = event.data.record;
+        if (attrs.context) {
+            attrs.context = new Context(attrs.context)
                 .set_eval_context({
-                    active_id: event.target.id,
-                    active_ids: [event.target.id],
-                    active_model: this.modelName,
+                    active_id: record.res_id,
+                    active_ids: [record.res_id],
+                    active_model: record.model,
                 });
         }
         this.trigger_up('execute_action', {
-            action_data: event.data,
-            model: this.modelName,
-            record_id: event.target.id,
+            action_data: attrs,
+            model: record.model,
+            record_id: record.res_id,
             on_close: function () {
-                self.model.reload(record.db_id).then(function (db_id) {
+                self.model.reload(record.id).then(function (db_id) {
                     var data = self.model.get(db_id);
-                    record.update(data);
+                    var kanban_record = event.target;
+                    kanban_record.update(data);
                 });
             },
         });

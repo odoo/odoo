@@ -1703,6 +1703,87 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many list with action button', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].p = [2];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="int_field"/>' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="foo"/>' +
+                            '<button name="method_name" type="object" icon="fa-plus"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            intercepts: {
+                execute_action: function (event) {
+                    assert.strictEqual(event.data.record_id, 2,
+                        'should call with correct id');
+                    assert.strictEqual(event.data.model, 'partner',
+                        'should call with correct model');
+                    assert.strictEqual(event.data.action_data.name, 'method_name',
+                        "should call correct method");
+                    assert.strictEqual(event.data.action_data.type, 'object',
+                        'should have correct type');
+                },
+            },
+        });
+
+        form.$('.o_list_button button').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many kanban with action button', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].p = [2];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<kanban>' +
+                            '<field name="foo"/>' +
+                            '<templates>' +
+                                '<t t-name="kanban-box">' +
+                                    '<div>' +
+                                        '<span><t t-esc="record.foo.value"/></span>' +
+                                        '<button name="method_name" type="object" class="fa fa-plus"/>' +
+                                    '</div>' +
+                                '</t>' +
+                            '</templates>' +
+                        '</kanban>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            intercepts: {
+                execute_action: function (event) {
+                    assert.strictEqual(event.data.record_id, 2,
+                        'should call with correct id');
+                    assert.strictEqual(event.data.model, 'partner',
+                        'should call with correct model');
+                    assert.strictEqual(event.data.action_data.name, 'method_name',
+                        "should call correct method");
+                    assert.strictEqual(event.data.action_data.type, 'object',
+                        'should have correct type');
+                },
+            },
+        });
+
+        form.$('.oe_kanban_action_button').click();
+
+        form.destroy();
+    });
 
     QUnit.module('FieldMany2Many');
 

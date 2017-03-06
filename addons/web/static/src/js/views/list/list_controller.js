@@ -18,7 +18,7 @@ var qweb = core.qweb;
 
 var ListController = BasicController.extend({
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
-        list_button_clicked: '_onListButtonClicked',
+        button_clicked: '_onButtonClicked',
         change_mode: '_onChangeMode',
         selection_changed: '_onSelectionChanged',
         toggle_column_order: '_onToggleColumnOrder',
@@ -224,7 +224,7 @@ var ListController = BasicController.extend({
      *
      * @param {OdooEvent} event
      */
-    _onListButtonClicked: function (event) {
+    _onButtonClicked: function (event) {
         this.trigger_up('execute_action', {
             action_data: event.data.attrs,
             model: this.modelName,

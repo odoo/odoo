@@ -166,8 +166,9 @@ return BasicRenderer.extend({
     _addOnClickAction: function ($el, node) {
         var self = this;
         $el.click(function () {
-            self.trigger_up('form_button_clicked', {
+            self.trigger_up('button_clicked', {
                 attrs: node.attrs,
+                record: this.state,
                 show_wow: self.$el.hasClass('o_wow'),  // TODO: implement this (in view)
             });
         });

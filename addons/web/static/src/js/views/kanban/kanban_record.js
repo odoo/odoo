@@ -353,7 +353,10 @@ var KanbanRecord = Widget.extend({
                 break;
             case 'action':
             case 'object':
-                this.trigger_up('kanban_do_action', $action.data());
+                this.trigger_up('button_clicked', {
+                    attrs: $action.data(),
+                    record: this.state,
+                });
                 break;
             default:
                 this.do_warn("Kanban: no action for type : " + type);
