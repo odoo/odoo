@@ -66,7 +66,7 @@
                                 colspan="4"
                                 attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
                                 groups="product.group_stock_packaging">
-                                <field name="packaging_ids" nolabel="1" context="{'default_product_id': product_variant_id}"/>
+                                <field name="packaging_ids" nolabel="1" context="{'default_product_id': product_variant_id,'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}"/>
                             </group>
                         </page>
                         <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
@@ -215,7 +215,7 @@
                             </group>
                             <group name="weight">
                                 <group name="weight" string="Weights">
-                                    <label for="volume"/> 
+                                    <label for="volume"/>
                                     <div class="o_row">
                                         <field digits="(14, 3)" name="volume"/>
                                         <span>m³</span>
@@ -231,7 +231,7 @@
                         <group name="packaging" string="Packaging"
                             colspan="4"
                             groups="product.group_stock_packaging">
-                            <field name="packaging_ids" nolabel="1"/>
+                            <field name="packaging_ids" nolabel="1" context="{'default_product_id': id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}"/>
                         </group>
                     </sheet>
                 </form>
@@ -243,11 +243,11 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id}</field>
-            <field name="search_view_id" ref="product_search_form_view"/>             
-            <field name="view_ids" 
+            <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'tree'}),
-                          (0, 0, {'view_mode': 'form', 'view_id': ref('product_variant_easy_edit_view')}), 
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('product_variant_easy_edit_view')}),
                           (0, 0, {'view_mode': 'kanban'})]"/>
              <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -444,18 +444,14 @@
             <field name="view_id" ref="product_category_list_view"/>
         </record>
 
-        <record model="ir.actions.act_window" id="action_packaging_view">
-            <field name="name">Packagings</field>
-            <field name="res_model">product.packaging</field>
-            <field name="domain">[('product_id', '!=', False)]</field>
-        </record>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
-                <tree string="Packaging">
+                <tree string="Product Packagings">
                     <field name="sequence" widget="handle"/>
+                    <field name="product_id"/>
                     <field name="name"/>
                     <field name="qty"/>
                 </tree>
@@ -466,7 +462,7 @@
             <field name="name">product.packaging.form.view</field>
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
-                <form string="Packaging">
+                <form string="Product Packaging">
                     <sheet>
                         <label for="name"/>
                         <h1>
@@ -475,7 +471,7 @@
                         <group>
                             <field name="id" invisible='1'/>
                             <group>
-                                <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                                <field name="product_id"  required='True' attrs="{'readonly': [('id', '!=', False)]}"/>
                             </group>
                             <group name="qty">
                                 <field name="qty"/>
@@ -485,6 +481,15 @@
                     </sheet>
                 </form>
             </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_packaging_view">
+            <field name="name">Packagings</field>
+            <field name="res_model">product.packaging</field>
+            <field name="domain">[('product_id', '!=', False)]</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('product_packaging_tree_view')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('product_packaging_form_view')})]"/>
         </record>
 
         <record id="product_supplierinfo_form_view" model="ir.ui.view">
