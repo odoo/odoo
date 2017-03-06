@@ -1167,6 +1167,18 @@ var BasicModel = AbstractModel.extend({
                     .then(function (records) {
                         _.each(records, function (record) {
                             list_records[record.id].data = record;
+                            _.each(record, function (val, fieldName) {
+                                var field = list.fields[fieldName];
+                                if (field.type === 'date') {
+                                    // process data: convert into a moment instance
+                                    record[fieldName] = fieldUtils.parse.date(val);
+                                } else if (field.type === 'datetime') {
+                                    // process datetime: convert into a moment instance
+                                    record[fieldName] = fieldUtils.parse.datetime(val);
+                                } else {
+                                    record[fieldName] = val;
+                                }
+                            });
                         });
                     });
                 defs.push(def);
