@@ -203,6 +203,19 @@ odoo.define('website_sale.website_sale', function (require) {
             if (!event.isDefaultPrevented() && !$(this).is(".disabled")) {
                 $(this).closest('form').submit();
             }
+            if ($(this).hasClass('a-submit-disable')){
+                $(this).addClass("disabled");
+            }
+            if ($(this).hasClass('a-submit-loading')){
+                var loading = '<span class="fa fa-cog fa-spin"/>';
+                var fa_span = $(this).find('span[class*="fa"]');
+                if (fa_span.length){
+                    fa_span.replaceWith(loading);
+                }
+                else{
+                    $(this).append(loading);
+                }
+            }
         });
         $('form.js_attributes input, form.js_attributes select', oe_website_sale).on('change', function (event) {
             if (!event.isDefaultPrevented()) {
