@@ -877,6 +877,8 @@ class HrSalaryRule(models.Model):
                 raise UserError(_('Wrong range condition defined for salary rule %s (%s).') % (self.name, self.code))
         else:  # python code
             try:
+                # if self.code == "ATN.CAR":
+                #     import pdb; pdb.set_trace()
                 print safe_eval(self.condition_python, localdict, mode='exec', nocopy=True)
                 safe_eval(self.condition_python, localdict, mode='exec', nocopy=True)
                 return 'result' in localdict and localdict['result'] or False
