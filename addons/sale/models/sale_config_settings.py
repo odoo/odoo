@@ -49,9 +49,9 @@ class SaleConfiguration(models.TransientModel):
         implied_group='sale.group_show_price_total',
         group='base.group_portal,base.group_user,base.group_public')
     sale_show_tax = fields.Selection([
-        ('subtotal', 'Tax-Included Prices'),
-        ('total', 'Tax-Excluded Prices')], "Tax Display",
-        default='total',
+        ('subtotal', 'Tax-Excluded Prices'),
+        ('total', 'Tax-Included Prices')], "Tax Display",
+        default='subtotal',
         required=True)
     default_invoice_policy = fields.Selection([
         ('order', 'Ordered quantities'),
