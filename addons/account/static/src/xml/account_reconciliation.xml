@@ -143,12 +143,13 @@
             <t t-foreach="state.reconcileModels" t-as="reconcileModel">
                 <button class="btn btn-default" t-att-data-reconcile-model-id="reconcileModel.id"><t t-esc="reconcileModel.name"/></button>
             </t>
+            <p t-if="!state.reconcileModels.length" style="color: #bbb;">You did not configure any reconcile model yet, you can do it <a style="cursor: pointer;" class="reconcile_model_create">there</a>.</p>
         </div>
         <div class="dropdown pull-right">
             <a data-toggle="dropdown" href="#"><span class="fa fa-cog"/></a>
             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="Presets config">
-                <li><a class="presets_config_create" href="#">Create model</a></li>
-                <li><a class="presets_config_edit" href="#">Modify models</a></li>
+                <li><a class="reconcile_model_create" href="#">Create model</a></li>
+                <li><a class="reconcile_model_edit" href="#">Modify models</a></li>
             </ul>
         </div>
     </div>

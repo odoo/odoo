@@ -195,6 +195,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'click .o_reconcile_models button': '_onQuickCreateProposition',
         'click .create .add_line': '_onCreateProposition',
         'click .accounting_view .cell_right .line_info_button': '_onTogglePartialReconcile',
+        'click .reconcile_model_create': '_onCreateReconcileModel',
+        'click .reconcile_model_edit': '_onEditReconcileModel',
     },
     custom_events: _.extend({}, FieldManagerMixin.custom_events, {
         'field_changed': '_onFieldChanged',
@@ -421,6 +423,34 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onCreateReconcileModel: function (event) {
+        event.preventDefault();
+        this.do_action({
+            type: 'ir.actions.act_window',
+            res_model: 'account.reconcile.model',
+            views: [[false, 'form']],
+            target: 'current'
+        });
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onEditReconcileModel: function (event) {
+        event.preventDefault();
+        this.do_action({
+            type: 'ir.actions.act_window',
+            res_model: 'account.reconcile.model',
+            views: [[false, 'list'], [false, 'form']],
+            view_type: "list",
+            view_mode: "list",
+            target: 'current'
+        });
+    },
     /**
      * @private
      * @param {OdooEvent} event

@@ -624,7 +624,7 @@ QUnit.module('account', {
 
 
     QUnit.test('Reconciliation create line', function (assert) {
-        assert.expect(21);
+        assert.expect(23);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.options);
 
@@ -649,6 +649,20 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.accounting_view tbody tr').text().replace(/[\n\r\s$,]+/g, ' '), " 101200 SAJ/2014/002 and SAJ/2014/003 1175.00 ",
             "the new line should have the selected account, name and amout");
         assert.ok(widget.$('caption button.btn-primary:visible').length, "should display the 'Reconcile' button");
+
+        testUtils.intercept(clientAction, 'do_action', function (event) {
+            assert.strictEqual(JSON.stringify(event.data.action),
+                '{"type":"ir.actions.act_window","res_model":"account.reconcile.model","views":[[false,"form"]],"target":"current"}',
+                "should open the reconcile model form view");
+        });
+        widget.$('.create .reconcile_model_create').trigger('click');
+
+        testUtils.intercept(clientAction, 'do_action', function (event) {
+            assert.strictEqual(JSON.stringify(event.data.action),
+                '{"type":"ir.actions.act_window","res_model":"account.reconcile.model","views":[[false,"list"],[false,"form"]],"view_type":"list","view_mode":"list","target":"current"}',
+                "should open the reconcile model list view");
+        });
+        widget.$('.create .reconcile_model_edit').trigger('click');
 
         widget.$('.create .create_amount input').val('1100.00').trigger('input');
 
