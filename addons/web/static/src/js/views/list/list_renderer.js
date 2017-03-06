@@ -283,13 +283,21 @@ var ListRenderer = BasicRenderer.extend({
         if (this._isInvisible(record, node)) {
             return $td;
         }
+        if (node.Widget) {
+            var widget = new node.Widget(this, node.attrs.name, record, {
+                mode: 'readonly',
+            });
+            widget.appendTo($td);
+            $td.addClass('o_' + node.attrs.widget + '_cell');
+            return $td;
+        }
         if (node.tag === 'button') {
             var $button = $('<button type="button">').addClass('o_icon_button');
             $button.append($('<i>').addClass('fa').addClass(node.attrs.icon))
                 .prop('title', node.attrs.string)
                 .click(function (e) {
                     e.stopPropagation();
-                    self.trigger_up('list_button_clicked', {
+                    self.trigger_up('button_clicked', {
                         attrs: node.attrs,
                         record: record,
                     });
@@ -303,14 +311,6 @@ var ListRenderer = BasicRenderer.extend({
         }
         var field = this.state.fields[node.attrs.name];
         var value = record.data[node.attrs.name];
-        if (node.Widget) {
-            var widget = new node.Widget(this, node.attrs.name, record, {
-                mode: 'readonly',
-            });
-            widget.appendTo($td);
-            $td.addClass('o_' + node.attrs.widget + '_cell');
-            return $td;
-        }
         $td.addClass(FIELD_CLASSES[field.type]);
         var formatted_value = field_utils.format[field.type](value, field, { data: record.data });
         return $td.html(formatted_value);

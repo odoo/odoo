@@ -14,11 +14,11 @@ var qweb = core.qweb;
 var FormController = BasicController.extend({
     // className: "o_form_view",
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
+        add_one2many_record: '_onAddOne2ManyRecord',
+        bounce_edit: '_onBounceEdit',
+        button_clicked: '_onButtonClicked',
         open_record: '_onOpenRecord',
         toggle_column_order: '_onToggleColumnOrder',
-        form_button_clicked: '_onFormButtonClicked',
-        bounce_edit: '_onBounceEdit',
-        add_one2many_record: '_onAddOne2ManyRecord',
     }),
     /**
      * @override
@@ -475,7 +475,7 @@ var FormController = BasicController.extend({
     /**
      * @param {OdooEvent} event
      */
-    _onFormButtonClicked: function (event) {
+    _onButtonClicked: function (event) {
         // stop the event's propagation as a form controller might have other
         // form controllers in its descendants (e.g. in a FormViewDialog)
         event.stopPropagation();
