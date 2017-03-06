@@ -141,10 +141,8 @@ class ir_model(osv.osv):
             for model in self.browse(cr, user, ids, context):
                 if model.state != 'manual':
                     raise UserError(_("Model '%s' contains module data and cannot be removed!") % (model.name,))
-
-        # prevent screwing up fields that depend on these models' fields
-        for model in self.browse(cr, user, ids, context=context):
-            model.field_id._prepare_update()
+                # prevent screwing up fields that depend on these models' fields
+                model.field_id._prepare_update()
 
         self._drop_table(cr, user, ids, context)
         res = super(ir_model, self).unlink(cr, user, ids, context)
