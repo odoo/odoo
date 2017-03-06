@@ -13,7 +13,7 @@
         </div>
     </xpath>
 </template>
-<template id="sale_coupon_result" inherit_id="website_sale.reduction_code">
+<template id="sale_coupon_result" inherit_id="website_sale.coupon_form">
     <xpath expr="//form[@name='coupon_code']" position="after">
         <t t-if="website_sale_order and website_sale_order.applied_coupon_ids">
             <t t-foreach="website_sale_order.applied_coupon_ids" t-as="coupon">
@@ -40,7 +40,7 @@
                 </div>
             </t>
         </t>
-        <t t-if="code_not_available">
+        <t t-if="request.params.get('code_not_available')">
             <div class="panel panel-danger mt16">
                 <div class="panel-heading clearfix">
                     <span class="pull-left">Invalid or expired coupon code</span>
@@ -50,41 +50,18 @@
     </xpath>
     <xpath expr="//t[@name='code_not_available']" position="replace"/>
 </template>
-<template id="sale_coupon_result_payment" inherit_id="website_sale.reduction_code_payment">
-    <xpath expr="//form[@name='coupon_code']" position="after">
-        <t t-if="website_sale_order and website_sale_order.applied_coupon_ids">
-            <t t-foreach="website_sale_order.applied_coupon_ids" t-as="coupon">
-                <div class="panel panel-success mt16">
-                    <div class="panel-heading clearfix">
-                    <span class="pull-left">You have successfully applied coupon: <b t-esc="coupon.code"/></span>
-                    </div>
-                </div>
-            </t>
-        </t>
-        <t t-if="website_sale_order and website_sale_order.promo_code">
-            <div class="panel panel-success mt16">
-                <div class="panel-heading clearfix">
-                <span class="pull-left">You have successfully applied coupon: <b t-esc="website_sale_order.promo_code"/></span>
-                </div>
-            </div>
-        </t>
-        <t t-if="website_sale_order and website_sale_order.generated_coupon_ids">
-            <t t-foreach="website_sale_order.generated_coupon_ids" t-as="coupon">
-                <div class="panel panel-success mt16">
-                    <div class="panel-heading clearfix">
-                        <span class="pull-left">Your reward <b t-esc="coupon.discount_line_product_id.name"/> is available on a next order with this coupon code: <b t-esc="coupon.code"/></span>
-                    </div>
-                </div>
-            </t>
-        </t>
-        <t t-if="code_not_available">
-            <div class="panel panel-danger mt16">
-                <div class="panel-heading clearfix">
-                    <span class="pull-left">Invalid or expired coupon code</span>
-                </div>
-            </div>
-        </t>
+
+<template id="cart_discount" name="Discount" inherit_id="website_sale.total">
+    <xpath expr="//div[@id='order_total']" position="before">
+        <div class="row" id="order_discounted" t-if="website_sale_order and website_sale_order.reward_amount">
+              <span class="col-xs-6 text-right text-muted" title="Discounted amount"> Discount:</span>
+              <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
+                  <span t-field="website_sale_order.reward_amount" style="white-space: nowrap;" t-options='{
+                          "widget": "monetary",
+                          "display_currency": website_sale_order.currency_id,
+                      }'/>
+              </span>
+        </div>
     </xpath>
-    <xpath expr="//t[@name='code_not_available']" position="replace"/>
 </template>
 </odoo>
