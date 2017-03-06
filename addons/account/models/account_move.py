@@ -1679,6 +1679,9 @@ class AccountFullReconcile(models.Model):
         """
         for rec in self:
             if rec.exchange_move_id:
-                #reverse the exchange rate entry
-                rec.exchange_move_id.reverse_moves()
+                # reverse the exchange rate entry after de-referencing it to avoid looping
+                # (reversing will cause a nested attempt to drop the full reconciliation)
+                to_reverse = rec.exchange_move_id
+                rec.exchange_move_id = False
+                to_reverse.reverse_moves()
         return super(AccountFullReconcile, self).unlink()
