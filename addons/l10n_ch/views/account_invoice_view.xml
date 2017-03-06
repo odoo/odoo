@@ -9,6 +9,36 @@
                 <xpath expr="//field[@name='partner_bank_id']" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </xpath>
+
+                <xpath expr="//field[@name='sent']" position="after">
+                    <field name="l10n_ch_isr_sent" invisible="1"/>
+                    <field name="l10n_ch_currency_name" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//button[@id='account_invoice_payment_btn']" position="before">
+                    <button id="l10n_ch_btn_isr_print_highlight"
+                        name="isr_print"
+                        string="Print ISR"
+                        type="object"
+                        attrs="{'invisible':['|', ('l10n_ch_isr_sent', '=', True),
+                                                '|', ('state', '!=', 'open'),
+                                                    ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        class="oe_highlight"
+                        groups="base.group_user"
+                        />
+                </xpath>
+
+                <xpath expr="//button[@id='account_invoice_payment_btn']" position="before">
+                    <button id="btn_isr_print_normal"
+                        name="isr_print"
+                        string="Print ISR"
+                        type="object"
+                        attrs="{'invisible':['|', ('l10n_ch_isr_sent', '=', False),
+                                                '|', ('state', '!=', 'open'),
+                                                    ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        groups="base.group_user"
+                        />
+                </xpath>
             </field>
         </record>
 

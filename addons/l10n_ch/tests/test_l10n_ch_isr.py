@@ -4,6 +4,7 @@
 import time
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.exceptions import ValidationError
 
 
 class ISRTest(AccountingTestCase):
@@ -45,23 +46,20 @@ class ISRTest(AccountingTestCase):
             'acc_number': number
         })
 
+    def print_isr(self, invoice):
+        try:
+            invoice.isr_print()
+            return True
+        except ValidationError:
+            return False
+
     def isr_not_generated(self, invoice):
         """ Prints the given invoice and tests that no ISR generation is triggered. """
-        next_action = invoice.invoice_print()
-        iterated_actions = []
-        while next_action and next_action not in iterated_actions:
-            self.assertNotEqual(next_action['report_name'], 'l10n_ch.isr_report_main', 'No ISR should be generated for this invoice')
-            next_action = next_action.get('next_report_to_generate', None)
+        self.assertFalse(self.print_isr(invoice), 'No ISR should be generated for this invoice')
 
     def isr_generated(self, invoice):
         """ Prints the given invoice and tests that an ISR generation is triggered. """
-        next_action = invoice.invoice_print()
-        iterated_actions = []
-        isr_found = False
-        while next_action and next_action not in iterated_actions and not isr_found:
-            isr_found = next_action['report_name'] == 'l10n_ch.isr_report_main'
-            next_action = next_action.get('next_report_to_generate', None)
-        self.assertTrue(isr_found, 'An ISR should have been generated')
+        self.assertTrue(self.print_isr(invoice), 'An ISR should have been generated')
 
     def test_l10n_ch_postals(self):
         #An account whose number is set to a valid postal number becomes a 'postal'
