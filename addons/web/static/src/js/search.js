@@ -227,7 +227,7 @@ my.InputView = instance.web.Widget.extend({
         range.collapse(false);
         sel.addRange(range);
     },
-    onPaste: function () {
+    onPaste: function (e) {
         this.el.normalize();
         // In MSIE and Webkit, it is possible to get various representations of
         // the clipboard data at this point e.g.
@@ -240,23 +240,21 @@ my.InputView = instance.web.Widget.extend({
         // using this would require 1. getting the text data; 2. manually
         // inserting the text data into the content; and 3. cancelling the
         // paste event)
-        //
-        // But Firefox doesn't support the clipboard API (as of FF18)
-        // although it correctly triggers the paste event (Opera does not even
-        // do that) => implement lowest-denominator system where onPaste
-        // triggers a followup "cleanup" pass after the data has been pasted
-        setTimeout(function () {
-            // Read text content (ignore pasted HTML)
-            var data = this.$el.text();
-            if (!data)
-                return; 
-            // paste raw text back in
-            this.$el.empty().text(data);
-            this.el.normalize();
-            // Set the cursor at the end of the text, so the cursor is not lost
-            // in some kind of error-spawning limbo.
-            this.setCursorAtEnd();
-        }.bind(this), 0);
+        var clipboardEvent = e.originalEvent
+        // cancel paste event
+        clipboardEvent.preventDefault();
+        // get text data. Trim possible empty spaces/newline chars which are
+        // usually present when copy/pasting from
+        // other non-plaintext applications
+        var data = $.trim(clipboardEvent.clipboardData.getData('text/plain'));
+        if (!data)
+            return;
+        // paste raw text back in
+        this.$el.text(this.$el.text() + data);
+        this.el.normalize();
+        // Set the cursor at the end of the text, so the cursor is not lost
+        // in some kind of error-spawning limbo.
+        this.setCursorAtEnd();
     }
 });
 my.FacetView = instance.web.Widget.extend({
