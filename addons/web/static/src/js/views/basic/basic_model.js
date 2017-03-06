@@ -1840,6 +1840,7 @@ var BasicModel = AbstractModel.extend({
             }
             if (field.__fetch_selection && !self.many2ones[field.relation]) {
                 var fetchSelection = self.rpc(field.relation, 'name_search')
+                    .args(['', field.domain])
                     .exec()
                     .then(function (result) {
                         self.many2ones[field.relation] = result;
@@ -1848,6 +1849,7 @@ var BasicModel = AbstractModel.extend({
             }
             if (field.__fetch_many2manys) {
                 var fetchMany2Manys = self.rpc(field.relation, 'name_search')
+                    .args(['', field.domain])
                     .exec()
                     .then(function (result) {
                         self.many2manys[field.relation] = result;
