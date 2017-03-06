@@ -97,12 +97,12 @@ odoo.define('website_form_editor', function (require) {
                         field: {
                             name: 'model_selection',
                             string: 'Action',
-                            records: _.map(models, function(m){
+                            records: _.map(models.records, function(m){
                                 return {
                                     id: m.model,
                                     display_name: m.website_form_label || m.name,
                                     selected: (m.model == self.$target.attr('data-model_name')) ? 1: null
-                                }
+                                };
                             })
                         }
                     });
