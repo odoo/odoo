@@ -21,7 +21,7 @@ class BaseConfigSettings(models.TransientModel):
         }
 
     def edit_external_header(self):
-        return self._prepare_report_view_action('report.layout_'+self.external_report_layout)
+        return self._prepare_report_view_action('report.external_layout_' + self.external_report_layout)
 
     def change_report_template(self):
         self.ensure_one()
