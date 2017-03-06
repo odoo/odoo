@@ -69,6 +69,15 @@ class WebsiteSaleBackend(WebsiteBackend):
                 sales_values['summary']['order_count'] += res['state_count']
             sales_values['summary']['order_carts_count'] += res['state_count']
 
+        report_price_lines = request.env['sale.report'].read_group(
+            domain=[
+                ('team_id.team_type', '=', 'website'),
+                ('state', 'in', ['sale', 'done']),
+                ('date', '>=', date_from),
+                ('date', '<=', date_to)],
+            fields=['team_id', 'price_subtotal'],
+            groupby=['team_id'],
+        )
         sales_values['summary'].update(
             order_to_invoice_count=request.env['sale.order'].search_count(sale_order_domain + [
                 ('state', 'in', ['sale', 'done']),
@@ -80,14 +89,10 @@ class WebsiteSaleBackend(WebsiteBackend):
             ]),
             payment_to_capture_count=request.env['payment.transaction'].search_count([
                 ('state', '=', 'authorized'),
-                ('sale_order_id.state', '!=', 'cancel')
+                # that part perform a search on sale.order in order to comply with access rights as tx do not have any
+                ('sale_order_id.id', 'in', request.env['sale.order'].search(sale_order_domain + [('state', '!=', 'cancel')]).ids),
             ]),
-            total_sold=sum(request.env['sale.report'].search([
-                ('state', 'in', ['sale', 'done']),
-                ('team_id.team_type', '=', 'website'),
-                ('date', '>=', date_from),
-                ('date', '<=', date_to)]).mapped('price_subtotal')
-            )
+            total_sold=sum(price_line['price_subtotal'] for price_line in report_price_lines)
         )
 
         # Ratio computation
