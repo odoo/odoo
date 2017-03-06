@@ -616,7 +616,7 @@ odoo.define('website_form_editor.tour', function(require) {
                         ],
                         []
                     ])
-                    .exec({callback: ajax.rpc.bind(ajax)});
+                    .exec({type: "ajax"});
                 var success = function(model, data) {
                     if(data.length) {
                         $('body').append('<div id="website_form_editor_success_test_tour_'+model+'"></div>');

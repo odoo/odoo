@@ -64,7 +64,7 @@ odoo.define('website_form_editor', function (require) {
             rpc.query({model: "ir.model", method: "get_authorized_fields"})
                 .args([this.$target.closest('form').attr('data-model_name')])
                 .withContext(base.get_context())
-                .exec({callback: ajax.rpc.bind(ajax)})
+                .exec({type: "ajax"})
                 .then(function(fields) {
                     // The get_fields function doesn't return the name
                     // in the field dict since it uses it has the key
@@ -90,7 +90,7 @@ odoo.define('website_form_editor', function (require) {
                     ['id', 'model', 'name', 'website_form_label']
                 ])
                 .withContext(base.get_context())
-                .exec({callback: ajax.rpc.bind(ajax)})
+                .exec({type: "ajax"})
                 .then(function(models) {
                     // Models selection input
                     var model_selection = qweb.render("website_form_editor.field_many2one", {
@@ -344,7 +344,7 @@ odoo.define('website_form_editor', function (require) {
                     // succeeds... but no idea how to do that
                     rpc.query({model: 'ir.model.fields', method: 'formbuilder_whitelist'})
                         .args([model, _.uniq(fields)])
-                        .exec({callback: ajax.rpc.bind(ajax)});
+                        .exec({type: "ajax"});
                 }
             }
 
