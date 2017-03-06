@@ -361,8 +361,8 @@ class ModelConverter(ir.ir_http.ModelConverter):
                 record_id = abs(record_id)
         return env[self.model].browse(record_id)
 
-    def generate(self, query=None, args=None):
-        Model = request.env[self.model]
+    def generate(self, uid, query=None, args=None):
+        Model = request.env[self.model].sudo(uid)
         domain = safe_eval(self.domain, (args or {}).copy())
         if query:
             domain.append((Model._rec_name, 'ilike', '%' + query + '%'))
@@ -374,8 +374,8 @@ class ModelConverter(ir.ir_http.ModelConverter):
 class PageConverter(werkzeug.routing.PathConverter):
     """ Only point of this converter is to bundle pages enumeration logic """
 
-    def generate(self, query=None, args={}):
-        View = request.env['ir.ui.view']
+    def generate(self, uid, query=None, args={}):
+        View = request.env['ir.ui.view'].sudo(uid)
         domain = [('page', '=', True)]
         query = query and query.startswith('website.') and query[8:] or query
         if query:

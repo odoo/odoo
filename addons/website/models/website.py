@@ -550,7 +550,7 @@ class Website(models.Model):
                 newval = []
                 for val in values:
                     query = i == len(convitems)-1 and query_string
-                    for value_dict in converter.generate(query=query, args=val):
+                    for value_dict in converter.generate(uid=self.env.uid, query=query, args=val):
                         newval.append(val.copy())
                         value_dict[name] = value_dict['loc']
                         del value_dict['loc']
