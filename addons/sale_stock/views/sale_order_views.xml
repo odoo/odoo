@@ -24,7 +24,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//page/field[@name='order_line']/form/group/group/field[@name='tax_id']" position="before">
-                    <field name="product_packaging" context="{'default_product_id': product_id, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging" />
+                    <field name="product_packaging" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging" />
                 </xpath>
                 <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
                     <field name="route_id" groups="sale_stock.group_route_so_lines"/>

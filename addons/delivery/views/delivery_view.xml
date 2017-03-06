@@ -7,9 +7,12 @@
             <field name="name">Packagings</field>
             <field name="res_model">product.packaging</field>
             <field name="domain">[('product_id', '=', False)]</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('delivery.product_packaging_delivery_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('delivery.product_packaging_delivery_form')})]"/>
         </record>
 
-        <menuitem id="menu_delivery_packagings" name="Delivery Packaging" parent="stock.menu_packages_config" action="action_delivery_packaging_view"/>
+        <menuitem id="menu_delivery_packagings" name="Delivery Packaging" parent="stock.menu_packages_config" action="action_delivery_packaging_view" groups="stock.group_tracking_lot"/>
 
         <record id="view_delivery_carrier_tree" model="ir.ui.view">
             <field name="name">delivery.carrier.tree</field>
