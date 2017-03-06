@@ -1,7 +1,9 @@
 odoo.define('website_form_editor.tour', function(require) {
     'use strict';
 
+    var ajax = require('web.ajax');
     var base = require('web_editor.base');
+    var rpc = require('web.rpc');
     var tour = require("web_tour.tour");
 
     tour.register("website_form_editor_tour", {
@@ -601,7 +603,8 @@ odoo.define('website_form_editor.tour', function(require) {
             content: "Check mail.mail records have been created",
             trigger: "body",
             run: function () {
-                var mailDef = this.rpc("mail.mail", "search_read")
+                var mailDef = rpc
+                    .query({model: 'mail.mail', method: 'search_read'})
                     .args([
                         // TODO: add other fields in domain !
                         [
@@ -613,7 +616,7 @@ odoo.define('website_form_editor.tour', function(require) {
                         ],
                         []
                     ])
-                    .exec();
+                    .exec({callback: ajax.rpc.bind(ajax)});
                 var success = function(model, data) {
                     if(data.length) {
                         $('body').append('<div id="website_form_editor_success_test_tour_'+model+'"></div>');
