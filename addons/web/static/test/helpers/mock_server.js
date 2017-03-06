@@ -403,20 +403,42 @@ var MockServer = Class.extend({
      *
      * @private
      * @param {string} model
+     * @param {Array} args
+     * @param {string} args[0]
+     * @param {Array} args[1], search domain
      * @param {Object} _kwargs
      * @returns {Array[]} a list of [id, display_name]
      */
-    _mockNameSearch: function (model, _kwargs) {
-        var names = _.map(this.data[model].records, function (record) {
-            return [record.id, record.display_name];
-        });
-        var domain = _kwargs && _kwargs.args && _kwargs.args[0];
-        if (domain && domain[0] === 'id' && domain[1] === 'not in') {
-            names = _.filter(names, function (value) {
-                return !_.contains(domain[2], value[0]);
+    _mockNameSearch: function (model, args, _kwargs) {
+        var str = args && typeof args[0] === 'string' ? args[0] : _kwargs.name;
+        var domain = (args && args[1]) || _kwargs.args || [];
+        var dom = domain[0];
+        var records = this.data[model].records;
+        if (dom) {
+            records = _.filter(records, function (record) {
+                var value = record[dom[0]];
+                if (value instanceof Array) {
+                    value = value[0];
+                }
+                if (dom[1] === 'not in') {
+                    return !_.contains(dom[2], value);
+                } else if (dom[1] === 'in') {
+                    return _.contains(dom[2], value);
+                } else if (dom[1] === '==') {
+                    return dom[2] == value;
+                } else if (dom[1] === '!=') {
+                    return dom[2] != value;
+                }
             });
         }
-        return names;
+        if (str.length) {
+            records = _.filter(records, function (record) {
+                return record.display_name.indexOf(str) !== -1;
+            });
+        }
+        return _.map(records, function (record) {
+            return [record.id, record.display_name];
+        });
     },
     /**
      * Simulate an 'onchange' rpc
@@ -742,7 +764,7 @@ var MockServer = Class.extend({
                 return $.when(this._mockNameCreate(args.model, args.args));
 
             case 'name_search':
-                return $.when(this._mockNameSearch(args.model, args.kwargs));
+                return $.when(this._mockNameSearch(args.model, args.args, args.kwargs));
 
             case 'onchange':
                 return $.when(this._mockOnchange(args.model, args.args));
