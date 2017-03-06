@@ -32,7 +32,7 @@ var utils = require('web.utils');
  * @param {boolean} value
  * @returns {jQueryElement}
  */
-function formatBoolean (value) {
+function formatBoolean(value) {
     var $input = $('<input type="checkbox">')
                 .prop('checked', value)
                 .prop('disabled', true);
@@ -49,7 +49,7 @@ function formatBoolean (value) {
  * @param {string|false} value
  * @returns {string}
  */
-function formatChar (value) {
+function formatChar(value) {
     return typeof value === 'string' ? value : '';
 }
 
@@ -60,7 +60,7 @@ function formatChar (value) {
  * @param {Moment|false}
  * @returns {string}
  */
-function formatDate (value) {
+function formatDate(value) {
     if (!value) {
         return "";
     }
@@ -77,7 +77,7 @@ function formatDate (value) {
  * @params {Moment|false}
  * @returns {string}
  */
-function formatDateTime (value) {
+function formatDateTime(value) {
     if (!value) {
         return "";
     }
@@ -98,7 +98,7 @@ function formatDateTime (value) {
  *   should be used.
  * @returns {string}
  */
-function formatFloat (value, field) {
+function formatFloat(value, field) {
     var l10n = core._t.database.parameters;
     var precision = (field && field.digits) ? field.digits[1] : 2;
     var formatted = _.str.sprintf('%.' + precision + 'f', value || 0).split('.');
@@ -114,7 +114,7 @@ function formatFloat (value, field) {
  * @param {float} value
  * @returns {string}
  */
-function formatFloatTime (value) {
+function formatFloatTime(value) {
     var pattern = '%02d:%02d';
     if (value < 0) {
         value = Math.abs(value);
@@ -136,7 +136,7 @@ function formatFloatTime (value) {
  * @param {integer|false} value
  * @returns {string}
  */
-function formatID (value) {
+function formatID(value) {
     return value ? value.toString() : '';
 }
 
@@ -147,7 +147,7 @@ function formatID (value) {
  * @param {integer|false} value
  * @returns {string}
  */
-function formatInteger (value) {
+function formatInteger(value) {
     if (!value && value !== 0) {
         // previously, it returned 'false'. I don't know why.  But for the Pivot
         // view, I want to display the concept of 'no value' with an empty
@@ -167,7 +167,7 @@ function formatInteger (value) {
  * @param {Array|Object|false} value
  * @returns {string}
  */
-function formatMany2one (value) {
+function formatMany2one(value) {
     return value && (_.isArray(value) ? value[1] : value.data.display_name) || '';
 }
 
@@ -179,14 +179,14 @@ function formatMany2one (value) {
  *   list of values
  * @returns {string}
  */
-function formatMany2Many (value) {
-    var names = _.map(value.data, function(p) {
+function formatMany2Many(value) {
+    var names = _.map(value.data, function (p) {
         return p.data.display_name;
     });
     return names.join(', ');
 }
 
-function formatMonetary (value, field, options) {
+function formatMonetary(value, field, options) {
     options = options || {};
     var currency_id = options.currency_id;
     if (!currency_id && options.data) {
@@ -212,11 +212,11 @@ function formatMonetary (value, field, options) {
     }
 }
 
-function formatSelection (value, field) {
+function formatSelection(value, field) {
     if (!value) {
         return '';
     }
-    var val = _.find(field.selection, function(option) {
+    var val = _.find(field.selection, function (option) {
         return option[0] === value;
     });
     return val[1];
@@ -233,7 +233,7 @@ function formatSelection (value, field) {
  * @params {string}
  * @returns {Moment|false} Moment date object
  */
-function parseDate (value) {
+function parseDate(value) {
     if (!value) {
         return false;
     }
@@ -264,7 +264,7 @@ function parseDate (value) {
  * @params {string}
  * @returns {Moment|false} Moment date object
  */
-function parseDateTime (value) {
+function parseDateTime(value) {
     if (!value) {
         return false;
     }
@@ -294,7 +294,7 @@ function parseDateTime (value) {
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct datetime"), value));
 }
 
-function parseFloat (value) {
+function parseFloat(value) {
     value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
     value = value.replace(core._t.database.parameters.decimal_point, '.');
     var parsed = Number(value);
@@ -304,7 +304,7 @@ function parseFloat (value) {
     return parsed;
 }
 
-function parseFloatTime (value) {
+function parseFloatTime(value) {
     var factor = 1;
     if (value[0] === '-') {
         value = value.slice(1);
@@ -318,7 +318,7 @@ function parseFloatTime (value) {
     return factor * (hours + (minutes / 60));
 }
 
-function parseInteger (value) {
+function parseInteger(value) {
     value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
     var parsed = Number(value);
     // do not accept not numbers or float values
@@ -328,7 +328,7 @@ function parseInteger (value) {
     return parsed;
 }
 
-function parseMonetary (formatted_value) {
+function parseMonetary(formatted_value) {
     var l10n = core._t.database.parameters;
     var value = formatted_value.replace(l10n.thousands_sep, '')
         .replace(l10n.decimal_point, '.')
@@ -336,49 +336,44 @@ function parseMonetary (formatted_value) {
     return parseFloat(value);
 }
 
-function identity(value) {
-    return value;
-}
-
-
 return {
     format: {
-        binary: identity, // todo
+        binary: _.identity, // todo
         boolean: formatBoolean,
         char: formatChar,
         date: formatDate,
         datetime: formatDateTime,
         float: formatFloat,
         float_time: formatFloatTime,
-        html: identity, // todo
+        html: _.identity, // todo
         id: formatID,
         integer: formatInteger,
         many2many: formatMany2Many,
         many2one: formatMany2one,
         monetary: formatMonetary,
-        one2many: identity, // todo
-        reference: identity, // todo
+        one2many: _.identity, // todo
+        reference: _.identity, // todo
         selection: formatSelection,
         text: formatChar,
     },
     parse: {
-        binary: identity,
-        boolean: identity, // todo
-        char: identity, // todo
+        binary: _.identity,
+        boolean: _.identity, // todo
+        char: _.identity, // todo
         date: parseDate, // todo
         datetime: parseDateTime, // todo
         float: parseFloat,
         float_time: parseFloatTime,
-        html: identity, // todo
-        id: identity,
+        html: _.identity, // todo
+        id: _.identity,
         integer: parseInteger,
-        many2many: identity, // todo
-        many2one: identity,
+        many2many: _.identity, // todo
+        many2one: _.identity,
         monetary: parseMonetary,
-        one2many: identity,
-        reference: identity, // todo
-        selection: identity, // todo
-        text: identity, // todo
+        one2many: _.identity,
+        reference: _.identity, // todo
+        selection: _.identity, // todo
+        text: _.identity, // todo
     },
 };
 

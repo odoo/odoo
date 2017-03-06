@@ -108,8 +108,10 @@ var Domain = collections.Tree.extend({
             }
         }
     },
-
     /**
+     * Return the JS prefix-array representation of this domain. Note that all
+     * domains that use the "false" domain cannot be represented as such.
+     *
      * @returns {Array} JS prefix-array representation of this domain
      */
     toArray: function () {
@@ -124,7 +126,6 @@ var Domain = collections.Tree.extend({
             }));
         }
     },
-
     /**
      * @returns {string} representation of the Python prefix-array
      *                   representation of the domain
