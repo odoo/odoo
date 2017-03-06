@@ -151,11 +151,6 @@ return AbstractRenderer.extend({
 
         if (params.eventTemplate) {
             this.qweb = new QWeb(session.debug, {_s: session.origin});
-            params.eventTemplate.children = [{
-                'tag': "t",
-                'attrs': {'t-name': "calendar-box"},
-                'children': params.eventTemplate.children
-            }];
             this.qweb.add_template(utils.json_node_to_xml(params.eventTemplate));
         }
     },

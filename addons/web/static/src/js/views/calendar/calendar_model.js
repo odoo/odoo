@@ -164,26 +164,8 @@ return AbstractModel.extend({
         // fields to display color, e.g.: user_id.partner_id
         this.field_color = params.field_color;
         if (!this.preload_def) {
-            var def;
-            if (this.field_color) {
-                var fields = this.field_color.split('.');
-                if (fields.length > 1) {
-                    def = new $.Deferred();
-                    if (!this.model_color) {
-                        var dataset = new data.DataSetSearch(this, this.fields[fields[0]].relation, params.context, []);
-                        this.loadFieldView(dataset, false, 'form').then(function (fieldView) {
-                            self.model_color = fieldView.fields[fields[1]].relation;
-                            def.resolve();
-                        });
-                    } else {
-                        def.resolve();
-                    }
-                }
-            }
-
             this.preload_def = $.Deferred();
             $.when(
-                def,
                 this.performModelRPC(this.modelName, 'check_access_rights', ["write", false]),
                 this.performModelRPC(this.modelName, 'check_access_rights', ["create", false]))
             .then(function (write, create) {
@@ -401,32 +383,12 @@ return AbstractModel.extend({
      */
     _loadColors: function (element, events) {
         if (this.field_color) {
-            var fields = this.field_color.split('.');
-            var first = fields[0];
-            var self = this;
-
-            if (fields.length === 1) {
-                _.each(events, function (event) {
-                    var value = event.record[first];
-                    event.color_index = _.isArray(value) ? value[0] : value;
-                });
-                this.model_color = this.fields[first].relation || element.model;
-            } else {
-                var model = this.fields[first].relation;
-                var ids = [];
-                _.each(events, function (event) {
-                    ids.push(event.record[first][0]);
-                });
-                ids = _.uniq(ids);
-
-                return self.performModelRPC(model, 'read', [ids, [fields[1]]]).then(function (res) {
-                    res = _.object(_.pluck(res, ['id']), _.pluck(res, [fields[1]]));
-                    _.each(events, function (event) {
-                        var value = res[event.record[first][0]];
-                        event.color_index = _.isArray(value) ? value[0] : value;
-                    });
-                });
-            }
+            var fieldName = this.field_color;
+            _.each(events, function (event) {
+                var value = event.record[fieldName];
+                event.color_index = _.isArray(value) ? value[0] : value;
+            });
+            this.model_color = this.fields[fieldName].relation || element.model;
         }
         return $.Deferred().resolve();
     },
@@ -498,6 +460,7 @@ return AbstractModel.extend({
         var self = this;
         var new_filters = {};
         var to_read = {};
+
         _.each(this.data.filters, function (filter, fieldName) {
             var field = self.fields[fieldName];
 
@@ -526,7 +489,7 @@ return AbstractModel.extend({
                 _.each(data, function (_value) {
                     var value = _.isArray(_value) ? _value[0] : _value;
                     fs.push({
-                        'color': self.model_color === (field.relation || element.model) ? value : false,
+                        'color_index': self.model_color === (field.relation || element.model) ? value : false,
                         'value': value,
                         'label': field_utils.format[field.type](_value, field),
                         'avatar_model': field.relation || element.model,

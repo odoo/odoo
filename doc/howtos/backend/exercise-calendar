@@ -64,9 +64,8 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
 +            <field name="name">session.calendar</field>
 +            <field name="model">openacademy.session</field>
 +            <field name="arch" type="xml">
-+                <calendar string="Session Calendar" date_start="start_date" date_stop="end_date">
++                <calendar string="Session Calendar" date_start="start_date" date_stop="end_date" color="instructor_id">
 +                    <field name="name"/>
-+                    <filter name="instructor_id" color="True"/>
 +                </calendar>
 +            </field>
 +        </record>

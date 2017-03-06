@@ -113,11 +113,10 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="date_planned">
+                <calendar string="Calendar View" date_start="date_planned" color="partner_id">
                     <field name="name"/>
                     <field name="amount_total" widget="monetary"/>
                     <field name="partner_id"/>
-                    <filter name="partner_id" color="True" avatar_field="image_small"/>
                 </calendar>
             </field>
         </record>

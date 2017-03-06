@@ -742,10 +742,8 @@ class Meeting(models.Model):
         ('-1', 'Last')
     ], string='By day')
     final_date = fields.Date('Repeat Until')
-
     user_id = fields.Many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}, default=lambda self: self.env.user)
-    color_partner_id = fields.Integer("Color index of creator", compute='_compute_color_partner', store=False)
-
+    partner_id = fields.Many2one('res.partner', string='Responsible', related='user_id.partner_id', readonly=True)
     active = fields.Boolean('Active', default=True, help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.")
     categ_ids = fields.Many2many('calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags')
     attendee_ids = fields.One2many('calendar.attendee', 'event_id', 'Participant', ondelete='cascade')
@@ -833,11 +831,6 @@ class Meeting(models.Model):
                 data['recurrency'] = True
                 data.update(self._rrule_parse(meeting.rrule, data, meeting.start))
                 meeting.update(data)
-
-    @api.multi
-    def _compute_color_partner(self):
-        for meeting in self:
-            meeting.color_partner_id = meeting.user_id.partner_id.id
 
     @api.constrains('start_datetime', 'stop_datetime', 'start_date', 'stop_date')
     def _check_closing_date(self):

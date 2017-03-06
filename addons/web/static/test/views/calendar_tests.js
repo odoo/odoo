@@ -26,6 +26,7 @@ QUnit.module('Views', {
                 fields: {
                     id: {string: "ID", type: "integer"},
                     user_id: {string: "user", type: "many2one", relation: 'user'},
+                    parnter_id: {string: "user", type: "many2one", relation: 'partner', related: 'user_id.parnter_id'},
                     name: {string: "name", type: "char"},
                     start: {string: "start", type: "datetime"},
                     stop: {string: "stop", type: "datetime"},
@@ -34,12 +35,12 @@ QUnit.module('Views', {
                     type: {string: "type", type: "integer"},
                 },
                 records: [
-                    {id: 1, user_id: session.uid, name: "event 1", start: "2016-12-11 00:00:00", stop: "2016-12-11 00:00:00", allday: false, partner_ids: [1,2,3], type: 1},
-                    {id: 2, user_id: session.uid, name: "event 2", start: "2016-12-12 10:55:05", stop: "2016-12-12 14:55:05", allday: false, partner_ids: [1,2], type: 3},
-                    {id: 3, user_id: 4, name: "event 3", start: "2016-12-12 15:55:05", stop: "2016-12-12 16:55:05", allday: false, partner_ids: [1], type: 2},
-                    {id: 4, user_id: session.uid, name: "event 4", start: "2016-12-14 15:55:05", stop: "2016-12-14 18:55:05", allday: true, partner_ids: [1], type: 2},
-                    {id: 5, user_id: 4, name: "event 5", start: "2016-12-13 15:55:05", stop: "2016-12-20 18:55:05", allday: false, partner_ids: [2,3], type: 2},
-                    {id: 6, user_id: session.uid, name: "event 6", start: "2016-12-18 08:00:00", stop: "2016-12-18 09:00:00", allday: false, partner_ids: [3], type: 3}
+                    {id: 1, user_id: session.uid, partner_id: 1, name: "event 1", start: "2016-12-11 00:00:00", stop: "2016-12-11 00:00:00", allday: false, partner_ids: [1,2,3], type: 1},
+                    {id: 2, user_id: session.uid, partner_id: 1, name: "event 2", start: "2016-12-12 10:55:05", stop: "2016-12-12 14:55:05", allday: false, partner_ids: [1,2], type: 3},
+                    {id: 3, user_id: 4, partner_id: 4, name: "event 3", start: "2016-12-12 15:55:05", stop: "2016-12-12 16:55:05", allday: false, partner_ids: [1], type: 2},
+                    {id: 4, user_id: session.uid, partner_id: 1, name: "event 4", start: "2016-12-14 15:55:05", stop: "2016-12-14 18:55:05", allday: true, partner_ids: [1], type: 2},
+                    {id: 5, user_id: 4, partner_id: 4, name: "event 5", start: "2016-12-13 15:55:05", stop: "2016-12-20 18:55:05", allday: false, partner_ids: [2,3], type: 2},
+                    {id: 6, user_id: session.uid, partner_id: 1, name: "event 6", start: "2016-12-18 08:00:00", stop: "2016-12-18 09:00:00", allday: false, partner_ids: [3], type: 3}
                 ]
             },
             user: {
@@ -47,6 +48,7 @@ QUnit.module('Views', {
                     id: {string: "ID", type: "integer"},
                     display_name: {string: "Displayed name", type: "char"},
                     parnter_id: {string: "partner", type: "many2one", relation: 'partner'},
+                    image: {string: "image", type: "integer"},
                 },
                 records: [
                     {id: session.uid, display_name: "user 1", partner_id: 1},
@@ -158,10 +160,10 @@ QUnit.module('Views', {
                 'all_day="allday" '+
                 'mode="week" '+
                 'attendee="partner_ids" '+
-                'color="user_id.parnter_id">'+
+                'color="parnter_id">'+
                     '<field name="name"/>'+
-                    '<filter name="type"/>'+
-                    '<filter name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+ // todo test image: avatar_field="image"
+                    '<filter name="user_id" avatar_field="image"/>'+
+                    '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+
             '</calendar>',
             archs: archs,
             mockRPC: mock_check_access_rights,
@@ -191,11 +193,11 @@ QUnit.module('Views', {
 
         // test filters
 
-        assert.strictEqual($sidebar.find('.o_calendar_filter').length, 2, "should display 2 filters");
+        assert.strictEqual($sidebar.find('.o_calendar_filter').length, 2, "should display 3 filters");
 
-        var $typeFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(type))');
-        assert.ok($typeFilter.length, "should display 'type' filter");
-        assert.strictEqual($typeFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'type'");
+        var $typeFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(user))');
+        assert.ok($typeFilter.length, "should display 'user' filter");
+        assert.strictEqual($typeFilter.find('.o_calendar_filter_item').length, 1, "should display 1 filter items for 'user'");
 
         var $attendeesFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(attendees))');
         assert.ok($attendeesFilter.length, "should display 'attendees' filter");

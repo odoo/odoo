@@ -265,11 +265,10 @@
         <field name="arch" type="xml">
             <calendar string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday"
                 readonly_form_view_id="%(calendar.view_calendar_event_form_popup)s" event_limit="3"
-                color="user_id.partner_id">
+                color="partner_id">
                 <field name="name"/>
-                <field name="partner_ids" avatar_field="image_small"/>
+                <field name="partner_ids" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_small"/>
                 <field name="is_highlighted" invisible="1"/>
-                <filter name="partner_ids" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_small"/>
             </calendar>
         </field>
     </record>
