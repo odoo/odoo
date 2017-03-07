@@ -30,33 +30,51 @@ QUnit.module('core', {}, function () {
     QUnit.module('RPC Builder');
 
     QUnit.test('basic rpc (route)', function (assert) {
+        assert.expect(3);
+        var query = createQuery({
+            route: '/my/route',
+            mockRPC: function (route, params) {
+                assert.strictEqual(route, '/my/route',
+                    "should call the proper route");
+                assert.notOk('args' in params,
+                    "rpc on routes should not have any args by default");
+                assert.notOk('kwargs' in params,
+                    "rpc on routes should not have any kwargs by default");
+            },
+        });
+        query.exec();
+    });
+
+    QUnit.test('rpc on route with parameters', function (assert) {
         assert.expect(1);
         var query = createQuery({
             route: '/my/route',
-            mockRPC: function (route) {
-                assert.strictEqual(route, '/my/route',
-                    "should call the proper route");
-            }
+            mockRPC: function (route, params) {
+                assert.deepEqual(params, {hey: 'there'},
+                    "should transfer the proper parameters");
+            },
         });
-        query.exec();
+        query.params({hey: 'there'}).exec();
     });
 
     QUnit.test('basic rpc, with no context', function (assert) {
         assert.expect(1);
         var query = createQuery({
-            route: '/my/route',
-            mockRPC: function (route, args) {
-                assert.notOk('context' in args.kwargs,
+            model: 'partner',
+            method: 'test',
+            mockRPC: function (route, params) {
+                assert.notOk('context' in params.kwargs,
                     "does not automatically add a context");
             }
         });
-        query.exec();
+        query.kwargs({}).exec();
     });
 
     QUnit.test('basic rpc, with context', function (assert) {
         assert.expect(1);
         var query = createQuery({
-            route: '/my/route',
+            model: 'partner',
+            method: 'test',
             mockRPC: function (route, args) {
                 assert.deepEqual(args.kwargs.context, {a: 1},
                     "properly transfer the context");
@@ -68,7 +86,8 @@ QUnit.module('core', {}, function () {
     QUnit.test('basic rpc, with context, part 2', function (assert) {
         assert.expect(1);
         var query = createQuery({
-            route: '/my/route',
+            model: 'partner',
+            method: 'test',
             mockRPC: function (route, args) {
                 assert.deepEqual(args.kwargs.context, {a: 1},
                     "properly transfer the context");

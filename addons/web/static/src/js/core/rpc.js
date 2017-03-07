@@ -1,6 +1,7 @@
 odoo.define('web.rpc', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var Class = require('web.Class');
 
 var BaseRPCBuilder = Class.extend({
@@ -37,14 +38,26 @@ var BaseRPCBuilder = Class.extend({
         return this;
     },
     /**
-     * @param {Object} options
+     * @param {Object} [params]
+     * @param {string} [params.type=event] if type=event, the rpc will be done
+     *   by triggering an event.  It will work if the parent is in a component
+     *   tree with a component with a ServiceProvider somewhere up.  If
+     *   type=ajax, then it will instead perform directly an ajax call.  This is
+     *   discouraged, if possible.
+     * @param {Object} [params.options] options that will be sent to the low
+     *   level ajax call.  Typically, shadow=true.
      * @return {Deferred<*>}
      */
-    exec: function (options) {
-        if (options && options.callback) {
-            return options.callback(this._getRoute(), this._getArgs(), options.callbackOptions);
+    exec: function (params) {
+        var route = this._getRoute();
+        var options = (params && params.options) ? params.options : {};
+        var type = (params && params.type) ? params.type : 'event';
+
+        if (type === 'event') {
+            return this.parent.call('ajax', 'rpc', route, this._getParams(), options);
+        } else if (type === 'ajax') {
+            return ajax.rpc(route, this._getParams(), options);
         }
-        return this.parent.call('ajax', 'rpc', this._getRoute(), this._getArgs(), options || {});
     },
     /**
      * @param {Object} kwargs
@@ -52,6 +65,14 @@ var BaseRPCBuilder = Class.extend({
      */
     kwargs: function (kwargs) {
         this._kwargs = kwargs;
+        return this;
+    },
+    /**
+     * @param {Object} params
+     * @returns {BaseRPCBuilder}
+     */
+    params: function (params) {
+        this._params = params;
         return this;
     },
     /**
@@ -71,17 +92,17 @@ var BaseRPCBuilder = Class.extend({
      * @private
      * @returns {Object}
      */
-    _getArgs: function () {
+    _getParams: function () {
         var kwargs = _.extend({}, this._kwargs);
         if (this._context) {
             kwargs.context = this._context;
         }
-        return {
+        return _.extend({}, this._params, {
             method: this._method,
             model: this._model,
-            args: this._args || [],
-            kwargs: kwargs,
-        };
+            args: this._args || (this._method ? [] : undefined),
+            kwargs: this._method ? kwargs : undefined,
+        });
     },
     /**
      * @private
@@ -164,7 +185,7 @@ var SearchRPCBuilder = BaseRPCBuilder.extend({
      * @private
      * @returns {Object}
      */
-    _getArgs: function () {
+    _getParams: function () {
         return {
             context: this._context || {},
             domain: this._domain,
@@ -240,7 +261,7 @@ var ReadGroupRPCBuilder = SearchRPCBuilder.extend({
      * @private
      * @returns {Object}
      */
-    _getArgs: function () {
+    _getParams: function () {
         var kwargs = _.extend({}, this._kwargs, {
             context: this._context || {},
             domain: this._domain || [],
