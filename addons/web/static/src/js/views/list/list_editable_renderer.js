@@ -90,12 +90,13 @@ ListRenderer.include({
      * @param {Object} state a record resource (the new full state)
      * @param {string} changedRecordID the local id for the changed record
      * @param {string[]} changedFields list of modified fields
+     * @param {OdooEvent} event the event that triggered the change
      */
-    confirmChange: function (state, changedRecordID, changedFields) {
+    confirmChange: function (state, changedRecordID, changedFields, event) {
         this.state = state;
         var rowIndex = _.findIndex(this.state.data, {id: changedRecordID});
         if (rowIndex > -1) {
-            this._updateRow(rowIndex, changedFields);
+            this._updateRow(rowIndex, changedFields, event);
         } else {
             this._render();
         }
@@ -416,13 +417,20 @@ ListRenderer.include({
         }
         $td.replaceWith($new_td);
     },
-    _updateRow: function (index, changed_fields) {
+    /**
+     * Updates the row of a particular record of the editable list view.
+     *
+     * @param {index} index the index of the record whose row needs updating
+     * @param {string[]} changed_fields names of the fields which changed
+     * @param {OdooEvent} event the event that triggered the change
+     */
+    _updateRow: function (index, changed_fields, event) {
         var self = this;
         var record = this.state.data[index];
         _.each(changed_fields, function (field_name) {
             var widget = _.findWhere(self.widgets, {name: field_name});
             if (widget && widget.__rowIndex === index) {
-                widget.reset(record);
+                widget.reset(record, event);
                 widget.$el.parent().addClass('o_field_dirty');
             } else {
                 var column_index = _.findIndex(self.columns, function (column) {
