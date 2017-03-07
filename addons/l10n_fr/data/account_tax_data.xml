@@ -219,6 +219,7 @@
       <field name="sequence" eval="9"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_20_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_tva_20"/>
     </record>
 
     <record model="account.tax.template" id="tva_specifique">
@@ -232,6 +233,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_8_5')])]"/>
+      <field name="tax_group_id" ref="tax_group_tva_85"/>
     </record>
 
     <record model="account.tax.template" id="tva_intermediaire">
@@ -245,6 +247,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_10_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_tva_10"/>
     </record>
 
     <record model="account.tax.template" id="tva_reduite">
@@ -258,6 +261,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_5_5')])]"/>
+      <field name="tax_group_id" ref="tax_group_tva_55"/>
     </record>
 
     <record model="account.tax.template" id="tva_super_reduite">
@@ -271,6 +275,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_2_1')])]"/>
+      <field name="tax_group_id" ref="tax_group_tva_21"/>
     </record>
 
 
@@ -287,6 +292,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_20_0_TTC')])]"/>
+      <field name="tax_group_id" ref="tax_group_20"/>
     </record>
 
     <record model="account.tax.template" id="tva_specifique_ttc">
@@ -301,6 +307,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_8_5_TTC')])]"/>
+      <field name="tax_group_id" ref="tax_group_85"/>
     </record>
 
     <record model="account.tax.template" id="tva_intermediaire_ttc">
@@ -315,6 +322,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_10_0_TTC')])]"/>
+      <field name="tax_group_id" ref="tax_group_10"/>
     </record>
 
     <record model="account.tax.template" id="tva_reduite_ttc">
@@ -329,6 +337,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_5_5_TTC')])]"/>
+      <field name="tax_group_id" ref="tax_group_55"/>
     </record>
 
     <record model="account.tax.template" id="tva_super_reduite_ttc">
@@ -343,6 +352,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_2_1_TTC')])]"/>
+      <field name="tax_group_id" ref="tax_group_21"/>
     </record>
 
 <!-- ACHATS Tax excluded from price -->
@@ -360,6 +370,7 @@
       <field name="sequence" eval="9"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-20_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_20"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_specifique">
@@ -373,6 +384,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-8_5')])]"/>
+      <field name="tax_group_id" ref="tax_group_85"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_intermediaire">
@@ -386,6 +398,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-10_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_10"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_reduite">
@@ -399,6 +412,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-5_5')])]"/>
+      <field name="tax_group_id" ref="tax_group_55"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_super_reduite">
@@ -412,6 +426,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-2_1')])]"/>
+      <field name="tax_group_id" ref="tax_group_21"/>
     </record>
 
 
@@ -428,6 +443,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-20_0_TTC')])]"/>
+      <field name="tax_group_id" ref="tax_group_20"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_specifique_TTC">
@@ -442,6 +458,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-8_5_TTC')])]"/>
+      <field name="tax_group_id" ref="tax_group_85"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_intermediaire_TTC">
@@ -456,6 +473,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-10_0_TTC')])]"/>
+      <field name="tax_group_id" ref="tax_group_10"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_reduite_TTC">
@@ -470,6 +488,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_5_5')])]"/>
+      <field name="tax_group_id" ref="tax_group_55"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_super_reduite_TTC">
@@ -484,6 +503,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH-2_1_TTC')])]"/>
+      <field name="tax_group_id" ref="tax_group_21"/>
     </record>
 
 
@@ -500,6 +520,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_IMMO_20_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_20"/>
     </record>
 
     <record model="account.tax.template" id="tva_imm_specifique">
@@ -513,6 +534,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_IMMO_8_5')])]"/>
+      <field name="tax_group_id" ref="tax_group_85"/>
     </record>
 
     <record model="account.tax.template" id="tva_imm_intermediaire">
@@ -526,6 +548,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_IMMO-10_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_10"/>
     </record>
 
     <record model="account.tax.template" id="tva_imm_reduite">
@@ -539,6 +562,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_IMMO_5_5')])]"/>
+      <field name="tax_group_id" ref="tax_group_55"/>
     </record>
 
     <record model="account.tax.template" id="tva_imm_super_reduite">
@@ -552,6 +576,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_IMMO-2_1')])]"/>
+      <field name="tax_group_id" ref="tax_group_21"/>
     </record>
 
 
@@ -567,6 +592,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due_20_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_20"/>
     </record>
 
     <record model="account.tax.template" id="tva_intra_specifique">
@@ -580,6 +606,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due_8_5')])]"/>
+      <field name="tax_group_id" ref="tax_group_85"/>
     </record>
 
     <record model="account.tax.template" id="tva_intra_intermediaire">
@@ -593,6 +620,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due_10_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_10"/>
     </record>
 
     <record model="account.tax.template" id="tva_intra_reduite">
@@ -606,6 +634,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due_5_5')])]"/>
+      <field name="tax_group_id" ref="tax_group_55"/>
     </record>
 
     <record model="account.tax.template" id="tva_intra_super_reduite">
@@ -619,6 +648,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_due_2_1')])]"/>
+      <field name="tax_group_id" ref="tax_group_21"/>
     </record>
 
 
@@ -634,6 +664,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_ded_20_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_20"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_intra_specifique">
@@ -647,6 +678,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_ded_8_5')])]"/>
+      <field name="tax_group_id" ref="tax_group_85"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_intra_intermediaire">
@@ -660,6 +692,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_ded_10_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_10"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_intra_reduite">
@@ -673,6 +706,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_ded_5_5')])]"/>
+      <field name="tax_group_id" ref="tax_group_55"/>
     </record>
 
     <record model="account.tax.template" id="tva_acq_intra_super_reduite">
@@ -686,6 +720,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_ACH_UE_ded_2_1')])]"/>
+      <field name="tax_group_id" ref="tax_group_21"/>
     </record>
 
 
@@ -701,6 +736,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_EXO_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record model="account.tax.template" id="tva_export_0">
@@ -714,6 +750,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_EXPORT_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record model="account.tax.template" id="tva_intra_0">
@@ -727,6 +764,7 @@
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_UE_0')])]"/>
+      <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record model="account.tax.template" id="tva_import_0">
@@ -740,6 +778,7 @@
         <field name="sequence" eval="10"/>
         <field name="type_tax_use">purchase</field>
         <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tax_IMPORT_0')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
 <!--
