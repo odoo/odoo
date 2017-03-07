@@ -188,26 +188,59 @@ class IrMailServer(models.Model):
                     pass
         raise UserError(_("Connection Test Succeeded! Everything seems properly set up!"))
 
-    def connect(self, host, port, user=None, password=None, encryption=False, smtp_debug=False):
+    def connect(self, host=None, port=None, user=None, password=None, encryption=None,
+                smtp_debug=False, mail_server_id=None):
         """Returns a new SMTP connection to the give SMTP server, authenticated
            with ``user`` and ``password`` if provided, and encrypted as requested
            by the ``encryption`` parameter.
-        
-           :param host: host or IP of SMTP server to connect to
+
+           :param host: host or IP of SMTP server to connect to, if mail_server_id not passed
            :param int port: SMTP port to connect to
            :param user: optional username to authenticate with
            :param password: optional password to authenticate with
            :param string encryption: optional, ``'ssl'`` | ``'starttls'``
            :param bool smtp_debug: toggle debugging of SMTP sessions (all i/o
                               will be output in logs)
+           :param mail_server_id: ID of specific mail server to use (overrides other parameters)
         """
-        if encryption == 'ssl':
-            if not 'SMTP_SSL' in smtplib.__all__:
-                raise UserError(_("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
-                                  "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
-            connection = smtplib.SMTP_SSL(host, port)
+        mail_server = smtp_encryption = None
+        if mail_server_id:
+            mail_server = self.sudo().browse(mail_server_id)
+        elif not host:
+            mail_server = self.sudo().search([], order='sequence', limit=1)
+
+        if mail_server:
+            smtp_server = mail_server.smtp_host
+            smtp_port = mail_server.smtp_port
+            smtp_user = mail_server.smtp_user
+            smtp_password = mail_server.smtp_pass
+            smtp_encryption = mail_server.smtp_encryption
+            smtp_debug = smtp_debug or mail_server.smtp_debug
         else:
-            connection = smtplib.SMTP(host, port)
+            # we were passed individual smtp parameters or nothing and there is no default server
+            smtp_server = host or tools.config.get('smtp_server')
+            smtp_port = tools.config.get('smtp_port', 25) if port is None else port
+            smtp_user = user or tools.config.get('smtp_user')
+            smtp_password = password or tools.config.get('smtp_password')
+            if encryption is None and tools.config.get('smtp_ssl'):
+                smtp_encryption = 'starttls' # smtp_ssl => STARTTLS as of v7
+
+        if not smtp_server:
+            raise UserError(
+                (_("Missing SMTP Server") + "\n" +
+                 _("Please define at least one SMTP server, "
+                   "or provide the SMTP parameters explicitly.")))
+
+        if smtp_encryption == 'ssl':
+            if 'SMTP_SSL' not in smtplib.__all__:
+                raise UserError(
+                    _("Your OpenERP Server does not support SMTP-over-SSL. "
+                      "You could use STARTTLS instead."
+                       "If SSL is needed, an upgrade to Python 2.6 on the server-side "
+                       "should do the trick."))
+            connection = smtplib.SMTP_SSL(smtp_server, smtp_port)
+        else:
+            connection = smtplib.SMTP(smtp_server, smtp_port)
         connection.set_debuglevel(smtp_debug)
         if encryption == 'starttls':
             # starttls() will perform ehlo() if needed first
@@ -218,14 +251,14 @@ class IrMailServer(models.Model):
             # will be correctly detected for next step
             connection.starttls()
 
-        if user:
+        if smtp_user:
             # Attempt authentication - will raise if AUTH service not supported
             # The user/password must be converted to bytestrings in order to be usable for
             # certain hashing schemes, like HMAC.
             # See also bug #597143 and python issue #5285
-            user = ustr(user).encode('utf-8')
-            password = ustr(password).encode('utf-8')
-            connection.login(user, password)
+            smtp_user = ustr(smtp_user).encode('utf-8')
+            smtp_password = ustr(smtp_password).encode('utf-8')
+            connection.login(smtp_user, smtp_password)
         return connection
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
@@ -356,7 +389,8 @@ class IrMailServer(models.Model):
 
     @api.model
     def send_email(self, message, mail_server_id=None, smtp_server=None, smtp_port=None,
-                   smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False):
+                   smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
+                   smtp_session=None):
         """Sends an email directly (no queuing).
 
         No retries are done, the caller should handle MailDeliveryException in order to ensure that
@@ -372,6 +406,10 @@ class IrMailServer(models.Model):
                         ``Return-Path`` (if present), or will be set to the default bounce address.
                         The envelope recipients will be extracted from the combined list of ``To``,
                         ``CC`` and ``BCC`` headers.
+        :param smtp_session: optional pre-established SMTP session. When provided,
+                             overrides `mail_server_id` and all the `smtp_*` parameters.
+                             Passing the matching `mail_server_id` may yield better debugging/log
+                             messages. The caller is in charge of disconnecting the session.
         :param mail_server_id: optional id of ir.mail_server to use for sending. overrides other smtp_* arguments.
         :param smtp_server: optional hostname of SMTP server to use
         :param smtp_encryption: optional TLS mode, one of 'none', 'starttls' or 'ssl' (see ir.mail_server fields for explanation)
@@ -413,49 +451,17 @@ class IrMailServer(models.Model):
             _test_logger.info("skip sending email in test mode")
             return message['Message-Id']
 
-        # Get SMTP Server Details from Mail Server
-        mail_server = None
-        if mail_server_id:
-            mail_server = self.sudo().browse(mail_server_id)
-        elif not smtp_server:
-            mail_server = self.sudo().search([], order='sequence', limit=1)
-
-        if mail_server:
-            smtp_server = mail_server.smtp_host
-            smtp_user = mail_server.smtp_user
-            smtp_password = mail_server.smtp_pass
-            smtp_port = mail_server.smtp_port
-            smtp_encryption = mail_server.smtp_encryption
-            smtp_debug = smtp_debug or mail_server.smtp_debug
-        else:
-            # we were passed an explicit smtp_server or nothing at all
-            smtp_server = smtp_server or tools.config.get('smtp_server')
-            smtp_port = tools.config.get('smtp_port', 25) if smtp_port is None else smtp_port
-            smtp_user = smtp_user or tools.config.get('smtp_user')
-            smtp_password = smtp_password or tools.config.get('smtp_password')
-            if smtp_encryption is None and tools.config.get('smtp_ssl'):
-                smtp_encryption = 'starttls' # STARTTLS is the new meaning of the smtp_ssl flag as of v7.0
-
-        if not smtp_server:
-            raise UserError(_("Missing SMTP Server") + "\n" + _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
-
         try:
             message_id = message['Message-Id']
-
-            # Add email in Maildir if smtp_server contains maildir.
-            if smtp_server.startswith('maildir:/'):
-                from mailbox import Maildir
-                maildir_path = smtp_server[8:]
-                mdir = Maildir(maildir_path, factory=None, create=True)
-                mdir.add(message.as_string(True))
-                return message_id
-
-            smtp = None
+            smtp = smtp_session
             try:
-                smtp = self.connect(smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption or False, smtp_debug)
+                smtp = smtp or self.connect(
+                    smtp_server, smtp_port, smtp_user, smtp_password,
+                    smtp_encryption, smtp_debug, mail_server_id=mail_server_id)
                 smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
             finally:
-                if smtp is not None:
+                # do not quit() a pre-established smtp_session
+                if smtp is not None and not smtp_session:
                     smtp.quit()
         except Exception as e:
             params = (ustr(smtp_server), e.__class__.__name__, ustr(e))
