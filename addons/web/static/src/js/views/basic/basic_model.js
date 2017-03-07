@@ -361,6 +361,7 @@ var BasicModel = AbstractModel.extend({
 
         delete element._cache;
         delete element._changes;
+        delete element._forceM2MLink;
         delete element.static;
         delete element.parentID;
         delete element.relation_field;
@@ -1141,6 +1142,8 @@ var BasicModel = AbstractModel.extend({
                 list._changes.push(newRecord.id);
                 break;
             case 'ADD_M2M':
+                // force to use link command instead of create command
+                list._forceM2MLink = true;
                 // handle multiple add: command[2] may be a dict of values (1
                 // record added) or an array of dict of values
                 var data = _.isArray(command.ids) ? command.ids : [command.ids];
@@ -1576,7 +1579,7 @@ var BasicModel = AbstractModel.extend({
                 relIds = _.pluck(relData, 'res_id');
                 commands[fieldName] = [];
 
-                if (type === 'many2many') {
+                if (type === 'many2many' || list._forceM2MLink) {
                     // deliberately generate a single 'replace' command instead
                     // of a 'delete' and a 'link' commands with the exact diff
                     // because 1) performance-wise it doesn't change anything
