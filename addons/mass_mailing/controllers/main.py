@@ -26,7 +26,7 @@ class MassMailController(http.Controller):
                 res_ids = [res_id]
 
             right_token = mailing._unsubscribe_token(res_id, email)
-            if not consteq(token, right_token):
+            if not consteq(str(token), right_token):
                 raise exceptions.AccessDenied()
             mailing.update_opt_out(email, res_ids, True)
             return _('You have been unsubscribed successfully')
