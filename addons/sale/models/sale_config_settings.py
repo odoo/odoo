@@ -8,7 +8,7 @@ class SaleConfiguration(models.TransientModel):
     _inherit = 'sale.config.settings'
 
     sale_note = fields.Text(related='company_id.sale_note', string="Terms & Conditions")
-    default_use_sale_note = fields.Boolean(default_model='sale.config.settings')
+    default_use_sale_note = fields.Boolean()
     group_product_variant = fields.Boolean("Attributes & Variants",
         implied_group='product.group_product_variant')
     group_sale_pricelist = fields.Boolean("Use pricelists to adapt your price per customers",
@@ -82,6 +82,15 @@ class SaleConfiguration(models.TransientModel):
     module_web_clearbit = fields.Boolean("Company Research")
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Manage coupons and promotional offers")
+
+    @api.model
+    def get_default_use_sale_note(self, fields):
+        default_use_sale_note = self.env['ir.config_parameter'].sudo().get_param('sale.default_use_sale_note', default=False)
+        return dict(default_use_sale_note=default_use_sale_note)
+
+    @api.multi
+    def set_default_use_sale_note(self):
+        self.env['ir.config_parameter'].sudo().set_param("sale.default_use_sale_note", self.default_use_sale_note)
 
     @api.model
     def get_default_sale_pricelist_setting(self, fields):
