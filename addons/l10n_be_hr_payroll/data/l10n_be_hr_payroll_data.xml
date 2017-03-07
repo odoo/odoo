@@ -491,8 +491,8 @@ result = -contract.car_atn
         <field name="amount_select">code</field>
         <field name="sequence">65</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.get_value('travel_reimbursement_amount'))</field>
-        <field name="amount_python_compute">result = contract.get_value('travel_reimbursement_amount')</field>
+        <field name="condition_python">result = bool(contract.others_employee_amount)</field>
+        <field name="amount_python_compute">result = contract.others_employee_amount</field>
     </record>
     <record id="hr_payroll_rules_insurance" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.DED"/>
@@ -596,11 +596,6 @@ result = -contract.car_atn
         </record>
 
         <!-- Salary advantages definition -->
-        <record id="hr_contract_advantage_template_travel_reimbursement_amount" model="hr.contract.advantage.template">
-            <field name="name">Reimbursement of travel expenses</field>
-            <field name="code">travel_reimbursement_amount</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
         <record id="hr_contract_advantage_template_meal_voucher_amount" model="hr.contract.advantage.template">
             <field name="name">Check Value Meal</field>
             <field name="code">meal_voucher_amount</field>

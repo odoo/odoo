@@ -30,7 +30,7 @@ class HrContract(models.Model):
     new_car_model_id = fields.Many2one('fleet.vehicle.model', string="Model", domain=lambda self: self._get_possible_model_domain())
     public_transport_employee_amount = fields.Float('Paid by the employee (Monthly)')
     public_transport_reimbursed_amount = fields.Float(compute='_compute_public_transport_reimbursed_amount', string='Reimbursed amount')
-    others_employee_amount = fields.Float('Paid by the employee (Monthly)')
+    others_employee_amount = fields.Float('Reimbursed by the employer (Monthly)')
     eco_checks = fields.Float('Eco-checks', default=250)
     thirteen_month = fields.Float(compute='_compute_holidays_advantages', string='13th Month')
     double_holidays = fields.Float(compute='_compute_holidays_advantages', string='Double holidays')
@@ -233,12 +233,14 @@ class HrEmployee(models.Model):
 
     @api.depends('disabled_children_bool', 'disabled_children_number', 'children')
     def _compute_dependent_children(self):
-        if self.disabled_children_bool:
-            self.dependent_children = self.children + self.disabled_children_number
-        else:
-            self.dependent_children = self.children
+        for employee in self:
+            if employee.disabled_children_bool:
+                employee.dependent_children = employee.children + employee.disabled_children_number
+            else:
+                employee.dependent_children = employee.children
 
     @api.depends('other_dependent_people', 'other_senior_dependent', 'other_disabled_senior_dependent', 'other_juniors_dependent', 'other_disabled_juniors_dependent')
     def _compute_dependent_people(self):
-        self.dependent_seniors = self.other_senior_dependent + self.other_disabled_senior_dependent
-        self.dependent_juniors = self.other_juniors_dependent + self.other_disabled_juniors_dependent
+        for employee in self:
+            employee.dependent_seniors = employee.other_senior_dependent + employee.other_disabled_senior_dependent
+            employee.dependent_juniors = employee.other_juniors_dependent + employee.other_disabled_juniors_dependent
