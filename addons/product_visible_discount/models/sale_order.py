@@ -24,7 +24,7 @@ class SaleOrderLine(models.Model):
             if pricelist_item.pricelist_id.discount_policy == 'without_discount':
                 partner = self.env.context.get('partner_id')
                 while pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id and pricelist_item.base_pricelist_id.discount_policy == 'without_discount':
-                    price, rule_id = pricelist_item.base_pricelist_id.with_context(uom=uom.id).price_rule_get(product_id, qty, partner)[pricelist_item.base_pricelist_id.id]
+                    price, rule_id = pricelist_item.base_pricelist_id.with_context(uom=uom.id).price_rule_get(product.id, qty, partner)[pricelist_item.base_pricelist_id.id]
                     pricelist_item = PricelistItem.browse(rule_id)
 
             if pricelist_item.base == 'standard_price':
