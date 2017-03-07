@@ -4,6 +4,7 @@ odoo.define('web_tour.TourManager', function(require) {
 var core = require('web.core');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
+var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
 
@@ -187,7 +188,7 @@ var RunningTourActionHelper = core.Class.extend({
     },
 });
 
-return core.Class.extend(mixins.EventDispatcherMixin, mixins.ServicesMixin, {
+return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     init: function(parent, consumed_tours) {
         mixins.EventDispatcherMixin.init.call(this);
         this.setParent(parent);

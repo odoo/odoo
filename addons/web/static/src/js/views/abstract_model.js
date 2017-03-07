@@ -16,8 +16,9 @@ odoo.define('web.AbstractModel', function (require) {
 
 var Class = require('web.Class');
 var mixins = require('web.mixins');
+var ServicesMixin = require('web.ServicesMixin');
 
-var AbstractModel = Class.extend(mixins.EventDispatcherMixin, mixins.ServicesMixin, {
+var AbstractModel = Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     /**
      * @param {Widget} parent
      */

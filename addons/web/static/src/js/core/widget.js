@@ -3,6 +3,7 @@ odoo.define('web.Widget', function (require) {
 
 var core = require('web.core');
 var mixins = require('web.mixins');
+var ServicesMixin = require('web.ServicesMixin');
 
 /**
  * Base class for all visual components. Provides a lot of functionalities helpful
@@ -54,7 +55,7 @@ var mixins = require('web.mixins');
  */
 
 
-var Widget = core.Class.extend(mixins.PropertiesMixin, mixins.ServicesMixin, {
+var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
     // Backbone-ish API
     tagName: 'div',
     id: null,

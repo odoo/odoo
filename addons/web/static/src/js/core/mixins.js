@@ -2,7 +2,6 @@ odoo.define('web.mixins', function (require) {
 "use strict";
 
 var Class = require('web.Class');
-var rpc = require('web.rpc');
 var utils = require('web.utils');
 var AbstractService = require('web.AbstractService');
 
@@ -400,6 +399,39 @@ var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
     }
 });
 
+var ServiceProvider = {
+    services: {},
+    init: function () {
+        var self = this;
+        _.each(AbstractService.prototype.Services, function (Service) {
+            var service = new Service();
+            self.services[service.name] = service;
+        });
+        this.custom_events = _.clone(this.custom_events);
+        this.custom_events.call_service = this._call_service.bind(this);
+    },
+    _call_service: function (event) {
+        var service = this.services[event.data.service];
+        var args = event.data.args.concat(event.target);
+        var result = service[event.data.method].apply(service, args);
+        event.data.callback(result);
+    },
+};
+
+return {
+    ParentedMixin: ParentedMixin,
+    EventDispatcherMixin: EventDispatcherMixin,
+    PropertiesMixin: PropertiesMixin,
+    ServiceProvider: ServiceProvider,
+};
+
+});
+
+odoo.define('web.ServicesMixin', function (require) {
+"use strict";
+
+var rpc = require('web.rpc');
+
 var ServicesMixin = {
     call: function (service, method) {
         var args = Array.prototype.slice.call(arguments, 2);
@@ -500,31 +532,6 @@ var ServicesMixin = {
     },
 };
 
-var ServiceProvider = {
-    services: {},
-    init: function () {
-        var self = this;
-        _.each(AbstractService.prototype.Services, function (Service) {
-            var service = new Service();
-            self.services[service.name] = service;
-        });
-        this.custom_events = _.clone(this.custom_events);
-        this.custom_events.call_service = this._call_service.bind(this);
-    },
-    _call_service: function (event) {
-        var service = this.services[event.data.service];
-        var args = event.data.args.concat(event.target);
-        var result = service[event.data.method].apply(service, args);
-        event.data.callback(result);
-    },
-};
-
-return {
-    ParentedMixin: ParentedMixin,
-    EventDispatcherMixin: EventDispatcherMixin,
-    PropertiesMixin: PropertiesMixin,
-    ServicesMixin: ServicesMixin,
-    ServiceProvider: ServiceProvider,
-};
+return ServicesMixin;
 
 });
