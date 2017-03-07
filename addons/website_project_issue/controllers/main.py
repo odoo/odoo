@@ -41,6 +41,7 @@ class WebsiteAccount(website_account):
             'content': {'input': 'content', 'label': _('Search <span class="nolabel"> (in Content)</span>')},
             'message': {'input': 'message', 'label': _('Search in Messages')},
             'customer': {'input': 'customer', 'label': _('Search in Customer')},
+            'stage': {'input': 'stage', 'label': _('Search in Stages')},
             'all': {'input': 'all', 'label': _('Search in All')},
         }
         # extends filterby criteria with project (criteria name is the project id)
@@ -73,6 +74,8 @@ class WebsiteAccount(website_account):
                 search_domain = OR([search_domain, [('partner_id', 'ilike', search)]])
             if search_in in ('message', 'all'):
                 search_domain = OR([search_domain, [('message_ids.body', 'ilike', search)]])
+            if search_in in ('stage', 'all'):
+                search_domain = OR([search_domain, [('stage_id', 'ilike', search)]])
             domain += search_domain
 
         # issue count
