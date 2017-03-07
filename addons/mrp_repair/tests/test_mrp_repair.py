@@ -113,7 +113,6 @@ class TestMrpRepair(AccountingTestCase):
             'product_uom_qty': 1.0,
             'product_uom': product_uom_hour.id,
             'price_unit': 12.0,
-            'to_invoice': True,
             'repair_id': self.mrp_repair_rmrp1.id})
         # I check the total amount of mrp_repair_rmrp1 is now 112
         self.assertEqual(self.mrp_repair_rmrp1.amount_total, 112, "Amount_total should be 100")
