@@ -167,10 +167,11 @@ var ListController = BasicController.extend({
      *
      * @param {string} id a basicmodel id, which is a record in the list view
      * @param {string[]} fields the changed fields
+     * @param {OdooEvent} event the event that triggered the change
      */
-    _confirmChange: function (id, fields) {
+    _confirmChange: function (id, fields, event) {
         var state = this.model.get(this.handle);
-        this.renderer.confirmChange(state, id, fields);
+        this.renderer.confirmChange(state, id, fields, event);
     },
     /**
      * This function is the hook called by the field manager mixin to confirm

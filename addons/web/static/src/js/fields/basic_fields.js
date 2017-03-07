@@ -46,6 +46,21 @@ var InputField = AbstractField.extend({
         setTimeout(this.$el.select.bind(this.$el), 0);
     },
 
+    /**
+     * Do not re-render this field if it was the origin of the onchange call.
+     * FIXME: make the onchange work on itself without disturbing the user typing
+     *
+     * @override
+     */
+    reset: function (record, event) {
+        this._reset(record, event);
+        if (event && event.target === this) {
+            return $.when();
+        } else {
+            return this._render();
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
