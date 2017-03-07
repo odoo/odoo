@@ -21,13 +21,13 @@ class sale_quote(http.Controller):
         now = fields.Date.today()
         if token:
             Order = request.env['sale.order'].sudo().search([('id', '=', order_id), ('access_token', '=', token)])
-            # Log only once a day
-            if Order and request.session.get('view_quote') != now:
-                request.session['view_quote'] = now
-                body = _('Quotation viewed by customer')
-                _message_post_helper(res_model='sale.order', res_id=Order.id, message=body, token=token, token_field="access_token", message_type='notification', subtype="mail.mt_note", partner_ids=Order.user_id.partner_id.ids)
         else:
             Order = request.env['sale.order'].search([('id', '=', order_id)])
+        # Log only once a day
+        if Order and request.session.get('view_quote') != now and request.env.user.share:
+            request.session['view_quote'] = now
+            body = _('Quotation viewed by customer')
+            _message_post_helper(res_model='sale.order', res_id=Order.id, message=body, token=token, token_field="access_token", message_type='notification', subtype="mail.mt_note", partner_ids=Order.user_id.partner_id.ids)
 
         if not Order:
             return request.render('website.404')
