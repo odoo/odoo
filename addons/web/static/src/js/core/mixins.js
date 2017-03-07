@@ -453,25 +453,13 @@ var ServicesMixin = {
      * @param {string} method if a model is given, this argument is a method
      * @returns {RPCBuilder}
      */
-    rpc: function (arg1, method) {
+    _rpc: function (arg1, method) {
         return rpc.query({
             method: method,
             model: method && arg1,
             parent: this,
             route: !method && arg1,
         });
-    },
-    // AJAX calls
-    performRPC: function (route, args, options) {
-        return this.call('ajax', 'rpc', route, args || {}, options || {});
-    },
-    performModelRPC: function (model, method, args, kwargs, options) {
-        return this.performRPC('/web/dataset/call_kw/' + model + '/' + method, {
-            model: model,
-            method: method,
-            args: args || [],
-            kwargs: kwargs || {},
-        }, options || {});
     },
     loadFieldView: function (dataset, view_id, view_type, options) {
         return this.loadViews(dataset.model, dataset.get_context(), [[view_id, view_type]], options).then(function (result) {
