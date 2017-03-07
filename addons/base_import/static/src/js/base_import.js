@@ -89,6 +89,8 @@ ListView.include({
     }
 });
 
+// Enable import button on kanban view.
+KanbanView.prototype.defaults.import_enabled = true;
 KanbanView.include({
     /**
      * Extend the render_buttons function of KanbanView by adding an event listener
