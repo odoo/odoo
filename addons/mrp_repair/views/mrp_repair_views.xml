@@ -26,6 +26,7 @@
         <field name="arch" type="xml">
             <form string="Repair Order">
                <header>
+                   <button name="print_repair_order" states="draft" string="Print Quotation" type="object"/>
                    <button name="action_repair_confirm" states="draft" type="object" string="Confirm Repair" class="oe_highlight"/>
                    <button name="action_repair_start" attrs="{'invisible': ['&amp;', ('state','!=','confirmed'), '!', '&amp;', ('state','=','ready'), ('invoice_method','=','b4repair')]}"
                     type="object" string="Start Repair" class="oe_highlight"/>
@@ -37,6 +38,13 @@
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                </header>
                <sheet string="Repairs order">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_created_invoice"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o" string="Invoice" attrs="{'invisible': ['|',('invoice_method','=','none'), ('state','in',('confirmed','2binvoiced','draft'))]}">
+                        </button>
+                    </div>
                     <label for="name"/>
                     <h1>
                         <field name="name"/>
@@ -45,9 +53,9 @@
                         <group>
                             <field name="product_id" domain="[('type', 'in', ['product', 'consu'])]"/>
                             <label for="product_qty"/>
-                            <div>
-                                <field name="product_qty" class="oe_inline"/> 
-                                <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
+                            <div class="o_row">
+                                <field name="product_qty"/>
+                                <field name="product_uom" groups="product.group_uom"/>
                             </div>
                             <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" groups="stock.group_production_lot"/>
                             <field name="partner_id" attrs="{'required':[('invoice_method','!=','none')]}"/>
@@ -58,36 +66,42 @@
                             <field name="location_dest_id" groups="stock.group_stock_multi_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="guarantee_limit"/>
+                            <field name="invoice_method"/>
+                            <field name="partner_invoice_id" attrs="{'invisible':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="sale.group_delivery_invoice_address"/>
+                            <field name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}" attrs="{'invisible':[('invoice_method','=', 'none')]}"/>
                         </group>
                     </group>
                 <notebook>
-                    <page string="Operations">
+                    <page string="Parts">
                         <field name="operations" context="{'default_product_uom_qty': product_qty}">
                             <form string="Operations">
                                 <notebook>
                                     <page string="Repair Line">
-                                        <group col="4">
-                                            <field name="name"/>
-                                            <field name="product_id"/>
-                                            <label for="product_uom_qty"/>
-                                            <div>
-                                                <field name="product_uom_qty" class="oe_inline"/>
-                                                <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
-                                            </div>
-                                            <field name="price_unit"/>
-                                            <field name="price_subtotal" widget="monetary"/>
-                                            <field name="type"/>
-                                            <field name="to_invoice"/>
-                                            <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
-                                            <field name="invoiced"/>
-                                            <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                                            <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                                        <group>
+                                            <group>
+                                                <field name="product_id"/>
+                                                <field name="name"/>
+                                                <label for="product_uom_qty"/>
+                                                <div class="o_row">
+                                                    <field name="product_uom_qty"/>
+                                                    <field name="product_uom" groups="product.group_uom"/>
+                                                </div>
+                                                <field name="type" invisible="1"/>
+                                                <field name="price_unit"/>
+                                                <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
+                                                <field name="invoiced" invisible="1"/>
+                                                <field name="price_subtotal" widget="monetary" invisible="1"/>
+                                            </group>
+                                            <group groups="stock.group_stock_multi_locations">
+                                                <field name="location_id" />
+                                                <field name="location_dest_id"/>
+                                            </group>
                                         </group>
                                     </page>
-                                    <page string="History">
+                                    <page string="History" attrs="{'invisible':[('move_id','=', False)]}">
                                         <group>
                                             <field name="move_id" />
-                                            <field name="invoice_line_id"/>
+                                            <field name="invoice_line_id" invisible="1"/>
                                         </group>
                                     </page>
                                  </notebook>
@@ -103,7 +117,6 @@
                                 <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags"/>
-                                <field name="to_invoice"/>
                                 <field name="price_subtotal" widget="monetary"/>
                             </tree>
                         </field>
@@ -119,56 +132,30 @@
                         </group>
                         <div class="oe_clear"/>
                     </page>
-                    <page string="Invoicing">
-                        <group col="4">
-                            <field name="invoice_method"/>
-                            <field name="invoice_id" context="{'form_view_ref': 'account.invoice_form'}"/>
-                            <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="sale.group_delivery_invoice_address"/>
-                            <field
-                                name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}"
-                                attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
-                        </group>
+                    <page string="Operations">
                         <!-- <field name="invoice_id"/> -->
-                        <separator string="Fees"/>
-                        <field name="fees_lines" attrs="{'readonly': [('invoice_method','=', 'none')]}">
+                        <field name="fees_lines">
                             <form string="Fees">
-                                <label for="name" class="oe_edit_only"/>
-                                <h2>
+                                <group>
+                                    <field name="product_id"/>
                                     <field name="name"/>
-                                </h2>
-                                <group string="Product Information">
-                                    <group>
-                                        <field name="to_invoice"/>
-                                        <field name="product_id"/>
-                                        <label for="product_uom_qty"/>
-                                        <div>
-                                            <field name="product_uom_qty" string="Quantity" class="oe_inline"/>
-                                            <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
-                                        </div>
-                                    </group>
-                                    <group>
-                                        <field name="price_unit"/>
-                                        <field widget="many2many_tags" name="tax_id" domain="[('type_tax_use','=','sale')]"/>
-                                        <field name="price_subtotal" widget="monetary"/>
-                                    </group>
-                                </group>
-                                <group string="History">
-                                    <group>
-                                        <field name="invoiced"/>
-                                    </group>
-                                    <group>
-                                        <field name="invoice_line_id" />
-                                    </group>
+                                    <label for="product_uom_qty"/>
+                                    <div class="o_row">
+                                        <field name="product_uom_qty" string="Quantity"/>
+                                        <field name="product_uom" groups="product.group_uom"/>
+                                    </div>
+                                    <field name="price_unit"/>
+                                    <field widget="many2many_tags" name="tax_id" domain="[('type_tax_use','=','sale')]"/>
+                                    <field name="price_subtotal" widget="monetary" invisible="1"/>
                                 </group>
                             </form>
                             <tree string="Fees" editable="bottom">
-                                <field name="product_id"/>
+                                <field name="product_id" domain="[('type','=','service')]"/>
                                 <field name='name'/>
                                 <field name="product_uom_qty" string="Quantity"/>
                                 <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" domain="[('type_tax_use', '=', 'sale')]" widget="many2many_tags"/>
-                                <field name="to_invoice"/>
                                 <field name="price_subtotal" widget="monetary"/>
                             </tree>
                         </field>
@@ -249,7 +236,7 @@
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a reparation order. 
+                Click to create a reparation order.
               </p><p>
                 In a repair order, you can detail the components you remove,
                 add or replace and record the time you spent on the different

@@ -238,6 +238,13 @@
             <field name="description">Custom computer shipped in kit.</field>
             <field name="default_code">E-COM06</field>
         </record>
+        <record id="product_product_5c" model="product.product">
+            <field name="name">Parts Replacement</field>
+            <field name="categ_id" ref="product_category_3"/>
+            <field name="standard_price">600.0</field>
+            <field name="list_price">147.0</field>
+            <field name="type">service</field>
+        </record>
 
         <record id="product_product_6" model="product.product">
             <field name="name">iPad Mini</field>
@@ -251,6 +258,13 @@
             <field name='weight'>0.330</field>
         </record>
 
+        <record id="product_product_6c" model="product.product">
+            <field name="name">Repair</field>
+            <field name="categ_id" ref="product_category_3"/>
+            <field name="standard_price">800.0</field>
+            <field name="list_price">320.0</field>
+            <field name="type">service</field>
+        </record>
         <record id="product_product_7" model="product.product">
             <field name="name">Apple In-Ear Headphones</field>
             <field name="categ_id" ref="product_category_5"/>
@@ -311,6 +325,13 @@
             <field name="default_code">E-COM13</field>
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2')])]"/>
+        </record>
+        <record id="product_product_11c" model="product.product">
+            <field name="name">Cleaning</field>
+            <field name="categ_id" ref="product_category_3"/>
+            <field name="standard_price">14</field>
+            <field name="list_price">16.50</field>
+            <field name="type">service</field>
         </record>
 
         <record id="product_attribute_line_4" model="product.attribute.line">
