@@ -96,11 +96,22 @@ function formatDateTime(value) {
  * @param {Object} [field] a description of the field (returned by fields_get
  *   for example).  It may contain a description of the number of digits that
  *   should be used.
+ * @param {Object} [options] additional options to override the values in the
+ *   python description of the field.
+ * @param {integer} [options.digit] the number of digit that should be used,
+ *   instead of the default digit precision in the field.
  * @returns {string}
  */
-function formatFloat(value, field) {
+function formatFloat(value, field, options) {
     var l10n = core._t.database.parameters;
-    var precision = (field && field.digits) ? field.digits[1] : 2;
+    var precision;
+    if (options && options.digits) {
+        precision = options.digits[1];
+    } else if (field && field.digits) {
+        precision = field.digits[1];
+    } else {
+        precision = 2;
+    }
     var formatted = _.str.sprintf('%.' + precision + 'f', value || 0).split('.');
     formatted[0] = utils.insert_thousand_seps(formatted[0]);
     return formatted.join(l10n.decimal_point);
