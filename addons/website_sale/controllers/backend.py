@@ -20,7 +20,7 @@ class WebsiteSaleBackend(WebsiteBackend):
             best_sellers=[],
             summary=dict(
                 order_count=0, order_carts_count=0, order_unpaid_count=0,
-                order_to_invoice_count=0, order_carts_abandonned_count=0,
+                order_to_invoice_count=0, order_carts_abandoned_count=0,
                 payment_to_capture_count=0, total_sold=0,
                 order_per_day_ratio=0, order_sold_ratio=0, order_convertion_pctg=0,
             )
@@ -81,10 +81,13 @@ class WebsiteSaleBackend(WebsiteBackend):
         sales_values['summary'].update(
             order_to_invoice_count=request.env['sale.order'].search_count(sale_order_domain + [
                 ('state', 'in', ['sale', 'done']),
+                ('order_line', '!=', False),
+                ('partner_id', '!=', request.env.ref('base.public_partner').id),
                 ('invoice_status', '=', 'to invoice'),
             ]),
-            order_carts_abandonned_count=request.env['sale.order'].search_count(sale_order_domain + [
+            order_carts_abandoned_count=request.env['sale.order'].search_count(sale_order_domain + [
                 ('state', '=', 'draft'),
+                ('order_line', '!=', 'False'),
                 ('date_order', '<=', fields.Datetime.to_string(datetime.now() - timedelta(hours=1))),
             ]),
             payment_to_capture_count=request.env['payment.transaction'].search_count([
