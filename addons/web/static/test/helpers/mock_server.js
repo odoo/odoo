@@ -744,6 +744,9 @@ var MockServer = Class.extend({
             case '/web/dataset/search_read':
                 return $.when(this._mockSearchRead(args));
         }
+        if (route.indexOf('/web/image/') === 0) {
+            return $.when();
+        }
         switch (args.method) {
             case 'copy':
                 return $.when(this._mockCopy(args.model, args.args[0]));
