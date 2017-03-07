@@ -51,6 +51,7 @@ QUnit.module('relational_fields', {
                     p: [],
                     timmy: [],
                     trululu: 1,
+                    product_id: 37,
                     date: "2017-01-25",
                     datetime: "2016-12-12 10:55:05",
                 }, {
@@ -1569,6 +1570,82 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_edit').click();
         form.$('tbody td.o_form_field_x2many_list_row_add a').click();
+        form.destroy();
+    });
+
+    QUnit.test('one2many with many2many widget', function (assert) {
+        assert.expect(9);
+
+        this.data.partner.records[0].p = [2];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="foo"/>' +
+                            '<field name="int_field"/>' +
+                            '<field name="product_id"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<group>' +
+                                '<field name="foo"/>' +
+                                '<field name="bar"/>' +
+                                '<field name="int_field"/>' +
+                                '<field name="product_id"/>' +
+                            '</group>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            archs: {
+                'partner,false,list': '<tree><field name="foo"/><field name="bar"/><field name="product_id"/></tree>',
+                'partner,false,search': '<search><field name="foo"/><field name="bar"/><field name="product_id"/></search>',
+            },
+            session: {},
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    assert.strictEqual(args.args[0][0], 1, "should write on the partner record 1");
+                    assert.strictEqual(args.args[1].p[0][0], 6, "should send only a 'replace with' command");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+
+        assert.strictEqual($('.modal .o_data_row').length, 2,
+            "sould have 2 records in the select view (the last one is not displayed because it is already selected)");
+
+        $('.modal .o_data_row:first .o_list_record_selector input').click();
+        $('.modal .o_select_button').click();
+        $('.o_form_button_save').click();
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+
+        assert.strictEqual($('.modal .o_data_row').length, 1,
+            "sould have 1 record in the select view");
+
+        $('.modal-footer button:eq(1)').click();
+        $('.modal input.o_form_field[name="foo"]').val('tototo').trigger('input');
+        $('.modal input.o_form_field[name="int_field"]').val(50).trigger('input');
+        var $many2one = $('.modal [name="product_id"] input').click();
+        var $dropdown = $many2one.autocomplete('widget');
+        $dropdown.find('li:first a').mouseenter();
+        $dropdown.find('li:first a').click();
+
+        $('.modal-footer button:contains(&):first').click();
+
+        assert.strictEqual($('.modal').length, 0, "sould close the modals");
+
+        assert.strictEqual(form.$('.o_data_row').length, 3,
+            "sould have 3 records in one2many list");
+
+        $('.o_form_button_save').click();
+
         form.destroy();
     });
 
