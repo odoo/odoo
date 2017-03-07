@@ -1170,18 +1170,7 @@ var BasicModel = AbstractModel.extend({
                     .then(function (records) {
                         _.each(records, function (record) {
                             list_records[record.id].data = record;
-                            _.each(record, function (val, fieldName) {
-                                var field = list.fields[fieldName];
-                                if (field.type === 'date') {
-                                    // process data: convert into a moment instance
-                                    record[fieldName] = fieldUtils.parse.date(val);
-                                } else if (field.type === 'datetime') {
-                                    // process datetime: convert into a moment instance
-                                    record[fieldName] = fieldUtils.parse.datetime(val);
-                                } else {
-                                    record[fieldName] = val;
-                                }
-                            });
+                            self._parseServerData(list.fieldNames, list.fields, record);
                         });
                     });
                 defs.push(def);
@@ -1318,33 +1307,7 @@ var BasicModel = AbstractModel.extend({
                     return self._postprocess(record);
                 });
             }).then(function (record) {
-                _.each(fieldNames, function (name) {
-                    var field = record.fields[name];
-                    var val = record.data[name];
-                    if (field.type === 'many2one') {
-                        // process many2one: split [id, nameget] and create corresponding record
-                        if (val !== false) {
-                            // the many2one value is of the form [id, display_name]
-                            var r = self._makeDataPoint({
-                                modelName: field.relation,
-                                data: {
-                                    display_name: val[1],
-                                    id: val[0],
-                                },
-                            });
-                            record.data[name] = r.id;
-                        } else {
-                            // no value for the many2one
-                            record.data[name] = false;
-                        }
-                    } else if (field.type === 'date') {
-                        // process data: convert into a moment instance
-                        record.data[name] = fieldUtils.parse.date(val);
-                    } else if (field.type === 'datetime') {
-                        // process datetime: convert into a moment instance
-                        record.data[name] = fieldUtils.parse.datetime(val);
-                    }
-                });
+                self._parseServerData(fieldNames, record.fields, record.data);
                 return record;
             });
     },
@@ -1795,6 +1758,43 @@ var BasicModel = AbstractModel.extend({
         return dataPoint;
     },
     /**
+     * parse the server values to javascript framwork
+     *
+     * @param {[string]} fieldNames
+     * @param {Object} fields
+     * @param {Object} record
+     */
+    _parseServerData: function (fieldNames, fields, record) {
+        var self = this;
+        _.each(fieldNames, function (fieldName) {
+            var field = fields[fieldName];
+            var val = record[fieldName];
+            if (field.type === 'many2one') {
+                // process many2one: split [id, nameget] and create corresponding record
+                if (val !== false) {
+                    // the many2one value is of the form [id, display_name]
+                    var r = self._makeDataPoint({
+                        modelName: field.relation,
+                        data: {
+                            display_name: val[1],
+                            id: val[0],
+                        },
+                    });
+                    record[fieldName] = r.id;
+                } else {
+                    // no value for the many2one
+                    record[fieldName] = false;
+                }
+            } else if (field.type === 'date') {
+                // process data: convert into a moment instance
+                record[fieldName] = fieldUtils.parse.date(val);
+            } else if (field.type === 'datetime') {
+                // process datetime: convert into a moment instance
+                record[fieldName] = fieldUtils.parse.datetime(val);
+            }
+        });
+    },
+    /**
      * Once a record is created and some data has been fetched, we need to do
      * quite a lot of computations to determine what needs to be fetched. This
      * method is doing that.
@@ -1996,25 +1996,7 @@ var BasicModel = AbstractModel.extend({
                     });
 
                     // add many2one records
-                    _.each(dataPoint.fieldNames, function (name) {
-                        var field = dataPoint.fields[name];
-                        if (field.type === 'many2one') {
-                            var r = self._makeDataPoint({
-                                modelName: field.relation,
-                                data: {
-                                    id: dataPoint.data[name][0],
-                                    display_name: dataPoint.data[name][1],
-                                },
-                                parentID: dataPoint.id,
-                            });
-
-                            dataPoint.data[name] = r.id;
-                        } else if (field.type === 'date') {
-                            dataPoint.data[name] = fieldUtils.parse.date(dataPoint.data[name]);
-                        } else if (field.type === 'datetime') {
-                            dataPoint.data[name] = fieldUtils.parse.datetime(dataPoint.data[name]);
-                        }
-                    });
+                    self._parseServerData(list.fieldNames, dataPoint.fields, dataPoint.data);
                     list._cache[id] = dataPoint.id;
                 }
                 list.data.push(dataPoint.id);
@@ -2052,26 +2034,7 @@ var BasicModel = AbstractModel.extend({
                     });
 
                     // add many2one records
-                    _.each(dataPoint.fieldNames, function (name) {
-                        var field = dataPoint.fields[name];
-                        if (field.type === 'many2one') {
-                            var r = self._makeDataPoint({
-                                modelName: field.relation,
-                                data: {
-                                    id: dataPoint.data[name][0],
-                                    display_name: dataPoint.data[name][1],
-                                }
-                            });
-
-                            dataPoint.data[name] = r.id;
-                        }
-                        if (field.type === 'date') {
-                            dataPoint.data[name] = fieldUtils.parse.date(dataPoint.data[name]);
-                        }
-                        if (field.type === 'datetime') {
-                            dataPoint.data[name] = fieldUtils.parse.datetime(dataPoint.data[name]);
-                        }
-                    });
+                    self._parseServerData(list.fieldNames, dataPoint.fields, dataPoint.data);
                     return dataPoint.id;
                 });
                 list.data = data;
