@@ -102,7 +102,7 @@ class MrpProductProduce(models.TransientModel):
     def check_finished_move_lots(self):
         lots = self.env['stock.move.lots']
         produce_move = self.production_id.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel'))
-        if produce_move.product_id.tracking != 'none':
+        if produce_move and produce_move.product_id.tracking != 'none':
             if not self.lot_id:
                 raise UserError(_('You need to provide a lot for the finished product'))
             existing_move_lot = produce_move.move_lot_ids.filtered(lambda x: x.lot_id == self.lot_id)
