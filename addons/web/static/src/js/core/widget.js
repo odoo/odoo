@@ -2,8 +2,7 @@ odoo.define('web.Widget', function (require) {
 "use strict";
 
 var core = require('web.core');
-
-var mixins = core.mixins;
+var mixins = require('web.mixins');
 
 /**
  * Base class for all visual components. Provides a lot of functionalities helpful

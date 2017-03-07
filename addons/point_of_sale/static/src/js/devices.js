@@ -3,6 +3,7 @@ odoo.define('point_of_sale.devices', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
+var mixins = require('web.mixins');
 var rpc = require('web.rpc');
 var Session = require('web.Session');
 
@@ -90,9 +91,9 @@ var JobQueue = function(){
 // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
 // methods are used both to signal an event, and to fetch information.
 
-var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
+var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     init: function(parent,options){
-        core.mixins.PropertiesMixin.init.call(this,parent);
+        mixins.PropertiesMixin.init.call(this,parent);
         var self = this;
         options = options || {};
 

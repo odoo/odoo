@@ -2,7 +2,7 @@ odoo.define('barcodes.BarcodeEvents', function(require) {
 "use strict";
 
 var core = require('web.core');
-var mixins = core.mixins;
+var mixins = require('web.mixins');
 
 
 // For IE >= 9, use this, new CustomEvent(), instead of new Event()
