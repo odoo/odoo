@@ -523,9 +523,23 @@ class Meeting(models.Model):
         return partners
 
     @api.multi
-    def _get_recurrent_date_by_event(self):
-        """ Get recurrent dates based on Rule string and all event where recurrent_id is child """
+    def _get_recurrent_dates_by_event(self):
+        """ Get recurrent start and stop dates based on Rule string"""
+        start_dates = self._get_recurrent_date_by_event(date_field='start')
+        stop_dates = self._get_recurrent_date_by_event(date_field='stop')
+        return zip(start_dates, stop_dates)
+
+    @api.multi
+    def _get_recurrent_date_by_event(self, date_field='start'):
+        """ Get recurrent dates based on Rule string and all event where recurrent_id is child 
+        
+        date_field: the field containing the reference date information for recurrency computation
+        """
         self.ensure_one()
+        if date_field in self._fields.keys() and self._fields[date_field].type in ('date', 'datetime'):
+            reference_date = self[date_field]
+        else:
+            reference_date = self.start
 
         def todate(date):
             val = parser.parse(''.join((re.compile('\d')).findall(date)))
@@ -535,14 +549,14 @@ class Meeting(models.Model):
             return val.astimezone(timezone)
 
         timezone = pytz.timezone(self._context.get('tz') or 'UTC')
-        startdate = pytz.UTC.localize(fields.Datetime.from_string(self.start))  # Add "+hh:mm" timezone
-        if not startdate:
-            startdate = datetime.now()
+        event_date = pytz.UTC.localize(fields.Datetime.from_string(reference_date))  # Add "+hh:mm" timezone
+        if not event_date:
+            event_date = datetime.now()
 
-        # Convert the start date to saved timezone (or context tz) as it'll
+        # Convert the event date to saved timezone (or context tz) as it'll
         # define the correct hour/day asked by the user to repeat for recurrence.
-        startdate = startdate.astimezone(timezone)  # transform "+hh:mm" timezone
-        rset1 = rrule.rrulestr(str(self.rrule), dtstart=startdate, forceset=True)
+        event_date = event_date.astimezone(timezone)  # transform "+hh:mm" timezone
+        rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date, forceset=True)
         recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
 
         for meeting in recurring_meetings:
@@ -986,27 +1000,38 @@ class Meeting(models.Model):
                 result.append(meeting.id)
                 result_data.append(meeting.get_search_fields(order_fields))
                 continue
-            rdates = meeting._get_recurrent_date_by_event()
+            rdates = meeting._get_recurrent_dates_by_event()
 
-            for r_date in rdates:
+            for r_start_date, r_stop_date in rdates:
                 # fix domain evaluation
                 # step 1: check date and replace expression by True or False, replace other expressions by True
                 # step 2: evaluation of & and |
                 # check if there are one False
                 pile = []
                 ok = True
+                r_date = r_start_date  # default for empty domain
                 for arg in domain:
                     if str(arg[0]) in ('start', 'stop', 'final_date'):
+                        if str(arg[0]) == 'start':
+                            r_date = r_start_date
+                        else:
+                            r_date = r_stop_date
+                        if arg[2] and len(arg[2]) > len(r_date.strftime(DEFAULT_SERVER_DATE_FORMAT)):
+                            dformat = DEFAULT_SERVER_DATETIME_FORMAT
+                        else:
+                            dformat = DEFAULT_SERVER_DATE_FORMAT
                         if (arg[1] == '='):
-                            ok = r_date.strftime('%Y-%m-%d') == arg[2]
+                            ok = r_date.strftime(dformat) == arg[2]
                         if (arg[1] == '>'):
-                            ok = r_date.strftime('%Y-%m-%d') > arg[2]
+                            ok = r_date.strftime(dformat) > arg[2]
                         if (arg[1] == '<'):
-                            ok = r_date.strftime('%Y-%m-%d') < arg[2]
+                            ok = r_date.strftime(dformat) < arg[2]
                         if (arg[1] == '>='):
-                            ok = r_date.strftime('%Y-%m-%d') >= arg[2]
+                            ok = r_date.strftime(dformat) >= arg[2]
                         if (arg[1] == '<='):
-                            ok = r_date.strftime('%Y-%m-%d') <= arg[2]
+                            ok = r_date.strftime(dformat) <= arg[2]
+                        if (arg[1] == '!='):
+                            ok = r_date.strftime(dformat) != arg[2]
                         pile.append(ok)
                     elif str(arg) == str('&') or str(arg) == str('|'):
                         pile.append(arg)
@@ -1530,6 +1555,18 @@ class Meeting(models.Model):
 
         if not self._context.get('virtual_id', True):
             return super(Meeting, self).search(new_args, offset=offset, limit=limit, order=order, count=count)
+
+        if any(arg[0] == 'start' for arg in args) and \
+           not any(arg[0] in ('stop', 'final_date') for arg in args):
+            # domain with a start filter but with no stop clause should be extended
+            # e.g. start=2017-01-01, count=5 => virtual occurences must be included in ('start', '>', '2017-01-02')
+            start_args = new_args
+            new_args = []
+            for arg in start_args:
+                new_arg = arg
+                if arg[0] in ('start_date', 'start_datetime', 'start',):
+                    new_args += ['|', '&', ('recurrency', '=', 1), ('final_date', arg[1], arg[2])]
+                new_args.append(new_arg)
 
         # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
         events = super(Meeting, self).search(new_args, offset=0, limit=0, order=None, count=False)
