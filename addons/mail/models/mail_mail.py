@@ -313,7 +313,8 @@ class MailMail(models.Model):
                         subtype_alternative='plain',
                         headers=headers)
                     try:
-                        res = IrMailServer.send_email(msg, mail_server_id=mail.mail_server_id.id)
+                        res = IrMailServer.send_email(
+                            msg, mail_server_id=mail.mail_server_id.id, smtp_session=smtp_session)
                     except AssertionError as error:
                         if error.message == IrMailServer.NO_VALID_RECIPIENT:
                             # No valid recipient found for this particular
