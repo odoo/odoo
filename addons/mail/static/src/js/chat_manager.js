@@ -11,6 +11,7 @@ var time = require('web.time');
 var web_client = require('web.web_client');
 var Class = require('web.Class');
 var Mixins = require('web.mixins');
+var ServicesMixin = require('web.ServicesMixin');
 
 var _t = core._t;
 var _lt = core._lt;
@@ -592,7 +593,7 @@ function on_transient_message_notification (data) {
 
 // Public interface
 //----------------------------------------------------------------------------------
-var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, Mixins.ServicesMixin, {
+var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     // these two functions are exposed for extensibility purposes and shouldn't be called by other modules
     make_message: make_message,
     make_channel: make_channel,
