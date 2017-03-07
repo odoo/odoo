@@ -132,6 +132,18 @@ function createAsyncView(params) {
 
     var view = new params.View(fields_view.arch, fields_view.fields, viewOptions);
 
+    // remove src attribute on images to remove not found error in tests
+    function removeImageSrc () {
+        $('img', this).each(function () {
+            var src = $(this).attr('src');
+            if (src[0] !== '#') {
+                $(this).attr('src', '#test:' + $(this).attr('src'));
+                widget.performRPC(src);
+            }
+        });
+    }
+    $('#qunit-fixture').on('DOMNodeInserted', removeImageSrc);
+
     if (params.with_modifiers) {
         _.each(params.with_modifiers, function (modifier, name) {
             fields_view.fields[name].__attrs.modifiers = JSON.stringify(modifier);
@@ -158,6 +170,7 @@ function createAsyncView(params) {
             // when it will be called the second time (by its parent)
             delete view.destroy;
             widget.destroy();
+            $('#qunit-fixture').off('DOMNodeInserted', removeImageSrc);
         };
         return view.appendTo($view_manager).then(function () {
             view.$el.on('click', 'a', function (ev) {
