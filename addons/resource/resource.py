@@ -187,7 +187,7 @@ class resource_calendar(osv.osv):
          
         calendar = self.browse(cr, uid, id, context=None)
 
-        #Declerate list of attendances in UTC for each day one list of tuples (the resource-working-times interpreted as timezone) 
+        #Declerate list of attendances in UTC; For each day one list of tuples (the resource-working-times interpreted as timezone) 
         #[[(0,12), (13,14)]][..][..][..][..][..][..]]
         att_utc = []
         
@@ -415,7 +415,6 @@ class resource_calendar(osv.osv):
         working_intervals = []
          
         tz_info = fields.datetime.context_timestamp(cr, uid, work_dt, context=context).tzinfo
-        a = self.get_attendances_for_weekday_with_timezone(cr, uid, id, start_dt.weekday(), tz_info, work_dt, context=None)
 
         for calendar_working_day in self.get_attendances_for_weekday_with_timezone(cr, uid, id, start_dt.weekday(), tz_info, work_dt, context):
             x = work_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(list(calendar_working_day)[0] * 3600))
