@@ -40,7 +40,7 @@ var Apps = Widget.extend({
         if (apps_client) {
             return check_client_available(apps_client);
         } else {
-            return this.rpc('ir.module.module', 'get_apps_server')
+            return this._rpc('ir.module.module', 'get_apps_server')
                 .exec()
                 .then(function(u) {
                     var link = $(_.str.sprintf('<a href="%s"></a>', u))[0];
@@ -90,7 +90,7 @@ var Apps = Widget.extend({
                 });
             },
             'Model': function(m) {
-                return this.rpc(m.model, m.method)
+                return this._rpc(m.model, m.method)
                     .args(m.args)
                     .exec()
                     .then(function(r) {

@@ -65,12 +65,12 @@ return AbstractWebClient.extend({
     logo_edit: function(ev) {
         var self = this;
         ev.preventDefault();
-        this.rpc("res.users", "read")
+        this._rpc("res.users", "read")
             .args([[session.uid], ["company_id"]])
             .exec()
             .then(function(data) {
-                self.rpc("/web/action/load")
-                    .kwargs({ action_id: "base.action_res_company_form" })
+                self._rpc("/web/action/load")
+                    .params({ action_id: "base.action_res_company_form" })
                     .exec()
                     .done(function(result) {
                         result.res_id = data[0].company_id[0];
@@ -99,7 +99,7 @@ return AbstractWebClient.extend({
         var state = $.bbq.getState(true);
         if (_.isEmpty(state) || state.action === "login") {
             self.menu.is_bound.done(function() {
-                self.rpc("res.users", "read")
+                self._rpc("res.users", "read")
                     .args([[session.uid], ["action_id"]])
                     .exec()
                     .done(function(result) {

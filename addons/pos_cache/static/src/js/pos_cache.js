@@ -2,7 +2,6 @@ odoo.define('pos_cache.pos_cache', function (require) {
 "use strict";
 
 var models = require('point_of_sale.models');
-var ajax = require('web.ajax');
 var core = require('web.core');
 var rpc = require('web.rpc');
 var _t = core._t;
@@ -34,7 +33,7 @@ models.PosModel = models.PosModel.extend({
         return posmodel_super.load_server_data.apply(this, arguments).then(function () {
             var records = rpc.query({model: 'pos.config', method: 'get_products_from_cache'})
                 .args([self.pos_session.config_id[0], product_fields, product_domain])
-                .exec({callback: ajax.rpc.bind(ajax)});
+                .exec({type: "ajax"});
             self.chrome.loading_message(_t('Loading') + ' product.product', 1);
             return records.then(function (product) {
                 self.db.add_products(product);

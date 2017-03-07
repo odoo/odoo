@@ -172,7 +172,7 @@ var DiagramController = AbstractController.extend({
         Dialog.confirm(this, (_t("Are you sure you want to remove this transition?")), {
             confirm_callback: function () {
                 var state = self.model.get();
-                self.rpc(state.connector_model, 'unlink')
+                self._rpc(state.connector_model, 'unlink')
                     .args([event.data.id])
                     .exec()
                     .then(self.reload.bind(self));
@@ -191,7 +191,7 @@ var DiagramController = AbstractController.extend({
         Dialog.confirm(this, (msg), {
             confirm_callback: function () {
                 var state = self.model.get();
-                self.rpc(state.node_model, 'unlink')
+                self._rpc(state.node_model, 'unlink')
                     .args([event.data.id])
                     .exec()
                     .then(self.reload.bind(self));

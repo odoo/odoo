@@ -63,9 +63,13 @@ var DebugManager = Widget.extend({
         // whether the current user is an administrator
         this._is_admin = session.is_system;
         return $.when(
-            this.performModelRPC('res.users', 'check_access_rights', {operation: 'write', raise_exception: false}),
+            this._rpc('res.users', 'check_access_rights')
+                .kwargs({operation: 'write', raise_exception: false})
+                .exec(),
             session.user_has_group('base.group_no_one'),
-            this.performModelRPC('ir.model.data', 'xmlid_to_res_id', {xmlid: 'base.group_no_one'}),
+            this._rpc('ir.model.data', 'xmlid_to_res_id')
+                .kwargs({xmlid: 'base.group_no_one'})
+                .exec(),
             this._super()
         ).then(function (can_write_user, has_group_no_one, group_no_one_id) {
             this._features_group = can_write_user && group_no_one_id;
@@ -161,7 +165,12 @@ var DebugManager = Widget.extend({
             title: _t('Select a view'),
             disable_multiple_selection: true,
             on_selected: function (element_ids) {
-                self.performModelRPC('ir.ui.view', [[['id', '=', element_ids[0]]], ['name', 'model', 'type']], {limit: 1}).then(function (view) {
+                self._rpc('ir.ui.view', 'search_read')
+                    .withDomain([['id', '=', element_ids[0]]])
+                    .withFields(['name', 'model', 'type'])
+                    .withLimit(1)
+                    .exec()
+                    .then(function (view) {
                         self.do_action({
                             type: 'ir.actions.act_window',
                             name: view.name,
@@ -219,16 +228,19 @@ DebugManager.include({
     get_view_fields: function () {
         var self = this;
         var model = this._action.res_model;
-        this.performModelRPC(model, 'fields_get', [], {
-            attributes: ['string', 'searchable', 'required', 'readonly', 'type', 'store', 'sortable', 'relation', 'help']
-        }).done(function (fields) {
-            new Dialog(self, {
-                title: _.str.sprintf(_t("Fields of %s"), model),
-                $content: $(QWeb.render('WebClient.DebugManager.Action.Fields', {
-                    fields: fields
-                }))
-            }).open();
-        });
+        this._rpc(model, 'fields_get')
+            .kwargs({
+                attributes: ['string', 'searchable', 'required', 'readonly', 'type', 'store', 'sortable', 'relation', 'help']
+            })
+            .exec()
+            .done(function (fields) {
+                new Dialog(self, {
+                    title: _.str.sprintf(_t("Fields of %s"), model),
+                    $content: $(QWeb.render('WebClient.DebugManager.Action.Fields', {
+                        fields: fields
+                    }))
+                }).open();
+            });
     },
     manage_filters: function () {
         this.do_action({
@@ -254,8 +266,10 @@ DebugManager.include({
         });
     },
     translate: function() {
-        var model = this._action.res_model;
-        this.performModelRPC("ir.translation", 'get_technical_translations', [model]).then(this.do_action);
+        this._rpc("ir.translation", 'get_technical_translations')
+            .args([this._action.res_model])
+            .exec()
+            .then(this.do_action);
     }
 });
 
@@ -269,10 +283,12 @@ DebugManager.include({
         this._can_edit_views = false;
         return $.when(
             this._super(),
-            this.performModelRPC('ir.ui.view', 'check_access_rights', {operation: 'write', raise_exception: false})
-            .then(function (ar) {
-                this._can_edit_views = ar;
-            }.bind(this))
+            this._rpc('ir.ui.view', 'check_access_rights')
+                .kwargs({operation: 'write', raise_exception: false})
+                .exec()
+                .then(function (ar) {
+                    this._can_edit_views = ar;
+                }.bind(this))
         );
     },
     update: function (tag, descriptor, widget) {

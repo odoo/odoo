@@ -57,7 +57,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         var commands = this.field_manager.get_field_value("timesheet_ids");
         var self = this;
 
-        this.rpc(this.view.model, "resolve_2many_commands")
+        this._rpc(this.view.model, "resolve_2many_commands")
             .args(["timesheet_ids", commands, []])
             .exec()
             .done(function(result) {
@@ -111,7 +111,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         var default_get;
         var self = this;
         return this.render_drop.add(
-            this.rpc("account.analytic.line", "default_get")
+            this._rpc("account.analytic.line", "default_get")
                 .args([['account_id','general_account_id','journal_id','date','name','user_id','product_id','product_uom_id','amount','unit_amount','project_id']])
                 .withContext({'user_id': self.get('user_id')} )
                 .exec()
@@ -163,7 +163,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
             }).value();
 
             // we need the name_get of the projects
-            this.rpc("project.project", "name_get")
+            this._rpc("project.project", "name_get")
                 .args([_.pluck(projects, "project")])
                 .exec()
                 .then(function(result) {

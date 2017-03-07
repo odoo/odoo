@@ -1,7 +1,6 @@
 odoo.define('web.planner.common', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
@@ -71,7 +70,7 @@ var PlannerDialog = Dialog.extend({
         var def = rpc.query({model: 'web.planner', method: 'render'})
             .args([this.planner.view_id[0], this.planner.planner_application])
             .withContext(session.user_context)
-            .exec({callback: ajax.rpc.bind(ajax)})
+            .exec({type: "ajax"})
             .then((function (template) {
                 this.$template = $(template);
             }).bind(this));
@@ -355,7 +354,7 @@ var PlannerDialog = Dialog.extend({
     _save_planner_data: function() {
         return rpc.query({model: 'web.planner', method: 'write'})
             .args([this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}])
-            .exec({callback: ajax.rpc.bind(ajax)});
+            .exec({type: "ajax"});
     },
     show_enterprise: function () {
         var buttons = [{
@@ -365,7 +364,7 @@ var PlannerDialog = Dialog.extend({
             click: function () {
                 rpc.query({model: "res.users", method: "search_count"})
                     .args([[["share", "=", false]]])
-                    .exec({callback: ajax.rpc.bind(ajax)})
+                    .exec({type: "ajax"})
                     .then(function (data) {
                         window.location = "https://www.odoo.com/odoo-enterprise/upgrade?utm_medium=community_upgrade&num_users=" + data;
                     });

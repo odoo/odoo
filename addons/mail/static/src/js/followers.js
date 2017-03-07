@@ -195,8 +195,9 @@ var Followers = AbstractField.extend({
         var missing_ids = _.difference(this.value.res_ids, _.pluck(this.followers, 'id'));
         var def;
         if (missing_ids.length) {
-            var args = { follower_ids: missing_ids, res_model: this.model };
-            def = this.performRPC('/mail/read_followers', args);
+            def = this._rpc('/mail/read_followers')
+                .params({ follower_ids: missing_ids, res_model: this.model })
+                .exec();
         }
         return $.when(def).then(function (results) {
             if (results) {
@@ -219,7 +220,7 @@ var Followers = AbstractField.extend({
             partner_ids: [this.partnerID],
             context: {}, // FIXME
         };
-        this.rpc(this.model, 'message_subscribe')
+        this._rpc(this.model, 'message_subscribe')
             .args([[this.res_id]])
             .kwargs(kwargs)
             .exec()
@@ -242,7 +243,7 @@ var Followers = AbstractField.extend({
                     ids.channel_ids,
                     {}, // FIXME
                 ];
-                self.rpc(self.model, 'message_unsubscribe')
+                self._rpc(self.model, 'message_unsubscribe')
                     .args(args)
                     .exec()
                     .then(self._reload.bind(self));
@@ -286,7 +287,7 @@ var Followers = AbstractField.extend({
             var kwargs = _.extend({}, ids);
             kwargs.subtype_ids = checklist;
             kwargs.context = {}; // FIXME
-            this.rpc(this.model, 'message_subscribe')
+            this._rpc(this.model, 'message_subscribe')
                 .args([[this.res_id]])
                 .kwargs(kwargs)
                 .exec()
@@ -307,32 +308,32 @@ var Followers = AbstractField.extend({
         var self = this;
         var $currentTarget = $(event.currentTarget);
         var follower_id = $currentTarget.data('follower-id'); // id of model mail_follower
-        return this.performRPC('/mail/read_subscription_data', {
-            res_model: this.model,
-            follower_id: follower_id,
-        }).then(function (data) {
-            var res_id = $currentTarget.data('oe-id'); // id of model res_partner or mail_channel
-            var is_channel = $currentTarget.data('oe-model') === 'mail.channel';
-            self.dialog = new Dialog(this, {
-                size: 'medium',
-                title: _t('Edit Subscription of ') + $currentTarget.siblings('a').text(),
-                buttons: [
-                    {
-                        text: _t("Apply"),
-                        classes: 'btn-primary',
-                        click: function () {
-                            self._updateSubscription(event, res_id, is_channel);
+        return this._rpc('/mail/read_subscription_data')
+            .params({res_model: this.model, follower_id: follower_id})
+            .exec()
+            .then(function (data) {
+                var res_id = $currentTarget.data('oe-id'); // id of model res_partner or mail_channel
+                var is_channel = $currentTarget.data('oe-model') === 'mail.channel';
+                self.dialog = new Dialog(this, {
+                    size: 'medium',
+                    title: _t('Edit Subscription of ') + $currentTarget.siblings('a').text(),
+                    buttons: [
+                        {
+                            text: _t("Apply"),
+                            classes: 'btn-primary',
+                            click: function () {
+                                self._updateSubscription(event, res_id, is_channel);
+                            },
+                            close: true
                         },
-                        close: true
-                    },
-                    {
-                        text: _t("Cancel"),
-                        close: true,
-                    },
-                ],
-            }).open();
-            self._displaySubtypes(data, true, is_channel);
-        });
+                        {
+                            text: _t("Cancel"),
+                            close: true,
+                        },
+                    ],
+                }).open();
+                self._displaySubtypes(data, true, is_channel);
+            });
     },
     _onFollowButtonClicked: function () {
         if (!this.is_follower) {

@@ -125,7 +125,7 @@ var ChatterComposer = composer.BasicComposer.extend({
         var def;
         if (names_to_find.length > 0) {
             var args = [[this.context.default_res_id], names_to_find];
-            def = this.rpc(this.model, 'message_partner_info_from_emails')
+            def = this._rpc(this.model, 'message_partner_info_from_emails')
                 .args(args)
                 .exec();
         }
@@ -173,7 +173,7 @@ var ChatterComposer = composer.BasicComposer.extend({
                 var def;
                 if (new_names_to_find.length > 0) {
                     var args = [[self.context.default_res_id], new_names_to_find, true];
-                    self.rpc(self.model, 'message_partner_info_from_emails')
+                    self._rpc(self.model, 'message_partner_info_from_emails')
                         .args(args)
                         .exec();
                 }

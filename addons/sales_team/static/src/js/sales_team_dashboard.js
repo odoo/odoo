@@ -198,7 +198,7 @@ var SalesTeamDashboardController = KanbanController.extend({
         if(isNaN(targetValue)) {
             this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
         } else {
-            this.rpc('crm.lead', 'modify_target_sales_dashboard')
+            this._rpc('crm.lead', 'modify_target_sales_dashboard')
                 .args([targetName, parseInt(targetValue)])
                 .exec()
                 .then(this.reload.bind(this));

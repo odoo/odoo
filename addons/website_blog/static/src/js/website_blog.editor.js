@@ -1,7 +1,6 @@
 odoo.define('website_blog.new_blog_post', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var core = require('web.core');
 var rpc = require('web.rpc');
 var base = require('web_editor.base');
@@ -14,7 +13,7 @@ contentMenu.TopBar.include({
     new_blog_post: function () {
         rpc.query({model: 'blog.blog', method: 'name_search'})
             .withContext(base.get_context())
-            .exec({callback: ajax.rpc.bind(ajax)})
+            .exec({type: "ajax"})
             .then(function (blog_ids) {
                 if (blog_ids.length === 1) {
                     document.location = '/blog/' + blog_ids[0][0] + '/post/new';

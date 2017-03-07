@@ -559,11 +559,14 @@ var ActionManager = Widget.extend({
             if (warm) {
                 this.null_action();
             }
-            action_loaded = this.rpc('/web/session/get_session_action',  {key: state.sa}).then(function(action) {
-                if (action) {
-                    return self.do_action(action);
-                }
-            });
+            action_loaded = this._rpc('/web/session/get_session_action')
+                .params({key: state.sa})
+                .exec()
+                .then(function(action) {
+                    if (action) {
+                        return self.do_action(action);
+                    }
+                });
         }
 
         return $.when(action_loaded || null).done(function() {
@@ -832,12 +835,15 @@ var ActionManager = Widget.extend({
     },
     ir_actions_server: function (action, options) {
         var self = this;
-        return this.performRPC('/web/action/run', {
-            action_id: action.id,
-            context: action.context || {}
-        }).then(function (action) {
-            return self.do_action(action, options);
-        });
+        return this._rpc('/web/action/run')
+            .params({
+                action_id: action.id,
+                context: action.context || {}
+            })
+            .exec()
+            .then(function (action) {
+                return self.do_action(action, options);
+            });
     },
     ir_actions_report_xml: function(action, options) {
         var self = this;

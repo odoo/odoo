@@ -6,7 +6,6 @@ var chrome = require('point_of_sale.chrome');
 var gui = require('point_of_sale.gui');
 var models = require('point_of_sale.models');
 var screens = require('point_of_sale.screens');
-var ajax = require('web.ajax');
 var core = require('web.core');
 var rpc = require('web.rpc');
 
@@ -250,12 +249,12 @@ var TableWidget = PosBaseWidget.extend({
 
         rpc.query({model: 'restaurant.table', method: 'create_from_ui'})
             .args([serializable_table])
-            .exec({callback: ajax.rpc.bind(ajax)})
+            .exec({type: "ajax"})
             .then(function (table_id){
                 rpc.query({model: 'restaurant.table', method: 'search_read'})
                     .args([[['id', '=', table_id]], fields])
                     .withLimit(1)
-                    .exec({callback: ajax.rpc.bind(this)})
+                    .exec({type: "ajax"})
                     .then(function (table){
                         for (var field in table) {
                             self.table[field] = table[field];
@@ -278,7 +277,7 @@ var TableWidget = PosBaseWidget.extend({
         var self  = this;
         rpc.query({model: 'restaurant.table', method: 'create_from_ui'})
             .args([{'active':false,'id':this.table.id}])
-            .exec(ajax.rpc.bind(rpc))
+            .exec({type: "ajax"})
             .then(function (table_id){
                 // Removing all references from the table and the table_widget in in the UI ...
                 for (var i = 0; i < self.pos.floors.length; i++) {
@@ -416,7 +415,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
         this.floor.background_color = background;
         rpc.query({model: 'restaurant.floor', method: 'write'})
             .args([[this.floor.id], {'background_color': background}])
-            .exec({callback: ajax.rpc.bind(ajax)})
+            .exec({type: "ajax"})
             .fail(function (err, event){
                 self.gui.show_popup('error',{
                     'title':_t('Changes could not be saved'),

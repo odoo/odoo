@@ -56,20 +56,23 @@ CalendarRenderer.include({
                     var text = _.str.sprintf(confirm_text1 + "\n" + confirm_text2 + "\n\n" + confirm_text3, o.info.new_name, o.info.old_name);
                     Dialog.confirm(self, text, {
                         confirm_callback: function() {
-                            self.rpc('/google_calendar/remove_references', {
-                                model: self.state.model,
-                                local_context: context,
-                            }).done(function(o) {
-                                if (o.status === "OK") {
-                                    Dialog.alert(self, _t("All events have been disconnected from your previous account. You can now restart the synchronization"), {
-                                        title: _t('Event disconnection success'),
-                                    });
-                                } else if (o.status === "KO") {
-                                    Dialog.alert(self, _t("An error occured while disconnecting events from your previous account. Please retry or contact your administrator."), {
-                                        title: _t('Event disconnection error'),
-                                    });
-                                } // else NOP
-                            });
+                            self._rpc('/google_calendar/remove_references')
+                                .params({
+                                    model: self.state.model,
+                                    local_context: context,
+                                })
+                                .exec()
+                                .done(function(o) {
+                                    if (o.status === "OK") {
+                                        Dialog.alert(self, _t("All events have been disconnected from your previous account. You can now restart the synchronization"), {
+                                            title: _t('Event disconnection success'),
+                                        });
+                                    } else if (o.status === "KO") {
+                                        Dialog.alert(self, _t("An error occured while disconnecting events from your previous account. Please retry or contact your administrator."), {
+                                            title: _t('Event disconnection error'),
+                                        });
+                                    } // else NOP
+                                });
                         },
                         title: _t('Accounts'),
                     });

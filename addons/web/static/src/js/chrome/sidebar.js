@@ -148,23 +148,26 @@ var Sidebar = Widget.extend({
                 new Context(
                     sidebar_eval_context, active_ids_context));
 
-                self.rpc("/web/action/load", {
-                    action_id: item.action.id,
-                    context: new Context(
-                        dataset.get_context(), active_ids_context).eval()
-                }).done(function(result) {
-                    result.context = new Context(
-                        result.context || {}, active_ids_context)
-                            .set_eval_context(c);
-                    result.flags = result.flags || {};
-                    result.flags.new_window = true;
-                    self.do_action(result, {
-                        on_close: function() {
-                            // reload view
-                            self.getParent().reload();
-                        },
+                self._rpc("/web/action/load")
+                    .params({
+                        action_id: item.action.id,
+                        context: new Context(
+                            dataset.get_context(), active_ids_context).eval()
+                    })
+                    .exec()
+                    .done(function(result) {
+                        result.context = new Context(
+                            result.context || {}, active_ids_context)
+                                .set_eval_context(c);
+                        result.flags = result.flags || {};
+                        result.flags.new_window = true;
+                        self.do_action(result, {
+                            on_close: function() {
+                                // reload view
+                                self.getParent().reload();
+                            },
+                        });
                     });
-                });
             });
         });
     },

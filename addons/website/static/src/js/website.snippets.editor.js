@@ -4,6 +4,7 @@ odoo.define('website.snippets.editor', function (require) {
 var ajax = require("web.ajax");
 var core = require("web.core");
 var Dialog = require("web.Dialog");
+var rpc = require("web.rpc");
 var editor = require("web_editor.editor");
 var animation = require('web_editor.snippets.animation');
 var options = require('web_editor.snippets.options');
@@ -54,7 +55,6 @@ options.registry.menu_data = options.Class.extend({
 
 options.registry.company_data = options.Class.extend({
     start: function () {
-        var self = this;
         this._super.apply(this, arguments);
 
         var proto = options.registry.company_data.prototype;
@@ -62,11 +62,14 @@ options.registry.company_data = options.Class.extend({
         if (proto.__link_deferred === undefined) {
             proto.__link_deferred = $.Deferred();
             return ajax.jsonRpc("/web/session/get_session_info", "call").then(function (session) {
-                return self.performModelRPC("res.users", "read", [session.uid, ["company_id"]]).then(function (res) {
-                    proto.__link_deferred.resolve(
-                        "/web#action=base.action_res_company_form&view_type=form&id=" + (res && res[0] && res[0].company_id[0] || 1)
-                    );
-                });
+                return rpc.query({model: "res.users", method: "read"})
+                    .args([session.uid, ["company_id"]])
+                    .exec({type: "ajax"})
+                    .then(function (res) {
+                        proto.__link_deferred.resolve(
+                            "/web#action=base.action_res_company_form&view_type=form&id=" + (res && res[0] && res[0].company_id[0] || 1)
+                        );
+                    });
             });
         }
     },

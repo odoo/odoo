@@ -3,10 +3,10 @@ odoo.define('website_links.website_links', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
+var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var website = require('website.website');
-var model = require('website.model');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -49,11 +49,13 @@ if(!$('.o_website_links_create_tracked_url').length) {
             });
         },
         fetch_objects: function() {
-            return model.performModelRPC(this.obj, 'search_read', [[]]).then(function(result) {
-                return _.map(result, function(val) {
-                    return {id: val.id, text:val.name};
+            return rpc.query({model: this.obj, method: 'search_read'})
+                .exec({type: "ajax"})
+                .then(function(result) {
+                    return _.map(result, function(val) {
+                        return {id: val.id, text:val.name};
+                    });
                 });
-            });
         },
         object_exists: function(query) {
             return _.find(this.objects, function(val) {
@@ -68,10 +70,13 @@ if(!$('.o_website_links_create_tracked_url').length) {
         create_object: function(name) {
             var self = this;
 
-            return model.performModelRPC(this.obj, 'create', [{name:name}]).then(function(record) {
-                self.element.attr('value', record);
-                self.objects.push({'id': record, 'text': name});
-            });
+            return rpc.query({model: this.obj, method: 'create'})
+                .args([{name:name}])
+                .exec({type: "ajax"})
+                .then(function(record) {
+                    self.element.attr('value', record);
+                    self.objects.push({'id': record, 'text': name});
+                });
         },
     });
     

@@ -25,21 +25,23 @@ var Dashboard = Widget.extend({
     load: function(dashboards){
         var self = this;
         var loading_done = new $.Deferred();
-        this.performRPC("/web_settings_dashboard/data", {}).then(function (data) {
-            // Load each dashboard
-            var all_dashboards_defs = [];
-            _.each(dashboards, function(dashboard) {
-                var dashboard_def = self['load_' + dashboard](data);
-                if (dashboard_def) {
-                    all_dashboards_defs.push(dashboard_def);
-                }
-            });
+        this._rpc("/web_settings_dashboard/data")
+            .exec()
+            .then(function (data) {
+                // Load each dashboard
+                var all_dashboards_defs = [];
+                _.each(dashboards, function(dashboard) {
+                    var dashboard_def = self['load_' + dashboard](data);
+                    if (dashboard_def) {
+                        all_dashboards_defs.push(dashboard_def);
+                    }
+                });
 
-            // Resolve loading_done when all dashboards defs are resolved
-            $.when.apply($, all_dashboards_defs).then(function() {
-                loading_done.resolve();
+                // Resolve loading_done when all dashboards defs are resolved
+                $.when.apply($, all_dashboards_defs).then(function() {
+                    loading_done.resolve();
+                });
             });
-        });
         return loading_done;
     },
 
@@ -88,7 +90,7 @@ var DashboardInvitations = Widget.extend({
             $target.prop('disabled', true);
             $target.find('i.fa-cog').removeClass('hidden');
             // Try to create user accountst
-            this.rpc("res.users", "web_dashboard_create_users")
+            this._rpc("res.users", "web_dashboard_create_users")
                 .args([user_emails])
                 .exec()
                 .then(function() {
@@ -165,7 +167,7 @@ var DashboardPlanner = Widget.extend({
 
     willStart: function () {
         var self = this;
-        return this.rpc('web.planner', 'search_read')
+        return this._rpc('web.planner', 'search_read')
             .exec()
             .then(function(res) {
                 self.planners = res.records;

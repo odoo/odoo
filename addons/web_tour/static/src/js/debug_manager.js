@@ -19,7 +19,7 @@ DebugManager.include({
     consume_tours: function () {
         var active_tours = get_active_tours();
         if (active_tours.length > 0) { // tours might have been consumed meanwhile
-            this.rpc('web_tour.tour', 'consume')
+            this._rpc('web_tour.tour', 'consume')
                 .args([active_tours])
                 .exec()
                 .then(function () {

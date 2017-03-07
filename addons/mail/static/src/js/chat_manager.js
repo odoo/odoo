@@ -611,9 +611,9 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         bus.on('notification', null, on_notification);
 
         this.channel_seen = _.throttle(function (channel) {
-            return self.rpc('mail.channel', 'channel_seen')
+            return self._rpc('mail.channel', 'channel_seen')
                 .args([[channel.id]])
-                .exec({shadow: true});
+                .exec({options: {shadow: true}});
         }, 3000);
     },
 
@@ -676,7 +676,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             domain = [['id', '<', min_message_id]].concat(domain);
         }
 
-        return this.rpc('mail.message', 'message_fetch')
+        return this._rpc('mail.message', 'message_fetch')
             .args([domain])
             .kwargs({limit: LIMIT, context: session.user_context})
             .exec()
@@ -704,7 +704,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         if (options.force_fetch || _.difference(ids.slice(0, LIMIT), loaded_msg_ids).length) {
             var ids_to_load = _.difference(ids, loaded_msg_ids).slice(0, LIMIT);
 
-            return this.rpc('mail.message', 'message_format')
+            return this._rpc('mail.message', 'message_format')
                 .args([ids_to_load])
                 .kwargs({context: session.user_context})
                 .exec()
@@ -743,7 +743,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         }
         if ('channel_id' in options) {
             // post a message in a channel or execute a command
-            return this.rpc('mail.channel', data.command ? 'execute_command' : 'message_post')
+            return this._rpc('mail.channel', data.command ? 'execute_command' : 'message_post')
                 .args([options.channel_id])
                 .kwargs(_.extend(msg, {
                     message_type: 'comment',
@@ -763,12 +763,12 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                 subtype_id: data.subtype_id,
             });
 
-            return this.rpc(options.model, 'message_post')
+            return this._rpc(options.model, 'message_post')
                 .args([options.res_id])
                 .kwargs(msg)
                 .exec()
                 .then(function (msg_id) {
-                    return self.rpc('mail.message', 'message_format')
+                    return self._rpc('mail.message', 'message_format')
                         .args([msg_id])
                         .exec()
                         .then(function (msgs) {
@@ -812,7 +812,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             // get messages for a chatter, when it doesn't know the ids (use
             // case is when using the full composer)
             var domain = [['model', '=', options.model], ['res_id', '=', options.res_id]];
-            this.rpc('mail.message', 'message_fetch')
+            this._rpc('mail.message', 'message_fetch')
                 .args([domain])
                 .kwargs({limit: 30})
                 .exec()
@@ -822,12 +822,12 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         }
     },
     toggle_star_status: function (message_id) {
-        return this.rpc('mail.message', 'toggle_message_starred')
+        return this._rpc('mail.message', 'toggle_message_starred')
             .args([[message_id]])
             .exec();
     },
     unstar_all: function () {
-        return this.rpc('mail.message', 'unstar_all')
+        return this._rpc('mail.message', 'unstar_all')
             .args([[]])
             .exec();
     },
@@ -838,7 +838,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             return !message || message.is_needaction;
         });
         if (ids.length) {
-            return this.rpc('mail.message', 'set_message_done')
+            return this._rpc('mail.message', 'set_message_done')
                 .args([ids])
                 .exec();
         } else {
@@ -847,14 +847,14 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     },
     mark_all_as_read: function (channel, domain) {
         if ((channel.id === "channel_inbox" && needaction_counter) || (channel && channel.needaction_counter)) {
-            return this.rpc('mail.message', 'mark_all_as_read')
+            return this._rpc('mail.message', 'mark_all_as_read')
                 .kwargs({channel_ids: channel.id !== "channel_inbox" ? [channel.id] : [], domain: domain})
                 .exec();
         }
         return $.when();
     },
     undo_mark_as_read: function (message_ids, channel) {
-        return this.rpc('mail.message', 'mark_as_unread')
+        return this._rpc('mail.message', 'mark_as_unread')
             .args([message_ids, [channel.id]])
             .exec();
     },
@@ -886,9 +886,9 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             return mention_partner_suggestions;
         }
         if (!channel.members_deferred) {
-            channel.members_deferred = this.rpc('mail.channel', "channel_fetch_listeners")
+            channel.members_deferred = this._rpc('mail.channel', "channel_fetch_listeners")
                 .args([channel.uuid])
-                .exec({shadow: true})
+                .exec({options: {shadow: true}})
                 .then(function (members) {
                     var suggestions = [];
                     _.each(mention_partner_suggestions, function (partners) {
@@ -949,9 +949,9 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     },
 
     detach_channel: function (channel) {
-        return this.rpc('mail.channel', "channel_minimize")
+        return this._rpc('mail.channel', "channel_minimize")
             .args([channel.uuid, true])
-            .exec({shadow: true});
+            .exec({options: {shadow: true}});
     },
     remove_chatter_messages: function (model) {
         messages = _.reject(messages, function (message) {
@@ -963,7 +963,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         var method = type === "dm" ? "channel_get" : "channel_create";
         var args = type === "dm" ? [[name]] : [name, type];
 
-        return this.rpc('mail.channel', method)
+        return this._rpc('mail.channel', method)
             .args(args)
             .exec()
             .then(add_channel);
@@ -978,7 +978,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             // channel already joined
             channel_defs[channel_id] = $.when(channel);
         } else {
-            channel_defs[channel_id] = this.rpc('mail.channel', 'channel_join_and_get_info')
+            channel_defs[channel_id] = this._rpc('mail.channel', 'channel_join_and_get_info')
                 .args([[channel_id]])
                 .exec()
                 .then(function (result) {
@@ -988,7 +988,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         return channel_defs[channel_id];
     },
     open_and_detach_dm: function (partner_id) {
-        return this.rpc('mail.channel', 'channel_get_and_minimize')
+        return this._rpc('mail.channel', 'channel_get_and_minimize')
             .args([[partner_id]])
             .exec()
             .then(add_channel);
@@ -999,20 +999,20 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
 
     unsubscribe: function (channel) {
         if (_.contains(['public', 'private'], channel.type)) {
-            return this.rpc('mail.channel', 'action_unfollow')
+            return this._rpc('mail.channel', 'action_unfollow')
                 .args([[channel.id]])
                 .exec();
         } else {
-            return this.rpc('mail.channel', 'channel_pin')
+            return this._rpc('mail.channel', 'channel_pin')
                 .args([channel.uuid, false])
                 .exec();
         }
     },
     close_chat_session: function (channel_id) {
         var channel = this.get_channel(channel_id);
-        this.rpc('mail.channel', "channel_fold")
+        this._rpc('mail.channel', "channel_fold")
             .kwargs({uuid : channel.uuid, state : "closed"})
-            .exec({shadow: true});
+            .exec({options: {shadow: true}});
     },
     fold_channel: function (channel_id, folded) {
         var args = {
@@ -1021,9 +1021,9 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         if (_.isBoolean(folded)) {
             args.state = folded ? 'folded' : 'open';
         }
-        return this.rpc('mail.channel', "channel_fold")
+        return this._rpc('mail.channel', "channel_fold")
             .kwargs(args)
-            .exec({shadow: true});
+            .exec({options: {shadow: true}});
     },
     /**
      * Special redirection handling for given model and id
@@ -1046,7 +1046,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         };
         if (res_model === "res.partner") {
             var domain = [["partner_id", "=", res_id]];
-            this.rpc('res.users', "search")
+            this._rpc('res.users', "search")
                 .args([domain])
                 .exec()
                 .then(function (user_ids) {
@@ -1057,7 +1057,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                     }
                 });
         } else {
-            this.rpc(res_model, 'get_formview_id')
+            this._rpc(res_model, 'get_formview_id')
                 .args([[res_id], session.user_context])
                 .exec()
                 .then(function (view_id) {
@@ -1083,9 +1083,9 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         if (!channels_preview_def) {
             if (missing_channels.length) {
                 var missing_channel_ids = _.pluck(missing_channels, 'id');
-                channels_preview_def = this.rpc('mail.channel', 'channel_fetch_preview')
+                channels_preview_def = this._rpc('mail.channel', 'channel_fetch_preview')
                     .args([missing_channel_ids])
-                    .exec({shadow: true});
+                    .exec({options: {shadow: true}});
             } else {
                 channels_preview_def = $.when();
             }
@@ -1120,9 +1120,9 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         });
         if (!values.length) {
             // extend the research to all users
-            def = this.rpc('res.partner', 'im_search')
+            def = this._rpc('res.partner', 'im_search')
                 .args([search_val, limit || 20])
-                .exec({shadow: true});
+                .exec({options: {shadow: true}});
         } else {
             def = $.when(values);
         }

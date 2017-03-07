@@ -506,7 +506,7 @@ exports.PosModel = Backbone.Model.extend({
                     if (method === 'search_read') {
                         query = query.orderBy(order);
                     }
-                    query.exec({callback: ajax.rpc.bind(ajax)}).then(function(result){
+                    query.exec({type: "ajax"}).then(function(result){
                         try{    // catching exceptions in model.loaded(...)
                             if (method === 'search_read') {
                                 result = result.records;
@@ -551,11 +551,10 @@ exports.PosModel = Backbone.Model.extend({
         var def  = new $.Deferred();
         var fields = _.find(this.models,function(model){ return model.model === 'res.partner'; }).fields;
         var domain = [['customer','=',true],['write_date','>',this.db.get_partner_write_date()]];
-        var rpcOptions = {timeout:3000, shadow: true};
         rpc.query({model: 'res.partner', method: 'search_read'})
-           .args([domain, fields])
-           .exec({callback: ajax.rpc.bind(ajax), callbackOptions: rpcOptions})
-           .then(function(partners){
+            .args([domain, fields])
+            .exec({type: "ajax", options: {timeout:3000, shadow: true}})
+            .then(function(partners){
                 if (self.db.add_partners(partners.records)) {   // check if the partners we got were real updates
                     def.resolve();
                 } else {
@@ -891,9 +890,9 @@ exports.PosModel = Backbone.Model.extend({
             })];
         var rpcOptions = {timeout: timeout, shadow: !options.to_invoice};
         return rpc.query({model: 'pos.order', method: 'create_from_ui'})
-           .args(args)
-           .exec({callback: ajax.rpc.bind(ajax), callbackOptions: rpcOptions})
-           .then(function (server_ids) {
+            .args(args)
+            .exec({type: "ajax", options: rpcOptions})
+            .then(function (server_ids) {
                 _.each(order_ids_to_sync, function (order_id) {
                     self.db.remove_order(order_id);
                 });

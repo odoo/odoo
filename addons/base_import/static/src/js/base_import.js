@@ -176,7 +176,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         );
     },
     create_model: function() {
-        return this.rpc('base_import.import', 'create')
+        return this._rpc('base_import.import', 'create')
             .args([{res_model: this.res_model}])
             .exec();
     },

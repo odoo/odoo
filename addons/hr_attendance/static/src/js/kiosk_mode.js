@@ -23,7 +23,7 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
     start: function () {
         var self = this;
         self.session = Session;
-        this.rpc('res.company', 'search_read')
+        this._rpc('res.company', 'search_read')
             .args([[['id', '=', self.session.company_id]], ['name']])
             .exec()
             .then(function (companies){
@@ -37,7 +37,7 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
 
     on_barcode_scanned: function(barcode) {
         var self = this;
-        this.rpc('hr.employee', 'attendance_scan')
+        this._rpc('hr.employee', 'attendance_scan')
             .args([barcode, ])
             .exec()
             .then(function (result) {

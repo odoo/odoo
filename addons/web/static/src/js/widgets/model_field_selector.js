@@ -317,7 +317,7 @@ var ModelFieldSelector = Widget.extend({
     _getModelFieldsFromCache: function (model, filters) {
         var def = modelFieldsCache.cacheDefs[model];
         if (!def) {
-            def = modelFieldsCache.cacheDefs[model] = this.rpc(model, "fields_get")
+            def = modelFieldsCache.cacheDefs[model] = this._rpc(model, "fields_get")
                 .args([
                     false,
                     ["store", "searchable", "type", "string", "relation", "selection", "related"]])

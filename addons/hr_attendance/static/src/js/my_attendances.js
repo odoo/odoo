@@ -19,7 +19,7 @@ var MyAttendances = Widget.extend({
     start: function () {
         var self = this;
 
-        this.rpc('hr.employee', 'search_read')
+        this._rpc('hr.employee', 'search_read')
             .args([[['user_id', '=', self.session.uid]], ['attendance_state', 'name']])
             .exec()
             .then(function (res) {
@@ -36,7 +36,7 @@ var MyAttendances = Widget.extend({
 
     update_attendance: function () {
         var self = this;
-        this.rpc('hr.employee', 'attendance_manual')
+        this._rpc('hr.employee', 'attendance_manual')
             .args([[self.employee.id], 'hr_attendance.hr_attendance_action_my_attendances'])
             .exec()
             .then(function(result) {

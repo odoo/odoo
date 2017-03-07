@@ -302,7 +302,7 @@ var KanbanController = BasicController.extend({
         }
         data.context['default_' + data.groupedBy[0]] = column.id;
 
-        this.rpc(data.model, "name_create")
+        this._rpc(data.model, "name_create")
             .args([event.data.value])
             .withContext(data.context)
             .exec()
