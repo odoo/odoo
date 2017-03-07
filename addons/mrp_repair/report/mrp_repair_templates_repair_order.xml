@@ -42,13 +42,13 @@
                             <p t-field="o.product_id.name"/>
                         </div>
                         <div class="col-xs-3" groups="stock.group_production_lot">
-                            <strong>Lot Number</strong>
+                            <strong>Lot/Serial Number:</strong>
                             <t t-if="o.lot_id">
                                 <span t-field="o.lot_id.name"/>
                             </t>
                         </div>
                         <div t-if="o.guarantee_limit" class="col-xs-3">
-                            <strong>Guarantee Limit:</strong>
+                            <strong>Warranty:</strong>
                             <p t-field="o.guarantee_limit"/>
                         </div>
                         <div class="col-xs-3">
@@ -71,7 +71,7 @@
                         </thead>
                         <tbody>
                             <t t-if="o.operations">
-                                <tr><td colspan="5"><strong>Operation Line(s)</strong></td></tr>
+                                <tr><td colspan="5"><strong>Parts</strong></td></tr>
                                 <tr t-foreach="o.operations" t-as="line">
                                     <td>
                                         <p t-if="line.type == 'add'"><i>(Add)</i> <span t-field="line.name" /></p>
@@ -95,7 +95,7 @@
                                 </tr>
                             </t>
                             <t t-if="o.fees_lines">
-                                <tr><td colspan="5"><strong>Fees Line(s)</strong></td></tr>
+                                <tr><td colspan="5"><strong>Operations</strong></td></tr>
                                 <tr t-foreach="o.fees_lines" t-as="fees">
                                     <td>
                                         <span t-field="fees.name"/>

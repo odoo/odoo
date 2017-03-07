@@ -36,7 +36,7 @@ class Repair(models.Model):
         'product.uom', 'Product Unit of Measure',
         readonly=True, required=True, states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one(
-        'res.partner', 'Partner',
+        'res.partner', 'Customer',
         index=True, states={'confirmed': [('readonly', True)]},
         help='Choose partner for whom the order will be invoiced and delivered.')
     address_id = fields.Many2one(
@@ -70,12 +70,12 @@ class Repair(models.Model):
         readonly=True, required=True,
         states={'draft': [('readonly', False)], 'confirmed': [('readonly', True)]})
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Repaired Lot',
+        'stock.production.lot', 'Lot/Serial',
         domain="[('product_id','=', product_id)]",
         help="Products repaired are all belonging to this lot", oldname="prodlot_id")
     guarantee_limit = fields.Date('Warranty Expiration', states={'confirmed': [('readonly', True)]})
     operations = fields.One2many(
-        'mrp.repair.line', 'repair_id', 'Operation Lines',
+        'mrp.repair.line', 'repair_id', 'Parts',
         copy=True, readonly=True, states={'draft': [('readonly', False)]})
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist',
@@ -97,7 +97,7 @@ class Repair(models.Model):
         copy=False, readonly=True, track_visibility="onchange",
         help="Move created by the repair order")
     fees_lines = fields.One2many(
-        'mrp.repair.fee', 'repair_id', 'Fees',
+        'mrp.repair.fee', 'repair_id', 'Operations',
         copy=True, readonly=True, states={'draft': [('readonly', False)]})
     internal_notes = fields.Text('Internal Notes')
     quotation_notes = fields.Text('Quotation Notes')
@@ -453,7 +453,7 @@ class RepairLine(models.Model):
     move_id = fields.Many2one(
         'stock.move', 'Inventory Move',
         copy=False, readonly=True)
-    lot_id = fields.Many2one('stock.production.lot', 'Lot')
+    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
