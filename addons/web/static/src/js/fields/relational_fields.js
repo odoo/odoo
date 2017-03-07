@@ -197,7 +197,7 @@ var FieldMany2One = AbstractField.extend({
         var self = this;
         var slowCreate = this._searchCreatePopup.bind(this, "form", false, this._createContext(name));
         if (this.nodeOptions.quick_create) {
-            this.rpc(this.field.relation, "name_create")
+            this._rpc(this.field.relation, "name_create")
                 .args([name])
                 .kwargs({context: this.record.getContext({fieldName: this.name})})
                 .exec()
@@ -267,7 +267,7 @@ var FieldMany2One = AbstractField.extend({
             domain.push(['id', 'not in', blacklisted_ids]);
         }
 
-        this.rpc(this.field.relation, "name_search")
+        this._rpc(this.field.relation, "name_search")
             .kwargs({
                 name: search_val,
                 args: domain,
@@ -294,7 +294,7 @@ var FieldMany2One = AbstractField.extend({
                     values.push({
                         label: _t("Search More..."),
                         action: function () {
-                            self.rpc(self.field.relation, "name_search")
+                            self._rpc(self.field.relation, "name_search")
                                 .kwargs({
                                 name: search_val,
                                 args: domain,
@@ -385,7 +385,7 @@ var FieldMany2One = AbstractField.extend({
         if (this.mode === 'readonly' && !this.nodeOptions.no_open) {
             event.preventDefault();
             event.stopPropagation();
-            this.rpc(this.field.relation, 'get_formview_action')
+            this._rpc(this.field.relation, 'get_formview_action')
                 .args([[this.value.res_id]])
                 .withContext(this.record.getContext({fieldName: this.name}))
                 .exec()
@@ -404,7 +404,7 @@ var FieldMany2One = AbstractField.extend({
         }
         var self = this;
         var context = this.record.getContext({fieldName: this.name});
-        this.rpc(this.field.relation, 'get_formview_id')
+        this._rpc(this.field.relation, 'get_formview_id')
             .args([[this.value.res_id]])
             .withContext(context)
             .exec()

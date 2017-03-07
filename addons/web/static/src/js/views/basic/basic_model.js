@@ -199,7 +199,7 @@ var BasicModel = AbstractModel.extend({
     deleteRecords: function (recordIds, modelName, parentID) {
         var self = this;
         var records = _.map(recordIds, function (id) { return self.localData[id]; });
-        return this.rpc(modelName, 'unlink')
+        return this._rpc(modelName, 'unlink')
             .args([_.pluck(records, 'res_id')])
             .withContext(session.user_context) // todo: combine with view context
             .exec()
@@ -235,7 +235,7 @@ var BasicModel = AbstractModel.extend({
     duplicateRecord: function (recordID) {
         var self = this;
         var record = this.localData[recordID];
-        return this.rpc(record.model, 'copy')
+        return this._rpc(record.model, 'copy')
             .args([record.data.id])
             .withContext(this._getContext(record))
             .exec()
@@ -450,7 +450,7 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var fields_key = _.without(params.fieldNames, '__last_update');
 
-        return this.rpc(modelName, 'default_get')
+        return this._rpc(modelName, 'default_get')
             .args([fields_key])
             .withContext(params.context)
             .exec()
@@ -818,7 +818,7 @@ var BasicModel = AbstractModel.extend({
             // in the case of a write, only perform the RPC if there are changes to save
             if (method === 'create' || Object.keys(changes).length) {
                 var args = method === 'write' ? [[record.data.id], changes] : [changes];
-                return self.rpc(record.model, method)
+                return self._rpc(record.model, method)
                     .args(args)
                     .withContext(session.user_context) // todo: combine with view context
                     .exec()
@@ -901,7 +901,7 @@ var BasicModel = AbstractModel.extend({
         var resIDs = _.map(recordIDs, function (recordID) {
             return self.localData[recordID].res_id;
         });
-        return this.rpc(parent.model, 'write')
+        return this._rpc(parent.model, 'write')
             .args([resIDs, { active: value }])
             .exec()
             .then(this.reload.bind(this, parentID));
@@ -959,7 +959,7 @@ var BasicModel = AbstractModel.extend({
         var def;
         if (!('display_name' in rel_data)) {
             var field = record.fields[fieldName];
-            def = this.rpc(field.relation, 'name_get')
+            def = this._rpc(field.relation, 'name_get')
                 .args([data.id])
                 .withContext(record.context)
                 .exec()
@@ -1011,7 +1011,7 @@ var BasicModel = AbstractModel.extend({
             fields = fields[0];
         }
         return this.mutex.exec(function () {
-            return self.rpc(record.model, 'onchange')
+            return self._rpc(record.model, 'onchange')
                 .args([idList, currentData, fields, onchange_spec, context])
                 .exec()
                 .then(function (result) {
@@ -1161,7 +1161,7 @@ var BasicModel = AbstractModel.extend({
                 // _changes so this is a very specific case)
                 // this could be optimized by registering the fetched records in the list's _cache
                 // so that if a record is removed and then re-added, it won't be fetched twice
-                var def = this.rpc(list.model, 'read')
+                var def = this._rpc(list.model, 'read')
                     .args([_.pluck(data, 'id'), list.fieldNames])
                     .exec()
                     .then(function (records) {
@@ -1257,7 +1257,7 @@ var BasicModel = AbstractModel.extend({
     _fetchMany2OneGroup: function (group) {
         var ids = _.uniq(_.pluck(group, 'res_id'));
 
-        return this.rpc(group[0].model, 'name_get')
+        return this._rpc(group[0].model, 'name_get')
             .args([ids])
             .withContext(group[0].context)
             .exec()
@@ -1281,7 +1281,7 @@ var BasicModel = AbstractModel.extend({
             model = many2oneRecord.model;
             return many2oneRecord.res_id;
         });
-        return this.rpc(model, 'name_get')
+        return this._rpc(model, 'name_get')
             .args([ids])
             .withContext(list.context)
             .exec()
@@ -1303,7 +1303,7 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         fieldNames = fieldNames || _.uniq(record.fieldNames.concat(['display_name']));
         var oldData = record.data;
-        return this.rpc(record.model, 'read')
+        return this._rpc(record.model, 'read')
             .args([[record.res_id], fieldNames])
             // .withContext({ bin_size: true })  // FIXME: when editing a subrecord in the partner form view, it tries to write the bin_size on the image field
             .exec()
@@ -1495,7 +1495,7 @@ var BasicModel = AbstractModel.extend({
         }
 
         // step 2: fetch data from server
-        return this.rpc(field.relation, 'read')
+        return this._rpc(field.relation, 'read')
             .args([ids, _.keys(field.relatedFields)])
             .withContext({}) // FIXME
             .exec()
@@ -1817,13 +1817,13 @@ var BasicModel = AbstractModel.extend({
                 });
                 var domain = Domain.prototype.stringToArray(field.domain || [], field_values);
                 var fold_field = pyeval.py_eval(attrs.options || '{}').fold_field;
-                var fetch_status_information = self.rpc(field.relation, 'search_read')
+                var fetch_status_information = self._rpc(field.relation, 'search_read')
                     .withFields(['id'].concat(fold_field ? [fold_field] : []))
                     .withDomain(domain)
                     .exec()
                     .then(function (result) {
                         var ids = _.pluck(result.records, 'id');
-                        return self.rpc(field.relation, 'name_get')
+                        return self._rpc(field.relation, 'name_get')
                             .args([ids])
                             .withContext(self._getContext(record, {fieldName: name}))
                             .exec()
@@ -1841,7 +1841,7 @@ var BasicModel = AbstractModel.extend({
             }
             if (field.__always_reload) {
                 if (record.data[name] instanceof Array) {
-                    defs.push(self.rpc(field.relation, 'name_get')
+                    defs.push(self._rpc(field.relation, 'name_get')
                         .args([record.data[name][0]])
                         .withContext(self._getContext(record, {fieldName: name}))
                         .exec()
@@ -1851,7 +1851,7 @@ var BasicModel = AbstractModel.extend({
                 }
             }
             if (field.__fetch_selection && !self.many2ones[field.relation]) {
-                var fetchSelection = self.rpc(field.relation, 'name_search')
+                var fetchSelection = self._rpc(field.relation, 'name_search')
                     .args(['', field.domain])
                     .exec()
                     .then(function (result) {
@@ -1860,7 +1860,7 @@ var BasicModel = AbstractModel.extend({
                 defs.push(fetchSelection);
             }
             if (field.__fetch_many2manys) {
-                var fetchMany2Manys = self.rpc(field.relation, 'name_search')
+                var fetchMany2Manys = self._rpc(field.relation, 'name_search')
                     .args(['', field.domain])
                     .exec()
                     .then(function (result) {
@@ -1885,7 +1885,7 @@ var BasicModel = AbstractModel.extend({
     _readGroup: function (list) {
         var self = this;
         var fields = _.uniq(list.fieldNames.concat(list.groupedBy));
-        return this.rpc(list.model, 'read_group')
+        return this._rpc(list.model, 'read_group')
             .withFields(fields)
             .withContext(list.context)
             .groupBy(list.groupedBy)
@@ -1969,7 +1969,7 @@ var BasicModel = AbstractModel.extend({
             }
         }
         if (missingIds.length) {
-            def = this.rpc(list.model, 'read')
+            def = this._rpc(list.model, 'read')
                 .args([missingIds, list.fieldNames])
                 .withContext({}) // FIXME
                 .exec();
@@ -2029,7 +2029,7 @@ var BasicModel = AbstractModel.extend({
      */
     _searchReadUngroupedList: function (list) {
         var self = this;
-        return this.rpc(list.model, 'search_read')
+        return this._rpc(list.model, 'search_read')
             .withFields(list.fieldNames)
             .withDomain(list.domain || [])
             .withLimit(list.limit)

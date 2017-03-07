@@ -138,7 +138,7 @@ function createAsyncView(params) {
             var src = $(this).attr('src');
             if (src[0] !== '#') {
                 $(this).attr('src', '#test:' + $(this).attr('src'));
-                widget.performRPC(src);
+                widget._rpc(src).exec();
             }
         });
     }

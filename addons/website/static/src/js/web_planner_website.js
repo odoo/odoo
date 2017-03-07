@@ -4,20 +4,24 @@ odoo.define('web.planner.website', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var planner = require('web.planner.common');
+var rpc = require('web.rpc');
 var session = require('web.session');
 var website = require('website.website');
-var model = require('website.model');
 
 var qweb = core.qweb;
 
 var WebsitePlannerLauncher = planner.PlannerLauncher.extend({
     _fetch_planner_data: function () {
-        return model.performModelRPC('web.planner', 'search_read', [[['planner_application', '=', 'planner_website']]]).then((function (planner) {
-            if (!planner.length) return;
+        return rpc.query({model: 'web.planner', method: 'search_read'})
+            .args([[['planner_application', '=', 'planner_website']]])
+            .exec({type: "ajax"})
+            .then((function (planner) {
+                planner = planner.records;
+                if (!planner.length) return;
 
-            planner[0].data = $.parseJSON(planner[0].data) || {};
-            this._setup_for_planner(planner[0]);
-        }).bind(this));
+                planner[0].data = $.parseJSON(planner[0].data) || {};
+                this._setup_for_planner(planner[0]);
+            }).bind(this));
     },
 });
 

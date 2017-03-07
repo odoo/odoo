@@ -13,7 +13,7 @@ var PlannerLauncher = planner.PlannerLauncher.extend({
     },
     _fetch_planner_data: function () {
         var planner_by_menu = this.planner_by_menu = {};
-        return this.rpc('web.planner', 'search_read')
+        return this._rpc('web.planner', 'search_read')
             .exec()
             .then(function (res) {
                 _.each(res.records, function (planner) {

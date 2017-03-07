@@ -1,7 +1,6 @@
 odoo.define('point_of_sale.devices', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var core = require('web.core');
 var mixins = require('web.mixins');
 var rpc = require('web.rpc');
@@ -443,7 +442,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     print_sale_details: function() { 
         var self = this;
         rpc.query({model: 'report.point_of_sale.report_saledetails', method: 'get_sale_details'})
-            .exec({callback: ajax.rpc.bind(ajax)})
+            .exec({type: "ajax"})
             .then(function(result){
                 var env = {
                     company: self.pos.company,

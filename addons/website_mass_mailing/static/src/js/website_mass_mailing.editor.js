@@ -1,9 +1,9 @@
 odoo.define('website_mass_mailing.editor', function (require) {
 'use strict';
 
-var model = require('website.model');
 var ajax = require('web.ajax');
 var core = require('web.core');
+var rpc = require('web.rpc');
 var base = require('web_editor.base');
 var web_editor = require('web_editor.editor');
 var options = require('web_editor.snippets.options');
@@ -21,7 +21,10 @@ var mass_mailing_common = options.Class.extend({
             'window_title': this.popup_title,
             'select': _t("Newsletter"),
             'init': function (field) {
-                return model.performModelRPC('mail.mass_mailing.list', 'name_search', ['', []], { context: base.get_context() });
+                return rpc.query({model: 'mail.mass_mailing.list', method: 'name_search'})
+                        .args(['', []])
+                        .withContext(base.get_context())
+                        .exec({type: "ajax"});
             },
         });
         def.then(function (mailing_list_id) {

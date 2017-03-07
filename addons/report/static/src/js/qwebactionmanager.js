@@ -89,7 +89,7 @@ ActionManager.include({
         } else if (action.report_type === 'qweb-pdf') {
             framework.blockUI();
             // Before doing anything, we check the state of wkhtmltopdf on the server.
-            (wkhtmltopdf_state = wkhtmltopdf_state || this.performRPC('/report/check_wkhtmltopdf')).then(function (state) {
+            (wkhtmltopdf_state = wkhtmltopdf_state || this._rpc('/report/check_wkhtmltopdf').exec()).then(function (state) {
                 // Display a notification to the user according to wkhtmltopdf's state.
                 if (WKHTMLTOPDF_MESSAGES[state]) {
                     self.do_notify(_t('Report'), WKHTMLTOPDF_MESSAGES[state], true);

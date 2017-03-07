@@ -69,7 +69,7 @@ var PartnerInviteDialog = Dialog.extend({
         var self = this;
         var data = this.$input.select2('data');
         if(data.length >= 1){
-            return this.rpc('mail.channel', 'channel_invite')
+            return this._rpc('mail.channel', 'channel_invite')
                 .args([this.channel_id])
                 .kwargs({partner_ids: _.pluck(data, 'id')})
                 .exec()
@@ -381,7 +381,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     do_search_channel: function(search_val){
-        return this.rpc('mail.channel', 'channel_search_to_join')
+        return this._rpc('mail.channel', 'channel_search_to_join')
             .args([search_val])
             .exec()
             .then(function(result){

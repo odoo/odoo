@@ -62,25 +62,28 @@ var DiagramModel = AbstractModel.extend({
      */
     _fetchDiagramInfo: function () {
         var self = this;
-        return this.performRPC('/web_diagram/diagram/get_diagram_info', {
-            id: this.res_id,
-            model: this.modelName,
-            node: this.node_model,
-            connector: this.connector_model,
-            src_node: this.connectors.attrs.source,
-            des_node: this.connectors.attrs.destination,
-            label: this.connectors.attrs.label || false,
-            bgcolor: this.nodes.attrs.bgcolor,
-            shape: this.nodes.attrs.shape,
-            visible_nodes: this.visible_nodes,
-            invisible_nodes: this.invisible_nodes,
-            node_fields_string: this.node_fields_string,
-            connector_fields_string: this.connector_fields_string,
-        }).then(function (data) {
-            self.datanodes = data.nodes;
-            self.edges = data.conn;
-            self.parent_field = data.parent_field;
-        });
+        return this._rpc('/web_diagram/diagram/get_diagram_info')
+            .params({
+                id: this.res_id,
+                model: this.modelName,
+                node: this.node_model,
+                connector: this.connector_model,
+                src_node: this.connectors.attrs.source,
+                des_node: this.connectors.attrs.destination,
+                label: this.connectors.attrs.label || false,
+                bgcolor: this.nodes.attrs.bgcolor,
+                shape: this.nodes.attrs.shape,
+                visible_nodes: this.visible_nodes,
+                invisible_nodes: this.invisible_nodes,
+                node_fields_string: this.node_fields_string,
+                connector_fields_string: this.connector_fields_string,
+            })
+            .exec()
+            .then(function (data) {
+                self.datanodes = data.nodes;
+                self.edges = data.conn;
+                self.parent_field = data.parent_field;
+            });
     },
 });
 

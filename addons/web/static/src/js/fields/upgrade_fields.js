@@ -37,9 +37,12 @@ var AbstractFieldUpgrade = {
      */
     _confirmUpgrade: function () {
         var args = [[["share", "=", false]]];
-        return this.performModelRPC('res.users', 'search_count', args).then(function (data) {
-            framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?num_users=" + data);
-        });
+        return this._rpc('res.users', 'search_count')
+            .args(args)
+            .exec()
+            .then(function (data) {
+                framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?num_users=" + data);
+            });
     },
     /**
      * This function is meant to be overriden to insert the 'Enterprise' label

@@ -22,12 +22,15 @@ var CalendarNotification = Notification.extend({
             'click .link2event': function() {
                 var self = this;
 
-                this.rpc("/web/action/load", {
-                    action_id: "calendar.action_calendar_event_notify",
-                }).then(function(r) {
-                    r.res_id = self.eid;
-                    return self.do_action(r);
-                });
+                this._rpc("/web/action/load")
+                    .params({
+                        action_id: "calendar.action_calendar_event_notify",
+                    })
+                    .exec()
+                    .then(function(r) {
+                        r.res_id = self.eid;
+                        return self.do_action(r);
+                    });
             },
 
             'click .link2recall': function() {
@@ -36,7 +39,8 @@ var CalendarNotification = Notification.extend({
 
             'click .link2showed': function() {
                 this.destroy(true);
-                this.rpc("/calendar/notify_ack");
+                this._rpc("/calendar/notify_ack")
+                    .exec();
             },
         });
     },

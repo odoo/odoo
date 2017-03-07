@@ -1,7 +1,6 @@
 odoo.define('barcodes.BarcodeParser', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var Class = require('web.Class');
 var rpc = require('web.rpc');
 
@@ -21,9 +20,9 @@ var BarcodeParser = Class.extend({
         var self = this;
         var id = this.nomenclature_id[0];
         rpc.query({model: 'barcode.nomenclature', method: 'read'})
-           .args([[id], ['name','rule_ids','upc_ean_conv']])
-           .exec({callback: ajax.rpc.bind(ajax)})
-           .then(function (nomenclatures){
+            .args([[id], ['name','rule_ids','upc_ean_conv']])
+            .exec({type: "ajax"})
+            .then(function (nomenclatures){
                 self.nomenclature = nomenclatures[0];
 
                 var args = [
@@ -33,7 +32,7 @@ var BarcodeParser = Class.extend({
                 return rpc
                     .query({model: 'barcode.rule', method: 'search_read'})
                     .args(args)
-                    .exec({callback: ajax.rpc.bind(ajax)});
+                    .exec({type: "ajax"});
             }).then(function(rules){
                 rules = rules.records.sort(function(a, b){ return a.sequence - b.sequence; });
                 self.nomenclature.rules = rules;

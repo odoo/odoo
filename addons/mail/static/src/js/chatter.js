@@ -245,7 +245,7 @@ var Chatter = Widget.extend(chat_mixin, {
             this.suggested_partners_def = $.Deferred();
             var method = 'message_get_suggested_recipients';
             var args = [[this.context.default_res_id], this.context];
-            this.rpc(this.record.model, method)
+            this._rpc(this.record.model, method)
                 .args(args)
                 .exec()
                 .then(function (result) {

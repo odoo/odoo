@@ -22,7 +22,7 @@ KanbanRecord.include({
             ev.preventDefault();
 
             var domain = [['res_model', '=', 'project.task'], ['res_id', '=', this.id], ['mimetype', 'ilike', 'image']];
-            this.rpc('ir.attachment', 'search_read')
+            this._rpc('ir.attachment', 'search_read')
                 .withDomain(domain)
                 .withFields(['id', 'name'])
                 .exec()

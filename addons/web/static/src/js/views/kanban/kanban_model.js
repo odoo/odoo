@@ -77,11 +77,9 @@ return BasicModel.extend({
         var data = self.localData[parent_id];
         var def;
         if (data.fields.sequence) {
-            def = this.performRPC('/web/dataset/resequence', {
-                model: modelName,
-                ids: res_ids,
-                // fixme: correctly handle context
-            });
+            def = this._rpc('/web/dataset/resequence')
+                .params({model: modelName, ids: res_ids})
+                .exec();
         }
         return $.when(def).then(function () {
             data.data = _.sortBy(data.data, function (d) {
@@ -98,7 +96,7 @@ return BasicModel.extend({
         if (!groupByField || groupByField.type !== 'many2one') {
             return $.Deferred().reject(); // only supported when grouped on m2o
         }
-        return this.rpc(groupByField.relation, 'name_create')
+        return this._rpc(groupByField.relation, 'name_create')
             .args([name])
             .withContext(parent.context) // todo: combine with view context
             .exec()

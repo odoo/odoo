@@ -127,9 +127,10 @@ return AbstractModel.extend({
      * @returns
      */
     deleteRecords: function (ids, model) {
-        return this.performModelRPC(model, 'unlink', [ids], {
-            context: session.user_context, // todo: combine with view context
-        });
+        return this._rpc(model, 'unlink')
+            .args([ids])
+            .withContext(session.user_context) // todo: combine with view context
+            .exec();
     },
     /**
      * @override
@@ -166,8 +167,8 @@ return AbstractModel.extend({
         if (!this.preload_def) {
             this.preload_def = $.Deferred();
             $.when(
-                this.performModelRPC(this.modelName, 'check_access_rights', ["write", false]),
-                this.performModelRPC(this.modelName, 'check_access_rights', ["create", false]))
+                this._rpc(this.modelName, 'check_access_rights').args(["write", false]).exec(),
+                this._rpc(this.modelName, 'check_access_rights').args(["create", false]).exec())
             .then(function (write, create) {
                 self.write_right = write;
                 self.create_right = create;
@@ -362,18 +363,18 @@ return AbstractModel.extend({
         var defs = _.map(this.data.filters, this._loadFilter.bind(this));
 
         return $.when.apply($, defs).then(function () {
-            return self.performRPC('/web/dataset/search_read', {
-                model: self.modelName,
-                context: self.data.context,
-                domain: self.data.domain.concat(self._getRangeDomain()).concat(self._getFilterDomain()),
-                fields: self.fieldNames,
-            }).then(function (events) {
-                self.data.data = _.map(events.records, self._recordToCalendarEvent.bind(self));
-                return $.when(
-                    self._loadColors(self.data, self.data.data),
-                    self._loadRecordsToFilters(self.data, self.data.data)
-                );
-            });
+            return self._rpc(self.modelName, 'search_read')
+                .withContext(self.data.context)
+                .withFields(self.fieldNames)
+                .withDomain(self.data.domain.concat(self._getRangeDomain()).concat(self._getFilterDomain()))
+                .exec()
+                .then(function (events) {
+                    self.data.data = _.map(events.records, self._recordToCalendarEvent.bind(self));
+                    return $.when(
+                        self._loadColors(self.data, self.data.data),
+                        self._loadRecordsToFilters(self.data, self.data.data)
+                    );
+                });
         });
     },
     /**
@@ -402,54 +403,54 @@ return AbstractModel.extend({
         }
 
         var field = this.fields[filter.fieldName];
-        return this.performRPC('/web/dataset/search_read', {
-            model: filter.write_model,
-            domain: [["user_id", "=", session.uid]],
-            fields: [filter.write_field]
-        }).then(function (res) {
-            var records = _.map(res.records, function (record) {
-                var _value = record[filter.write_field];
-                var value = _.isArray(_value) ? _value[0] : _value;
-                var f = _.find(filter.filters, function (f) {return f.value === value;});
-                var formater = field_utils.format[_.contains(['many2many', 'one2many'], field.type) ? 'many2one' : field.type];
-                return {
-                    'id': record.id,
-                    'value': value,
-                    'label': formater(_value, field),
-                    'active': !f || f.active,
-                };
-            });
-            records.sort(function (f1,f2) {
-                return _.string.naturalCmp(f2.label, f1.label);
-            });
-
-            // add my profile
-            if (field.relation === 'res.partner' || field.relation === 'res.users') {
-                var value = field.relation === 'res.partner' ? session.partner_id : session.uid;
-                var me = _.find(records, function (record) {
-                    return record.value === value;
-                });
-                if (me) {
-                    records.splice(records.indexOf(me), 1);
-                } else {
+        return this._rpc(filter.write_model, 'search_read')
+            .withDomain([["user_id", "=", session.uid]])
+            .withFields([filter.write_field])
+            .exec()
+            .then(function (res) {
+                var records = _.map(res.records, function (record) {
+                    var _value = record[filter.write_field];
+                    var value = _.isArray(_value) ? _value[0] : _value;
                     var f = _.find(filter.filters, function (f) {return f.value === value;});
-                    me = {
+                    var formater = field_utils.format[_.contains(['many2many', 'one2many'], field.type) ? 'many2one' : field.type];
+                    return {
+                        'id': record.id,
                         'value': value,
-                        'label': session.name + _t(" [Me]"),
+                        'label': formater(_value, field),
                         'active': !f || f.active,
                     };
-                }
-                records.unshift(me);
-            }
-            // add all selection
-            records.push({
-                'value': 'all',
-                'label': field.relation === 'res.partner' || field.relation === 'res.users' ? _t("Everybody's calendars") : _t("Everything"),
-                'active': filter.all,
-            });
+                });
+                records.sort(function (f1,f2) {
+                    return _.string.naturalCmp(f2.label, f1.label);
+                });
 
-            filter.filters = records;
-        });
+                // add my profile
+                if (field.relation === 'res.partner' || field.relation === 'res.users') {
+                    var value = field.relation === 'res.partner' ? session.partner_id : session.uid;
+                    var me = _.find(records, function (record) {
+                        return record.value === value;
+                    });
+                    if (me) {
+                        records.splice(records.indexOf(me), 1);
+                    } else {
+                        var f = _.find(filter.filters, function (f) {return f.value === value;});
+                        me = {
+                            'value': value,
+                            'label': session.name + _t(" [Me]"),
+                            'active': !f || f.active,
+                        };
+                    }
+                    records.unshift(me);
+                }
+                // add all selection
+                records.push({
+                    'value': 'all',
+                    'label': field.relation === 'res.partner' || field.relation === 'res.users' ? _t("Everybody's calendars") : _t("Everything"),
+                    'active': filter.all,
+                });
+
+                filter.filters = records;
+            });
     },
     /**
      * @param {any} element
@@ -509,9 +510,12 @@ return AbstractModel.extend({
 
         var defs = [];
         _.each(to_read, function (ids, model) {
-            defs.push(self.performModelRPC(model, 'name_get', [_.uniq(ids)]).then(function (res) {
-                to_read[model] = _.object(res);
-            }));
+            defs.push(self._rpc(model, 'name_get')
+                .args([_.uniq(ids)])
+                .exec()
+                .then(function (res) {
+                    to_read[model] = _.object(res);
+                }));
         });
         return $.when.apply($, defs).then(function () {
             _.each(self.data.filters, function (filter) {

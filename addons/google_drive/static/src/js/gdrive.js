@@ -59,7 +59,7 @@ Sidebar.include({
         var self = this;
         var domain = [['id', '=', doc_item.config_id]];
         var fields = ['google_drive_resource_id', 'google_drive_client_id'];
-        this.rpc('google.drive.config', 'search_read')
+        this._rpc('google.drive.config', 'search_read')
             .args([domain, fields])
             .exec()
             .then(function (configs) {

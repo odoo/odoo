@@ -30,7 +30,7 @@ return session.is_bound.then(function () {
     // in the page source.
     if (session.is_frontend && session.is_superuser) {
         var def = rpc.query({model: 'web_tour.tour', method: 'get_consumed_tours'})
-                     .exec({callback: ajax.rpc.bind(ajax)});
+            .exec({type: "ajax"});
         defs.push(def);
     }
     return $.when.apply($, defs).then(function (consumed_tours) {

@@ -426,7 +426,7 @@ var ManyToOneField = CharField.extend({
                 args = [];
             }
         }
-        return this.rpc(this.attrs.relation, 'name_search')
+        return this._rpc(this.attrs.relation, 'name_search')
             .kwargs({
                 name: needle,
                 args: args,
@@ -458,7 +458,7 @@ var ManyToOneField = CharField.extend({
         }
         var context = pyeval.eval('contexts', [this.searchview.dataset.get_context()]);
 
-        return this.rpc(this.attrs.relation, 'name_get')
+        return this._rpc(this.attrs.relation, 'name_get')
             .args([value])
             .withContext(context)
             .exec()

@@ -34,7 +34,7 @@ var ServicesMixin = require('web.ServicesMixin');
  *
  *         // if you have some asynchronous operations, it's a good idea to return
  *         // a promise in start()
- *         var promise = this.rpc(...);
+ *         var promise = this._rpc(...);
  *         return promise;
  *     }
  * });

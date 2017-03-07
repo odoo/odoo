@@ -84,7 +84,7 @@ var ProductWishlist = Widget.extend({
 
         rpc.query({model: 'product.wishlist', method: 'write'})
             .args([[wish], { active: false }, base.get_context()])
-            .exec({callback: ajax.rpc.bind(ajax)})
+            .exec({type: "ajax"})
             .then(function(){
                 $(tr).hide();
             });

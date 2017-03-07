@@ -1,7 +1,6 @@
 odoo.define('pos_mercury.pos_mercury', function (require) {
 "use strict";
 
-var ajax    = require('web.ajax');
 var core    = require('web.core');
 var rpc    = require('web.rpc');
 var screens = require('point_of_sale.screens');
@@ -391,7 +390,7 @@ PaymentScreenWidget.include({
 
         rpc.query({model: 'pos_mercury.mercury_transaction', method: 'do_payment'})
             .args([transaction])
-            .exec({timeout: self.server_timeout_in_ms, callback: ajax.rpc.bind(ajax)})
+            .exec({type: "ajax", options: {timeout: self.server_timeout_in_ms}})
             .then(function (data) {
                 // if not receiving a response from Mercury, we should retry
                 if (data === "timeout") {
@@ -549,7 +548,7 @@ PaymentScreenWidget.include({
 
         rpc.query({model: 'pos_mercury.mercury_transaction', method: rpc_method})
             .args([request_data])
-            .exec({timeout: self.server_timeout_in_ms, callback: ajax.rpc.bind(ajax)})
+            .exec({type: "ajax", options: {timeout: self.server_timeout_in_ms}})
             .then(function (data) {
                 if (data === "timeout") {
                     self.retry_mercury_transaction(def, null, retry_nr, true, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);

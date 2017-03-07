@@ -82,7 +82,7 @@ var PivotModel = AbstractModel.extend({
         }
 
         return $.when.apply(null, groupbys.map(function (groupBy) {
-            return self.rpc(self.modelName, 'read_group')
+            return self._rpc(self.modelName, 'read_group')
                 .withContext(self.data.context)
                 .withDomain(header.domain.length ? header.domain : self.data.domain)
                 .withFields(_.map(fields, function (field) { return field.split(':')[0]; }))
@@ -513,7 +513,7 @@ var PivotModel = AbstractModel.extend({
         }
 
         return $.when.apply(null, groupBys.map(function (groupBy) {
-            return self.rpc(self.modelName, 'read_group')
+            return self._rpc(self.modelName, 'read_group')
                 .withContext(self.data.context)
                 .withDomain(self.data.domain)
                 .withFields(_.map(fields, function (field) { return field.split(':')[0]; }))

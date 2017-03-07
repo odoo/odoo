@@ -31,15 +31,18 @@ var ChangePassword = Widget.extend({
             self.$el.parents('.modal').modal('hide');
         });
         $button.eq(0).click(function () {
-            self.performRPC('/web/session/change_password', {
-                fields: $('form[name=change_password_form]').serializeArray(),
-            }).done(function (result) {
-                if (result.error) {
-                    self._display_error(result);
-                } else {
-                   self.do_action('logout');
-                }
-            });
+            self._rpc('/web/session/change_password')
+                .params({
+                    fields: $('form[name=change_password_form]').serializeArray()
+                })
+                .exec()
+                .done(function (result) {
+                    if (result.error) {
+                        self._display_error(result);
+                    } else {
+                    self.do_action('logout');
+                    }
+                });
         });
     },
 

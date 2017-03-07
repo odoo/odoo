@@ -12,7 +12,7 @@ var KioskConfirm = Widget.extend({
         "click .o_hr_attendance_sign_in_out_icon": function () {
             var self = this;
             this.$('.o_hr_attendance_sign_in_out_icon').attr("disabled", "disabled");
-            this.rpc('hr.employee', 'attendance_manual')
+            this._rpc('hr.employee', 'attendance_manual')
                 .args([[this.employee_id], this.next_action])
                 .exec()
                 .then(function(result) {
@@ -38,7 +38,7 @@ var KioskConfirm = Widget.extend({
         'click .o_hr_attendance_pin_pad_button_ok': function() {
             var self = this;
             this.$('.o_hr_attendance_pin_pad_button_ok').attr("disabled", "disabled");
-            this.rpc('hr.employee', 'attendance_manual')
+            this._rpc('hr.employee', 'attendance_manual')
                 .args([[this.employee_id], this.next_action, this.$('.o_hr_attendance_PINbox').val()])
                 .exec()
                 .then(function(result) {

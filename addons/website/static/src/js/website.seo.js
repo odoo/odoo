@@ -490,17 +490,20 @@ var Configurator = Dialog.extend({
             def.resolve(null);
         } else {
             var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'];
-            this.performModelRPC(obj.model, 'read', [[obj.id], fields, base.get_context()]).then(function (data) {
-                if (data.length) {
-                    var meta = data[0];
-                    meta.model = obj.model;
-                    def.resolve(meta);
-                } else {
-                    def.resolve(null);
-                }
-            }).fail(function () {
-                def.reject();
-            });
+            this._rpc(obj.model, 'read')
+                .args([[obj.id], fields, base.get_context()])
+                .exec()
+                .then(function (data) {
+                    if (data.length) {
+                        var meta = data[0];
+                        meta.model = obj.model;
+                        def.resolve(meta);
+                    } else {
+                        def.resolve(null);
+                    }
+                }).fail(function () {
+                    def.reject();
+                });
         }
         return def;
     },
@@ -509,7 +512,9 @@ var Configurator = Dialog.extend({
         if (!obj) {
             return $.Deferred().reject();
         } else {
-            return this.performModelRPC(obj.model, 'write', [[obj.id], data, base.get_context()]);
+            return this._rpc(obj.model, 'write')
+                .args([[obj.id], data, base.get_context()])
+                .exec();
         }
     },
     titleChanged: function () {

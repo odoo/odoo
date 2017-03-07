@@ -59,12 +59,15 @@ var UserMenu = Widget.extend({
         var self = this;
         this.trigger_up('clear_uncommitted_changes', {
             callback: function () {
-                self.performRPC('/web/session/account').then(function (url) {
-                    framework.redirect(url);
-                }).fail(function (result, ev){
-                    ev.preventDefault();
-                    framework.redirect('https://accounts.odoo.com/account');
-                });
+                self._rpc('/web/session/account')
+                    .exec()
+                    .then(function (url) {
+                        framework.redirect(url);
+                    })
+                    .fail(function (result, ev){
+                        ev.preventDefault();
+                        framework.redirect('https://accounts.odoo.com/account');
+                    });
             },
         });
     },
@@ -90,12 +93,15 @@ var UserMenu = Widget.extend({
         var session = this.getSession();
         this.trigger_up('clear_uncommitted_changes', {
             callback: function () {
-                self.performRPC("/web/action/load", {
-                    action_id: "base.action_res_users_my",
-                }).done(function (result) {
-                    result.res_id = session.uid;
-                    self.do_action(result);
-                });
+                self._rpc("/web/action/load")
+                    .params({
+                        action_id: "base.action_res_users_my",
+                    })
+                    .exec()
+                    .done(function (result) {
+                        result.res_id = session.uid;
+                        self.do_action(result);
+                    });
             },
         });
     },

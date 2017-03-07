@@ -30,7 +30,6 @@ odoo.define('point_of_sale.screens', function (require) {
 var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
 var models = require('point_of_sale.models');
-var ajax = require('web.ajax');
 var core = require('web.core');
 var rpc = require('web.rpc');
 var utils = require('web.utils');
@@ -1212,7 +1211,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
 
         rpc.query({model: 'res.partner', method: 'create_from_ui'})
             .args([fields])
-            .exec({callback: ajax.rpc.bind(ajax)})
+            .exec({type: "ajax"})
             .then(function(partner_id){
                 self.saved_client_details(partner_id);
             },function(err,event){
