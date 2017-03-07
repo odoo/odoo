@@ -37,9 +37,9 @@ class AccountConfigSettings(models.TransientModel):
         help="Allows you to put invoices in pro-forma state.")
     module_account_reports_followup = fields.Boolean("Enable payment followup management")
     default_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax",
-        default_model="account.config.settings", company_dependent=True, oldname="default_sale_tax")
+        company_dependent=True, oldname="default_sale_tax")
     default_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax",
-        default_model="account.config.settings", company_dependent=True, oldname="default_purchase_tax")
+        company_dependent=True, oldname="default_purchase_tax")
     module_l10n_us_check_printing = fields.Boolean("Allow check printing and deposits")
     module_account_batch_deposit = fields.Boolean(string='Use batch deposit',
         help='This allows you to group received checks before you deposit them to the bank.\n'
@@ -55,6 +55,17 @@ class AccountConfigSettings(models.TransientModel):
     module_print_docsaway = fields.Boolean(string="Docsaway")
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
+
+    @api.model
+    def get_default_tax_fields(self, fields):
+        default_purchase_tax_id = self.env['ir.config_parameter'].sudo().get_param('account.default_purchase_tax_id', default=False)
+        default_sale_tax_id = self.env['ir.config_parameter'].sudo().get_param('account.default_sale_tax_id', default=False)
+        return dict(default_purchase_tax_id=int(default_purchase_tax_id), default_sale_tax_id=int(default_sale_tax_id))
+
+    @api.multi
+    def set_default_tax_fields(self):
+        self.env['ir.config_parameter'].sudo().set_param("account.default_purchase_tax_id", self.default_purchase_tax_id.id)
+        self.env['ir.config_parameter'].sudo().set_param("account.default_sale_tax_id", self.default_sale_tax_id.id)
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
