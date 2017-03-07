@@ -1324,9 +1324,9 @@ class MailThread(models.AbstractModel):
                     to_remove.append(node)
             if node.tag == 'img' and node.get('src', '').startswith('cid:'):
                 cid = node.get('src').split(':', 1)[1]
-                related_attachment = [attach for attach in attachments if len(attach) == 2 and attach[2] == cid]
+                related_attachment = [attach for attach in attachments if attach[2] and attach[2].get('cid') == cid]
                 if related_attachment:
-                    node.set('data-filename', related_attachment[0])
+                    node.set('data-filename', related_attachment[0][0])
                     postprocessed = True
 
         for node in to_remove:
