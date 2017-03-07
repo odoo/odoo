@@ -242,7 +242,7 @@ class IrMailServer(models.Model):
         else:
             connection = smtplib.SMTP(smtp_server, smtp_port)
         connection.set_debuglevel(smtp_debug)
-        if encryption == 'starttls':
+        if smtp_encryption == 'starttls':
             # starttls() will perform ehlo() if needed first
             # and will discard the previous list of services
             # after successfully performing STARTTLS command,
