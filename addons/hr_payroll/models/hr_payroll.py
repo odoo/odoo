@@ -85,7 +85,7 @@ class HrContract(models.Model):
         ('bi-weekly', 'Bi-weekly'),
         ('bi-monthly', 'Bi-monthly'),
     ], string='Scheduled Pay', index=True, default='monthly')
-    advantage_ids = fields.One2many('hr.contract.advantage', 'contract_id', 'Contract Advantage',
+    advantage_ids = fields.One2many('hr.contract.advantage', 'contract_id', 'Contract Advantage', copy=True,
         help="The default advantages will be set on the contract if they're defined for the country of the company you're logged in.")
     company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
     resource_calendar_id = fields.Many2one(required=True)
