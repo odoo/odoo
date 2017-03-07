@@ -277,16 +277,32 @@ var FieldInteger = InputField.extend({
 
 var FieldFloat = InputField.extend({
     supportedFieldTypes: ['float'],
-    _renderReadonly: function () {
-        var precision;
-        var value = this.value;
+
+    /**
+     * Float fields have an additional precision parameter that is read from
+     * either the field node in the view or the field python definition itself.
+     *
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
         if (this.attrs.digits) {
-            precision = this.node.attrs.digits;
+            this.nodeOptions.digits = JSON.parse(this.attrs.digits);
         } else {
-            precision = this.field.digits;
+            this.nodeOptions.digits = this.field.digits;
         }
-        if (precision && precision.length === 2) {
-            value = utils.round_decimals(value, precision[1]);
+    },
+
+    /**
+     * Format value according to precision parameter.
+     *
+     * @override
+     * @private
+     */
+    _renderReadonly: function () {
+        var value = this.value;
+        if (this.nodeOptions.digits && this.nodeOptions.digits.length === 2) {
+            value = utils.round_decimals(value, this.nodeOptions.digits[1]);
         }
         var $span = $('<span>').addClass('o_form_field o_form_field_number').text(this._formatValue(value));
         this.$el.html($span);
