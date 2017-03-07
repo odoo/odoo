@@ -4,11 +4,11 @@ odoo.define('web.Session', function (require) {
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
+var mixins = require('web.mixins');
 var utils = require('web.utils');
 
 var _t = core._t;
 var qweb = core.qweb;
-var mixins = core.mixins;
 
 // To do: refactor session. Session accomplishes several concerns (rpc,
 // configuration, currencies (wtf?), user permissions...). They should be
