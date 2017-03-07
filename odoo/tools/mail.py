@@ -42,13 +42,21 @@ class _Cleaner(clean.Cleaner):
     _style_re = re.compile('''([\w-]+)\s*:\s*((?:[^;"']|"[^"]*"|'[^']*')+)''')
 
     _style_whitelist = [
-        'font-size', 'font-family', 'background-color', 'color', 'text-align',
+        'font-size', 'font-family', 'font-weight', 'background-color', 'color', 'text-align',
+        'line-height', 'letter-spacing', 'text-transform', 'text-decoration',
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right'
         # box model
-        'border', 'border-color', 'border-radius', 'height', 'margin', 'padding', 'width', 'max-width', 'min-width',
+        'border', 'border-color', 'border-radius', 'border-style', 'height',
+        'margin', 'padding', 'width', 'max-width', 'min-width',
         # tables
         'border-collapse', 'border-spacing', 'caption-side', 'empty-cells', 'table-layout']
+
+    _style_whitelist.extend(
+        ['border-%s-%s' % (position, attribute)
+            for position in ['top', 'bottom', 'left', 'right']
+            for attribute in ('style', 'color', 'width', 'left-radius', 'right-radius')]
+    )
 
     strip_classes = False
     sanitize_style = False
