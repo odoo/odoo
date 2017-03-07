@@ -863,6 +863,7 @@ var FieldMany2Many = FieldX2Many.extend({
             context: this.record.getContext({fieldName: this.name}),
             title: _t("Add: ") + this.string,
             no_create: this.nodeOptions.no_create || !this.activeActions.create,
+            fields_view: this.field.views.form,
             on_selected: function (res_ids) {
                 var new_ids = _.difference(res_ids, self.value.res_ids);
                 if (new_ids.length) {
