@@ -167,6 +167,18 @@ class ProductTemplate(models.Model):
         else:
             return self.set_sequence_bottom()
 
+    def _drag_drop_product(self, sequence, dragged_product_sequence, target_product_id, direction=''):
+        self.ensure_one()
+        if sequence != dragged_product_sequence:
+            domain = [('id', 'not in', [self.id]), ('website_published', '=', self.website_published)]
+            domain += [('website_sequence', '<=', sequence), ('website_sequence', '>=', dragged_product_sequence)] if direction == 'up' else [('website_sequence', '>=', sequence), ('website_sequence', '<=', dragged_product_sequence)]
+            next_product_tmpl = self.search(domain, order='website_sequence desc')
+        else:
+            next_product_tmpl = self.search([('website_sequence', '=', sequence), ('id', 'not in', [self.id, target_product_id]), ('website_published', '=', self.website_published)], order='website_sequence desc')
+        self.website_sequence = sequence
+        for x in next_product_tmpl:
+            x.website_sequence = x.website_sequence - 1 if direction == 'up' else x.website_sequence + 1
+
     @api.multi
     def _compute_website_url(self):
         super(ProductTemplate, self)._compute_website_url()
