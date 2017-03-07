@@ -14,6 +14,7 @@ class MassMailController(http.Controller):
     def mailing(self, mailing_id, email=None, res_id=None, token="", **post):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
         if mailing.exists():
+            res_id = res_id and int(res_id)
             res_ids = []
             if mailing.mailing_model == 'mail.mass_mailing.contact':
                 contacts = request.env['mail.mass_mailing.contact'].sudo().search([
