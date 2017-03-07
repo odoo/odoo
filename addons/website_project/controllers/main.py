@@ -7,6 +7,7 @@ from odoo import http, _
 from odoo.http import request
 
 from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
+from odoo.osv.expression import OR
 
 
 class WebsiteAccount(website_account):
@@ -73,7 +74,7 @@ class WebsiteAccount(website_account):
         return request.render("website_project.my_project", vals)
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
-    def my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+    def my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', **kw):
         values = self._prepare_portal_layout_values()
         domain = [('project_id.privacy_visibility', '=', 'portal')]
 
@@ -85,6 +86,13 @@ class WebsiteAccount(website_account):
         }
         searchbar_filters = {
             'all': {'label': _('All'), 'domain': []},
+        }
+        searchbar_inputs = {
+            'content': {'input': 'content', 'label': _('Search <span class="nolabel"> (in Content)</span>')},
+            'message': {'input': 'message', 'label': _('Search in Messages')},
+            'customer': {'input': 'customer', 'label': _('Search in Customer')},
+            'stage': {'input': 'stage', 'label': _('Search in Stages')},
+            'all': {'input': 'all', 'label': _('Search in All')},
         }
         # extends filterby criteria with project (criteria name is the project id)
         projects = request.env['project.project'].search([('privacy_visibility', '=', 'portal')])
@@ -106,6 +114,19 @@ class WebsiteAccount(website_account):
         archive_groups = self._get_archive_groups('project.task', domain)
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+
+        # search
+        if search and search_in:
+            search_domain = []
+            if search_in in ('content', 'all'):
+                search_domain = OR([search_domain, ['|', ('name', 'ilike', search), ('description', 'ilike', search)]])
+            if search_in in ('customer', 'all'):
+                search_domain = OR([search_domain, [('partner_id', 'ilike', search)]])
+            if search_in in ('message', 'all'):
+                search_domain = OR([search_domain, [('message_ids.body', 'ilike', search)]])
+            if search_in in ('stage', 'all'):
+                search_domain = OR([search_domain, [('stage_id', 'ilike', search)]])
+            domain += search_domain
 
         # task count
         task_count = request.env['project.task'].search_count(domain)
@@ -131,6 +152,7 @@ class WebsiteAccount(website_account):
             'default_url': '/my/tasks',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
+            'searchbar_inputs': searchbar_inputs,
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
