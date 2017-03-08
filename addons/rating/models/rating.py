@@ -40,7 +40,11 @@ class Rating(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
     rating = fields.Float(string="Rating", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 10=Happy")
     rating_image = fields.Binary('Image', compute='_compute_rating_image')
-    rating_text = fields.Char(string='Rating', compute='_compute_rating_text')
+    rating_text = fields.Selection([
+        ('satisfied', 'Satisfied'),
+        ('not_satisfied', 'Not satisfied'),
+        ('highly_dissatisfied', 'Highly dissatisfied'),
+        ('no_rating', 'No Rating yet')], string='Rating', store=True, compute='_compute_rating_text', readonly=True)
     feedback = fields.Text('Comment', help="Reason of the rating")
     message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
     access_token = fields.Char('Security Token', default=new_access_token, help="Access token to set the rating of the value")
@@ -63,12 +67,17 @@ class Rating(models.Model):
             except (IOError, OSError):
                 rating.rating_image = False
 
-    @api.multi
     @api.depends('rating')
     def _compute_rating_text(self):
-        text = {10: _('Satisfied'), 5: _('Not satisfied'), 1: _('Highly dissatisfied')}
         for rating in self:
-            rating.rating_text = text[rating.rating] or _('No rating yet')
+            if rating.rating >= 7:
+                rating.rating_text = 'satisfied'
+            elif rating.rating > 3:
+                rating.rating_text = 'not_satisfied'
+            elif rating.rating >= 1:
+                rating.rating_text = 'highly_dissatisfied'
+            else:
+                rating.rating_text = 'no_rating'
 
     @api.model
     def create(self, vals):
