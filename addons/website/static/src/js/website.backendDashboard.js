@@ -6,7 +6,7 @@ var ajax = require('web.ajax');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var session = require('web.session');
 var web_client = require('web.web_client');
 var Widget = require('web.Widget');
@@ -572,12 +572,12 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         if (type === 'currency') {
             return this.render_monetary_field(value, this.currency_id);
         } else {
-            return formats.format_value(value || 0, {type: type, digits: digits}) + ' ' + symbol;
+            return field_utils.format[type](value || 0, {digits: digits}) + ' ' + symbol;
         }
     },
     render_monetary_field: function(value, currency_id) {
         var currency = session.get_currency(currency_id);
-        var formatted_value = formats.format_value(value || 0, {type: "float", digits: currency && currency.digits});
+        var formatted_value = field_utils.format.float(value || 0, {digits: currency && currency.digits});
         if (currency) {
             if (currency.position === "after") {
                 formatted_value += currency.symbol;
