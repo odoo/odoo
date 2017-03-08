@@ -59,6 +59,35 @@ class StockMove(osv.osv):
             ('company_id', '=', user_company)]
         return self.pool.get('mrp.bom').search(cr, SUPERUSER_ID, domain, context=context)
 
+    def _prep_move_explode(self, cr, uid, line, move, context=None):
+        return dict(
+            picking_id=move.picking_id.id if move.picking_id else False,
+            product_id=line['product_id'],
+            product_uom=line['product_uom'],
+            product_uom_qty=line['product_qty'],
+            product_uos=line['product_uos'],
+            product_uos_qty=line['product_uos_qty'],
+            state='draft',  #will be confirmed below
+            name=line['name'],
+            procurement_id=move.procurement_id.id,
+            split_from=move.id, #Needed in order to keep sale connection, but will be removed by unlink
+        )
+
+    def _prep_proc_explode(self, cr, uid, line, move, context=None):
+        return dict(
+            name=move.rule_id and move.rule_id.name or "/",
+            origin=move.origin,
+            company_id=move.company_id and move.company_id.id or False,
+            date_planned=move.date,
+            product_id=line['product_id'],
+            product_qty=line['product_qty'],
+            product_uom=line['product_uom'],
+            product_uos_qty=line['product_uos_qty'],
+            product_uos=line['product_uos'],
+            group_id=move.group_id.id,
+            priority=move.priority,
+            partner_dest_id=move.partner_id.id,
+        )
 
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
@@ -84,36 +113,12 @@ class StockMove(osv.osv):
             for line in res[0]:
                 product = prod_obj.browse(cr, uid, line['product_id'], context=context)
                 if product.type != 'service':
-                    valdef = {
-                        'picking_id': move.picking_id.id if move.picking_id else False,
-                        'product_id': line['product_id'],
-                        'product_uom': line['product_uom'],
-                        'product_uom_qty': line['product_qty'],
-                        'product_uos': line['product_uos'],
-                        'product_uos_qty': line['product_uos_qty'],
-                        'state': 'draft',  #will be confirmed below
-                        'name': line['name'],
-                        'procurement_id': move.procurement_id.id,
-                        'split_from': move.id, #Needed in order to keep sale connection, but will be removed by unlink
-                    }
+                    valdef = self._prep_move_explode(cr, uid, line, move, context=context)
                     mid = move_obj.copy(cr, uid, move.id, default=valdef, context=context)
                     to_explode_again_ids.append(mid)
                 else:
                     if prod_obj.need_procurement(cr, uid, [product.id], context=context):
-                        valdef = {
-                            'name': move.rule_id and move.rule_id.name or "/",
-                            'origin': move.origin,
-                            'company_id': move.company_id and move.company_id.id or False,
-                            'date_planned': move.date,
-                            'product_id': line['product_id'],
-                            'product_qty': line['product_qty'],
-                            'product_uom': line['product_uom'],
-                            'product_uos_qty': line['product_uos_qty'],
-                            'product_uos': line['product_uos'],
-                            'group_id': move.group_id.id,
-                            'priority': move.priority,
-                            'partner_dest_id': move.partner_id.id,
-                            }
+                        valdef = self._prep_proc_explode(cr, uid, line, move, context=context)
                         if move.procurement_id:
                             proc = proc_obj.copy(cr, uid, move.procurement_id.id, default=valdef, context=context)
                         else:
