@@ -9,14 +9,13 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Clo <clo@odoo.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
-# Daniel & Delphine <dd2013@leschoupinous.net>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 14:07+0000\n"
-"Last-Translator: Daniel & Delphine <dd2013@leschoupinous.net>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Xavier Symons <xsy@openerp.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,76 +24,37 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:192
+#: code:addons/payment_adyen/models/payment.py:181
 #, python-format
 msgid "; multiple order found"
 msgstr "; plusieurs commandes trouvées"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:190
+#: code:addons/payment_adyen/models/payment.py:179
 #, python-format
 msgid "; no order found"
 msgstr "; aucune commande trouvée"
 
 #. module: payment_adyen
-#: model:payment.acquirer,cancel_msg:payment_adyen.payment_acquirer_adyen
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Annuler,</i> votre paiement a été annulé.</span>"
-
-#. module: payment_adyen
-#: model:payment.acquirer,done_msg:payment_adyen.payment_acquirer_adyen
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
-"<span><i>Terminé,</i> votre paiement en ligne a été enregistré. Merci de "
-"votre commande.</span>"
-
-#. module: payment_adyen
-#: model:payment.acquirer,error_msg:payment_adyen.payment_acquirer_adyen
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-"<span><i>Erreur,</i> une erreur est survenue pendant la transaction. La "
-"commande a été confirmée mais ne sera pas payée. N'hésitez pas à nous "
-"contacter si vous avez une question sur le statut de votre commande.</span>"
-
-#. module: payment_adyen
-#: model:payment.acquirer,pending_msg:payment_adyen.payment_acquirer_adyen
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
-"<span><i>En cours,</i> votre paiement en ligne a été enregistré. Mais votre "
-"commande n'est pas encore validée.</span>"
-
-#. module: payment_adyen
-#: model:payment.acquirer,name:payment_adyen.payment_acquirer_adyen
-msgid "Adyen"
-msgstr "Adyen"
-
-#. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:241
+#: code:addons/payment_adyen/models/payment.py:229
 #, python-format
 msgid "Adyen: feedback error"
 msgstr "Adyen : Erreur de rétroaction"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:203
+#: code:addons/payment_adyen/models/payment.py:191
 #, python-format
 msgid "Adyen: invalid merchantSig, received %s, computed %s"
 msgstr "Adyen : merchantSig incorrect, %s reçu, %s calculé"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:188
+#: code:addons/payment_adyen/models/payment.py:177
 #, python-format
 msgid "Adyen: received data for reference %s"
 msgstr "Adyen : données reçues pour la référence %s"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:181
+#: code:addons/payment_adyen/models/payment.py:170
 #, python-format
 msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
@@ -132,12 +92,3 @@ msgstr "Skin Code"
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_hmac_key
 msgid "Skin HMAC Key"
 msgstr "Skin HMAC Key"
-
-#. module: payment_adyen
-#: model:payment.acquirer,pre_msg:payment_adyen.payment_acquirer_adyen
-msgid ""
-"You will be redirected to the Adyen website after clicking on the payment "
-"button."
-msgstr ""
-"Vous serez redirigé sur le site Adyen après avoir cliqué sur le bouton de "
-"paiement."

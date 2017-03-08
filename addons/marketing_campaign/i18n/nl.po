@@ -10,10 +10,10 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -69,7 +69,7 @@ msgid "Activity"
 msgstr "Activiteit"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:376
+#: code:addons/marketing_campaign/models/marketing_campaign.py:394
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "Na %(interval_nbr)d %(interval_type)s"
@@ -110,7 +110,7 @@ msgid "Automatic"
 msgstr "Automatisch"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:375
+#: code:addons/marketing_campaign/models/marketing_campaign.py:393
 #, python-format
 msgid "Automatic transition"
 msgstr "Automatische overgang"
@@ -236,7 +236,7 @@ msgid "Condition"
 msgstr "Voorwaarde"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:377
+#: code:addons/marketing_campaign/models/marketing_campaign.py:395
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -349,7 +349,7 @@ msgid "Draft"
 msgstr "Concept"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:123
+#: code:addons/marketing_campaign/models/marketing_campaign.py:127
 #, python-format
 msgid "Duplicating campaigns is not supported."
 msgstr "Campagnes kopiëren wordt niet ondersteund."
@@ -360,7 +360,7 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:578
+#: code:addons/marketing_campaign/models/marketing_campaign.py:596
 #, python-format
 msgid "Email Preview"
 msgstr "Email voorbeeld"
@@ -369,11 +369,6 @@ msgstr "Email voorbeeld"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
 msgstr "E-mailsjabloon"
-
-#. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "Email sjabloon voorbeeld"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
@@ -661,6 +656,20 @@ msgid "Marketing Campaign Statistics"
 msgstr "Statistieken marketingcampagne"
 
 #. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_hour_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+msgid "Marketing Campaign: Campaign workitems processing"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_day_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_day
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_day
+msgid "Marketing Campaign: Segment Sync"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_graph
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_pivot
@@ -679,10 +688,10 @@ msgid "Mode"
 msgstr "Modus"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:194
+#: code:addons/marketing_campaign/models/marketing_campaign.py:198
 #, python-format
 msgid "Model of filter must be same as resource model of Campaign"
-msgstr ""
+msgstr "Model van filter moet gelijk zijn aan model van de campagne "
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -762,6 +771,8 @@ msgid ""
 "            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fulfill the campaign."
 msgstr ""
+"Odoo's marketingcampagnes geven u de mogelijkheid om de interactie\n"
+"met uw prospects te automatiseren. U kunt een segment bepalen (een reeks voorwaarden) voor uw leads en relaties om de campagne uit te voeren."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -837,7 +848,7 @@ msgstr "Rapport"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.report_marketing_campaign
-msgid "Reports"
+msgid "Reporting"
 msgstr "Rapportages"
 
 #. module: marketing_campaign
@@ -997,6 +1008,11 @@ msgid ""
 " validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
 msgstr ""
+"Test - Het maakt en verwerkt alle activiteiten direct (zonder wachten op vertraging bij overgangen) maar verstuurt geen emails en maakt geen rapporten. \n"
+"\n"
+"Test in Realtime - Het maakt en verwerkt alle activiteiten direct maar verstuurt geen emails en maakt geen rapporten. Met handmatige bevestiging - de campagne loopt normaal, maar de gebruiker moet alle activiteiten handmatig bevestigen. \n"
+"\n"
+"Normaal - de campagne loopt normaal en verstuurt alle emails en rapporten (wees voorzichtig met deze stand, u bent live!)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1014,10 +1030,11 @@ msgid "Test in Realtime"
 msgstr "Test in realtime"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:393
+#: code:addons/marketing_campaign/models/marketing_campaign.py:411
 #, python-format
 msgid "The To/From Activity of transition must be of the same Campaign"
 msgstr ""
+"De naar/van activiteit van de overgang moet van dezelfde campagne zijn"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -1025,7 +1042,7 @@ msgid "The action to perform when this activity is activated"
 msgstr "De actie die wordt uitgevoerd als de activiteit is geactiveerd"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:103
+#: code:addons/marketing_campaign/models/marketing_campaign.py:107
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr ""
@@ -1033,7 +1050,7 @@ msgstr ""
 "afgesloten zijn."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:95
+#: code:addons/marketing_campaign/models/marketing_campaign.py:99
 #, python-format
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
@@ -1043,14 +1060,14 @@ msgstr ""
 " Pas de campagne activiteiten aan om er een als start punt aan te merken."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:83
+#: code:addons/marketing_campaign/models/marketing_campaign.py:87
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
 msgstr ""
 "De campagne kan niet worden gestart. De campagne bevat geen activiteiten."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:601
+#: code:addons/marketing_campaign/models/marketing_campaign.py:619
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr "De huidige stap voor dit item heeft geen email of rapport voorbeeld."
@@ -1091,6 +1108,11 @@ msgid ""
 "- Report: print an existing Report defined on the resource item and save it into a specific directory \n"
 "- Custom Action: execute a predefined action, e.g. to modify the fields of the resource record"
 msgstr ""
+"De soort actie om uit te voeren als een item bij deze actie komt, zoals:\n"
+"   - Email: verstuur een email gebruik makend van een voorgedefinieerde email sjabloon\n"
+"   - Report: druk een bestaand overzicht af gedefinieerd bij het resource item en sla het op in de aangegeven map\n"
+"   - Aangepaste actie: voor een voorgedefinieerde actie uit, bijv. om velden in het resource record te wijzigen\n"
+"  "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start

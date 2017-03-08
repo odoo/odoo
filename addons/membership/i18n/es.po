@@ -8,20 +8,20 @@
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Antonio Trueba <atgayol@gmail.com>, 2016
-# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # José Vicente <txusev@gmail.com>, 2016
 # Alejandro Die Sanchis <marketing@domatix.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -137,6 +137,11 @@ msgstr "Pulse para agregar un nuevo miembro"
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
 msgstr "Compañía"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_marketing_config_association
+msgid "Configuration"
+msgstr "Configuración"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_tree
@@ -383,6 +388,7 @@ msgstr "Precio socio"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_association
 #: model:ir.ui.menu,name:membership.menu_membership
 #: model:ir.ui.view,arch_db:membership.membership_members_tree
 msgid "Members"
@@ -480,6 +486,13 @@ msgid "Membership products"
 msgstr "Productos para socios"
 
 #. module: membership
+#: model:ir.actions.server,name:membership.ir_cron_update_membership_ir_actions_server
+#: model:ir.cron,cron_name:membership.ir_cron_update_membership
+#: model:ir.cron,name:membership.ir_cron_update_membership
+msgid "Membership: update memberships"
+msgstr ""
+
+#. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Memberships"
 msgstr "Socios"
@@ -531,13 +544,13 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: membership
-#: code:addons/membership/models/partner.py:182
+#: code:addons/membership/models/partner.py:181
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr "Empresa no tiene una dirección para realizar la factura."
 
 #. module: membership
-#: code:addons/membership/models/partner.py:180
+#: code:addons/membership/models/partner.py:179
 #, python-format
 msgid "Partner is a free Member."
 msgstr "La empresa es un socio gratis."
@@ -559,7 +572,7 @@ msgstr "Cantidad"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
-msgid "Reports"
+msgid "Reporting"
 msgstr "Informes"
 
 #. module: membership

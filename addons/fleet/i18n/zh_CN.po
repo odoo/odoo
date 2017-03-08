@@ -3,14 +3,16 @@
 # * fleet
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# 苏州远鼎 <tiexinliu@126.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -180,6 +182,11 @@ msgid "Brand model of the vehicle"
 msgstr "车辆品牌型号"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
+msgid "Break"
+msgstr "分隔"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_co2
 msgid "CO2 Emissions"
 msgstr "二氧化碳排放量"
@@ -195,14 +202,14 @@ msgid "Calculation Benefit In Kind"
 msgstr "计算实际利益"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_car_value
+msgid "Car Value"
+msgstr "车辆价值"
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_14
 msgid "Car Wash"
 msgstr "洗车"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_car_value
-msgid "Car value"
-msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -313,6 +320,11 @@ msgid "Color of the vehicle"
 msgstr "车辆颜色"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
+msgid "Compact"
+msgstr "紧凑型"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_company_id
 msgid "Company"
 msgstr "公司"
@@ -387,6 +399,11 @@ msgstr "承包人"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Contracts"
 msgstr "合约"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
+msgid "Convertible"
+msgstr "可转换"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_id
@@ -490,7 +507,7 @@ msgid "Created on"
 msgstr "创建时间"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2877
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_3011
 msgid "Current state of the vehicle"
 msgstr "车辆的当前状态"
 
@@ -614,6 +631,11 @@ msgid "Emissions"
 msgstr "排量"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
+msgid "Employee Car"
+msgstr "公司雇员轿车"
+
+#. module: fleet
 #: code:addons/fleet/models/fleet.py:37
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
@@ -654,6 +676,13 @@ msgstr "排气管更换"
 #: model:ir.ui.menu,name:fleet.menu_root
 msgid "Fleet"
 msgstr "车队"
+
+#. module: fleet
+#: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
+#: model:ir.cron,cron_name:fleet.ir_cron_contract_costs_generator
+#: model:ir.cron,name:fleet.ir_cron_contract_costs_generator
+msgid "Fleet: Generate contracts costs based on costs frequency"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_type
@@ -819,7 +848,7 @@ msgstr "混合动力"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2825
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2959
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
@@ -892,6 +921,11 @@ msgid "Invoice Reference"
 msgstr "发票参考"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
+msgid "Junior"
+msgstr "初级"
+
+#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Kilometers"
 msgstr "公里"
@@ -952,15 +986,15 @@ msgid "Leasing"
 msgstr "租赁"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_license_plate
+msgid "License Plate"
+msgstr "车辆牌照"
+
+#. module: fleet
 #: code:addons/fleet/models/fleet.py:332
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr "车牌：从'%s'到'%s'"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_license_plate
-msgid "License plate"
-msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_license_plate
@@ -1057,7 +1091,7 @@ msgid "Miles"
 msgstr "里程"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2858
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2992
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Model"
@@ -1086,7 +1120,7 @@ msgid "Model of a vehicle"
 msgstr "车辆型号"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2858
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2992
 msgid "Model of the vehicle"
 msgstr "车辆型号"
 
@@ -1340,8 +1374,13 @@ msgstr "价格"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_price_per_liter
-msgid "Price per liter"
-msgstr ""
+msgid "Price Per Liter"
+msgstr "每公升价格"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
+msgid "Purchased"
+msgstr "已采购"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_purchaser_id
@@ -1404,8 +1443,8 @@ msgstr "更换车辆"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting
-msgid "Reports"
-msgstr "报表"
+msgid "Reporting"
+msgstr "报告"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -1436,6 +1475,16 @@ msgstr "更换转子"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_seats
 msgid "Seats Number"
 msgstr "座位数"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
+msgid "Sedan"
+msgstr "轿车"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
+msgid "Senior"
+msgstr "高级"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_sequence
@@ -1531,7 +1580,7 @@ msgid "Starter Replacement"
 msgstr "更换启动器"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2877
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_3011
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_state_view_tree
 msgid "State"
 msgstr "状态"
@@ -1708,7 +1757,7 @@ msgstr "车辆识别代号，发动机上的唯一编号 (VIN/SN 号)，通俗�
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2892
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_3026
 msgid "Unit"
 msgstr "单位"
 
@@ -1718,7 +1767,7 @@ msgstr "单位"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_odometer_unit
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit_2892
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit_3026
 msgid "Unit of the odometer "
 msgstr "单位的里程表 "
 
@@ -1786,7 +1835,7 @@ msgstr "车辆状态"
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_view_form
 msgid "Vehicle Tags"
-msgstr ""
+msgstr "车辆标签"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_vehicle_id

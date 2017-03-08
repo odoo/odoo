@@ -3,15 +3,17 @@
 # * base_import
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# 苏州远鼎 <tiexinliu@126.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,14 +23,14 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:595
+#: code:addons/base_import/static/src/js/base_import.js:599
 #, python-format
 msgid "(%d more)"
 msgstr "( %d  更多)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:373
+#: code:addons/base_import/static/src/js/base_import.js:376
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
@@ -43,24 +45,23 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:608
-#, python-format
-msgid ""
-"Column %s contains incorrect values (value: %s does not match date format"
-msgstr ""
-
-#. module: base_import
-#: code:addons/base_import/models/base_import.py:590
+#: code:addons/base_import/models/base_import.py:600
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "列 %s 包含非法数据(值: %s)"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:620
+#, python-format
+msgid "Column %s contains incorrect values. Error in line %d: %s"
+msgstr "列 %s 包含非法数据. 错误在行%d: %s"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:244
-#: code:addons/base_import/static/src/js/base_import.js:255
-#: code:addons/base_import/static/src/js/base_import.js:262
-#: code:addons/base_import/static/src/js/base_import.js:274
+#: code:addons/base_import/static/src/js/base_import.js:245
+#: code:addons/base_import/static/src/js/base_import.js:256
+#: code:addons/base_import/static/src/js/base_import.js:263
+#: code:addons/base_import/static/src/js/base_import.js:275
 #, python-format
 msgid "Comma"
 msgstr "逗号"
@@ -102,8 +103,8 @@ msgid "Created on"
 msgstr "创建时间"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:151
-#: code:addons/base_import/models/base_import.py:156
+#: code:addons/base_import/models/base_import.py:152
+#: code:addons/base_import/models/base_import.py:157
 #, python-format
 msgid "Database ID"
 msgstr "数据库 ID"
@@ -117,7 +118,14 @@ msgstr "数据格式："
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:127
+#: code:addons/base_import/static/src/js/base_import.js:126
+#, python-format
+msgid "Datetime Format:"
+msgstr "日期时间格式:"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:128
 #, python-format
 msgid "Decimal Separator:"
 msgstr "十进制分隔符："
@@ -142,15 +150,15 @@ msgstr "显示名称"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:416
+#: code:addons/base_import/static/src/js/base_import.js:420
 #, python-format
 msgid "Don't import"
 msgstr "不导入"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:263
-#: code:addons/base_import/static/src/js/base_import.js:281
+#: code:addons/base_import/static/src/js/base_import.js:264
+#: code:addons/base_import/static/src/js/base_import.js:282
 #, python-format
 msgid "Dot"
 msgstr "点"
@@ -163,21 +171,27 @@ msgid "Encoding:"
 msgstr "编码:"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:233
+#: code:addons/base_import/models/base_import.py:622
+#, python-format
+msgid "Error Parsing Date [%s:L%d]: %s"
+msgstr "日期语法错误 [%s:L%d]: %s"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:234
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
 msgstr "读取XLS/XLSX文件: %s 时发现错误单元格"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:572
+#: code:addons/base_import/static/src/js/base_import.js:576
 #, python-format
 msgid "Everything seems valid."
 msgstr "看上去一切正常。"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:116
-#: code:addons/base_import/models/base_import.py:150
+#: code:addons/base_import/models/base_import.py:117
+#: code:addons/base_import/models/base_import.py:151
 #, python-format
 msgid "External ID"
 msgstr "外部 ID"
@@ -211,7 +225,7 @@ msgstr "对于CSV文件来说，这个问题可能由错误的编码造成。"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:619
+#: code:addons/base_import/static/src/js/base_import.js:623
 #, python-format
 msgid "Get all possible values"
 msgstr "获取所有可能的值"
@@ -225,7 +239,7 @@ msgstr "帮助"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:606
+#: code:addons/base_import/static/src/js/base_import.js:610
 #, python-format
 msgid "Here are the possible values:"
 msgstr "这里是可能的值："
@@ -290,7 +304,7 @@ msgstr "导入"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:181
+#: code:addons/base_import/static/src/js/base_import.js:182
 #, python-format
 msgid "Import a File"
 msgstr "导入文件"
@@ -368,7 +382,7 @@ msgstr "加载文件"
 #: code:addons/base_import/static/src/xml/base_import.xml:56
 #, python-format
 msgid "Map your columns to import"
-msgstr ""
+msgstr "匹配导入列"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_res_model
@@ -385,11 +399,11 @@ msgstr "名称"
 #: code:addons/base_import/static/src/xml/base_import.xml:15
 #, python-format
 msgid "No file chosen..."
-msgstr ""
+msgstr "没有选择文件..."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:482
+#: code:addons/base_import/static/src/js/base_import.js:486
 #, python-format
 msgid "Normal Fields"
 msgstr "正常字段"
@@ -399,7 +413,7 @@ msgstr "正常字段"
 #: code:addons/base_import/static/src/xml/base_import.xml:30
 #, python-format
 msgid "Options…"
-msgstr ""
+msgstr "选项..."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_othervalue
@@ -408,19 +422,12 @@ msgstr "其它变量"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_parent_id
-msgid "Parent id"
-msgstr "父级ID"
+msgid "Parent"
+msgstr "上级"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:122
-#, python-format
-msgid "Quoting:"
-msgstr "引用："
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:483
+#: code:addons/base_import/static/src/js/base_import.js:487
 #, python-format
 msgid "Relation Fields"
 msgstr "关联字段"
@@ -430,18 +437,18 @@ msgstr "关联字段"
 #: code:addons/base_import/static/src/xml/base_import.xml:24
 #, python-format
 msgid "Reload File"
-msgstr ""
+msgstr "重新载入文件"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:11
 #, python-format
 msgid "Select a CSV or Excel file to import."
-msgstr ""
+msgstr "选择 CSV 或者 Excel 文件导入。"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:245
+#: code:addons/base_import/static/src/js/base_import.js:246
 #, python-format
 msgid "Semicolon"
 msgstr "分号"
@@ -457,7 +464,7 @@ msgstr "分隔符："
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:72
 #, python-format
-msgid "Show all fields for completion (advanced)"
+msgid "Show fields of relation fields (advanced)"
 msgstr ""
 
 #. module: base_import
@@ -467,17 +474,24 @@ msgstr "一些值"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:247
+#: code:addons/base_import/static/src/js/base_import.js:248
 #, python-format
 msgid "Space"
 msgstr "空格键"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:246
+#: code:addons/base_import/static/src/js/base_import.js:247
 #, python-format
 msgid "Tab"
 msgstr "选项卡"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:122
+#, python-format
+msgid "Text Delimiter:"
+msgstr "文本分隔符: "
 
 #. module: base_import
 #. openerp-web
@@ -486,14 +500,14 @@ msgstr "选项卡"
 msgid ""
 "The first row\n"
 "                 contains the label of the column"
-msgstr ""
+msgstr "文件的第一行包含表头"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:126
+#: code:addons/base_import/static/src/js/base_import.js:127
 #, python-format
-msgid "Thousand Separator:"
-msgstr ""
+msgid "Thousands Separator:"
+msgstr "千分位分隔符:"
 
 #. module: base_import
 #. openerp-web
@@ -503,13 +517,13 @@ msgid "Track history during import"
 msgstr "导入时跟踪导入历史"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:198
+#: code:addons/base_import/models/base_import.py:199
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr "无法装载 \"{extension}\"  文件:需要Python 模块 \"{modname}\""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:199
+#: code:addons/base_import/models/base_import.py:200
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
@@ -539,14 +553,14 @@ msgid "Value"
 msgstr "值"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:528
+#: code:addons/base_import/models/base_import.py:538
 #, python-format
 msgid "You must configure at least one field to import"
 msgstr "You must configure at least one field to import"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:589
+#: code:addons/base_import/static/src/js/base_import.js:593
 #, python-format
 msgid "at row %d"
 msgstr "在 %d 行"
@@ -623,7 +637,7 @@ msgstr "base_import.tests.models.preview"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:591
+#: code:addons/base_import/static/src/js/base_import.js:595
 #, python-format
 msgid "between rows %d and %d"
 msgstr "在第 %d 行和第 %d 行之间"

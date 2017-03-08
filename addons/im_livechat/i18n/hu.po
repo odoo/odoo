@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_nbr_channel
 msgid "# of Sessions"
-msgstr ""
+msgstr "# folyamatok közül"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_nbr_speaker
@@ -43,6 +43,9 @@ msgid ""
 "* 'Auto popup' displays the button and automatically open the conversation pane.\n"
 "* 'Hide the button' hides the chat button on the pages."
 msgstr ""
+"* 'Gomb megjelenítése' a csevegés gomb egyszerű megjelenítése az oldalakon.\n"
+"* 'Auto felugró' a gomb megjelenítéséhez, és a párbeszéd ablak automatikus megnyitásához.\n"
+"* 'Gomb eltüntetése' a csevegés gomb oldalakról történő eltüntetéséhez."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -50,8 +53,8 @@ msgid ""
 "<span>Define rules for your live support channel. You can apply an action "
 "(disable the support, automatically open your support, or just make the "
 "button available) for the given URL, and per country.<br/>To identify the "
-"country, GeoIP must be install on your server, otherwise, the countries of "
-"the rule will not be taken into account.</span>"
+"country, GeoIP must be installed on your server, otherwise, the countries of"
+" the rule will not be taken into account.</span>"
 msgstr ""
 "<span>Határozzon meg szabályokat az élő támogatási csatornához. Alkalmazhat "
 "egy műveletet (támogatás kikapcsolása, automatikus támogatás aktiválás, vagy"
@@ -124,7 +127,7 @@ msgstr "Rossz"
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
 #: model:ir.ui.menu,name:im_livechat.canned_responses
 msgid "Canned Responses"
-msgstr ""
+msgstr "Bedobozolt válaszok"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
@@ -134,6 +137,10 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
+"Dobozolt  válaszok lehetővé teszik előre megírt válaszok beillesztését\n"
+"                az üzeneteibe beírva a <i>:gyorsbillentyű</i>. A gyorsbillentyű\n"
+"                kiváltódik az üzenetével, így tovább szerkesztheti azt\n"
+"                elküldés előtt."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
@@ -182,7 +189,7 @@ msgstr "Társalogjon az egyik munkatársunkkal"
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
 msgid "Click to create a new canned response."
-msgstr ""
+msgstr "Kattintson egy új dobozolt válasz létrehozásához."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -278,6 +285,9 @@ msgid ""
 "selected action must be 'Auto popup' otherwise this parameter will not be "
 "taken into account."
 msgstr ""
+"Késeletetés (másodpercekben) a párbeszéd ablak automatikus megnyitásához. "
+"Megjegyzés : Az  'Automatikus felugró' műveletet kell kiválasztani, "
+"egyébként ezt a paramétert nem veszi figyelembe."
 
 #. module: im_livechat
 #. openerp-web
@@ -330,13 +340,13 @@ msgstr "Magyarázza meg a megjegyzését"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "For website built with Odoo CMS, please install the website_livechat module."
-" Then go to Settings &gt; Website Settings and select the Website Live Chat "
-"Channel you want to add on your website."
+" Then go to Website Admin &gt; Configuration &gt; Settings and select the "
+"Website Live Chat Channel you want to add on your website."
 msgstr ""
 "Az Odoo CMS-el elkészített weboldalon, kérem telepítse a website_livechat "
-"modult. Ezután menjen a Beállítások &gt;  Weboldal beállításokhoz és "
-"válassza ki a Weboldal Élő társalgási csatornát, melyet hozzá szeretne adni "
-"a weboldalához."
+"modult. Ezután menjen a Weboldal Admin &gt; Beállítások &gt; Beállításokhoz "
+"és válassza ki a Weboldal Élő társalgási csatornát, melyet hozzá szeretne "
+"adni a weboldalához."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_sequence
@@ -364,7 +374,7 @@ msgstr "Csoportosítás..."
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Has a Rating"
-msgstr ""
+msgstr "Van egy értékelése"
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
@@ -463,6 +473,11 @@ msgid "Last Week"
 msgstr "Utolsó hét"
 
 #. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Leave"
+msgstr "Távollét"
+
+#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
 msgstr "Csatorna elhagyása"
@@ -497,6 +512,10 @@ msgid ""
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
+"Élő társalgást támogató csatorna statisztikák lehetővé teszik a vállalata "
+"élő társalgási szakaszai teljesítményének  könnyű visszaellenőrzését és "
+"statisztika készítését. Elhalasztott szakaszok információinak, hallgató "
+"információk, szakasz időszakának kibontása, stb."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -622,6 +641,8 @@ msgid ""
 "Operators that do not show any activity In Odoo for more than 30 minutes "
 "will be considered as disconnected."
 msgstr ""
+"Operátorok, melyek nem aktívak az Odoo rendszerben több mint 30 perce, "
+"kijelentkezőként veszi tekintetbe."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -634,18 +655,13 @@ msgid "Percentage of happy ratings over the past 7 days"
 msgstr "Jó szavazatok százaléka az elmult 7 napban"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Quit"
-msgstr "Kilépés"
-
-#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
 msgid "Rating"
 msgstr "Értékelés"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:309
+#: code:addons/im_livechat/static/src/js/im_livechat.js:311
 #, python-format
 msgid "Rating: :rating_%d"
 msgstr "Értékelés: :rating_%d"
@@ -655,6 +671,7 @@ msgstr "Értékelés: :rating_%d"
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
 msgstr ""
+"Általános kifejezés a weboldalhoz, melyen a szabályt alkalmazni fogják."
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -710,7 +727,7 @@ msgstr "Értékesítési folyamatok"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.session_history
 msgid "Sessions History"
-msgstr ""
+msgstr "Folyamat előzmények"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_small
@@ -759,6 +776,10 @@ msgid ""
 "located in these 2 countries. This feature requires GeoIP installed on your "
 "server."
 msgstr ""
+"A szabály csak erre az országokra szól.Például: ha kiválasztja a 'Belgium' "
+"és 'USA' és beállítja a 'Gomb elrejtése' szabályt, ez a 2 ország nem látja "
+"majd a csevegés gombot a meghatározott URL oldalon. Ennek a tulajdonságnak a"
+" működéséhez telepíteni kell a szerverre a GeoIP -t."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
@@ -856,6 +877,9 @@ msgid ""
 "                to integrate the website live chat widget, allowing your website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
+"Létrehozhat csatornákat mindegyik honlaphoz, melyen az élő \n"
+"                társalgás kis ablakot integrálni szeretné, lehetővé téve a \n"
+"                weboldal látogatóinak az élő beszélgetést az operátorokkal."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.mail_channel_action
@@ -863,6 +887,8 @@ msgid ""
 "Your chatter history is empty. Create a channel and start chatting to fill "
 "up your history."
 msgstr ""
+"A csevegés előzmények üres. Hozzon létre egy csatornát és kezdjen "
+"beszélgetni az előzmények feltöltéséhez."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form

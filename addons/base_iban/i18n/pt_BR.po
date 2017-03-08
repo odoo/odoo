@@ -3,15 +3,15 @@
 # * base_iban
 # 
 # Translators:
-# grazziano <g.negocios@outlook.com.br>, 2016
+# grazziano <gra.negocia@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Mateus Lopes <mateus1@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -26,20 +26,20 @@ msgid "Bank Accounts"
 msgstr "Contas Bancárias"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:57
+#: code:addons/base_iban/models/res_partner_bank.py:57
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
 msgstr ""
 "Não é possível calcular o BBAN porque o número de conta não é um IBAN."
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:26
+#: code:addons/base_iban/models/res_partner_bank.py:26
 #, python-format
 msgid "No IBAN !"
 msgstr "Nenhum IBAN !"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:34
+#: code:addons/base_iban/models/res_partner_bank.py:34
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
@@ -49,13 +49,13 @@ msgstr ""
 "Onde B = Código do banco nacional, S = Código de ramo, C = Número da conta, k = Dígito de verificador"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:30
+#: code:addons/base_iban/models/res_partner_bank.py:30
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr "Este IBAN é inválido, Ele deverá começar com o código de país"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:40
+#: code:addons/base_iban/models/res_partner_bank.py:40
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
 msgstr "Este IBAN não passou no check de validação, por favor verifique"

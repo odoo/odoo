@@ -7,10 +7,10 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -25,21 +25,12 @@ msgid "Companies"
 msgstr "Bedrijven"
 
 #. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
-msgid ""
-"If checked, Partners VAT numbers will be fully validated against EU's VIES "
-"service rather than via a simple format validation (checksum)."
-msgstr ""
-"Indien aangevinkt worden BTW nummers van relaties gevalideerd bij de EU's "
-"VIES service, in plaats van een simpele controlegetal controle."
-
-#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
 msgstr "Relatie"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:128
+#: code:addons/base_vat/models/res_partner.py:126
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
@@ -49,7 +40,7 @@ msgstr ""
 "Opmerking: Het verwachte formaat is %s"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:127
+#: code:addons/base_vat/models/res_partner.py:125
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
@@ -59,11 +50,30 @@ msgstr ""
 "heeft niet het verwachte formaat %s."
 
 #. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.account_config_settings_view_form_inherit_base_vat
+msgid ""
+"Use VIES service to check VAT # of your customers rather than a simple "
+"format validation."
+msgstr ""
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.company_form_vat
+#: model:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "VAT"
+msgstr "BTW"
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.account_config_settings_view_form_inherit_base_vat
+msgid "VAT # check with European VIES service"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_account_config_settings_vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 msgid "VIES VAT Check"
 msgstr "VIES BTW controle"
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.view_partner_form
-msgid "e.g. BE0477472701"
-msgstr "Bijv.  BE0477472701"
+#: model:ir.model,name:base_vat.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"
