@@ -66,7 +66,6 @@ class ProjectIssue(models.Model):
     color = fields.Integer('Color Index')
     user_email = fields.Char(related='user_id.email', string='User Email', readonly=True)
     date_action_last = fields.Datetime(string='Last Action', readonly=True)
-    date_action_next = fields.Datetime(string='Next Action', readonly=True)
     legend_blocked = fields.Char(related="stage_id.legend_blocked", string='Kanban Blocked Explanation', readonly=True)
     legend_done = fields.Char(related="stage_id.legend_done", string='Kanban Valid Explanation', readonly=True)
     legend_normal = fields.Char(related="stage_id.legend_normal", string='Kanban Ongoing Explanation', readonly=True)
