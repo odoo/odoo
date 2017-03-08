@@ -41,7 +41,6 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'zip',
     'create_date',
     'date_action_last',
-    'date_action_next',
     'email_from',
     'email_cc',
     'website',
@@ -70,7 +69,6 @@ class Lead(models.Model):
         help="Linked partner (optional). Usually created when converting the lead.")
     active = fields.Boolean('Active', default=True)
     date_action_last = fields.Datetime('Last Action', readonly=True)
-    date_action_next = fields.Datetime('Next Action', readonly=True)
     email_from = fields.Char('Email', help="Email address of the contact", index=True)
     website = fields.Char('Website', index=True, help="Website of the contact")
     team_id = fields.Many2one('crm.team', string='Sales Channel', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
