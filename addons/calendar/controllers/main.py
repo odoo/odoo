@@ -49,6 +49,7 @@ class meeting_invitation(http.Controller):
             attendee_data['current_attendee'] = attendee[0]
 
         values = dict(
+            menu_data={"children": dict()},
             init = """
                 odoo.define('calendar.invitation_page', function (require) {
                     require('base_calendar.base_calendar').showCalendarInvitation('%s', '%s', '%s', '%s', '%s');
