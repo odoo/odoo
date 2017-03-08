@@ -477,14 +477,13 @@ return BasicRenderer.extend({
     },
     _renderTagHeader: function (node) {
         var self = this;
-        var $statusbar = $('<div>').addClass('o_form_statusbar');
-        var $buttons = $('<div>').addClass('o_statusbar_buttons');
+        var $statusbar = $('<div>', {class: 'o_form_statusbar'});
+        var $buttons = $('<div>', {class: 'o_statusbar_buttons'});
         $statusbar.append($buttons);
         _.each(node.children, function (child) {
             if (child.tag === 'button') {
                 $buttons.append(self._renderHeaderButton(child));
-            }
-            if (child.tag === 'field') {
+            } else if (child.tag === 'field') {
                 var widget = self._renderFieldWidget(child);
                 $statusbar.append(widget.$el);
             }

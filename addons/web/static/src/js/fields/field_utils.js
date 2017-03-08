@@ -336,6 +336,34 @@ function parseMonetary(formatted_value) {
     return parseFloat(value);
 }
 
+/**
+ * Creates an object with id and display_name.
+ *
+ * @param {Array|number|string|Object} value
+ *        The given value can be :
+ *        - an array with id as first element and display_name as second element
+ *        - a number or a string representing the id (the display_name will be
+ *          returned as undefined)
+ *        - an object, simply returned untouched
+ * @returns {Object} (contains the id and display_name)
+ *                   Note: if the given value is not an array, a string or a
+ *                   number, the value is returned untouched.
+ */
+function parseMany2one(value) {
+    if (_.isArray(value)) {
+        return {
+            id: value[0],
+            display_name: value[1],
+        };
+    }
+    if (_.isNumber(value) || _.isString(value)) {
+        return {
+            id: parseInt(value, 10),
+        };
+    }
+    return value;
+}
+
 return {
     format: {
         binary: _.identity, // todo
@@ -368,7 +396,7 @@ return {
         id: _.identity,
         integer: parseInteger,
         many2many: _.identity, // todo
-        many2one: _.identity,
+        many2one: parseMany2one,
         monetary: parseMonetary,
         one2many: _.identity,
         reference: _.identity, // todo
