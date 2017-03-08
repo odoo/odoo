@@ -63,24 +63,28 @@ return AbstractRenderer.extend({
      * @returns {Object}
      */
     _getFieldValues: function (record) {
-        return _.mapObject(record.data, function (value, name) {
+        var result = {};
+        _.each(record.fieldNames, function (name) {
             var field = record.fields[name];
+            var value = record.data[name];
+            result[name] = value;
             if (field.type === 'many2one') {
-                return value.data ? value.data.id || false : false;
+                result[name] = value.data ? value.data.id || false : false;
             }
             if (field.type === 'one2many' || field.type === 'many2many') {
                 if (value) {
-                    return _.pluck(value.data, 'res_id');
+                    result[name] = _.pluck(value.data, 'res_id');
                 } else {
-                    return [];
+                    result[name] = [];
                 }
             }
             if (field.type === 'boolean') {
                 // we want an explicit false value, not null if it is unset
-                return value || false;
+                result[name] = value || false;
             }
-            return value;
         });
+        result.id = record.data.id;
+        return result;
     },
     /**
      * Render the view

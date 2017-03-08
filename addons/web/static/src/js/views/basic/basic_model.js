@@ -302,6 +302,9 @@ var BasicModel = AbstractModel.extend({
 
             for (var fieldName in element.data) {
                 field = element.fields[fieldName];
+                if (!field) {
+                    continue;
+                }
 
                 // get relational datapoint
                 if (field.type === 'many2one') {
@@ -842,18 +845,32 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
-     * Set and return the fieldattrs on a record element.
+     * Set fieldNames.
+     * Set fields on a record element (current fields as defaults)
+     * Set fieldattrs.
      * It is mostly useful for the cases where a record element is shared
      * between various views, such as a one2many with a tree and a form view.
      *
      * @param {string} recordID a valid element ID
-     * @param {Object} attrs the new field attrs
-     * @return {Object} the previous field attrs
+     * @param {Object} props
+     * @param {Object} props.fieldNames
+     * @param {Object} props.fields
+     * @param {Object} props.fieldAttrs
+     * @return {Object}
+     * @return {Object} result.fieldNames the previous field names
+     * @return {Object} result.fields the previous description fields
+     * @return {Object} result.fieldattrs the previous field attrs
      */
-    setFieldAttrs: function (recordID, attrs) {
+    setFieldProps: function (recordID, props) {
         var record = this.localData[recordID];
-        var result = record.fieldAttrs;
-        record.fieldAttrs = attrs;
+        var result = {
+            fieldNames: record.fieldNames,
+            fields: record.fields,
+            fieldAttrs: record.fieldAttrs,
+        };
+        record.fieldNames = props.fieldNames;
+        record.fields = _.defaults(props.fields, record.fields);
+        record.fieldAttrs = props.fieldAttrs;
         return result;
     },
     /**
@@ -2100,6 +2117,9 @@ var BasicModel = AbstractModel.extend({
         if (element.type === 'record') {
             for (var fieldName in element.data) {
                 var field = element.fields[fieldName];
+                if (!field) {
+                    continue;
+                }
                 if (_.contains(['one2many', 'many2one', 'many2many'], field.type)) {
                     var relationalElement = this.localData[element.data[fieldName]];
 
