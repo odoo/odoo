@@ -964,7 +964,7 @@ var BasicModel = AbstractModel.extend({
         }
         var rel_data = _.pick(data, 'id', 'display_name');
         var def;
-        if (!('display_name' in rel_data)) {
+        if (rel_data.display_name === undefined) {
             var field = record.fields[fieldName];
             def = this._rpc(field.relation, 'name_get')
                 .args([data.id])
@@ -1498,7 +1498,12 @@ var BasicModel = AbstractModel.extend({
     _fetchSpecialStatus: function (record, fieldName) {
         var foldField = record.fieldAttrs[fieldName].options.fold_field;
         var fieldsToRead = foldField ? [foldField] : [];
-        return this._fetchSpecialMany2ones(record, fieldName, fieldsToRead);
+        return this._fetchSpecialMany2ones(record, fieldName, fieldsToRead).then(function (m2os) {
+            _.each(m2os, function (m2o) {
+                m2o.fold = foldField ? m2o[foldField] : false;
+            });
+            return m2os;
+        });
     },
     /**
      * Fetch all data in a ungrouped list

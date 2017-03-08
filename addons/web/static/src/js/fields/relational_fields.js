@@ -1166,13 +1166,15 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
 //------------------------------------------------------------------------------
 
 var FieldStatus = AbstractField.extend({
-    template: "FieldStatus",
     className: 'o_statusbar_status',
     events: {
-        'click .o_arrow_button': '_onClickStage',
+        'click button:not(.dropdown-toggle)': '_onClickStage',
     },
     specialData: "_fetchSpecialStatus",
     supportedFieldTypes: ['selection', 'many2one'],
+    /**
+     * @override init from AbstractField
+     */
     init: function () {
         this._super.apply(this, arguments);
         this._setState();
@@ -1183,6 +1185,7 @@ var FieldStatus = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override _reset from AbstractField
      * @private
      */
     _reset: function () {
@@ -1190,45 +1193,51 @@ var FieldStatus = AbstractField.extend({
         this._setState();
     },
     /**
+     * Prepares the rendering data from the field and record data.
      * @private
      */
     _setState: function () {
+        var self = this;
         if (this.field.type === 'many2one') {
-            this.status_information = this.record.specialData[this.name];
-            var status = _.findWhere(this.status_information, {id: this.value.res_id});
-            if (status) {
-                status.selected = true;
-            }
+            this.status_information = _.map(this.record.specialData[this.name], function (info) {
+                return _.extend({
+                    selected: info.id === self.value.res_id,
+                }, info);
+            });
         } else {
-            var self = this;
-            this.status_information = _.map(this.field.selection, function (val) {
-                return { id: val[0], display_name: val[1], selected: val[0] === self.value };
+            var selection = this.field.selection;
+            if (this.attrs.statusbar_visible) {
+                var restriction = this.attrs.statusbar_visible.split(",");
+                selection = _.filter(selection, function (val) {
+                    return _.contains(restriction, val[0]) || val[0] === self.value;
+                });
+            }
+            this.status_information = _.map(selection, function (val) {
+                return { id: val[0], display_name: val[1], selected: val[0] === self.value, fold: false };
             });
         }
     },
     /**
+     * @override _render from AbstractField
      * @private
      */
     _render: function () {
-        var visible = this.attrs.statusbar_visible;
-        var selection_folded = [];
-        var selection_unfolded = [];
-        _.each(this.status_information, function (info) {
-            if (info.selected && (info.fold || visible && visible.indexOf(info.display_name) === -1)) {
-                selection_folded.push(info);
-            } else {
-                selection_unfolded.push(info);
-            }
-        });
-        var mobile = config.device.size_class <= config.device.SIZES.XS;
-        // grep: FieldStatus.content.mobile, FieldStatus.content.desktop
-        var content = qweb.render("FieldStatus.content." + (mobile ? 'mobile' : 'desktop'), {
-            selection_folded: selection_folded.reverse(),
-            selection_unfolded: selection_unfolded.reverse(),
-            clickable: !!this.attrs.clickable,
-        });
-        this.$el.html(content);
-        this.$('.disabled').prop('disabled', true);
+        if (config.device.size_class > config.device.SIZES.XS) {
+            var selections = _.partition(this.status_information, function (info) {
+                return (info.selected || !info.fold);
+            });
+            this.$el.html(qweb.render("FieldStatus.content.desktop", {
+                selection_unfolded: selections[0],
+                selection_folded: selections[1],
+                clickable: !!this.attrs.clickable,
+            }));
+        } else {
+            this.$el.html(qweb.render("FieldStatus.content.mobile", {
+                selection: this.status_information,
+                value: _.findWhere(this.status_information, {selected: true}).display_name,
+                clickable: !!this.attrs.clickable,
+            }));
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1236,22 +1245,14 @@ var FieldStatus = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Note that this function is debounced...
+     * Called when on status stage is clicked -> sets the field value.
+     * Note: this function is debounced...
      *
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} e
      */
-    _onClickStage: _.debounce(function (event) {
-        var $stage = $(event.currentTarget);
-        var val;
-        if (this.field.type === "many2one") {
-            val = parseInt($stage.data("value"), 10);
-        } else {
-            val = $stage.data("value");
-        }
-        if (val) {
-            this._setValue(val);
-        }
+    _onClickStage: _.debounce(function (e) {
+        this._setValue($(e.currentTarget).data("value"));
     }, 300, true),
 });
 

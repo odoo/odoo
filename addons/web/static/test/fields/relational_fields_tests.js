@@ -2323,9 +2323,8 @@ QUnit.module('relational_fields', {
         assert.expect(5);
 
         this.data.partner.fields.trululu.domain = "[('bar', '=', True)]";
-        this.data.partner.records.forEach(function (record) {
-            record.bar = true;
-        });
+        this.data.partner.records[1].bar = false;
+
         var count = 0;
         var nb_fields_fetched;
         var form = createView({
@@ -2333,7 +2332,7 @@ QUnit.module('relational_fields', {
             model: 'partner',
             data: this.data,
             arch:'<form string="Partners">' +
-                    '<field name="trululu" widget="statusbar"/>' +
+                    '<header><field name="trululu" widget="statusbar"/></header>' +
                     // the following field seem useless, but its presence was the
                     // cause of a crash when evaluating the field domain.
                     '<field name="timmy"/>' +
@@ -2350,8 +2349,8 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(count, 1, 'once search_read should have been done to fetch the relational values');
         assert.strictEqual(nb_fields_fetched, 1, 'search_read should only fetch field id');
-        assert.strictEqual(form.$('.o_statusbar_status button').length, 3, "should have 3 status");
-        assert.strictEqual(form.$('.o_statusbar_status button.disabled').length, 3,
+        assert.strictEqual(form.$('.o_statusbar_status button:not(.dropdown-toggle)').length, 2, "should have 2 status");
+        assert.strictEqual(form.$('.o_statusbar_status button:disabled').length, 2,
             "all status should be disabled");
         assert.ok(form.$('.o_statusbar_status button[data-value="4"]').hasClass('btn-primary'),
             "selected status should be btn-primary");
@@ -2360,22 +2359,27 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('clickable statusbar widget on many2one field', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             arch:'<form string="Partners">' +
-                    '<field name="trululu" widget="statusbar" clickable="True"/>' +
+                    '<header><field name="trululu" widget="statusbar" clickable="True"/></header>' +
                 '</form>',
             res_id: 1,
         });
 
         assert.ok(form.$('.o_statusbar_status button[data-value="4"]').hasClass('btn-primary disabled'),
             "selected status should be btn-primary and disabled");
-        assert.strictEqual(form.$('.o_statusbar_status button.btn-default:not(.disabled)').length, 2,
+        var $clickable = form.$('.o_statusbar_status button.btn-default:not(.dropdown-toggle):not(:disabled)');
+        assert.strictEqual($clickable.length, 2,
             "other status should be btn-default and not disabled");
+        $clickable.last().click(); // (last is visually the first here (css))
+        assert.ok(form.$('.o_statusbar_status button[data-value="1"]').hasClass("btn-primary disabled"),
+            "value should have been updated");
+
         form.destroy();
     });
 
@@ -2388,7 +2392,7 @@ QUnit.module('relational_fields', {
             model: 'partner',
             data: this.data,
             arch:'<form string="Partners">' +
-                    '<field name="product_id" widget="statusbar"/>' +
+                    '<header><field name="product_id" widget="statusbar"/></header>' +
                 '</form>',
             res_id: 1,
         });
@@ -2397,6 +2401,31 @@ QUnit.module('relational_fields', {
             'statusbar widget should have class o_form_field_empty');
         assert.strictEqual(form.$('.o_statusbar_status').children().length, 0,
             'statusbar widget should be empty');
+        form.destroy();
+    });
+
+    QUnit.test('statusbar fold_field option and statusbar_visible attribute', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].bar = false;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<header><field name="trululu" widget="statusbar" options="{\'fold_field\': \'bar\'}"/>' +
+                    '<field name="color" widget="statusbar" statusbar_visible="red"/></header>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_statusbar_status:first .dropdown-menu button.disabled').length, 1, "should have 1 folded status");
+        assert.strictEqual(form.$('.o_statusbar_status:last button.disabled').length, 1, "should have 1 status (other discarded)");
+
         form.destroy();
     });
 
@@ -2413,7 +2442,7 @@ QUnit.module('relational_fields', {
             data: this.data,
             arch:
                 '<form string="Partners">' +
-                    '<field name="trululu" widget="statusbar"/>' +
+                    '<header><field name="trululu" widget="statusbar"/></header>' +
                     '<field name="qux"/>' +
                     '<field name="foo"/>' +
                 '</form>',
