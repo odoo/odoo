@@ -130,15 +130,15 @@
                     <field name="res_name"/>
                     <field name="res_id"/>
                     <field name="parent_res_name"/>
-                    <filter string="Satisfied" name="rating_happy" domain="[('rating', '=', 10)]"/>
-                    <filter string="Not satisfied" name="rating_okay" domain="[('rating', '=', 5)]"/>
-                    <filter string="Highly dissatisfied" name="rating_unhappy" domain="[('rating', '=', 1)]"/>
+                    <filter string="Satisfied" name="rating_happy" domain="[('rating_text', '=', 'satisfied')]"/>
+                    <filter string="Not satisfied" name="rating_okay" domain="[('rating_text', '=', 'not_satisfied')]"/>
+                    <filter string="Highly dissatisfied" name="rating_unhappy" domain="[('rating_text', '=', 'highly_dissatisfied')]"/>
                     <separator/>
                     <filter string="My Ratings" domain="[('rated_partner_id.user_ids', 'in', [uid])]"/>
                     <group expand="0" string="Group By">
                         <filter string="Rated User" name="responsible" context="{'group_by':'rated_partner_id'}"/>
                         <filter string="Customer" name="customer" context="{'group_by':'partner_id'}"/>
-                        <filter string="Rating" name="rating" context="{'group_by':'rating'}"/>
+                        <filter string="Rating" name="rating_text" context="{'group_by':'rating_text'}"/>
                         <filter string="Resource" name="resource" context="{'group_by':'res_name'}"/>
                         <filter string="Day" context="{'group_by':'create_date:day'}"/>
                         <filter string="Month" context="{'group_by':'create_date:month'}"/>
