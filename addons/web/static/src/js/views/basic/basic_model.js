@@ -81,7 +81,6 @@ var concurrency = require('web.concurrency');
 var Context = require('web.Context');
 var Domain = require('web.Domain');
 var fieldUtils = require('web.field_utils');
-var pyeval = require('web.pyeval');
 var session = require('web.session');
 
 var x2ManyCommands = {
@@ -1829,7 +1828,8 @@ var BasicModel = AbstractModel.extend({
         var defs = [];
         _.each(record.fieldNames, function (name) {
             var field = record.fields[name];
-            var attrs = record.fieldAttrs[name];
+            var attrs = record.fieldAttrs[name] || {};
+            var options = attrs.options || {};
             if (field.__fetch_status && !field.__status_information) {
                 var field_values = _.mapObject(record.data, function (val, key) {
                     var fieldType = record.fields[key].type;
@@ -1839,9 +1839,8 @@ var BasicModel = AbstractModel.extend({
                     return val;
                 });
                 var domain = Domain.prototype.stringToArray(field.domain || [], field_values);
-                var fold_field = pyeval.py_eval(attrs.options || '{}').fold_field;
                 var fetch_status_information = self._rpc(field.relation, 'search_read')
-                    .withFields(['id'].concat(fold_field ? [fold_field] : []))
+                    .withFields(['id'].concat(options.fold_field ? [options.fold_field] : []))
                     .withDomain(domain)
                     .exec()
                     .then(function (result) {
@@ -1862,7 +1861,7 @@ var BasicModel = AbstractModel.extend({
                     });
                 defs.push(fetch_status_information);
             }
-            if (field.__always_reload) {
+            if (options.always_reload) {
                 if (record.data[name] instanceof Array) {
                     defs.push(self._rpc(field.relation, 'name_get')
                         .args([record.data[name][0]])

@@ -222,7 +222,7 @@ var FieldMany2One = AbstractField.extend({
         // really a bad way to do it.  Now, we need to remove the extra lines
         // and hope for the best that noone tries to uses this mechanism to do
         // something else.
-        if (this.field.__always_reload) {
+        if (this.nodeOptions.always_reload) {
             value = value.split('\n')[0];
         }
         this.$input.val(value);

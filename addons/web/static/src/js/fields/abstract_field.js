@@ -31,7 +31,6 @@ odoo.define('web.AbstractField', function (require) {
  */
 
 var field_utils = require('web.field_utils');
-var pyeval = require('web.pyeval');
 var Widget = require('web.Widget');
 var Domain = require('web.Domain');
 
@@ -114,7 +113,7 @@ var AbstractField = Widget.extend({
 
         // Widget can often be configured in the 'options' attribute in the
         // xml 'field' tag.  These options are saved (and evaled) in nodeOptions
-        this.nodeOptions = pyeval.py_eval(this.attrs.options || '{}', this.recordData);
+        this.nodeOptions = this.attrs.options || {};
 
         // dataPointID is the id corresponding to the current record in the model.
         // Its intended use is to be able to tag any messages going upstream,

@@ -164,12 +164,10 @@ var BasicView = AbstractView.extend({
      * @param {Object} attrs
      */
     _processField: function (field, node, attrs) {
-        if (attrs.options) {
-            var options = pyeval.py_eval(attrs.options || '{}');
-            if (options.always_reload) {
-                field.__always_reload = true;
-            }
+        if (!_.isObject(attrs.options)) { // parent arch could have already been processed (TODO this should not happen)
+            attrs.options = attrs.options ? pyeval.py_eval(attrs.options) : {};
         }
+
         if (field.type === 'many2one') {
             if (node.attrs.widget === 'statusbar' || node.attrs.widget === 'radio') {
                 field.__fetch_status = true;

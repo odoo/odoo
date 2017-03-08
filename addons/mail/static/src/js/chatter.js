@@ -11,7 +11,6 @@ var utils = require('mail.utils');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
-var pyeval = require('web.pyeval');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -57,8 +56,7 @@ var Chatter = Widget.extend(chat_mixin, {
         }
         if (mailFields.mail_thread) {
             this.fields.thread = new ThreadField(this, mailFields.mail_thread, record, options);
-            var nodeAttrs = this.record.fieldAttrs[mailFields.mail_thread];
-            var nodeOptions = pyeval.py_eval(nodeAttrs.options || '{}', this.record.data);
+            var nodeOptions = this.record.fieldAttrs[mailFields.mail_thread].options;
             this.hasLogButton = nodeOptions.display_log_button;
         }
     },
@@ -167,7 +165,7 @@ var Chatter = Widget.extend(chat_mixin, {
         });
         this._muteNewMessageButton(true);
     },
-    _render: function(def) {
+    _render: function (def) {
         // the rendering of the chatter is aynchronous: relational data of its fields needs to be
         // fetched (in some case, it might be synchronous as they hold an internal cache).
         // this function takes a deferred as argument, which is resolved once all fields have
