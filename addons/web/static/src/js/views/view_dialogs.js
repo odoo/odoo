@@ -141,7 +141,7 @@ var FormViewDialog = ViewDialog.extend({
      */
     destroy: function () {
         if (this.recordID && this.fieldAttrs) {
-            this.model.setFieldAttrs(this.recordID, this.fieldAttrs);
+            this.setFieldProps(this.recordID, this.previousFieldProps);
         }
         this._super.apply(this, arguments);
     },
@@ -168,8 +168,11 @@ var FormViewDialog = ViewDialog.extend({
 
         fields_view_def.then(function (fields_view) {
             if (self.recordID) {
-                self.fieldAttrs =
-                    self.model.setFieldAttrs(self.recordID, fields_view.fieldAttrs);
+                self.previousFieldProps = self.model.setFieldProps(self.recordID, {
+                    fieldNames: Object.keys(fields_view.fields),
+                    fields: fields_view.fields,
+                    fieldAttrs: fields_view.fieldAttrs
+                });
             }
             var formview = new FormView(fields_view.arch, fields_view.fields, {
                 modelName: self.res_model,

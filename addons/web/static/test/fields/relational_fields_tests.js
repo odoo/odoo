@@ -20,6 +20,7 @@ QUnit.module('relational_fields', {
                     int_field: {string: "int_field", type: "integer", sortable: true},
                     qux: {string: "Qux", type: "float", digits: [16,1] },
                     p: {string: "one2many field", type: "one2many", relation: 'partner', relation_field: 'trululu'},
+                    turtles: {string: "one2many turtle field", type: "one2many", relation: 'turtle'},
                     trululu: {string: "Trululu", type: "many2one", relation: 'partner'},
                     timmy: { string: "pokemon", type: "many2many", relation: 'partner_type'},
                     product_id: {string: "Product", type: "many2one", relation: 'product'},
@@ -39,6 +40,7 @@ QUnit.module('relational_fields', {
                     int_field: 10,
                     qux: 0.44,
                     p: [],
+                    turtles: [2],
                     timmy: [],
                     trululu: 4,
                 }, {
@@ -83,6 +85,36 @@ QUnit.module('relational_fields', {
                     {id: 14, display_name: "silver", color: 5},
                 ]
             },
+            turtle: {
+                fields: {
+                    display_name: { string: "Displayed name", type: "char" },
+                    turtle_foo: {string: "Foo", type: "char", default: "My little Foo Value"},
+                    turtle_bar: {string: "Bar", type: "boolean", default: true},
+                    turtle_int: {string: "int", type: "integer", sortable: true, required: true},
+                    turtle_qux: {string: "Qux", type: "float", digits: [16,1], required: true},
+                    turtle_trululu: {string: "Trululu", type: "many2one", relation: 'partner', required: true, default: 1},
+                    product_id: {string: "Product", type: "many2one", relation: 'product', required: true},
+                },
+                records: [{
+                    id: 1,
+                    display_name: "leonardo",
+                    turtle_bar: true,
+                    turtle_foo: "yop",
+                }, {
+                    id: 2,
+                    display_name: "donatello",
+                    turtle_bar: true,
+                    turtle_foo: "blip",
+                    turtle_int: 9,
+                }, {
+                    id: 3,
+                    display_name: "raphael",
+                    turtle_bar: false,
+                    turtle_foo: "kawa",
+                    turtle_int: 21,
+                    turtle_qux: 9.8,
+                }],
+            }
         };
     }
 }, function () {
@@ -1573,42 +1605,44 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('one2many with many2many widget', function (assert) {
-        assert.expect(9);
-
-        this.data.partner.records[0].p = [2];
+    QUnit.test('one2many with many2many widget: create', function (assert) {
+        assert.expect(10);
 
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             arch:'<form string="Partners">' +
-                    '<field name="p" widget="many2many">' +
+                    '<field name="turtles" widget="many2many">' +
                         '<tree>' +
-                            '<field name="foo"/>' +
-                            '<field name="int_field"/>' +
+                            '<field name="turtle_foo"/>' +
+                            '<field name="turtle_qux"/>' +
+                            '<field name="turtle_int"/>' +
                             '<field name="product_id"/>' +
                         '</tree>' +
                         '<form>' +
                             '<group>' +
-                                '<field name="foo"/>' +
-                                '<field name="bar"/>' +
-                                '<field name="int_field"/>' +
+                                '<field name="turtle_foo"/>' +
+                                '<field name="turtle_bar"/>' +
+                                '<field name="turtle_int"/>' +
                                 '<field name="product_id"/>' +
                             '</group>' +
                         '</form>' +
                     '</field>' +
                 '</form>',
             archs: {
-                'partner,false,list': '<tree><field name="foo"/><field name="bar"/><field name="product_id"/></tree>',
-                'partner,false,search': '<search><field name="foo"/><field name="bar"/><field name="product_id"/></search>',
+                'turtle,false,list': '<tree><field name="display_name"/><field name="turtle_foo"/><field name="turtle_bar"/><field name="product_id"/></tree>',
+                'turtle,false,search': '<search><field name="turtle_foo"/><field name="turtle_bar"/><field name="product_id"/></search>',
             },
             session: {},
             res_id: 1,
             mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/turtle/create') {
+                    assert.ok(args.args, "should write on the turtle record");
+                }
                 if (route === '/web/dataset/call_kw/partner/write') {
                     assert.strictEqual(args.args[0][0], 1, "should write on the partner record 1");
-                    assert.strictEqual(args.args[1].p[0][0], 6, "should send only a 'replace with' command");
+                    assert.strictEqual(args.args[1].turtles[0][0], 6, "should send only a 'replace with' command");
                 }
                 return this._super.apply(this, arguments);
             },
@@ -1630,8 +1664,8 @@ QUnit.module('relational_fields', {
             "sould have 1 record in the select view");
 
         $('.modal-footer button:eq(1)').click();
-        $('.modal input.o_form_field[name="foo"]').val('tototo').trigger('input');
-        $('.modal input.o_form_field[name="int_field"]').val(50).trigger('input');
+        $('.modal input.o_form_field[name="turtle_foo"]').val('tototo').trigger('input');
+        $('.modal input.o_form_field[name="turtle_int"]').val(50).trigger('input');
         var $many2one = $('.modal [name="product_id"] input').click();
         var $dropdown = $many2one.autocomplete('widget');
         $dropdown.find('li:first a').mouseenter();
@@ -1643,8 +1677,85 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row').length, 3,
             "sould have 3 records in one2many list");
-        assert.strictEqual(form.$('.o_data_row').text(), "blip9xphoneyop10tototo50xphone",
+        assert.strictEqual(form.$('.o_data_row').text(), "blip0.09yop0.0tototo0.050xphone",
             "sould display the record values in one2many list");
+
+        $('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many with many2many widget: edition', function (assert) {
+        assert.expect(6);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="turtle_foo"/>' +
+                            '<field name="turtle_qux"/>' +
+                            '<field name="turtle_int"/>' +
+                            '<field name="product_id"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<group>' +
+                                '<field name="turtle_foo"/>' +
+                                '<field name="turtle_bar"/>' +
+                                '<field name="turtle_int"/>' +
+                                '<field name="product_id"/>' +
+                            '</group>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            archs: {
+                'turtle,false,list': '<tree><field name="display_name"/><field name="turtle_foo"/><field name="turtle_bar"/><field name="product_id"/></tree>',
+                'turtle,false,search': '<search><field name="turtle_foo"/><field name="turtle_bar"/><field name="product_id"/></search>',
+            },
+            session: {},
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/turtle/write') {
+                    assert.strictEqual(args.args[0].length, 1, "should write on the turtle record");
+                    assert.deepEqual(args.args[1], {"product_id":37}, "should write only the product_id on the turtle record");
+                }
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    assert.strictEqual(args.args[0][0], 1, "should write on the partner record 1");
+                    assert.strictEqual(args.args[1].turtles[0][0], 6, "should send only a 'replace with' command");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$('.o_data_row:first').click();
+        $('.modal .o_form_button_cancel').click();
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // edit the first one2many record
+        form.$('.o_data_row:first').click();
+        var $many2one = $('.modal [name="product_id"] input').click();
+        var $dropdown = $many2one.autocomplete('widget');
+        $dropdown.find('li:first a').mouseenter();
+        $dropdown.find('li:first a').click();
+        $('.modal-footer button:first').click();
+
+        $('.o_form_button_save').click(); // don't save anything because the one2many does not change
+
+        // add a one2many record
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        $('.modal .o_data_row:first .o_list_record_selector input').click();
+        $('.modal .o_select_button').click();
+
+        // edit the second one2many record
+        form.$('.o_data_row:eq(1)').click();
+        $many2one = $('.modal [name="product_id"] input').click();
+        $dropdown = $many2one.autocomplete('widget');
+        $dropdown.find('li:first a').mouseenter();
+        $dropdown.find('li:first a').click();
+        $('.modal-footer button:first').click();
 
         $('.o_form_button_save').click();
 
