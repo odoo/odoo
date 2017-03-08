@@ -188,9 +188,8 @@ class IrMailServer(models.Model):
 
     def connect(self, host=None, port=None, user=None, password=None, encryption=None,
                 smtp_debug=False, mail_server_id=None):
-        """Returns a new SMTP connection to the give SMTP server, authenticated
-           with ``user`` and ``password`` if provided, and encrypted as requested
-           by the ``encryption`` parameter.
+        """Returns a new SMTP connection to the given SMTP server.
+           When running in test mode, this method does nothing and returns `None`.
 
            :param host: host or IP of SMTP server to connect to, if mail_server_id not passed
            :param int port: SMTP port to connect to
@@ -201,6 +200,10 @@ class IrMailServer(models.Model):
                               will be output in logs)
            :param mail_server_id: ID of specific mail server to use (overrides other parameters)
         """
+        # Do not actually connect while running in test mode
+        if getattr(threading.currentThread(), 'testing', False):
+            return None
+
         mail_server = smtp_encryption = None
         if mail_server_id:
             mail_server = self.sudo().browse(mail_server_id)
