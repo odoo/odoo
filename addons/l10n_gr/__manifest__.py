@@ -18,6 +18,7 @@ Greek accounting chart and localization.
     'data': [ 'data/account_type_data.xml',
               'data/l10n_gr_chart_data.xml',
               'data/account_chart_template_data.xml',
+              'data/account_data.xml',
               'data/account_tax_data.xml',
               'data/account_chart_template_data.yml'
     ],
