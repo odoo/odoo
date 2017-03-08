@@ -19,7 +19,7 @@
             <field name="account_id" ref="account_2221_1_5" />
             <field name="refund_account_id" ref="account_2221_1_5" />
             <field name="tag_ids" eval="[(6, 0, [ref('tag1')])]" />
-            <field name="chart_template_id" ref="l10n_cn_standard" />
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business" />
         </record>
         <record id="vatp_standard_business" model="account.tax.template">
             <field name="name">增值税17%进项税 - 中国会计科目表-企业会计准则</field>
@@ -29,7 +29,7 @@
             <field name="account_id" ref="account_2221_1_1" />
             <field name="refund_account_id" ref="account_2221_1_1" />
             <field name="tag_ids" eval="[(6, 0, [ref('tag2')])]" />
-            <field name="chart_template_id" ref="l10n_cn_standard" />
+            <field name="chart_template_id" ref="l10n_chart_china_standard_business" />
         </record>
     </data>
 </odoo>
