@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -36,6 +36,20 @@ msgid "Channel"
 msgstr "Csatorna"
 
 #. module: bus
+#: model:ir.model.fields,help:bus.field_res_users_country_enforce_cities
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Jelölje be ezt a négyzetet, hogy mindegyik, ehhez az országhoz létrehozott "
+"címhez legyen egy 'Város' az országhoz tartozó város listában."
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_city_id
+msgid "Company"
+msgstr "Vállalat"
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
 msgid "Create date"
 msgstr "Létrehozás dátuma"
@@ -52,6 +66,16 @@ msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number2
+msgid "Door Number"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_country_enforce_cities
+msgid "Enforce Cities"
+msgstr "Város kényszerítés"
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
 msgid "Geo Latitude"
 msgstr "Földrajzi szélesség"
@@ -65,6 +89,11 @@ msgstr "Földrajzi hosszúság"
 #: model:ir.model.fields,field_description:bus.field_res_users_date_localization
 msgid "Geolocation Date"
 msgstr "Földrajzi elhelyezkedés dátuma"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number
+msgid "House Number"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_id
@@ -124,6 +153,11 @@ msgstr "Online"
 #: model:ir.model,name:bus.model_res_partner
 msgid "Partner"
 msgstr "Partner"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_name
+msgid "Street Name"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence

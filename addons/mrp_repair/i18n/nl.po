@@ -7,13 +7,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +42,12 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+" * De 'Concept' status wordt gebruikt wanneer een gebruiker een nieuwe reparatieopdracht aan het ingeven is.\n"
+"* De 'Bevestigd' status wordt gebruikt wanneer een gebruiker de reparatieopdracht bevestigt.\n"
+"* De 'Gereed voor reparatie' status wordt gebruikt om te beginnen met het repareren. De gebruiker kan beginnen met de reparatie nadat reparatieopdracht is bevestigd.\n"
+"* De 'Te factureren \" status wordt gebruikt om de factuur vóór of na de reparatie te genereren.\n"
+"* De 'Verwerkt' status wordt ingesteld als de reparatie is voltooid.\n"
+"* De 'Geannuleerd' status wordt gebruikt wanneer de gebruiker de reparatieopdracht annuleert."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -80,7 +87,7 @@ msgstr "<strong>Product om te repareren:</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "<strong>Verzendadres:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -118,6 +125,12 @@ msgid "Before Repair"
 msgstr "Voor reparatie"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:206
+#, python-format
+msgid "Can only confirm draft repairs."
+msgstr "Kan alleen concept reparatie bevestigen."
+
+#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
 msgid "Cancel"
@@ -139,6 +152,12 @@ msgstr "Reparatie order annuleren"
 #: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
 msgid "Cancelled"
 msgstr "Geannuleerd"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:221
+#, python-format
+msgid "Cannot cancel completed repairs."
+msgstr "Kan voltooide reparaties niet annuleren."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -168,8 +187,8 @@ msgid "Confirmed"
 msgstr "Bevestigd"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:500
-#: code:addons/mrp_repair/models/mrp_repair.py:562
+#: code:addons/mrp_repair/models/mrp_repair.py:508
+#: code:addons/mrp_repair/models/mrp_repair.py:570
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -215,8 +234,8 @@ msgstr "Huidige locatie"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
-msgid "Default address id"
-msgstr "Standaard address id"
+msgid "Default Address"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -341,11 +360,6 @@ msgid "Invoice"
 msgstr "Factuur"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Invoice Corrected"
-msgstr "Factuur gecorrigeerd"
-
-#. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Invoice Exception"
 msgstr "Fouten in facturatie"
@@ -437,39 +451,44 @@ msgid "Move created by the repair order"
 msgstr "Mutatie aangemaakt door reparatie order"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "My Activities"
+msgstr "Mijn activiteiten"
+
+#. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "No Invoice"
 msgstr "Geen factuur"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:491
-#: code:addons/mrp_repair/models/mrp_repair.py:553
+#: code:addons/mrp_repair/models/mrp_repair.py:499
+#: code:addons/mrp_repair/models/mrp_repair.py:561
 #, python-format
 msgid "No Pricelist!"
 msgstr "Geen prijslijst!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:250
+#: code:addons/mrp_repair/models/mrp_repair.py:260
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "Geen rekening voor partner \"%s\" gedefinieerd."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:275
-#: code:addons/mrp_repair/models/mrp_repair.py:303
+#: code:addons/mrp_repair/models/mrp_repair.py:285
+#: code:addons/mrp_repair/models/mrp_repair.py:313
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Geen rekening gedefinieerd voor product \"%s\"."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:296
+#: code:addons/mrp_repair/models/mrp_repair.py:306
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "Geen producten bij vergoedingen gedefineerd!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:498
-#: code:addons/mrp_repair/models/mrp_repair.py:560
+#: code:addons/mrp_repair/models/mrp_repair.py:506
+#: code:addons/mrp_repair/models/mrp_repair.py:568
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr "Geen geldige prijslijst regel gevonden!"
@@ -488,6 +507,11 @@ msgstr "Bewerkingregels"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Operations"
 msgstr "Bewerkingen"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Overdue Activities"
+msgstr "Activiteiten over tijd"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_id
@@ -583,11 +607,6 @@ msgid "Ready to Repair"
 msgstr "Gereed voor reparatie"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Recreate Invoice"
-msgstr "Maak factuur opnieuw"
-
-#. module: mrp_repair
 #: selection:mrp.repair.line,type:0
 msgid "Remove"
 msgstr "Verwijderen"
@@ -637,7 +656,32 @@ msgid "Repair Reference"
 msgstr "Reparatie referentie"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:217
+#: code:addons/mrp_repair/models/mrp_repair.py:194
+#, python-format
+msgid "Repair must be canceled in order to reset it to draft."
+msgstr ""
+"Reparatie moet geannuleerd worden om het terug te zetten naar concept."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:343
+#, python-format
+msgid "Repair must be confirmed before starting reparation."
+msgstr "Reparatie moet bevestigd voor deze gestart kan worden."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:371
+#, python-format
+msgid "Repair must be repaired in order to make the product moves."
+msgstr "Reparatie moet afgerond zijn om de voorraad mutaties te maken."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:354
+#, python-format
+msgid "Repair must be under repair in order to end reparation."
+msgstr "Reparatie moet in reparatie zijn om de reparatie te eindigen."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:223
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr "Reparatieorder is al gefactureerd."
@@ -673,7 +717,7 @@ msgstr "Reparatie order"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Zoek reparatie orders"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -688,7 +732,7 @@ msgstr ""
 "genereren van deze reparatie."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:210
+#: code:addons/mrp_repair/models/mrp_repair.py:213
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "Partijnummer is verplicht voor de regel met product '%s'"
@@ -697,6 +741,11 @@ msgstr "Partijnummer is verplicht voor de regel met product '%s'"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Set to Draft"
 msgstr "Zet op concept"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
@@ -766,6 +815,8 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"De status van een reparatie lijn is automatisch ingesteld op de status van "
+"de gerelateerde reparatie order."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -786,6 +837,11 @@ msgstr "Te factureren"
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
 msgstr "Nog te factureren"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Today Activities"
+msgstr "Activiteiten van vandaag"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_total
@@ -830,6 +886,11 @@ msgid "Untaxed amount"
 msgstr "Onbelast bedrag"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Upcoming Activities (7 days)"
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "VAT:"
 msgstr "BTW:"
@@ -851,17 +912,19 @@ msgid "Yes"
 msgstr "Ja"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:238
+#: code:addons/mrp_repair/models/mrp_repair.py:248
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr ""
 "U dient een factuuradres van de klant te selecteren in het reparatie scherm!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:493
-#: code:addons/mrp_repair/models/mrp_repair.py:555
+#: code:addons/mrp_repair/models/mrp_repair.py:501
+#: code:addons/mrp_repair/models/mrp_repair.py:563
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"U dient een prijslijst te selecteren in het reparatie formulier!\n"
+"Stel een prijslijst in voordat u een product selecteert."

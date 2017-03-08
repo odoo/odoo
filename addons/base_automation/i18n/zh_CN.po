@@ -1,16 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_action_rule
+# * base_automation
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
+# Talway <9010446@qq.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
+# fausthuang <faust_huang@hotmail.com>, 2017
+# Si Ling Lau <happy8645@hotmail.com>, 2017
+# xiaobin wu <bd5dml@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: xiaobin wu <bd5dml@gmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,446 +26,561 @@ msgstr ""
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid "<b>Please choose the document type before setting the conditions.</b>"
-msgstr "<b>在设置条件之前请先设置文件类型</b>"
-
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_tree
-msgid "Action Rule"
-msgstr "动作规则"
-
-#. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
-msgid "Action Rule Line Test"
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_website_published
+msgid ""
+"A code server action can be executed from the website, using a dedicated "
+"controller. The address is <base>/website/action/<website_path>. Set this "
+"field as True to allow users to run this action. If it is set to False the "
+"action cannot be run through the website."
 msgstr ""
 
-#. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_help
+msgid "Action Description"
+msgstr "动作说明"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_name
+msgid "Action Name"
+msgstr "动作名称"
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_line_test
+msgid "Action Rule Line Test"
+msgstr "动作规则测试"
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Action Rule Test"
 msgstr "动作规则测试"
 
-#. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_base_action_rule
-msgid "Action Rules"
-msgstr "动作规则"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_state
+msgid "Action To Do"
+msgstr "待做的动作"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid "Actions"
-msgstr "行动"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_type
+msgid "Action Type"
+msgstr "动作类型"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_active
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_active
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_menu_ir_values_id
+msgid "Action on Object"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_active
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_active
 msgid "Active"
 msgstr "有效"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_followers
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_channel_ids
+msgid "Add Channels"
+msgstr "添加频道"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_partner_ids
 msgid "Add Followers"
 msgstr "添加关注者"
 
-#. module: base_action_rule
-#: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
-#: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation
+msgid "Automated Action"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.actions.act_window,name:base_automation.base_automation_act
+#: model:ir.ui.menu,name:base_automation.menu_base_automation_form
 msgid "Automated Actions"
 msgstr "自动的动作"
 
-#. module: base_action_rule
-#: selection:base.action.rule,kind:0
-msgid "Based on Form Modification"
-msgstr "基于表单更改"
+#. module: base_automation
+#: model:ir.ui.view,arch_db:base_automation.view_base_automation_tree
+msgid "Automation"
+msgstr "自动化"
 
-#. module: base_action_rule
-#: selection:base.action.rule,kind:0
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_website_published
+msgid "Available on the Website"
+msgstr "可用于网站"
+
+#. module: base_automation
+#: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
+#: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
+#: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
+msgid "Base Action Rule: check and execute"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_model_id
+msgid "Base Model"
+msgstr "基础模型"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_model_id
+msgid "Base model on which the server action runs."
+msgstr "服务器动作运行的基本模型。"
+
+#. module: base_automation
+#: selection:base.automation,trigger:0
+msgid "Based on Form Modification"
+msgstr "基于表单修改"
+
+#. module: base_automation
+#: selection:base.automation,trigger:0
 msgid "Based on Timed Condition"
 msgstr "基于时间条件"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_domain
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_domain
 msgid "Before Update Domain"
 msgstr "更新前域表达式"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_id
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_id
 msgid "Before Update Filter"
 msgstr "更新前筛选"
 
-#. module: base_action_rule
-#: selection:base.action.rule.lead.test,state:0
+#. module: base_automation
+#: selection:base.automation.lead.test,state:0
 msgid "Cancelled"
 msgstr "已取消"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_lead_test_customer
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_lead_test_customer
 msgid "Check this box if this contact is a customer."
-msgstr "如果该联系人是客户就选择这个框"
+msgstr "如果该联系人是客户就选择这个框。"
 
-#. module: base_action_rule
-#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
-msgid "Click to setup a new automated action rule."
-msgstr "点击去创建一个自动的动作规则"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_child_ids
+msgid "Child Actions"
+msgstr "下级动作"
 
-#. module: base_action_rule
-#: selection:base.action.rule.lead.test,state:0
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_child_ids
+msgid ""
+"Child server actions that will be executed. Note that the last return "
+"returned action value will be used as global return value."
+msgstr "子服务器将被被激活。注意最后返回动作的值将做用做全局变量。"
+
+#. module: base_automation
+#: model:ir.actions.act_window,help:base_automation.base_automation_act
+msgid "Click to setup a new automated automation."
+msgstr ""
+
+#. module: base_automation
+#: selection:base.automation.lead.test,state:0
 msgid "Closed"
 msgstr "已关闭"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
 msgstr "以逗号分隔的字段名称列表触发变化"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid "Conditions"
-msgstr "条件"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_id
+msgid "Create/Write Target Model"
+msgstr "创建/写目标模型"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_uid
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_uid
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_uid
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_create_uid
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_create_uid
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_create_uid
 msgid "Created by"
 msgstr "创建人"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_date
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_date
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_create_date
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_create_date
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_create_date
 msgid "Created on"
 msgstr "创建时间"
 
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
+#. module: base_automation
+#: selection:base.automation,trg_date_range_type:0
 msgid "Days"
 msgstr "天数"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid "Delay After Trigger Date"
-msgstr "触发日期后的延迟"
-
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"延迟触发日期。\n"
+"如果在触发日期你需要一个延迟，\n"
+"你可以输入一个负数，如在会议前15分钟发送提醒"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_range
 msgid "Delay after trigger date"
 msgstr "触发日期后的延迟"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range_type
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_range_type
 msgid "Delay type"
 msgstr "延迟类型"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_display_name
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_display_name
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_display_name
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_display_name
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_display_name
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_display_name
 msgid "Display Name"
 msgstr "显示名称"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_domain
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_domain
 msgid "Domain"
-msgstr "领域"
+msgstr "域"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_server_action_ids
-msgid "Examples: email reminders, call object service, etc."
-msgstr "示例：电子邮件提醒，调用对象的服务，等。"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_template_id
+msgid "Email Template"
+msgstr "Email模板"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid "Fields to Change"
-msgstr "更改的字段"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_xml_id
+msgid "External ID"
+msgstr "外部 ID"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_id
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_id
 msgid "Filter"
 msgstr "筛选"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_sequence
-msgid "Gives the sequence order when displaying a list of rules."
-msgstr "为规则列表添加序列"
-
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid ""
-"Go to your \"Related Document Model\" page and set the filter parameters in "
-"the \"Search\" view (Example of filter based on Leads/Opportunities: "
-"Creation Date \"is equal to\" 01/01/2012)"
-msgstr "到您的\"相关模型\"页面，在\"查找\"视图 设置筛选条件 (例如:线索/商机 使用 筛选条件：创建日期\"等于\"2012-01-01)"
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
+#. module: base_automation
+#: selection:base.automation,trg_date_range_type:0
 msgid "Hours"
 msgstr "小时"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_id
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_id
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_id
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_id
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_id
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_id
 msgid "ID"
 msgstr "ID"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_domain
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_id
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "在XML文件中定义的动作的ID"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_filter_domain
+#: model:ir.model.fields,help:base_automation.field_base_automation_filter_id
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr "在执行规则前，此条件必须被满足"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_id
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_domain
+#: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_id
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
 msgstr "在更新记录前此条件必须被满足"
 
-#. module: base_action_rule
-#: selection:base.action.rule.lead.test,state:0
+#. module: base_automation
+#: selection:base.automation.lead.test,state:0
 msgid "In Progress"
 msgstr "进行中"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid ""
-"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
-" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
-"users\""
-msgstr "在同一个\"搜索\"视图，选择菜单中的\"保存现有的筛选条件\"，输入名称（例如：创建于01/01/2012)并且勾选\"共享给其他用户\"的选项。"
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_menu_ir_values_id
+msgid "IrValues entry of the related more menu entry action"
+msgstr ""
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_customer
 msgid "Is a Customer"
-msgstr "是客户"
+msgstr "客户"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_date_action_last
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_date_action_last
 msgid "Last Action"
 msgstr "最近的行动"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule___last_update
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test___last_update
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test___last_update
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation___last_update
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test___last_update
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test___last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
-msgid "Last Updated by"
-msgstr "最后更新人"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_last_run
+msgid "Last Run"
+msgstr "最后运行"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_date
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_date
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_date
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_write_uid
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_write_uid
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_write_uid
+msgid "Last Updated by"
+msgstr "最后更新者"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_write_date
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_write_date
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
-msgid "Last run"
-msgstr ""
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_lead_id
+msgid "Lead"
+msgstr "线索"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
-msgid "Lead id"
-msgstr ""
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_line_ids
+msgid "Line"
+msgstr "行"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
-msgid "Line ids"
-msgstr ""
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_link_field_id
+msgid "Link using field"
+msgstr "链接使用字段"
 
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
+#. module: base_automation
+#: selection:base.automation,trg_date_range_type:0
 msgid "Minutes"
 msgstr "分钟"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_model
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_model_name
 msgid "Model"
-msgstr "模型"
+msgstr "型号"
 
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_name
+msgid "Model Description"
+msgstr "模型说明"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_crud_model_id
+msgid ""
+"Model for record creation / update. Set this field only to specify a "
+"different model than the base model."
+msgstr "记录创建/更新的模型。设置这个字段仅指明模型与基本模型的不同。"
+
+#. module: base_automation
+#: selection:base.automation,trg_date_range_type:0
 msgid "Months"
 msgstr "月份"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_name
 msgid "Name"
 msgstr "名称"
 
-#. module: base_action_rule
-#: selection:base.action.rule.lead.test,state:0
+#. module: base_automation
+#: selection:base.automation.lead.test,state:0
 msgid "New"
-msgstr "新的"
+msgstr "新建"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_on_change_fields
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_on_change_fields
 msgid "On Change Fields Trigger"
 msgstr "变化字段的触发器"
 
-#. module: base_action_rule
-#: selection:base.action.rule,kind:0
+#. module: base_automation
+#: selection:base.automation,trigger:0
 msgid "On Creation"
 msgstr "创建时"
 
-#. module: base_action_rule
-#: selection:base.action.rule,kind:0
+#. module: base_automation
+#: selection:base.automation,trigger:0
 msgid "On Creation & Update"
 msgstr "创建以及更新时"
 
-#. module: base_action_rule
-#: selection:base.action.rule,kind:0
+#. module: base_automation
+#: selection:base.automation,trigger:0
 msgid "On Deletion"
 msgstr "删除时"
 
-#. module: base_action_rule
-#: selection:base.action.rule,kind:0
+#. module: base_automation
+#: selection:base.automation,trigger:0
 msgid "On Update"
 msgstr "更新时"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_partner_id
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_help
+msgid ""
+"Optional help text for the users with a description of the target view, such"
+" as its usage and purpose."
+msgstr "可选的帮助文本，目标视图的说明，比如用途和目的。"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_partner_id
 msgid "Partner"
 msgstr "业务伙伴"
 
-#. module: base_action_rule
-#: selection:base.action.rule.lead.test,state:0
+#. module: base_automation
+#: selection:base.automation.lead.test,state:0
 msgid "Pending"
 msgstr "暂停"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_model_id
-msgid "Related Document Model"
-msgstr "相关的单据模型"
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_link_field_id
+msgid ""
+"Provide the field used to link the newly created recordon the record on used"
+" by the server action."
+msgstr ""
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_user_id
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_code
+msgid "Python Code"
+msgstr "Python 代码"
+
+#. module: base_automation
+#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Remove Action"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Remove the contextual action related to this server action"
+msgstr "移除与此服务器动作相关的上下文动作"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_user_id
 msgid "Responsible"
 msgstr "负责人"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_name
-msgid "Rule Name"
-msgstr "规则名称"
-
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid ""
-"Select when the action must be run, and choose records and/or timing "
-"conditions."
-msgstr "当动作必须要执行的时候，选择并且选择记录和/或时间条件"
-
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_sequence
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_sequence
 msgid "Sequence"
-msgstr "序号"
+msgstr "序列"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_server_action_ids
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_action_server_id
 msgid "Server Actions"
 msgstr "服务器动作"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid "Server actions to run"
-msgstr "要运行的服务器动作"
-
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_user_id
-msgid "Set Responsible"
-msgstr "设置负责人"
-
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
+#. module: base_automation
+#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Set selection based on a search filter:"
 msgstr "在搜索筛选设置一个选择"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_state
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state
 msgid "Status"
 msgstr "状态"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_name
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_name
 msgid "Subject"
 msgstr "主题"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_website_url
+msgid "The full URL to access the server action through the website."
+msgstr "通过网站访问单据的完整URL。"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_id
 msgid "Trigger Date"
 msgstr "触发日期"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_calendar_id
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_trigger
+msgid "Trigger condition"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_state
+msgid ""
+"Type of server action. The following values are available:\n"
+"- 'Execute Python Code': a block of python code that will be executed\n"
+"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
+"- 'Write on a Record': update the values of a record\n"
+"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Add Followers': add followers to a record (available in Discuss)\n"
+"- 'Send Email': automatically send an email (available in email_template)"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_usage
+msgid "Usage"
+msgstr "用途"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_calendar_id
 msgid "Use Calendar"
 msgstr "使用日历"
 
-#. module: base_action_rule
-#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+#. module: base_automation
+#: model:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
 "                various screens. Example: a lead created by a specific user may\n"
-"                be automatically set to a specific sales team, or an\n"
+"                be automatically set to a specific sales channel, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
-"使用自动操作来触发不同屏幕的动作\n"
-"例如：一个特定用户创建的线索可能被自动分配给某一个销售团队\n"
-"或者商机在等待14天后自动触发一个提醒电子邮件，"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
-msgid "User id"
-msgstr ""
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_user_id
+msgid "User"
+msgstr "用户"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_fields_lines
+msgid "Value Mapping"
+msgstr "映射的值"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_website_path
+msgid "Website Path"
+msgstr "网站路径"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_website_url
+msgid "Website Url"
+msgstr "网站网址"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_calendar_id
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr "当需要基于时间条件做计算时，可能使用一个基于工作日的日历去计算是比较合适的."
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_sequence
+msgid ""
+"When dealing with multiple actions, the execution order is based on the "
+"sequence. Low number means high priority."
+msgstr "在处理多个操作时，执行顺序是基于序列。小的数字具有更高的优先级。"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"当条件被触发。\n"
+"如果存在，将由调度器检查。如果为空，将检查创建并更新。"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
-msgid "When to Run"
-msgstr "何时运行"
-
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_active
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_active
 msgid "When unchecked, the rule is hidden and will not be executed."
 msgstr "如果不选中，此规则被隐藏且不被执行"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_code
 msgid ""
-"You may also use filters instead of choosing records. In order to create a "
-"new filter:"
-msgstr "你可能也用筛选选择记录。可以创建一个新的筛选："
+"Write Python code that the action will execute. Some variables are available"
+" for use; help about pyhon expression is given in the help tab."
+msgstr "编写将运行的Python代码。可以使用有限的特定变量，详细帮助请参阅 帮助 页签。"
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_ir_actions_server
+msgid "ir.actions.server"
+msgstr "ir.actions.server"

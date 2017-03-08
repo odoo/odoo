@@ -7,10 +7,10 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -18,41 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: payment_authorize
-#: model:payment.acquirer,cancel_msg:payment_authorize.payment_acquirer_authorize
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Mégse,</i> A fizetése elutasítva.</span>"
-
-#. module: payment_authorize
-#: model:payment.acquirer,done_msg:payment_authorize.payment_acquirer_authorize
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
-"<span><i>Elvégezve,</i> Az online fizetése sikeresen végrehajtva. Köszönjük "
-"a megrendelést.</span>"
-
-#. module: payment_authorize
-#: model:payment.acquirer,error_msg:payment_authorize.payment_acquirer_authorize
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-"<span><i>Hiba,</i> Vegye figyelembe, hogy a tranzakció alatt hiba történt. A"
-" megrendelés visszaigazolt, de nem lett kifizetve. A megrendelésének "
-"állapotával kapcsolatos kérdésekben, kérjük vegye fel velünk a "
-"kapcsolatot.</span>"
-
-#. module: payment_authorize
-#: model:payment.acquirer,pending_msg:payment_authorize.payment_acquirer_authorize
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
-"<span><i>Függőben,</i> Az online fizetése sikeresen teljesítve. De a "
-"megrendelését még nem hagyták jóvá.</span>"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_login
@@ -65,9 +30,29 @@ msgid "API Transaction Key"
 msgstr "API tranzakciós kulcs"
 
 #. module: payment_authorize
-#: model:payment.acquirer,name:payment_authorize.payment_acquirer_authorize
-msgid "Authorize.Net"
-msgstr "Authorize.Net"
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
+msgid "Authorize.net Profile ID"
+msgstr "Authorize.net profil ID"
+
+#. module: payment_authorize
+#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "CVC"
+msgstr "CVC"
+
+#. module: payment_authorize
+#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "Card number"
+msgstr "Kártya szám"
+
+#. module: payment_authorize
+#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
+msgstr "Jóváhagy <span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: payment_authorize
+#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "Expires"
+msgstr "Lejárat"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
@@ -77,6 +62,16 @@ msgid ""
 msgstr ""
 "Hogyan állítsa be az Authorize.Net fiókját (nézze meg a Első Lépések "
 "Útmutatót) ?"
+
+#. module: payment_authorize
+#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "MM / YY"
+msgstr "HH / ÉÉ"
+
+#. module: payment_authorize
+#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "Name"
+msgstr "Név"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -89,10 +84,15 @@ msgid "Payment Transaction"
 msgstr "Fizetési tranzakció"
 
 #. module: payment_authorize
-#: model:payment.acquirer,pre_msg:payment_authorize.payment_acquirer_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
 msgid ""
-"You will be redirected to the Authorize website after clicking on the "
-"payment button."
+"This contains the unique reference for this partner/payment token "
+"combination in the Authorize.net backend"
 msgstr ""
-"Át lesz irányítva az Authorize.Net weboldalra miután a fizetés gombra "
-"kattintott."
+"Ez tartalmazza az egyedi hivatkozást ehhez a partner/fizetés token "
+"kombinációhoz az Authorize.net háttérhez"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_token
+msgid "payment.token"
+msgstr "payment.token"

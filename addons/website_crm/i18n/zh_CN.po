@@ -3,7 +3,7 @@
 # * website_crm
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # xiaobin wu <bd5dml@gmail.com>, 2016
 # Wei "oldrev" Li <liwei@sandwych.com>, 2016
 # mrshelly <mrshelly@hotmail.com>, 2016
@@ -11,13 +11,16 @@
 # Michael Chong <michaelchong2005@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Talway <9010446@qq.com>, 2016
+# Олег <pehotaolega.ru@mail.ru>, 2016
+# liAnGjiA <liangjia@qq.com>, 2017
+# fausthuang <faust_huang@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: Talway <9010446@qq.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: fausthuang <faust_huang@hotmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +33,7 @@ msgstr ""
 #: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:35
 #, python-format
 msgid "% Leads"
-msgstr ""
+msgstr "线索"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
@@ -42,6 +45,35 @@ msgstr "&amp;次数;"
 msgid ""
 "<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
 "                                <span id=\"o_website_form_result\"/>"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_config_settings_crm_default_team_id
+msgid "Default Sales Channel"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_team_id
+msgid "Default Sales Channels"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_config_settings_crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_user_id
+msgid "Default Salesperson"
+msgstr "默认销售人员"
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_website_config_settings_crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website_crm_default_team_id
+msgid ""
+"Default sales channel for new leads created through the Contact Us form."
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_website_config_settings_crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_website_crm_default_user_id
+msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
 
 #. module: website_crm
@@ -71,7 +103,7 @@ msgstr "线索"
 #: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:8
 #, python-format
 msgid "Leads Acquisition /"
-msgstr ""
+msgstr "线索采集 /"
 
 #. module: website_crm
 #. openerp-web
@@ -84,6 +116,16 @@ msgstr "线索分析"
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Phone Number"
 msgstr "电话号码"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.website_config_settings_view_form_inherit_website_crm
+msgid "Sales Channel"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.website_config_settings_view_form_inherit_website_crm
+msgid "Salesperson"
+msgstr "销售员"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -106,6 +148,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "We will get back to you shortly."
 msgstr "我们将很快回复。"
+
+#. module: website_crm
+#: model:ir.model,name:website_crm.model_website
+msgid "Website"
+msgstr "网站"
 
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
@@ -131,3 +178,8 @@ msgstr "你的问题"
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "Your message has been sent successfully."
 msgstr "你的消息已成功发出。"
+
+#. module: website_crm
+#: model:ir.model,name:website_crm.model_website_config_settings
+msgid "website.config.settings"
+msgstr "website.config.settings"

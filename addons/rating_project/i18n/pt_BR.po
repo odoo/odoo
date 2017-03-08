@@ -3,17 +3,17 @@
 # * rating_project
 # 
 # Translators:
-# grazziano <g.negocios@outlook.com.br>, 2016
+# grazziano <gra.negocia@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Fernanda Gauss Pereira <nanda.gauss@gmail.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Mateus Lopes <mateus1@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,8 +25,8 @@ msgstr ""
 #: model:mail.template,body_html:rating_project.rating_project_request_email_template
 msgid ""
 "\n"
-"% set access_token = object.rating_get_access_token()\n"
 "<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    % set access_token = object.rating_get_access_token()\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
@@ -45,7 +45,7 @@ msgid ""
 "                <p>We appreciate your feedback. It helps us to improve continuously.</p>\n"
 "            </td></tr>\n"
 "            <tr><td style=\"padding:10px 20px\">\n"
-"                <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                <table summary=\"o_mail_notification\" style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                    <tr>\n"
 "                        <td style=\"text-align:center;\">\n"
 "                            <h2 style=\"font-weight:300;font-size:18px;\">\n"
@@ -79,7 +79,7 @@ msgid ""
 "                    </tr>\n"
 "                </table>\n"
 "            </td></tr>\n"
-"            <tr><td style=\"padding:15px 20px 10px 20px;\">${object.user_id.signature | safe}</td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${object.user_id.signature or ''| safe}</td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
 "    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
@@ -89,9 +89,9 @@ msgid ""
 "                    <p>This customer survey has been sent because your task has been moved to the stage <b>${object.stage_id.name}</b></p>\n"
 "                % endif\n"
 "                % if object.project_id.rating_status == 'periodic':\n"
-"                    <p>This customer survey is send <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.\n"
+"                    <p>This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.</p>\n"
 "                % endif\n"
-"                <p>Email automatically sent by <a href=\"https://www.odoo.com/page/project-management\" style=\"color:#a24689;text-decoration:none;\">Odoo Project</a> for <a href=\"${object.project_id.company_id.website}\" style=\"color:#a24689;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
+"                <p>Email automatically sent by <a href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo Project</a> for <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -102,29 +102,33 @@ msgstr ""
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
 msgstr ""
+"${object.project_id.company_id.name}: Solicitação de avaliação de serviço"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "% On tasks"
-msgstr ""
+msgstr "% Em tarefas"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Status de kanban automático"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid ""
-"Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
+"Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
 
 #. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
+#: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
+#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Customer Ratings"
-msgstr ""
+msgstr "Avaliações de Clientes"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -132,6 +136,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Avaliações de clientes sobre tarefas. Se você não tiver classificação, "
+"altere suas configurações do projeto para ativá-la."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project
@@ -139,18 +145,13 @@ msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
 msgstr ""
+"Avaliações de clientes sobre tarefas/problemas. Se você não tiver "
+"classificação, altere suas configurações do projeto para ativá-la."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr ""
-
-#. module: rating_project
-#: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
-#: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
-#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
-msgid "Customers Ratings"
-msgstr ""
+msgstr "Avaliações de Cliente(s)"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -163,16 +164,18 @@ msgid ""
 "Edit project's stages and set an email template\n"
 "                            on the stages on which you want to activate the rating."
 msgstr ""
+"Edite os estágios do projeto e defina um modelo de e-mail  nos estágios nos "
+"quais você deseja ativar a classificação."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr ""
+msgstr "Feliz % no Projeto"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr ""
+msgstr "Feliz % na Tarefa"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_rating_status
@@ -183,36 +186,49 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Como obter os feedbacks do cliente? - Avaliação ao mudar de fase: E-mail "
+"será enviado quando uma tarefa / problema é puxado em outro estágio- "
+"Avaliação periódica: Email será enviado periodicamenteNão se esqueça de "
+"configurar os modelos de e-mail Nos estágios para os quais você deseja obter"
+" os feedbacks do cliente."
+
+#. module: rating_project
+#: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
+msgid ""
+"If set and if the project's rating configuration is 'Rating when changing "
+"stage', then an email will be sent to the customer when the task reaches "
+"this step."
+msgstr ""
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Última Avaliação: Extremamente insatisfeito"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Última avaliação: Insatisfeito"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Última avaliação: Satisfeito"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr ""
+msgstr "Sem Avaliação"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "No rating yet"
-msgstr ""
+msgstr "Sem Avaliação ainda"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Once a Month"
-msgstr ""
+msgstr "Uma vez por mês"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -220,16 +236,25 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Percentagem de avaliações positivas nos últimos 30 dias. Obtenha detalhes de"
+" classificação no menu Mais."
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Periodical Rating"
-msgstr ""
+msgstr "Avaliação periódica"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
 msgid "Project"
 msgstr "Projeto"
+
+#. module: rating_project
+#: model:ir.actions.server,name:rating_project.ir_cron_rating_project_ir_actions_server
+#: model:ir.cron,cron_name:rating_project.ir_cron_rating_project
+#: model:ir.cron,name:rating_project.ir_cron_rating_project
+msgid "Project: Send rating"
+msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -244,36 +269,27 @@ msgstr "Classificação"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Avaliação do modelo de e-mail"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "Freqüência de avaliação"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
-msgid "Rating request deadline"
+msgid "Rating Request Deadline"
 msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Avaliação ao mudar de fase"
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
 msgid "Ratings"
-msgstr ""
-
-#. module: rating_project
-#: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
-msgid ""
-"Select an email template. An email will be sent to the customer when the "
-"task reach this step."
-msgstr ""
-"Escolha um modelo de e-mail. Um e-mail será enviado para o cliente quando a "
-"tarefa  chegar a esta etapa."
+msgstr "Avaliações"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task
@@ -284,7 +300,7 @@ msgstr "Tarefa"
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "Tarefa de avaliação"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
@@ -294,7 +310,7 @@ msgstr "Estágios de Tarefas"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Twice a Month"
-msgstr ""
+msgstr "Duas vezes por mês"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0

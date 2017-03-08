@@ -9,10 +9,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -124,6 +124,12 @@ msgid "Before Repair"
 msgstr "Javítás előtt"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:206
+#, python-format
+msgid "Can only confirm draft repairs."
+msgstr "Csak tervezet javításokat tud jóváhagyni."
+
+#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
 msgid "Cancel"
@@ -145,6 +151,12 @@ msgstr "Javítási rendelés visszavonás"
 #: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
 msgid "Cancelled"
 msgstr "Visszavont"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:221
+#, python-format
+msgid "Cannot cancel completed repairs."
+msgstr "Végrehajtott javításokat nem tudja törölni!"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -176,8 +188,8 @@ msgid "Confirmed"
 msgstr "Jóváhagyott"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:500
-#: code:addons/mrp_repair/models/mrp_repair.py:562
+#: code:addons/mrp_repair/models/mrp_repair.py:508
+#: code:addons/mrp_repair/models/mrp_repair.py:570
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -223,8 +235,8 @@ msgstr "Szállítás innen"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
-msgid "Default address id"
-msgstr "Alapértelmezett cím id azonosító"
+msgid "Default Address"
+msgstr "Alapértelmezett cím"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -349,11 +361,6 @@ msgid "Invoice"
 msgstr "Számla"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Invoice Corrected"
-msgstr "Számla javítása"
-
-#. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Invoice Exception"
 msgstr "Számlázási kivétel"
@@ -445,39 +452,44 @@ msgid "Move created by the repair order"
 msgstr "Tétel mozgás a javítási megrendelés által létrehozva"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "My Activities"
+msgstr "Tevékenységeim"
+
+#. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "No Invoice"
 msgstr "Nincs számla"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:491
-#: code:addons/mrp_repair/models/mrp_repair.py:553
+#: code:addons/mrp_repair/models/mrp_repair.py:499
+#: code:addons/mrp_repair/models/mrp_repair.py:561
 #, python-format
 msgid "No Pricelist!"
 msgstr "Nincs árlista!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:250
+#: code:addons/mrp_repair/models/mrp_repair.py:260
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "Nincs számla definiálva \"%s\" partnerhez."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:275
-#: code:addons/mrp_repair/models/mrp_repair.py:303
+#: code:addons/mrp_repair/models/mrp_repair.py:285
+#: code:addons/mrp_repair/models/mrp_repair.py:313
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Nincs számla definiálva \"%s\" termékhez."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:296
+#: code:addons/mrp_repair/models/mrp_repair.py:306
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "Nincs termék meghatározva a díjakon!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:498
-#: code:addons/mrp_repair/models/mrp_repair.py:560
+#: code:addons/mrp_repair/models/mrp_repair.py:506
+#: code:addons/mrp_repair/models/mrp_repair.py:568
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr "A rendszer nem talált érvényes árlista sort!"
@@ -496,6 +508,11 @@ msgstr "Műveleti sorok"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Operations"
 msgstr "Műveletek"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Overdue Activities"
+msgstr "Lejárt tevékenységek"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_id
@@ -591,11 +608,6 @@ msgid "Ready to Repair"
 msgstr "Javításra kész"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Recreate Invoice"
-msgstr "Számla újrakészítése"
-
-#. module: mrp_repair
 #: selection:mrp.repair.line,type:0
 msgid "Remove"
 msgstr "Eltávolítás"
@@ -645,7 +657,31 @@ msgid "Repair Reference"
 msgstr "Hivatkozás javításra"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:217
+#: code:addons/mrp_repair/models/mrp_repair.py:194
+#, python-format
+msgid "Repair must be canceled in order to reset it to draft."
+msgstr "Javításoknak érvénytelenítettnek kell lennie vázlattá alakításhoz."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:343
+#, python-format
+msgid "Repair must be confirmed before starting reparation."
+msgstr "Javításoknak jóváhagyottaknak kell lennie a javítás megkezdéséhez."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:371
+#, python-format
+msgid "Repair must be repaired in order to make the product moves."
+msgstr "Javításoknak elvégzettnek kell lennie termék egyeztetéshez."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:354
+#, python-format
+msgid "Repair must be under repair in order to end reparation."
+msgstr "Javításoknak javítás alatt kell lennie a javítás befejezéséhez."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:223
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr "A jevitási megrendelés már számlázva."
@@ -695,7 +731,7 @@ msgstr ""
 "jelenti, hogy ehhez a javításhoz nem szeretne számlát készíteni."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:210
+#: code:addons/mrp_repair/models/mrp_repair.py:213
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "Szériaszám szükséges a terméken végzett művelet sorhoz '%s'"
@@ -704,6 +740,13 @@ msgstr "Szériaszám szükséges a terméken végzett művelet sorhoz '%s'"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Set to Draft"
 msgstr "Beállítás tervezetnek"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Mutassa az összes rekordot melyre a következő műveleti dátum a mai nap "
+"előtti"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
@@ -797,6 +840,11 @@ msgid "To be Invoiced"
 msgstr "Még számlázandó"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Today Activities"
+msgstr "Mai napi tevékenységek"
+
+#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_total
 msgid "Total"
 msgstr "Összesen"
@@ -839,6 +887,11 @@ msgid "Untaxed amount"
 msgstr "Nettó érték"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Upcoming Activities (7 days)"
+msgstr "Elkövetkező műveletek (7 nap)"
+
+#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "VAT:"
 msgstr "ÁFA:"
@@ -860,14 +913,14 @@ msgid "Yes"
 msgstr "Igen"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:238
+#: code:addons/mrp_repair/models/mrp_repair.py:248
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr "A javítási űrlapon ki kell választania egy partner számlázási címet!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:493
-#: code:addons/mrp_repair/models/mrp_repair.py:555
+#: code:addons/mrp_repair/models/mrp_repair.py:501
+#: code:addons/mrp_repair/models/mrp_repair.py:563
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"

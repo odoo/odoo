@@ -11,13 +11,19 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2017
+# Clo <clo@odoo.com>, 2017
+# Quentin THEURET <quentin@theuret.net>, 2017
+# Agathe Mollé <molleagathe@gmail.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2017
+# Richard Mathot <rim@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Leo Schmitt <inactive+lschmitt@transifex.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Richard Mathot <rim@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +57,13 @@ msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Un membre auquel vous voulez associer votre adhésion. Cela prendra en compte"
+" l'état de l'adhésion du membre associé."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
+msgid "Activation"
+msgstr "Activation"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
@@ -64,7 +77,7 @@ msgstr "Date d'annulation de l'adhésion"
 
 #. module: sale_crm
 #. openerp-web
-#: code:addons/sale_crm/static/src/js/tour.js:14
+#: code:addons/sale_crm/static/src/js/tour.js:16
 #, python-format
 msgid "Click here to see more options."
 msgstr ""
@@ -105,14 +118,38 @@ msgid "Free Member"
 msgstr "Membre libre"
 
 #. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
+msgstr ""
+"Donne la probabilité d'affecter une piste à ce partenaire (0 signifie pas "
+"d'affectation)"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
+msgid "Implementation References"
+msgstr "Références d'implémentations"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_count
+msgid "Implemented Count"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
+msgid "Implemented by"
+msgstr "Implémenté par"
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
 msgstr "Facture"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
-msgid "Invoiced in Sale Orders Target"
-msgstr "Facturé dans l'objectif des bons de commande"
+msgid "Invoiced in Sales Orders Target"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
@@ -134,16 +171,31 @@ msgstr ""
 "-Membre payé : Un membre qui a payé son adhésion."
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
+msgid "Latest Partner Review"
+msgstr "Dernière révision du partenaire"
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Piste/opportunité"
 
 #. module: sale_crm
 #. openerp-web
-#: code:addons/sale_crm/static/src/js/tour.js:18
+#: code:addons/sale_crm/static/src/js/tour.js:20
 #, python-format
-msgid "Let's have a look at the quotations of this sales team."
+msgid "Let's have a look at the quotations of this sales channel."
 msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
+msgid "Level"
+msgstr "Niveau"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
+msgid "Level Weight"
+msgstr "Poids du niveau"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
@@ -188,6 +240,11 @@ msgid "New Quotation"
 msgstr "Nouveau devis"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
+msgid "Next Partner Review"
+msgstr "Prochaine révision du partenaire"
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
 msgstr "Nombre de devis"
@@ -203,9 +260,20 @@ msgid "Orders"
 msgstr "Tri"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+msgid "Partnership Date"
+msgstr "Date du partenariat"
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
 msgid "Payment Tokens"
 msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/models/crm_team.py:12
+#, python-format
+msgid "Pipeline"
+msgstr "Pipeline"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -216,6 +284,11 @@ msgstr "Devis"
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
 msgid "Quotations"
 msgstr "Devis"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_team
+msgid "Sales Channel"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
@@ -241,6 +314,11 @@ msgstr ""
 "Message. Sélectionner 'Message Bloquant' lancera une exception avec le "
 "message et bloquera le flux. Le Message doit être encodé dans le champ "
 "suivant."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_sequence
+msgid "Sequence"
+msgstr "Séquence"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn

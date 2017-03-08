@@ -10,10 +10,10 @@
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -26,9 +26,8 @@ msgstr ""
 #: model:mail.template,body_html:project.mail_template_data_module_install_project
 msgid ""
 "\n"
-"            % set last_created_project = user.env['project.project'].search([('alias_id','<>',False)], order=\"create_date desc\")[0]\n"
-"\n"
 "            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
 "            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
 "                <tbody>\n"
 "                    <tr>\n"
@@ -36,7 +35,7 @@ msgid ""
 "                            <img src=\"web/static/src/img/logo.png\"/>\n"
 "                        </td>\n"
 "                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #a24689;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </tbody>\n"
@@ -73,7 +72,7 @@ msgid ""
 "                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
 "                                    <span style=\"font-weight:bold; text-decoration:underline;\">project planner</span></a></span>\n"
 "                                <span> to activate extra features</span>\n"
-"                                <span style=\"color:#a24689;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
 "                            </p>\n"
 "                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
 "                                <li dir=\"ltr\">\n"
@@ -108,11 +107,10 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
-"                                how to get the best out of Odoo Project with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo Project with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation\">\n"
@@ -129,109 +127,21 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
-"\n"
-"            % set last_created_project = user.env['project.project'].search([('alias_id','<>',False)], order=\"create_date desc\")[0]\n"
-"\n"
-"            <div style=\"margin: 10px auto;\">\n"
-"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:2px;width:30%;\">\n"
-"                            <img src=\"web/static/src/img/logo.png\"/>\n"
-"                        </td>\n"
-"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #a24689;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Automatikus belépés</a>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                <span>Az Odoo rendszer Projekt téma alkalmazása él és fut</span></p><br>\n"
-"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-size:13px;font-weight:bold;\">Mi a további teendő?</span></p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                % if last_created_project:\n"
-"                                    <li dir=\"ltr\">\n"
-"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                            <span>Próbáljon meg egy feladatot létrehozni a e-amil küldésével ide: </span>\n"
-"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
-"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
-"                                            </a>\n"
-"                                        </p>\n"
-"                                    </li>\n"
-"                                % endif\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
-"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Hívjon meg új felhasználókat</span></a></span>\n"
-"                                        <span>segítségnyújtához</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul> <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Fedezze fel a </span>\n"
-"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
-"                                    <span style=\"font-weight:bold; text-decoration:underline;\">projekt téma tervezőt</span></a></span>\n"
-"                                <span> extra jellemzők aktiválásával</span>\n"
-"                                <span style=\"color:#a24689;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
-"                            </p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Kövesse nyomon a munkaórákat a Munkaidő-kimutatásokkal,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Tervezzen feladatokat és erőforrásokat előrejelzésekkel,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Kapjon okos kimutatásokat és  pontos műszerfalakat,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Időben számlázzon a feladatokra vagy az ügyekre,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>É s még sok más...</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Szüksége van segítségre?</span>\n"
-"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
-"                            </p>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>Örömmel  nyújtunk segítséget útközben. Lépjen kapcsolatba velünk itt \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> bármely felmerülő kérdéssel. Ugyanakkor felfedezheti \n"
-"                                hogyan vegye ki a legtöbbet az Odoo Projekt témákból a mi </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
-"                                <span style=\"text-decoration:underline;\">Felhasználói Dokumentációnkból</span></a>\n"
-"                                </span><span> or with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation\">\n"
-"                                <span style=\"text-decoration:underline;\">API Dokumentáció</span></a>\n"
-"                            </p>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Élvezze az Odoo rendszer felfedezését,</span></p>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>Az Odoo csapata<br/>PS: Emberek szeretik az Odoo rendszert, ellenőrizze </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">mit mondanak erről.</span></a></span>\n"
-"            </div>\n"
-"        </div>"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
+msgid "# Days to Assign"
+msgstr "# Napok a hozzárendelésig"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
+msgid "# Days to Close"
+msgstr "# Lezárásig hátralévő napok"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
+msgid "# Days to Deadline"
+msgstr "# Napok a határidőig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -240,18 +150,17 @@ msgstr "# Feladatok"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
-msgid "# of Days"
-msgstr "# Napok száma"
+msgid "# Working Days"
+msgstr "# Munkanapok "
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_nbr_tasks
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
 msgid "# of Tasks"
 msgstr "# számú feladat"
 
 #. module: project
-#: code:addons/project/models/project.py:235
-#: code:addons/project/models/project.py:404
+#: code:addons/project/models/project.py:240
+#: code:addons/project/models/project.py:407
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -285,7 +194,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:72
+#: code:addons/project/static/src/js/tour.js:69
 #, python-format
 msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
@@ -296,7 +205,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:83
+#: code:addons/project/static/src/js/tour.js:80
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
 msgstr ""
@@ -312,13 +221,13 @@ msgstr "<b>Fogd &amp; vidd feladatok</b> az oszlopok közt a munkája során."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:97
+#: code:addons/project/static/src/js/tour.js:94
 #, python-format
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
-"<b>Hívjon meg  munkatársakat</b> e-mailen.<br/><i>Soronként egy emailt adjon"
-" meg.</i>"
+"<b>Hívjon meg munkatársakat</b> e-mailen.<br/><i>Soronként egy e-mail címet "
+"adjon meg.</i>"
 
 #. module: project
 #. openerp-web
@@ -349,7 +258,7 @@ msgstr ""
 "                    </p>"
 
 #. module: project
-#: code:addons/project/models/project.py:145
+#: code:addons/project/models/project.py:150
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
 msgstr ""
@@ -550,6 +459,22 @@ msgstr ""
 "                                        <span class=\"fa fa-exclamation-circle\"/>\n"
 "                                        <strong> Ügyek</strong>\n"
 "                                    </span>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
+msgid ""
+"<span class=\"text-muted\">NB: This will archive the selected tasks (Except "
+"the destination task)</span>"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid ""
+"<span>(*) This configuration is related to the company you're logged "
+"into.</span>"
+msgstr ""
+"<span>(*) Ez a konfiguráció összefügg a vállalattal, amelybe "
+"bejelentkezett.</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1066,15 +991,10 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task_kanban_state
 msgid ""
 "A task's kanban state indicates special situations affecting it:\n"
-" * Normal is the default situation\n"
-" * Blocked indicates something is preventing the progress of this task\n"
-" * Ready for next stage indicates the task is ready to be pulled to the next stage"
+" * Grey is the default situation\n"
+" * Red indicates something is preventing the progress of this task\n"
+" * Green indicates the task is ready to be pulled to the next stage"
 msgstr ""
-"Egy feladat kanban állapota megmutatja a speciális helyzet hatását:\n"
-" * Normál az alapértelmezett helyzet\n"
-" * Blokkolt azt mutatja, hogy valami megakadályozza ennek a feladatnak a folyamatát\n"
-" * Készen áll a következő szintre azt mutatja, hogy a a feladat készen áll a  a következő szintre\n"
-"lépésre"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1088,7 +1008,7 @@ msgstr "Fiók beállítások"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:38
+#: code:addons/project/static/src/js/web_planner_project.js:39
 #, python-format
 msgid "Action has a clear description"
 msgstr "Érthető leírása van a műveletnek"
@@ -1101,11 +1021,6 @@ msgid ""
 msgstr ""
 "Aktiválja a 'Engedélyezze a számlázást a munkaidő-kiosztás alapján' a "
 "<i>Humán Erőforrás Beállítások</i> menüben."
-
-#. module: project
-#: model:ir.actions.server,name:project.activate_sample_project
-msgid "Activate Sample Project"
-msgstr "Példa projekt téma aktiválása"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_active
@@ -1130,8 +1045,13 @@ msgstr ""
 "beállításához.<br/><i>pl. Részletezés &gt; Fejlesztés &gt; Kész</i>"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+msgid "Add/remove from favorite"
+msgstr "Hozzáadás/eltávolítás a kedvencekből"
+
+#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:55
+#: code:addons/project/static/src/js/web_planner_project.js:56
 #, python-format
 msgid "Added in current sprint"
 msgstr "Jelenlegi futáshoz adta"
@@ -1257,8 +1177,8 @@ msgid "Assigned To"
 msgstr "Hozzárendelve"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_user_id
 #: model:ir.model.fields,field_description:project.field_project_task_user_id
-#: model:ir.ui.view,arch_db:project.view_task_history_search
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
@@ -1273,12 +1193,12 @@ msgstr "Hozzárendelés dátuma"
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid ""
 "At each stage employees can block or make task/issue ready for next stage.\n"
-"                            You can define here labels that will be displayed for the state instead\n"
-"                            of the default labels."
+"                                You can define here labels that will be displayed for the state instead\n"
+"                                of the default labels."
 msgstr ""
-"Mindegyik szakasz szinten az alkalmazottak megállíthatják vagy feladatokat/ügyeket fejezhetnek be a következő szinthez.\n"
-"                            Feliratokat határozhatnak meg az állapot kijelzésére az alapértelmezett\n"
-"                            folyamat szint feliratok helyett."
+"Mindegyik szakasz szinten az alkalmazottak megállíthatják vagy feladatokat/ügyeket fejezhetnek be a következő szinthez. \n"
+"                                Feliratokat határozhatnak meg az állapot kijelzésére az alapértelmezett folyamat \n"
+"                                szint feliratok helyett."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1322,9 +1242,9 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:31
-#: code:addons/project/static/src/js/web_planner_project.js:47
-#: code:addons/project/static/src/js/web_planner_project.js:63
+#: code:addons/project/static/src/js/web_planner_project.js:32
+#: code:addons/project/static/src/js/web_planner_project.js:48
+#: code:addons/project/static/src/js/web_planner_project.js:64
 #, python-format
 msgid "Backlog"
 msgstr "Hátralék"
@@ -1354,10 +1274,22 @@ msgstr ""
 " egy órán belül tartani"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_task_history_search
-#: selection:project.task,kanban_state:0
-#: selection:project.task.history,kanban_state:0
-#: selection:project.task.history.cumulative,kanban_state:0
+#: model:project.task,legend_blocked:project.project_task_data_0
+#: model:project.task,legend_blocked:project.project_task_data_1
+#: model:project.task,legend_blocked:project.project_task_data_11
+#: model:project.task,legend_blocked:project.project_task_data_12
+#: model:project.task,legend_blocked:project.project_task_data_13
+#: model:project.task,legend_blocked:project.project_task_data_14
+#: model:project.task,legend_blocked:project.project_task_data_2
+#: model:project.task,legend_blocked:project.project_task_data_4
+#: model:project.task,legend_blocked:project.project_task_data_5
+#: model:project.task,legend_blocked:project.project_task_data_6
+#: model:project.task,legend_blocked:project.project_task_data_7
+#: model:project.task,legend_blocked:project.project_task_data_8
+#: model:project.task,legend_blocked:project.project_task_data_9
+#: model:project.task.type,legend_blocked:project.project_stage_data_0
+#: model:project.task.type,legend_blocked:project.project_stage_data_1
+#: model:project.task.type,legend_blocked:project.project_stage_data_2
 #: selection:report.project.task.user,state:0
 msgid "Blocked"
 msgstr "Zárolt"
@@ -1379,15 +1311,16 @@ msgid "By Responsible"
 msgstr "Felelős szerint"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Cancel"
 msgstr "Mégse"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:69
-#: code:addons/project/static/src/js/web_planner_project.js:84
-#: code:addons/project/static/src/js/web_planner_project.js:98
+#: code:addons/project/static/src/js/web_planner_project.js:70
+#: code:addons/project/static/src/js/web_planner_project.js:85
+#: code:addons/project/static/src/js/web_planner_project.js:99
 #, python-format
 msgid "Cancelled"
 msgstr "Visszavont"
@@ -1417,13 +1350,13 @@ msgstr ""
 "fejlesztés, Irodai rendezvény, stb.)"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.edit_project_simplified
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Choose a Project Email"
 msgstr "Válasszon egy projekt téma E-mailt"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:54
+#: code:addons/project/static/src/js/web_planner_project.js:55
 #, python-format
 msgid "Clear description and purpose"
 msgstr "Törölje a leírást és célt"
@@ -1437,15 +1370,6 @@ msgstr "Kattintson egy kártyára a feladat részleteihez"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:88
-#, python-format
-msgid "Click on layers in the path to easily <b>return to tasks</b>."
-msgstr ""
-"Kattintson az útvonalon egy rétegre, hogy könnyen <b>visszatérjen a "
-"feladatokra</b>."
-
-#. module: project
-#. openerp-web
 #: code:addons/project/static/src/js/tour.js:31
 #, python-format
 msgid ""
@@ -1456,7 +1380,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:67
+#: code:addons/project/static/src/js/tour.js:64
 #, python-format
 msgid "Click on this button to modify the task."
 msgstr "Kattintson erre a gombra a feladat módosításához."
@@ -1470,11 +1394,6 @@ msgstr "Kattintson egy új címke hozzáadásához."
 #: model:ir.actions.act_window,help:project.open_task_type_form
 msgid "Click to add a stage in the task pipeline."
 msgstr "Kattintson a egy új szakasz hozzáadásához a folyamat útvonalába."
-
-#. module: project
-#: model:ir.ui.view,arch_db:project.view_project_kanban
-msgid "Click to add/remove from favorite"
-msgstr "Kattintson a kedvencek hozzáadásához/kikapcsolásához."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -1504,6 +1423,7 @@ msgid "Companies"
 msgstr "Vállalatok"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_company_id
 #: model:ir.model.fields,field_description:project.field_project_project_company_id
 #: model:ir.model.fields,field_description:project.field_project_task_company_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_company_id
@@ -1526,7 +1446,7 @@ msgstr "Beállítások"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:93
+#: code:addons/project/static/src/js/tour.js:90
 #, python-format
 msgid "Configuration options are available in the Settings app."
 msgstr "Beállítási lehetőségeket a Beállítások alkalmazásban talál."
@@ -1574,15 +1494,25 @@ msgstr "Projekt témák minőségét és elégedettségét felügyelheti"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:33
+#: code:addons/project/static/src/js/web_planner_project.js:34
 #, python-format
 msgid "Copywriting / Design"
 msgstr "Szlogen / Kivitelezés"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.edit_project_simplified
+#: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
+msgid "Cover Image"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create"
 msgstr "Létrehozás"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_create_date
+msgid "Create Date"
+msgstr "Létrehozás dátuma"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1598,6 +1528,11 @@ msgstr "Projekt létrehozása"
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project."
 msgstr "Hozzon létre egy új projekt témát."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_new_task
+msgid "Create a new task"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1619,11 +1554,6 @@ msgid "Create bills automatically based on Time &amp; Material."
 msgstr "Számla automatikus létrehozása az Idő &amp; Anyag alapján."
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_create_date
-msgid "Create date"
-msgstr "Létrehozás dátuma"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create the Projects"
 msgstr "Projekt témák létrehozása"
@@ -1633,6 +1563,7 @@ msgstr "Projekt témák létrehozása"
 #: model:ir.model.fields,field_description:project.field_project_project_create_uid
 #: model:ir.model.fields,field_description:project.field_project_tags_create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_create_uid
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_create_uid
 msgid "Created by"
 msgstr "Készítette"
@@ -1641,6 +1572,7 @@ msgstr "Készítette"
 #: model:ir.model.fields,field_description:project.field_project_config_settings_create_date
 #: model:ir.model.fields,field_description:project.field_project_project_create_date
 #: model:ir.model.fields,field_description:project.field_project_tags_create_date
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
@@ -1655,7 +1587,6 @@ msgstr ""
 "                        Az Odoo rendszerben, ez eléggé magától értetődő, de itt találhat egy két hasznos magyarázatot."
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_task_history_search
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Creation Date"
 msgstr "Létrehozás dátuma"
@@ -1666,10 +1597,7 @@ msgid "Credit"
 msgstr "Követel"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_view_task_history_cumulative
-#: model:ir.actions.act_window,name:project.action_view_task_history_cumulative_filter
-#: model:ir.ui.menu,name:project.menu_action_view_task_history_cumulative
-#: model:ir.ui.view,arch_db:project.view_project_kanban
+#: model:ir.filters,name:project.filter_task_report_cumulative_flow
 msgid "Cumulative Flow"
 msgstr "Halmozódó folyamat"
 
@@ -1684,7 +1612,12 @@ msgid "Current Timesheet"
 msgstr "Jelenlegi munkaidő-kiosztás"
 
 #. module: project
-#: code:addons/project/models/project.py:663
+#: model:ir.actions.act_window,help:project.project_task_action_activity
+msgid "Currently there are not any activity scheduled."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:638
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1693,7 +1626,7 @@ msgid "Customer"
 msgstr "Vásárló"
 
 #. module: project
-#: code:addons/project/models/project.py:663
+#: code:addons/project/models/project.py:638
 #, python-format
 msgid "Customer Email"
 msgstr "Vevői e-mail"
@@ -1705,28 +1638,28 @@ msgstr "Vásárlói ügyfélszolgálat"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:73
+#: code:addons/project/static/src/js/web_planner_project.js:74
 #, python-format
 msgid "Customer feedback has been requested"
 msgstr "Vásárlói visszajelzés igényelve"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:91
+#: code:addons/project/static/src/js/web_planner_project.js:92
 #, python-format
 msgid "Customer has cancelled repair"
 msgstr "Vásárló megszakította a javíttatást"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:71
+#: code:addons/project/static/src/js/web_planner_project.js:72
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "Vásárló új ügyet jelentett be"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:70
+#: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer service has found new issue"
 msgstr "Ügyfél szolgálat új ügyet talált"
@@ -1745,22 +1678,6 @@ msgstr "Testreszabás"
 #: model:ir.ui.menu,name:project.menu_projects
 msgid "Dashboard"
 msgstr "Műszerfal"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_date
-#: model:ir.model.fields,field_description:project.field_project_task_history_date
-msgid "Date"
-msgstr "Dátum"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
-msgid "Days to Assign"
-msgstr "Napok száma a hozzárendelésig"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
-msgid "Days to Close"
-msgstr "Lezárásig hátralévő napok"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_deadline
@@ -1815,7 +1732,7 @@ msgstr "Telepít"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:19
+#: code:addons/project/static/src/js/web_planner_project.js:20
 #, python-format
 msgid "Deployment"
 msgstr "Fejlődés"
@@ -1829,7 +1746,7 @@ msgstr "Leírás"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:17
+#: code:addons/project/static/src/js/web_planner_project.js:18
 #, python-format
 msgid "Development"
 msgstr "Fejlesztés"
@@ -1842,7 +1759,7 @@ msgstr "Fejlesztési folyamat"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:50
-#: model:ir.ui.view,arch_db:project.edit_project_simplified
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #, python-format
 msgid "Discard"
 msgstr "Elvetés"
@@ -1852,28 +1769,22 @@ msgstr "Elvetés"
 #: model:ir.model.fields,field_description:project.field_project_project_display_name
 #: model:ir.model.fields,field_description:project.field_project_tags_display_name
 #: model:ir.model.fields,field_description:project.field_project_task_display_name
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_display_name
-#: model:ir.model.fields,field_description:project.field_project_task_history_display_name
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_display_name
 #: model:ir.model.fields,field_description:project.field_project_task_type_display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
-msgid "Displayed Image"
-msgstr "Megjelenített kép"
-
-#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:34
+#: code:addons/project/static/src/js/web_planner_project.js:35
 #, python-format
 msgid "Distribute"
 msgstr "Feloszt"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:42
+#: code:addons/project/static/src/js/web_planner_project.js:43
 #, python-format
 msgid "Distribution is completed"
 msgstr "Distribució elvégezve"
@@ -1885,7 +1796,7 @@ msgstr "Ne hozzon létre automatikusan email álneveket"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:50
+#: code:addons/project/static/src/js/web_planner_project.js:51
 #, python-format
 msgid "Documentation"
 msgstr "Dokumentáció"
@@ -1925,10 +1836,10 @@ msgstr "Ne tétovázzon, válasszon az érdeklődésének megfelelő események 
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:35
-#: code:addons/project/static/src/js/web_planner_project.js:68
-#: code:addons/project/static/src/js/web_planner_project.js:83
-#: code:addons/project/static/src/js/web_planner_project.js:97
+#: code:addons/project/static/src/js/web_planner_project.js:36
+#: code:addons/project/static/src/js/web_planner_project.js:69
+#: code:addons/project/static/src/js/web_planner_project.js:84
+#: code:addons/project/static/src/js/web_planner_project.js:98
 #, python-format
 msgid "Done"
 msgstr "Elvégezve"
@@ -1977,19 +1888,13 @@ msgid "End"
 msgstr "Vége"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_end_date
-#: model:ir.model.fields,field_description:project.field_project_task_history_end_date
-msgid "End Date"
-msgstr "Befejezés dátuma"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_end
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_end
 msgid "Ending Date"
 msgstr "Befejezési dátum"
 
 #. module: project
-#: code:addons/project/models/project.py:412
+#: code:addons/project/models/project.py:415
 #, python-format
 msgid "Error ! Task starting date must be lower than its ending date."
 msgstr ""
@@ -2036,7 +1941,7 @@ msgstr "Példák"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:74
+#: code:addons/project/static/src/js/web_planner_project.js:75
 #, python-format
 msgid "Expert advice has been requested"
 msgstr "Szakember tanácsát igényelte"
@@ -2049,11 +1954,9 @@ msgstr "Lejárati idő"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_legend_priority
 msgid ""
-"Explanation text to help users using the star and priority mechanism on "
-"stages or issues that are in this stage."
+"Explanation text to help users using the star on tasks or issues in this "
+"stage."
 msgstr ""
-"Magyarázó szöveg a felhasználóknak az ezen a szinten lévő lépés szintek vagy"
-" ügyek csillag és prioritás szerkezet használatának segítségére."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -2071,28 +1974,23 @@ msgid "Extra useful for when you're with a customer or in a meeting."
 msgstr "Kimondottan hasznos akkor, ha ügyféllel van vagy egy találkozón."
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_project_kanban
-msgid "Favorite"
-msgstr "Kedvenc"
-
-#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:88
+#: code:addons/project/static/src/js/web_planner_project.js:89
 #, python-format
 msgid "Feedback from customer requested"
 msgstr "Vásárlótól kért visszajelzés"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:26
+#: code:addons/project/static/src/js/web_planner_project.js:27
 #, python-format
 msgid "Finally task is deployed"
 msgstr "Végezetül a feladat telepítve"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
-msgid "Folded in Tasks Pipeline"
-msgstr "A Feladat folyamatokban behajtott"
+msgid "Folded in Kanban"
+msgstr "Kanban nézetben behajtott"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2194,9 +2092,32 @@ msgstr ""
 "Ha megjelemníti a  feladatok listáját akkor kiadja a megrendelés sorozatát"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:99
+#, python-format
+msgid ""
+"Good job! Your completed the Project Management tour. You can continue with "
+"the <b>implementation guide</b> to help you setup Project Management in your"
+" company."
+msgstr ""
+"Szép munka! elvégezte a Projekt téma szervezés bejárását. Folytathatja a "
+"<b>végrehajtás leírással</b> a saját vállalkozásához a Projekt téma "
+"szervezés beállításához."
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Good luck!"
 msgstr "Sok szerencsét!"
+
+#. module: project
+#: selection:project.task,kanban_state:0
+msgid "Green"
+msgstr "Zöld"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
+msgid "Green Kanban Label"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2207,13 +2128,22 @@ msgstr ""
 "munka elvégezve)"
 
 #. module: project
+#: selection:project.task,kanban_state:0
+msgid "Grey"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
+msgid "Grey Kanban Label"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Grey: the Task is in progress (someone is working on it)"
 msgstr "Szürke : a Feladat  elvégzése folyamatban (valaki dolgozik rajta)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
-#: model:ir.ui.view,arch_db:project.view_task_history_search
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Group By"
@@ -2228,17 +2158,6 @@ msgstr "Itt talál egy pár <strong>elérhető személyre-szabást</strong>:"
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Here, you can create new tasks"
 msgstr "Itt, létrehozhat új feladatokat"
-
-#. module: project
-#: selection:project.task,priority:0
-#: selection:report.project.task.user,priority:0
-msgid "High"
-msgstr "Magas"
-
-#. module: project
-#: model:ir.model,name:project.model_project_task_history
-msgid "History of Tasks"
-msgstr "Feladatok története"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_privacy_visibility
@@ -2258,7 +2177,7 @@ msgstr ""
 "   feladatokat, bejelentett ügyeket\n"
 
 #. module: project
-#: code:addons/project/models/project.py:591
+#: code:addons/project/models/project.py:564
 #, python-format
 msgid "I take it"
 msgstr "Átveszem"
@@ -2267,9 +2186,8 @@ msgstr "Átveszem"
 #: model:ir.model.fields,field_description:project.field_project_config_settings_id
 #: model:ir.model.fields,field_description:project.field_project_project_id
 #: model:ir.model.fields,field_description:project.field_project_tags_id
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_id
-#: model:ir.model.fields,field_description:project.field_project_task_history_id
 #: model:ir.model.fields,field_description:project.field_project_task_id
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_id
 #: model:ir.model.fields,field_description:project.field_project_task_type_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_id
 msgid "ID"
@@ -2286,14 +2204,14 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:103
+#: code:addons/project/static/src/js/web_planner_project.js:104
 #, python-format
 msgid "Idea has been transformed into concrete actions"
 msgstr "Ötlet konkrét cselekvésekké alakult"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:102
+#: code:addons/project/static/src/js/web_planner_project.js:103
 #, python-format
 msgid "Idea is fully explained"
 msgstr "Ötlet teljesen tisztázott"
@@ -2305,7 +2223,7 @@ msgstr "Ideális esetben, egy személy egy projekt témáért felel."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:95
+#: code:addons/project/static/src/js/web_planner_project.js:96
 #, python-format
 msgid "Ideas"
 msgstr "Ötletek"
@@ -2377,23 +2295,38 @@ msgid "Improve collaboration with customers"
 msgstr "Fejlessze az együttműködést a vásárlókkal"
 
 #. module: project
-#: selection:project.task,kanban_state:0
+#: model:project.task,legend_normal:project.project_task_data_0
+#: model:project.task,legend_normal:project.project_task_data_1
+#: model:project.task,legend_normal:project.project_task_data_11
+#: model:project.task,legend_normal:project.project_task_data_12
+#: model:project.task,legend_normal:project.project_task_data_13
+#: model:project.task,legend_normal:project.project_task_data_14
+#: model:project.task,legend_normal:project.project_task_data_2
+#: model:project.task,legend_normal:project.project_task_data_4
+#: model:project.task,legend_normal:project.project_task_data_5
+#: model:project.task,legend_normal:project.project_task_data_6
+#: model:project.task,legend_normal:project.project_task_data_7
+#: model:project.task,legend_normal:project.project_task_data_8
+#: model:project.task,legend_normal:project.project_task_data_9
+#: model:project.task.type,legend_normal:project.project_stage_data_0
+#: model:project.task.type,legend_normal:project.project_stage_data_1
+#: model:project.task.type,legend_normal:project.project_stage_data_2
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "Folyamatban"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:32
-#: code:addons/project/static/src/js/web_planner_project.js:65
-#: code:addons/project/static/src/js/web_planner_project.js:80
+#: code:addons/project/static/src/js/web_planner_project.js:33
+#: code:addons/project/static/src/js/web_planner_project.js:66
+#: code:addons/project/static/src/js/web_planner_project.js:81
 #, python-format
 msgid "In progress"
 msgstr "Folyamatban"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:79
+#: code:addons/project/static/src/js/web_planner_project.js:80
 #, python-format
 msgid "Incoming"
 msgstr "Érkező"
@@ -2440,14 +2373,14 @@ msgstr "Ügy változata"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:72
+#: code:addons/project/static/src/js/web_planner_project.js:73
 #, python-format
 msgid "Issue is being worked on"
 msgstr "Ügyet fel fog dolgozni ekkor"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:75
+#: code:addons/project/static/src/js/web_planner_project.js:76
 #, python-format
 msgid "Issue is resolved"
 msgstr "Ügy megoldva"
@@ -2517,13 +2450,11 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_blocked
-#: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Kanban Blocked Explanation"
 msgstr "Kanban blokkolás magyarázata"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_normal
-#: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
 msgid "Kanban Ongoing Explanation"
 msgstr "Kanban továbblépés magyarázata"
 
@@ -2538,15 +2469,13 @@ msgid "Kanban Stages"
 msgstr "Kanban szakaszok"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_kanban_state
-#: model:ir.model.fields,field_description:project.field_project_task_history_kanban_state
 #: model:ir.model.fields,field_description:project.field_project_task_kanban_state
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_state
 msgid "Kanban State"
 msgstr "Kanban státusz"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_done
-#: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Kanban Valid Explanation"
 msgstr "Kanban tényleges magyarázata"
 
@@ -2570,8 +2499,7 @@ msgstr "Utolsó üzenet"
 #: model:ir.model.fields,field_description:project.field_project_project___last_update
 #: model:ir.model.fields,field_description:project.field_project_tags___last_update
 #: model:ir.model.fields,field_description:project.field_project_task___last_update
-#: model:ir.model.fields,field_description:project.field_project_task_history___last_update
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative___last_update
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard___last_update
 #: model:ir.model.fields,field_description:project.field_project_task_type___last_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user___last_update
 msgid "Last Modified on"
@@ -2587,6 +2515,7 @@ msgstr "Utolsó szint frissítése"
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_uid
 #: model:ir.model.fields,field_description:project.field_project_project_write_uid
 #: model:ir.model.fields,field_description:project.field_project_tags_write_uid
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_write_uid
 msgid "Last Updated by"
@@ -2596,6 +2525,7 @@ msgstr "Utoljára frissítette"
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_date
 #: model:ir.model.fields,field_description:project.field_project_project_write_date
 #: model:ir.model.fields,field_description:project.field_project_tags_write_date
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_write_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_date
 msgid "Last Updated on"
 msgstr "Utoljára frissítve "
@@ -2640,11 +2570,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "List, plan and track things to do"
 msgstr "Elvégzendő feladatok listája, terve és követése"
-
-#. module: project
-#: selection:report.project.task.user,priority:0
-msgid "Low"
-msgstr "Alacsony"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2696,9 +2621,19 @@ msgid "Members"
 msgstr "Tagok"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_task_history_search
-msgid "Month"
-msgstr "Hónap"
+#: model:ir.actions.act_window,name:project.project_task_actions_act_window_merge_tasks
+msgid "Merge Selected Tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
+msgid "Merge Tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_id
+msgid "Merge into an existing task"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -2716,13 +2651,21 @@ msgid "More efficient communication between employees"
 msgstr "Sokkal hatékonyabb munkavállaló közti kommunikáció"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_project_project_filter
-#: model:ir.ui.view,arch_db:project.view_task_history_search
-msgid "My Projects"
-msgstr "Projekt témáim"
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "My Activities"
+msgstr "Tevékenységeim"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_task_history_search
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "My Favorites"
+msgstr "Kedvenceim"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.project_task_action_activity
+msgid "My Next Task Activities"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Tasks"
 msgstr "Feladataim"
@@ -2734,27 +2677,34 @@ msgstr "Név"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:64
-#: model:ir.ui.view,arch_db:project.view_task_history_search
+#: code:addons/project/static/src/js/web_planner_project.js:65
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
-#: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:project.task.type,name:project.project_stage_data_0
 #, python-format
 msgid "New"
 msgstr "Új"
 
 #. module: project
-#: code:addons/project/models/project.py:593
-#, python-format
-msgid "New Task"
-msgstr "Új Feladat"
-
-#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:86
+#: code:addons/project/static/src/js/web_planner_project.js:87
 #, python-format
 msgid "New repair added"
 msgstr "Új javítás hozzáadva"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_name
+msgid "New task name"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_task_view_tree_activity
+msgid "Next Activities"
+msgstr "Következő tevékenységek"
+
+#. module: project
+#: model:ir.ui.menu,name:project.project_task_menu_activity
+msgid "Next Task Activities"
+msgstr ""
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -2763,11 +2713,9 @@ msgstr "Nincs vásárló értékelés"
 
 #. module: project
 #: selection:project.task,priority:0
-#: selection:project.task.history,kanban_state:0
-#: selection:project.task.history.cumulative,kanban_state:0
 #: selection:report.project.task.user,priority:0
-msgid "Normal"
-msgstr "Normál"
+msgid "Non Starred"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2834,7 +2782,7 @@ msgstr ""
 "részletit, hozzáfűzhet dokumentumokat, stb. "
 
 #. module: project
-#: code:addons/project/models/project.py:198
+#: code:addons/project/models/project.py:203
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
@@ -2899,9 +2847,9 @@ msgstr ""
 "percekig."
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
-msgid "Overpassed Deadline"
-msgstr "Túllépett határidő"
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Overdue Activities"
+msgstr "Lejárt tevékenységek"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -2980,18 +2928,12 @@ msgid "Plan your activities for the day"
 msgstr "Tervezze meg a tevékenységét erre a napra"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_planned_hours
-#: model:ir.model.fields,field_description:project.field_project_task_history_planned_hours
-msgid "Planned Time"
-msgstr "Tervezett idő"
-
-#. module: project
 #: model:ir.model,name:project.model_web_planner
 msgid "Planner"
 msgstr "Tervező"
 
 #. module: project
-#: code:addons/project/models/project.py:743
+#: code:addons/project/models/project.py:718
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3019,17 +2961,6 @@ msgid "Prepare"
 msgstr "Előkészít"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_priority
-#: model:ir.model.fields,field_description:project.field_report_project_task_user_priority
-msgid "Priority"
-msgstr "Elsőbbségi"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
-msgid "Priority Management Explanation"
-msgstr "Priorizálás kezelésének leírása"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
 msgid "Privacy"
 msgstr "Adatvédelem"
@@ -3041,12 +2972,11 @@ msgstr "Termék vagy szoftver verzió"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_project_id
 #: model:ir.model.fields,field_description:project.field_project_task_project_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_project_id
+#: model:ir.ui.menu,name:project.menu_main_pm
 #: model:ir.ui.view,arch_db:project.edit_project
-#: model:ir.ui.view,arch_db:project.edit_project_simplified
-#: model:ir.ui.view,arch_db:project.view_task_history_search
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:res.request.link,name:project.req_link_project
@@ -3080,7 +3010,7 @@ msgstr "Projekt téma irányítója"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
-#: model:ir.ui.view,arch_db:project.edit_project_simplified
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Name"
@@ -3099,10 +3029,13 @@ msgstr "Projekt téma beállítások"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_task_graph
 #: model:ir.ui.view,arch_db:project.view_project_task_pivot
-#: model:ir.ui.view,arch_db:project.view_task_history_graph
-#: model:ir.ui.view,arch_db:project.view_task_history_pivot
 msgid "Project Tasks"
 msgstr "Projekt téma feladatok"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_project_time_mode_id
+msgid "Project Time Unit *"
+msgstr "Projekt időegysége *"
 
 #. module: project
 #: model:res.request.link,name:project.req_link_task
@@ -3115,6 +3048,11 @@ msgid "Project's tasks"
 msgstr "Projekt feladatai"
 
 #. module: project
+#: model:ir.actions.server,name:project.ir_actions_server_project_sample
+msgid "Project: Activate Sample Project"
+msgstr ""
+
+#. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.actions.act_window,name:project.open_view_project_all_config
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_ids
@@ -3122,15 +3060,9 @@ msgstr "Projekt feladatai"
 #: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
-#: model:ir.ui.view,arch_db:project.task_company
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "Projekt témák"
-
-#. module: project
-#: model:ir.ui.view,arch_db:project.task_type_edit
-msgid "Projects using this stage"
-msgstr "Ezt a szakaszt használó projektek"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
@@ -3138,50 +3070,62 @@ msgid "Rating on task"
 msgstr "Értékelés a feladatokon"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_task_history_search
-msgid "Ready"
-msgstr "Kész"
+#: model:project.task,legend_done:project.project_task_data_0
+#: model:project.task,legend_done:project.project_task_data_1
+#: model:project.task,legend_done:project.project_task_data_11
+#: model:project.task,legend_done:project.project_task_data_12
+#: model:project.task,legend_done:project.project_task_data_13
+#: model:project.task,legend_done:project.project_task_data_14
+#: model:project.task,legend_done:project.project_task_data_2
+#: model:project.task,legend_done:project.project_task_data_4
+#: model:project.task,legend_done:project.project_task_data_5
+#: model:project.task,legend_done:project.project_task_data_6
+#: model:project.task,legend_done:project.project_task_data_7
+#: model:project.task,legend_done:project.project_task_data_8
+#: model:project.task,legend_done:project.project_task_data_9
+#: model:project.task.type,legend_done:project.project_stage_data_0
+#: model:project.task.type,legend_done:project.project_stage_data_1
+#: model:project.task.type,legend_done:project.project_stage_data_2
+msgid "Ready for Next Stage"
+msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:40
+#: code:addons/project/static/src/js/web_planner_project.js:41
 #, python-format
 msgid "Ready for layout / copywriting"
 msgstr "Kivitelezésre / szlogenre kész"
 
 #. module: project
-#: selection:project.task,kanban_state:0
-#: selection:project.task.history,kanban_state:0
-#: selection:project.task.history.cumulative,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
 msgstr "Következő fokra ugorhat"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:58
+#: code:addons/project/static/src/js/web_planner_project.js:59
 #, python-format
 msgid "Ready for release"
 msgstr "Elengedésre kész"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:56
+#: code:addons/project/static/src/js/web_planner_project.js:57
 #, python-format
 msgid "Ready for testing"
 msgstr "Tesztelésre kész"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:41
+#: code:addons/project/static/src/js/web_planner_project.js:42
 #, python-format
 msgid "Ready to be displayed, published or sent"
 msgstr "Megjelenítésre,  közzétételre vagy küldésre kész"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:76
-#: code:addons/project/static/src/js/web_planner_project.js:105
+#: code:addons/project/static/src/js/web_planner_project.js:77
+#: code:addons/project/static/src/js/web_planner_project.js:106
 #, python-format
 msgid "Reason for cancellation has been documented"
 msgstr "Az érvénytelenítés oka dokumentálva"
@@ -3190,6 +3134,16 @@ msgstr "Az érvénytelenítés oka dokumentálva"
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
 msgstr "Feljegyzés összefűzési azonosító ID"
+
+#. module: project
+#: selection:project.task,kanban_state:0
+msgid "Red"
+msgstr "Piros"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
+msgid "Red Kanban Label"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3203,7 +3157,7 @@ msgstr "Hivatkozás"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:51
+#: code:addons/project/static/src/js/web_planner_project.js:52
 #, python-format
 msgid "Release"
 msgstr "Elengedés"
@@ -3211,12 +3165,6 @@ msgstr "Elengedés"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_remaining_hours
 msgid "Remaining Hours"
-msgstr "Hátralévő idő"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_remaining_hours
-#: model:ir.model.fields,field_description:project.field_project_task_history_remaining_hours
-msgid "Remaining Time"
 msgstr "Hátralévő idő"
 
 #. module: project
@@ -3233,26 +3181,27 @@ msgstr "Javítás/Szerviz műhely"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:87
+#: code:addons/project/static/src/js/web_planner_project.js:88
 #, python-format
 msgid "Repair has started"
 msgstr "Javítás elindítva"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:90
+#: code:addons/project/static/src/js/web_planner_project.js:91
 #, python-format
 msgid "Repair is completed"
 msgstr "Javítás befejezve"
 
 #. module: project
+#: model:ir.ui.menu,name:project.menu_project_report
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
 msgstr "Riport készítés"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:89
+#: code:addons/project/static/src/js/web_planner_project.js:90
 #, python-format
 msgid "Request for parts has been sent"
 msgstr "Alkatrész igény elküldve"
@@ -3266,12 +3215,6 @@ msgstr "Felelősségek"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Responsibility"
 msgstr "Felelősség"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_user_id
-#: model:ir.model.fields,field_description:project.field_project_task_history_user_id
-msgid "Responsible"
-msgstr "Felelős"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3339,6 +3282,7 @@ msgid "Set a Cover Image"
 msgstr "Egy borító kép beállítása"
 
 #. module: project
+#: model:ir.ui.menu,name:project.menu_project_general_settings
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Settings"
@@ -3360,6 +3304,13 @@ msgid "Show Project on dashboard"
 msgstr "Projekt téma megjelenítése a műszerfalon"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Mutassa az összes rekordot melyre a következő műveleti dátum a mai nap "
+"előtti"
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "So if you're looking for the history of a Task, or the latest message on an "
@@ -3375,38 +3326,35 @@ msgstr "Szoftver fejlesztés"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:15
+#: code:addons/project/static/src/js/web_planner_project.js:16
 #, python-format
 msgid "Specification"
 msgstr "Részletezés"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:23
+#: code:addons/project/static/src/js/web_planner_project.js:24
 #, python-format
 msgid "Specification is validated"
 msgstr "Specifikáció jóváhagyott"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:22
+#: code:addons/project/static/src/js/web_planner_project.js:23
 #, python-format
 msgid "Specification of task is written"
 msgstr "Feladat specifikációja leírva"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:48
+#: code:addons/project/static/src/js/web_planner_project.js:49
 #, python-format
 msgid "Sprint"
 msgstr "Sprint"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_type_id
-#: model:ir.model.fields,field_description:project.field_project_task_history_type_id
 #: model:ir.model.fields,field_description:project.field_project_task_stage_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_stage_id
-#: model:ir.ui.view,arch_db:project.view_task_history_search
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Stage"
@@ -3434,8 +3382,23 @@ msgstr "Szint megváltoztatva"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
+#: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Stages"
 msgstr "Szintek"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_priority
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_priority
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "Starred"
+msgstr "Kedvenc"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
+msgid "Starred Explanation"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3451,12 +3414,6 @@ msgstr "Kezdő dátum"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "Kezdési dátum"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user_state
-#: model:ir.ui.view,arch_db:project.view_task_history_search
-msgid "Status"
-msgstr "Állapot"
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3478,11 +3435,13 @@ msgid "Tags of project's tasks, issues..."
 msgstr "Projekt témák feladatainak, ügyeinek címkéi..."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_project_id
+msgid "Target Project"
+msgstr ""
+
+#. module: project
 #: model:ir.model,name:project.model_project_task
-#: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_task_id
-#: model:ir.model.fields,field_description:project.field_project_task_history_task_id
 #: model:ir.ui.view,arch_db:project.view_task_form2
-#: model:ir.ui.view,arch_db:project.view_task_history_search
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Task"
@@ -3546,26 +3505,26 @@ msgstr "Feladat blokkolva"
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
-msgid "Task description is a plain text"
+msgid "Task description is plain text"
 msgstr "Feladat leírás egy egyszerű szöveg"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:24
+#: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
 msgid "Task is Developed"
 msgstr "Feladat fejlesztve"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:104
+#: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Task is completed"
 msgstr "Feladat befejezett"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:25
+#: code:addons/project/static/src/js/web_planner_project.js:26
 #, python-format
 msgid "Task is tested"
 msgstr "Feladat tesztelve"
@@ -3581,19 +3540,14 @@ msgid "Task ready for Next Stage"
 msgstr "Az ügy készen áll a következő szintre lépésre"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_task_history_search
-msgid "Task's Analysis"
-msgstr "Elemzés a feladaton"
-
-#. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
+#: model:ir.actions.act_window,name:project.project_task_action_from_partner
 #: model:ir.model.fields,field_description:project.field_project_project_task_count
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 #: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
 #: model:ir.model.fields,field_description:project.field_res_partner_task_ids
 #: model:ir.ui.menu,name:project.menu_action_view_task
-#: model:ir.ui.menu,name:project.menu_project_task_user_tree
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -3612,6 +3566,7 @@ msgstr "Feladatok &amp; Ügyek"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree_filtered
+#: model:ir.ui.menu,name:project.menu_project_report_task_analysis
 #: model:ir.ui.view,arch_db:project.view_task_project_user_graph
 #: model:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3641,22 +3596,27 @@ msgid "Tasks by user and project"
 msgstr "Feladatok a felhasználók és projekt témák szerint"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_task_ids
+msgid "Tasks to Merge"
+msgstr ""
+
+#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:49
+#: code:addons/project/static/src/js/web_planner_project.js:50
 #, python-format
 msgid "Test"
 msgstr "Teszt üzemmód"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:57
+#: code:addons/project/static/src/js/web_planner_project.js:58
 #, python-format
 msgid "Test is OK, need to document"
 msgstr "Teszt OK, dokumentálni kell"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:18
+#: code:addons/project/static/src/js/web_planner_project.js:19
 #, python-format
 msgid "Testing"
 msgstr "Tesztelés"
@@ -3676,6 +3636,16 @@ msgstr ""
 "kis kreativitással, még a marketing kommunikációhoz is használható vagy "
 "személyes projekt témákhoz. De csak azért mert elvégezhető, nem jelenti azt,"
 " hogy mindig jó ötlet: kezdjük, hogy megértse mi lehet egy jó projekt téma."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.mail_template_task_merge
+msgid "The following task has been merged into this one:"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.mail_template_task_merge
+msgid "The following tasks have been merged into this one:"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model
@@ -3777,6 +3747,11 @@ msgstr ""
 "rekordok."
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.mail_template_task_merge
+msgid "This task has been merged into the following task:"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "This whole process might take you a few hours, but don't worry, you can take a break and\n"
@@ -3796,6 +3771,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
+#: model:ir.model.fields,help:project.field_project_config_settings_project_time_mode_id
 #: model:ir.model.fields,help:project.field_project_project_company_uom_id
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
@@ -3804,12 +3780,17 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
 "Ez állítja be a projekt témákban és a feladatokban használt mértékegységet. \n"
-"Ha használja a projektekhez kapcsolt munkaidő-kimutatást /project_timesheet modul/, ne felejtse el beállítani a helyes mértékegységet az alkalmazotti űrlapon."
+"Ha használja a projektekhez kapcsolt munkaidő-kiosztás /project_timesheet modul/, ne felejtse el beállítani a helyes mértékegységet az alkalmazotti űrlapon."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
 msgstr "Idő becslés a feladatra"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Time Scheduling"
+msgstr "Idő ütemezés"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
@@ -3845,7 +3826,7 @@ msgstr "Munka órák időbeosztása a gantt diagram jelentés igazításához"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:96
+#: code:addons/project/static/src/js/web_planner_project.js:97
 #, python-format
 msgid "To Do"
 msgstr "Tennivalók"
@@ -3870,6 +3851,11 @@ msgid "To use Timesheets, go to your"
 msgstr "Az Időkiosztás használatához, menjen a"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Today Activities"
+msgstr "Mai napi tevékenységek"
+
+#. module: project
 #: model:ir.model.fields,help:project.field_project_task_remaining_hours
 msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
@@ -3890,16 +3876,15 @@ msgid "Unassigned"
 msgstr "Nem hozzárendelt"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_task_history_search
-msgid "Unassigned Tasks"
-msgstr "Nem kiosztoot feladat"
-
-#. module: project
-#: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Upcoming Activities (7 days)"
+msgstr "Elkövetkező műveletek (7 nap)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_use_tasks
@@ -3927,6 +3912,26 @@ msgstr ""
 "csapat számára nem különösen fontos ügyek megoldására."
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:103
+#, python-format
+msgid ""
+"Use the <b>implementation guide</b> to setup Project Management in your "
+"company."
+msgstr ""
+"Használja a <b>végrehajtás leírást</b> a Projekt téma szervezés "
+"beállításához a saját vállalatához."
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:85
+#, python-format
+msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
+msgstr ""
+"Használja a morzsákat <b>az értékesítési folyamatához való "
+"visszatéréshez</b>."
+
+#. module: project
 #: model:res.groups,name:project.group_project_user
 msgid "User"
 msgstr "Felhasználó"
@@ -3951,7 +3956,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:16
+#: code:addons/project/static/src/js/web_planner_project.js:17
 #, python-format
 msgid "Validation"
 msgstr "Érvényesítés"
@@ -3967,14 +3972,14 @@ msgid "View statistics for the week"
 msgstr "Nézzem meg a hét statisztikáját"
 
 #. module: project
-#: code:addons/project/models/project.py:199
+#: code:addons/project/models/project.py:204
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
 msgstr "Összes alkalmazott által látható"
 
 #. module: project
-#: code:addons/project/models/project.py:200
+#: code:addons/project/models/project.py:205
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
@@ -3982,16 +3987,16 @@ msgstr "Következő alkalmazottak által látható"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:66
-#: code:addons/project/static/src/js/web_planner_project.js:81
+#: code:addons/project/static/src/js/web_planner_project.js:67
+#: code:addons/project/static/src/js/web_planner_project.js:82
 #, python-format
 msgid "Wait. Customer"
 msgstr "Várak. Vásárlók"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:67
-#: code:addons/project/static/src/js/web_planner_project.js:82
+#: code:addons/project/static/src/js/web_planner_project.js:68
+#: code:addons/project/static/src/js/web_planner_project.js:83
 #, python-format
 msgid "Wait. Expert"
 msgstr "Várak. Szakértő"
@@ -4092,7 +4097,7 @@ msgstr "Ez a projekt téma megjelenítésre kerüljön a műszerfalon vagy sem"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:39
+#: code:addons/project/static/src/js/web_planner_project.js:40
 #, python-format
 msgid "Work has started"
 msgstr "Munka elindítva"
@@ -4109,8 +4114,8 @@ msgstr "Munkamennyiség"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
-msgid "Write date"
-msgstr "Dátum írása"
+msgid "Write Date"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -4216,7 +4221,7 @@ msgid "and activate:"
 msgstr "és aktivált:"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.edit_project_simplified
+#: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
 msgstr "pl. Munkahelyi rendezvény"
 
@@ -4246,9 +4251,9 @@ msgid "project.config.settings"
 msgstr "project.config.settings"
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_history_cumulative
-msgid "project.task.history.cumulative"
-msgstr "project.task.history.cumulative"
+#: model:ir.model,name:project.model_project_task_merge_wizard
+msgid "project.task.merge.wizard"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4256,7 +4261,7 @@ msgid "send us an email"
 msgstr "küldjön nekünk egy e-mailt"
 
 #. module: project
-#: code:addons/project/models/project.py:460
+#: code:addons/project/models/project.py:463
 #, python-format
 msgid "tasks"
 msgstr "feladatok"

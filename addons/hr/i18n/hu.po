@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -37,8 +37,8 @@ msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "<span>Reports</span>"
-msgstr "<span>Kimutatások</span>"
+msgid "<span>Reporting</span>"
+msgstr "<span>Jelentés</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -216,6 +216,16 @@ msgid "Efficiency Factor"
 msgstr "Hatékonysági tényező"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr "Email álnevek"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr "E-mail összafűzés"
+
+#. module: hr
 #: model:ir.model,name:hr.model_hr_employee
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
@@ -274,7 +284,7 @@ msgid "Employees Tags"
 msgstr "Alkalmazottak címkéi"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:254
+#: code:addons/hr/models/hr.py:263
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Hiba! Nem hozhat létre egymásba épülő osztályokat."
@@ -284,6 +294,11 @@ msgstr "Hiba! Nem hozhat létre egymásba épülő osztályokat."
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Hiba! Nem készíthet visszatérő rangsorú alklamazott(ak) listát."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_event_count
+msgid "Events"
+msgstr "Rendezvények"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
@@ -323,6 +338,11 @@ msgid "Group By"
 msgstr "Csoportosítás"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "HR Department"
+msgstr "Emberi erőforrás Osztály, részleg"
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr "Emberi erőforrás beállítások"
@@ -336,11 +356,6 @@ msgstr "Felvett munkavállalók"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Home Address"
 msgstr "Otthoni cím"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "Hr Department"
-msgstr "Emberi erőforrás Osztály, részleg"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -399,8 +414,6 @@ msgstr "Állás pozíció"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
-#: model:ir.ui.menu,name:hr.menu_hr_job_position
-#: model:ir.ui.menu,name:hr.menu_hr_job_position_config
 msgid "Job Positions"
 msgstr "Álláspozíciók"
 
@@ -454,6 +467,11 @@ msgid "Last Updated on"
 msgstr "Utoljára frissítve "
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_calendar_last_notif_ack
+msgid "Last notification marked as read from base Calendar"
+msgstr "Utolsó figyelmeztetés olvasottnak jelölve az alap naptárban"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_last_login
 msgid "Latest Connection"
 msgstr "Legutoló csatlakozás"
@@ -477,8 +495,14 @@ msgstr "Férfi"
 #: model:ir.model.fields,field_description:hr.field_hr_department_manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_parent_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
 msgstr "Igazgató"
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_attendance
+msgid "Manual Attendance"
+msgstr "Kézi jelenlét"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_marital
@@ -552,6 +576,11 @@ msgid "Number of employees currently occupying this job position."
 msgstr "Alakalmazottak száma akik jelenleg betöltik ezt az állás pozíciót."
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_res_users_event_count
+msgid "Number of events the partner has participated."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
@@ -572,6 +601,11 @@ msgstr ""
 " Odoo rendszer osztályfelépítése az összes munkavállaló \n"
 "                dokumentumának osztályonkénti kezelésére szolgál: kiadások, \n"
 "                időbeosztások, eltávozások és szabadságolások, felvételiztetések, stb."
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_user
+msgid "Officer"
+msgstr "Hivatalnok"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -642,8 +676,8 @@ msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
-msgid "Reports"
-msgstr "Kimutatások"
+msgid "Reporting"
+msgstr "Riport készítés"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_requirements
@@ -758,17 +792,13 @@ msgstr ""
 "Az állás nevének egyedinek kell lennie osztályonként a vállalkozásban!"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+#: model:res.groups,comment:hr.group_hr_attendance
 msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
 msgstr ""
-"Ez a mező ábrázolja a kutatás hatékonyságát a teljes feladaton. pl. egyedül "
-"végrehajtott kutatási 5 napos fázis 5 tárgyban kiosztva neki, ez a 100% "
-"terhelés erre a fázisra alap értelmezve, de ha a hatékonyságot 200% tesszük "
-"akkor ez a terhelés \"csak\" 50%."
+"A felhasználó elérheti az emberi erőforrások jelenléti menüt,  lehetővé téve"
+" a saját jelenlétének szervezését."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
@@ -778,6 +808,16 @@ msgid ""
 msgstr ""
 "Ez a mező tartalmazza a képet amit az alkalmazottakhoz használ, limitált "
 "méret 1024x1024px."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+msgid ""
+"This field is used to calculate the the expected duration of a work order at"
+" this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
@@ -825,6 +865,11 @@ msgstr ""
 "kapcsolati adatok, munka pozíció, elérhetőség, stb."
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
+msgid "Work Address"
+msgstr "Munkahely címe"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
 msgid "Work Email"
 msgstr "Munkahelyi e-mail"
@@ -845,11 +890,6 @@ msgid "Work Phone"
 msgstr "Munkahelyi telefon"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
-msgid "Working Address"
-msgstr "Munkahely címe"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_calendar_id
 msgid "Working Time"
 msgstr "Munkaidő"
@@ -865,6 +905,28 @@ msgstr ""
 "                fogja használni az állásra pályázók értékelésére."
 
 #. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr "A dokumentuma nem készült el"
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr ""
+"A dokumentuma nem készült el, mivel az e-mail címe nem ismert. Kérem az "
+"e-mail küldéshez a alkalmazotti információs oldalán jegyezze be, vagy vegye "
+"fel a kapcsolatot a HR emberi erőforrás igazgatóval."
+
+#. module: hr
+#: code:addons/hr/models/mail_thread.py:41
+#, python-format
+msgid "alias %s does not accept unknown employees"
+msgstr "alias %s nem fogadja el az ismeretlen alkalmazottakat"
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "részleg"
@@ -878,3 +940,25 @@ msgstr "Pl. Rész időben"
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr "pl. Értékesítési menedzsment"
+
+#. module: hr
+#: code:addons/hr/models/mail_thread.py:41
+#, python-format
+msgid "skipping"
+msgstr "átugorja"
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_user
+msgid "the user will be able to approve document created by employees."
+msgstr ""
+"a felhasználónak lehetővé válik a munkavállalók által létrehozott "
+"dokumentumok jóváhagyása"
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_manager
+msgid ""
+"the user will have an access to the human resources configuration as well as"
+" statistic reports."
+msgstr ""
+"a felhasználónak elérése lesz az emberi erőforrások beállításához és a "
+"statikus kimutatásokhoz."

@@ -11,10 +11,10 @@
 # Volluta <volluta@tutanota.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Volluta <volluta@tutanota.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgid ""
 "                <p>You have been invited to validate your email in order to get access to\n"
 "                \"${object.company_id.name}\" Q/A Forums.</p>\n"
 "                <p>To validate your email, please click on the following link:</p>\n"
-"                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#a24689; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
+"                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
 "                    Validate my account for \"${object.company_id.name}\" Q/A Forums\n"
 "                </a>\n"
 "                <p>Thanks for your participation!</p>\n"
@@ -64,6 +64,43 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px; font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Beste ${object.name},</p>\n"
+"                <p>U bent uitgenodigd om uw e-mail te valideren hiermee krijgt u toegang to \n"
+"                \"${object.company_id.name}\" V/A Forum.</p>\n"
+"                <p>Om uw e-mail te valideren, klik op de volgende link:</p>\n"
+"                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
+"                    Valideer mijn account voor ${object.company_id.name}\" V/A Forum\n"
+"                </a>\n"
+"                <p>Bedankt voor uw aanmelding!</p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: website_forum
 #. openerp-web
@@ -186,6 +223,8 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead either edit the "
 "question or add a question comment."
 msgstr ""
+"<b>Antwoorden moeten geen vragen toevoegen of uitbreiden</b>. In plaats hier"
+" van wijzigt u de vraag of voegt u een reactie toe."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -254,6 +293,11 @@ msgid ""
 "    copy/paste. Links are welcome, but should be complementary to\n"
 "    answer, referring sources or additional reading."
 msgstr ""
+"<b>Antwoorden moeten niet gewoon een link geven naar\n"
+"een oplossing.</b> Bied in de plaats de oplossing\n"
+"aan in uw antwoord, zelfs als het een\n"
+"kopie is. Links zijn welkom, maar moeten enkel antwoorden\n"
+"aanvullen, bronnen toevoegen of extra leesmateriaal toevoegen."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -263,6 +307,11 @@ msgid ""
 "Links are welcome, but should be complementary to answer, referring sources "
 "or additional reading."
 msgstr ""
+"<b>Antwoorden moeten niet gewoon een link geven naar\n"
+"een oplossing.</b> Bied in de plaats de oplossing\n"
+"aan in uw antwoord, zelfs als het een\n"
+"kopie is. Links zijn welkom, maar moeten enkel antwoorden\n"
+"aanvullen, bronnen toevoegen of extra leesmateriaal toevoegen."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -423,6 +472,9 @@ msgid ""
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question. (Hover the mouse to follow/unfollow tag(s))"
 msgstr ""
+"Een label wordt gebruikt om uw vragen te groeperen met andere,\n"
+"overeenkomstige vragen. Door gebruiken te maken van het juiste label wordt het gemakkelijker voor\n"
+"anderen om uw vragen te vinden en te beantwoorden. (Hover met de muis om tags te volgen/ontvolgen)"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -620,7 +672,7 @@ msgstr "Stel vragen"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_post
 msgid "Ask questions without validation"
-msgstr "Stel vragen zonder validatie"
+msgstr "Stel vragen zonder bevestiging"
 
 #. module: website_forum
 #. openerp-web
@@ -1158,14 +1210,14 @@ msgid "Edit Profile"
 msgstr "Profiel bewerken"
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "Edit Your Bio"
-msgstr "Wijzig je bio"
-
-#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
 msgstr "Wijzig je vorige antwoord"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "Edit Your Profile"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_all
@@ -1209,16 +1261,6 @@ msgstr "Editor opties: afbeeldingen en links"
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Email"
 msgstr "E-mail"
-
-#. module: website_forum
-#: model:ir.model,name:website_forum.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "E-mail samenstellen wizard"
-
-#. module: website_forum
-#: model:ir.model,name:website_forum.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "E-mail opmaak wizard voor enquête"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_5
@@ -1370,6 +1412,7 @@ msgid "Forum Badge Level"
 msgstr "Forum badge niveau"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.res_users_view_form_preference
 #: model:ir.ui.view,arch_db:website_forum.view_users_form_forum
 msgid "Forum Karma"
 msgstr "Forum Karma"
@@ -1702,11 +1745,6 @@ msgid "Links"
 msgstr "Links"
 
 #. module: website_forum
-#: model:ir.model,name:website_forum.model_mail_message
-msgid "Message"
-msgstr "Bericht"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_moderate
 msgid "Moderate posts"
 msgstr "Modereer berichten"
@@ -1820,14 +1858,14 @@ msgid "Nofollow links"
 msgstr "Nofollow links"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:848
-#: code:addons/website_forum/models/forum.py:868
+#: code:addons/website_forum/models/forum.py:871
+#: code:addons/website_forum/models/forum.py:891
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr "Niet toegestaan om te stemmen op zijn eigen bericht"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:912
+#: code:addons/website_forum/models/forum.py:935
 #, python-format
 msgid "Not enough karma to create a new Tag"
 msgstr "Niet genoeg karma om een nieuw label aan te maken"
@@ -1867,7 +1905,7 @@ msgstr "Aantal gevlagde berichten"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_posts_waiting_validation
 msgid "Number of posts waiting for validation"
-msgstr "Aantal berichten die wachten op validatie"
+msgstr "Aantal berichten die wachten op bevestiging"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -1975,6 +2013,7 @@ msgstr "Boeken"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
+#: model:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Answer"
 msgstr "Plaats antwoord"
 
@@ -1984,6 +2023,7 @@ msgid "Post Closing Reason"
 msgstr "Verstuur reden van sluiten"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answer
 #: model:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Comment"
 msgstr "Plaats reactie"
@@ -2347,21 +2387,21 @@ msgstr "Sorry u moet ingelogd zijn om deze actie uit te voeren"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:70
+#: code:addons/website_forum/static/src/js/website_forum.js:97
 #, python-format
 msgid "Sorry you must be logged to flag a post"
 msgstr "Sorry u moet aangemeld zijn om een bericht te markeren"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:118
+#: code:addons/website_forum/static/src/js/website_forum.js:145
 #, python-format
 msgid "Sorry you must be logged to vote"
 msgstr "Sorry u moet ingelogd zijn om te stemmen"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:149
+#: code:addons/website_forum/static/src/js/website_forum.js:195
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
 msgstr "Sorry, anonieme gebruikers kunnen geen correct antwoord kiezen."
@@ -2373,7 +2413,7 @@ msgstr "Sorry, deze vraag is niet meer beschikbaar."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:113
+#: code:addons/website_forum/static/src/js/website_forum.js:140
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
 msgstr "Sorry, u kan niet stemmen op uw eigen bericht"
@@ -2512,7 +2552,7 @@ msgstr "De offensieve wachtrij is leeg."
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "The validation queue is empty."
-msgstr "De validatie wachtrij is leeg."
+msgstr "De bevestiging wachtrij is leeg."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2566,17 +2606,24 @@ msgstr "Dit forum staat niet %s toe"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:80
+#: code:addons/website_forum/static/src/js/website_forum.js:107
 #, python-format
 msgid "This post can not be flagged"
 msgstr "Dit bericht kan niet gemarkeerd worden"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:75
+#: code:addons/website_forum/static/src/js/website_forum.js:102
 #, python-format
 msgid "This post is already flagged"
 msgstr "Dit bericht is al gemarkeerd"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"This post is currently awaiting moderation and not yet published... Do you "
+"want <i>Accept</i> or <i>Reject</i> this post ?"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.private_profile
@@ -2734,9 +2781,7 @@ msgid "Validate question"
 msgstr "Valideer vraag"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:801
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
-#, python-format
 msgid "View"
 msgstr "Weergave"
 
@@ -2760,17 +2805,17 @@ msgstr "Stemmen"
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Waiting Validation"
-msgstr "Wachtend op validatie"
+msgstr "Wachtend op bevestiging"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
-msgstr "Wacht op validatie"
+msgstr "Wacht op bevestiging"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
 msgid "Waiting post"
-msgstr ""
+msgstr "Wachtende berichten"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -2837,6 +2882,8 @@ msgid ""
 "You already have one pending post.<br/>\n"
 "            Please wait for a moderator to validate your previous post before continuing."
 msgstr ""
+"Je hebt al een wachtend bericht.<br/>\n"
+"Wacht op een moderator van uw vorige bericht alvorens verder te valideren."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:139
@@ -2850,7 +2897,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid "You cannot post an empty answer"
-msgstr ""
+msgstr "Je kunt geen leeg antwoord ingeven"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -3240,7 +3287,7 @@ msgstr "stemmen"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "waiting for validation"
-msgstr "wachtend op validatie"
+msgstr "wachtend op bevestiging"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help

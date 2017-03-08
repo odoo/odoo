@@ -7,10 +7,10 @@
 # krnkris <krnkris@freemail.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -18,41 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: payment_paypal
-#: model:payment.acquirer,cancel_msg:payment_paypal.payment_acquirer_paypal
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Mégse,</i> A fizetése elutasítva.</span>"
-
-#. module: payment_paypal
-#: model:payment.acquirer,done_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
-"<span><i>Elvégezve,</i> Az online fizetése sikeresen végrehajtva. Köszönjük "
-"a megrendelést.</span>"
-
-#. module: payment_paypal
-#: model:payment.acquirer,error_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-"<span><i>Hiba,</i> Vegye figyelembe, hogy a tranzakció alatt hiba történt. A"
-" megrendelés visszaigazolt, de nem lett kifizetve. A megrendelésének "
-"állapotával kapcsolatos kérdésekben, kérjük vegye fel velünk a "
-"kapcsolatot.</span>"
-
-#. module: payment_paypal
-#: model:payment.acquirer,pending_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
-"<span><i>Függőben,</i> Az online fizetése sikeresen teljesítve. De a "
-"megrendelését még nem hagyták jóvá.</span>"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
@@ -63,11 +28,6 @@ msgstr "Hozzáférési token"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token_validity
 msgid "Access Token Validity"
 msgstr "Hozzáférési token érvényessége"
-
-#. module: payment_paypal
-#: model:ir.model,name:payment_paypal.model_res_company
-msgid "Companies"
-msgstr "Vállalatok"
 
 #. module: payment_paypal
 #: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
@@ -83,11 +43,6 @@ msgstr "Fizetést lebonyolító"
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Fizetési tranzakció"
-
-#. module: payment_paypal
-#: model:payment.acquirer,name:payment_paypal.payment_acquirer_paypal
-msgid "Paypal"
-msgstr "Paypal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
@@ -110,7 +65,7 @@ msgid "Paypal TX Details"
 msgstr "Paypal TX részletek"
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/paypal.py:183
+#: code:addons/payment_paypal/models/payment.py:137
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr "Paypal: beérkezett adat hiányzó hivatkozással (%s) vagy txn_id (%s)"
@@ -148,10 +103,3 @@ msgstr "IPN használata"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
 msgid "Use Rest API"
 msgstr "Nyugvó API használata"
-
-#. module: payment_paypal
-#: model:payment.acquirer,pre_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"You will be redirected to the Paypal website after clicking on the payment "
-"button."
-msgstr "Át lesz irányítva a Paypal weboldalra a fizetés gomb megnyomása után."

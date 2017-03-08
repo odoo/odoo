@@ -3,15 +3,15 @@
 # * website_event_questions
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # fausthuang <faust_huang@hotmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -73,6 +73,7 @@ msgstr "显示名称"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_event
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_event_id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_event_id
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Event"
@@ -80,23 +81,18 @@ msgstr "活动"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_event_answer_id
-msgid "Event answer id"
-msgstr "事件解答ID"
-
-#. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question_event_id
-msgid "Event id"
-msgstr "事件ID"
+msgid "Event Answer"
+msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_event_registration_id
-msgid "Event registration id"
-msgstr "事件注册ID"
+msgid "Event Registration"
+msgstr "活动登记"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event_general_question_ids
 msgid "General Questions"
-msgstr ""
+msgstr "一般性问题"
 
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
@@ -141,17 +137,13 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_answer_question_id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_question_id
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_answer_simplified_form
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_form
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Question"
 msgstr "疑问"
-
-#. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer_question_id
-msgid "Question id"
-msgstr "问题ID"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event_question_ids
@@ -183,7 +175,7 @@ msgstr "序号"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event_specific_question_ids
 msgid "Specific Questions"
-msgstr ""
+msgstr "特定问题"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_title

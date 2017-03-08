@@ -10,10 +10,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -36,26 +36,14 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
 msgstr ""
 "\n"
 "<p>Hallo,</p>\n"
-"<p>\n"
-"    ${user.name} deelde het ${object.slide_type} <strong>${object.name}</strong> met u!\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
-"    </a>\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
-"        Bekijk <strong>${object.name}</strong>\n"
-"    </a>\n"
-"</p>\n"
+"<p> ${user.name} deelde het ${object.slide_type} <strong>${object.name}</strong> met u! </p> <p style=\"text-align: center; margin-top: 10px;\"> <a href=\"${object.website_url}\"> <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\"> </a> </p> <p style=\"text-align: center; margin-top: 10px;\"> <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\"> Bekijk <strong>${object.name}</strong> </a> </p>\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -71,7 +59,7 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
@@ -79,7 +67,7 @@ msgstr ""
 "\n"
 "<p>Hallo,</p>\n"
 "<p>\n"
-"    Een nieuw ${object.slide_type} <strong>${object.name}</strong> is gepubliceerd op ${object.channel_id.name} om ${format_tz(object.write_date, tz=user.tz)}\n"
+"    Een nieuwe ${object.slide_type} <strong>${object.name}</strong> is gepubliceerd op ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a href=\"${object.website_url}\">\n"
@@ -87,7 +75,7 @@ msgstr ""
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
 "        Bekijk <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
@@ -449,7 +437,7 @@ msgstr ""
 "toegangsrechten zijn niet beschikbaar. Foutmelding: %s"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:307
+#: code:addons/website_slides/models/slides.py:321
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -457,6 +445,11 @@ msgid ""
 msgstr ""
 "Kon geen gegevens ophalen vanaf deze url. Het document of de juiste toegangsrechten zijn niet beschikbaar.\n"
 "%s"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.website_config_settings_view_form_inherit_website_slides
+msgid "Create a Google Project and Get a Key"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
@@ -505,7 +498,7 @@ msgstr "Omschrijving"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:72
+#: code:addons/website_slides/static/src/xml/website_slides.xml:71
 #, python-format
 msgid "Discard"
 msgstr "Negeren"
@@ -639,7 +632,7 @@ msgstr "Beleidsregelsopties"
 #: code:addons/website_slides/static/src/js/slides_upload.js:90
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
-msgstr ""
+msgstr "Bestand is te groot. Bestand mag niet groter zijn dan 5MB"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
@@ -872,7 +865,7 @@ msgstr "Partnerkanaal"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Please"
-msgstr "Gelieve"
+msgstr "Alstublieft"
 
 #. module: website_slides
 #. openerp-web
@@ -884,8 +877,8 @@ msgstr ""
 "kunnen stemmen"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:310
-#: code:addons/website_slides/models/slides.py:535
+#: code:addons/website_slides/models/slides.py:324
+#: code:addons/website_slides/models/slides.py:548
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Geef een geldige Youtube of Google Doc URL in"
@@ -1201,7 +1194,7 @@ msgid "Uncategorized presentation"
 msgstr "Presentatie niet gecategoriseerd"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:524
+#: code:addons/website_slides/models/slides.py:537
 #, python-format
 msgid "Unknown document"
 msgstr "Document onbekend"
@@ -1263,12 +1256,6 @@ msgid "Videos"
 msgstr "Video's"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:449
-#, python-format
-msgid "View Slide"
-msgstr "Bekijk presentatie"
-
-#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Views"
@@ -1287,7 +1274,7 @@ msgstr "Zichtbaarheid"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Waiting for validation"
-msgstr "Wacht op validatie"
+msgstr "Wacht op bevestiging"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1298,11 +1285,6 @@ msgstr "Website"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_message_ids
 msgid "Website Messages"
 msgstr "Website berichten"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_website_config_settings
-msgid "Website Slides"
-msgstr "Website presentaties"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_website_message_ids
@@ -1388,13 +1370,6 @@ msgstr "in te loggen"
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "on"
 msgstr "op"
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:70
-#, python-format
-msgid "or"
-msgstr "of"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search

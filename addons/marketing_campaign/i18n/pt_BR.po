@@ -6,16 +6,17 @@
 # Mateus Lopes <mateus1@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Cezar <cezar.santanna@gmail.com>, 2016
-# grazziano <g.negocios@outlook.com.br>, 2016
+# grazziano <gra.negocia@gmail.com>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
-# francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
+# falexandresilva <falexandresilva@gmail.com>, 2016
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,7 +73,7 @@ msgid "Activity"
 msgstr "Atividade"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:376
+#: code:addons/marketing_campaign/models/marketing_campaign.py:394
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "Após %(interval_nbr)d %(interval_type)s"
@@ -112,7 +113,7 @@ msgid "Automatic"
 msgstr "Automático"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:375
+#: code:addons/marketing_campaign/models/marketing_campaign.py:393
 #, python-format
 msgid "Automatic transition"
 msgstr "Transição automática"
@@ -238,7 +239,7 @@ msgid "Condition"
 msgstr "Condição"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:377
+#: code:addons/marketing_campaign/models/marketing_campaign.py:395
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -351,7 +352,7 @@ msgid "Draft"
 msgstr "Provisório"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:123
+#: code:addons/marketing_campaign/models/marketing_campaign.py:127
 #, python-format
 msgid "Duplicating campaigns is not supported."
 msgstr "Duplicar campanhas não é suportado."
@@ -362,7 +363,7 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:578
+#: code:addons/marketing_campaign/models/marketing_campaign.py:596
 #, python-format
 msgid "Email Preview"
 msgstr "Visualizar E-mail"
@@ -371,11 +372,6 @@ msgstr "Visualizar E-mail"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
 msgstr "Modelo de E-mail"
-
-#. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "Visualizar Modelo de E-mail"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
@@ -663,6 +659,20 @@ msgid "Marketing Campaign Statistics"
 msgstr "Estatísticas da Campanha de Marketing"
 
 #. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_hour_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+msgid "Marketing Campaign: Campaign workitems processing"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_day_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_day
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_day
+msgid "Marketing Campaign: Segment Sync"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_graph
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_pivot
@@ -681,10 +691,10 @@ msgid "Mode"
 msgstr "Modo"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:194
+#: code:addons/marketing_campaign/models/marketing_campaign.py:198
 #, python-format
 msgid "Model of filter must be same as resource model of Campaign"
-msgstr ""
+msgstr "Modelo de filtro deve ser igual ao modelo de recursos de campanha "
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -765,6 +775,10 @@ msgid ""
 "            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fulfill the campaign."
 msgstr ""
+"A campanha de marketing no Odoo permitem a você a automatização da "
+"comunicação com seus futuros clientes. Voce pode definir um segmento "
+"(definindo condições) de suas oportunidades e parceiros quais serão "
+"incluídos na campanha."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -841,7 +855,7 @@ msgstr "Relatório"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.report_marketing_campaign
-msgid "Reports"
+msgid "Reporting"
 msgstr "Relatórios"
 
 #. module: marketing_campaign
@@ -1003,6 +1017,10 @@ msgid ""
 " validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
 msgstr ""
+"Teste - Ele cria e processa todas as atividades diretamente (sem esperar pela demora nas transições), mas não enviar e-mails ou produzir relatórios.\n"
+"Teste em Tempo Real - Cria e processa todas as atividades diretamente, mas não envia e-mails ou produz relatórios.\n"
+"Com a confirmação Manual - as campanhas funciona normalmente, mas o usuário tem que validar todos os itens de trabalho manualmente.\n"
+"Normal - A campanha decorre normalmente e envia automaticamente todos os e-mails e relatórios (ter muito cuidado com este modo, você está em produção!)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1020,10 +1038,10 @@ msgid "Test in Realtime"
 msgstr "Testar em Tempo Real"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:393
+#: code:addons/marketing_campaign/models/marketing_campaign.py:411
 #, python-format
 msgid "The To/From Activity of transition must be of the same Campaign"
-msgstr ""
+msgstr "A transição da Atividade Para/De precisa pertencer a mesma Campanha "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -1031,7 +1049,7 @@ msgid "The action to perform when this activity is activated"
 msgstr "A Ação a ser executada quando esta atividade for ativada"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:103
+#: code:addons/marketing_campaign/models/marketing_campaign.py:107
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr ""
@@ -1039,7 +1057,7 @@ msgstr ""
 "estejam fechados."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:95
+#: code:addons/marketing_campaign/models/marketing_campaign.py:99
 #, python-format
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
@@ -1049,14 +1067,14 @@ msgstr ""
 "Modifique as atividades de campanha para marcar uma como o ponto de partida."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:83
+#: code:addons/marketing_campaign/models/marketing_campaign.py:87
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
 msgstr ""
 "A campanha não pode ser iniciada. Não existe nenhuma atividade cadastrada."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:601
+#: code:addons/marketing_campaign/models/marketing_campaign.py:619
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""
@@ -1099,6 +1117,11 @@ msgid ""
 "- Report: print an existing Report defined on the resource item and save it into a specific directory \n"
 "- Custom Action: execute a predefined action, e.g. to modify the fields of the resource record"
 msgstr ""
+"O tipo de ação a ser executada quando um item entra nesta atividade, tais como:\n"
+"    - E-mail: envie um e-mail usando um modelo de e-mail pré-definido\n"
+"    - Relatório: imprimir um relatório existente definido no item recursos e salvá-lo em um diretório específico\n"
+"    - Ação Personalizada: executar uma ação pré-definida, por exemplo, para modificar os campos do registro de recurso\n"
+"  "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
