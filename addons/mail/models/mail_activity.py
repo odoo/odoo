@@ -65,6 +65,7 @@ class MailActivity(models.Model):
     icon = fields.Char('Icon', related='activity_type_id.icon')
     summary = fields.Char('Summary')
     note = fields.Html('Note')
+    feedback = fields.Html('Feedback')
     date_deadline = fields.Date('Deadline', index=True, required=True, default=fields.Date.today)
     # description
     user_id = fields.Many2one(
@@ -117,8 +118,10 @@ class MailActivity(models.Model):
         return res
 
     @api.multi
-    def action_done(self):
+    def action_done(self, feedback=False):
         message = self.env['mail.message']
+        if feedback:
+            self.write(dict(feedback=feedback))
         for activity in self:
             record = self.env[activity.res_model].browse(activity.res_id)
             record.message_post_with_view(

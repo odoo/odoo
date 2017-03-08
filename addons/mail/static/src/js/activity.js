@@ -187,11 +187,49 @@ var Activity = form_common.AbstractField.extend({
     },
 
     on_activity_done: function (event) {
-        event.preventDefault();
         var self = this;
-        var activity_id = this.$(event.currentTarget).data('activity-id');
+        event.preventDefault();
+        var $popover_el = this.$(event.currentTarget);
+        var activity_id = $popover_el.data('activity-id');
+        if(! $popover_el.data('bs.popover')) {
+            $popover_el.popover({
+                title : _t('Feedback'),
+                html: 'true',
+                trigger:'click',
+                content : function() {
+                    var $popover = $(QWeb.render("mail.activity_feedback_form", {}));
+                    $popover.on('click', '.o_activity_popover_done_next', function (e) {
+                        self.set_done(activity_id, _.escape($popover.find('#activity_feedback').val()));
+                        self.on_activity_schedule(e);
+                    });
+                    $popover.on('click', '.o_activity_popover_done', function () {
+                        self.set_done(activity_id, _.escape($popover.find('#activity_feedback').val()));
+                    });
+                    $popover.on('click', '.o_activity_popover_discard', function () {
+                        $popover_el.popover('hide');
+                    });
+                    return $popover;
+                },
+            }).on("show.bs.popover", function (e) {
+                $(".popover").not(e.target).popover("hide");
+            }).on("shown.bs.popover", function () {
+                var $popover = $(this).data("bs.popover").tip();
+                $popover.css({maxWidth: "410px"}).attr('tabindex', 0);
+                $popover.find('#activity_feedback').focus();
+                // Outside click of popover hide the popover
+                $popover.focusout(function (e) {
+                    if(!e.relatedTarget) {
+                        $popover.popover('hide');
+                    }
+                });
+            }).popover('show');
+        }
+    },
+
+    set_done: function (activity_id, feedback) {
+        var self = this;
         this.Activity
-            .call("action_done", [[activity_id]])
+            .call("action_done", [[activity_id]], {'feedback': feedback})
             .then(function (msg_id) {
                 self.fetch_and_render_value();
 
