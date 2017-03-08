@@ -52,7 +52,10 @@ class Channel(models.Model):
     email_send = fields.Boolean('Send messages by email', default=False)
     # multi users channel
     channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen')
-    channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners')
+    channel_partner_ids = fields.Many2many(
+        'res.partner', 'mail_channel_partner', 'channel_id', 'partner_id',
+        string='Listeners',
+        default=lambda self: [(4, self.env.user.partner_id.id)])
     channel_message_ids = fields.Many2many('mail.message', 'mail_message_mail_channel_rel')
     is_member = fields.Boolean('Is a member', compute='_compute_is_member')
     # access
@@ -561,7 +564,6 @@ class Channel(models.Model):
             'name': name,
             'public': privacy,
             'email_send': False,
-            'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
         channel_info = new_channel.channel_info('creation')[0]
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (new_channel.id, new_channel.name,)

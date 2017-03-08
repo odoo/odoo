@@ -67,14 +67,16 @@ class TestMailGroup(TestMail):
         # TODO Change the except_orm to Warning
         self.group_pigs.sudo(self.user_employee).read()
 
-        # Employee can create a group
-        self.env['mail.channel'].sudo(self.user_employee).create({'name': 'Test'})
+        # Employee can create a private group
+        self.env['mail.channel'].sudo(self.user_employee).create({'name': 'Test', 'public': 'private'})
 
-        # Employee update employee-based group: ok
-        self.group_pigs.sudo(self.user_employee).write({'name': 'modified'})
+        # Employee update employee-based group: ko (only private groups for employees)
+        with self.assertRaises(except_orm):
+            self.group_pigs.sudo(self.user_employee).write({'name': 'modified'})
 
-        # Employee unlink employee-based group: ok
-        self.group_pigs.sudo(self.user_employee).unlink()
+        # Employee unlink employee-based group: ko (only private groups for employees)
+        with self.assertRaises(except_orm):
+            self.group_pigs.sudo(self.user_employee).unlink()
 
         # Employee cannot read a private group
         with self.assertRaises(except_orm):
@@ -103,6 +105,7 @@ class TestMailGroup(TestMail):
             with self.assertRaises(except_orm):
                 trigger_read = partner.name
 
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_mail_group_notification_recipients_grouped(self):
         # Data: set alias_domain to see emails with alias
         self.registry('ir.config_parameter').set_param(self.cr, self.uid, 'mail.catchall.domain', 'schlouby.fr')
@@ -117,6 +120,7 @@ class TestMailGroup(TestMail):
                 set(email['email_to']),
                 set([formataddr((self.user_employee.name, self.user_employee.email)), formataddr((self.user_portal.name, self.user_portal.email))]))
 
+    @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_mail_group_notification_recipients_separated(self):
         # Remove alias, should trigger classic behavior of mail group
         self.group_private.write({'alias_name': False})

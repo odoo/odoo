@@ -313,11 +313,18 @@ class ir_attachment(osv.osv):
                 require_employee = True
             # For related models, check if we can write to the model, as unlinking
             # and creating attachments can be seen as an update to the model
-            if (mode in ['unlink','create']):
-                ima.check(cr, uid, model, 'write')
+            if (mode in ['unlink', 'create']):
+                check_operation = 'write'
+            elif mode == 'write':
+                DocModel = self.pool[model]
+                if hasattr(DocModel, '_mail_post_access'):
+                    check_operation = DocModel._mail_post_access
+                else:
+                    check_operation = 'write'
             else:
-                ima.check(cr, uid, model, mode)
-            self.pool[model].check_access_rule(cr, uid, existing_ids, mode, context=context)
+                check_operation = mode
+            ima.check(cr, uid, model, check_operation)
+            self.pool[model].check_access_rule(cr, uid, existing_ids, check_operation, context=context)
         if require_employee:
             if not uid == SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_user'):
                 raise AccessError(_("Sorry, you are not allowed to access this document."))
