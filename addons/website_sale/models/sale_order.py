@@ -325,7 +325,7 @@ class Website(models.Model):
 
     @api.multi
     def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
-        """ Return the current sale order after mofications specified by params.
+        """ Return the current sale order after modifications specified by params.
         :param bool force_create: Create sale order if not already existing
         :param str code: Code to force a pricelist (promo code)
                          If empty, it's a special case to reset the pricelist with the first available else the default.
@@ -354,7 +354,12 @@ class Website(models.Model):
 
         # Test validity of the sale_order_id
         sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
-
+        
+        #Test the sale_order state
+        if sale_order and sale_order.state != 'draft':
+            request.session['sale_order_id'] = None
+            return None
+            
         # create so if needed
         if not sale_order and (force_create or code):
             # TODO cache partner_id session
