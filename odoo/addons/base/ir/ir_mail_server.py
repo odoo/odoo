@@ -174,9 +174,7 @@ class IrMailServer(models.Model):
         for server in self:
             smtp = False
             try:
-                smtp = self.connect(server.smtp_host, server.smtp_port, user=server.smtp_user,
-                                    password=server.smtp_pass, encryption=server.smtp_encryption,
-                                    smtp_debug=server.smtp_debug)
+                smtp = self.connect(mail_server_id=server.id)
             except Exception as e:
                 raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s") % ustr(e))
             finally:
@@ -222,7 +220,8 @@ class IrMailServer(models.Model):
             smtp_port = tools.config.get('smtp_port', 25) if port is None else port
             smtp_user = user or tools.config.get('smtp_user')
             smtp_password = password or tools.config.get('smtp_password')
-            if encryption is None and tools.config.get('smtp_ssl'):
+            smtp_encryption = encryption
+            if smtp_encryption is None and tools.config.get('smtp_ssl'):
                 smtp_encryption = 'starttls' # smtp_ssl => STARTTLS as of v7
 
         if not smtp_server:
