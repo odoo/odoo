@@ -756,7 +756,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many list field edition', function (assert) {
-        assert.expect(5);
+        assert.expect(7);
 
         this.data.partner.records.push({
             id: 3,
@@ -786,14 +786,13 @@ QUnit.module('relational_fields', {
         assert.ok(form.$('.o_field_one2many tbody td').first().hasClass('o_edit_mode'),
             "first row of o2m should be in edition");
         form.$('.o_field_one2many tbody td').first().find('input').val("new value").trigger('input');
-        // FIXME: this doesn"t work for now as the x2many fields are reset on field changed
-        // assert.ok(form.$('.o_field_one2many tbody td').first().hasClass('o_edit_mode'),
-        //     "first row of o2m should still be in edition");
+        assert.ok(form.$('.o_field_one2many tbody td').first().hasClass('o_edit_mode'),
+            "first row of o2m should still be in edition");
 
         // // leave o2m edition
-        // form.$el.click();
-        // assert.ok(!form.$('.o_field_one2many tbody td').first().hasClass('o_edit_mode'),
-        //     "first row of o2m should be readonly again");
+        form.$el.click();
+        assert.ok(!form.$('.o_field_one2many tbody td').first().hasClass('o_edit_mode'),
+            "first row of o2m should be readonly again");
 
         // discard changes
         form.$buttons.find('.o_form_button_cancel').click();
@@ -813,6 +812,7 @@ QUnit.module('relational_fields', {
         // data isn't reloaded when clicking on save (it doesn't work for now actually)
         assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'new value',
             "display name of first record in o2m list should be 'new value'");
+
         form.destroy();
     });
 
