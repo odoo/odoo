@@ -300,34 +300,34 @@ class ResourceCalendar(models.Model):
         # Computes start_dt, end_dt (with default values if not set) + off-interval work limits
         work_limits = []
         if start_dt is None and end_dt is not None:
-            start_dt = end_dt.replace(hour=0, minute=0, second=0)
+            start_dt = end_dt.replace(hour=0, minute=0, second=0, microsecond=0)
         elif start_dt is None:
-            start_dt = datetime.datetime.now().replace(hour=0, minute=0, second=0)
+            start_dt = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         else:
-            work_limits.append((start_dt.replace(hour=0, minute=0, second=0), start_dt))
+            work_limits.append((start_dt.replace(hour=0, minute=0, second=0, microsecond=0), start_dt))
         if end_dt is None:
-            end_dt = start_dt.replace(hour=23, minute=59, second=59)
+            end_dt = start_dt.replace(hour=23, minute=59, second=59, microsecond=999999)
         else:
-            work_limits.append((end_dt, end_dt.replace(hour=23, minute=59, second=59)))
+            work_limits.append((end_dt, end_dt.replace(hour=23, minute=59, second=59, microsecond=999999)))
         assert start_dt.date() == end_dt.date(), 'get_working_intervals_of_day is restricted to one day'
 
         intervals = []
-        work_dt = start_dt.replace(hour=0, minute=0, second=0)
+        work_dt = start_dt.replace(hour=0, minute=0, second=0, microsecond=0)
 
         # no calendar: try to use the default_interval, then return directly
         if not self:
             working_interval = []
             if default_interval:
-                working_interval = (start_dt.replace(hour=default_interval[0], minute=0, second=0),
-                                    start_dt.replace(hour=default_interval[1], minute=0, second=0))
+                working_interval = (start_dt.replace(hour=default_interval[0], minute=0, second=0, microsecond=0),
+                                    start_dt.replace(hour=default_interval[1], minute=0, second=0, microsecond=0))
             intervals = self.interval_remove_leaves(working_interval, work_limits)
             return intervals
 
         working_intervals = []
         tz_info = fields.Datetime.context_timestamp(self, work_dt).tzinfo
         for calendar_working_day in self.get_attendances_for_weekday(start_dt):
-            dt_f = work_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(calendar_working_day.hour_from * 3600))
-            dt_t = work_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(calendar_working_day.hour_to * 3600))
+            dt_f = work_dt.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(seconds=(calendar_working_day.hour_from * 3600))
+            dt_t = work_dt.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(seconds=(calendar_working_day.hour_to * 3600))
 
             # adapt tz
             working_interval = (
@@ -369,12 +369,12 @@ class ResourceCalendar(models.Model):
                           resource_id=None, default_interval=None):
         hours = 0.0
         for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
-                               until=(end_dt + timedelta(days=1)).replace(hour=0, minute=0, second=0),
+                               until=(end_dt + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0),
                                byweekday=self.get_weekdays()):
-            day_start_dt = day.replace(hour=0, minute=0, second=0)
+            day_start_dt = day.replace(hour=0, minute=0, second=0, microsecond=0)
             if start_dt and day.date() == start_dt.date():
                 day_start_dt = start_dt
-            day_end_dt = day.replace(hour=23, minute=59, second=59)
+            day_end_dt = day.replace(hour=23, minute=59, second=59, microsecond=999999)
             if end_dt and day.date() == end_dt.date():
                 day_end_dt = end_dt
             hours += self.get_working_hours_of_date(
@@ -528,7 +528,7 @@ class ResourceCalendar(models.Model):
         intervals = []
         planned_days = 0
         iterations = 0
-        current_datetime = day_date.replace(hour=0, minute=0, second=0)
+        current_datetime = day_date.replace(hour=0, minute=0, second=0, microsecond=0)
 
         while planned_days < days and iterations < 100:
             working_intervals = self.get_working_intervals_of_day(
@@ -585,7 +585,7 @@ class ResourceCalendar(models.Model):
         saas-3, counts leave hours instead of all-day leaves."""
         return self.schedule_hours(
             hours * -1.0,
-            day_dt=dt_from.replace(minute=0, second=0),
+            day_dt=dt_from.replace(minute=0, second=0, microsecond=0),
             compute_leaves=True, resource_id=resource,
             default_interval=(8, 16)
         )
