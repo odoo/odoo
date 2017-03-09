@@ -112,8 +112,9 @@ function _parse_and_transform(nodes, transform_function) {
     }).join("");
 }
 
-// suggested regexp (gruber url matching regexp, adapted to js, see https://gist.github.com/gruber/8891611)
-var url_regexp = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
+// Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
+// Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
+var url_regexp = /\b(?:https?:\/\/|(www\.))[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,13}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
 function add_link (node, transform_children) {
     if (node.nodeType === 3) {  // text node
         return node.data.replace(url_regexp, function (url) {
