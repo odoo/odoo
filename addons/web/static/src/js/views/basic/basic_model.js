@@ -26,6 +26,8 @@ odoo.define('web.BasicModel', function (require) {
  *      fieldNames: {string[]},
  *      fields: {Object},
  *      fieldAttrs: {Object},
+ *      getContext: {function},
+ *      getDomain: {function},
  *      groupedBy: {string[]},
  *      id: {integer},
  *      isOpen: {boolean},
@@ -371,9 +373,6 @@ var BasicModel = AbstractModel.extend({
         delete element.parentID;
         delete element.relation_field;
         delete element.rawContext;
-
-        element.getContext = this._getContext.bind(this, record);
-        element.getDomain = this._getDomain.bind(this, record);
 
         return element;
     },
@@ -1771,6 +1770,9 @@ var BasicModel = AbstractModel.extend({
             type: type,  // 'record' | 'list'
             value: value,
         };
+
+        dataPoint.getContext = this._getContext.bind(this, dataPoint);
+        dataPoint.getDomain = this._getDomain.bind(this, dataPoint);
 
         this.localData[dataPoint.id] = dataPoint;
 
