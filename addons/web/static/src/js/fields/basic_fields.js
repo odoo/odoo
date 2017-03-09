@@ -55,7 +55,7 @@ var InputField = AbstractField.extend({
      */
     activate: function () {
         this.$el.focus();
-        setTimeout(this.$el.select.bind(this.$el), 0);
+        setTimeout(this.$input.select.bind(this.$input), 0);
     },
 
     /**
@@ -84,18 +84,32 @@ var InputField = AbstractField.extend({
      * @private
      */
     _renderEdit: function () {
-        this.$el.addClass('o_form_input');
-        this.$el.attr('type', 'text');
+        // Keep a reference to the input so $el can become something else
+        // without losing track of the actual input.
+        this.$input = this.$el;
+        this._prepareInput(this.$input);
+    },
+
+    /**
+     * Formats an input element for edit mode. This is in a separate function so
+     * extending widgets can use it on their input without having input as tagName.
+     *
+     * @param {jQueryElement} $input
+     * @private
+     */
+    _prepareInput: function ($input) {
+        $input.addClass('o_form_input');
+        $input.attr('type', 'text');
         if (this.attrs.placeholder) {
-            this.$el.attr('placeholder', this.attrs.placeholder);
+            $input.attr('placeholder', this.attrs.placeholder);
         }
-        this.$el.attr('id', this.idForLabel);
+        $input.attr('id', this.idForLabel);
         // save cursor position to restore it after updating value
-        var selectionStart = this.el.selectionStart;
-        var selectionEnd = this.el.selectionEnd;
-        this.$el.val(this._formatValue(this.value));
-        this.el.selectionStart = selectionStart;
-        this.el.selectionEnd = selectionEnd;
+        var selectionStart = this.$input[0].selectionStart;
+        var selectionEnd = this.$input[0].selectionEnd;
+        this.$input.val(this._formatValue(this.value));
+        this.$input[0].selectionStart = selectionStart;
+        this.$input[0].selectionEnd = selectionEnd;
     },
 
     /**
@@ -121,7 +135,7 @@ var InputField = AbstractField.extend({
      * @param {any} event
      */
     _onKeydown: function (event) {
-        var input = this.$el[0];
+        var input = this.$input[0];
         var is_not_selecting;
         switch (event.which) {
             case $.ui.keyCode.DOWN:
@@ -156,7 +170,7 @@ var InputField = AbstractField.extend({
      * @private
      */
     _onInput: function () {
-        this._setValue(this.$el.val());
+        this._setValue(this.$input.val());
     },
 });
 
@@ -256,8 +270,42 @@ var FieldDateTime = FieldDate.extend({
 });
 
 var FieldMonetary = InputField.extend({
-    className: 'o_list_number',
+    className: 'o_form_field_monetary o_list_number',
+    replace_element: true,
     supportedFieldTypes: ['float', 'monetary'],
+
+    /**
+     * Float fields using a monetary widget have an additional currency_field
+     * parameter which defines the name of the field from which the currency
+     * should be read.
+     *
+     * They are also displayed differently than other inputs in
+     * edit mode. They are a div containing a span with the currency symbol and
+     * the actual input.
+     *
+     * If no currency field is given or the field does not exist, we fallback
+     * to the default input behavior instead.
+     *
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        // Options for _formatValue
+        this.nodeOptions.digits = [16,2];
+        if (this.attrs.currency_field) {
+            this.nodeOptions.currency_field = this.attrs.currency_field;
+        } else {
+            this.nodeOptions.currency_field = this.field.currency_field || 'currency_id';
+        }
+        if (this.record.data[this.nodeOptions.currency_field]) {
+            this.nodeOptions.currency_id = this.record.data[this.nodeOptions.currency_field].res_id;
+        }
+
+        if (this.mode === 'edit' && this.nodeOptions.currency_id) {
+            this.tagName = 'div';
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -277,16 +325,44 @@ var FieldMonetary = InputField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * FieldMonetary overrides _formatValue to ensure that the format_monetary
-     * method is used.  This allows this widget to be used with other field
-     * types, such as float.
+     * For monetary fields, the input is inside a div, alongside a span
+     * containing the currency symbol.
+     *
+     * @override
+     * @private
+     */
+    _renderEdit: function () {
+        if (this.nodeOptions.currency_id) {
+            var currency = session.get_currency(this.nodeOptions.currency_id);
+            var $currencySymbol = $('<span>').text(currency.symbol);
+            this.$input = $('<input>');
+            this._prepareInput(this.$input);
+            this.$input.appendTo(this.$el);
+            if (currency.position === "after") {
+                this.$el.append($currencySymbol);
+            } else {
+                this.$el.prepend($currencySymbol);
+            }
+        }
+        else {
+            this._super.apply(this, arguments);
+        }
+    },
+
+    /**
+     * FieldMonetary overrides _formatValue to use the format monetary method
+     * in readonly.
      *
      * @override
      * @private
      * @param {float} value
      */
     _formatValue: function (value) {
-        return field_utils.format.monetary(value, this.field, this.record_data, this.node_options);
+        if (this.mode === 'readonly') {
+            return field_utils.format.monetary(value, this.field, this.nodeOptions);
+        } else if (this.mode === 'edit') {
+            return this._super.apply(this, arguments);
+        }
     },
 });
 
