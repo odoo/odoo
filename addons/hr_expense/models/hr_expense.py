@@ -249,7 +249,7 @@ class HrExpense(models.Model):
             elif expense.product_id:
                 account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
                 if not account:
-                    raise UserError(_("No Expense account found for the product %s (or for it's category), please configure one.") % (expense.product_id.name))
+                    raise UserError(_("No Expense account found for the product %s (or for its category), please configure one.") % (expense.product_id.name))
             else:
                 account = self.env['ir.property'].with_context(force_company=expense.company_id.id).get('property_account_expense_categ_id', 'product.category')
                 if not account:
