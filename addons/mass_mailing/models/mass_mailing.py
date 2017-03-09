@@ -6,7 +6,7 @@ import hmac
 from datetime import datetime
 import random
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import html_translate
