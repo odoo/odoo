@@ -27,6 +27,7 @@ class ResConfigSettings(models.TransientModel):
     cdn_url = fields.Char(related='website_id.cdn_url')
     cdn_filters = fields.Text(related='website_id.cdn_filters')
     module_website_version = fields.Boolean("A/B Testing")
+    module_website_links = fields.Boolean(string="Link Trackers")
 
     favicon = fields.Binary('Favicon', related='website_id.favicon')
     # Set as global config parameter since methods using it are not website-aware. To be changed

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-extend="website_sale.products_table">
+        <t t-jquery=".o_top_margin .row .col-xs-12" t-operation="attributes">
+            <attribute name="class">col-md-6 col-xs-12</attribute>
+        </t>
+        <t t-jquery=".o_top_margin .row" t-operation="append">
+            <div class="col-md-6 col-xs-12 o_dashboard_utms">
+                <div>
+                    <h4 class="pull-left">REVENUE BY</h4>
+                    <t t-call="website_sale.LinkTrackersDropDown"/>
+                </div>
+                <div class="o_utm_no_data_img">
+                    <img src="website_sale_link_tracker/static/src/img/website_sale_link_tracker_chart_demo.png" alt="There isn't any UTM tag detected in orders" class="utm_chart_image image-responsive mt8"/>
+                </div>
+                <div class="o_utm_data_graph"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="website_sale.LinkTrackersDropDown">
+        <div class="dropdown">
+            <button class="btn btn-default btn-sm dropdown-toggle utm_dropdown ml4" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><span class="utm_button_name">Campaigns</span><span class="caret ml4"/>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="utm_dropdown">
+                <li><a class="js_utm_selector" name="campaign_id">Campaigns</a></li>
+                <li><a class="js_utm_selector" name="medium_id">Medium</a></li>
+                <li><a class="js_utm_selector" name="source_id">Sources</a></li>
+            </ul>
+        </div>
+    </t>
+</templates>
