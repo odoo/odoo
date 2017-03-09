@@ -735,6 +735,27 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('no nocontent helper when no data and no help', function (assert) {
+        assert.expect(3);
+
+        this.data.foo.records = [];
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+        });
+
+        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+            "should not display the no content helper");
+
+        assert.strictEqual(list.$('tr.o_data_row').length, 0,
+            "should not have any data row");
+
+        assert.strictEqual(list.$('table').length, 1, "should have a table in the dom");
+        list.destroy();
+    });
 
     QUnit.test('list view, editable, without data', function (assert) {
         assert.expect(9);
@@ -752,6 +773,11 @@ QUnit.module('Views', {
                     '<field name="m2o"/>' +
                     '<field name="foo"/>' +
                 '</tree>',
+            viewOptions: {
+                action: {
+                    help: '<p class="hello">click to add a partner</p>'
+                }
+            },
             mockRPC: function (route, args) {
                 if (args.method === 'create') {
                     assert.ok(true, "should have created a record");
