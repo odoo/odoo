@@ -13,6 +13,7 @@ odoo.define('web.BasicView', function (require) {
 var AbstractView = require('web.AbstractView');
 var BasicController = require('web.BasicController');
 var BasicModel = require('web.BasicModel');
+var fieldRegistry = require('web.field_registry');
 var pyeval = require('web.pyeval');
 
 /**
@@ -141,9 +142,9 @@ var BasicView = AbstractView.extend({
                 return false;
             }
             if (node.tag === 'field') {
-                var attrs = node.attrs || {};
-                var field = _.extend({}, fields[node.attrs.name]);
-                self._processField(field, node, attrs);
+                var attrs = node.attrs ? _.clone(node.attrs) : {};
+                var field = _.clone(fields[node.attrs.name]);
+                self._processField(field, attrs);
                 viewFields[node.attrs.name] = field;
                 fieldAttrs[node.attrs.name] = attrs;
                 return false;
@@ -159,28 +160,51 @@ var BasicView = AbstractView.extend({
      * Process a field node, in particular, put a flag on the field to give
      * special directives to the BasicModel.
      *
-     * @param {Object} field
-     * @param {Object} node
-     * @param {Object} attrs
+     * @param {Object} field - the field properties
+     * @param {Object} attrs - the field attributes (from the xml)
      */
-    _processField: function (field, node, attrs) {
+    _processField: function (field, attrs) {
+        attrs.Widget = this._getFieldWidgetClass(field, attrs);
+
         if (!_.isObject(attrs.options)) { // parent arch could have already been processed (TODO this should not happen)
             attrs.options = attrs.options ? pyeval.py_eval(attrs.options) : {};
         }
 
         if (field.type === 'many2one') {
-            if (node.attrs.widget === 'statusbar' || node.attrs.widget === 'radio') {
+            if (attrs.widget === 'statusbar' || attrs.widget === 'radio') {
                 field.__fetch_status = true;
-            } else if (node.attrs.widget === 'selection') {
+            } else if (attrs.widget === 'selection') {
                 field.__fetch_selection = true;
             }
         }
-        if (node.attrs.widget === 'many2many_checkboxes') {
+        if (attrs.widget === 'many2many_checkboxes') {
             field.__fetch_many2manys = true;
         }
-        if (node.attrs.on_change) {
+        if (attrs.on_change) {
             field.onChange = "1";
         }
+    },
+
+    /**
+     * Returns the AbstractField specialization that should be used for the
+     * given field informations. If there is no mentioned specific widget to
+     * use, determine one according the field type.
+     *
+     * @param {Object} field
+     * @param {Object} attrs
+     * @returns {function|null} AbstractField specialization Class
+     */
+    _getFieldWidgetClass: function (field, attrs) {
+        var viewName = this.rendererParams.arch.tag;
+
+        var Widget;
+        if (attrs.widget) {
+            Widget = fieldRegistry.getAny([viewName + "." + attrs.widget, attrs.widget]);
+            if (!Widget) {
+                console.warn("Missing widget: ", attrs.widget, " for field", attrs.name, "of type", field.type);
+            }
+        }
+        return Widget || fieldRegistry.getAny([viewName + "." + field.type, field.type, "abstract"]);
     },
 });
 

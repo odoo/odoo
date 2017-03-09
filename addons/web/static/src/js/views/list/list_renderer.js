@@ -5,7 +5,6 @@ var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var Domain = require('web.Domain');
-var field_registry = require('web.field_registry');
 var field_utils = require('web.field_utils');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -61,8 +60,6 @@ var ListRenderer = BasicRenderer.extend({
             if (c.attrs.widget === 'handle') {
                 self.hasHandle = true;
             }
-            var keys = ['list.' + c.attrs.widget, c.attrs.widget];
-            c.Widget = field_registry.getAny(keys);
             c.modifiers = modifiers;
             return false;
         });
@@ -283,8 +280,9 @@ var ListRenderer = BasicRenderer.extend({
         if (this._isInvisible(record, node)) {
             return $td;
         }
-        if (node.Widget) {
-            var widget = new node.Widget(this, node.attrs.name, record, {
+        var name = node.attrs.name;
+        if (node.attrs.widget) {
+            var widget = new this.state.fieldAttrs[name].Widget(this, name, record, {
                 mode: 'readonly',
             });
             widget.appendTo($td);
@@ -309,8 +307,8 @@ var ListRenderer = BasicRenderer.extend({
             });
             return $td;
         }
-        var field = this.state.fields[node.attrs.name];
-        var value = record.data[node.attrs.name];
+        var field = this.state.fields[name];
+        var value = record.data[name];
         $td.addClass(FIELD_CLASSES[field.type]);
         var formatted_value = field_utils.format[field.type](value, field, { data: record.data });
         return $td.html(formatted_value);
@@ -446,23 +444,24 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement} a <th> element
      */
     _renderHeaderCell: function (node) {
+        var name = node.attrs.name;
         var order = this.state.orderedBy;
-        var isNodeSorted = order[0] && order[0].name === node.attrs.name;
-        var field = this.state.fields[node.attrs.name];
+        var isNodeSorted = order[0] && order[0].name === name;
+        var field = this.state.fields[name];
         var $th = $('<th>');
         if (!field) {
             return $th;
         }
         var description;
-        if (node.Widget) {
-            description = node.Widget.prototype.description;
+        if (node.attrs.widget) {
+            description = this.state.fieldAttrs[name].Widget.prototype.description;
         }
         if (description === undefined) {
             description = node.attrs.string || field.string;
         }
         $th
             .text(description)
-            .data('name', node.attrs.name)
+            .data('name', name)
             .toggleClass('o-sort-down', isNodeSorted ? !order[0].asc : false)
             .toggleClass('o-sort-up', isNodeSorted ? order[0].asc : false)
             .addClass(field.sortable && 'o_column_sortable');
@@ -474,8 +473,8 @@ var ListRenderer = BasicRenderer.extend({
         if (config.debug) {
             var fieldDescr = {
                 field: field,
-                name: node.attrs.name,
-                string: description || node.attrs.name,
+                name: name,
+                string: description || name,
                 record: this.state,
                 attrs: node.attrs,
             };

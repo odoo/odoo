@@ -3,7 +3,6 @@ odoo.define('web.KanbanRecord', function (require) {
 
 var core = require('web.core');
 var Domain = require('web.Domain');
-var field_registry = require('web.field_registry');
 var field_utils = require('web.field_utils');
 var framework = require('web.framework');
 var session = require('web.session');
@@ -94,8 +93,7 @@ var KanbanRecord = Widget.extend({
                 var widget = self.sub_widgets[field_name];
                 if (!widget) {
                     // the widget doesn't exist yet, so instanciate it
-                    var Widget = field_registry.getAny(['kanban.' + field_widget, field_widget]);
-
+                    var Widget = self.state.fieldAttrs[field_name].Widget;
                     if (Widget) {
                         // some field's attrs might be record dependent (they start with
                         // 't-att-') and should thus be evaluated, which is done by qweb

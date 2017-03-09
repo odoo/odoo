@@ -5,7 +5,6 @@ var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var Domain = require('web.Domain');
-var field_registry = require('web.field_registry');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -260,15 +259,6 @@ return BasicRenderer.extend({
     _renderFieldWidget: function (node) {
         var name = node.attrs.name;
         var field = this.state.fields[name];
-        var widget_keys = ['form.' + field.type, field.type, 'abstract'];
-        if (node.attrs.widget) {
-            widget_keys = ['form.' + node.attrs.widget, node.attrs.widget].concat(widget_keys);
-        }
-        var Widget = field_registry.getAny(widget_keys);
-
-        if (node.attrs.widget && !field_registry.contains(node.attrs.widget)) {
-            console.warn('missing widget: ' + node.attrs.widget + ' for field', name, 'of type', field.type);
-        }
 
         var modifiers = JSON.parse(node.attrs.modifiers || "{}");
         var is_readonly = new Domain(modifiers.readonly).compute(this.field_values);
@@ -277,9 +267,8 @@ return BasicRenderer.extend({
             mode: is_readonly ? 'readonly' : this.mode,
             required: is_required,
             idForLabel: this._getIDForLabel(name),
-            widgets_registry: field_registry,
         };
-        var widget = new Widget(this, name, this.state, options);
+        var widget = new this.state.fieldAttrs[name].Widget(this, name, this.state, options);
         this.widgets.push(widget);
         var def = widget.__widgetRenderAndInsert(function () {});
         if (def.state() === 'pending') {

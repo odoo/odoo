@@ -524,7 +524,6 @@ var FieldX2Many = AbstractField.extend({
                                             true;
             this.editable = arch.attrs.editable;
         }
-        this.widgets_registry = options && options.widgets_registry;
     },
     /**
      * @override
