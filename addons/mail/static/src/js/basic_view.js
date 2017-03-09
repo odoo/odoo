@@ -6,15 +6,24 @@ var BasicView = require('web.BasicView');
 var mailWidgets = ['mail_followers', 'mail_thread', 'mail_activity', 'kanban_activity'];
 
 BasicView.include({
-    init: function() {
+    init: function () {
         this.mailFields = {};
         this._super.apply(this, arguments);
         this.rendererParams.activeActions = this.controllerParams.activeActions;
         this.rendererParams.mailFields = this.mailFields;
     },
-    _processField: function(field, node) {
-        if (_.contains(mailWidgets, node.attrs.widget)) {
-            this.mailFields[node.attrs.widget] = node.attrs.name;
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @param {Object} field - the field properties
+     * @param {Object} attrs - the field attributes (from the xml)
+     */
+    _processField: function (field, attrs) {
+        if (_.contains(mailWidgets, attrs.widget)) {
+            this.mailFields[attrs.widget] = attrs.name;
             field.__no_fetch = true;
         }
         this._super.apply(this, arguments);

@@ -15,7 +15,6 @@ odoo.define('web.EditableListRenderer', function (require) {
 var core = require('web.core');
 var Domain = require('web.Domain');
 var ListRenderer = require('web.ListRenderer');
-var field_registry = require('web.field_registry');
 
 var _t = core._t;
 
@@ -172,7 +171,11 @@ ListRenderer.include({
      * @returns {boolean}
      */
     _isReadonly: function (record, field, node) {
-        if (field.readonly || (node.Widget && node.Widget.prototype.readonly)) {
+        if (field.readonly) {
+            return true;
+        }
+        var Widget = this.state.fieldAttrs[node.attrs.name].Widget;
+        if (Widget && Widget.prototype.readonly) {
             return true;
         }
         if ('readonly' in node.modifiers) {
@@ -257,19 +260,14 @@ ListRenderer.include({
         if (node.tag === 'button') {
             return;
         }
+        var name = node.attrs.name;
         var record = this.state.data[rowIndex];
-        var field = this.state.fields[node.attrs.name];
+        var field = this.state.fields[name];
         if (!this._isEditable(record, field, node)) {
             return;
         }
         var $td = this._findTd($row, colIndex);
-        var widget_keys = ['list.' + field.type, field.type];
-        if (node.attrs.widget) {
-            widget_keys.unshift(node.attrs.widget);
-            widget_keys.unshift('list.' + node.attrs.widget);
-        }
-        var Widget = field_registry.getAny(widget_keys);
-        var widget = new Widget(this, node.attrs.name, record, {
+        var widget = new this.state.fieldAttrs[name].Widget(this, name, record, {
             mode: 'edit'
         });
         if (widget.replace_element) {

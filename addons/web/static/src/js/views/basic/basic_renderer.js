@@ -104,8 +104,7 @@ return AbstractRenderer.extend({
      * Actual rendering. Supposed to be overridden by concrete renderers.
      * The basic responsabilities of _renderView are:
      * - use the xml arch of the view to render a jQuery representation
-     * - instantiate a widget from the widgets_registry for each field in the
-     *   arch
+     * - instantiate a widget from the registry for each field in the arch
      *
      * Note that the 'state' field should contains all necessary information
      * for the rendering.  The field widgets should be as synchronous as
