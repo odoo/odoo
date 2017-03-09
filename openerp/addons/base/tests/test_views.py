@@ -9,6 +9,7 @@ from lxml.builder import E
 
 from psycopg2 import IntegrityError
 
+from openerp.exceptions import ValidationError
 from openerp.tests import common
 import openerp.tools
 
@@ -242,6 +243,25 @@ class TestViewInheritance(ViewCase):
         self.assertFalse(
             self.View.default_view(
                 self.cr, self.uid, model=self.model, view_type='graph'))
+
+    def test_no_recursion(self):
+        r1 = self.makeView('R1')
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            self.View.write(self.cr, self.uid, r1, {'inherit_id': r1})
+
+        r2 = self.makeView('R2', r1)
+        r3 = self.makeView('R3', r2)
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            self.View.write(self.cr, self.uid, r2, {'inherit_id': r3})
+
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            self.View.write(self.cr, self.uid, r1, {'inherit_id': r3})
+
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            self.View.write(self.cr, self.uid, r1, {
+                'inherit_id': r1,
+                'arch': self.arch_for('itself', parent=True),
+            })
 
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base
