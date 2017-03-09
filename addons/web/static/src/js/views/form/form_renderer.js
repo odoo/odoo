@@ -530,7 +530,7 @@ return BasicRenderer.extend({
                 $header.addClass('active');
                 $page.addClass('active');
             }
-            self._handleAttributes($header, child, function (attrs) {
+            self._handleAttributes($header, child, function onEvalCallback (attrs) {
                 // if the active tab is invisible, activate the first visible tab instead
                 if (attrs.invisible && $header.hasClass('active')) {
                     $header.removeClass('active');

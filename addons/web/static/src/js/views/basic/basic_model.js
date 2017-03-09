@@ -302,6 +302,9 @@ var BasicModel = AbstractModel.extend({
 
             for (var fieldName in element.data) {
                 field = element.fields[fieldName];
+                if (element.data[fieldName] === null) {
+                    element.data[fieldName] = false;
+                }
                 if (!field) {
                     continue;
                 }
