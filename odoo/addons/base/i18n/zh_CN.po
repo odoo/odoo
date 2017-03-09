@@ -96,17 +96,6 @@ msgid ""
 " - Hungarian Bank information\n"
 " "
 msgstr ""
-"\n"
-"\n"
-"匈牙利本地化模块\n"
-"==========================================\n"
-"\n"
-"模块构成 :\n"
-"\n"
-" - 匈牙利会计科目\n"
-" - 匈牙利税\n"
-" - 匈牙利银行账户\n"
-" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -128,19 +117,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"概览:\n"
-"---------\n"
-"\n"
-"* 日本公司会计科目表和税务模板。\n"
-"* 本模板大概不会覆盖到一个公司所有必须的科目。基于模板，你需要自行增加/删除/修改科目。\n"
-"\n"
-"备注:\n"
-"-----\n"
-"\n"
-"* 财政状况 '内税' 和 '外税'，用来处理POS实施中可能会碰到的一些问题。 [1] 正常情况下你不会用到这些。\n"
-"\n"
-"[1] 访问 https://github.com/odoo/odoo/pull/6470 查看更多细节。"
 
 #. module: base
 #: code:addons/base/res/res_config.py:332
@@ -181,47 +157,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"\n"
-"    \n"
-"\n"
-"在外部发票中进行比利时本土化 (前提条件是在账户尾部):\n"
-"\n"
-"============================================================================\n"
-"\n"
-"    - 重命名“参考”字段标签来“通信”\n"
-"\n"
-"    - 添加支持比利时的结构化通信\n"
-"\n"
-"\n"
-"\n"
-"一个结构化的通信可以根据以下算法对外部发票自动生成:\n"
-"\n"
-"---------------------------------------------------------------------------------------------------------------------\n"
-"\n"
-"    1) 随机 : +++RRR/RRRR/RRRDD+++\n"
-"\n"
-"        **R..R =** 随机数字, **DD =** 校验数字\n"
-"\n"
-"    2) 日期 : +++DOY/YEAR/SSSDD+++\n"
-"\n"
-"        **DOY =** 年中的一天, **SSS =** 序列号, **DD =** 校验数字\n"
-"\n"
-"    3) 客户单号 : +++RRR/RRRR/SSSDDD+++\n"
-"\n"
-"        **R..R =** 客户单号而非数字字符, **SSS =** 序列号, **DD =** 校验数字  \n"
-"\n"
-"        \n"
-"\n"
-"结构化通信的首选类型和相关的算法可以\n"
-"\n"
-"在合作伙伴指定的记录。如果没有算法在伙伴指定的记录\n"
-"\n"
-"将会生成一个“随机”的结构化通信。\n"
-"\n"
-"\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -368,11 +303,6 @@ msgid ""
 "          templates to target objects.\n"
 "    "
 msgstr ""
-"\n"
-"    * 科目表、税、税项、分类账、记账模板、分析科目表和成本分类账的多语言支持。\n"
-"    * 设置向导变更\n"
-"        - 从模板复制科目表、税、税项和财政状况的翻译到目标对象。\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_cash_basis
@@ -472,10 +402,6 @@ msgid ""
 "==========================================\n"
 "    "
 msgstr ""
-"\n"
-"比利时薪酬规则的会计数据.\n"
-"==========================================\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mass_mailing
@@ -583,7 +509,7 @@ msgid ""
 "The wizard to launch the report has several options to help you get the data you need.\n"
 msgstr ""
 "\n"
-"在产品上添加一个报告菜单，用于按发票计算销售、采购、毛利和其他有趣的指标。\n"
+"在产品上添加一个报告菜单，基于发票计算销售、采购、毛利，以及其他有趣的指标。\n"
 "=============================================================================================================================\n"
 "\n"
 "此向导加载的报表有若干选项用来帮助你获取你需要的数据。\n"
@@ -721,13 +647,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"阿根廷本地会计和税收图表.\n"
-"==================================================\n"
-"\n"
-"Plan contable argentino e impuestos de acuerdo a disposiciones vigentes\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum
@@ -806,8 +725,6 @@ msgid ""
 "    - sets up Australian taxes.\n"
 "    "
 msgstr ""
-"\n"
-"澳大利亚会计模块==澳大利亚会计基本图表和本地化。另外： - 激活一些区域货币。 - 建立澳大利亚税。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_gengo
@@ -931,20 +848,6 @@ msgid ""
 "    * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...\n"
 "    "
 msgstr ""
-"\n"
-"Belgian Payroll Rules.\n"
-"======================\n"
-"\n"
-"    * Employee Details\n"
-"    * Employee Contracts\n"
-"    * Passport based Contract\n"
-"    * Allowances/Deductions\n"
-"    * Allow to configure Basic/Gross/Net Salary\n"
-"    * Employee Payslip\n"
-"    * Monthly Payroll Register\n"
-"    * Integrated with Holiday Management\n"
-"    * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -956,12 +859,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"Bolivian accounting chart and tax localization.\n"
-"\n"
-"Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail
@@ -1045,12 +942,6 @@ msgid ""
 "Thai accounting chart and localization.\n"
 "    "
 msgstr ""
-"\n"
-"泰国会计科目表.\n"
-"===============================\n"
-"\n"
-"Thai accounting chart and localization.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cr
@@ -1080,12 +971,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"Chilean accounting chart and tax localization.\n"
-"==============================================\n"
-"Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_decimal_precision
@@ -1268,12 +1153,6 @@ msgid ""
 "German accounting chart and localization.\n"
 "    "
 msgstr ""
-"\n"
-"Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.\n"
-"==============================================================================\n"
-"\n"
-"German accounting chart and localization.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_skr04
@@ -1396,47 +1275,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"欧盟迷你一站式店铺(MOSS) 提供电信,广播,电子服务VAT\n"
-"=============================================================================================\n"
-"\n"
-"截至2015年一月,电信，广播电子服务\n"
-"在欧洲的销售必须在客户所在的国家含税。\n"
-". 为了简化EU的流程,迷你一站式店铺 (MOSS) 注册方案\n"
-"允许交易有一个特别的税号。\n"
-"\n"
-"这个模块能帮助你创建所需的\n"
-"欧盟财政位置和税号来自动应用和记录所需的税。\n"
-"\n"
-"这个模块安装了一个向导来帮助设置财政位置\n"
-"及在欧盟内销售电子服务税。\n"
-"\n"
-"向导让你选择:\n"
-" - 销售电子服务所在的欧盟国家\n"
-" - 你国家的VAT服务税,对应到\n"
-"   目标国家的税\n"
-" - 选项: 一个财政位置模板， \n"
-"   用于复制账户映射. 也会作为你\n"
-"   现有的B2C Intra-EU财政位置. (默认\n"
-"   是无账户映射)\n"
-" - 选项: 用于收集税款的账户\n"
-"    (默认为你国家的VAT服务税的账户)\n"
-"\n"
-"这创建了对应的财务位置和税，\n"
-"自动用于客户所选国家的欧盟销售。\n"
-"向导可多次运行来增加更多的国家。\n"
-"\n"
-"向导为税创建了分割符来收集MOSS的VAT总额\n"
-"，所以提取MOSS数据会很容易。\n"
-"查找税中的 \"欧盟MOSS VAT 图\" \n"
-"在税报表菜单 (总账报表).\n"
-"\n"
-"参考\n"
-"++++++++++\n"
-"- Directive 2008/8/EC\n"
-"- Council Implementing Regulation (EU) No 1042/2013\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
@@ -1557,26 +1395,6 @@ msgid ""
 "      payslip interface, but not in the payslip report\n"
 "    "
 msgstr ""
-"\n"
-"\\n\n"
-"法国薪资规则.\\n\n"
-"=====================\\n\n"
-"\\n\n"
-"    - 法国本地化人事薪资配置\\n\n"
-"    - 法国薪资单主要贡献计算规则,分骨干和非骨干\\n\n"
-"    - 新薪资单报告\\n\n"
-"\\n\n"
-"待办事项:\\n\n"
-"-----\\n\n"
-"    - 在补贴扣缴方面和年假模块集成\\n\n"
-"    - 在薪资单创建自动匹配科目方面和人事薪资科目集成\\n\n"
-"      \\n\n"
-"    - 继续与捐款模块集成. 现在只实施主要贡献管理功能\\n\n"
-"      \\n\n"
-"    - 在Webbit下修改报表\\n\n"
-"    - 在 payslip.line with appears_in_payslip = False 时显示薪资单交互界面，而不是薪资单报表\\n\n"
-"      \\n\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -1604,13 +1422,6 @@ msgid ""
 "Provide Templates for Chart of Accounts, Taxes for Uruguay.\n"
 "\n"
 msgstr ""
-"\n"
-"\\n\n"
-"账户一般图表。\\n\n"
-"========================== \\n\n"
-"\\n\n"
-"为乌拉圭提供会计科目，税表模板。\\n\n"
-"\\n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intrastat
@@ -1620,10 +1431,6 @@ msgid ""
 "Based on invoices.\n"
 "    "
 msgstr ""
-"\n"
-"基于发票生成 XML格式的国际间组织申报报表。\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_account
@@ -1642,8 +1449,8 @@ msgstr ""
 "================================================== \n"
 "\n"
 "    * 费用编制\n"
-"    * 支付编制\n"
-"    * 公司供款管理\n"
+"    * 付款编制\n"
+"    * 公司捐献管理\n"
 "    "
 
 #. module: base
@@ -1784,9 +1591,6 @@ msgid ""
 "    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
 "    "
 msgstr ""
-"\n"
-"印度工资表薪资规则. ============================ - 印度本地化人事薪资配置 - 印度薪资单所有供款规则. * 新薪资单报表 * 雇员合同 * 允许配置基本工资 /总额/净工资 * 雇员薪资单 * 津贴 / 扣缴 * 与休假管理集成 * 医疗补助， 差旅津贴， 育儿津贴 ... - 薪资通知单 - 按人头年薪和按雇员年薪报告\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_drive
@@ -2154,24 +1958,6 @@ msgid ""
 ".. SAT: http://www.sat.gob.mx/\n"
 "    "
 msgstr ""
-"\n"
-"\n"
-"墨西哥简易会计模块配置.\n"
-"============================================\n"
-"\n"
-"这张会计科目表是可以使用Openerp的会计模块中OoB功能\n"
-"最基本的建议.\n"
-"\n"
-"这不是针对MX的所有本地化,它仅仅是从0开始墨西哥西班牙语本地化的最少需要.\n"
-"\n"
-"这些模块会由openerp墨西哥团队频繁的升级.\n"
-"\n"
-"这些模块可以让你:\n"
-"\n"
-" - 经过生产环境测试的最少的图表.\n"
-" - 可以满足墨西哥税务总局SAT需求的最少的税收帐目表.\n"
-"\n"
-".. SAT: http://www.sat.gob.mx/"
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic
@@ -2275,12 +2061,6 @@ msgid ""
 "\n"
 "In future this module will include some payroll rules for ME .\n"
 msgstr ""
-"\n"
-"Odoo中面向大多数阿拉伯及沙乌地阿拉伯等国家或地区的本地化。\n"
-"\n"
-"此会计科目以美国会计科目为蓝本翻译为阿拉伯会计科目。\n"
-"\n"
-"对于本人而言，预计将来会包含一些工资规则。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_blog
@@ -2379,7 +2159,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Odoo Web 编辑部件\n"
+"Odoo Web编辑器挂件\n"
 "==========================\n"
 
 #. module: base
@@ -2592,14 +2372,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"Peruvian accounting chart and tax localization. According the PCGE 2010.\n"
-"========================================================================\n"
-"\n"
-"Plan contable peruano e impuestos de acuerdo a disposiciones vigentes de la\n"
-"SUNAT 2011 (PCGE 2010).\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it
@@ -2611,12 +2383,6 @@ msgid ""
 "Italian accounting chart and localization.\n"
 "    "
 msgstr ""
-"\n"
-"Piano dei conti italiano di un'impresa generica.\n"
-"================================================\n"
-"\n"
-"Italian accounting chart and localization.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_posbox_homepage
@@ -2879,20 +2645,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"新加坡会计科目表及本地化(于中国大陆用处不大，下面保留原文)。\n"
-"=======================================================\n"
-"After installing this module, the Configuration wizard for accounting is launched.\n"
-"* The Chart of Accounts consists of the list of all the general ledger accounts\n"
-"required to maintain the transactions of Singapore.\n"
-"* On that particular wizard, you will be asked to pass the name of the company,\n"
-"the chart template to follow, the no. of digits to generate, the code for your\n"
-"account and bank account, currency to create journals.\n"
-"\n"
-"* The Chart of Taxes would display the different types/groups of taxes such as\n"
-"Standard Rates, Zeroed, Exempted, MES and Out of Scope.\n"
-"* The tax codes are specified considering the Tax Group and for easy accessibility of\n"
-"submission of GST Tax Report."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -2909,17 +2661,6 @@ msgid ""
 "    * Defines tax code templates\n"
 "    * Defines fiscal positions for spanish fiscal legislation\n"
 msgstr ""
-"\n"
-"西班牙会计科目表 (PGCE 2008)\n"
-"========================================\n"
-"\n"
-"* Defines the following chart of account templates:\n"
-"* Spanish general chart of accounts 2008\n"
-"* Spanish general chart of accounts 2008 for small and medium companies\n"
-"* Spanish general chart of accounts 2008 for associations\n"
-"* Defines templates for sale and purchase VAT\n"
-"* Defines tax code templates\n"
-"* Defines fiscal positions for spanish fiscal legislation\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey_crm
@@ -2968,36 +2709,6 @@ msgid ""
 "``l10n_ch`` is located in the core Odoo modules. The other modules are in:\n"
 "https://github.com/OCA/l10n-switzerland\n"
 msgstr ""
-"\n"
-"Swiss localization\n"
-"==================\n"
-"\n"
-"**Multilang Swiss PME/KMU 2015 account chart and taxes**\n"
-"\n"
-"**Author:** Camptocamp SA\n"
-"\n"
-"**Financial contributors:** Prisme Solutions Informatique SA, Quod SA\n"
-"\n"
-"**Translation contributors:** brain-tec AG, Agile Business Group\n"
-"\n"
-"The swiss localization addons are organized this way:\n"
-"\n"
-"``l10n_ch``\n"
-"  Multilang Swiss PME/KMU 2015 account chart and taxes (official addon)\n"
-"``l10n_ch_base_bank``\n"
-"  Technical module that introduces a new and simplified version of bank\n"
-"  type management\n"
-"``l10n_ch_bank``\n"
-"  List of swiss banks\n"
-"``l10n_ch_zip``\n"
-"  List of swiss postal zip\n"
-"``l10n_ch_dta``\n"
-"  Support of the DTA payment protocol (will be deprecated by the end of 2014)\n"
-"``l10n_ch_payment_slip``\n"
-"  Support of ESR/BVR payment slip report and reconciliation.\n"
-"\n"
-"``l10n_ch`` is located in the core Odoo modules. The other modules are in:\n"
-"https://github.com/OCA/l10n-switzerland\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_voucher
@@ -3224,14 +2935,6 @@ msgid ""
 "* The main taxes used in Domincan Republic\n"
 "* Fiscal position for local "
 msgstr ""
-"\n"
-"This is the base module to manage the accounting chart for Dominican Republic.\n"
-"==============================================================================\n"
-"\n"
-"* Chart of Accounts.\n"
-"* The Tax Code Chart for Domincan Republic\n"
-"* The main taxes used in Domincan Republic\n"
-"* Fiscal position for local "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -3254,12 +2957,6 @@ msgid ""
 "Greek accounting chart and localization.\n"
 "    "
 msgstr ""
-"\n"
-"This is the base module to manage the accounting chart for Greece.\n"
-"==================================================================\n"
-"\n"
-"Greek accounting chart and localization.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gt
@@ -3272,13 +2969,6 @@ msgid ""
 "la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes\n"
 "taxes and the Quetzal currency."
 msgstr ""
-"\n"
-"This is the base module to manage the accounting chart for Guatemala.\n"
-"=====================================================================\n"
-"\n"
-"Agrega una nomenclatura contable para Guatemala. También icluye impuestos y\n"
-"la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes\n"
-"taxes and the Quetzal currency."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hn
@@ -3291,13 +2981,6 @@ msgid ""
 "moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\n"
 "and the Lempira currency."
 msgstr ""
-"\n"
-"This is the base module to manage the accounting chart for Honduras.\n"
-"====================================================================\n"
-"    \n"
-"Agrega una nomenclatura contable para Honduras. También incluye impuestos y la\n"
-"moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\n"
-"and the Lempira currency."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -3316,19 +2999,6 @@ msgid ""
 "      see the first sheet of tax.xls for details of coverage\n"
 "    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
 msgstr ""
-"\n"
-"这是个用来管理卢森堡的科目表的基础模块.\n"
-"======================================================================\n"
-"\n"
-"    * the Luxembourg Official Chart of Accounts (law of June 2009 + 2015 chart and Taxes),\n"
-"    * the Tax Code Chart for Luxembourg\n"
-"    * the main taxes used in Luxembourg\n"
-"    * default fiscal position for local, intracom, extracom\n"
-"\n"
-"Notes:\n"
-"    * the 2015 chart of taxes is implemented to a large extent,\n"
-"      see the first sheet of tax.xls for details of coverage\n"
-"    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -3343,15 +3013,6 @@ msgid ""
 "L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
 "Seddik au cours du troisième trimestre 2010."
 msgstr ""
-"\n"
-"This is the base module to manage the accounting chart for Maroc.\n"
-"=================================================================\n"
-"\n"
-"Ce Module charge le modèle du plan de comptes standard Marocain et permet de\n"
-"générer les états comptables aux normes marocaines (Bilan, CPC (comptes de\n"
-"produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...).\n"
-"L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
-"Seddik au cours du troisième trimestre 2010."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_coa
@@ -3989,20 +3650,6 @@ msgid ""
 "    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
 "    "
 msgstr ""
-"\n"
-"This module implements the accounting chart for OHADA area.\n"
-"===========================================================\n"
-"    \n"
-"It allows any company or association to manage its financial accounting.\n"
-"\n"
-"Countries that use OHADA are the following:\n"
-"-------------------------------------------\n"
-"    Benin, Burkina Faso, Cameroon, Central African Republic, Comoros, Congo,\n"
-"    \n"
-"    Ivory Coast, Gabon, Guinea, Guinea Bissau, Equatorial Guinea, Mali, Niger,\n"
-"    \n"
-"    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -4136,10 +3783,6 @@ msgid ""
 "============================================================================================================= \n"
 "Please keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.\n"
 msgstr ""
-"\n"
-"This module provides the standard Accounting Chart for Austria which is based on the Template from BMF.gv.at.\n"
-"============================================================================================================= \n"
-"Please keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_note_pad
@@ -4290,10 +3933,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"此模块用于开支票和支票打印。\n"
-"================================================\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us
@@ -4303,10 +3942,6 @@ msgid ""
 "==================================\n"
 "    "
 msgstr ""
-"\n"
-"United States - Chart of accounts.\n"
-"==================================\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sales_team
@@ -5005,7 +4640,7 @@ msgstr "具有仿真方法的模块"
 #: code:addons/base/ir/ir_qweb/fields.py:377
 #, python-format
 msgid "A unit must be provided to duration widgets"
-msgstr "对期间挂件必须提供一个单位"
+msgstr "必须提供一个单位给时长挂件"
 
 #. module: base
 #: selection:res.company,rml_paper_format:0
@@ -5751,7 +5386,7 @@ msgstr "阿根廷"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar
 msgid "Argentina - Accounting"
-msgstr "阿根廷 - 会计"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_args
@@ -5856,7 +5491,7 @@ msgstr "澳大利亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
 msgid "Australian - Accounting"
-msgstr "澳大利亚 - 会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.at
@@ -5866,7 +5501,7 @@ msgstr "奥地利"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_at
 msgid "Austria - Accounting"
-msgstr "Austria - Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
@@ -6108,7 +5743,7 @@ msgstr "白俄罗斯"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
-msgstr "比利时国际间组织申报"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.be
@@ -6118,22 +5753,22 @@ msgstr "比利时"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be
 msgid "Belgium - Accounting"
-msgstr "Belgium - Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
 msgid "Belgium - Payroll"
-msgstr "Belgium - Payroll"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
 msgid "Belgium - Payroll with Accounting"
-msgstr "Belgium - Payroll with Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_invoice_bba
 msgid "Belgium - Structured Communication"
-msgstr "比利时 - 结构化 沟通"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -6179,7 +5814,7 @@ msgstr "玻利维亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_bo
 msgid "Bolivia - Accounting"
-msgstr "玻利维亚 - 会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bq
@@ -6219,7 +5854,7 @@ msgstr "巴西"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
 msgid "Brazilian - Accounting"
-msgstr "Brazilian - Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_payment
@@ -6353,7 +5988,7 @@ msgstr "加拿大"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca
 msgid "Canada - Accounting"
-msgstr "加拿大 - 会计"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.change_password_wizard_view
@@ -6619,7 +6254,7 @@ msgstr "智利"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl
 msgid "Chile - Accounting"
-msgstr "智利 - 会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.cn
@@ -6769,12 +6404,12 @@ msgstr "哥伦比亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co
 msgid "Colombian - Accounting"
-msgstr "Colombian - Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co
 msgid "Colombian Accounting and Tax Preconfiguration"
-msgstr "Colombian Accounting and Tax Preconfiguration"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_color
@@ -7186,7 +6821,7 @@ msgstr "哥斯达黎加"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cr
 msgid "Costa Rica - Accounting"
-msgstr "Costa Rica - Accounting"
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_partner.py:601
@@ -8017,17 +7652,17 @@ msgstr "指定货币符的位置，放在总额的前面还是后面"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de
 msgid "Deutschland - Accounting"
-msgstr "德国 - 会计"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr03
 msgid "Deutschland SKR03 - Accounting"
-msgstr "德国SKR03 - 会计"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr04
 msgid "Deutschland SKR04 - Accounting"
-msgstr "德国SKR04 - 会计"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -8256,7 +7891,7 @@ msgstr "多米尼加共和国"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_do
 msgid "Dominican Republic - Accounting"
-msgstr "多米尼加共和国 - 会计"
+msgstr ""
 
 #. module: base
 #: selection:ir.actions.todo,state:0
@@ -8304,7 +7939,7 @@ msgstr "ESC/POS 硬件驱动"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_service
 msgid "EU Mini One Stop Shop (MOSS)"
-msgstr "欧盟的一站式迷你商店 (MOSS)"
+msgstr ""
 
 #. module: base
 #: sql_constraint:ir.model:0
@@ -8324,7 +7959,7 @@ msgstr "厄瓜多尔"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
 msgid "Ecuador - Accounting"
-msgstr "厄瓜多尔 - 会计"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
@@ -8494,7 +8129,7 @@ msgstr "埃塞俄比亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_et
 msgid "Ethiopia - Accounting"
-msgstr "埃塞俄比亚-会计"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines_type
@@ -8779,46 +8414,6 @@ msgid ""
 "* Alexis de Lattre <alexis.delattre@akretion.com>\n"
 "\n"
 msgstr ""
-"Fichier d'Échange Informatisé (FEC) pour la France\n"
-"==================================================\n"
-"\n"
-"Ce module permet de générer le fichier FEC tel que définit par `l'arrêté du 29\n"
-"Juillet 2013 <http://legifrance.gouv.fr/eli/arrete/2013/7/29/BUDE1315492A/jo/texte>`\n"
-"portant modification des dispositions de l'article A. 47 A-1 du\n"
-"livre des procédures fiscales.\n"
-"\n"
-"Cet arrêté prévoit l'obligation pour les sociétés ayant une comptabilité\n"
-"informatisée de pouvoir fournir à l'administration fiscale un fichier\n"
-"regroupant l'ensemble des écritures comptables de l'exercice. Le format de ce\n"
-"fichier, appelé *FEC*, est définit dans l'arrêté.\n"
-"\n"
-"Le détail du format du FEC est spécifié dans le bulletin officiel des finances publiques `BOI-CF-IOR-60-40-20-20131213 <http://bofip.impots.gouv.fr/bofip/ext/pdf/createPdfWithAnnexePermalien/BOI-CF-IOR-60-40-20-20131213.pdf?doc=9028-PGP&identifiant=BOI-CF-IOR-60-40-20-20131213>` du 13 Décembre 2013. Ce module implémente le fichier\n"
-"FEC au format texte et non au format XML, car le format texte sera facilement\n"
-"lisible et vérifiable par le comptable en utilisant un tableur.\n"
-"\n"
-"La structure du fichier FEC généré par ce module a été vérifiée avec le logiciel\n"
-"*Test Compta Demat* version 1_00_05 disponible sur\n"
-"`le site de la direction générale des finances publiques <http://www.economie.gouv.fr/dgfip/outil-test-des-fichiers-des-ecritures-comptables-fec>`\n"
-"en utilisant une base de donnée Odoo réelle.\n"
-"\n"
-"Configuration\n"
-"=============\n"
-"\n"
-"Aucune configuration n'est nécessaire.\n"
-"\n"
-"Utilisation\n"
-"===========\n"
-"\n"
-"Pour générer le *FEC*, allez dans le menu *Accounting > Reporting > French Statements > FEC* qui va démarrer l'assistant de génération du FEC.\n"
-"\n"
-"Credits\n"
-"=======\n"
-"\n"
-"Contributors\n"
-"------------\n"
-"\n"
-"* Alexis de Lattre <alexis.delattre@akretion.com>\n"
-"\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_model_object_field
@@ -9172,7 +8767,7 @@ msgstr "法国"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr
 msgid "France - Accounting"
-msgstr "法国-会计"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
@@ -9187,7 +8782,7 @@ msgstr "法国圭亚那"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
 msgid "French Payroll"
-msgstr "法国工资表"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.tf
@@ -9271,7 +8866,7 @@ msgstr "甘特图"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_kanban_gauge
 msgid "Gauge Widget for Kanban"
-msgstr "看板视图的计量工具"
+msgstr "看板的测量挂件"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -9296,7 +8891,7 @@ msgstr "通用的"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_generic_coa
 msgid "Generic - Accounting"
-msgstr "通用-会计"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form
@@ -9404,7 +8999,7 @@ msgstr "希腊"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr
 msgid "Greece - Accounting"
-msgstr "希腊-会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.gl
@@ -9503,7 +9098,7 @@ msgstr "瓜地马拉"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gt
 msgid "Guatemala - Accounting"
-msgstr "瓜地马拉会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.gg
@@ -9766,7 +9361,7 @@ msgstr "洪都拉斯"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hn
 msgid "Honduras - Accounting"
-msgstr "洪都拉斯-会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.hk
@@ -9819,7 +9414,7 @@ msgstr "人力资源调查"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu
 msgid "Hungarian - Accounting"
-msgstr "匈牙利-会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.hu
@@ -10221,12 +9816,12 @@ msgstr "印度"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in
 msgid "Indian - Accounting"
-msgstr "印度-会计"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
 msgid "Indian Payroll"
-msgstr "印度工资表"
+msgstr ""
 
 #. module: base
 #: selection:res.partner,company_type:0
@@ -10613,7 +10208,7 @@ msgstr "意大利"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it
 msgid "Italy - Accounting"
-msgstr "意大利 - 会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ci
@@ -10633,7 +10228,7 @@ msgstr "日本"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jp
 msgid "Japan - Accounting"
-msgstr "日本- 会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.je
@@ -10723,7 +10318,7 @@ msgstr "基里巴斯"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_si
 msgid "Kontni načrt za gospodarske družbe"
-msgstr "Kontni načrt za gospodarske družbe"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.kw
@@ -11281,7 +10876,7 @@ msgstr "卢森堡"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu
 msgid "Luxembourg - Accounting"
-msgstr "卢森堡 - 会计"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_byproduct
@@ -11467,12 +11062,12 @@ msgstr "多对多 关系"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_margin
 msgid "Margins by Products"
-msgstr "利润 按产品"
+msgstr "毛利，按产品"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_margin
 msgid "Margins in Sales Orders"
-msgstr "销售订单利润"
+msgstr "销售订单的毛利"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
@@ -11492,7 +11087,7 @@ msgstr "市场营销"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma
 msgid "Maroc - Accounting"
-msgstr "摩洛哥 - 会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mh
@@ -11613,7 +11208,7 @@ msgstr "墨西哥"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx
 msgid "Mexico - Accounting"
-msgstr "墨西哥 - 会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -11901,17 +11496,17 @@ msgstr "黑山共和国"
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
 msgid "Month"
-msgstr "月份"
+msgstr "月"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Month: %(month)s"
-msgstr "月份：%(month)s"
+msgstr "月：%(month)s"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
 msgid "Months"
-msgstr "月份"
+msgstr "月"
 
 #. module: base
 #: model:res.country,name:base.ms
@@ -11964,7 +11559,7 @@ msgstr "多币种"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_multilang
 msgid "Multi Language Chart of Accounts"
-msgstr "多语言科目表"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
@@ -12051,7 +11646,7 @@ msgstr "荷兰"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl
 msgid "Netherlands - Accounting"
-msgstr "荷兰 - 会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.an
@@ -12236,7 +11831,7 @@ msgstr "挪威"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_no
 msgid "Norway - Accounting"
-msgstr "挪威 - 会计"
+msgstr ""
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -12286,7 +11881,7 @@ msgstr "OAuth2身份验证"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_syscohada
 msgid "OHADA - Accounting"
-msgstr "OHADA - 会计"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_model
@@ -12679,7 +12274,7 @@ msgstr "巴拿马"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pa
 msgid "Panama - Accounting"
-msgstr "巴拿马-会计"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_rml_paper_format
@@ -12918,7 +12513,7 @@ msgstr "秘鲁"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe
 msgid "Peru - Accounting"
-msgstr "秘鲁 - 会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ph
@@ -12964,7 +12559,7 @@ msgstr "计划"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pt
 msgid "Plano de contas SNC para Portugal"
-msgstr "SNC葡萄牙的方案，决算方案（为什么会有葡萄牙语？翻译者不懂葡萄牙语，用Google翻译的）"
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:888
@@ -13042,7 +12637,7 @@ msgstr "波兰"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl
 msgid "Poland - Accounting"
-msgstr "波兰-会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.pf
@@ -13087,7 +12682,7 @@ msgstr "葡萄牙"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pt
 msgid "Portugal - Accounting"
-msgstr "葡萄牙 - 会计"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
@@ -13824,7 +13419,7 @@ msgstr "罗马尼亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro
 msgid "Romania - Accounting"
-msgstr "罗马尼亚 - 会计"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rounding
@@ -14049,7 +13644,7 @@ msgstr "沙特阿拉伯"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa
 msgid "Saudi Arabia - Accounting"
-msgstr "沙特阿拉伯 - 会计"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -14433,7 +14028,7 @@ msgstr "新加坡"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg
 msgid "Singapore - Accounting"
-msgstr "新加坡－会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.sx
@@ -14473,7 +14068,7 @@ msgstr "斯洛文尼亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_si
 msgid "Slovenian - Accounting"
-msgstr "斯洛文尼亚语－会计"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_image_small
@@ -14602,7 +14197,7 @@ msgstr "西班牙"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es
 msgid "Spain - Accounting (PGCE 2008)"
-msgstr "西班牙 － 会计(PGCE 2008)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_specific_industry_applications
@@ -14880,7 +14475,7 @@ msgstr "瑞士"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch
 msgid "Switzerland - Accounting"
-msgstr "瑞士 - 会计"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_symbol
@@ -15125,7 +14720,7 @@ msgstr "泰国"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_th
 msgid "Thailand - Accounting"
-msgstr "泰国 - 会计"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
@@ -15591,9 +15186,6 @@ msgid ""
 "\n"
 "Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>\n"
 msgstr ""
-"这是Odoo中管理挪威财务报表的模块.\n"
-"\n"
-"Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>\n"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -15915,7 +15507,7 @@ msgstr "土耳其"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr
 msgid "Turkey - Accounting"
-msgstr "土耳其 - 会计"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.tm
@@ -15996,12 +15588,12 @@ msgstr "类型："
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae
 msgid "U.A.E. - Accounting"
-msgstr "阿联酋－会计"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk
 msgid "UK - Accounting"
-msgstr "英国 - 会计"
+msgstr ""
 
 #. module: base
 #: selection:ir.attachment,type:0
@@ -16107,7 +15699,7 @@ msgstr "美国"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us
 msgid "United States - Accounting"
-msgstr "美国 - 科目表"
+msgstr ""
 
 #. module: base
 #: selection:ir.module.module.dependency,state:0
@@ -16237,7 +15829,7 @@ msgstr "乌拉圭"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uy
 msgid "Uruguay - Chart of Accounts"
-msgstr "乌拉圭会计模块"
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:166
@@ -16476,7 +16068,7 @@ msgstr "委内瑞拉"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ve
 msgid "Venezuela - Accounting"
-msgstr "委内瑞拉－会计科目表"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
@@ -16491,7 +16083,7 @@ msgstr "越南"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_vn
 msgid "Vietnam - Accounting"
-msgstr "越南－会计科目表"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_view_id

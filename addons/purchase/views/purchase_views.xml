@@ -210,6 +210,7 @@
                         <page string="Products">
                             <field name="order_line" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}">
                                  <tree string="Purchase Order Lines" editable="bottom">
+                                    <field name="currency_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" attrs="{'readonly': [('state', 'in', ('purchase', 'to approve','done', 'cancel'))]}" context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"/>

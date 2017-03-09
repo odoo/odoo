@@ -294,6 +294,9 @@ msgid ""
 "                                        <strong>From the Purchase application</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<strong>Iz Nabave</strong>\n"
+"</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -302,6 +305,9 @@ msgid ""
 "                                        <strong>From the Sales application</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<strong>Iz prodaje</strong>\n"
+"</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -503,6 +509,8 @@ msgid ""
 "<strong>No bill of materials defined for production:</strong> you need to "
 "create a BoM or indicate that the product can be purchased instead."
 msgstr ""
+"<strong>Sastavnica nije definirana za proizvodnju:</strong> trebate kreirati"
+" sastavnicu ili naznačiti da se proizvod može kupiti"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -517,6 +525,8 @@ msgid ""
 "<strong>No supplier available for a purchase:</strong> you have to define a "
 "supplier in the Procurements tab of the product form."
 msgstr ""
+"<strong>Nema dostupnog dobavljača za nabavu:</strong> trebate definirati "
+"dobavljača u kartici Nabava na obrascu proizvoda."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -632,6 +642,9 @@ msgid ""
 "                        you may find yourself out of stock) and not too high (your products occupy\n"
 "                        space and may lose value)."
 msgstr ""
+"Dobar skladišni menadžment teži optimizaciji stanja zalihe: ne premalo (jer\n"
+"možete ostati bez zalihe) i ne previše (Vaši bi proizvodi mogli zauzimati\n"
+"mjesto i izgubiti vrijednost). "
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -710,7 +723,7 @@ msgstr "Sve"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_children_quant_ids
 msgid "All Bulk Content"
-msgstr ""
+msgstr "Cijeli grupni sadržaj"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
@@ -757,7 +770,7 @@ msgstr "Sva vraćena knjiženja"
 #: code:addons/stock/models/procurement.py:221
 #, python-format
 msgid "All stock moves have been cancelled for this procurement."
-msgstr ""
+msgstr "Svi skladišni prijenosi otkazani su za ovu nabavu."
 
 #. module: stock
 #: selection:stock.config.settings,group_warning_stock:0
@@ -789,6 +802,8 @@ msgid ""
 "Allows you to create and manage your packaging dimensions and types you want"
 " to be maintained in your system."
 msgstr ""
+"Dopušta Vam kreiranje i upravljanje dimenzijama i tipovima pakiranja koje "
+"želite sačuvati u Vašem sustavu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_uom
@@ -866,6 +881,8 @@ msgid ""
 "As an example, a decimal precision of 2 will allow weights like: 9.99 kg, "
 "whereas a decimal precision of 4 will allow weights like:  0.0231 kg."
 msgstr ""
+"Naprimjer, decimalna preciznost od 2 dopušta težine kao: 9.99 kg, dok "
+"decimalna preciznost od 4 dopušta težine kao: 0.0231 kg."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
@@ -1379,32 +1396,32 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking
 msgid "Count picking"
-msgstr ""
+msgstr "Broj skladišnica"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_backorders
 msgid "Count picking backorders"
-msgstr ""
+msgstr "Broj zaostalih skladišnica"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_draft
 msgid "Count picking draft"
-msgstr ""
+msgstr "Broj skladišnica u nacrtu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_late
 msgid "Count picking late"
-msgstr ""
+msgstr "Broj skladišnica u kašnjenju"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_ready
 msgid "Count picking ready"
-msgstr ""
+msgstr "Broj skladišnica spremno"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_waiting
 msgid "Count picking waiting"
-msgstr ""
+msgstr "Broj skladišnica u čekanju"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1871,6 +1888,8 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
 msgstr ""
+"Ovisno o instaliranim modulima, ovo će Vam dopustiti definiranje rute "
+"proizvoda: hoće li biti kupljeni, proizvedeni, MTO/MTS,..."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2107,7 +2126,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:647
 #, python-format
 msgid "Everything inside a package should be in the same location"
-msgstr ""
+msgstr "Sve unutar jednog paketa trebalo bi biti na istoj lokaciji"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2340,7 +2359,7 @@ msgstr "Ima operaciju pakiranja."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
 msgid "Has Scrap Moves"
-msgstr ""
+msgstr "Ima otpisane prijenose"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_quant_reserved_exist
@@ -2390,6 +2409,9 @@ msgid ""
 "                this product, as well as all future receipts you are waiting\n"
 "                from your suppliers."
 msgstr ""
+"Ovdje ćete pronaći povijest svih potvrda povezanih s\n"
+"ovim proizvodom, kao i sve buduće potvrde na koje čekate\n"
+"od Vaših dobavljača."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
@@ -2578,6 +2600,9 @@ msgid ""
 "                        API</strong> to load data automatically through\n"
 "                        scripts: take a look at our"
 msgstr ""
+"Ako ste programer <strong>možete koristiti naš\n"
+"API</strong> za automatsko učitavanje podataka\n"
+"preko skripte: pogledajte naš"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2649,14 +2674,14 @@ msgstr "U tijeku"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_in_type_id
 msgid "In Type"
-msgstr ""
+msgstr "U tipu"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_partner_dest_id
 msgid ""
 "In case of dropshipping, we need to know the destination address more "
 "precisely"
-msgstr ""
+msgstr "U slučaju dropshippinga, trebamo preciznije znati odredišnu adresu"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3163,7 +3188,7 @@ msgstr "Vrsta potencijala"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
-msgstr ""
+msgstr "Ostavite ovo polje prazno ako se ova ruta dijeli među svim tvrtkama"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_left
@@ -3174,7 +3199,7 @@ msgstr "Left Parent"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_company_id
 msgid "Let this field empty if this location is shared between companies"
-msgstr ""
+msgstr "Ostavite ovo polje prazno ako se ova lokacija dijeli među tvrtkama"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3206,7 +3231,7 @@ msgstr "Lokalizacija"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Locate"
-msgstr ""
+msgstr "Lociraj"
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:12
@@ -3358,7 +3383,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lots_visible
 msgid "Lots visible"
-msgstr ""
+msgstr "Vidljivi lotovi"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -3367,18 +3392,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
-msgstr ""
+msgstr "Lotovi/Serijski brojevi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_pack_lot_ids
 msgid "Lots/Serial Numbers Used"
-msgstr ""
+msgstr "Korišteni lotovi/serijski brojevi"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:504
 #, python-format
 msgid "MTO"
-msgstr ""
+msgstr "MTO"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_mto_pull_id
@@ -3407,7 +3432,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
 msgid "Manage Different Stock Owners"
-msgstr ""
+msgstr "Upravljaj različitim vlasnicima skladišta"
 
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
@@ -3437,7 +3462,7 @@ msgstr "Upravljanje konsignacijom (napredno)"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Manage default locations per product"
-msgstr ""
+msgstr "Upravljaj zadanim lokacijama po proizvodu"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
@@ -3447,7 +3472,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
 msgid "Manage multiple warehouses"
-msgstr ""
+msgstr "Upravljaj s više skladišta"
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3493,7 +3518,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
 msgid "Manage several warehouses"
-msgstr ""
+msgstr "Upravljaj s nekoliko skladišta"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3508,7 +3533,7 @@ msgstr "Ručna operacija"
 #. module: stock
 #: selection:stock.picking.type,code:0
 msgid "Manufacturing Operation"
-msgstr ""
+msgstr "Operacije u proizvodnji"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -3619,12 +3644,12 @@ msgstr "Temeljnica"
 #: code:addons/stock/models/procurement.py:50
 #, python-format
 msgid "Move From Another Location"
-msgstr ""
+msgstr "Premjesti s nekog drugog mjesta"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_negative_move_id
 msgid "Move Negative Quant"
-msgstr ""
+msgstr "Premjesti negativni kvant"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_split_from
@@ -3763,7 +3788,7 @@ msgstr "Nema poruke"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
 msgid "No Stock Move yet"
-msgstr ""
+msgstr "Još nema skladišnih prijenosa"
 
 #. module: stock
 #: selection:product.template,tracking:0
@@ -3779,7 +3804,7 @@ msgstr "Bez automatskog usmjeravanja artikala"
 #: code:addons/stock/models/stock_picking.py:823
 #, python-format
 msgid "No negative quantities allowed"
-msgstr ""
+msgstr "Negativne količine nisu dozvoljene"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:60
@@ -3833,7 +3858,7 @@ msgstr "Bilješke"
 #: code:addons/stock/models/stock_picking.py:461
 #, python-format
 msgid "Nothing to check the availability for."
-msgstr ""
+msgstr "Dostupnost se nema za što provjeriti."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3921,6 +3946,9 @@ msgid ""
 "customer. It would be great if you could send us a photo of your warehouse "
 "to"
 msgstr ""
+"Kada bude radilo u potpunosti, javite nam povratnu informaciju: volimo čuti "
+"o našim kupcima. Bilo bi lijepo ako biste nam mogli poslati sliku Vašeg "
+"skladišta na"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:100
@@ -3938,7 +3966,7 @@ msgstr "Samo jedan vlasnik"
 #: code:addons/stock/models/stock_inventory.py:91
 #, python-format
 msgid "One product category"
-msgstr ""
+msgstr "Jedna grupa proizvoda"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:98
@@ -3974,12 +4002,12 @@ msgstr "Naziv radnje"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
-msgstr ""
+msgstr "Vrste operacija"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
 msgid "Operation id"
-msgstr ""
+msgstr "ID operacije"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
@@ -4070,7 +4098,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_original_location_id
 msgid "Original location id"
-msgstr ""
+msgstr "ID originalne lokacije"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:222
@@ -4182,7 +4210,7 @@ msgstr "Barkod paketa"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode
 msgid "Package BarCode with Contents"
-msgstr ""
+msgstr "Barkod paketa sa sadržajima"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4208,12 +4236,12 @@ msgstr "Prijenosi paketa"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
 msgid "Package Type"
-msgstr ""
+msgstr "Tip paketa"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
 msgid "Package Types"
-msgstr ""
+msgstr "Tipovi paketa"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4485,12 +4513,12 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:139
 #, python-format
 msgid "Please specify at least one non-zero quantity."
-msgstr ""
+msgstr "Molimo navedite barem jednu količinu različitu od nule."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_plus_visible
 msgid "Plus visible"
-msgstr ""
+msgstr "Plus vidljivo"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -4500,7 +4528,7 @@ msgstr "Pozitivno"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_packaging
 msgid "Preferred Packaging"
-msgstr ""
+msgstr "Preferirano pakiranje"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_route_ids
@@ -5045,7 +5073,7 @@ msgstr "Vezana sekvenca"
 #. module: stock
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per company!"
-msgstr ""
+msgstr "Oznaka mora biti jedinstvena za tvrtku!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_origin
@@ -5055,7 +5083,7 @@ msgstr "Referenca dokumenta"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_ids
 msgid "Related Packing Operations"
-msgstr ""
+msgstr "Povezane operacije pakiranja"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_remaining_qty
@@ -5095,13 +5123,13 @@ msgstr "Uklanjanje"
 #: model:ir.model,name:stock.model_product_removal
 #: model:ir.model.fields,field_description:stock.field_stock_location_removal_strategy_id
 msgid "Removal Strategy"
-msgstr ""
+msgstr "Strategija uklanjanja"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:467
 #, python-format
 msgid "Removal strategy %s not implemented."
-msgstr ""
+msgstr "Strategija uklanjanja %s nije implementirana."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_warehouse_2_stock_warehouse_orderpoint
@@ -5120,7 +5148,7 @@ msgstr "Pravila ponovnog naručivanja"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules Search"
-msgstr ""
+msgstr "Pretraživanje pravila ponovnog naručivanja"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_max_qty
@@ -5167,12 +5195,12 @@ msgstr "Rezervirano"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_reserved_quant_id
 msgid "Reserved Quant"
-msgstr ""
+msgstr "Rezervirani kvant"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_form
 msgid "Reserved Quants"
-msgstr ""
+msgstr "Rezervirani kvanti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reservation_id
@@ -5485,6 +5513,7 @@ msgid ""
 "Set the <i>Real Quantity</i> for each Product and <i>Validate the "
 "Inventory</i>"
 msgstr ""
+"Postavi <i>stvarnu količinu</i> za svaki proizvod i <i>ovjeri stanje</i>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5552,7 +5581,7 @@ msgstr "Kratki naziv"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_code
 msgid "Short name used to identify your warehouse"
-msgstr ""
+msgstr "Kratki naziv za identifikaciju Vašeg skladišta"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_string_availability_info
@@ -5562,7 +5591,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.location_refrigerator_small
 msgid "Small Refrigerator"
-msgstr ""
+msgstr "Mali hladnjak"
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
@@ -5579,6 +5608,8 @@ msgid ""
 "Some products require lots/serial numbers, so you need to specify those "
 "first!"
 msgstr ""
+"Neki proizvodi trebaju lotove/serijske brojeve, tako da prvo njih trebate "
+"definirati!"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -5697,7 +5728,7 @@ msgstr "Prognoza stanja zaliha"
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_graph
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_pivot
 msgid "Stock Level forecast"
-msgstr ""
+msgstr "Prognoza stanja zaliha"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -5882,13 +5913,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_tmpl_id
 msgid "Technical: used in views"
-msgstr ""
+msgstr "Tehnički: koristi se u prikazima"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_stock_move_ids
 #: model:ir.model.fields,help:stock.field_product_product_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "Tehnički: koristi se za računanje količine."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
@@ -5928,7 +5959,7 @@ msgstr ""
 #. module: stock
 #: sql_constraint:stock.location:0
 msgid "The barcode for a location must be unique per company !"
-msgstr ""
+msgstr "Barkod lokacije mora biti jedinstven za tvrtku!"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -5943,7 +5974,7 @@ msgstr "Kombinacija serijskog broja i proizvoda mora biti jedinstvena!"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_company_id
 msgid "The company is automatically set from your user preferences."
-msgstr ""
+msgstr "Tvrtka je automatski postavljena iz Vaših korisničkih preferencija."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_company_id
@@ -5987,7 +6018,7 @@ msgstr ""
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The name of the warehouse must be unique per company!"
-msgstr ""
+msgstr "Naziv skladišta mora biti jedinstven za tvrtku!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_propagated_from_id
@@ -5997,7 +6028,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_location_dest_id
 msgid "The new location where the goods need to go"
-msgstr ""
+msgstr "Nova lokacija kamo roba treba ići"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_parent_id
@@ -6088,7 +6119,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:222
 #, python-format
 msgid "The serial number %s is already in stock."
-msgstr ""
+msgstr "Ovaj serijski broj %s je već na skladištu."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:515
@@ -6148,6 +6179,8 @@ msgid ""
 "This analysis gives you a fast overview on the current stock level of your "
 "products and their current inventory value."
 msgstr ""
+"Ova analiza dat će Vam brzi pregled trenutnog stanja zaliha Vaših proizvoda "
+"i njihove trenutne skladišne vrijednosti."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_packaging_id
@@ -6231,7 +6264,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_quality
 msgid "This module allows you to generate quality alerts and quality check"
-msgstr ""
+msgstr "Ovaj modul dopušta Vam generiranje "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_stock_adv_location
@@ -6265,7 +6298,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "This shipment is a backorder of"
-msgstr ""
+msgstr "Ova pošiljka je zaostali nalog od"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_customer
@@ -6315,6 +6348,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_stock_tracking_owner
 msgid "This way you can receive products attributed to a certain owner. "
 msgstr ""
+"Na ovaj način možete primiti proizvod koji je pridodan određenom vlasniku."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_to_loc
@@ -6358,6 +6392,8 @@ msgid ""
 "To create them, click on <strong><span class=\"fa fa-refresh\"/> "
 "Reordering</strong> on"
 msgstr ""
+"Kako biste ih kreirali, kliknite na <strong><span class=\"fa fa-refresh\"/> "
+"Ponovno naručivanje</strong> na"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6608,7 +6644,7 @@ msgstr "Hitno"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
-msgstr ""
+msgstr "Koristi postojeće lotove/serijske brojeve"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
@@ -6652,7 +6688,7 @@ msgstr "Provjereno"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "Inačica broja"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_variant_count
@@ -6763,7 +6799,7 @@ msgstr "Skladište"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Warehouse Configuration"
-msgstr ""
+msgstr "Postavke skladišta"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -6896,6 +6932,9 @@ msgid ""
 " Odoo generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
 msgstr ""
+"Kada se virtualna zaliha spusti ispod minimalne količine koja je određena za"
+" ovo polje, Odoo stvara nabavu kako bi predviđenu količinu doveo do "
+"maksimalne količine. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_max_qty
@@ -6904,6 +6943,9 @@ msgid ""
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
 msgstr ""
+"Kada se virtualna zaliha spusti ispod minimalne količine, Odoo stvara nabavu"
+" kako bi predviđenu količinu doveo do količine koja je definirana kao "
+"maksimalna količina."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -6961,7 +7003,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "You can delete lines to ignore some products."
-msgstr ""
+msgstr "Možete izbrisati stavke kako biste ignorirali neke proizvode."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_form
@@ -7080,18 +7122,20 @@ msgstr ""
 #. module: stock
 #: sql_constraint:stock.pack.operation.lot:0
 msgid "You have already mentioned this lot in another line"
-msgstr ""
+msgstr "Već ste spomenuli ovaj lot u nekoj drugoj stavci"
 
 #. module: stock
 #: sql_constraint:stock.pack.operation.lot:0
 msgid "You have already mentioned this lot name in another line"
-msgstr ""
+msgstr "Već ste spomenuli naziv ovog lota u nekoj drugoj stavci"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:114
 #, python-format
 msgid "You have manually created product lines, please delete them to proceed"
 msgstr ""
+"Ručno ste kreirali stavke proizvoda, molimo pobrišite ih kako biste "
+"nastavili"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -7133,7 +7177,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:21
 #, python-format
 msgid "You must define a warehouse for the company: %s."
-msgstr ""
+msgstr "Morate definirati skladište za tvrtku: %s."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:553
