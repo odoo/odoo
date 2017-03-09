@@ -90,9 +90,9 @@ QUnit.module('relational_fields', {
                     display_name: { string: "Displayed name", type: "char" },
                     turtle_foo: {string: "Foo", type: "char", default: "My little Foo Value"},
                     turtle_bar: {string: "Bar", type: "boolean", default: true},
-                    turtle_int: {string: "int", type: "integer", sortable: true, required: true},
-                    turtle_qux: {string: "Qux", type: "float", digits: [16,1], required: true},
-                    turtle_trululu: {string: "Trululu", type: "many2one", relation: 'partner', required: true, default: 1},
+                    turtle_int: {string: "int", type: "integer", sortable: true},
+                    turtle_qux: {string: "Qux", type: "float", digits: [16,1], required: true, default: 1.5},
+                    turtle_trululu: {string: "Trululu", type: "many2one", relation: 'partner'},
                     product_id: {string: "Product", type: "many2one", relation: 'product', required: true},
                 },
                 records: [{
@@ -1677,7 +1677,7 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row').length, 3,
             "sould have 3 records in one2many list");
-        assert.strictEqual(form.$('.o_data_row').text(), "blip0.09yop0.0tototo0.050xphone",
+        assert.strictEqual(form.$('.o_data_row').text(), "blip1.59yop1.5tototo1.550xphone",
             "sould display the record values in one2many list");
 
         $('.o_form_button_save').click();
@@ -1705,6 +1705,7 @@ QUnit.module('relational_fields', {
                                 '<field name="turtle_foo"/>' +
                                 '<field name="turtle_bar"/>' +
                                 '<field name="turtle_int"/>' +
+                                '<field name="turtle_trululu"/>' +
                                 '<field name="product_id"/>' +
                             '</group>' +
                         '</form>' +

@@ -115,7 +115,13 @@ var BasicView = AbstractView.extend({
      */
     _loadData: function () {
         if (this.recordID) {
-            return $.when(this.recordID);
+            var record = this.model.get(this.recordID);
+            var fieldNames = _.difference(record.fieldNames, Object.keys(record.data));
+            if (fieldNames.length && !this.model.isNew(record.id)) {
+                return this.model.reload(this.recordID, {fieldNames: fieldNames});
+            } else {
+                return $.when(this.recordID);
+            }
         }
         return this._super.apply(this, arguments);
     },
