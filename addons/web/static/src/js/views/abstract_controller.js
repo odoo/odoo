@@ -210,7 +210,7 @@ var AbstractController = Widget.extend({
      * @param {boolean} hasNoContent
      */
     _toggleNoContentHelper: function (hasNoContent) {
-        if (hasNoContent) {
+        if (hasNoContent && this.noContentHelp) {
             this.renderer.$el.detach();
             var $msg = $('<div>')
                 .addClass('oe_view_nocontent')
