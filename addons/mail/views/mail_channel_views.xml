@@ -120,11 +120,10 @@
                                 </group>
                             </page>
                             <page string="Members">
-                                <field name="channel_partner_ids" mode="tree">
-                                    <tree string="members">
-                                        <field name="name"/>
-                                        <field name="email"/>
-                                        <field name="im_status"/>
+                                <field name="channel_last_seen_partner_ids" mode="tree" context="{'active_test': False}">
+                                    <tree string="Members" editable="bottom">
+                                        <field name="partner_id"/>
+                                        <field name="partner_email"/>
                                     </tree>
                                 </field>
                             </page>
