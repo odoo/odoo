@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, models, _
 
 
 class ResCompany(models.Model):
@@ -37,12 +37,27 @@ class ResCompany(models.Model):
         if currency_id and main_pricelist:
             nb_companies = self.search_count([])
             for company in self:
-                if main_pricelist.company_id == company or (main_pricelist.company_id.id is False and nb_companies == 1):
+                existing_pricelist = ProductPricelist.search(
+                    [('company_id', 'in', (False, company.id)), 
+                     ('currency_id', '=', currency_id)])
+                if existing_pricelist:
+                    continue
+                if currency_id == company.currency_id.id:
+                    continue
+                currency_match = main_pricelist.currency_id == company.currency_id
+                company_match = (main_pricelist.company_id == company or
+                                 (main_pricelist.company_id.id is False and nb_companies == 1))
+                if currency_match and company_match:
                     main_pricelist.write({'currency_id': currency_id})
                 else:
+                    params = {
+                        'currency': self.env['res.currency'].browse(currency_id).name,
+                        'company': company.name
+                    }
                     pricelist = ProductPricelist.create({
-                        'name': company.name,
+                        'name': _("Default %(currency)s pricelist for %(company)s") %  params,
                         'currency_id': currency_id,
+                        'company_id': company.id,
                     })
                     field = self.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_product_pricelist')])
                     self.env['ir.property'].create({
