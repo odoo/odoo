@@ -245,7 +245,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list view: readonly fields cannot be edited', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         this.data.foo.fields.foo.readonly = true;
 
@@ -253,13 +253,19 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
+            arch: '<tree editable="bottom">' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field" readonly="1"/>' +
+                '</tree>',
         });
         var $td = list.$('td:not(.o_list_record_selector)').first();
         var $second_td = list.$('td:not(.o_list_record_selector)').eq(1);
+        var $third_td = list.$('td:not(.o_list_record_selector)').eq(2);
         $td.click();
         assert.ok(!$td.hasClass('o_edit_mode'), "foo cells should not be editable");
         assert.ok($second_td.hasClass('o_edit_mode'), "bar cells should be editable");
+        assert.ok(!$third_td.hasClass('o_edit_mode'), "int_field cells should not be editable");
         list.destroy();
     });
 
