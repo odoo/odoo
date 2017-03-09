@@ -33,6 +33,7 @@ odoo.define('web.AbstractField', function (require) {
 var field_utils = require('web.field_utils');
 var pyeval = require('web.pyeval');
 var Widget = require('web.Widget');
+var Domain = require('web.Domain');
 
 var AbstractField = Widget.extend({
     className: 'o_field_widget',
@@ -90,6 +91,9 @@ var AbstractField = Widget.extend({
 
         // the 'attrs' property contains the attributes of the xml 'field' tag
         this.attrs = record.fieldAttrs[name] || {};
+
+        // modifiers
+        this.modifiers =  JSON.parse(this.attrs.modifiers || "{}");
 
         // this property tracks the current (parsed if needed) value of the field.
         // Note that we don't use an event system anymore, using this.get('value')
@@ -157,9 +161,6 @@ var AbstractField = Widget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self._render();
-            if (self.required) {
-                self.$el.addClass('o_form_required');
-            }
             self.$el.attr('name', self.name);
         });
     },
@@ -191,7 +192,11 @@ var AbstractField = Widget.extend({
      * @returns {boolean}
      */
     isValid: function () {
-        return this._isValid && !(this.required && !this.isSet());
+        var is_required = this.required;
+        if ('required' in this.modifiers) {
+            is_required = new Domain(this.modifiers.required).compute(this.recordData);
+        }
+        return this._isValid && !(is_required && !this.isSet());
     },
     /**
      * this method is supposed to be called from the outside of field widgets.
@@ -249,6 +254,12 @@ var AbstractField = Widget.extend({
      * @returns {Deferred}
      */
     _render: function () {
+        var is_required = this.required;
+        if ('required' in this.modifiers) {
+            is_required = new Domain(this.modifiers.required).compute(this.recordData);
+        }
+        this.$el.toggleClass('o_form_required', is_required);
+
         if (this.mode === 'edit') {
             return this._renderEdit();
         } else if (this.mode === 'readonly') {
