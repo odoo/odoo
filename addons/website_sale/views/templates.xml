@@ -1047,11 +1047,11 @@
         </form>
     </template>
 
-    <template id="reduction_code" inherit_id="website_sale.cart" active="False" customize_show="True" name="Coupon Code">
+    <template id="reduction_code" inherit_id="website_sale.cart" active="False" customize_show="True" name="Promo Code">
         <xpath expr="//div[@id='right_column']" position="inside">
-            <h4>Coupon Code</h4>
+            <h4>Promo Code</h4>
             <p>
-              Have a coupon code? Fill in this field and apply.
+              Have a promo code? Fill in this field and apply.
             </p>
             <t t-call='website_sale.coupon_form'>
                 <t t-set='redirect'>/shop/cart</t>
@@ -1358,7 +1358,7 @@
                                 <div class="col-lg-5 col-sm-6 col-xs-12 text-muted" id="coupon_box">
                                     <t t-if="request.env.ref('website_sale.reduction_code').active">
                                         <p>
-                                          Have a coupon code? Fill in this field and apply.
+                                          Have a promo code? Fill in this field and apply.
                                         </p>
                                         <t t-call='website_sale.coupon_form'>
                                             <t t-set='redirect'>/shop/payment</t>
