@@ -263,10 +263,6 @@ ListRenderer.include({
             return;
         }
         var $td = this._findTd($row, colIndex);
-        // force the width of the cell to its current value so that it won't
-        // change if its content changes (to prevent the list view from
-        // flickering).
-        $td.width($td.width());
         var widget_keys = ['list.' + field.type, field.type];
         if (node.attrs.widget) {
             widget_keys.unshift(node.attrs.widget);
@@ -385,6 +381,12 @@ ListRenderer.include({
         // instantiate column widgets
         var $row = this.$('tbody tr').eq(rowIndex);
         $row.addClass('o_selected_row');
+        // force the width of each cell to its current value so that it won't
+        // change if its content changes, to prevent the view from flickering
+        $row.find('td').each(function () {
+            var $td = $(this);
+            $td.width($td.width());
+        });
 
         _.each(this.columns, function (node, index) {
             var widget = self._renderFieldWidget($row, node, rowIndex, index);
