@@ -62,10 +62,7 @@ var FieldTextHtml = AbstractField.extend({
         return def;
     },
     get_url: function (_attr) {
-        if (!this.options) {
-            this.options = {};
-        }
-        var src = this.options.editor_url || "/mass_mailing/field/email_template";
+        var src = this.nodeOptions.editor_url || "/mass_mailing/field/email_template";
         var k;
         var datarecord = this.recordData;
         var attr = {
@@ -76,14 +73,14 @@ var FieldTextHtml = AbstractField.extend({
         };
         _attr = _attr || {};
 
-        if (this.options['style-inline']) {
+        if (this.nodeOptions['style-inline']) {
             attr.inline_mode = 1;
         }
-        if (this.options.snippets) {
-            attr.snippets = this.options.snippets;
+        if (this.nodeOptions.snippets) {
+            attr.snippets = this.nodeOptions.snippets;
         }
-        if (this.options.template) {
-            attr.template = this.options.template;
+        if (this.nodeOptions.template) {
+            attr.template = this.nodeOptions.template;
         }
         if (this. mode === "edit") {
             attr.enable_editor = 1;
@@ -116,7 +113,6 @@ var FieldTextHtml = AbstractField.extend({
         return src;
     },
     old_initialize_content: function () {
-        var self = this;
         this.$el.closest('.modal-body').css('max-height', 'none');
         this.$iframe = this.$el.find('iframe');
         this.document = null;
@@ -125,14 +121,6 @@ var FieldTextHtml = AbstractField.extend({
         this.editor = false;
         window.odoo[this.callback+"_updown"] = null;
         this.$iframe.attr("src", this.get_url());
-        this.view.on("load_record", this, function () {
-            if (!self.$body.find('.o_dirty').length) {
-                var url = self.get_url();
-                if (url !== self.$iframe.attr("src")) {
-                    self.$iframe.attr("src", url);
-                }
-            }
-        });
     },
     on_content_loaded: function () {
         var self = this;
