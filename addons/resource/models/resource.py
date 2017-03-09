@@ -601,7 +601,7 @@ class ResourceCalendar(models.Model):
         for dt_str, hours, calendar_id in date_and_hours_by_cal:
             result = self.browse(calendar_id).schedule_hours(
                 hours,
-                day_dt=fields.Datetime.from_string(dt_str).replace( second=0, microsecond=0),
+                day_dt=fields.Datetime.from_string(dt_str).replace(second=0),
                 compute_leaves=True, resource_id=resource,
                 default_interval=(8, 16)
             )
