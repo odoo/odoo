@@ -196,6 +196,7 @@ class fleet_vehicle(osv.Model):
         if context is None:
             context = {}
         if context.get('xml_id'):
+            context.pop('group_by', False)
             res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet', context['xml_id'], context=context)
             res['context'] = context
             res['context'].update({'default_vehicle_id': ids[0]})
