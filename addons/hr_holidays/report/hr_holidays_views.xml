@@ -31,28 +31,14 @@
             <field name="name">Leaves Analysis</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="view_mode">graph,pivot,calendar,form</field>
+            <field name="view_mode">pivot,graph,tree,calendar,form</field>
             <field name="view_id"></field>  <!-- force empty -->
             <field name="context">{'search_default_leaves':1}</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
-        <record id="action_window_leave_pivot" model="ir.actions.act_window.view">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">pivot</field>
-            <field name="view_id" ref="view_holiday_pivot"/>
-            <field name="act_window_id" ref="action_hr_available_holidays_report"/>
-        </record>
-
-        <record id="action_window_leave_graph" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_holiday_graph"/>
-            <field name="act_window_id" ref="action_hr_available_holidays_report"/>
-        </record>
-
         <menuitem
-            name="Leaves"
+            name="Leaves Analysis"
             id="menu_hr_available_holidays_report_tree"
             action="action_hr_available_holidays_report"
             parent="menu_hr_holidays_report" sequence="5"/>

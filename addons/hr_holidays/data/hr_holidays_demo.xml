@@ -2,7 +2,7 @@
 <odoo>
 <data noupdate="1">
 
-    <record id="hr_holidays_employee1_allocation_cl" model="hr.holidays">
+    <record id="hr_holidays_employee1_allocation_cl" model="hr.holidays" context="{'default_type': 'add'}">
         <field name="name">Legal Leaves for Peter Parker</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="type">add</field>
@@ -10,23 +10,19 @@
         <field name="employee_id" ref="hr.employee_root"/>
     </record>
 
-    <record id="hr_holidays_employee1_int_tour" model="hr.holidays">
+    <record id="hr_holidays_employee1_int_tour" model="hr.holidays" context="{'default_type': 'add'}">
         <field name="name">International Tour</field>
         <field name="holiday_status_id" ref="holiday_status_comp"/>
-        <field eval="time.strftime('%Y-%m-26')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-28')" name="date_to"/>
         <field name="type">add</field>
         <field name="number_of_days_temp">7</field>
         <field name="employee_id" ref="hr.employee_root"/>
     </record>
 
-    <record id="hr_holidays_employee1_vc" model="hr.holidays">
-        <field name="name">Summer Vacation</field>
-        <field name="holiday_status_id" ref="holiday_status_unpaid"/>
-        <field eval="time.strftime('%Y-%m-23')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-25')" name="date_to"/>
+    <record id="hr_holidays_employee1_travel_comp" model="hr.holidays" context="{'default_type': 'add'}">
+        <field name="name">Tokyo Travel Compensation</field>
+        <field name="holiday_status_id" ref="holiday_status_comp"/>
         <field name="type">add</field>
-        <field name="number_of_days_temp">7</field>
+        <field name="number_of_days_temp">3</field>
         <field name="employee_id" ref="hr.employee_root"/>
     </record>
 

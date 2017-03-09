@@ -4,7 +4,7 @@
 
         <!-- Casual leave -->
         <record id="holiday_status_cl" model="hr.holidays.status">
-            <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
+            <field name="name">Legal Leaves</field>
             <field name="limit" eval="False"/>
             <field name="color_name">black</field>
         </record>
@@ -25,7 +25,7 @@
 
         <!--Unpaid Leave -->
         <record id="holiday_status_unpaid" model="hr.holidays.status">
-            <field name="name">Unpaid</field>
+            <field name="name">Unpaid Leaves</field>
             <field name="limit" eval="True"/>
             <field name="color_name">brown</field>
         </record>

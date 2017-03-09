@@ -18,7 +18,7 @@
                 <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
                     <div t-if="record.leave_to_approve_count.raw_value > 0" class="row">
                         <div class="col-xs-9">
-                            <a name="%(hr_holidays_action_request_from_department)d" type="action">
+                            <a name="%(action_hr_holidays_generic)d" type="action" context="{'search_default_leaves': 1, 'search_default_department_id': active_id, 'search_default_approve': 1}">
                                 Leave Requests
                             </a>
                         </div>
@@ -28,7 +28,7 @@
                     </div>
                     <div t-if="record.allocation_to_approve_count.raw_value > 0" class="row">
                         <div class="col-xs-9">
-                            <a name="%(hr_holidays_action_allocation_from_department)d" type="action">
+                            <a name="%(action_hr_holidays_generic)d" type="action" context="{'search_default_allocations': 1, 'search_default_department_id': active_id, 'search_default_approve': 1, 'default_type': 'add'}">
                                 Allocation Requests
                             </a>
                         </div>
@@ -42,7 +42,7 @@
                     <div class="col-xs-12 o_kanban_primary_bottom bottom_block">
                         <div class="row">
                             <div class="col-xs-3">
-                                <a name="%(hr_employee_action_from_department)d" type="action" title="Absent Employee(s), Whose leaves request are either confirmed or validated on today">Absence</a>
+                                <a name="%(hr.open_view_employee_list_my)d" type="action" title="Absent Employee(s), whose leave request are either confirmed or validated today" context="{'search_default_is_absent_totay': 1, 'search_default_department_id': active_id, 'default_department_id': active_id}">Absence</a>
                             </div>
                             <div class="col-xs-9">
                                 <field name="absence_of_today" widget="progressbar" options="{'current_value': 'absence_of_today', 'max_value': 'total_employee', 'editable': false}"/>
@@ -54,7 +54,7 @@
                 <xpath expr="//div[hasclass('o_kanban_manage_to_approve')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
-                            <a name="%(hr_holidays_action_request_from_department)d" type="action">
+                            <a name="%(action_hr_holidays_generic)d" type="action" context="{'search_default_leaves': 1, 'search_default_department_id': active_id, 'search_default_approve': 1}">
                                 <t t-esc="record.leave_to_approve_count.raw_value or 0"/> Leave Requests
                             </a>
                         </div>
@@ -62,7 +62,7 @@
 
                     <div class="row">
                         <div class="col-xs-12 text-left">
-                            <a name="%(hr_holidays_action_allocation_from_department)d" type="action">
+                            <a name="%(action_hr_holidays_generic)d" type="action" context="{'search_default_allocations': 1, 'search_default_department_id': active_id, 'search_default_approve': 1, 'default_type': 'add'}">
                                 <t t-esc="record.allocation_to_approve_count.raw_value or 0"/> Allocation Requests
                             </a>
                         </div>
@@ -72,7 +72,7 @@
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
-                            <a name="%(action_hr_holidays_leaves_analysis_filtered)d" type="action">
+                            <a name="%(action_hr_available_holidays_report)d" type="action" context="{'search_default_leaves': 1, 'search_default_department_id': active_id}">
                                 Leaves
                             </a>
                         </div>

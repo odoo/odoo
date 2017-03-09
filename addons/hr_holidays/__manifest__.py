@@ -6,7 +6,7 @@
     'version': '1.5',
     'category': 'Human Resources',
     'sequence': 27,
-    'summary': 'Leave allocations and leave requests',
+    'summary': 'Leave Requests and Allocations',
     'website': 'https://www.odoo.com/page/employees',
     'description': """
 Manage leave requests and allocations
@@ -33,7 +33,11 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'security/ir.model.access.csv',
 
         'views/resource_views.xml',
+        'views/hr_holidays_assets_backend.xml',
+
+        # do not reorder these 3, each one depends on the previous one
         'views/hr_holidays_views.xml',
+        'report/hr_holidays_views.xml',
         'views/hr_views.xml',
 
         'wizard/hr_holidays_summary_department_views.xml',
@@ -42,7 +46,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'report/hr_holidays_templates.xml',
         'report/hr_holidays_reports.xml',
         'report/hr_holidays_leaves_report_views.xml',
-        'report/hr_holidays_views.xml',
     ],
     'demo': [
         'data/hr_holidays_demo.xml',

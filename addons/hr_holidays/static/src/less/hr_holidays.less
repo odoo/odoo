@@ -1,0 +1,113 @@
+.o_dashboard {
+    .o-flex-display();
+    .o-flex-flow(row, wrap);
+    .o_kanban_record {
+        min-height: 250px;
+        span {
+            display: inline-block;
+        }
+        @media (min-width: @screen-sm-min) {
+            min-width: 420px;
+        }
+    }
+
+    .o_hr_holidays_dashboard {
+        margin: (0 - @o-kanban-record-margin) (@o-kanban-record-margin - @odoo-horizontal-padding) @o-kanban-record-margin;
+        .o-flex(1, 0, 100%);
+        padding: 10px (@odoo-horizontal-padding - 10px);
+
+        background-color: @odoo-view-background-color;
+        position: relative;
+
+        display: inline-block;
+        vertical-align: top;
+        .o_text_title {
+            font-size: 15px;
+        }
+        .o_text_tiny {
+            font-size: 12px;
+            vertical-align: baseline !important;
+        }
+        .o_leave_expiration {
+            display: inline;
+        }
+        .o_highlight {
+            font-size: 20px;
+            min-height: 44px;
+        }
+
+        .o_dashboard_action {
+            min-height: 35px;
+            color: white;
+            position: relative;
+            background-color: @odoo-brand-optional;
+            &:hover {
+                cursor: pointer;
+                background-color: darken(@odoo-brand-optional, 10%);
+            }
+            &.o_summary {
+                margin: 0px;
+                height: 100%;
+                vertical-align: middle;
+                text-align: center;
+                background-color: @odoo-brand-primary;
+                &:hover {
+                    cursor: pointer;
+                    background-color: darken(@odoo-brand-primary, 10%);
+                }
+            }
+        }
+
+        div > div {
+            margin: 1px 0px;
+            text-align: center;
+        }
+        @media (min-width: @screen-xs-min) {
+            .o_flex_parent {
+                .o-flex-display();
+                .o_left {
+                    float: left;
+                    .o-flex(1, 0, auto);
+                    width: 85%;
+                    .o_flex {
+                        background-color: @odoo-view-background-color;
+                        .o-flex-display();
+                        > div {
+                            .o-flex(1, 0, auto);
+                            width: 0px;
+                            .o-flex-display();
+                            flex-direction: column;
+                            justify-content: center;
+                            border-top: 1px solid @odoo-view-background-color;
+                            margin: 0px 7px 0px 0px;
+                            span {
+                                display: inline;
+                            }
+                            a:hover {
+                                text-decoration: none;
+                            }
+                            &.o_text {
+                                text-align: right;
+                            }
+                        }
+                        > div:nth-child(1) {
+                            .o-flex(0, 0, auto);
+                            width:20%;
+                            margin-right: 10px;
+                        }
+                    }
+                }
+                .o_right {
+                    .o-flex(1, 0, auto);
+                    margin: 3px 0px 2px 0px;
+                    padding: 0px 7px;
+                    float: right;
+                    width: 15%;
+                    .o-flex-display();
+                    flex-direction: column;
+                    justify-content: center;
+                }
+            }
+        }
+    }
+}

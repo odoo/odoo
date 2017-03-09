@@ -1,6 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_holidays_user,hr.holidays.user,model_hr_holidays,hr_holidays.group_hr_holidays_user,1,1,1,1
 access_hr_holidays_employee,hr.holidays.employee,model_hr_holidays,base.group_user,1,1,1,1
+access_hr_holidays_reservation_user,hr.holidays.reservation.user,model_hr_holidays_reservation,hr_holidays.group_hr_holidays_user,1,1,1,1
+access_hr_holidays_reservation_employee,hr.holidays.reservation.employee,model_hr_holidays_reservation,base.group_user,1,0,0,0
 access_hr_holydays_status_employee,hr.holidays.status employee,model_hr_holidays_status,base.group_user,1,0,0,0
 access_hr_holydays_status_manager,hr.holidays.status manager,model_hr_holidays_status,hr_holidays.group_hr_holidays_manager,1,1,1,1
 access_hr_holidays_remain_user,hr.holidays.ramain.user,model_hr_holidays_remaining_leaves_user,hr_holidays.group_hr_holidays_user,1,1,1,1

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!--
+        This template is the ribbon at the top of the Leaves dashboard that displays
+        the current user's leaves.
+    -->
+    <t t-name="hr_holidays.HrHolidaysDashboard">
+        <div t-if="data" class="o_hr_holidays_dashboard">
+            <div class="o_flex_parent">
+                <div class="o_left">
+                    <div class="o_flex">
+                        <div class="o_text o_highlight">
+                            My Remaining Leaves
+                        </div>
+                        <t t-foreach="data.allocated_leaves" t-as="leave_type">
+                            <div class="o_dashboard_action" name="hr_holidays.action_hr_holidays_simple" t-att-data-context="'{&quot;default_holiday_status_id&quot;: ' + leave_type.id + ', &quot;search_default_holiday_status_id&quot;: ' + leave_type.id + '}'" title="View Leave Requests">
+                                <div class="o_text_title">
+                                    <span><t t-esc="leave_type.virtual_remaining_leaves"/> <t t-esc="leave_type.name"/></span>
+                                </div>
+                                 <div t-if="leave_type.next_expiration_date" class="o_leave_expiration">
+                                    <span>
+                                        <span t-if="leave_type.next_expiration_date &lt; moment().add(1, 'months').format()" class="fa fa-warning"/>
+                                        <i><t t-esc="leave_type.next_expiration_amount"/> will expire on <t t-esc="leave_type.next_expiration_date"/></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                    <div class="o_flex">
+                        <div class="o_text o_highlight">
+                            Other Leaves
+                        </div>
+                        <t t-foreach="data.limitless_leaves" t-as="leave_type">
+                            <div class="o_dashboard_action" name="hr_holidays.action_hr_holidays_simple" t-att-data-context="'{&quot;default_holiday_status_id&quot;: ' + leave_type.id + ', &quot;search_default_holiday_status_id&quot;: ' + leave_type.id + '}'" title="View Leave Requests">
+                                <div class="o_text_title">
+                                    <t t-esc="leave_type.name"/><span t-if="leave_type.leaves_taken" class="o_text_tiny"> (<t t-esc="leave_type.leaves_taken"/> taken this year)</span>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="o_right">
+                    <div class="o_summary o_dashboard_action" name="hr_holidays.open_company_allocation">
+                        <div class="fa fa-list-ul fa-3x mt8"/>
+                        <div class="o_text_title">Leaves Overview</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
