@@ -488,7 +488,8 @@ class AccountInvoice(models.Model):
             else:
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term_id.id
-            fiscal_position = p.property_account_position_id.id
+            addr = p.address_get(['delivery'])
+            fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(p.id, delivery_id=addr['delivery'])
 
         self.account_id = account_id
         self.payment_term_id = payment_term_id
