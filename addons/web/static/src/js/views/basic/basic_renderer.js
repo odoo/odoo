@@ -68,17 +68,20 @@ return AbstractRenderer.extend({
             var field = record.fields[name];
             var value = record.data[name];
             result[name] = value;
-            if (field.type === 'many2one') {
+            if (!value) {
+                return;
+            }
+            else if (field.type === 'many2one') {
                 result[name] = value.data ? value.data.id || false : false;
             }
-            if (field.type === 'one2many' || field.type === 'many2many') {
+            else if (field.type === 'one2many' || field.type === 'many2many') {
                 if (value) {
                     result[name] = _.pluck(value.data, 'res_id');
                 } else {
                     result[name] = [];
                 }
             }
-            if (field.type === 'boolean') {
+            else if (field.type === 'boolean') {
                 // we want an explicit false value, not null if it is unset
                 result[name] = value || false;
             }
