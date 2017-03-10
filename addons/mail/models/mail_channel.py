@@ -43,6 +43,13 @@ class Channel(models.Model):
         image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
+    @api.model
+    def default_get(self, fields):
+        res = super(Channel, self).default_get(fields)
+        if not res.get('alias_contact') and (not fields or 'alias_contact' in fields):
+            res['alias_contact'] = 'everyone' if res.get('public', 'private') == 'public' else 'followers'
+        return res
+
     name = fields.Char('Name', required=True, translate=True)
     channel_type = fields.Selection([
         ('chat', 'Chat Discussion'),
@@ -98,6 +105,13 @@ class Channel(models.Model):
         membership_ids = memberships.mapped('channel_id')
         for record in self:
             record.is_member = record in membership_ids
+
+    @api.onchange('public')
+    def _onchange_public(self):
+        if self.public == 'public':
+            self.alias_contact = 'everyone'
+        else:
+            self.alias_contact = 'followers'
 
     @api.model
     def create(self, vals):
