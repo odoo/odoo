@@ -380,21 +380,47 @@
         <div id="wrap">
             <div class="oe_structure">
                 <div class="container">
-                    <h1>Thank you!</h1>
-                    <p>
-                        Your job application has been successfully registered,
-                        we will get back to you soon.
-                    </p>
-                </div>
-                <section class="oe_dark">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12 text-center mt16 mb16">
-                                <a href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="text-center">Congratulations!</h1>
+                        </div>
+                        <t t-if="request.session.get('form_builder_model_model', '') == 'hr.applicant'">
+                            <t t-set="job" t-value="request.website._website_form_last_record().sudo().job_id"/>
+                            <t t-set="responsible" t-value="job and job.user_id.website_published and job.user_id "/>
+                        </t>
+                        <t t-if="responsible">
+                            <div class="col-md-12">
+                                <h3 class="mb32 text-center">Your application has been sent to:</h3>
                             </div>
+                            <div class="col-md-1 col-md-offset-4">
+                                <p t-field="responsible.image_small" t-field-options="{'widget': 'image', 'class': 'img-circle center-block'}"/>
+                            </div>
+                            <div class="col-md-5 o_responsible_data">
+                                <h4 class="mt0" t-field="responsible.name"/>
+                                <p t-field="responsible.function"/>
+                                <t t-if='responsible.email'>
+                                    <i class="fa fa-envelope"></i> <a t-attf-href="mailto:#{responsible.email}" t-esc="responsible.email"/>
+                                </t>
+                                <t t-if='responsible.phone'>
+                                    <br/><i class="fa fa-phone"></i> <span t-field="responsible.phone"/>
+                                </t>
+                            </div>
+                        </t>
+                        <div class="col-md-12 mt32 text-center">
+                            <span>
+                                We usually reply between one and three days.<br/>
+                                Feel free to contact him/her if you have further questions.
+                            </span>
                         </div>
                     </div>
-                </section>
+                    <div class="row">
+                        <div class="col-md-12 text-center mt32 mb32">
+                            <span>In the meantime</span>
+                            <h3 class="mt8 mb32">Look around on our website.</h3>
+                            <a href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </t>

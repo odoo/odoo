@@ -4,12 +4,18 @@
 import itertools
 
 from odoo import models, fields, api
+from odoo.http import request
 
-MAGIC_FIELDS = ["id", "create_uid", "create_date", "write_uid", "write_date", "__last_update"]
 
 class website_form_config(models.Model):
     _inherit = 'website'
-    website_form_enable_metadata = fields.Boolean('Write metadata',help="Enable writing metadata on form submit.")
+
+    website_form_enable_metadata = fields.Boolean('Write metadata', help="Enable writing metadata on form submit.")
+
+    def _website_form_last_record(self):
+        if request and request.session.form_builder_model_model:
+            return request.env[request.session.form_builder_model_model].browse(request.session.form_builder_id)
+        return False
 
 
 class website_form_model(models.Model):
@@ -52,7 +58,7 @@ class website_form_model(models.Model):
         fields_get = model.fields_get()
 
         for key, val in model._inherits.iteritems():
-            fields_get.pop(val,None)
+            fields_get.pop(val, None)
 
         # Unrequire fields with default values
         default_values = model.default_get(fields_get.keys())
@@ -60,6 +66,7 @@ class website_form_model(models.Model):
             fields_get[field]['required'] = False
 
         # Remove readonly and magic fields
+        MAGIC_FIELDS = models.MAGIC_COLUMNS + [model.CONCURRENCY_CHECK_FIELD]
         for field in fields_get.keys():
             if fields_get[field]['readonly'] or field in MAGIC_FIELDS:
                 del fields_get[field]

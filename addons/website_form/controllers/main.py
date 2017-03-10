@@ -43,8 +43,9 @@ class WebsiteForm(http.Controller):
         except IntegrityError:
             return json.dumps(False)
 
+        request.session['form_builder_model_model'] = model_record.model
         request.session['form_builder_model'] = model_record.name
-        request.session['form_builder_id']    = id_record
+        request.session['form_builder_id'] = id_record
 
         return json.dumps({'id': id_record})
 
