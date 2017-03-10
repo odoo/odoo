@@ -17,7 +17,6 @@ var MockServer = Class.extend({
      */
     init: function (data, options) {
         this.data = data;
-
         for (var modelName in this.data) {
             var model = this.data[modelName];
             if (!('id' in model.fields)) {
@@ -129,8 +128,11 @@ var MockServer = Class.extend({
             if (fieldName === 'id') {
                 continue;
             }
-            if (model.fields[fieldName].type !== 'boolean' || record[fieldName] !== false) {
-                record[fieldName] = record[fieldName] || model.fields[fieldName].default;
+            if (!(fieldName in record)) {
+                record[fieldName] = model.fields[fieldName].default;
+                if (model.fields[fieldName].type === 'boolean') {
+                    record[fieldName] = record[fieldName] || false;
+                }
             }
         }
     },
