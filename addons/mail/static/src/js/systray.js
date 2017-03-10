@@ -6,6 +6,7 @@ var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 
 var chat_manager = require('mail.chat_manager');
+var config = require('web.config');
 
 var QWeb = core.qweb;
 
@@ -140,7 +141,13 @@ var MessagingMenu = Widget.extend({
         var channel_id = $(event.currentTarget).data('channel_id');
         var channel = chat_manager.get_channel(channel_id);
         if (channel) {
-            chat_manager.open_channel(channel);
+            if (config.device.size_class <= config.device.SIZES.SM) {
+                this.do_action('mail.mail_channel_action_client_chat', {active_id: channel_id}).then(function () {
+                    core.bus.trigger('change_menu_section', chat_manager.get_discuss_menu_id());
+                });
+            } else {
+                chat_manager.open_channel(channel);
+            }
         }
     },
 });
