@@ -45,18 +45,24 @@ var AbstractField = Widget.extend({
      * skip the widget when pressing tab
      */
     readonly: false,
-
     /**
      * If this flag is set to true, the field widget will be reset on every
      * change which is made in the view (if the view supports it). This is
      * currently a form view feature.
      */
     resetOnAnyFieldChange: false,
-
     /**
      * if true, the widget will replace a cell in an editable list view
      */
     replace_element: false,
+    /**
+     * If this flag is given a string, the related BasicModel will be used to
+     * initialize specialData the field might need. This data will be available
+     * through this.record.specialData[this.name].
+     *
+     * @see BasicModel._fetchSpecialData
+     */
+    specialData: false,
     /**
      * to override to indicate which field types are supported by the widget
      */

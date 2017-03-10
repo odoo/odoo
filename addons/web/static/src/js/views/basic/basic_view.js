@@ -170,16 +170,6 @@ var BasicView = AbstractView.extend({
             attrs.options = attrs.options ? pyeval.py_eval(attrs.options) : {};
         }
 
-        if (field.type === 'many2one') {
-            if (attrs.widget === 'statusbar' || attrs.widget === 'radio') {
-                field.__fetch_status = true;
-            } else if (attrs.widget === 'selection') {
-                field.__fetch_selection = true;
-            }
-        }
-        if (attrs.widget === 'many2many_checkboxes') {
-            field.__fetch_many2manys = true;
-        }
         if (attrs.on_change) {
             field.onChange = "1";
         }

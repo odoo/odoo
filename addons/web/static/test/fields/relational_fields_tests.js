@@ -2355,7 +2355,7 @@ QUnit.module('relational_fields', {
             "all status should be disabled");
         assert.ok(form.$('.o_statusbar_status button[data-value="4"]').hasClass('btn-primary'),
             "selected status should be btn-primary");
-        // TODO: add a test to check that we can change the status
+
         form.destroy();
     });
 
@@ -2397,6 +2397,45 @@ QUnit.module('relational_fields', {
             'statusbar widget should have class o_form_field_empty');
         assert.strictEqual(form.$('.o_statusbar_status').children().length, 0,
             'statusbar widget should be empty');
+        form.destroy();
+    });
+
+    QUnit.test('statusbar with dynamic domain', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.trululu.domain = "[('int_field', '>', qux)]";
+        this.data.partner.records[2].int_field = 0;
+
+        var rpcCount = 0;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<field name="trululu" widget="statusbar"/>' +
+                    '<field name="qux"/>' +
+                    '<field name="foo"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    rpcCount++;
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_statusbar_status button.disabled').length, 3, "should have 3 status");
+        assert.strictEqual(rpcCount, 1, "should have done 1 search_read rpc");
+        form.$('input:first').val(9.5).trigger("input").trigger("change");
+        assert.strictEqual(form.$('.o_statusbar_status button.disabled').length, 2, "should have 2 status");
+        assert.strictEqual(rpcCount, 2, "should have done 1 more search_read rpc");
+        form.$('input:last').val("hey").trigger("input").trigger("change");
+        assert.strictEqual(rpcCount, 2, "should not have done 1 more search_read rpc");
+
         form.destroy();
     });
 
