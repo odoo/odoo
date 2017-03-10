@@ -196,9 +196,9 @@ class Http(models.AbstractModel):
                     if request.lang != request.website.default_lang_code:
                         path.insert(1, request.lang)
                     path = '/'.join(path) or '/'
+                    request.context = context
                     redirect = request.redirect(path + '?' + request.httprequest.query_string)
                     redirect.set_cookie('website_lang', request.lang)
-                    request.context = context
                     return redirect
                 elif url_lang:
                     request.uid = None

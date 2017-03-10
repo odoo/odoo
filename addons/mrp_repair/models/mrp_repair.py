@@ -521,7 +521,7 @@ class RepairFee(models.Model):
         index=True, ondelete='cascade', required=True)
     name = fields.Char('Description', index=True, required=True)
     product_id = fields.Many2one('product.product', 'Product')
-    product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
+    product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     price_unit = fields.Float('Unit Price', required=True)
     product_uom = fields.Many2one('product.uom', 'Product Unit of Measure', required=True)
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', digits=0)
