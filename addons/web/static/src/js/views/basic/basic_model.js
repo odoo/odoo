@@ -41,6 +41,8 @@ odoo.define('web.BasicModel', function (require) {
  *      relationField: {string},
  *      res_id: {integer|null},
  *      res_ids: {integer[]},
+ *      specialData: {Object},
+ *      _specialDataCache: {Object},
  *      static: {boolean},
  *      type: {string} 'record' | 'list'
  *      value: ?,
@@ -132,14 +134,6 @@ var BasicModel = AbstractModel.extend({
         // sequentially, for example, an onchange needs to be completed before a
         // save is performed.
         this.mutex = new concurrency.Mutex();
-
-        // this dictionary is used to hold all many2one informations for widget
-        // selection.
-        this.many2ones = {};
-
-        // this dictionary is used to hold all many2many informations for widget
-        // many2many_checkboxes.
-        this.many2manys = {};
 
         this.localData = Object.create(null);
         this._super.apply(this, arguments);
@@ -329,16 +323,6 @@ var BasicModel = AbstractModel.extend({
                     } else {
                         element.data[fieldName] = this.get(element.data[fieldName]) || [];
                     }
-                }
-
-                // weird way to get out many2ones for widget=selection
-                if (field.__fetch_selection) {
-                    field.__selection_information = self.many2ones[field.relation];
-                }
-
-                // weird way to get out many2manys for widget=many2many_checkboxes
-                if (field.__fetch_many2manys) {
-                    field.__many2many_information = self.many2manys[field.relation];
                 }
             }
 
@@ -697,7 +681,11 @@ var BasicModel = AbstractModel.extend({
                         delete record._changes[name];
                     }
                 });
-                return fieldNames;
+                return self._fetchSpecialData(record).then(function (fieldNames2) {
+                    // Return the names of the fields that changed (onchange or
+                    // associated special data change)
+                    return _.union(fieldNames, fieldNames2);
+                });
             });
         });
     },
@@ -1372,6 +1360,147 @@ var BasicModel = AbstractModel.extend({
         return $.when.apply($, _.map(groups, this._fetchMany2OneGroup.bind(this)));
     },
     /**
+     * Check the AbstractField specializations that are (will be) used by the
+     * given record and fetch the special data they will need. Special data are
+     * data that the rendering of the record won't need if it was not using
+     * particular widgets (example of these can be found at the methods which
+     * start with _fetchSpecial).
+     *
+     * @param {Object} record - an element from the localData
+     * @returns {Deferred<Array>}
+     *          The deferred is resolved with an array containing the names of
+     *          the field whose special data has been changed.
+     */
+    _fetchSpecialData: function (record) {
+        var self = this;
+        var fieldNames = [];
+        return $.when.apply($, _.map(record.fieldNames, function (name) {
+            var attrs = record.fieldAttrs[name] || {};
+            var Widget = attrs.Widget;
+            if (Widget && Widget.prototype.specialData) {
+                return self[Widget.prototype.specialData](record, name).then(function (data) {
+                    if (data === undefined) {
+                        return;
+                    }
+                    record.specialData[name] = data;
+                    fieldNames.push(name);
+                });
+            }
+        })).then(function () {
+            return fieldNames;
+        });
+    },
+    /**
+     * Fetches all the m2o records associated to the given fieldName. If the
+     * given fieldName is not a m2o field, nothing is done.
+     *
+     * @param {Object} record - an element from the localData
+     * @param {Object} fieldName - the name of the field
+     * @param {string[]} [fieldsToRead] - the m2os fields to read (id and
+     *                                  display_name are automatic).
+     * @returns {Deferred<any>}
+     *          The deferred is resolved with the fetched special data. If this
+     *          data is the same as the previously fetched one (for the given
+     *          parameters), no RPC is done and the deferred is resolved with
+     *          the undefined value.
+     */
+    _fetchSpecialMany2ones: function (record, fieldName, fieldsToRead) {
+        var field = record.fields[fieldName];
+        if (field.type !== "many2one") {
+            return $.when();
+        }
+
+        var context = record.getContext({fieldName: fieldName});
+        var domain = record.getDomain({fieldName: fieldName});
+        if (domain.length) {
+            var localID = record.data[fieldName];
+            var element = this.localData[localID];
+            domain = ["|", ["id", "=", element.data.id]].concat(domain);
+        }
+
+        // avoid rpc if not necessary
+        var specialDataCache = {context: context, domain: domain};
+        if (_.isEqual(record._specialDataCache[fieldName], specialDataCache)) {
+            return $.when();
+        }
+        record._specialDataCache[fieldName] = specialDataCache;
+
+        var self = this;
+        return this._rpc(field.relation, 'search_read')
+            .withFields(["id"].concat(fieldsToRead || []))
+            .withContext(context)
+            .withDomain(domain)
+            .exec()
+            .then(function (result) {
+                var ids = _.pluck(result.records, 'id');
+                return self._rpc(field.relation, 'name_get')
+                    .args([ids])
+                    .withContext(context)
+                    .exec()
+                    .then(function (name_gets) {
+                        _.each(result.records, function (rec) {
+                            var name_get = _.find(name_gets, function (n) {
+                                return n[0] === rec.id;
+                            });
+                            rec.display_name = name_get[1];
+                        });
+                        return result.records;
+                    });
+            });
+    },
+    /**
+     * Fetches all the relation records associated to the given fieldName. If
+     * the given fieldName is not a relational field, nothing is done.
+     *
+     * @param {Object} record - an element from the localData
+     * @param {Object} fieldName - the name of the field
+     * @returns {Deferred<any>}
+     *          The deferred is resolved with the fetched special data. If this
+     *          data is the same as the previously fetched one (for the given
+     *          parameters), no RPC is done and the deferred is resolved with
+     *          the undefined value.
+     */
+    _fetchSpecialRelation: function (record, fieldName) {
+        var field = record.fields[fieldName];
+        if (!_.contains(["many2one", "many2many", "one2many"], field.type)) {
+            return $.when();
+        }
+
+        var context = record.getContext({fieldName: fieldName});
+        var domain = record.getDomain({fieldName: fieldName});
+
+        // avoid rpc if not necessary
+        var specialDataCache = {context: context, domain: domain};
+        if (_.isEqual(record._specialDataCache[fieldName], specialDataCache)) {
+            return $.when();
+        }
+        record._specialDataCache[fieldName] = specialDataCache;
+
+        return this._rpc(field.relation, "name_search")
+            .args(["", domain])
+            .withContext(context)
+            .exec();
+    },
+    /**
+     * Fetches all the m2o records associated to the given fieldName. If the
+     * given fieldName is not a m2o field, nothing is done. The difference with
+     * _fetchSpecialMany2ones is that the field given by options.fold_field is
+     * also fetched.
+     *
+     * @param {Object} record - an element from the localData
+     * @param {Object} fieldName - the name of the field
+     * @returns {Deferred<any>}
+     *          The deferred is resolved with the fetched special data. If this
+     *          data is the same as the previously fetched one (for the given
+     *          parameters), no RPC is done and the deferred is resolved with
+     *          the undefined value.
+     */
+    _fetchSpecialStatus: function (record, fieldName) {
+        var foldField = record.fieldAttrs[fieldName].options.fold_field;
+        var fieldsToRead = foldField ? [foldField] : [];
+        return this._fetchSpecialMany2ones(record, fieldName, fieldsToRead);
+    },
+    /**
      * Fetch all data in a ungrouped list
      *
      * @param {Object} list a valid resource object
@@ -1767,6 +1896,8 @@ var BasicModel = AbstractModel.extend({
             relationField: params.relationField,
             res_id: res_id,
             res_ids: res_ids,
+            specialData: {},
+            _specialDataCache: {},
             static: params.static || false,
             type: type,  // 'record' | 'list'
             value: value,
@@ -1833,38 +1964,6 @@ var BasicModel = AbstractModel.extend({
             var field = record.fields[name];
             var attrs = record.fieldAttrs[name] || {};
             var options = attrs.options || {};
-            if (field.__fetch_status && !field.__status_information) {
-                var field_values = _.mapObject(record.data, function (val, key) {
-                    var fieldType = record.fields[key].type;
-                    if (fieldType === 'many2one') {
-                        var element = self.localData[val];
-                        return element && element.data.id || false;
-                    }
-                    return val;
-                });
-                var domain = Domain.prototype.stringToArray(field.domain || [], field_values);
-                var fetch_status_information = self._rpc(field.relation, 'search_read')
-                    .withFields(['id'].concat(options.fold_field ? [options.fold_field] : []))
-                    .withDomain(domain)
-                    .exec()
-                    .then(function (result) {
-                        var ids = _.pluck(result.records, 'id');
-                        return self._rpc(field.relation, 'name_get')
-                            .args([ids])
-                            .withContext(self._getContext(record, {fieldName: name}))
-                            .exec()
-                            .then(function (name_gets) {
-                                _.each(result.records, function (record) {
-                                    var name_get = _.find(name_gets, function (n) {
-                                        return n[0] === record.id;
-                                    });
-                                    record.display_name = name_get[1];
-                                });
-                                field.__status_information = result.records;
-                            });
-                    });
-                defs.push(fetch_status_information);
-            }
             if (options.always_reload) {
                 if (record.fields[name].type === 'many2one' && record.data[name]) {
                     var element = self.localData[record.data[name]];
@@ -1877,25 +1976,9 @@ var BasicModel = AbstractModel.extend({
                         }));
                 }
             }
-            if (field.__fetch_selection && !self.many2ones[field.relation]) {
-                var fetchSelection = self._rpc(field.relation, 'name_search')
-                    .args(['', field.domain])
-                    .exec()
-                    .then(function (result) {
-                        self.many2ones[field.relation] = result;
-                    });
-                defs.push(fetchSelection);
-            }
-            if (field.__fetch_many2manys) {
-                var fetchMany2Manys = self._rpc(field.relation, 'name_search')
-                    .args(['', field.domain])
-                    .exec()
-                    .then(function (result) {
-                        self.many2manys[field.relation] = result;
-                    });
-                defs.push(fetchMany2Manys);
-            }
         });
+
+        defs.push(this._fetchSpecialData(record));
 
         return $.when.apply($, defs).then(function () {
             return record;

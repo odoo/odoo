@@ -1107,10 +1107,11 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         change: '_onChange',
     }),
+    specialData: "_fetchSpecialRelation",
     supportedFieldTypes: ['many2many'],
     init: function () {
         this._super.apply(this, arguments);
-        this.m2mValues = this.field.__many2many_information;
+        this.m2mValues = this.record.specialData[this.name];
     },
 
     //--------------------------------------------------------------------------
@@ -1170,6 +1171,7 @@ var FieldStatus = AbstractField.extend({
     events: {
         'click .o_arrow_button': '_onClickStage',
     },
+    specialData: "_fetchSpecialStatus",
     supportedFieldTypes: ['selection', 'many2one'],
     init: function () {
         this._super.apply(this, arguments);
@@ -1192,7 +1194,7 @@ var FieldStatus = AbstractField.extend({
      */
     _setState: function () {
         if (this.field.type === 'many2one') {
-            this.status_information = this.field.__status_information;
+            this.status_information = this.record.specialData[this.name];
             var status = _.findWhere(this.status_information, {id: this.value.res_id});
             if (status) {
                 status.selected = true;
@@ -1260,6 +1262,7 @@ var FieldStatus = AbstractField.extend({
  */
 var FieldSelection = AbstractField.extend({
     template: 'FieldSelection',
+    specialData: "_fetchSpecialRelation",
     supportedFieldTypes: ['selection', 'many2one'],
     events: _.extend({}, AbstractField.prototype.events, {
         'change': '_onChange',
@@ -1272,7 +1275,7 @@ var FieldSelection = AbstractField.extend({
         this._super.apply(this, arguments);
         this.values = [];
         if (this.field.type === 'many2one') {
-            this.values = this.field.__selection_information;
+            this.values = this.record.specialData[this.name];
         } else {
             this.values = _.reject(this.field.selection, function (v) {
                 return v[0] === false && v[1] === '';
@@ -1357,6 +1360,7 @@ var FieldSelection = AbstractField.extend({
 
 var FieldRadio = FieldSelection.extend({
     template: 'FieldRadio',
+    specialData: "_fetchSpecialMany2ones",
     supportedFieldTypes: ['selection', 'many2one'],
     events: _.extend({}, AbstractField.prototype.events, {
         'click input': '_onInputClick',
@@ -1369,7 +1373,7 @@ var FieldRadio = FieldSelection.extend({
         if (this.field.type === 'selection') {
             this.values = this.field.selection || [];
         } else if (this.field.type === 'many2one') {
-            this.values = _.map(this.field.__status_information, function (val) {
+            this.values = _.map(this.record.specialData[this.name], function (val) {
                 return [val.id, val.display_name];
             });
         }
