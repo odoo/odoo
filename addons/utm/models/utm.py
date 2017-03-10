@@ -78,5 +78,6 @@ class UtmMixin(models.AbstractModel):
                     if not records:
                         records = Model.create({'name': value})
                     value = records.id
-                values[field_name] = value
+                if value:
+                    values[field_name] = value
         return values
