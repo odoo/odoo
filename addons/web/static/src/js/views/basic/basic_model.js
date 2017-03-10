@@ -1320,13 +1320,14 @@ var BasicModel = AbstractModel.extend({
             .then(function (result) {
                 result = result[0];
                 record.data = _.extend({}, record.data, result);
-            }).then(function () {
+            })
+            .then(function () {
+                self._parseServerData(fieldNames, record.fields, record.data);
+            })
+            .then(function () {
                 return self._fetchX2Manys(record, oldData, fieldNames).then(function () {
                     return self._postprocess(record);
                 });
-            }).then(function (record) {
-                self._parseServerData(fieldNames, record.fields, record.data);
-                return record;
             });
     },
     /**
@@ -1836,7 +1837,8 @@ var BasicModel = AbstractModel.extend({
                 var field_values = _.mapObject(record.data, function (val, key) {
                     var fieldType = record.fields[key].type;
                     if (fieldType === 'many2one') {
-                        return val instanceof Array && val[0];
+                        var element = self.localData[val];
+                        return element && element.data.id || false;
                     }
                     return val;
                 });
@@ -1864,13 +1866,14 @@ var BasicModel = AbstractModel.extend({
                 defs.push(fetch_status_information);
             }
             if (options.always_reload) {
-                if (record.data[name] instanceof Array) {
+                if (record.fields[name].type === 'many2one' && record.data[name]) {
+                    var element = self.localData[record.data[name]];
                     defs.push(self._rpc(field.relation, 'name_get')
-                        .args([record.data[name][0]])
+                        .args([element.data.id])
                         .withContext(self._getContext(record, {fieldName: name}))
                         .exec()
                         .then(function (result) {
-                            record.data[name] = result[0];
+                            element.data.display_name = result[0][1];
                         }));
                 }
             }
