@@ -35,8 +35,7 @@ class Channel(models.Model):
     _name = 'mail.channel'
     _mail_flat_thread = False
     _mail_post_access = 'read'
-    _inherit = ['mail.thread']
-    _inherits = {'mail.alias': 'alias_id'}
+    _inherit = ['mail.thread', 'mail.alias.mixin']
 
     MAX_BOUNCE_LIMIT = 10
 
@@ -82,9 +81,6 @@ class Channel(models.Model):
         help="Small-sized photo of the group. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
-    alias_id = fields.Many2one(
-        'mail.alias', 'Alias', ondelete="restrict", required=True,
-        help="The email address associated with this group. New emails received will automatically create new topics.")
     is_subscribed = fields.Boolean(
         'Is Subscribed', compute='_compute_is_subscribed')
 
@@ -144,6 +140,9 @@ class Channel(models.Model):
         if vals.get('group_ids'):
             self._subscribe_users()
         return result
+
+    def get_alias_model_name(self, vals):
+        return vals.get('alias_model', 'mail.channel')
 
     def _subscribe_users(self):
         for mail_channel in self:
