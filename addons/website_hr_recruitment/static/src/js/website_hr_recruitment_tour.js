@@ -29,7 +29,7 @@ odoo.define('website_hr_recruitment.tour', function(require) {
         trigger: ".o_website_form_send"
     }, {
         content: "Check the form is submited without errors",
-        trigger: ".oe_structure:has(h1:contains('Thank you!'))"
+        trigger: ".oe_structure:has(h1:contains('Congratulations'))"
     }]);
 
     return {};
