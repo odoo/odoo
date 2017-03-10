@@ -46,7 +46,7 @@
                                         <div class="content-group">
                                             <div class="row mt16">
                                                 <label class="col-md-3 o_light_label" for="language_ids"/>
-                                                <field name="language_ids" class="col-md-8" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
+                                                <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
                                             </div>
                                             <field name="language_count" invisible="1"/>
                                             <div class="row" attrs="{'invisible':[('language_count', '&lt;', 2)]}">
