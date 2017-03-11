@@ -7,6 +7,7 @@
 # fausthuang, 2015
 # Gary Wei <Gary.wei@elico-corp.com>, 2015
 # Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015,2017
 # xiaobin wu <bd5dml@gmail.com>, 2015
@@ -18,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2017-02-04 06:49+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
+"PO-Revision-Date: 2017-03-07 02:40+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgstr "产品类别"
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template_product_variant_count
 msgid "# of Product Variants"
-msgstr "#产品变型"
+msgstr "#产品变体"
 
 #. module: product
 #: code:addons/product/pricelist.py:288
@@ -184,7 +185,7 @@ msgid ""
 "<strong>Warning</strong>: adding or deleting attributes\n"
 "                            will delete and recreate existing variants and lead\n"
 "                            to the loss of their possible customizations."
-msgstr "<strong>警告</strong>: 添加或删除属性\n将会删除并重建现有的变量和引导\n并会导致丢失它们的自定义属性。"
+msgstr "<strong>警告</strong>: 添加或删除属性\n将会删除并重建现有的变体，并会导致丢失它们的自定义属性。"
 
 #. module: product
 #: code:addons/product/product.py:977 sql_constraint:product.product:0
@@ -1422,21 +1423,21 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "产品变型的图像(如果为False,采用大尺寸图像模板). 它保持图像的宽高比,并自动调整图像大小为1024 x 1024px."
+msgstr "产品变体的图像(如果为False,采用大尺寸图像模板). 它保持图像的宽高比,并自动调整图像大小为1024 x 1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "产品变型的图像(如果为Flase,采用产品模板的中尺寸图像)"
+msgstr "产品变体的图像(如果为Flase,采用产品模板的中尺寸图像)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr "产品变型的图像(如果为Flase,采用产品模板的小尺寸图像)"
+msgstr "产品变体的图像(如果为Flase,采用产品模板的小尺寸图像)"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1508,7 +1509,7 @@ msgstr "是关注者"
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
 msgid "Is a product variant"
-msgstr "是产品变型"
+msgstr "是产品变体"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1679,7 +1680,7 @@ msgstr "管理产品包装"
 #: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr "管理产品变型"
+msgstr "管理产品变体"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -2013,7 +2014,7 @@ msgstr "额外价格"
 msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr "价格附加:销售价格随着附加价格进行变化,如:原销售价格是1000,额外收费是200,当前售价是1200 = 1000 + 200."
+msgstr "价格附加: 变体销售价格随着附加价格进行变化,如:原销售价格是1000,额外收费是200,当前售价是1200 = 1000 + 200."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -2219,7 +2220,7 @@ msgstr "计量单位"
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
 msgid "Product Variant"
-msgstr "产品变型"
+msgstr "产品变体"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
@@ -2227,7 +2228,7 @@ msgstr "产品变型"
 #: model:ir.ui.menu,name:product.menu_products
 #: model:ir.ui.view,arch_db:product.product_product_tree_view
 msgid "Product Variants"
-msgstr "产品变型"
+msgstr "产品变体"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -2795,7 +2796,7 @@ msgstr "从供应商采购的最小数量的计量单位在产品的供应商信
 msgid ""
 "The operation cannot be completed:\n"
 "You are trying to delete an attribute value with a reference on a product variant."
-msgstr "该操作无法完成：\n你正试图删除一个产品变型引用的属性值"
+msgstr "该操作无法完成：\n你正试图删除一个产品变体引用的属性值"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
@@ -2909,7 +2910,7 @@ msgstr "此处源自该产品表单。"
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr "该字段保存产品的图像，限制图像大小须小于 1024x1024px."
+msgstr "该字段保存产品变体的图像，限制图像大小须小于 1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
@@ -3107,36 +3108,36 @@ msgstr "值"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
 msgid "Variant Extra Price"
-msgstr "变型附加价格"
+msgstr "变体附加价格"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
 msgid "Variant Image"
-msgstr "变型图像"
+msgstr "变体图像"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr "变型信息"
+msgstr "变体信息"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant Prices"
-msgstr "变型价格"
+msgstr "变体价格"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
 #: model:ir.ui.view,arch_db:product.attribute_tree_view
 #: model:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
-msgstr "变型值"
+msgstr "变体值"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
 #: model:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
-msgstr "变型"
+msgstr "变体"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_seller_ids
@@ -3238,7 +3239,7 @@ msgstr "一个播放列表是不够的。"
 msgid ""
 "When this field is filled in, the vendor data will only apply to the "
 "variant."
-msgstr "当此字段填写，供应商的数据只适用于变型。"
+msgstr "当此字段填写，供应商的数据只适用于变体。"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
@@ -3292,7 +3293,7 @@ msgstr "先进的Wi‑Fi比之前的Ipad的网速快两倍，用它可以链接�
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr "产品型号可以让你为同一个产品定义不同的型号，例如在电商业务中是一种简单的产品管理方式"
+msgstr "产品变体可以让你为同一个产品定义不同的变体，例如在电商业务中是一种简单的产品管理方式"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
