@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-02-28 15:17+0000\n"
+"PO-Revision-Date: 2017-03-10 14:09+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -235,7 +235,7 @@ msgid ""
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
 "                            </span>\n"
 "                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n<strong>E-mail masovna pošta</strong> na\n<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">odabranim zapisima</span>\n<span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">trenutni filter pretrage</span>.\n</span>\n<span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Pratitelji dokumenta i</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -270,7 +270,7 @@ msgstr ""
 msgid ""
 "<strong>Moreover, if you want to send a lot of emails, we recommend you to use the mass mailing module</strong>. <br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
-msgstr ""
+msgstr "<strong>Osim toga, ako želite puno e-mailova, savjetujemo Vam korištenje modula masovne pošte</strong>. <br/>\nPotvrda ovog čarobnjaka vjerojatno će trajati nekoliko minuta i blokirati Vaš preglednik."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
@@ -286,7 +286,7 @@ msgstr "Python rječnik koji će se provjeravati za zadane postave kada se kreir
 msgid ""
 "A shortcode is a keyboard shortcut. For instance, you type #gm and it will "
 "be transformed into \"Good Morning\"."
-msgstr ""
+msgstr "Kratki kod je prečac na tipkovnici. Npr. utipkate #gm i to će se transformirati u \"Good Morning\"."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
@@ -619,7 +619,7 @@ msgstr "Gotovi odgovor"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_shortcode
 msgid "Canned Response / Shortcode"
-msgstr ""
+msgstr "Gotovi odgovor / Kratki kod"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_email_cc
@@ -704,7 +704,7 @@ msgstr "Chat rasprava"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
 msgid "Chat Shortcode"
-msgstr ""
+msgstr "Kratki kod Čavrljanja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_child_ids
@@ -743,7 +743,7 @@ msgstr "Klikni da bi dodao kontakt u svoj adresar."
 #. module: mail
 #: model:ir.actions.act_window,help:mail.mail_shortcode_action
 msgid "Click to define a new chat shortcode."
-msgstr ""
+msgstr "Kliknite za definiranje novog kratkog koda."
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -2756,13 +2756,13 @@ msgstr "Postavke"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_shortcode_type
 msgid "Shortcode type"
-msgstr ""
+msgstr "Tip kratkog koda"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_shortcode_view_form
 #: model:ir.ui.view,arch_db:mail.mail_shortcode_view_tree
 msgid "Shortcodes"
-msgstr ""
+msgstr "Kratki kodovi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_source
@@ -3378,7 +3378,7 @@ msgstr "base.config.settings"
 #. module: mail
 #: model:mail.channel,name:mail.channel_2
 msgid "board-meetings"
-msgstr ""
+msgstr "sastanci članova uprave"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -3408,7 +3408,7 @@ msgstr "Sljedbenici"
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
 msgid "general"
-msgstr ""
+msgstr "općenito"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server

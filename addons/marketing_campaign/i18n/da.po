@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2017-03-03 12:16+0000\n"
+"PO-Revision-Date: 2017-03-09 16:19+0000\n"
 "Last-Translator: Morten Schou <ms@msteknik.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr "Antal handlinger"
 msgid ""
 "<span class=\"o_stat_text\">Campaign</span>\n"
 "                            <span class=\"o_stat_text\">Statistics</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kampagne</span>\n<span class=\"o_stat_text\">Statistikker</span>"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -37,7 +37,7 @@ msgid ""
 "            a letter, assigning to a team, etc. These activities are triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc."
-msgstr ""
+msgstr "En kampagne kan have mange funktioner såsom at sende en email, udskrive\net brev, tildele et hold, osv. Disse funktioner bliver aktiveret\naf specifikke situationer; kontaktformular, 10 dage efter første\nkontakt, hvis det pågældende lead ikke er afsluttet, osv."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -102,14 +102,14 @@ msgstr "Automatisk"
 #: code:addons/marketing_campaign/marketing_campaign.py:478
 #, python-format
 msgid "Automatic transition"
-msgstr ""
+msgstr "Automatisk overgang"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr ""
+msgstr "Ved at aktivere denne indstilling, er workitems, der ikke udføres fordi betingelsen ikke er opfyldt, markeret som aflyst i stedet for at blive slettet."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_campaign_id
@@ -135,32 +135,32 @@ msgstr "Kampagne aktivitet"
 #: model:ir.model,name:marketing_campaign.model_campaign_analysis
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
 msgid "Campaign Analysis"
-msgstr ""
+msgstr "Kampagne analyse"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_diagram
 msgid "Campaign Editor"
-msgstr ""
+msgstr "Kampagneredaktør"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
 msgid "Campaign Follow-up"
-msgstr ""
+msgstr "Kampagne opfølgning"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
 msgid "Campaign Segment"
-msgstr ""
+msgstr "Kampagne segment"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
 msgid "Campaign Transition"
-msgstr ""
+msgstr "Kampagne overgang"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
 msgid "Campaign Workitem"
-msgstr ""
+msgstr "Kampagne workitem"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
@@ -184,12 +184,12 @@ msgstr "Annuller kampagne"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Cancel Segment"
-msgstr ""
+msgstr "Annuller segment"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 msgid "Cancel Workitem"
-msgstr ""
+msgstr "Annuller workitem"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
@@ -201,12 +201,12 @@ msgstr "Annulleret"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_object_id
 msgid "Choose the resource on which you want this campaign to be run"
-msgstr ""
+msgstr "Vælg hvilken kilde du vil have kampagnen kørt på"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
 msgid "Click to create a marketing campaign."
-msgstr ""
+msgstr "Klik for at oprette en marketing kampagne."
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
@@ -221,19 +221,19 @@ msgstr "Betingelse"
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
+msgstr "Tillykke! Du er nu sølvpartner!"
 
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_3
 msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr ""
+msgstr "Tillykke! Du er nu en af vores guld partnere!"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:480
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
-msgstr ""
+msgstr "Kosmetisk"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_total_cost
@@ -274,12 +274,12 @@ msgstr ""
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
-msgstr ""
+msgstr "Dato hvor dette segment sidst blev synkroniseret (automatisk eller manuelt)"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_done
 msgid "Date this segment was last closed or cancelled."
-msgstr ""
+msgstr "Dato hvor dette segment sidst var færdiggjort eller annulleret."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -315,7 +315,7 @@ msgstr "Vist navn"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
 msgid "Don't Delete Workitems"
-msgstr ""
+msgstr "Slet ikke workitems"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -337,7 +337,7 @@ msgstr "Kladde"
 #: code:addons/marketing_campaign/marketing_campaign.py:170
 #, python-format
 msgid "Duplicating campaigns is not supported."
-msgstr ""
+msgstr "Duplikering af kampagner er ikke anbefalet. "
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -387,24 +387,24 @@ msgstr "Undtagelser"
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_date
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_date
 msgid "Execution Date"
-msgstr ""
+msgstr "Udførelses dato"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_day
 msgid "Execution Day"
-msgstr ""
+msgstr "Udførelses dag"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_month
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Execution Month"
-msgstr ""
+msgstr "Udførelses måned"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_year
 msgid "Execution Year"
-msgstr ""
+msgstr "Udførelses år"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -840,7 +840,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_res_name
 msgid "Resource Name"
-msgstr ""
+msgstr "Navn på resurse"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_revenue
