@@ -8,12 +8,12 @@
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Ermin Trevisan <trevi@twanda.com>, 2016
 # Philipp Hug <philipp@hug.cx>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # JackTheHunter <Maximilian.N98@gmail.com>, 2016
 # Anja Funk <anja.funk@afimage.de>, 2016
-# Ermin Trevisan <trevi@twanda.com>, 2016
 # Falk Scholze <inactive+falkscholze@transifex.com>, 2016
 # Renzo Meister <info@jamotion.ch>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
@@ -492,6 +492,16 @@ msgid ""
 msgstr ""
 "<span> (*) Diese Konfiguration bezieht sich auf die Firma, mit der Sie "
 "angemeldet sind. </span>"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
+msgid "<span>invoice</span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
+msgid "<span>refund</span>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
@@ -1409,7 +1419,7 @@ msgstr "Buchhaltungskonfiguration: eine Schritt-für-Schritt Anleitung."
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr "Dashboard Finanzen"
+msgstr "Buchhaltungsdashboard"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_date
@@ -5707,7 +5717,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
 msgid "Kanban dashboard"
-msgstr "Kanban Übersicht"
+msgstr "Kanban-Dashboard"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard_graph
@@ -6738,7 +6748,7 @@ msgid ""
 "                        to access your statements from the Accounting Dashboard. \n"
 "                        The available methods for synchronization are as follows."
 msgstr ""
-"Sind Ihre Bankkonten eingetragen, können Sie auf die Kontoauszüge über das Cockpit der Buchhaltung zugreifen.\n"
+"Sind Ihre Bankkonten eingetragen, können Sie auf die Kontoauszüge über das Dashboard der Buchhaltung zugreifen.\n"
 "Die verfügbaren Verfahren zur Synchronisation sind die Folgenden:"
 
 #. module: account
@@ -9558,7 +9568,7 @@ msgid ""
 "This is the accounting dashboard. If you have not yet\n"
 "                installed a chart of account, please install one first."
 msgstr ""
-"Dies ist das Buchhaltungs-Cockpit. Wenn Sie noch \n"
+"Dies ist das Buchhaltungsdashboard. Wenn Sie noch \n"
 "keinen Kontenplan installiert haben, machen Sie das\n"
 "bitte zuerst."
 
@@ -10143,7 +10153,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "Verwendet, um Journale im Cockpit zu sortieren"
+msgstr "Verwendet, um Journale im Dashboard zu sortieren"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_loss_account_id

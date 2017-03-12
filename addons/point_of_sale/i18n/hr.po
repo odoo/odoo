@@ -223,6 +223,8 @@ msgid ""
 "A sequence number that is incremented each time a user resumes the pos "
 "session"
 msgstr ""
+"Brojčani slijed koji se povećava svaki put kada korisnik nastavlja POS "
+"sesiju"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_sequence_number
@@ -1006,6 +1008,7 @@ msgid ""
 "Difference between the theoretical closing balance and the real closing "
 "balance."
 msgstr ""
+"Razlika između teoretskog salda zatvaranja i stvarnog salda zatvaranja."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1568,7 +1571,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
 msgid "Last session closing date"
-msgstr ""
+msgstr "Datum zaključenja zadnje sesije"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_review
@@ -2025,7 +2028,7 @@ msgstr "Analiza narudžbi"
 #: code:addons/point_of_sale/models/pos_config.py:212
 #, python-format
 msgid "POS Order %s"
-msgstr ""
+msgstr "POS Stavka %s"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
@@ -2056,7 +2059,7 @@ msgstr "POS prodaja"
 #: code:addons/point_of_sale/models/pos_config.py:223
 #, python-format
 msgid "POS order line %s"
-msgstr ""
+msgstr "Stavka narudžbe %s"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -2299,7 +2302,7 @@ msgstr "Postavke prodajnog mjesta"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_manager_id
 msgid "Point of Sale Manager Group"
-msgstr ""
+msgstr "POS menadžer grupa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_name
@@ -2333,7 +2336,7 @@ msgstr "Smjena POS-a"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_user_id
 msgid "Point of Sale User Group"
-msgstr ""
+msgstr "POS korisnička grupa"
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_restaurant:0
@@ -2365,7 +2368,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_pos_order_line_id
 msgid "Pos order line id"
-msgstr ""
+msgstr "ID stavke narudžbe"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_username
@@ -2875,7 +2878,7 @@ msgstr "Neke narudžbe se ne mogu predati"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr ""
+msgstr "Odredite lot/serijski broj proizvoda u stavci prodaje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_start_categ_id
@@ -3129,7 +3132,7 @@ msgstr "Naziv POS smjene mora biti jedinstven!"
 #: model:ir.model.fields,help:point_of_sale.field_res_partner_pos_order_count
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_order_count
 msgid "The number of point of sale orders related to this customer"
-msgstr ""
+msgstr "Broj POS narudžbi povezanih s ovim kupcem"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3253,6 +3256,9 @@ msgid ""
 "\n"
 " Please pay the exact amount or add a cash payment method in the point of sale configuration"
 msgstr ""
+"Nema dostupnog gotovinskog načina plaćanja na ovom mjestu prodaje kako bi se mogao vraćati ostatak.\n"
+"\n"
+"Molimo platite točan iznos ili dodajte gotovinski način plaćanja u POS konfiguraciju"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box.py:21
@@ -3292,6 +3298,8 @@ msgid ""
 "This cashbox line is used by default when opening or closing a balance for "
 "this point of sale"
 msgstr ""
+"Ova stavka blagajne koristi se kao zadana pri otvaranju ili zatvaranju salda"
+" za ovu blagajnu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_journal_amount_authorized_diff
@@ -3355,6 +3363,8 @@ msgid ""
 "This operation will permanently destroy all paid orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
 msgstr ""
+"Ova operacija će trajno uništiti sve plaćene narudžbe iz lokalne pohrane. "
+"Izgubit čete sve podatke. Ova se operacija ne može poništiti."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3365,6 +3375,9 @@ msgid ""
 "that have been put in the local storage. You will lose all the data and exit"
 " the point of sale. This operation cannot be undone."
 msgstr ""
+"Ova operacija će trajno uništiti sve neplaćene narudžbe iz svih sesija koje "
+"su stavljene u lokalnu pohranu. Izgubit ćete sve podatke i izaći iz "
+"blagajne. Ova se operacija ne može poništiti."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_sequence_id
@@ -3697,6 +3710,8 @@ msgid ""
 "You cannot use the session of another users. This session is owned by %s. "
 "Please first close this one to use this point of sale."
 msgstr ""
+"Ne možete koristiti sesiju drugog korisnika. Ovu sesiju posjeduje %s. Molimo"
+" da prvo zatvorite ovu sesiju kako biste koristili blagajnu. "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:18
