@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-25 12:58+0000\n"
-"PO-Revision-Date: 2017-02-13 13:56+0000\n"
+"PO-Revision-Date: 2017-03-11 04:57+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +36,7 @@ msgid ""
 "            <p><em>${object.comment}</em></p>\n"
 "        % endif\n"
 "        "
-msgstr "\n        <p>恭喜你获得一枚徽章 <strong>${object.badge_id.name}</strong> !\n            % if object.sender_id\n                徽章授予者 <strong>${object.sender_id.name}</strong>.\n            % endif\n        </p>\n\n        % if object.comment\n            <p><em>${object.comment}</em></p>\n        % endif\n        "
+msgstr "\n        <p>恭喜您获得一枚徽章 <strong>${object.badge_id.name}</strong> !\n            % if object.sender_id\n                徽章授予者 <strong>${object.sender_id.name}</strong>.\n            % endif\n        </p>\n\n        % if object.comment\n            <p><em>${object.comment}</em></p>\n        % endif\n        "
 
 #. module: gamification
 #: model:email.template,body_html:gamification.email_template_goal_reminder
@@ -48,7 +48,7 @@ msgid ""
 "    \n"
 "    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
-msgstr "\n<header>\n        <strong>提醒 ${object.name}</strong>\n    </header>\n    \n    <p> 最近 ${object.remind_update_delay} 天内，你没有更新你的目标${object.definition_id.name}的进度 (当前完成 ${object.completeness}%)。 不要忘记。</p>\n            "
+msgstr "\n<header>\n        <strong>提醒 ${object.name}</strong>\n    </header>\n    \n    <p> 最近 ${object.remind_update_delay} 天内，您没有更新您的目标${object.definition_id.name}的进度 (当前完成 ${object.completeness}%)。 不要忘记。</p>\n            "
 
 #. module: gamification
 #: model:email.template,body_html:gamification.simple_report_template
@@ -214,7 +214,7 @@ msgid ""
 "                Make sure that your challenge is active and assigned to at least one user.\n"
 "              </p>\n"
 "            "
-msgstr "<p>\n                没有相关的这种挑战符合搜索目标。\n                请确认你的挑战是有效的，并分配给至少一个用户。\n              </p>"
+msgstr "<p>\n                没有相关的这种挑战符合搜索目标。\n                请确认您的挑战是有效的，并分配给至少一个用户。\n              </p>"
 
 #. module: gamification
 #: selection:gamification.challenge.line,condition:0
@@ -479,7 +479,7 @@ msgid ""
 "deactivated should there be a period of time during which they will/should "
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
-msgstr "为系统创建和管理用户。在一段时间内用该系统的用户可以暂不激活。你还可以给用户分配某一个组，以便他们能用到系统的指定功能"
+msgstr "为系统创建和管理用户。在一段时间内用该系统的用户可以暂不激活。您还可以给用户分配某一个组，以便他们能用到系统的指定功能"
 
 #. module: gamification
 #: field:gamification.badge.user,create_date:0
@@ -931,7 +931,7 @@ msgstr "如果设置了最大"
 #: help:gamification.badge,message_unread:0
 #: help:gamification.challenge,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "如果勾选此项，需要你关注新消息。"
+msgstr "如果勾选此项，需要您关注新消息。"
 
 #. module: gamification
 #: help:gamification.badge.user,challenge_id:0
@@ -1482,12 +1482,12 @@ msgstr "对于订购的序列号"
 #. module: gamification
 #: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
-msgstr "设置你已经达到这个目标的当前值"
+msgstr "设置您已经达到这个目标的当前值"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_company_data
 msgid "Set your Company Data"
-msgstr "设置你的公司数据"
+msgstr "设置您的公司数据"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_company_logo
@@ -1866,7 +1866,7 @@ msgstr "谁可以授予这个徽章"
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
 msgid "Who would you like to reward?"
-msgstr "你希望谁来奖励？"
+msgstr "您希望谁来奖励？"
 
 #. module: gamification
 #: help:gamification.challenge,reward_realtime:0
@@ -1885,18 +1885,18 @@ msgstr "年度"
 #: code:addons/gamification/models/badge.py:240
 #, python-format
 msgid "You are not in the user allowed list."
-msgstr "你是不是在用户允许列表中"
+msgstr "您是不是在用户允许列表中"
 
 #. module: gamification
 #: code:addons/gamification/wizard/grant_badge.py:43
 #, python-format
 msgid "You can not grant a badge to yourself"
-msgstr "你不能自己授予自己一个徽章"
+msgstr "您不能自己授予自己一个徽章"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "You can still grant"
-msgstr "你仍然可以授予"
+msgstr "您仍然可以授予"
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:242

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-03-02 15:23+0000\n"
+"PO-Revision-Date: 2017-03-09 13:10+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -214,17 +214,17 @@ msgstr "Un mesaj în antetul chitanței"
 msgid ""
 "A sequence number that is incremented each time a user resumes the pos "
 "session"
-msgstr ""
+msgstr "Un număr de secvență incrementat de fiecare dată un utilizator reia sesiunea Punctului de lucru"
 
 #. module: point_of_sale
 #: help:pos.session,sequence_number:0
 msgid "A sequence number that is incremented with each order"
-msgstr ""
+msgstr "Un număr de secvență incrementat la fiecare comandă"
 
 #. module: point_of_sale
 #: help:pos.order,sequence_number:0
 msgid "A session-unique sequence number for the order"
-msgstr ""
+msgstr "Un număr de secvență unic per sesiune al comenzii"
 
 #. module: point_of_sale
 #: help:pos.config,receipt_footer:0
@@ -453,7 +453,7 @@ msgstr "Boon Framboise 37.5cl"
 #. module: point_of_sale
 #: help:pos.config,iface_print_via_proxy:0
 msgid "Bypass browser printing and prints via the hardware proxy"
-msgstr ""
+msgstr "Evită tipărirea din browser și tipărește prin unitatea hardware"
 
 #. module: point_of_sale
 #. openerp-web
@@ -486,7 +486,7 @@ msgstr "Anulat(a)"
 #: code:addons/point_of_sale/static/src/js/screens.js:1289
 #, python-format
 msgid "Cannot return change without a cash payment method"
-msgstr ""
+msgstr "Nu se poate da rest fără o metodă de plată cu numerar"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.carotte_product_template
@@ -597,7 +597,7 @@ msgstr "Chaudfontaine Petillante 50cl"
 #: help:product.template,to_weight:0
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
-msgstr ""
+msgstr "Bifați dacă produsul trebuie cântărit folosind integrarea cu cântarul hardware"
 
 #. module: point_of_sale
 #: help:product.template,available_in_pos:0
@@ -1281,27 +1281,27 @@ msgstr "Comandă goală"
 #. module: point_of_sale
 #: help:pos.config,iface_scan_via_proxy:0
 msgid "Enable barcode scanning with a remotely connected barcode scanner"
-msgstr ""
+msgstr "Activează citirea codurilor de bare printr-un cititor legat la distanță"
 
 #. module: point_of_sale
 #: help:pos.config,iface_electronic_scale:0
 msgid "Enables Electronic Scale integration"
-msgstr ""
+msgstr "Activează integrarea cu un cântar electronic"
 
 #. module: point_of_sale
 #: help:pos.config,iface_payment_terminal:0
 msgid "Enables Payment Terminal integration"
-msgstr ""
+msgstr "Activează integrarea cu un terminal de plată"
 
 #. module: point_of_sale
 #: help:pos.config,iface_vkeyboard:0
 msgid "Enables an integrated Virtual Keyboard"
-msgstr ""
+msgstr "Activează tastatura virtuală integrată"
 
 #. module: point_of_sale
 #: help:pos.config,iface_invoicing:0
 msgid "Enables invoice generation from the Point of Sale"
-msgstr ""
+msgstr "Activează generarea facturilor din Punctul de vânzare"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_detailsofsales
@@ -1370,7 +1370,7 @@ msgstr "Eroare!"
 #: code:addons/point_of_sale/static/src/js/screens.js:757
 #, python-format
 msgid "Error: Could not Save Changes"
-msgstr ""
+msgstr "Eroare: Nu s-au putut salva schimbările"
 
 #. module: point_of_sale
 #: constraint:res.partner:0 constraint:res.users:0
@@ -1386,7 +1386,7 @@ msgid ""
 "of Sale. You are probably trying to load the point of sale as an "
 "administrator in a multi-company setup, with the administrator account set "
 "to the wrong company."
-msgstr ""
+msgstr "Eroare: Utilizatorul Punctului de vânzare trebuie să aparțină aceleiași companii ca și Punctul de vânzare. Probabil încercați să deschideți Punctul de vânzare ca administrator într-o configurație multi-companie, contul de administrator fiind asignat unei companii greșite."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_1l_product_template
@@ -1456,7 +1456,7 @@ msgstr "Mancare"
 #. module: point_of_sale
 #: help:pos.config,iface_big_scrollbars:0
 msgid "For imprecise industrial touchscreens"
-msgstr ""
+msgstr "Pentru ecrane tactile industriale imprecise"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruits
@@ -1732,7 +1732,7 @@ msgstr "Jupiler 50cl"
 #. module: point_of_sale
 #: field:pos.config,iface_big_scrollbars:0
 msgid "Large Scrollbars"
-msgstr ""
+msgstr "Bare de derulare mari"
 
 #. module: point_of_sale
 #: field:pos.category,write_uid:0 field:pos.config,write_uid:0
@@ -1864,7 +1864,7 @@ msgstr "Locație"
 #. module: point_of_sale
 #: field:pos.session,login_number:0
 msgid "Login Sequence Number"
-msgstr ""
+msgstr "Secvență numerotare login"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_33cl_product_template
@@ -1963,7 +1963,7 @@ msgstr "Numar Factura"
 #: code:addons/point_of_sale/static/src/js/screens.js:1270
 #, python-format
 msgid "Negative Bank Payment"
-msgstr ""
+msgstr "Plată bancară negativă"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_payment
@@ -2082,7 +2082,7 @@ msgstr "Cepe / Usturoi / Arpagic"
 #: code:addons/point_of_sale/static/src/js/screens.js:815
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
-msgstr ""
+msgstr "Sunt acceptate doar imagini compatibile web precum .png sau .jpeg"
 
 #. module: point_of_sale
 #: view:account.bank.statement:point_of_sale.view_pos_confirm_cash_statement_filter
@@ -2409,7 +2409,7 @@ msgstr "Piersica"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.peche_product_template
 msgid "Peaches"
-msgstr ""
+msgstr "Piersici"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.poire
@@ -3499,7 +3499,7 @@ msgstr "Comanda din PDV trebuie sa aiba linii atunci cand se foloseste aceasta m
 msgid ""
 "The Point of Sale could not find any product, client, employee\n"
 "                    or action associated with the scanned barcode."
-msgstr ""
+msgstr "Punctul de vânzare nu a găsit nici un produs, client, angajat\nsau acțiune asociată cu codul de bare scanat."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3514,26 +3514,26 @@ msgstr "Punctul de Vânzare nu este acceptat de Microsoft Internet Explorer. Fol
 #: constraint:pos.config:0
 msgid ""
 "The company of a payment method is different than the one of point of sale"
-msgstr ""
+msgstr "Compania unei metode de plată este diferită față de cea a Punctului de vânzare"
 
 #. module: point_of_sale
 #: constraint:pos.config:0
 msgid ""
 "The company of the sale journal is different than the one of point of sale"
-msgstr ""
+msgstr "Compania Registrului de vânzări este diferită față de cea a Punctului de vânzare"
 
 #. module: point_of_sale
 #: constraint:pos.config:0
 msgid ""
 "The company of the stock location is different than the one of point of sale"
-msgstr ""
+msgstr "Compania Locaţiei stocului este diferită față de cea a Punctului de vânzare"
 
 #. module: point_of_sale
 #: help:pos.config,proxy_ip:0
 msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty"
-msgstr ""
+msgstr "Numele sau adresa IP a proxy-ului hardware. Va fi detectat automat dacă este necompletat"
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
@@ -3587,7 +3587,7 @@ msgstr "Punctul de vanzare fizic pe care il veti folosi."
 #: code:addons/point_of_sale/static/src/js/screens.js:830
 #, python-format
 msgid "The provided file could not be read due to an unknown error"
-msgstr ""
+msgstr "Fișierul nu a putu fi citit din cauza unei erori necunoscute"
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
@@ -3607,7 +3607,7 @@ msgstr "Sistemul va deschide toate casele de marcat, astfel incat sa puteti ince
 #, python-format
 msgid ""
 "The type of the journal for your payment method should be bank or cash "
-msgstr ""
+msgstr "Tipul Registrului pentru metoda de plată trebuie să fie bancă sau numerar"
 
 #. module: point_of_sale
 #: field:pos.session,cash_register_balance_end:0
@@ -3638,7 +3638,7 @@ msgid ""
 "There is no cash payment method available in this point of sale to handle the change.\n"
 "\n"
 " Please pay the exact amount or add a cash payment method in the point of sale configuration"
-msgstr ""
+msgstr "Nu este disponibilă metoda de plată cu numerar în acest Punct de vânzare pentru a gestiona restul.\n\nVă rugăm plătiți suma exactă sau adăugați o metodă de plată cu numerar în configurarea Punctului de vânzare"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box.py:23
@@ -3666,7 +3666,7 @@ msgstr "Nu exista un cont de creante definit pentru a face plata."
 #, python-format
 msgid ""
 "There must be at least one product in your order before it can be validated"
-msgstr ""
+msgstr "Trebuie să existe cel puțin un produs în comandă pentru a fi validată"
 
 #. module: point_of_sale
 #: help:account.journal,amount_authorized_diff:0
@@ -3698,12 +3698,12 @@ msgstr ""
 msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
-msgstr ""
+msgstr "Această secvență este creată automat de Odoo dar o puteți schimba pentru a personaliza numerele de referință ale comenzilor."
 
 #. module: point_of_sale
 #: help:product.template,pos_categ_id:0
 msgid "Those categories are used to group similar products for point of sale."
-msgstr ""
+msgstr "Aceste categorii sunt folosite pentru a grupa produsele similare în Punctul de vânzare."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_faro_37,5cl_product_template
@@ -3809,7 +3809,7 @@ msgstr "Total facturat"
 #. module: point_of_sale
 #: help:pos.session,cash_register_total_entry_encoding:0
 msgid "Total of all paid sale orders"
-msgstr ""
+msgstr "Total comenzi vânzare plătie"
 
 #. module: point_of_sale
 #: help:pos.session,cash_register_balance_end_real:0
@@ -3819,7 +3819,7 @@ msgstr "Totalul liniilor de închidere tranzacționate în numerar."
 #. module: point_of_sale
 #: help:pos.session,cash_register_balance_start:0
 msgid "Total of opening cash control lines."
-msgstr ""
+msgstr "Totalul liniilor de control numerar la deschidere."
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_detailsofsales
@@ -4057,7 +4057,7 @@ msgstr "Nu puteti crea doua sesiuni active cu acelasi responsabil!"
 msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
 "still opened."
-msgstr ""
+msgstr "Nu puteți șterge un produs vandabil în Punctul de vânzare cât timp există sesiuni deschise."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4066,7 +4066,7 @@ msgstr ""
 msgid ""
 "You cannot have a negative amount in a Bank payment. Use a cash payment "
 "method to return money to the customer."
-msgstr ""
+msgstr "Nu poate exista sumă negativă în plăți bancare. Folosiți metoda de plată cu numerar pentru a returna bani către client."
 
 #. module: point_of_sale
 #: constraint:pos.config:0
@@ -4079,7 +4079,7 @@ msgstr "Nu puteti avea doua controale de numerar intr-un singur punct de vanzare
 msgid ""
 "You cannot use the session of another users. This session is owned by %s. "
 "Please first close this one to use this point of sale."
-msgstr ""
+msgstr "Nu puteți folosi sesiunea altui utilizator. Această sesiune aparține de %s. Vă rugăm închideți-o mai întâi pe aceasta pentru a folosi acest Punct de vânzare."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
@@ -4125,7 +4125,7 @@ msgstr "Ar trebui sa atribuiti un Punct de Vanzare sesiunii dumneavoastra."
 #: code:addons/point_of_sale/static/src/js/widgets.js:985
 #, python-format
 msgid "You will lose any data associated with the current order"
-msgstr ""
+msgstr "Veți pierde toate datele asociate cu comanda curentă"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4147,7 +4147,7 @@ msgid ""
 "Your ending balance is too different from the theoretical cash closing "
 "(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
 "it."
-msgstr ""
+msgstr "Soldul de închidere este mult diferit față de numerarul teoretic de închidere (%.2f), maximul admis este: %.2f. Contactați managerul."
 
 #. module: point_of_sale
 #. openerp-web

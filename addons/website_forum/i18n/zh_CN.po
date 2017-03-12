@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2017-02-13 13:57+0000\n"
+"PO-Revision-Date: 2017-03-11 04:57+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -50,7 +50,7 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr "\n<p>\n     ${object.name},你好\n</p>\n<p>\n    为了访问 \"${object.company_id.name}\" Q/A 论坛，你现在被邀请验证你的邮件\n</p>\n<p>\n    请点击下面的链接来验证你的邮件:\n</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">验证我的 \"${object.company_id.name}\" Q/A论坛账户</a></li>\n</ul>\n<p>\n    谢谢,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
+msgstr "\n<p>\n     ${object.name},您好\n</p>\n<p>\n    为了访问 \"${object.company_id.name}\" Q/A 论坛，您现在被邀请验证您的邮箱\n</p>\n<p>\n    请您点击下面的链接来验证您的邮箱:\n</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">验证我的 \"${object.company_id.name}\" Q/A论坛账户</a></li>\n</ul>\n<p>\n    谢谢,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
@@ -111,7 +111,7 @@ msgid ""
 "A tag is a label that categorizes your question with other,\n"
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question."
-msgstr "标签的作用就是把你的问题与其他类似的问题归为一类。\n使用正确的标签可以让别人更容易发现和回答你的问题。"
+msgstr "标签的作用就是把您的问题与其他类似的问题归为一类。\n使用正确的标签可以让别人更容易发现和回答您的问题。"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -206,7 +206,7 @@ msgstr "提问"
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Ask your Question"
-msgstr "提出你的问题"
+msgstr "提出您的问题"
 
 #. module: website_forum
 #: field:forum.post,create_date:0
@@ -257,7 +257,7 @@ msgid ""
 "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr "通过你的问题和答案，你可以赢得声誉，,\n            另外，如果特别有帮助，你会获得徽章。徽章\n            徽章会显示在你的模板页，和你发的帖子上。"
+msgstr "通过您的问题和答案，您可以赢得声誉，,\n            另外，如果特别有帮助，您会获得徽章。徽章\n            徽章会显示在您的模板页，和您发的帖子上。"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -340,7 +340,7 @@ msgstr "城市"
 msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "forum."
-msgstr "点击这里发送一封验证邮件以便允许你加入论坛。"
+msgstr "点击这里发送一封验证邮件以便允许您加入论坛。"
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_clickable_link:0
@@ -430,7 +430,7 @@ msgstr "完成自己的传记"
 msgid ""
 "Congratulations! Your email has just been validated. You may now participate"
 " to our forums."
-msgstr "恭喜！你的邮件已经被激活了。现在你已经加入了我们的论坛。"
+msgstr "恭喜！您的邮件已经被激活了。现在您已经加入了我们的论坛。"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -539,7 +539,7 @@ msgstr "编辑您的简历"
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
-msgstr "编辑你以前的回答"
+msgstr "编辑您以前的回答"
 
 #. module: website_forum
 #: field:forum.forum,karma_edit_all:0
@@ -564,7 +564,7 @@ msgstr "编辑问题"
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit your Question"
-msgstr "编辑你的问题"
+msgstr "编辑您的问题"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_7
@@ -588,7 +588,7 @@ msgstr "开明的"
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Enter your Question"
-msgstr "输入你的问题"
+msgstr "输入您的问题"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
@@ -795,7 +795,7 @@ msgstr "标识"
 #. module: website_forum
 #: help:forum.forum,message_unread:0 help:forum.post,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "如果要求你关注新消息，勾选此项"
+msgstr "如果要求您关注新消息，勾选此项"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -803,12 +803,12 @@ msgid ""
 "If you close this question, it will be hidden for most users. Only\n"
 "            users having a high karma can see closed questions to moderate\n"
 "            them."
-msgstr "如果你关闭这个问题,对于大多数用户来说它将被隐藏。\n只有具有较高贡献值的用户才可以在关闭的问题中看到它们。"
+msgstr "如果您关闭这个问题,对于大多数用户来说它将被隐藏。\n只有具有较高贡献值的用户才可以在关闭的问题中看到它们。"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "If you wanted to comment on the question or answer, just"
-msgstr "如果你想对这个问题的回答或评论，只是"
+msgstr "如果您想对这个问题的回答或评论，只是"
 
 #. module: website_forum
 #: field:forum.forum,message_is_follower:0
@@ -1015,7 +1015,7 @@ msgstr "没有徽章!"
 #. module: website_forum
 #: view:website:website_forum.user_votes
 msgid "No vote given by you yet!"
-msgstr "没有评价给你!"
+msgstr "没有评价给您!"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
@@ -1090,7 +1090,7 @@ msgstr "为了接收回复通知，请输入正确的邮箱地址"
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Please remember that you can always"
-msgstr "请记住你是可以的"
+msgstr "请记住您是可以的"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -1141,12 +1141,12 @@ msgstr "张贴原因"
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Post Your Answer"
-msgstr "张贴你的答案"
+msgstr "张贴您的答案"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Post Your Question"
-msgstr "张贴你的问题"
+msgstr "张贴您的问题"
 
 #. module: website_forum
 #: field:forum.tag,post_ids:0
@@ -1526,7 +1526,7 @@ msgstr "网站meta标题"
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Your answer"
-msgstr "你的答案"
+msgstr "您的答案"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
@@ -1697,7 +1697,7 @@ msgstr "或"
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "please, try to make your question interesting to others"
-msgstr "请试着让你的问题有趣"
+msgstr "请试着让您的问题有趣"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
@@ -1717,7 +1717,7 @@ msgstr "收到此徽章："
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "revise your answers"
-msgstr "修改你的答案"
+msgstr "修改您的答案"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0

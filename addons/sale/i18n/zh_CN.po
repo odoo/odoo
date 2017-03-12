@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-02-14 04:46+0000\n"
+"PO-Revision-Date: 2017-03-11 05:00+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -99,7 +99,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>你好 ${object.partner_id.name},</p>\n    \n    <p>这是你的 ${object.state in ('draft', 'sent') and '报价单' or '订单'} 来自 ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>摘要</strong><br />\n       &nbsp;&nbsp;订单号: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;订单总额: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;订单日期: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;订单偏向: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;你的偏好: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;你的联系人: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    % if object.paypal_url:\n    <br/>\n    <p>也可能直接通过贝宝支付:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>如果你有任何问题的话，请直接联系我们！</p>\n    <p>感谢您选择${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                电话:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                网址 :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>您好 ${object.partner_id.name},</p>\n    \n    <p>这是您的 ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>摘要</strong><br />\n       &nbsp;&nbsp;订单号: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;订单总额: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;订单日期: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;订单备注: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;您的备注: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;联系方式: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n    <p>\n        您也可以在线查看报价:\n    </p>\n    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n\n    % if object.paypal_url:\n    <br/>\n    <p>您也可直接通过贝宝 Paypal 在线支付:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>如果您有任何问题的话，请直接联系我们.</p>\n    <p>感谢您选择 ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                电话:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                网址 :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
@@ -161,7 +161,7 @@ msgid ""
 "                    quotation, sales order, delivery, invoicing and payment.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                   单击此处创建报价单，创建之后自动转换成为销售订单。\n                </p><p>此功能非常管用：odoo系统将帮助你高效地跑完整个销售流程：报价单、销售、交货、开票及付款等。</p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                   单击此处创建报价单，创建之后自动转换成为销售订单。\n                </p><p>此功能非常管用：odoo系统将帮助您高效地跑完整个销售流程：报价单、销售、交货、开票及付款等。</p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -178,7 +178,7 @@ msgid ""
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n               单击可以为你的客户创建一个询价单或者销售订单。\n              </p><p>\n                Odoo可以高效的为你完成销售流程:\n                包括询价单，销售订单，发货，开具发票和支付。\n              </p><p>\n                 社交功能可以帮助你组织关于每一个销售订单的讨论，还允许你的客户持续跟踪销售订单的变化。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n               单击可以为您的客户创建一个询价单或者销售订单。\n              </p><p>\n                Odoo可以高效的为您完成销售流程:\n                包括询价单，销售订单，发货，开具发票和支付。\n              </p><p>\n                 社交功能可以帮助您组织关于每一个销售订单的讨论，还允许您的客户持续跟踪销售订单的变化。\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
@@ -209,7 +209,7 @@ msgid ""
 "                of the sales order.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n               销售的第一步，单击创建一个报价单。\n              </p><p>\n                Odoo将会高效的帮你完成整个销售流程：\n                从报价单到销售订单，然后到发货，直至开具发票和支付。\n              </p><p>\n                社交功能可以帮助你组织关于每一个销售订单的讨论，还允许你的客户持续跟踪销售订单的变化。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n               销售的第一步，单击创建一个报价单。\n              </p><p>\n                Odoo将会高效的帮您完成整个销售流程：\n                从报价单到销售订单，然后到发货，直至开具发票和支付。\n              </p><p>\n                社交功能可以帮助您组织关于每一个销售订单的讨论，还允许您的客户持续跟踪销售订单的变化。\n              </p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
@@ -221,7 +221,7 @@ msgid ""
 "                if you invoice sales totally.\n"
 "              </p>\n"
 "            "
-msgstr "<p>\n                这里是每个已经被开票的订单行的列表。\n                你能为逐行为部分订单开票。\n                如果你根据发货清单开票或者全额开票，就不需要这个清单。\n              </p>\n            "
+msgstr "<p>\n                这里是每个已经被开票的订单行的列表。\n                您能为逐行为部分订单开票。\n                如果您根据发货清单开票或者全额开票，就不需要这个清单。\n              </p>\n            "
 
 #. module: sale
 #: help:sale.order.line,address_allotment_id:0
@@ -278,7 +278,7 @@ msgstr "点击 '显示线发票 '之后，选择要发票从 '更多 '下拉菜�
 msgid ""
 "All items in these order lines will be invoiced. You can also invoice a percentage of the sales order\n"
 "                    or a fixed price (for advances) directly from the sales order form if you prefer."
-msgstr "这些订单行的所有项目将被开票。你也能按订单的比例开票，如果你喜欢，也能直接从订单表单的以固定价格（预收）开票。"
+msgstr "这些订单行的所有项目将被开票。您也能按订单的比例开票，如果您喜欢，也能直接从订单表单的以固定价格（预收）开票。"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -329,7 +329,7 @@ msgid ""
 "Allows to define your customer contracts conditions: invoicing method (fixed price, on timesheet, advance invoice), the exact pricing (650€/day for a developer), the duration (one year support contract).\n"
 "You will be able to follow the progress of the contract and invoice automatically.\n"
 "-It installs the account_analytic_analysis module."
-msgstr "允许定义你的客户合同条款：开票方法(固定价格，根据计工单，预收发票),准确价格（每天每个开发人员650欧元），期间（一年的支援合同）。\n你讲能够自动跟踪合同和开票进程。\n - 安装account_analytic_analysis模块。"
+msgstr "允许定义您的客户合同条款：开票方法(固定价格，根据计工单，预收发票),准确价格（每天每个开发人员650欧元），期间（一年的支援合同）。\n您讲能够自动跟踪合同和开票进程。\n - 安装account_analytic_analysis模块。"
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -355,7 +355,7 @@ msgstr "允许在每个销售订单行 应用折扣"
 msgid ""
 "Allows you to categorize your sales and deliveries (picking lists) between different journals, and perform batch operations on journals.\n"
 "-This installs the module sale_journal."
-msgstr "允许你对销售和发运（分拣单）在不同的分类账之间进行分类, 并且在分类账上进行批量操作。\n - 安装sale_journal模块。"
+msgstr "允许您对销售和发运（分拣单）在不同的分类账之间进行分类, 并且在分类账上进行批量操作。\n - 安装sale_journal模块。"
 
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
@@ -363,25 +363,25 @@ msgid ""
 "Allows you to define what is the default function of a specific user on a given account.\n"
 "This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.\n"
 "-This installs the module analytic_user_function."
-msgstr "对一个给定帐户的特定用户，允许你定义默认功能。\n这一功能主要用于用户编制时间表。检索值和字段是自动填充的。但是仍然可以改变这些值。\n - 安装analytic_user_function模块。"
+msgstr "对一个给定帐户的特定用户，允许您定义默认功能。\n这一功能主要用于用户编制时间表。检索值和字段是自动填充的。但是仍然可以改变这些值。\n - 安装analytic_user_function模块。"
 
 #. module: sale
 #: help:sale.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr "允许你选择和维护产品的不同计量单位"
+msgstr "允许您选择和维护产品的不同计量单位"
 
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr "允许你在销售订单指定一个分析账户"
+msgstr "允许您在销售订单指定一个分析账户"
 
 #. module: sale
 #: help:sale.config.settings,group_sale_delivery_address:0
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
-msgstr "允许你在销售单给运输和开票指定不同的地址"
+msgstr "允许您在销售单给运输和开票指定不同的地址"
 
 #. module: sale
 #: field:sale.report,analytic_account_id:0
@@ -472,7 +472,7 @@ msgstr "不能删除 '%s'状态的销售订单行。"
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr "找不到匹配这个产品和数量的价格表。\n你必须修改 产品、数量，或者价格表"
+msgstr "找不到匹配这个产品和数量的价格表。\n您必须修改 产品、数量，或者价格表"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -738,7 +738,7 @@ msgstr "在销售订单显示利润"
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "你真的要创建发票吗 ？"
+msgstr "您真的要创建发票吗 ？"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter selection:sale.order,state:0
@@ -828,7 +828,7 @@ msgstr "关注者"
 msgid ""
 "For modifying account analytic view to show important data to project manager of services companies.You can also view the report of account analytic summary user-wise as well as month wise.\n"
 "-This installs the module account_analytic_analysis."
-msgstr "修改会计分析视图为服务公司的项目经理显示重要数据。你也可以查看每月用户的会计总结分析报告。\n - 安装account_analytic_analysis模块。"
+msgstr "修改会计分析视图为服务公司的项目经理显示重要数据。您也可以查看每月用户的会计总结分析报告。\n - 安装account_analytic_analysis模块。"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -849,7 +849,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr "根据此报告，你可总体上了解向客人开票的情况，这一工具也可用于生成个性化的发票报告，以满足你分析的需要。"
+msgstr "根据此报告，您可总体上了解向客人开票的情况，这一工具也可用于生成个性化的发票报告，以满足您分析的需要。"
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
@@ -905,7 +905,7 @@ msgstr "标识"
 #. module: sale
 #: help:sale.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "如果要求你关注新消息，勾选此项"
+msgstr "如果要求您关注新消息，勾选此项"
 
 #. module: sale
 #: code:addons/sale/sale.py:305
@@ -913,7 +913,7 @@ msgstr "如果要求你关注新消息，勾选此项"
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
 "prices of existing order lines will not be updated."
-msgstr "如果你修改这订单的价格表（货币），现有订单明细的价格不会修改。"
+msgstr "如果您修改这订单的价格表（货币），现有订单明细的价格不会修改。"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1718,7 +1718,7 @@ msgstr "查找未开票明细"
 msgid ""
 "Select a product of type service which is called 'Advance Product'.\n"
 "                You may have to create it and set it as a default value on this field."
-msgstr "选择一个叫做“预收产品”的服务类型的产品，。你可以在这个字段创建并且设置默认值。"
+msgstr "选择一个叫做“预收产品”的服务类型的产品。您可以在这个字段创建并且设置默认值。"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -1911,7 +1911,7 @@ msgid ""
 " partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
-msgstr "这个报表会对你的报价单和销售订单进行分析。分析检查你的销售收入，并且按照不同的标准分组（业务员，合作伙伴，产品等）。用这个报表对还没有开票的销售订单进行分析。 如果你想分析你的营业额，你应该用会计模块里的发票分析报表。"
+msgstr "这个报表会对您的报价单和销售订单进行分析。分析检查您的销售收入，并且按照不同的标准分组（业务员，合作伙伴，产品等）。用这个报表对还没有开票的销售订单进行分析。 如果您想分析您的营业额，您应该用会计模块里的发票分析报表。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -1921,7 +1921,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr "这个报表会对你的报价单和销售订单进行分析。检查你的销售收入，并且按照不同的标准排序（业务员，业务伙伴，产品等）。用这个报表对还没有开票的销售订单进行分析。 如果你想分析你的营业额，你应该用会计模块里的发票分析报表功能。"
+msgstr "这个报表会对您的报价单和销售订单进行分析。检查您的销售收入，并且按照不同的标准排序（业务员，业务伙伴，产品等）。用这个报表对还没有开票的销售订单进行分析。 如果您想分析您的营业额，您应该用会计模块里的发票分析报表功能。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -1931,7 +1931,7 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr "这个报表会对你的销售订单进行分析。分析检查你的销售收入，并且按照不同的标准分组（业务员，业务伙伴，产品等）进行排序。用这个报表对还没有开票的销售订单进行分析。 如果你想分析你的营业额，你应该用会计模块里的发票分析报表。"
+msgstr "这个报表会对您的销售订单进行分析。分析检查您的销售收入，并且按照不同的标准分组（业务员，业务伙伴，产品等）进行排序。用这个报表对还没有开票的销售订单进行分析。 如果您想分析您的营业额，您应该用会计模块里的发票分析报表。"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2036,7 +2036,7 @@ msgid ""
 "Use contract to be able to manage your services with\n"
 "                        multiple invoicing as part of the same contract with\n"
 "                        your customer."
-msgstr "使用合同 管理 多次开票的服务作为你的客户的相同合同的一部分。"
+msgstr "使用合同 管理 多次开票的服务作为您的客户的相同合同的一部分。"
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
@@ -2051,7 +2051,7 @@ msgstr "在销售订单使用多重分析账户"
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
 msgid "Use pricelists to adapt your price per customers"
-msgstr "为每个客户使用价格表来适配你的价格"
+msgstr "为每个客户使用价格表来适配您的价格"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -2124,7 +2124,7 @@ msgstr "当销售订单未经确认时， 您不能创建发票。"
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr "你不能对同一个业务伙伴的不同币种的销售订单进行分组。"
+msgstr "您不能对同一个业务伙伴的不同币种的销售订单进行分组。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1130
@@ -2132,7 +2132,7 @@ msgstr "你不能对同一个业务伙伴的不同币种的销售订单进行分
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
-msgstr "你必须在销售界面选一个客户或价格表！\n请在选择产品前设置。"
+msgstr "您必须在销售界面选一个客户或价格表！\n请在选择产品前设置。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:55

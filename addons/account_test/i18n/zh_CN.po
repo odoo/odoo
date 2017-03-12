@@ -4,17 +4,17 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013-2014
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
-# liAnGjiA <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015,2017
 # liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-07-08 12:57+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2017-03-11 05:00+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -134,7 +134,7 @@ msgid ""
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr "代码应该总是设​置一个名为\"result\"变量来保存你的测试结果，这可以是列表或字典。 如果\"result\"变量是一个空列表，这意味着测试是成功的。 否则，它会尝试翻译和打印\"result\"变量中的内容.\n\n如果输出的结果在列表或字典中你可以在`result`的内容中设置一个名为`column_order`的变量。\n\n若您需要它们，您同样可以使用以列变量至你的代码中：\n    * cr: cursor to the database\n    * uid: ID of the current user\n\n时刻留意的事是,所编写的代码均需要在python标准语法范围内 (若您需要的话)。\n\n例如:：\n    sql = '''SELECT id, name, ref, date\n             FROM account_move_line \n             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n          '''\n    cr.execute(sql)\n    result = cr.dictfetchall()"
+msgstr "代码应该总是设​置一个名为\"result\"变量来保存您的测试结果，这可以是列表或字典。 如果\"result\"变量是一个空列表，这意味着测试是成功的。 否则，它会尝试翻译和打印\"result\"变量中的内容.\n\n如果输出的结果在列表或字典中您可以在`result`的内容中设置一个名为`column_order`的变量。\n\n若您需要它们，您同样可以使用以列变量至您的代码中：\n    * cr: cursor to the database\n    * uid: ID of the current user\n\n时刻留意的事是,所编写的代码均需要在python标准语法范围内 (若您需要的话)。\n\n例如:：\n    sql = '''SELECT id, name, ref, date\n             FROM account_move_line \n             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n          '''\n    cr.execute(sql)\n    result = cr.dictfetchall()"
 
 #. module: account_test
 #: field:accounting.assert.test,create_uid:0
