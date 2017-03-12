@@ -26,30 +26,30 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid " Product Category"
-msgstr ""
+msgstr "Produktkategori"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Produktvarianter"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_product_count
 msgid "# Products"
-msgstr ""
+msgstr "# Produkter"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:438
 #, python-format
 msgid "%s %% discount"
-msgstr ""
+msgstr "%s %% rabat"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:440
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s %% rabat og %s ekstragebyr"
 
 #. module: product
 #: code:addons/product/models/product_template.py:302
@@ -134,7 +134,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "75 percent less reflection."
-msgstr ""
+msgstr "75 procent mindre refleksion."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -143,36 +143,39 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Offentlig pris - </span>\n"
+"<span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Udgifter - </span>\n"
+"<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Anden prisliste - </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Produkter</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Currency</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Valuta</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Beskrivelse</strong>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Navn på prisliste</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Udskriv dato</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -181,12 +184,15 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>Advarsel</strong>: Tilføjelse eller sletning af attributter\n"
+"vil slette og lave om på eksisterende variationer og fører\n"
+"til tab af deres mulige tilpasninger."
 
 #. module: product
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
-msgstr ""
+msgstr "En stregkode kan kun tilhøre ét produkt !"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_type
@@ -221,7 +227,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_9
 #: model:product.template,website_description:product.product_product_9_product_template
 msgid "A great Keyboard. Cordless."
-msgstr ""
+msgstr "Et godt tastatur. Trådløst."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description
@@ -308,7 +314,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4c_product_template
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid "And because it’s so easy to use, it’s easy to love."
-msgstr ""
+msgstr "Og fordi det er så nemt at bruge, er det nemt at elske."
 
 #. module: product
 #: model:product.product,name:product.product_product_7
@@ -331,7 +337,7 @@ msgstr "Gældende for"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
 msgid "Apply On"
-msgstr ""
+msgstr "Anvend på"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search

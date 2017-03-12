@@ -54,13 +54,17 @@
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2016
 # Jeanjean Noname <monsieur.spock@gmail.com>, 2016
 # Davy <cottet_davy@yahoo.fr>, 2017
+# Florent De Labarre <florent@iguanayachts.com>, 2017
+# Henri MARES <henri.mares@aliceadsl.fr>, 2017
+# Paul-Hervé Meyer <paulherve.meyer@mail.novancia.fr>, 2017
+# Richard Mathot <rim@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-14 10:20+0000\n"
 "PO-Revision-Date: 2017-02-14 10:20+0000\n"
-"Last-Translator: Davy <cottet_davy@yahoo.fr>, 2017\n"
+"Last-Translator: Richard Mathot <rim@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -156,7 +160,7 @@ msgid ""
 msgstr ""
 "* L'état \"Brouillon\" est utilisé lorsqu'un utilisateur est en train de saisir ou de modifier une nouvelle facture non confirmée.\n"
 "* L'état \"Pro-forma\" est utilisé lorsque la facture n'a pas de numéro de facture.\n"
-"* L'état 'Ouvert' est utilisé lorsque l'utilisateur crée une facture, celle-ci a alors un numéro de facture La facture reste dans ce statut \"Ouvert\" jusqu'à ce qu'elle soit payée.\n"
+"* L'état 'Ouvert' est utilisé lorsque l'utilisateur crée une facture, celle-ci a alors un numéro de facture. La facture reste dans ce statut \"Ouvert\" jusqu'à ce qu'elle soit payée.\n"
 "* L'état 'Payé' est affecté automatiquement lorsque la facture est payée. Ses écritures dans les journaux connexes peuvent ou non être réconciliées.\n"
 "* L'état \"Annulé\" est utilisé lorsque l'utilisateur annule la facture."
 
@@ -171,12 +175,12 @@ msgstr "secondes"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_code_digits
 msgid "# of Digits"
-msgstr "Nombre de caractères"
+msgstr "Nombre de chiffres"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_code_digits
 msgid "# of Digits *"
-msgstr "Nombre de caractères *"
+msgstr "Nombre de chiffres *"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
@@ -620,6 +624,16 @@ msgid ""
 msgstr ""
 "<span>(*) Cette configuration concerne la société sur le compte de laquelle "
 "vous êtes connecté.</span>"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
+msgid "<span>invoice</span>"
+msgstr "<span>Facture</span>"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
+msgid "<span>refund</span>"
+msgstr "<span>avoir</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
@@ -1817,7 +1831,7 @@ msgstr ""
 #. module: account
 #: selection:account.config.settings,group_warning_account:0
 msgid "All the partners can be used in invoices"
-msgstr "Tous les Partenaires peuvent être utilisés dans les factures"
+msgstr "Tous les partenaires peuvent être utilisés dans les factures"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_update_posted
@@ -1995,7 +2009,7 @@ msgstr ""
 #: selection:account.config.settings,group_warning_account:0
 msgid "An informative or blocking warning can be set on a partner"
 msgstr ""
-"Une alerte d'information ou bloquante peuvent être définie sur un Partenaire"
+"Une alerte d'information ou bloquante peuvent être définie sur un partenaire"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -2430,7 +2444,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr "Appartient à la Société de l'utilisateur en cours"
+msgstr "Appartient à la société de l'utilisateur"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2797,6 +2811,8 @@ msgid ""
 "Chart of Accounts has been\n"
 "                            installed. You should review it and create any additional accounts."
 msgstr ""
+"Le plan de comptes a été installé.\n"
+"Vous pouvez le parcourir et y créer des comptes additionnels."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_list
@@ -3090,7 +3106,7 @@ msgstr "Devise de la société"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_company_currency_id
 msgid "Company currency id"
-msgstr "Identifiant de la Devise de la Société"
+msgstr "Identifiant de la devise de la société"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_has_chart_of_accounts
@@ -4322,12 +4338,12 @@ msgstr "Journal pour le gain ou la perte de change"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_move_id
 msgid "Exchange move id"
-msgstr ""
+msgstr "Numéro d'identification de l'opération de change"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_partial_rec_id
 msgid "Exchange partial rec id"
-msgstr ""
+msgstr "Exchange partial rec id"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4617,12 +4633,12 @@ msgstr "Référence libre"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Payable accounts"
-msgstr "Depuis les Comptes créditeurs"
+msgstr "Depuis les comptes créditeurs"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Receivable accounts"
-msgstr "Depuis les Comptes débiteurs"
+msgstr "Depuis les comptes débiteurs"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -5442,18 +5458,22 @@ msgstr "Identifiant de la facture"
 #, python-format
 msgid "Invoice must be a draft in order to set it to Pro-forma."
 msgstr ""
+"La facture doit être saisie au brouillon afin de pouvoir l'exporter pro "
+"forma."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:535
 #, python-format
 msgid "Invoice must be cancelled in order to reset it to draft."
 msgstr ""
+"La facture définitive doit être annulée pour la remettre au format "
+"brouillon."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:563
 #, python-format
 msgid "Invoice must be in draft or Pro-forma state in order to validate it."
-msgstr ""
+msgstr "La facture doit être au format brouillon ou pro pour être validée."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:587
@@ -5461,18 +5481,20 @@ msgstr ""
 msgid ""
 "Invoice must be in draft, Pro-forma or open state in order to be cancelled."
 msgstr ""
+"La facture doit être à l'état brouillon, pro-forma ou ouverte pour être "
+"annulée."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
 #, python-format
 msgid "Invoice must be paid in order to set it to register payment."
-msgstr ""
+msgstr "la facture doit être réglée afin d'être enregistrée comme paiement."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
 msgid "Invoice must be validated in order to set it to register payment."
-msgstr ""
+msgstr "La facture doit être validée pour pouvoir y enregistrer un paiement."
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -5750,7 +5772,7 @@ msgstr "Pièce comptable"
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_name
 #: model:ir.model.fields,field_description:account.field_account_payment_move_name
 msgid "Journal Entry Name"
-msgstr ""
+msgstr "nom du journal de saisie"
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
@@ -5855,7 +5877,7 @@ msgstr "juin"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_reason
 msgid "Justification"
-msgstr ""
+msgstr "Justificatif"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
@@ -6323,7 +6345,7 @@ msgstr "Taxes de facture manuelle"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_manual_reconciliation
 msgid "Manual Payments & Invoices Matching"
-msgstr ""
+msgstr "Correspondance des paiements manuels et des factures"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_manual_reconciliation
@@ -6423,12 +6445,12 @@ msgstr "Message pour Facture"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Cost of Revenue"
-msgstr ""
+msgstr "Moins le cout des ventes"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Credit Card Accounts"
-msgstr ""
+msgstr "Moins les comptes de cartes de crédit"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -7312,7 +7334,7 @@ msgstr "Méthode de paiement"
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_method_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_id
 msgid "Payment Method Type"
-msgstr "Type des Méthodes de Paiement"
+msgstr "Type des méthodes de paiement"
 
 #. module: account
 #. openerp-web
@@ -9879,6 +9901,8 @@ msgstr ""
 #, python-format
 msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
 msgstr ""
+"Astuce : utilisez Ctrl+Entrée pour lettrer tous les entrées équilibrées sur "
+"la feuille."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -10207,7 +10231,7 @@ msgstr "Montant HT"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount in Company Currency"
-msgstr ""
+msgstr "Montant hors taxe dans la devise de la société"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10222,7 +10246,7 @@ msgstr "Utilisé la comptabilité anglo-saxonne"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_use_anglo_saxon
 msgid "Use Anglo-Saxon Accounting *"
-msgstr ""
+msgstr "Utiliser la comptabilité anglo-saxonne"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_use_anglo_saxon
@@ -11039,7 +11063,7 @@ msgstr "account.config.settings"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_template
 msgid "account.reconcile.model.template"
-msgstr ""
+msgstr "account.reconcile.model.template"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_group
@@ -11187,7 +11211,7 @@ msgstr "report.account.report_generalledger"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
 msgid "report.account.report_journal"
-msgstr ""
+msgstr "report.account.report_journal"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_overdue

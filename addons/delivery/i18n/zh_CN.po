@@ -47,7 +47,7 @@ msgstr "# 制造订单"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
 msgid "# Product Variants"
-msgstr "# 产品变型"
+msgstr "# 产品变体"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
@@ -124,7 +124,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
 msgid "Action Needed"
-msgstr "需要行动"
+msgstr "需要采取行动"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
@@ -738,21 +738,21 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "产品变型的图像(如果为False,采用大尺寸图像模板). 它保持图像的宽高比,并自动调整图像大小为1024 x 1024px."
+msgstr "产品变体的图像(如果为False,采用大尺寸图像模板). 它保持图像的宽高比,并自动调整图像大小为1024 x 1024px."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "产品变型的图像(如果为Flase,采用产品模板的中尺寸图像)"
+msgstr "产品变体的图像(如果为Flase,采用产品模板的中尺寸图像)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr "产品变型的图像(如果为Flase,采用产品模板的小尺寸图像)"
+msgstr "产品变体的图像(如果为Flase,采用产品模板的小尺寸图像)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
@@ -1443,6 +1443,9 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"标准价格：成本价格在特定时期结束时（通常每年一次）手动更新\n"
+"平均价格：成本价格在每次进货时重新计算，并用于产品估价\n"
+"实际价格：显示的成本价格是最后一个外出产品的价格（例如，在库存损失的情况下使用）。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
@@ -1550,7 +1553,7 @@ msgstr "只能对草稿状态的订单增加交货明细"
 msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
-msgstr "销售价格是由产品模板管理。点击“变价格”按钮来设置附加属性的价格。"
+msgstr "销售价格是由产品模板管理。点击“变体价格”按钮来设置附加属性的价格。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
@@ -1742,12 +1745,12 @@ msgstr "可变系数"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_variant
 msgid "Variant Image"
-msgstr "变型图像"
+msgstr "变体图像"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_extra
 msgid "Variant Price Extra"
-msgstr "变型价格额外"
+msgstr "变体价格额外"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
