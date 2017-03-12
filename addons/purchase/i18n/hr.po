@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2017-01-31 09:11+0000\n"
+"PO-Revision-Date: 2017-03-10 10:30+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -624,7 +624,7 @@ msgstr "Završeno"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
 msgid "Double validation amount"
-msgstr ""
+msgstr "Dvostruka ovjera količine"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -693,7 +693,7 @@ msgstr "Pratitelji (Partneri)"
 #. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr ""
+msgstr "Dvije razine odobrenja potrebne su za potvrdu narudžbe"
 
 #. module: purchase
 #: model:web.tip,description:purchase.purchase_tip_3
@@ -908,7 +908,7 @@ msgstr "Poruke i povijest"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr ""
+msgstr "Minimalna količina za koju je potrebna dvostruka ovjera"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -920,7 +920,7 @@ msgstr "Mjesečne nabave"
 msgid ""
 "Most propositions of purchase orders are created automatically\n"
 "                by Odoo based on inventory needs."
-msgstr ""
+msgstr "Većinu prijedloga za narudžbe Odoo automatski\nkreira prema potrebama inventara."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -937,7 +937,7 @@ msgstr "Nema varijante na proizvodima"
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
-msgstr ""
+msgstr "Nijedan prodavač nije povezan s proizvodom %s. Molimo postavite prodavača kako biste popravili ovu nabavu."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1263,7 +1263,7 @@ msgstr "Nalozi za nabavu koji uključuju stavke koje nisu naplaćene"
 #: selection:purchase.config.settings,module_purchase_requisition:0
 msgid ""
 "Purchase propositions trigger draft purchase orders to a single supplier"
-msgstr ""
+msgstr "Prijedlozi nabave aktiviraju nacrte nabave za jednog dobavljača"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
@@ -1386,7 +1386,7 @@ msgid ""
 "Reference of the sales order or bid sent by the vendor. It's used to do the "
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
-msgstr ""
+msgstr "Referenca prodajnog naloga ili ponude koju je poslao prodavač. Koristi se za povezivanje kada primite proizvode jer je ova referenca obično napisana na nalogu za dostavu koju je poslao Vaš prodavač."
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
@@ -1555,7 +1555,7 @@ msgid ""
 "The quotation contains the history of the discussion/negotiation\n"
 "                you had with your vendor. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order."
-msgstr ""
+msgstr "Ponuda sadrži povijest rasprave/pregovaranja\nkoju ste imali s prodavačem. Kad se zahtjev za ponudom\npotvrdi, postat će narudžba."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1563,14 +1563,14 @@ msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
-msgstr ""
+msgstr "Zahtjev za ponudom je prvi korak toka nabave. Kad\npostane narudžba, moći ćete kontrolirati račun\nproizvoda i ulazni račun. "
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
-msgstr ""
+msgstr "Ovaj konto će se koristiti za knjiženje razlike između nabavne cijene i troška računovodstva."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
@@ -1590,12 +1590,12 @@ msgstr "Za ovog partnera ovdje možete navesti specifičan tečaj za nabavu ako 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Click to create a new RfQ."
-msgstr ""
+msgstr "Ovaj prodavač nema narudžbu. Kliknite za kreiranje novog ZZP."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id
 msgid "This will determine picking type of incoming shipment"
-msgstr ""
+msgstr "Ovo će odrediti tip skladišnice za primku"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
@@ -1634,7 +1634,7 @@ msgstr "Prenos"
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
-msgstr ""
+msgstr "Nabavni nalog %s ne može se otkazati, jer su se neka primanja već obavila."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:286
@@ -1706,7 +1706,7 @@ msgid ""
 "                references, vendor, products, etc. For each purchase order,\n"
 "                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
-msgstr ""
+msgstr "Koristite ovaj izbornik za pretraživanje narudžbi prema\nreferencama, prodavaču, proizvodima itd. Za svaku narudžbu\nmožete pratiti povezanu raspravu s prodavačem, kontrolirati\nprimljene proizvode i ulazne račune."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -1760,7 +1760,7 @@ msgid ""
 "                    orders or receipts. This allows you to control bills\n"
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
-msgstr ""
+msgstr "Ulazni računi mogu biti unaprijed generirani prema narudžbi\nili računima. Ovo Vam omogućava kontrolu računa\nkoje primite od svog prodavača prema nacrtu\ndokumenta u Odoo. "
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_mail_mail_website_published
