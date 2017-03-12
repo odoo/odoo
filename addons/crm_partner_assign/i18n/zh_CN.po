@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 15:14+0000\n"
-"PO-Revision-Date: 2017-02-13 13:48+0000\n"
+"PO-Revision-Date: 2017-03-11 04:57+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -58,7 +58,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr "\n            \n<p>你好,</p>\n\n\n<p>我们已经充分了解贵地区的发展前景。因此，以下线索已被分配到 ${ctx['partner_id'].name}:</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>烦请您登入您在我们官方网站的您自己的合作伙伴账号 <a href=\"${object.get_portal_url()}\">Partner Portal</a> 获知详情。 On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" & \"I'm not interested\".</p>\n% else:\n<p>\n    You do not have yet a portal access to our database. Please contact \n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n</p>\n% endif\n<p>The lead will be sent to another partner if you do not contact the lead before 20 days.</p>\n\n<p>谢谢,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nPS: 看起来你没有分配给您的客户经理，请与我们联系。\n% endif\n            "
+msgstr "\n            \n<p>您好,</p>\n\n\n<p>我们已经充分了解贵地区的发展前景。因此，以下线索已被分配到 ${ctx['partner_id'].name}:</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>烦请您登入您在我们官方网站的您自己的合作伙伴账号 <a href=\"${object.get_portal_url()}\">Partner Portal</a> 获知详情。 On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" & \"I'm not interested\".</p>\n% else:\n<p>\n    You do not have yet a portal access to our database. Please contact \n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n</p>\n% endif\n<p>The lead will be sent to another partner if you do not contact the lead before 20 days.</p>\n\n<p>谢谢,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nPS: 看起来您没有分配给您的客户经理，请与我们联系。\n% endif\n            "
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
@@ -293,12 +293,12 @@ msgstr "详细信息"
 #. module: crm_partner_assign
 #: field:crm.lead.channel.interested,contacted:0
 msgid "Did you contact the lead?"
-msgstr "你跟踪此线索了吗？"
+msgstr "您跟踪此线索了吗？"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Do you have contacted the customer?"
-msgstr "你是否与客户已联系？"
+msgstr "您是否与客户已联系？"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:102
@@ -836,13 +836,13 @@ msgstr "接下来的行动是什么？什么时候？预期收益是多少？"
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Why aren't you interested by this lead?"
-msgstr "你为何对此线索不感兴趣？"
+msgstr "您为何对此线索不感兴趣？"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:44
 #, python-format
 msgid "You must contact the lead before saying that you are interested"
-msgstr "在你说感兴趣之前，你必须先联系此线索"
+msgstr "在您说感兴趣之前，您必须先联系此线索"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
