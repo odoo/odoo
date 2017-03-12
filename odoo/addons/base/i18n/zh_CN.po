@@ -117,6 +117,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"概览:\n"
+"---------\n"
+"\n"
+"* 日本公司会计科目表和税务模板。\n"
+"* 本模板大概不会设置到一个公司所有必须的科目。基于模板，您需要自行增加/删除/修改科目。\n"
+"\n"
+"备注:\n"
+"-----\n"
+"\n"
+"* 财政状况 '内税' 和 '外税'，用来处理POS实施中可能会碰到的一些问题。 [1] 正常情况下您不会用到这些。\n"
+"\n"
+"[1] 访问 https://github.com/odoo/odoo/pull/6470 查看更多细节。"
 
 #. module: base
 #: code:addons/base/res/res_config.py:332
@@ -249,24 +262,23 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"stock_calendar 模块处理 最小库存规则 (=订购点 / 再订购规则) 考虑了采购日历和送货日历两种模式。\n"
+"stock_calendar模块以不同的方式处理最小库存规则（=订货点/订货规则）, 考虑采购日历和交付日历的可能性。\n"
 "\n"
-"通常情况下，调度检查所有订购点并基于当前库存和未来库存调拨（已经确定的出入库）产生补货。对于生鲜产品的公司来说，这可能有问题，因为如果你提前两个星期预订产品，但产品明天到达，产品不能在两个星期内保鲜。\n"
+"通常，调度程序将通过所有的订货点，并创建补货，补货的数量考虑当前库存和所有未来库存移动。对于生鲜产品的公司，这是一个问题，因为，如果你订购产品的是超过2周才需要的，而现在他们明天就到达，那么这些产品在两周内不会再新鲜。\n"
 "\n"
-"为了解决这个问题，我们增加了送货日历到订购点上。未来库存调拨 (也反应了当前的需求)只会考虑那些日历上第二次送货前的那些。\n"
-"因此如果我每星期周四周五送货，我在周一订货，可以在周二收到，所有的需求直到周五。\n"
+"为了解决这个问题，我们向订货点添加了交货日历。未来库存移动（它们代表需求）将被考虑, 将限于根据日历的第二次交货之前的库存移动。因此，如果我每周星期二和星期五交货，当我在星期一订购，将在星期二交付礼拜五之前所有需求。\n"
 "\n"
-"然而此方案并不完美。因为采购需求可能会变化，如果你只需要在补货前一天创建采购订单。 (除非你已经采购的足够多)。为此，我们增加了一个采购日历，订购点会基于采购日历上的采购日期计算。 (最后一次执行日期会检查这次是否需要触发)\n"
+"然而，这不够好，因为您只想在交货日期之前创建采购订单，因为未来的需求可能会改变。 （否则你可能已经订购太多了）为此，我们添加了采购日历，并且只有当调度程序在采购日历指定的时间内运行时，才会触发。（最后一个执行日期还将检查它是否在这段时间内还没有被触发）\n"
 "\n"
-"然而, 有时我们需要重复下单: 假设我们周五需要订购两次: 一个给周一的采购订单和一个给周二的采购订单。我们就需要同时下两张采购订单。\n"
-"为了解决这个问题, 我们在发货日期上和采购日期上增加了一个需求组，\n"
-"我们会检查对应的送货日期. 在相应的需求单上, 我们可以要求传递需求使得可以周一一张、周二一张。\n"
+"然而，有时我们有双重订单：假设我们需要在星期五订购两次：星期一的采购订单，和星期二的采购订单。然后我们同时需要有两个订单。\n"
+"为了处理这一点，我们在日历行放置补货组，对于采购日历行，我们需要做，我们将检查相应的交货行。\n"
 "\n"
-"普通订购点, 采购订单上的日期是基于产品/公司的交期计算的。\n"
-"这个并不对应日历上的日期计算方法，所以采购/送货日期是基于日历上设置。\n"
+"在补货组，我们可以告诉传播它自己到采购，这样才可以有一个订单是星期一，一个订单是星期二。\n"
 "\n"
-"我们使用的日历基于每周，它可以设置一个开始日期，结束日期，例如周二送货。\n"
-"也可以在不送货的日期上设置例外情况。"
+"对于正常的订货点，采购订单上的日期是基于产品/公司的系统延迟，\n"
+"这与日历所做的不一致，因此，购买/交付日期也将根据日历设置。\n"
+"\n"
+"我们使用的日历是每周一次。但是，有可能有开始日期和结束日期。例如：周二交货。也可以在没有的时候放置例外。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -388,11 +400,11 @@ msgid ""
 "It assigns manager and user access rights to the Administrator for the accounting application and only user rights to the Demo user.\n"
 msgstr ""
 "\n"
-"会计访问权限 \n"
+"会计访问权\n"
 "======================== \n"
-"它让管理员拥有所有会计功能的访问权限，如分类账项目（journal items）和会计科目（chart of accounts）等。\n"
+"它让管理员拥有所有会计功能的访问权利，如分类账项目（journal items）和会计科目（chart of accounts）等。\n"
 " \n"
-"它让管理员（Administrator）拥有会计应用模块的管理者权限及用户权限，而演示用户（Demo user）仅拥有用户的权限。\n"
+"它让管理员（Administrator）拥有会计应用模块的管理者权限及用户权利，而演示用户（Demo user）仅拥有用户的权利。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_account
@@ -1450,7 +1462,7 @@ msgstr ""
 "\n"
 "    * 费用编制\n"
 "    * 付款编制\n"
-"    * 公司捐献管理\n"
+"    * 公司缴纳管理\n"
 "    "
 
 #. module: base
@@ -2438,7 +2450,7 @@ msgid ""
 msgstr ""
 "\n"
 "产品扩展。这个模块增加：\n"
-"  * 使用产品变型表单上的一个按钮，从产品的物料清单计算标准价格，基于BOM里面的材料以及工作中心。 必要时，它会创建相应的会计分录。\n"
+"  * 使用产品变体表单上的一个按钮，从产品的物料清单计算标准价格，基于BOM里面的材料以及工作中心。 必要时，它会创建相应的会计分录。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -4147,7 +4159,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%A - Full weekday name."
-msgstr "%A - 工作日全称。"
+msgstr "%A - 星期几全称。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4182,7 +4194,7 @@ msgstr "%Y - 4位数的年份。\""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%a - Abbreviated weekday name."
-msgstr "%a - 工作日名称缩写。"
+msgstr "%a - 星期几缩写。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4578,7 +4590,7 @@ msgid ""
 "to see. Whether they can have a read, write, create and delete access right "
 "can be managed from here."
 msgstr ""
-"用户组用于把一系列功能分配给用户，使其能够访问特定的模块和功能。可以新建或修改现有的用户组，这样就可以自定义该组用户的菜单，或者对某个对象的插删改查权限。"
+"用户组用于把一系列功能分配给用户，使其能够访问特定的模块和功能。可以新建或修改现有的用户组，这样就可以自定义该组用户的菜单，或者对某个对象的增删改查权利。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_homepage
@@ -4709,7 +4721,7 @@ msgstr "访问菜单"
 #: model:ir.ui.view,arch_db:base.view_view_form
 #: model:res.groups,name:base.group_erp_manager
 msgid "Access Rights"
-msgstr "访问权限"
+msgstr "访问权"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_groups_form
@@ -8322,7 +8334,7 @@ msgstr "额外的"
 #: model:ir.module.category,name:base.module_category_usability
 #: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Extra Rights"
-msgstr "额外的权限"
+msgstr "额外的权利"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra_tools
@@ -8947,7 +8959,7 @@ msgid ""
 "global rules, but any additional group rule will add more permissions"
 msgstr ""
 "全局规则 "
-"(没有指定组)是强制的，不能被旁路。群组规则授予额外的权限，但是约束在全局规则的范围内。第一个群组规则进一步限制了全局规则，但是任何附加组规则将增加更多权限"
+"(没有指定组)是强制的，不能被旁路。群组规则授予额外的许可，但是约束在全局规则的范围内。第一个群组规则进一步限制了全局规则，但是任何附加组规则将增加更多权限"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail
@@ -9050,7 +9062,7 @@ msgstr "必填群组 "
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups_share
 msgid "Group created to set access rights for sharing data with some users."
-msgstr "为设置一些用户的共享数据访问权限所建立的用户群组"
+msgstr "为设置一些用户的共享数据访问权所建立的用户群组"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_country_group_form
@@ -9777,7 +9789,7 @@ msgstr "无效"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_search
 msgid "Inactive Users"
-msgstr "未激活的用户"
+msgstr "无效用户"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_in_transitions
@@ -10249,7 +10261,7 @@ msgstr "工作岗位"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr
 msgid "Jobs, Departments, Employees Details"
-msgstr "职位，部门，员工信息"
+msgstr "工作，部门，员工详情"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
@@ -12158,7 +12170,7 @@ msgstr "其他"
 #: model:ir.module.category,name:base.module_category_extra
 #: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Other Extra Rights"
-msgstr "其它额外权限"
+msgstr "其它额外权利"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -12671,7 +12683,7 @@ msgid ""
 "Portal members have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual Odoo groups."
 msgstr ""
-"门户成员有特定的访问权限 (如记录规则和限制菜单)。\n"
+"门户成员有特定的访问权(如记录规则和限制菜单)。\n"
 "他们通常不属于普通的Odoo群组。"
 
 #. module: base
@@ -12857,7 +12869,7 @@ msgstr "公开"
 msgid ""
 "Public users have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual Odoo groups."
-msgstr "公众用户有特定的访问权限 (如记录规则和限制菜单)。 他们通常不属于通常的Odoo群组"
+msgstr "公众用户有特定的访问权(如记录规则和限制菜单)。 他们通常不属于通常的Odoo组"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_membership
@@ -13028,12 +13040,12 @@ msgstr "比率"
 #: model:ir.model.fields,field_description:base.field_ir_model_access_perm_read
 #: model:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Read Access"
-msgstr "读取访问"
+msgstr "读访问"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_search
 msgid "Read Access Right"
-msgstr "读取访问权限"
+msgstr "读访问权限"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_readonly
@@ -16582,12 +16594,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_access_perm_write
 #: model:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Write Access"
-msgstr "写入访问"
+msgstr "写访问"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_search
 msgid "Write Access Right"
-msgstr "写入访问 权限"
+msgstr "写访问权限"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_code
@@ -16745,7 +16757,7 @@ msgstr "不能删除用户的默认语言！"
 #: code:addons/base/ir/ir_values.py:412
 #, python-format
 msgid "You do not have the permission to perform this operation!!!"
-msgstr "你没有权限执行这个操作!!!"
+msgstr "你没有许可执行这个操作!!!"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
@@ -16779,7 +16791,7 @@ msgstr "你试图升级的模块 %s 依赖模块： %s. 但该模块在你的系
 msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
-msgstr "通过编辑在设置/用户菜单下的新建用户，你将能够定义额外的进入权限。"
+msgstr "通过编辑在设置/用户菜单下的新建用户，你将能够定义额外的访问权。"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:206
@@ -17374,7 +17386,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights
 msgid "test of access rights and rules"
-msgstr "访问权限和规则的测试 "
+msgstr "访问权和访问规则的测试 "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_read_group

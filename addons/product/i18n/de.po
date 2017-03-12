@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Ermin Trevisan <trevi@twanda.com>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Mathias Neef <mn@copado.de>, 2016
 # intero_chz <c.zoellner@intero-technologies.de>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
 # Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
-# Thomas A. Jaeger <tj@jamotion.ch>, 2016
+# Renzo Meister <info@jamotion.ch>, 2016
 # Anja Funk <anja.funk@afimage.de>, 2016
 # JackTheHunter <Maximilian.N98@gmail.com>, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
@@ -201,9 +202,8 @@ msgid ""
 "                        to the loss of their possible customizations."
 msgstr ""
 "<strong>Achtung</strong>: Löschen oder Hinzufügen von Attributen\n"
-"                            wird bestehende Varianten löschen und neu anlegen \n"
-"                            und führt zum Verlust möglicherweise ausgeführter\n"
-"                            Anpassungen."
+"wird bestehende Varianten löschen und neu anlegen\n"
+"und führt zum Verlust vorgenommener Anpassungen."
 
 #. module: product
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
@@ -385,18 +385,18 @@ msgstr "Weist der Produkt-Lieferantenliste Prioritäten zu."
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_attribute_id
 msgid "Attribute"
-msgstr "Eigenschaft"
+msgstr "Attribut"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Name"
-msgstr "Attribut Name"
+msgstr "Attributname"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
 msgid "Attribute Price Extra"
-msgstr "Attribut Preisaufschlag"
+msgstr "Attributpreisaufschlag"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_ids
@@ -417,7 +417,7 @@ msgstr "Attributwerte"
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Attributes"
-msgstr "Eigenschaften"
+msgstr "Attribute"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -626,6 +626,8 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
 msgstr ""
+"Aktivieren, wenn Sie mehrere Varianten für dieses Attribute erzeugen "
+"möchten."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -1027,6 +1029,7 @@ msgstr "Fehler! Rekursive Kategorien sind nicht zulässig"
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
 msgstr ""
+"Fehler ! Sie dürfen den folgenden Wert für dieses Attribut nicht verwenden."
 
 #. module: product
 #: code:addons/product/models/product.py:302
@@ -1035,6 +1038,8 @@ msgid ""
 "Error! It is not allowed to choose more than one value for a given "
 "attribute."
 msgstr ""
+"Fehler! Es ist nicht erlaubt, mehr als ein Wert für ein gegebenes Attribut "
+"zu verwenden."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:419
@@ -1979,13 +1984,13 @@ msgstr "Produktattributwert"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr ""
+msgstr "Produkt-Attribute und -Werte"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line_ids
 msgid "Product Attributes"
-msgstr "Produkteigenschaften"
+msgstr "Produktattribute"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -2616,7 +2621,7 @@ msgid ""
 "You are trying to delete an attribute value with a reference on a product variant."
 msgstr ""
 "Der Vorgang kann nicht fortgesetzt werden:\n"
-"Sie versuchen einen Attributwert, auf das sich eine Variante bezieht, zu löschen."
+"Sie versuchen einen Attributwert zu löschen, auf den sich eine Variante bezieht."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
@@ -2667,6 +2672,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"Der Verkaufspreis wird in der Produktvorlage verwaltet. Klicken Sie auf den "
+"'Variantenpreise'-Button, um Attributaufschlagspreise zu definieren."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_9
@@ -2934,7 +2941,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant Prices"
-msgstr "Preis der Variante"
+msgstr "Variantenpreise"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
