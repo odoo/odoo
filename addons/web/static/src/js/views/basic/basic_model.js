@@ -1414,8 +1414,10 @@ var BasicModel = AbstractModel.extend({
         var domain = record.getDomain({fieldName: fieldName});
         if (domain.length) {
             var localID = record.data[fieldName];
-            var element = this.localData[localID];
-            domain = ["|", ["id", "=", element.data.id]].concat(domain);
+            if (localID) {
+                var element = this.localData[localID];
+                domain = ["|", ["id", "=", element.data.id]].concat(domain);
+            }
         }
 
         // avoid rpc if not necessary
