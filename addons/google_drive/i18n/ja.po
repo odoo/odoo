@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-09-27 23:08+0000\n"
+"PO-Revision-Date: 2016-12-05 01:25+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -76,24 +76,24 @@ msgstr "有効"
 #: code:addons/google_drive/google_drive.py:49
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr ""
+msgstr "Googleドライブ名のパターンに少なくとも1つのキーが見つかりません"
 
 #. module: google_drive
 #: field:base.config.settings,google_drive_authorization_code:0
 msgid "Authorization Code"
-msgstr ""
+msgstr "認証コード"
 
 #. module: google_drive
 #: help:google.drive.config,name_template:0
 msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
-msgstr ""
+msgstr "新しいGoogleドライブの名前付け方法をGoogle側で選択します。 例えば。 gdoc_%(field_name)s"
 
 #. module: google_drive
 #: view:base.config.settings:google_drive.inherited_google_view_general_configuration
 msgid "Configure your templates"
-msgstr ""
+msgstr "テンプレートを設定"
 
 #. module: google_drive
 #: field:google.drive.config,create_uid:0
@@ -109,7 +109,7 @@ msgstr "作成日"
 #: code:addons/google_drive/google_drive.py:157
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr ""
+msgstr "Googleドライブの作成は、一度に1つだけ行うことができます。"
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -133,7 +133,7 @@ msgstr "フィルタ"
 #: code:addons/google_drive/google_drive.py:89
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "コンフィグレーションパネルに移動"
 
 #. module: google_drive
 #: field:google.drive.config,google_drive_client_id:0
@@ -149,7 +149,7 @@ msgstr "Googleドライブ"
 #: view:google.drive.config:google_drive.view_google_drive_config_form
 #: view:google.drive.config:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
-msgstr ""
+msgstr "Googleドライブの設定"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:157
@@ -160,19 +160,19 @@ msgstr ""
 #. module: google_drive
 #: field:google.drive.config,name_template:0
 msgid "Google Drive Name Pattern"
-msgstr ""
+msgstr "Googleドライブの名前パターン"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:71
 #: code:addons/google_drive/google_drive.py:91
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr ""
+msgstr "Googleドライブはまだ設定されていません。 管理者に連絡してください。"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
 msgid "Google Drive templates config"
-msgstr ""
+msgstr "Googleドライブのテンプレート設定"
 
 #. module: google_drive
 #: field:google.drive.config,id:0
@@ -216,7 +216,7 @@ msgstr ""
 #: code:addons/google_drive/google_drive.py:189
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr ""
+msgstr "有効なGoogleドキュメントのURLを入力してください。"
 
 #. module: google_drive
 #: field:google.drive.config,google_drive_resource_id:0
@@ -229,7 +229,7 @@ msgstr "リソースID"
 msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
-msgstr ""
+msgstr "トークンの生成中に何らか問題が発生しました。 承認コードを再度リクエストしてください。"
 
 #. module: google_drive
 #: field:google.drive.config,name:0
@@ -251,12 +251,12 @@ msgstr "テンプレート"
 #: code:addons/google_drive/google_drive.py:106
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr ""
+msgstr "Googleテンプレートが見つかりません。 多分それは削除されています。"
 
 #. module: google_drive
 #: help:base.config.settings,google_drive_uri:0
 msgid "The URL to generate the authorization code from Google"
-msgstr ""
+msgstr "The URL to generate the authorization code from Google"
 
 #. module: google_drive
 #: view:google.drive.config:google_drive.view_google_drive_config_form
@@ -265,7 +265,7 @@ msgid ""
 "                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
-msgstr ""
+msgstr "添付文書の名前は、固定または可変のデータを使用できます。 Googleドライブのドキュメントを区別するには、固定語とフィールドを使用します。\nたとえば、上記の例で、Googleドライブ名欄にAgrolait_%(name)s_Salesを書き込んだ場合、GoogleドライブとOdoo添付ファイルのドキュメント名は'Agrolait_SO0001_Sales'となります。"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:133
@@ -273,7 +273,7 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr ""
+msgstr "「リンクをしている人」のパーミッション「リーダー」がドキュメントに書き込まれていません"
 
 #. module: google_drive
 #: view:google.drive.config:google_drive.view_google_drive_config_form
@@ -283,7 +283,7 @@ msgstr ""
 #. module: google_drive
 #: field:base.config.settings,google_drive_uri:0
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:106
@@ -297,15 +297,15 @@ msgstr "警告"
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
-msgstr ""
+msgstr "Googleから生成された「認証コード」を設定していません。生成して設定してください。"
 
 #. module: google_drive
 #: view:base.config.settings:google_drive.inherited_google_view_general_configuration
 msgid "and paste it here"
-msgstr ""
+msgstr "ここに貼り付けてください"
 
 #. module: google_drive
 #: view:google.drive.config:google_drive.view_google_drive_config_form
 msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
-msgstr ""
+msgstr "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

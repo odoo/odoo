@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-09-29 12:40+0000\n"
+"PO-Revision-Date: 2017-03-08 11:44+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-8/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -204,7 +204,7 @@ msgstr "Aktivni ID nije pronađen"
 msgid ""
 "All product quantities must be greater than 0.\n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
-msgstr ""
+msgstr "Sve količine proizvoda moraju biti veće od 0.\nTrebali biste instalirati mrp_byproduct modul ako želite upravljati dodatnim proizvodima na sastavnicama!"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
@@ -264,7 +264,7 @@ msgstr "Odobri"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr ""
+msgstr "Prosječno kašnjenje u danima za proizvodnju ovog proizvoda. U slučaju multi-level skladišnice dodat će se pripremno vrijeme proizvodnje komponenata."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -295,7 +295,7 @@ msgstr "BOM Struktura"
 #. module: mrp
 #: field:mrp.bom.line,child_line_ids:0
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "Stavke sastavnice od sastavnice na koju se odnose"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:44
@@ -347,7 +347,7 @@ msgstr "Struktura sastavnice"
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr ""
+msgstr "Sastavnica omogućava definiranje liste sirovina ili materijala potrebnih za izradu proizvoda."
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
@@ -387,7 +387,7 @@ msgstr "Tip sastavnice"
 #: code:addons/mrp/stock.py:259
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "Nije moguće pronaći generičku rutu proizvodnje."
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
@@ -714,7 +714,7 @@ msgstr "Dodatni Podaci"
 msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
-msgstr ""
+msgstr "Ovo ispunite samo ako želite automatsko analitičko knjigovodstvo na proizvodnim nalozima."
 
 #. module: mrp
 #: help:mrp.workcenter,product_id:0
@@ -771,7 +771,7 @@ msgstr "Daje poredak u prikazu sastavnica."
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr ""
+msgstr "Definira poredak dok prikazuje listu usmjerenja radnih centara."
 
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
@@ -834,7 +834,7 @@ msgstr "ID"
 #: help:mrp.bom,product_id:0
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
+msgstr "Ako je definirana varijanta proizvoda, sastavnica je dostupna samo za taj proizvod."
 
 #. module: mrp
 #: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
@@ -1056,7 +1056,7 @@ msgstr "Nalozi proizvodnje u tijeku"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are currently in production."
-msgstr ""
+msgstr "Proizvodni nalozi koji su trenutno u izradi."
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1695,7 +1695,7 @@ msgstr "Planirani datum po mjesecu"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Scheduled Date:"
-msgstr ""
+msgstr "Planirani datum"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -2004,7 +2004,7 @@ msgstr "Jedinica mjere"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "Jedinica mjere (Jedinica mjere) je jedinica mjerenja za upravljanje zalihama"
 
 #. module: mrp
 #: field:mrp.bom,message_unread:0 field:mrp.production,message_unread:0
@@ -2062,7 +2062,7 @@ msgstr "Valjanost Bom-a. Ostavite prazno ako je uvijek valjan."
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Variant"
-msgstr ""
+msgstr "Inačica"
 
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
@@ -2131,13 +2131,13 @@ msgstr ""
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
 "                                will contain the raw materials, instead of the finished product."
-msgstr ""
+msgstr "Kada se obrađuje prodajni nalog za ovaj proizvod, nalog za dostavu\nće sadržavati sirovine umjesto završenih proizvoda."
 
 #. module: mrp
 #: help:stock.warehouse,manufacture_to_resupply:0
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr ""
+msgstr "Kada su proizvodi proizvedeni, mogu biti pšroizvodeni u ovom skladištu."
 
 #. module: mrp
 #: help:mrp.production,state:0
@@ -2252,7 +2252,7 @@ msgid ""
 "Without this module: A + B + C -> D.\n"
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
-msgstr ""
+msgstr "Možete postaviti nus-proizvode u sastavnici.\nBez ovog modula: A + B + C -> D.\nSa ovim modulom: A + B + C -> D + E.\n- ovo instalira modul mrp_byproduct."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:339
@@ -2260,7 +2260,7 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
-msgstr ""
+msgstr "Nije moguće obrisati Sastavnicu sa pokrenutim nalozima za proizvodnju.\nMolimo prvo ih zatvorite ili otkažite."
 
 #. module: mrp
 #: code:addons/mrp/stock.py:42

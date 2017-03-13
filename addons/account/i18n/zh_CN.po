@@ -4,10 +4,11 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012
-# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
-# liAnGjiA <liangjia@qq.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016-2017
 # Luyang Xing <leon.luyangxing@gmail.com>, 2015
 # matt.cai <cysnake4713@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
@@ -20,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-10-04 21:07+0000\n"
+"PO-Revision-Date: 2017-03-11 04:57+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -98,7 +99,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>您好 ${object.partner_id.name},</p>\n\n    <p>你有一张新发票： </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;发票号码: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;发票总额: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;发票日期: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;您的联络方式: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>也可以直接Paypal支付:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>如您有任何疑问，请直接与我们联系。</p>\n    <p>谢谢您一如既往的支持 ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                电话:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                网址 :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>您好 ${object.partner_id.name},</p>\n\n    <p>您有一张新发票： </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;发票号码: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;发票总额: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;发票日期: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;您的联络方式: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>您也可以直接Paypal支付:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>如您有任何疑问，请直接与我们联系。</p>\n    <p>谢谢您一如既往的支持 ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                电话:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                网址 :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -108,7 +109,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * 当用户编辑一张新的未确认的发票时为“草稿\"状态。            \n* 当一张发票无发票号码时为“形式”状态。             \n* 当发票已创建，发票号已生成，但仍未发出，则为“启用”状态。             \n* 当发票已收款，则会自动配置为“已收款”状态，发票的相关会计分录可以关联或不关联。            \n* 当用户删除发票时为“删除”状态。"
+msgstr "* 当用户编辑一张新的未确认的发票时为'草稿'状态。            \n* 当一张发票无发票号码时为'形式'状态。             \n* 当发票已创建，发票号已生成，但仍未发出，则为'启用'状态。             \n* 当发票已收款，则会自动配置为'已收款'状态，发票的相关会计分录可以关联或不关联。            \n* 当用户删除发票时为'删除'状态。"
 
 #. module: account
 #: code:addons/account/account.py:1477
@@ -163,7 +164,7 @@ msgstr "# 交易"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name|safe} 发票 (Ref ${object.number or 'n/a'})"
+msgstr "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account.py:1861
@@ -188,7 +189,7 @@ msgstr "(账户/业务伙伴)名称"
 msgid ""
 "(If you do not select a specific fiscal year, all open fiscal years will be "
 "selected.)"
-msgstr "（如果你没有选择会计年度，所有的开放会计年度将被选择。）"
+msgstr "（如果您没有选择会计年度，所有的开放会计年度将被选择。）"
 
 #. module: account
 #: view:account.tax.chart:account.view_account_tax_chart
@@ -199,7 +200,7 @@ msgstr "（如果您不选择会计期间，所有开放的期间将被选择）
 #. module: account
 #: view:account.state.open:account.view_account_state_open
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr "(如果您想打开它发票要反调节)"
+msgstr "(如果您想打开发票，它应当是未调节的)"
 
 #. module: account
 #: view:account.analytic.chart:account.account_analytic_chart_view
@@ -385,7 +386,7 @@ msgid ""
 "                goes out of the cash box.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建新的现金记录.\n              </p><p>\n                现金出纳机允许您在您的现金分类账中管理您的现金分录。\n                这个特性提供了按天的方式来跟踪现金付款的方式。\n                您可以查看在您钱箱中的每一分钱，并且在资金进出时创建记录。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建新的收款机记录.\n              </p><p>\n                这里可以管理您的收款机收入或取出的现金情况录入到财务会计分录中。\n                此特性为您提供了按天的方式来跟踪您的现金流向的功能。\n                在这里您可查看在钱箱中的每一分钱，并且在资金进出时创建记录。\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_statement_operation_template
@@ -952,12 +953,12 @@ msgstr "科目类型"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "科目未调节"
+msgstr "会计取消调节"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile_reconcile
 msgid "Account Unreconcile Reconcile"
-msgstr "科目未调节调节"
+msgstr "会计取消调节调节"
 
 #. module: account
 #: model:ir.model,name:account.model_account_vat_declaration
@@ -2177,7 +2178,7 @@ msgstr "不能 %s 草稿或形式发票或取消 发票"
 msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
-msgstr "不能 %s 已经调节的发票, 发票必须被首先反调节。只能退还这张发票。"
+msgstr "不能 %s 已经调节的发票, 发票必须被首先取消调节。只能退还这张发票。"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1299
@@ -2265,7 +2266,7 @@ msgstr "现金管理"
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.ui.menu,name:account.journal_cash_move_lines
 msgid "Cash Registers"
-msgstr "现金出纳机"
+msgstr "收款机"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -2727,7 +2728,7 @@ msgstr "共通报告"
 #. module: account
 #: field:account.bank.statement.line,name:0
 msgid "Communication"
-msgstr "联络方式"
+msgstr "通信"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -2892,7 +2893,7 @@ msgstr "配置错误!\n您不能为不是视图类型的科目定义子科目。
 msgid ""
 "Configuration Error!\n"
 "You cannot select an account type with a deferral method different of \"Unreconciled\" for accounts with internal type \"Payable/Receivable\"."
-msgstr "配置错误！\n对于内部类型是‘应收/应付’的会计科目，你不能选择结转方式是‘未调节’的科目类型。 "
+msgstr "配置错误！\n对于内部类型是‘应收/应付’的会计科目，您不能选择结转方式是‘未调节’的科目类型。 "
 
 #. module: account
 #: constraint:account.journal:0
@@ -3685,7 +3686,7 @@ msgstr "定义定期分录"
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
 msgid "Describe why you take money from the cash register:"
-msgstr "说明从现金出纳机取钱的原因。"
+msgstr "请说明在收款机取钱的原因："
 
 #. module: account
 #. openerp-web
@@ -3770,7 +3771,7 @@ msgstr "显示借方/贷方列"
 #. module: account
 #: field:account.vat.declaration,display_detail:0
 msgid "Display Detail"
-msgstr "显示细节"
+msgstr "显示详细信息"
 
 #. module: account
 #: help:account.partner.ledger,page_split:0
@@ -3795,7 +3796,7 @@ msgstr "层级显示子项"
 #. module: account
 #: field:account.financial.report,display_detail:0
 msgid "Display details"
-msgstr "显示细节"
+msgstr "显示详细信息"
 
 #. module: account
 #: xsl:account.transfer:0
@@ -3940,12 +3941,12 @@ msgstr "最佳效率"
 #: model:ir.actions.act_window,name:account.action_email_templates
 #: model:ir.ui.menu,name:account.menu_email_templates
 msgid "Email Templates"
-msgstr "Email 模板"
+msgstr "电子邮件模板"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Email撰写向导"
+msgstr "电子邮件撰写向导"
 
 #. module: account
 #: field:account.analytic.balance,empty_acc:0
@@ -4082,12 +4083,12 @@ msgstr "分录月份"
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 msgid "Entries Sorted By:"
-msgstr "分录排序 按："
+msgstr "按分录排序："
 
 #. module: account
 #: field:account.print.journal,sort_selection:0
 msgid "Entries Sorted by"
-msgstr "分录排序 按"
+msgstr "按分录排序"
 
 #. module: account
 #: code:addons/account/account_move_line.py:964
@@ -4353,7 +4354,7 @@ msgstr "筛选"
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Filter By:"
-msgstr "筛选按："
+msgstr "筛选："
 
 #. module: account
 #: field:account.aged.trial.balance,filter:0
@@ -4369,7 +4370,7 @@ msgstr "筛选按："
 #: field:account.vat.declaration,filter:0 field:accounting.report,filter:0
 #: field:accounting.report,filter_cmp:0
 msgid "Filter by"
-msgstr "筛选按"
+msgstr "筛选"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -4381,7 +4382,7 @@ msgstr "筛选按"
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Filtered by date"
-msgstr "筛选按日期"
+msgstr "按日期筛选"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -4393,7 +4394,7 @@ msgstr "筛选按日期"
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Filtered by period"
-msgstr "筛选按期间"
+msgstr "按期间筛选"
 
 #. module: account
 #: view:account.common.report:account.account_common_report_view
@@ -4682,7 +4683,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr "根据此报告，你可总体上了解向客人开票的情况，这一工具也可用于生成个性化的发票报告，以满足你分析的需要。"
+msgstr "根据此报告，您可总体上了解向客人开票的情况，这一工具也可用于生成个性化的发票报告，以满足您分析的需要。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_analytic_entries_report
@@ -5120,7 +5121,7 @@ msgid ""
 "this total tax amount will be rounded. If you sell with tax included, you "
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
-msgstr "如果选择“每行舍入”：对于每个税项，先计算出税额并按每个PO/SO/发票行圆整，然后这些圆整后税额将会被汇总，得到总的税额。如果选择“整体舍入”：对于每个税项，税额将按每个PO/SO/发票行计算，然后这些税额将会被汇总，最后对总税额进行圆整。如果销售含税，“每行舍入”，因为您一定希望每行税额小计的总和等于总的税额。"
+msgstr "如果选择“逐行舍入”：对于每个税项，先计算出税额，然后对每个PO/SO/发票行进行舍入，最后这些舍入之后的税额将会被加总，以得到总税额。\n如果选择“整体舍入”：对于每个税项，对每个PO/SO/发票行计算税额计算，然后将这些税额加总，最后对总税额进行舍入。\n假如使用含税价销售，应当选择“逐行舍入”，因为您一定希望含税明细行税额小计的总和等于总税额。"
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -5133,7 +5134,7 @@ msgid ""
 "this total tax amount will be rounded. If you sell with tax included, you "
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
-msgstr "如果选择“每行舍入”：对于每个税项，先计算出税额并按每个PO/SO/发票行圆整，然后这些圆整后税额将会被汇总，得到总的税额。如果选择“整体舍入”：对于每个税项，税额将按每个PO/SO/发票行计算，然后这些税额将会被汇总，最后对总税额进行圆整。如果销售含税，“每行舍入”，因为您一定希望每行税额小计的总和等于总的税额。"
+msgstr "如果选择“逐行舍入”：对于每个税项，先计算出税额，然后对每个PO/SO/发票行进行舍入，最后这些舍入之后的税额将会被加总，以得到总税额。\n如果选择“整体舍入”：对于每个税项，对每个PO/SO/发票行计算税额计算，然后将这些税额加总，最后对总税额进行舍入。\n假如使用含税价销售，应当选择“逐行舍入”，因为您一定希望含税明细行税额小计的总和等于总税额。"
 
 #. module: account
 #: help:account.partner.ledger,initial_balance:0
@@ -7351,12 +7352,12 @@ msgid ""
 "you set a paypal account, the customer  will be able to pay your invoices or"
 " quotations with a button \"Pay with  Paypal\" in automated emails or "
 "through the Odoo portal."
-msgstr "若配置了接收在线支付（比如，信用卡 等）的Paypal账户（email），客户可单击按钮 \"使用Paypal支付\" 在自动发送的邮件中或通过OpenERP接口支付发票或报价单。"
+msgstr "若配置了接收在线支付（比如，信用卡 等）的Paypal账户（电子邮箱），客户可单击按钮 \"使用Paypal支付\" 在自动发送的邮件中或通过OpenERP接口支付发票或报价单。"
 
 #. module: account
 #: help:res.company,paypal_account:0
 msgid "Paypal username (usually email) for receiving online payments."
-msgstr "Paypal 用户名 (通常为 email) 用于接受在线支付。"
+msgstr "Paypal 用户名 (通常为电子邮箱地址) 用于接受在线支付。"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
@@ -8363,12 +8364,12 @@ msgstr "整体舍入"
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round per Line"
-msgstr "每行舍入"
+msgstr "逐行舍入"
 
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
-msgstr "每行舍入"
+msgstr "逐行舍入"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:899
@@ -8716,7 +8717,7 @@ msgstr "以邮件发送"
 #. module: account
 #: field:account.config.settings,module_product_email_template:0
 msgid "Send products tools and information at the invoice confirmation"
-msgstr "在发票确认时发送产品工具和信息"
+msgstr "在发票确认中附加产品相关信息"
 
 #. module: account
 #: field:account.invoice,sent:0
@@ -8826,7 +8827,7 @@ msgstr "设为草稿"
 #: model:ir.actions.act_window,name:account.action_bank_tree
 #: model:ir.ui.menu,name:account.menu_action_bank_tree
 msgid "Setup your Bank Accounts"
-msgstr "设置你的银行账户"
+msgstr "设置您的银行账户"
 
 #. module: account
 #: field:account.account,shortcut:0 field:account.account.template,shortcut:0
@@ -8845,7 +8846,7 @@ msgstr "显示更多...("
 msgid ""
 "Shows you the progress made today on the reconciliation process. Given by \n"
 "Partners Reconciled Today \\ (Remaining Partners + Partners Reconciled Today)"
-msgstr "显示今天你在对账过程的进度，今天已调节的业务伙伴 / （剩余的业务伙伴 + 今天已调节的业务伙伴 ）"
+msgstr "显示今天您在对账过程的进度，今天已调节的业务伙伴 / （剩余的业务伙伴 + 今天已调节的业务伙伴 ）"
 
 #. module: account
 #: field:account.tax.code.template,sign:0
@@ -10069,7 +10070,7 @@ msgstr "本科目将用于替换当前业务伙伴的默认应收款科目"
 msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
-msgstr "这允许会计人员进行管理分析和交叉预算，\n                一旦明确了主预算和预算款，\n                项目经理就可以配置每个分析账户的计划总额.\n                安装帐户预算模块。"
+msgstr "这允许会计人员进行管理分析和交叉预算，\n                一旦明确了主预算和预算款，\n                项目经理就可以配置每个分析账户的计划总额.\n                安装account_budget帐户预算模块。"
 
 #. module: account
 #: help:account.config.settings,module_account_followup:0
@@ -10742,20 +10743,20 @@ msgstr "未实现收入和损失"
 #: view:account.unreconcile:account.account_unreconcile_view
 #: view:account.unreconcile.reconcile:account.account_unreconcile_reconcile_view
 msgid "Unreconcile"
-msgstr "未调节"
+msgstr "取消调节"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr "未调节分录"
+msgstr "取消调节分录"
 
 #. module: account
 #: view:account.unreconcile:account.account_unreconcile_view
 #: view:account.unreconcile.reconcile:account.account_unreconcile_reconcile_view
 msgid "Unreconcile Transactions"
-msgstr "未调节交易"
+msgstr "取消调节交易"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -11040,7 +11041,7 @@ msgstr "余额不等于零"
 #: view:website:account.report_generalledger
 #: view:website:account.report_trialbalance
 msgid "With movements"
-msgstr "有运动"
+msgstr "有变动"
 
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_search
@@ -11188,7 +11189,7 @@ msgid ""
 "You can select here the journal to use for the credit note that will be "
 "created. If you leave that field empty, it will use the same journal as the "
 "current invoice."
-msgstr "你可以在这选择日记账用于创建的退款。如果该栏留空，它将会使用当前发票的同一个日记账。"
+msgstr "您可以在这选择日记账用于创建的退款。如果该栏留空，它将会使用当前发票的同一个日记账。"
 
 #. module: account
 #: help:account.financial.report,style_overwrite:0
@@ -11225,7 +11226,7 @@ msgstr "可以在凭证模版的名称上使用年月日变量\n\n%(year)s：本
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
-msgstr "已部分付款的发票，不能取消。请先反调节相关的付款分录。"
+msgstr "已部分付款的发票，不能取消。请先取消调节相关的付款分录。"
 
 #. module: account
 #: code:addons/account/account.py:691
@@ -11345,7 +11346,7 @@ msgstr "不可修改一个已确认的分录，只可变动一些无特别要求
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
-msgstr "已调节的记录不能修改。仅能编辑非正式字段 或 先撤销调节. \n%s"
+msgstr "已调节的记录不能修改。仅能编辑非正式字段 或 先取消调节. \n%s"
 
 #. module: account
 #: code:addons/account/account.py:1352
@@ -11389,7 +11390,7 @@ msgid ""
 "You cannot unreconcile journal items if they has been generated by the"
 "                                                         opening/closing "
 "fiscal year process."
-msgstr "你不能反调节由开启/关闭会计年度过程生成的分类账项目。"
+msgstr "您不能取消调节由开启/关闭会计年度过程生成的分类账项目。"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1173
@@ -11413,7 +11414,7 @@ msgid ""
 "You cannot validate a non-balanced entry.\n"
 "Make sure you have configured payment terms properly.\n"
 "The latest payment term line should be of the \"Balance\" type."
-msgstr "不能验证一个不平衡的分录。\n确保你已正确的配置了付款条款。\n付款条款最后一行应该是“余额”。"
+msgstr "不能验证一个不平衡的分录。\n确保您已正确的配置了付款条款。\n付款条款最后一行应该是“余额”。"
 
 #. module: account
 #: code:addons/account/account.py:1346
@@ -11457,7 +11458,7 @@ msgstr "您必须定义分类账'%s' 的分析分类账！"
 msgid ""
 "You have to define the bank account\n"
 "in the journal definition for reconciliation."
-msgstr "你必须在分类账定义中为对账定义银行账户"
+msgstr "您必须在分类账定义中为对账定义银行账户。"
 
 #. module: account
 #: code:addons/account/account_move_line.py:976
@@ -11481,7 +11482,7 @@ msgid ""
 "You have to set the 'End  of Year Entries Journal' for this Fiscal Year "
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
-msgstr "你必须为本会计年度设置“年度结束分录分类账”，它是在从“生成开帐分录”生成开帐分录之后设置的。"
+msgstr "您必须为本会计年度设置“年度结束分录分类账”，它是在从“生成开帐分录”生成开帐分录之后设置的。"
 
 #. module: account
 #. openerp-web

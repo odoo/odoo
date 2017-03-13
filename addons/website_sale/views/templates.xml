@@ -97,7 +97,7 @@
                }'>
               </span>
               <span itemprop="price" style="display:none;" t-esc="product.price"/>
-              <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name"/>
+              <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name" class='decimal_precision' t-att-data-precision="website.pricelist_id.currency_id.rounding"/>
           </b>
       </div>
   </section>
@@ -428,7 +428,8 @@
 
 <template id="product_price">
   <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
-      <h4 class="oe_price_h4 css_editable_mode_hidden">
+      <h4 class="oe_price_h4 css_editable_mode_hidden decimal_precision"
+        t-att-data-precision="user_id.partner_id.property_product_pricelist.currency_id.rounding">
           <span class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
             t-field="product.lst_price"
             t-field-options='{
@@ -443,7 +444,7 @@
                "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
            }'/>
           <span itemprop="price" style="display:none;" t-esc="product.price"/>
-          <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name"/>
+          <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name" class='decimal_precision' t-att-data-precision="website.pricelist_id.currency_id.rounding"/>
       </h4>
       <h4 class="css_editable_mode_display" style="display: none;">
         <span t-field="product.lst_price"
@@ -663,7 +664,7 @@
                       <thead>
                           <tr>
                               <th colspan="2" width="100">Product</th>
-                              <th width="100">Price</th>
+                              <th width="100" class='decimal_precision' t-att-data-precision="website_sale_order.pricelist_id.currency_id.rounding">Price</th>
                               <th width="120">Quantity</th>
                           </tr>
                       </thead>

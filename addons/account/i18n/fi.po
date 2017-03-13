@@ -5,7 +5,7 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Jan-Erik Finlander, 2015
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2015-2016
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2015-2017
 # Jussi Lehto <jussi@gulfeo.com>, 2015
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015-2016
 # Kari Lindgren <karisatu@gmail.com>, 2015
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-10-19 10:44+0000\n"
+"PO-Revision-Date: 2017-01-19 09:23+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -2523,7 +2523,7 @@ msgstr "Valitse tämä, jos et halua tämän verokoodin veroja laskulle."
 msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
-msgstr ""
+msgstr "Valitse tämä, jos haluat  sallia tähän päiväkirjaan liittyvien tapahtumien ja laskujen peruutuksen."
 
 #. module: account
 #: help:account.journal,entry_posted:0
@@ -4330,7 +4330,7 @@ msgstr "Helmikuu"
 #. module: account
 #: view:cash.box.in:account.cash_box_in_form
 msgid "Fill in this form if you put money in the cash register:"
-msgstr ""
+msgstr "Täytä tämä lomake jos laitoit rahaa kassaan:"
 
 #. module: account
 #. openerp-web
@@ -4443,7 +4443,7 @@ msgstr "Talousraportti"
 #. module: account
 #: field:account.fiscal.position.account.template,position_id:0
 msgid "Fiscal Mapping"
-msgstr ""
+msgstr "Tilikausikohdistus"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
@@ -4664,7 +4664,7 @@ msgstr "Saldo toisessa valuutassa"
 #: code:addons/account/account_invoice.py:105
 #, python-format
 msgid "Free Reference"
-msgstr "Avoin viite"
+msgstr "Vapaa viesti"
 
 #. module: account
 #: field:account.analytic.chart,from_date:0
@@ -5012,7 +5012,7 @@ msgstr "Icon"
 #: code:addons/account/account_bank_statement.py:428
 #, python-format
 msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
-msgstr ""
+msgstr "Jos \"Maksun valuutta\" on määritelty, myös \"Määrä\" pitää määritellä."
 
 #. module: account
 #: help:account.bank.statement,message_unread:0
@@ -5054,7 +5054,7 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
-msgstr ""
+msgstr "Poistamalla valinnan \"Aktiivinen\"-kentästä, saat tilin piilotettua poistamatta sitä."
 
 #. module: account
 #: help:account.analytic.journal,active:0
@@ -5152,7 +5152,7 @@ msgstr ""
 msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
-msgstr ""
+msgstr "Jos peruutat täsmäytyksiä, sinun pitää myös tarkistaa kaikki toimenpiteet kohdistuvat näihin transaktiohin koska niitä ei poisteta käytöstä."
 
 #. module: account
 #: help:account.invoice,payment_term:0
@@ -5602,12 +5602,12 @@ msgstr ""
 #. module: account
 #: help:account.journal,default_credit_account_id:0
 msgid "It acts as a default account for credit amount"
-msgstr ""
+msgstr "Toimii oletusarvoisena kredit-tilinä"
 
 #. module: account
 #: help:account.journal,default_debit_account_id:0
 msgid "It acts as a default account for debit amount"
-msgstr ""
+msgstr "Toimii oletusarvoisena debit-tilinä"
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -5622,7 +5622,7 @@ msgstr ""
 msgid ""
 "It indicates that the invoice has been paid and the journal entry of the "
 "invoice has been reconciled with one or several journal entries of payment."
-msgstr ""
+msgstr "Se ilmaisee että lasku on maksettu ja laskun päiväkirja merkintä on täsmäytetty yhteen tai useampaan päiväkirjan maksuun."
 
 #. module: account
 #: help:account.invoice,sent:0
@@ -6977,7 +6977,7 @@ msgstr "Avaava välisaldo"
 #. module: account
 #: help:account.cashbox.line,number_opening:0
 msgid "Opening Unit Numbers"
-msgstr ""
+msgstr "Avataan kassakoneen numerot"
 
 #. module: account
 #: field:account.journal,with_last_closing_balance:0
@@ -7123,7 +7123,7 @@ msgstr "Osittaiset vientirivit"
 #: field:account.move.line,reconcile_partial_id:0
 #: view:account.move.line.reconcile:account.view_account_move_line_reconcile_full
 msgid "Partial Reconcile"
-msgstr "Osittaissuoritus"
+msgstr "Osittainen täsmäytys"
 
 #. module: account
 #: view:account.move.reconcile:account.view_move_reconcile_form
@@ -7521,7 +7521,7 @@ msgstr ""
 #: code:addons/account/wizard/pos_box.py:32
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
-msgstr ""
+msgstr "Tarkista että 'Päiväkirja' on asetettu pankkitositteeseen"
 
 #. module: account
 #: code:addons/account/account_invoice.py:799
@@ -7533,7 +7533,7 @@ msgstr "Ole hyvä ja luo laskurivejä"
 #: code:addons/account/account.py:1321
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Määrittele päiväkirjaan järjestys."
 
 #. module: account
 #: code:addons/account/account_invoice.py:797
@@ -8208,7 +8208,7 @@ msgstr "Hyvityksen verokoodin merkki"
 msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
-msgstr ""
+msgstr "Hyvitysperuste tälle tyypille. Et voi muokata ja peruuttaa jos lasku on jo täsmäytetty."
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -9205,7 +9205,7 @@ msgstr "Ota rahaa ulos"
 #: code:addons/account/static/src/js/account_widgets.js:546
 #, python-format
 msgid "Take on average less than 5 seconds to reconcile a transaction."
-msgstr ""
+msgstr "Täsmäytyksen tulisi viedä keskimäärin 5 sekuntia."
 
 #. module: account
 #: field:account.aged.trial.balance,target_move:0
@@ -9606,14 +9606,14 @@ msgstr "Summa ilmoitettuna valinnaisessa toisessa valuutassa."
 msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
-msgstr ""
+msgstr "Summa ilmoitettuna liittyvän tilin valuuttana, jos ei sama kuin yrityksen valuutta."
 
 #. module: account
 #: constraint:account.move.line:0
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
 " is debited and negative when account is credited."
-msgstr ""
+msgstr "Määrä ilmoitettuna toisena valuuttana pitää olla positiivinen kun tiliä veloitetaan ja negatiivinen kun hyvitetään."
 
 #. module: account
 #: help:account.statement.operation.template,amount:0
@@ -10145,7 +10145,7 @@ msgstr ""
 msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
-msgstr ""
+msgstr "Tämä kenttä sisältää tietoa päiväkirjan tapahtumien numeroinnista."
 
 #. module: account
 #: help:account.tax,domain:0 help:account.tax.template,domain:0
@@ -10289,7 +10289,7 @@ msgstr ""
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
-msgstr ""
+msgstr "Tällä sivulla on näkyvissä kaikki pankkitapahtumat jotka tulee täsmäyttää sekä käyttöliittymä sen tekemiseen."
 
 #. module: account
 #: help:res.partner,property_supplier_payment_term:0
@@ -11221,7 +11221,7 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
-msgstr ""
+msgstr "Et voi peruuttaa laskua joka on osittain maksettu. Ennen sitä tulee laskuun liittyvät täsmäytykset peruuttaa."
 
 #. module: account
 #: code:addons/account/account.py:691
@@ -11400,7 +11400,7 @@ msgstr "Et voi käyttää passiivista tiliä."
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
-msgstr ""
+msgstr "Et voi käyttää tätä yleistä tiliä tässä päiväkirjassa, tarkista päiväkirjan 'Kirjausasetukset' välilehti."
 
 #. module: account
 #: code:addons/account/account.py:1307
@@ -11562,7 +11562,7 @@ msgstr ""
 msgid ""
 "You should have defined an 'Internal Transfer Account' in your cash "
 "register's journal!"
-msgstr ""
+msgstr "Sinun tulisi määritellä 'Sisäiset siirrot' -tili käteispäiväkirjaan."
 
 #. module: account
 #. openerp-web

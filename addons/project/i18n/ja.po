@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-07-24 15:00+0000\n"
+"PO-Revision-Date: 2016-12-04 09:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -100,7 +100,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
 " * Ready for next stage indicates the task is ready to be pulled to the next stage"
-msgstr ""
+msgstr "タスクのかんばん状態は、それに影響を及ぼす特別な状況を示します。\n\n* デフォルトは通常 です\n\n* ブロックされている は、このタスクの進行を妨げるものがあることを示します。\n\n* 次の段階へ進む準備 は、そのタスクが次の段階に進む準備ができていることを示します"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -135,7 +135,7 @@ msgstr "エイリアス"
 #. module: project
 #: field:project.project,alias_model:0
 msgid "Alias Model"
-msgstr ""
+msgstr "エイリアスモデル"
 
 #. module: project
 #: field:project.config.settings,group_manage_delegation_task:0
@@ -191,7 +191,7 @@ msgstr "割当て日"
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assignation Month"
-msgstr ""
+msgstr "割当て月"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -234,7 +234,7 @@ msgstr "ブロック"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "責任者"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_reviewer
@@ -340,7 +340,7 @@ msgstr "タスク作業完了の合計を使用して計算されます。"
 #: model:ir.actions.act_window,name:project.action_config_settings
 #: view:project.config.settings:project.view_config_settings
 msgid "Configure Project"
-msgstr ""
+msgstr "プロジェクト設定"
 
 #. module: project
 #: view:project.project:project.view_project
@@ -357,7 +357,7 @@ msgstr ""
 #. module: project
 #: field:project.project,analytic_account_id:0
 msgid "Contract/Analytic"
-msgstr ""
+msgstr "契約/分析"
 
 #. module: project
 #: field:project.task,create_date:0
@@ -558,7 +558,7 @@ msgstr "エラー。再帰的なタスクを作成することはできません
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower than project end-date."
-msgstr ""
+msgstr "エラー！ プロジェクトの開始日はプロジェクトの終了日よりも前でなければなりません。"
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -711,7 +711,7 @@ msgstr "ID"
 #. module: project
 #: help:project.project,message_unread:0 help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: project
 #: help:account.analytic.account,use_tasks:0
@@ -802,7 +802,7 @@ msgstr "かんばん状態"
 #. module: project
 #: view:project.task:project.view_task_search_form
 msgid "Last Message"
-msgstr ""
+msgstr "最終メッセージ"
 
 #. module: project
 #: field:project.project,message_last_post:0
@@ -813,7 +813,7 @@ msgstr "最終メッセージ日"
 #. module: project
 #: field:project.task,write_date:0
 msgid "Last Modification Date"
-msgstr ""
+msgstr "最終変更日"
 
 #. module: project
 #: field:project.task,date_last_stage_update:0
@@ -842,7 +842,7 @@ msgstr "最終更新日"
 msgid ""
 "Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
-msgstr ""
+msgstr "新しいパッドへのリンクに使用するパッドのインストールをカスタマイズすることができます(例：http://ietherpad.com/)。\n- モジュールpadをインストールします"
 
 #. module: project
 #: help:project.project,analytic_account_id:0
@@ -882,7 +882,7 @@ msgstr "メンバー"
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
 msgid "Merge"
-msgstr ""
+msgstr "Merge"
 
 #. module: project
 #: field:project.project,message_ids:0 field:project.task,message_ids:0
@@ -1207,7 +1207,7 @@ msgstr ""
 msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
-msgstr ""
+msgstr "プロジェクトの課題/バグ管理のタイムシートサポートを提供します。\n- これはproject_issue_sheetモジュールをインストールします。"
 
 #. module: project
 #: code:addons/project/project.py:200
@@ -1414,7 +1414,7 @@ msgstr "タスク"
 #. module: project
 #: field:project.project,tasks:0
 msgid "Task Activities"
-msgstr ""
+msgstr "タスクのアクティビティ"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_assigned
@@ -1448,7 +1448,7 @@ msgstr "タスク委任"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr ""
+msgstr "タスクのパイプ"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -1572,7 +1572,7 @@ msgstr "テスト"
 msgid ""
 "The kind of document created when an email is received on this project's "
 "email alias"
-msgstr ""
+msgstr "このプロジェクトの電子メールエイリアスで電子メールが受信されたときに作成されるドキュメントの種類"
 
 #. module: project
 #: help:project.config.settings,module_project_timesheet:0
@@ -1703,7 +1703,7 @@ msgstr "ユーザビリティ"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Use Tasks"
-msgstr ""
+msgstr "タスクを使用"
 
 #. module: project
 #: field:project.config.settings,module_pad:0
@@ -1785,7 +1785,7 @@ msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
 "project's tasks and then delete the project or simply deactivate the "
 "project."
-msgstr ""
+msgstr "タスクを含むプロジェクトは削除できません。 すべてのプロジェクトのタスクを削除してから、プロジェクトを削除するか、単にプロジェクトを無効にすることができます。"
 
 #. module: project
 #: code:addons/project/project.py:435
@@ -1806,7 +1806,7 @@ msgstr "委任"
 #. module: project
 #: view:project.task:project.view_task_kanban
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_text_red"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings

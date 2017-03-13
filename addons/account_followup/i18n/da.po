@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-04-11 12:48+0000\n"
+"PO-Revision-Date: 2017-01-06 13:43+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-8/language/da/)\n"
 "MIME-Version: 1.0\n"
@@ -159,7 +159,7 @@ msgid ""
 "In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
+msgstr "\nKære %(partner_name)s,\n\nVed gennemgang af vores bogholderi har vi bemærket, at vi stadig ikke har modtaget betaling for ovenstående faktura på trods af tidligere rykker.\n\nDet er vigtigt at udestående betales straks, ellers vil vi vurdere om hvor hvidt jeres konto spærres for yderligere levering.\n\nHvis der er problemer med betaling eller stemmer saldoen ikke overens, så kontakt os hurtigst muligt så vi kan få løst problemet.\n\nMed venlig hilsen,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -178,7 +178,7 @@ msgid ""
 "\n"
 "Best Regards,\n"
 "            "
-msgstr ""
+msgstr "\nKære %(partner_name)s,\n\nVed gennemgang af vores bogholderi har vi bemærket, at vi stadig ikke har modtaget betaling for ovenstående faktura på trods af tidligere rykker.\n\nDet er vigtigt at udestående betales straks, ellers vil vi vurdere om hvor hvidt jeres konto spærres for yderligere levering.\n\nHvis der er problemer med betaling eller stemmer saldoen ikke overens, så kontakt os hurtigst muligt så vi kan få løst problemet.\n\nMed venlig hilsen,"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -191,7 +191,7 @@ msgid ""
 "Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.  \n"
 "\n"
 "Best Regards,\n"
-msgstr ""
+msgstr "\nKære %(partner_name)s,\n\nVed gennemgang af vores bogholderi har vi bemærket, at vi ikke har modtaget betaling for ovenstående faktura. \n\nHar I allerede indbetalt beløbet indenfor de seneste fem hverdage, så kan I se bort fra henvendelsen. Har I glemt at betale regningen, så beder vi jer indbetale beløbet straks. \n\nMed venlig hilsen,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -209,7 +209,7 @@ msgid ""
 "Details of due payments is printed below.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
+msgstr "\nKære %(partner_name)s,\n\nPå trods af flere rykkere er Jeres udestående endnu ikke betalt. \n\nDenne rykker er et varsel i henhold til inkassolovens § 10. Det skyldige beløb skal betales senest 10 dage fra dags dato. Hvis det ikke sker, vil det kunne medføre yderligere omkostninger for Dem, idet sagen uden yderligere varsel vil blive overgivet til inkasso.\n\nMed venlig hilsen,\n\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:174
@@ -472,7 +472,7 @@ msgstr "Kunde opfølgning"
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
-msgstr ""
+msgstr "Kunden lovet betaling"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
@@ -533,7 +533,7 @@ msgstr "Forfaldsdato"
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
-msgstr ""
+msgstr "Dage forfalden"
 
 #. module: account_followup
 #: field:account_followup.print,email_body:0
@@ -614,12 +614,12 @@ msgstr ""
 #: field:account.move.line,followup_line_id:0
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Follow-up Level"
-msgstr ""
+msgstr "Opfølgning niveau"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-up Levels"
-msgstr ""
+msgstr "Opfølgnings niveauer"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.action_report_followup
@@ -820,7 +820,7 @@ msgstr "Retssager"
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: field:account_followup.followup.line,manual_action:0
 msgid "Manual Action"
-msgstr ""
+msgstr "Manuel handling"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_followup
@@ -1037,13 +1037,13 @@ msgstr ""
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: field:account_followup.followup.line,send_letter:0
 msgid "Send a Letter"
-msgstr ""
+msgstr "Send et brev"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: field:account_followup.followup.line,send_email:0
 msgid "Send an Email"
-msgstr ""
+msgstr "Send en email"
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
@@ -1106,7 +1106,7 @@ msgid ""
 "The number of days after the due date of the invoice to wait before sending "
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
-msgstr ""
+msgstr "Antal dage efter forfaldsdato på en faktura, før rykker sendes. Kan være negativ hvis en venlig påmindelse skal sendes før forfald. "
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:313
@@ -1171,7 +1171,7 @@ msgstr ""
 #. module: account_followup
 #: view:account.move.line:account_followup.account_move_line_partner_tree
 msgid "Total credit"
-msgstr ""
+msgstr "Total til gode"
 
 #. module: account_followup
 #: view:account.move.line:account_followup.account_move_line_partner_tree
@@ -1213,7 +1213,7 @@ msgid ""
 "                            use the following keywords in the text. Don't\n"
 "                            forget to translate in all languages you installed\n"
 "                            using to top right icon."
-msgstr ""
+msgstr "Skriv introduktionen til brevether,\ni forhold til niveau af rykker. Du kan\nbruge følgende nøgleord i teksten. Glem\nikke at oversætte alle sprog du har installeret\nved hjælp af øverste højre ikon (globus)."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:291
@@ -1227,12 +1227,12 @@ msgstr ""
 msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
-msgstr ""
+msgstr "Din beskrivelse er forkert, brug den korrekte syntax eller %% hvis du ønsker at bruge procent karakteren."
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "days overdue, do the following actions:"
-msgstr ""
+msgstr "dage forfalden, udfør følgende handling:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form

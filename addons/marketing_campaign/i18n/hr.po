@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-05-06 13:30+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2017-02-27 14:44+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-8/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +66,7 @@ msgstr "Aktivnost"
 #: code:addons/marketing_campaign/marketing_campaign.py:501
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
-msgstr ""
+msgstr "Nakon %(interval_nbr)d %(interval_type)s"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
@@ -193,7 +193,7 @@ msgstr "Otkaži segment"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
 msgid "Cancel Workitem"
-msgstr ""
+msgstr "Otkaži stavku"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
@@ -220,12 +220,12 @@ msgstr "Uvjet"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
+msgstr "Čestitamo! Vi ste sada srebrni partner!"
 
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_3
 msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr ""
+msgstr "Čestitamo! Vi ste sada jedan od naših zlatnih partnera!"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:502
@@ -278,12 +278,12 @@ msgstr "Datum"
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
-msgstr ""
+msgstr "Datum na koji je ovaj segment zadnji put sinkroniziran (automatski ili ručno)"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
 msgid "Date this segment was last closed or cancelled."
-msgstr ""
+msgstr "Datum kada je ovaj segment zadnji put bio zatvoren ili otkazan."
 
 #. module: marketing_campaign
 #: field:campaign.analysis,day:0
@@ -319,7 +319,7 @@ msgstr "Mapa"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid "Don't Delete Workitems"
-msgstr ""
+msgstr "Nemoj brisati stavke"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -484,7 +484,7 @@ msgstr "ID"
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
 msgid "If date is not set, this workitem has to be run manually"
-msgstr ""
+msgstr "Ako datum nije postavljen, ova se stavka mora ručno pokrenuti"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
@@ -711,12 +711,12 @@ msgstr "Listopad"
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records created after last sync"
-msgstr ""
+msgstr "Samo zapisi kreirani nakon zadnje sinkronizacije"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
-msgstr ""
+msgstr "Samo zapisi izmijenjeni nakon zadnje sinkronizacije (bez duplikata)"
 
 #. module: marketing_campaign
 #: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
@@ -949,7 +949,7 @@ msgstr ""
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test Directly"
-msgstr ""
+msgstr "Testiraj direktno"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
@@ -959,7 +959,7 @@ msgstr "Testni način rada"
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test in Realtime"
-msgstr ""
+msgstr "Testiraj u stvarnom vremenu"
 
 #. module: marketing_campaign
 #: constraint:marketing.campaign.transition:0
@@ -975,7 +975,7 @@ msgstr ""
 #: code:addons/marketing_campaign/marketing_campaign.py:133
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr ""
+msgstr "Kampanja se ne može označiti kao obavljena prije nego se svi segmenti zatvore."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:123
@@ -983,13 +983,13 @@ msgstr ""
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr ""
+msgstr "Kampanja se ne može započeti, jer nema početnu aktivnost. Odredite aktivnosti kampanje kako biste odabrali jednu aktivnost kao točku polazišta."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:111
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
-msgstr ""
+msgstr "Kampanja se ne može započeti, jer ne sadrži aktivnosti."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:800
@@ -1000,7 +1000,7 @@ msgstr ""
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
 msgid "The email to send when this activity is activated"
-msgstr ""
+msgstr "E-mail za poslati kada se ova aktivnost aktivira"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
@@ -1014,7 +1014,7 @@ msgstr ""
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
 msgid "The interval must be positive or zero"
-msgstr ""
+msgstr "Interval mora biti pozitivan ili nula"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_id:0

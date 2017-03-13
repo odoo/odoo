@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 12:39+0000\n"
-"PO-Revision-Date: 2016-09-27 23:09+0000\n"
+"PO-Revision-Date: 2016-12-03 07:00+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -90,7 +90,7 @@ msgstr "API設定"
 #. module: google_calendar
 #: model:ir.ui.menu,name:google_calendar.menu_calendar_google_tech_config
 msgid "API Credentials"
-msgstr ""
+msgstr "API認証情報"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -104,7 +104,7 @@ msgstr ""
 msgid ""
 "All events have been disconnected from your previous account. You can now "
 "restart the synchronization"
-msgstr ""
+msgstr "すべてのイベントが以前のアカウントから切断されました。 同期を再開できるようになりました"
 
 #. module: google_calendar
 #. openerp-web
@@ -113,7 +113,7 @@ msgstr ""
 msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
-msgstr ""
+msgstr "管理者は、Google同期を使用する前に設定する必要があります。"
 
 #. module: google_calendar
 #. openerp-web
@@ -122,7 +122,7 @@ msgstr ""
 msgid ""
 "An error occured while disconnecting events from your previous account. "
 "Please retry or contact your administrator."
-msgstr ""
+msgstr "以前のアカウントからイベントを切断中にエラーが発生しました。 再試行するか、管理者にお問い合わせください。"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -137,7 +137,7 @@ msgstr "カレンダ"
 #. module: google_calendar
 #: field:res.users,google_calendar_cal_id:0
 msgid "Calendar ID"
-msgstr ""
+msgstr "カレンダーID"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -172,14 +172,14 @@ msgstr "Client_key"
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid "Connect on your google account and go to"
-msgstr ""
+msgstr "あなたのGoogleアカウントに接続"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/calendar_sync.js:47
 #, python-format
 msgid "Do you want to do this now?"
-msgstr ""
+msgstr "今すぐこれをしたいですか？"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
@@ -196,7 +196,7 @@ msgstr "Google"
 #. module: google_calendar
 #: field:calendar.attendee,google_internal_event_id:0
 msgid "Google Calendar Event Id"
-msgstr ""
+msgstr "GoogleカレンダーイベントID"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -211,7 +211,7 @@ msgstr "Googleクライアントシークレット"
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
 msgid "Google ID should be unique!"
-msgstr ""
+msgstr "Google IDは一意である必要があります。"
 
 #. module: google_calendar
 #: field:google.calendar,id:0
@@ -225,7 +225,7 @@ msgstr "ID"
 msgid ""
 "In order to do this, you first need to disconnect all existing events from "
 "the old account."
-msgstr ""
+msgstr "これを行うには、まず、既存のすべてのイベントを古いアカウントから切断する必要があります。"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -244,22 +244,22 @@ msgstr ""
 msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
-msgstr ""
+msgstr "同期された最後のカレンダーID。 変更された場合、Google IDとOdoo Google内部IDの間のリンクはすべて削除されます"
 
 #. module: google_calendar
 #: field:res.users,google_calendar_last_sync_date:0
 msgid "Last synchro date"
-msgstr ""
+msgstr "最終同期日"
 
 #. module: google_calendar
 #: field:calendar.attendee,oe_synchro_date:0
 msgid "Odoo Synchro Date"
-msgstr ""
+msgstr "Odoo 同期日"
 
 #. module: google_calendar
 #: field:calendar.event,oe_update_date:0
 msgid "Odoo Update Date"
-msgstr ""
+msgstr "Odoo 更新日"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -269,12 +269,12 @@ msgstr ""
 #. module: google_calendar
 #: field:res.users,google_calendar_rtoken:0
 msgid "Refresh Token"
-msgstr ""
+msgstr "リフレッシュトークン"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid "Return at Top"
-msgstr ""
+msgstr "トップに戻る"
 
 #. module: google_calendar
 #: field:base.config.settings,google_cal_sync:0
@@ -300,7 +300,7 @@ msgstr ""
 msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
-msgstr ""
+msgstr "Google同期を使用するには、事前に設定する必要があります。今すぐしますか？"
 
 #. module: google_calendar
 #. openerp-web
@@ -309,29 +309,29 @@ msgstr ""
 msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
-msgstr ""
+msgstr "同期しようとしているアカウント (%s)は、最後に使用したアカウント (%s)と同じではありません！"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid ""
 "To setup the signin process with Google, first you have to perform the "
 "following steps"
-msgstr ""
+msgstr "Googleでログインプロセスを設定するには、まず次の手順を実行する必要があります"
 
 #. module: google_calendar
 #: field:res.users,google_calendar_token_validity:0
 msgid "Token Validity"
-msgstr ""
+msgstr "トークン有効性"
 
 #. module: google_calendar
 #: field:base.config.settings,server_uri:0
 msgid "URI for tuto"
-msgstr ""
+msgstr "tutoのURI"
 
 #. module: google_calendar
 #: field:res.users,google_calendar_token:0
 msgid "User token"
-msgstr ""
+msgstr "ユーザートークン"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
@@ -360,7 +360,7 @@ msgstr ""
 #: code:addons/google_calendar/static/src/js/calendar_sync.js:28
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
-msgstr ""
+msgstr "あなたのカレンダーへのアクセスを許可するためにGoogleにリダイレクトされます！"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -382,4 +382,4 @@ msgstr ""
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid "https://console.developers.google.com/"
-msgstr ""
+msgstr "https://console.developers.google.com/"

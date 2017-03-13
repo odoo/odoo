@@ -13,6 +13,14 @@ file_exists() {
     [[ -f $1 ]];
 }
 
+require_command () {
+    type "$1" &> /dev/null || { echo "Command $1 is missing. Install it e.g. with 'apt-get install $1'. Aborting." >&2; exit 1; }
+}
+
+require_command kpartx
+require_command qemu-system-arm
+require_command zerofree
+
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
 __base="$(basename ${__file} .sh)"
@@ -28,6 +36,7 @@ fi
 cp -a *raspbian*.img posbox.img
 
 CLONE_DIR="${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo"
+rm -rf "${CLONE_DIR}"
 mkdir "${CLONE_DIR}"
 git clone -b 8.0 --no-checkout --depth 1 https://github.com/odoo/odoo.git "${CLONE_DIR}"
 cd "${CLONE_DIR}"
@@ -44,7 +53,7 @@ cd "${__dir}"
 USR_BIN="${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr/bin/"
 mkdir -p "${USR_BIN}"
 cd "/tmp"
-curl 'https://dl.ngrok.com/ngrok_2.0.19_linux_arm.zip' > ngrok.zip
+curl 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip' > ngrok.zip
 unzip ngrok.zip
 rm ngrok.zip
 cd "${__dir}"
@@ -68,6 +77,7 @@ START_OF_ROOT_PARTITION=$(fdisk -l posbox.img | tail -n 1 | awk '{print $2}')
 
 LOOP_MAPPER_PATH=$(kpartx -av posbox.img | tail -n 1 | cut -d ' ' -f 3)
 LOOP_MAPPER_PATH="/dev/mapper/${LOOP_MAPPER_PATH}"
+sleep 5
 
 # resize filesystem
 e2fsck -f "${LOOP_MAPPER_PATH}" # resize2fs requires clean fs

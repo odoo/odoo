@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-10-13 15:42+0000\n"
+"PO-Revision-Date: 2016-12-09 02:23+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -50,14 +50,14 @@ msgstr ""
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr ""
+msgstr "<div> <p>こんにちは、</p> <p> %s は%s  ドキュメント：%s をフォローするようあなたを招待しました。</p> </div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:47
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr ""
+msgstr "<div><p>こんにちは、</p><p> %s が新規ドキュメントをフォローするようあなたを招待しました。</p></div>"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:134
@@ -165,7 +165,7 @@ msgstr "有効"
 #. module: mail
 #: field:mail.compose.message,active_domain:0
 msgid "Active domain"
-msgstr ""
+msgstr "有効なドメイン"
 
 #. module: mail
 #: view:mail.wizard.invite:mail.mail_wizard_invite_form
@@ -195,7 +195,7 @@ msgstr "フォロワー追加"
 #. module: mail
 #: field:mail.compose.message,partner_ids:0
 msgid "Additional Contacts"
-msgstr ""
+msgstr "追加連絡先"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -420,7 +420,7 @@ msgstr "Eメール作成"
 #. module: mail
 #: field:mail.compose.message,composition_mode:0
 msgid "Composition mode"
-msgstr ""
+msgstr "合成モード"
 
 #. module: mail
 #: field:mail.notification,partner_id:0
@@ -466,7 +466,7 @@ msgstr "作成月"
 #. module: mail
 #: help:mail.compose.message,starred:0 help:mail.message,starred:0
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
+msgstr "現在のユーザーには、このメッセージにリンクされているスター付き通知があります"
 
 #. module: mail
 #: help:mail.compose.message,to_read:0 help:mail.message,to_read:0
@@ -557,7 +557,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr ""
+msgstr "ドキュメントフォロワー"
 
 #. module: mail
 #. openerp-web
@@ -571,14 +571,14 @@ msgstr "完了"
 #: code:addons/mail/static/src/js/mail_followers.js:100
 #, python-format
 msgid "Edit Subscription of "
-msgstr ""
+msgstr "サブスクリプションの編集"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail_followers.xml:40
 #, python-format
 msgid "Edit subscription"
-msgstr ""
+msgstr "定期購読の編集"
 
 #. module: mail
 #: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
@@ -611,7 +611,7 @@ msgstr "Eメールスレッド"
 msgid ""
 "Email address internally associated with this user. Incoming emails will "
 "appear in the user's notifications."
-msgstr ""
+msgstr "このユーザーに内部的に関連付けられている電子メールアドレス。 受信メールはユーザーの通知に表示されます。"
 
 #. module: mail
 #: help:mail.compose.message,email_from:0 help:mail.message,email_from:0
@@ -623,12 +623,12 @@ msgstr "送信者のメールアドレス。このフィールドは受信メー
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
-msgstr ""
+msgstr "返信をリダイレクトする電子メールアドレス..."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Eメール構成ウィザード"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -658,12 +658,12 @@ msgstr "エラー"
 #: code:addons/mail/update.py:91
 #, python-format
 msgid "Error during communication with the publisher warranty server."
-msgstr ""
+msgstr "パブリッシャー保証サーバーとの通信中にエラーが発生しました。"
 
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a partner cannot follow twice the same object."
-msgstr ""
+msgstr "エラー、パートナーは同じオブジェクトを二回フォローすることはできません。"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -716,7 +716,7 @@ msgstr "フォロワー"
 #. module: mail
 #: view:mail.followers:mail.view_mail_subscription_form
 msgid "Followers Form"
-msgstr ""
+msgstr "フォロワーフォーム"
 
 #. module: mail
 #. openerp-web
@@ -758,7 +758,7 @@ msgstr "送信者"
 #: code:addons/mail/res_users.py:75
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "コンフィグレーションパネルに移動"
 
 #. module: mail
 #: view:mail.group:mail.view_group_search
@@ -810,7 +810,7 @@ msgstr "非表示"
 #. module: mail
 #: help:mail.message.subtype,hidden:0
 msgid "Hide the subtype in the follower options"
-msgstr ""
+msgstr "フォロワーオプションのサブタイプを非表示にする"
 
 #. module: mail
 #: help:mail.group,message_summary:0 help:mail.thread,message_summary:0
@@ -834,7 +834,7 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr ""
+msgstr "エイリアスを保持する親レコードのID（例：プロジェクトは、タスク作成エイリアスを保持）"
 
 #. module: mail
 #: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
@@ -845,21 +845,21 @@ msgstr "追従するリソースのID"
 #: help:mail.group,message_unread:0 help:mail.thread,message_unread:0
 #: help:res.partner,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: mail
 #: help:mail.wizard.invite,send_mail:0
 msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
-msgstr ""
+msgstr "オンにすると、パートナーはドキュメントのフォロワーに追加された旨の電子メールを受け取ります。"
 
 #. module: mail
 #: help:base.config.settings,alias_domain:0
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
-msgstr ""
+msgstr "Odooサーバーにリダイレクトされるキャッチオール電子メールドメインをセットアップした場合は、ここにドメイン名を入力します。"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -896,18 +896,18 @@ msgstr "操作は無効です。"
 msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
-msgstr ""
+msgstr "式が無効です。リテラルPython辞書定義でなければなりません。 例,\"{'field'： 'value'} '"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:97
 #, python-format
 msgid "Invitation to follow %s: %s"
-msgstr ""
+msgstr "%sに従う招待： %s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "招待ウィザード"
 
 #. module: mail
 #: field:mail.mail,notification:0
@@ -961,7 +961,7 @@ msgstr "最終更新日"
 #: help:mail.wizard.invite,partner_ids:0
 msgid ""
 "List of partners that will be added as follower of the current document."
-msgstr ""
+msgstr "現在のドキュメントのフォロワーとして追加されるパートナーのリスト。"
 
 #. module: mail
 #. openerp-web
@@ -987,7 +987,7 @@ msgstr "内部メモを記録"
 #: code:addons/mail/mail_mail.py:340
 #, python-format
 msgid "Mail Delivery Failed"
-msgstr ""
+msgstr "メール送信失敗"
 
 #. module: mail
 #: field:ir.ui.menu,mail_group_id:0
@@ -1002,7 +1002,7 @@ msgstr ""
 #. module: mail
 #: help:mail.mail,notification:0
 msgid "Mail has been created to notify people of an existing mail.message"
-msgstr ""
+msgstr "既存のmail.messageを知らせるメールが作成されました"
 
 #. module: mail
 #. openerp-web
@@ -1022,7 +1022,7 @@ msgid ""
 "Medium-sized photo of the group. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr ""
+msgstr "グループの中サイズ写真。 アスペクト比が保存された128x128ピクセルの画像として自動的にサイズが変更されます。 フォームビューまたは一部のかんばんビューでこのフィールドを使用します。"
 
 #. module: mail
 #: help:mail.group,group_ids:0
@@ -1108,7 +1108,7 @@ msgstr "メッセージ"
 #. module: mail
 #: view:mail.message:mail.view_message_search
 msgid "Messages Search"
-msgstr ""
+msgstr "メッセージ検索"
 
 #. module: mail
 #: help:mail.group,message_ids:0 help:mail.thread,message_ids:0
@@ -1176,7 +1176,7 @@ msgstr "名称"
 #. module: mail
 #: help:mail.compose.message,record_name:0 help:mail.message,record_name:0
 msgid "Name get of the related document."
-msgstr ""
+msgstr "関連するドキュメントの名前を取得します。"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -1212,7 +1212,7 @@ msgstr "返信をスレッドに追加しない"
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
 msgid "Notification"
-msgstr ""
+msgstr "通知"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_notifications
@@ -1238,7 +1238,7 @@ msgstr "フォロワーに通知"
 #. module: mail
 #: help:mail.compose.message,notify:0
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "フォロワーに文書を通知する（一括投稿のみ）"
 
 #. module: mail
 #. openerp-web
@@ -1257,7 +1257,7 @@ msgstr ""
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
 msgid "Open Document"
-msgstr ""
+msgstr "ドキュメントを開く"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_client_messaging_menu
@@ -1267,7 +1267,7 @@ msgstr ""
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
 msgid "Open Parent Document"
-msgstr ""
+msgstr "親ドキュメントを開く"
 
 #. module: mail
 #. openerp-web
@@ -1352,7 +1352,7 @@ msgstr "パートナ"
 #: code:addons/mail/res_partner.py:51
 #, python-format
 msgid "Partner Profile"
-msgstr ""
+msgstr "パートナープロファイル"
 
 #. module: mail
 #: help:mail.compose.message,notified_partner_ids:0
@@ -1390,7 +1390,7 @@ msgstr "取引先の情報とEメールを完成させてください。"
 #: code:addons/mail/static/src/xml/mail.xml:224
 #, python-format
 msgid "Please, wait while the file is uploading."
-msgstr ""
+msgstr "ファイルがアップロードされている間お待ちください。"
 
 #. module: mail
 #: help:mail.alias,alias_contact:0
@@ -1407,7 +1407,7 @@ msgid ""
 "Policy to receive emails for new messages pushed to your personal Inbox:\n"
 "- Never: no emails are sent\n"
 "- All Messages: for every notification you receive in your Inbox"
-msgstr ""
+msgstr "あなたの個人の受信トレイにプッシュされた新しいメッセージの電子メールを受信するポリシー：\n- 絶対：メールは送信されません\n- すべてのメッセージ：受信トレイで受け取ったすべての通知"
 
 #. module: mail
 #: field:mail.group,public:0
@@ -1513,7 +1513,7 @@ msgstr "返信"
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr ""
+msgstr "返信メールアドレス。 reply_toを設定すると、自動スレッド作成がバイパスされます。"
 
 #. module: mail
 #: field:mail.compose.message,reply_to:0 field:mail.message,reply_to:0
@@ -1533,7 +1533,7 @@ msgstr "リッチテキストのコンテンツ"
 #. module: mail
 #: help:mail.mail,body_html:0
 msgid "Rich-text/HTML message"
-msgstr ""
+msgstr "リッチテキスト/ HTMLメッセージ"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -1543,7 +1543,7 @@ msgstr "エイリアス検索"
 #. module: mail
 #: view:mail.group:mail.view_group_search
 msgid "Search Groups"
-msgstr ""
+msgstr "グループの検索"
 
 #. module: mail
 #: selection:mail.group,public:0
@@ -1633,7 +1633,7 @@ msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "グループの小サイズ写真。 アスペクト比が保存された64x64pxイメージとして自動的にサイズが変更されます。 小さな画像が必要な場所なら、このフィールドを使用します。"
 
 #. module: mail
 #: field:mail.compose.message,starred:0 field:mail.message,starred:0
@@ -1711,7 +1711,7 @@ msgstr ""
 msgid ""
 "The email address associated with this group. New emails received will "
 "automatically create new topics."
-msgstr ""
+msgstr "このグループに関連付けられている電子メールアドレス。 新しいメールが受信されると自動的に新しいトピックが作成されます。"
 
 #. module: mail
 #: help:mail.alias,alias_model_id:0
@@ -1719,14 +1719,14 @@ msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
-msgstr ""
+msgstr "このエイリアスに対応した(Odooドキュメント種別)モデル。既存のレコードに返信しない任意の受信メールは、このモデルの新しいレコード(例えば、プロジェクトタスク)の作成を引き起こします"
 
 #. module: mail
 #: help:mail.alias,alias_name:0
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr ""
+msgstr "eメールのエイリアス.例えば<jjobs@example.odoo.com>のメールを受け取りたい場合'jobs’を選択"
 
 #. module: mail
 #: help:mail.alias,alias_user_id:0
@@ -1744,14 +1744,14 @@ msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
+msgstr "セキュリティ上の制約のため、要求された操作を完了できません。 システム管理者に連絡してください。\n\n(ドキュメントタイプ: %s, 操作: %s)"
 
 #. module: mail
 #: help:mail.group,image:0
 msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
-msgstr ""
+msgstr "このフィールドには、グループの写真として使用される画像が格納されます（1024x1024pxに制限されます）。"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -1842,7 +1842,7 @@ msgstr "フォロー解除"
 #: sql_constraint:mail.alias:0
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
-msgstr ""
+msgstr "残念ながらこのメールエイリアスは既に使用されています。ユニークなものを選択してください"
 
 #. module: mail
 #: field:mail.group,message_unread:0 field:mail.thread,message_unread:0
@@ -1855,17 +1855,17 @@ msgstr "未読メッセージ"
 #: code:addons/mail/static/src/xml/mail.xml:223
 #, python-format
 msgid "Uploading error"
-msgstr ""
+msgstr "アップロードエラー"
 
 #. module: mail
 #: field:mail.compose.message,use_active_domain:0
 msgid "Use active domain"
-msgstr ""
+msgstr "有効なドメインを使用"
 
 #. module: mail
 #: help:mail.message.subtype,sequence:0
 msgid "Used to order subtypes."
-msgstr ""
+msgstr "サブタイプのオーダーに使用されます。"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -1923,7 +1923,7 @@ msgstr ""
 #. module: mail
 #: help:mail.compose.message,is_log:0
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "メッセージが内部ノートであるかどうか(コメントモードのみ)"
 
 #. module: mail
 #: model:mail.group,name:mail.group_all_employees
@@ -1946,7 +1946,7 @@ msgstr ""
 msgid ""
 "You cannot create a new user from here.\n"
 " To create new user please go to configuration panel."
-msgstr ""
+msgstr "ここから新しいユーザーを作成することはできません。\n  新しいユーザーを作成するには、設定パネルにアクセスしてください。"
 
 #. module: mail
 #: code:addons/mail/mail_group.py:174
@@ -1954,7 +1954,7 @@ msgstr ""
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
-msgstr ""
+msgstr "グループ全体が他のモジュールで必要とされるため、これらのグループを削除することはできません。"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:171
@@ -1997,7 +1997,7 @@ msgstr ""
 #: code:addons/mail/mail_thread.py:115
 #, python-format
 msgid "document"
-msgstr ""
+msgstr "ドキュメント"
 
 #. module: mail
 #. openerp-web
@@ -2025,7 +2025,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:310
 #, python-format
 msgid "more"
-msgstr ""
+msgstr "さらに"
 
 #. module: mail
 #. openerp-web
@@ -2057,7 +2057,7 @@ msgstr ""
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 #: view:mail.mail:mail.view_mail_form
 msgid "on"
-msgstr ""
+msgstr "on"
 
 #. module: mail
 #. openerp-web
@@ -2087,7 +2087,7 @@ msgstr "全文表示解除"
 #: code:addons/mail/static/src/xml/mail.xml:334
 #, python-format
 msgid "show"
-msgstr ""
+msgstr "表示"
 
 #. module: mail
 #. openerp-web

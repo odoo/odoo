@@ -8,17 +8,18 @@
 # danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
-# grazziano <g.negocios@outlook.com.br>, 2016
+# grazziano <gra.negocia@gmail.com>, 2016
+# grazziano <gra.negocia@gmail.com>, 2017
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
 # Mateus Lopes <mateus1@gmail.com>, 2015
-# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2015
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-09-18 22:58+0000\n"
-"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
+"PO-Revision-Date: 2017-01-26 02:04+0000\n"
+"Last-Translator: grazziano <gra.negocia@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3133,7 +3134,7 @@ msgid ""
 "The field 'Working Hours' is the delay(stop date - start date).\n"
 "So, that we can compare the theoretic delay and real delay. \n"
 "    "
-msgstr "\nEste módulo adiciona estado, date_start, date_stop em linhas de produção da ordem de operação (na aba 'Ordens de Trabalho \").\n================================================================================================================\n\nSituação: provisória, confirmar, concluir, cancelar\nNo término, confirmação, cancelamento de ordens de fabricação define todas as linhas de estado\npara o estado correspondente.\n\nCria menus:\n-------------\n     Fabricação ** **> ** ** Fabricação> Pedidos de trabalho ** **\n\nQue é um ponto de vista sobre as linhas \"Ordens de Serviço\" na ordem de fabricação.\n\nAdicionar botões na visão de formulário de ordem de produção na aba ordens de trabalho:\n-------------------------------------------------- -----------------------\n     * Começar (definir o estado para confirmar), conjunto date_start\n     * Concluído (definir o estado de concluído) date_stop, definir\n     * Provisório (definir o estado como provisório)\n     * Cancelar estado definido para cancelar\n\nQuando a ordem de produção torna-se \"pronto para produzir\", as operações devem\ntornam-se \"confirmada\". Quando a ordem de produção for concluída, todas as operações\ndeve tornar-se concluídas.\n\n\"Horário de Trabalho\" O campo é o atraso (parar data - data de início).\nEntão, que podemos comparar o atraso teórico e atraso real. \n    "
+msgstr "\nEste módulo adiciona estado, date_start, date_stop em linhas de produção da ordem de operação (na aba 'Ordens de Trabalho \").\n================================================================================================================\n\nSituação: provisória, confirmar, concluir, cancelar\nNo término, confirmação, cancelamento de ordens de fabricação define todas as linhas de estado\npara o estado correspondente.\n\nCria menus:\n-------------\n     Fabricação ** **> ** ** Fabricação> Pedidos de trabalho ** **\n\nQue é uma visão sobre as linhas \"Ordens de Serviço\" na ordem de fabricação.\n\nAdicionar botões na visão de formulário de ordem de produção na aba ordens de trabalho:\n-------------------------------------------------- -----------------------\n     * Começar (definir o estado para confirmar), conjunto date_start\n     * Concluído (definir o estado de concluído) date_stop, definir\n     * Provisório (definir o estado como provisório)\n     * Cancelar estado definido para cancelar\n\nQuando a ordem de produção torna-se \"pronto para produzir\", as operações devem\ntornam-se \"confirmada\". Quando a ordem de produção for concluída, todas as operações\ndeve tornar-se concluídas.\n\n\"Horário de Trabalho\" O campo é o atraso (parar data - data de início).\nEntão, que podemos comparar o atraso teórico e atraso real. \n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -7400,7 +7401,7 @@ msgstr "Intercâmbio Eletrônico de Dados (EDI)"
 #: code:addons/base/ir/ir_ui_view.py:475
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
-msgstr "Elemento '%s' não pode ser localizado na vista principal"
+msgstr "Elemento '%s' não pode ser localizado na visão pai"
 
 #. module: base
 #: code:addons/base/res/res_company.py:165
@@ -7708,7 +7709,7 @@ msgstr "Expressão, deve ser Verdadeira para corresponder.\nuse context.get ou u
 #. module: base
 #: selection:ir.ui.view,mode:0
 msgid "Extension View"
-msgstr "Veja Extensão"
+msgstr "Visão de Extensão"
 
 #. module: base
 #: field:ir.module.category,xml_id:0 field:ir.ui.view,xml_id:0
@@ -8336,7 +8337,7 @@ msgstr "Gráfico"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_graph
 msgid "Graph Views"
-msgstr "Visão Gráfico"
+msgstr "Visão de Gráfico"
 
 #. module: base
 #: model:res.country,name:base.gr
@@ -8905,7 +8906,7 @@ msgid ""
 "* if True, the view always extends its parent\n"
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "             "
-msgstr "Se esse ponto de vista é herdada,\n* Se for verdade, o ponto de vista sempre estende a sua mãe\n* Se false, a visão atualmente não estender seu pai mas pode ser ativado"
+msgstr "Se esta visão é herdada,\n* Se for verdade, a visão sempre estende seu pai\n* Se for falso, a visão atualmente não estende seu pai mas pode ser ativada"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_state
@@ -9084,7 +9085,7 @@ msgstr "Herdado"
 #. module: base
 #: field:ir.ui.view,inherit_id:0
 msgid "Inherited View"
-msgstr "View herdada"
+msgstr "Visão Herdada"
 
 #. module: base
 #: view:ir.ui.view:base.view_view_form
@@ -9124,7 +9125,7 @@ msgstr "Edição em linha"
 #. module: base
 #: selection:ir.actions.act_window,target:0
 msgid "Inline View"
-msgstr "Visão em linha"
+msgstr "Visão em Linha"
 
 #. module: base
 #: code:addons/base/module/module.py:436
@@ -9319,7 +9320,7 @@ msgstr "Especificação de group_by inválida: \"%s\".\nUma definição de group
 msgid ""
 "Invalid inheritance mode: if the mode is 'extension', the view must extend "
 "an other view"
-msgstr "Modo de herança inválido: se o modo é \"extensão\", a visão deve estender um outro ponto de vista"
+msgstr "Modo de herança inválido: se o modo é \"extensão\", a visão deve estender uma outra visão"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:227
@@ -10168,7 +10169,7 @@ msgstr "Gerenciar Equipes de Vendas"
 #. module: base
 #: model:res.groups,name:base.group_website_designer
 msgid "Manage Website and qWeb view"
-msgstr "Gerencie site e Qweb vista"
+msgstr "Gerencie site e visão Qweb"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.grant_menu_access
@@ -11257,7 +11258,7 @@ msgid ""
 "  different model than this one), then this view's inheritance specs\n"
 "  (<xpath/>) are applied, and the result is used as if it were this view's\n"
 "  actual arch.\n"
-msgstr "Só se aplica se essa visão herda de uma outra (inherit_id not False/nulo).\n\n* Se a extensão (padrão), se este ponto de vista é solicitado o ponto de vista primário mais próximo\n   é procurado (via inherit_id), todos os pontos de vista que herdam-lo com este\n   O modelo de vista são aplicadas\n* Se primário, o ponto de vista primário mais próximo está totalmente resolvida (mesmo se ele usa um modelo diferente do que este), então herança especificações deste vista\n   (<xpath />) são aplicadas, e o resultado é usado como se fosse deste vista\n   arco real.\n"
+msgstr "Só se aplica se essa visão herda de uma outra (inherit_id não é Falso/Nulo).\n\n* Se a extensão (padrão), se esta visão é solicitada visão primária mais próxima\n   é procurada (via inherit_id), então todas as visões que herdam-na com este\n   modelo de visão são aplicadas\n* Se primário, a visão primária mais próxima está totalmente resolvida (mesmo se ela usa um modelo diferente deste), então as especificações de herança desta visão\n   (<xpath/>) são aplicadas, e o resultado é usado como se fosse o arco atual desta visão.\n"
 
 #. module: base
 #: help:res.partner.bank,company_id:0
@@ -15251,7 +15252,7 @@ msgstr "Nome da Visão"
 #. module: base
 #: field:ir.actions.act_window,view_id:0
 msgid "View Ref."
-msgstr "Ref. de visão"
+msgstr "Ref. de Visão"
 
 #. module: base
 #: view:ir.actions.act_window:base.view_window_action_search
@@ -15263,7 +15264,7 @@ msgstr "Tipo de Visão"
 #. module: base
 #: field:ir.ui.view,mode:0
 msgid "View inheritance mode"
-msgstr "View inheritance mode"
+msgstr "Ver modo de herança"
 
 #. module: base
 #: help:ir.actions.act_window,view_type:0

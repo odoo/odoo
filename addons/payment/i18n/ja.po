@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-09-16 04:17+0000\n"
+"PO-Revision-Date: 2016-12-10 09:04+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -151,12 +151,12 @@ msgstr "費用"
 #. module: payment
 #: help:payment.transaction,fees:0
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "料金の額。 決済サービスに依存するため、システムによって設定"
 
 #. module: payment
 #: help:payment.transaction,state_message:0
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
+msgstr "情報のエラーおよび/または検証メッセージを格納するために使用されるフィールド"
 
 #. module: payment
 #: field:payment.acquirer,fees_dom_fixed:0
@@ -203,7 +203,7 @@ msgstr "ID"
 #. module: payment
 #: help:payment.transaction,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: payment
 #: field:payment.transaction,message_is_follower:0
@@ -233,7 +233,7 @@ msgstr "最終更新日"
 #. module: payment
 #: help:payment.acquirer,website_published:0
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "この決済サービスを利用可能にする(顧客の請求書など)"
 
 #. module: payment
 #: field:account.config.settings,module_payment_adyen:0
@@ -268,12 +268,12 @@ msgstr "メッセージ"
 #. module: payment
 #: help:payment.acquirer,post_msg:0
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "支払い処理が完了した後に表示されるメッセージ。"
 
 #. module: payment
 #: help:payment.acquirer,pre_msg:0
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "支払い処理の説明とヘルプに表示されるメッセージ。"
 
 #. module: payment
 #: field:payment.transaction,message_ids:0
@@ -332,7 +332,7 @@ msgstr "決済サービス"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "決済トランザクション"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -376,7 +376,7 @@ msgstr "プロバイダ"
 #. module: payment
 #: help:payment.transaction,acquirer_reference:0
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "決済サービスデータベースに格納されたTXの参照"
 
 #. module: payment
 #: help:payment.transaction,partner_reference:0
@@ -386,7 +386,7 @@ msgstr ""
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "必須フィールドが入力されていません"
 
 #. module: payment
 #: view:payment.transaction:payment.transaction_form
@@ -396,7 +396,7 @@ msgstr "グループにメッセージを送信"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
-msgstr ""
+msgstr "サーバーからサーバーへ"
 
 #. module: payment
 #: help:payment.acquirer,validation:0
@@ -426,7 +426,7 @@ msgstr "お礼メッセージ"
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "The payment transaction reference must be unique!"
-msgstr ""
+msgstr "支払取引の参照は一意でなければなりません！"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
@@ -483,51 +483,51 @@ msgstr "郵便番号"
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr ""
+msgstr "決済サービス：payment.acquirer ブラウズレコード"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr ""
+msgstr "金額：取引金額、浮動小数点"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr ""
+msgstr "context：現在のコンテキスト辞書"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr ""
+msgstr "currency: 取引通貨ブラウズレコード"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr ""
+msgstr "partner: バイヤーのパートナーの閲覧記録、設定必須ではない"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr ""
+msgstr "partner_values: 購入者に関する特定の値、たとえば出荷フォームからのもの"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr ""
+msgstr "reference: トランザクション参照番号"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr ""
+msgstr "tx_url: フォームを送信するトランザクションURL"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr ""
+msgstr "tx_values: トランザクション値"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr ""
+msgstr "user: 現在のユーザーの閲覧レコード"

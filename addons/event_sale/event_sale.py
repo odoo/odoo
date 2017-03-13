@@ -205,7 +205,8 @@ class event_ticket(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'event_id': fields.many2one('event.event', "Event", required=True, ondelete='cascade'),
-        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[("event_type_id", "!=", False)]),
+        'product_id': fields.many2one('product.product', 'Product', required=True,
+            domain=["|", ("event_type_id", "!=", False), ("event_ok", "=", True)]),
         'registration_ids': fields.one2many('event.registration', 'event_ticket_id', 'Registrations'),
         'deadline': fields.date("Sales End"),
         'is_expired': fields.function(_is_expired, type='boolean', string='Is Expired'),

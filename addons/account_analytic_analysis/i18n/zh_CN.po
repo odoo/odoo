@@ -5,19 +5,19 @@
 # Translators:
 # Feng Xi <uudice@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2015
+# Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015,2017
 # niulinlnc <admin@niulin.net>, 2015
-# wxb <bd5dml@gmail.com>, 2015
+# xiaobin wu <bd5dml@gmail.com>, 2015
 # liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-07-08 13:02+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2017-03-11 07:54+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +89,7 @@ msgid ""
 "</pre>\n"
 "\n"
 "            "
-msgstr "\n你好 ${object.name},\n\n% macro account_table(values):\n<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n    <tr>\n        <th>客户</th>\n        <th>合同</th>\n        <th>日期</th>\n        <th>预付单位</th>\n        <th>联络</th>\n    </tr>\n    % for partner, accounts in values:\n        % for account in accounts:\n        <tr>\n            <td>${partner.name}</td>\n            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&view_type=form\">${account.name}</a></td>\n            <td>${account.date_start} to ${account.date and account.date or '???'}</td>\n            <td>\n            % if account.quantity_max != 0.0:\n                ${account.remaining_hours}/${account.quantity_max} units\n            % endif\n            </td>\n            <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>\n        </tr>\n        % endfor\n    % endfor\n</table>\n% endmacro \n\n% if \"new\" in ctx[\"data\"]:\n    <h2>下列合同刚刚过期：</h2>\n    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n% endif\n\n% if \"old\" in ctx[\"data\"]:\n    <h2>下列已过期未处理的合同：</h2>\n    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n% endif\n\n% if \"future\" in ctx[\"data\"]:\n    <h2>以下合同将在不到一个月到期：</h2>\n    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n% endif\n\n<p>\n    你可以检查所有的合同都要重新使用菜单：\n</p>\n<ul>\n    <li>销售 / 发票 / 合同更新</li>\n</ul>\n<p>\n    谢谢,\n</p>\n\n<pre>\n-- \nOdoo 自动发出之电子邮件\n</pre>\n\n            "
+msgstr "\n您好 ${object.name},\n\n% macro account_table(values):\n<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n    <tr>\n        <th>客户</th>\n        <th>合同</th>\n        <th>日期</th>\n        <th>预付单位</th>\n        <th>联络</th>\n    </tr>\n    % for partner, accounts in values:\n        % for account in accounts:\n        <tr>\n            <td>${partner.name}</td>\n            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&view_type=form\">${account.name}</a></td>\n            <td>${account.date_start} to ${account.date and account.date or '???'}</td>\n            <td>\n            % if account.quantity_max != 0.0:\n                ${account.remaining_hours}/${account.quantity_max} units\n            % endif\n            </td>\n            <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>\n        </tr>\n        % endfor\n    % endfor\n</table>\n% endmacro \n\n% if \"new\" in ctx[\"data\"]:\n    <h2>下列合同刚刚过期：</h2>\n    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n% endif\n\n% if \"old\" in ctx[\"data\"]:\n    <h2>下列已过期未处理的合同：</h2>\n    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n% endif\n\n% if \"future\" in ctx[\"data\"]:\n    <h2>以下合同将在不到一个月到期：</h2>\n    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n% endif\n\n<p>\n    您可以检查所有的合同都要重新使用菜单：\n</p>\n<ul>\n    <li>销售 / 发票 / 合同更新</li>\n</ul>\n<p>\n    谢谢,\n</p>\n\n<pre>\n-- \nOdoo 自动发出之电子邮件\n</pre>\n\n            "
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
@@ -150,7 +150,7 @@ msgid ""
 "                pending contracts.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击以确立一个新合同\n          </p><p>\n                 你将发现合同已经更新,由于已过期或者工作流\n                 授权超过最大数\n                              </p><p>\n              Odoo 会自动更新挂起状态的合同,商谈结束,\n              销售员必须关闭或更新挂起的合同.\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击新建一个新合同.\n              </p><p>\n                已批准的、待续的合同,\n                试用期间努力工作的，\n                待更新的合同。\n              </p><p>\n                Odoo 会自动更新挂起状态的合同,商谈结束后\n                销售员必须关闭或更新\n                挂起的合同.\n              </p>\n            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -162,7 +162,7 @@ msgid ""
 "                menu instead.\n"
 "              </p>\n"
 "            "
-msgstr "<p>\n                此处显示可以根据合同向顾客发单的时间计划及采购项目。若想记录创建新的发单活动，你应该使用时间计划菜单。\n              </p>\n            "
+msgstr "<p>\n                此处显示可以根据合同向顾客发单的时间计划及采购项目。若想记录创建新的发单活动，您应该使用时间计划菜单。\n              </p>\n            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -301,7 +301,7 @@ msgstr "没有指派客户经理的合同"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
 msgid "Contracts to Renew"
-msgstr "待续签的合约"
+msgstr "要续签的合同"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,create_uid:0
@@ -434,7 +434,7 @@ msgstr "ID"
 msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
-msgstr "如果从分析账户开票, 剩余金额你能给客户开基于总成本的发票"
+msgstr "如果从分析账户开票, 剩余金额您能给客户开基于总成本的发票"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -554,7 +554,7 @@ msgstr "如果您按成本科目开票，这里是可以开票的工时(按时�
 msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
-msgstr "你在这个分析账户上花费的时间总数(数据来自计工单)。仅计算类型为 'general'的分类账。"
+msgstr "您在这个分析账户上花费的时间总数(数据来自计工单)。仅计算类型为 'general'的分类账。"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoice_on_timesheets:0

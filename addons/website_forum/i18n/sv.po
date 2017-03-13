@@ -3,14 +3,15 @@
 # * website_forum
 # 
 # Translators:
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-11-23 17:19+0000\n"
-"Last-Translator: Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>\n"
+"PO-Revision-Date: 2017-02-19 07:24+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +44,7 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr "\n<p>\nHej ${object.name},\n</p>\n<p>\nDu har blivit inbjuden att bekräfta din e-postadress för att ges tillgång tlll \"${object.company_id.name}\" Q/A-forumen.\n</p>\n<p>\nVänligen klicka på följande länk för att bekräfta din e-postadress:\n</p>\n<ul>\n<li><a href=\"${ctx.get('token_url')}\">Bekräfta mitt konto för \"${object.company_id.name}\" Q/A-forumen</a></li>\n</ul>\n<p>\nTack,\n</p>\n<pre>\n--\n${object.company_id.name eller ''}\n${object.company_id.email eller ''}\n${object.company_id.phone eller ''}\n</pre>"
+msgstr "\n<p>\nHej ${object.name},\n</p>\n<p>\nDu har blivit inbjuden att bekräfta din e-postadress för att ges tillgång tlll \"${object.company_id.name}\" F/S-forumen.\n</p>\n<p>\nVänligen klicka på följande länk för att bekräfta din e-postadress:\n</p>\n<ul>\n<li><a href=\"${ctx.get('token_url')}\">Bekräfta mitt konto för \"${object.company_id.name}\" F/S-forumen</a></li>\n</ul>\n<p>\nTack,\n</p>\n<pre>\n--\n${object.company_id.name eller ''}\n${object.company_id.email eller ''}\n${object.company_id.phone eller ''}\n</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
@@ -242,7 +243,7 @@ msgstr ""
 #: view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Badges"
-msgstr ""
+msgstr "Emblem"
 
 #. module: website_forum
 #: view:website:website_forum.badge
@@ -676,7 +677,7 @@ msgstr ""
 #: view:forum.post:website_forum.view_forum_post_form
 #: model:ir.model,name:website_forum.model_forum_post
 msgid "Forum Post"
-msgstr ""
+msgstr "Foruminlägg"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_list
@@ -1489,12 +1490,12 @@ msgstr "Webbplats"
 #. module: website_forum
 #: field:forum.forum,website_message_ids:0
 msgid "Website Messages"
-msgstr "Hemsidemeddelanden"
+msgstr "Webbplatsmeddelanden"
 
 #. module: website_forum
 #: help:forum.forum,website_message_ids:0
 msgid "Website communication history"
-msgstr "Hemsidans kommunikationshistorik"
+msgstr "Webbplatsens kommunikationshistorik"
 
 #. module: website_forum
 #: field:forum.forum,website_meta_description:0
