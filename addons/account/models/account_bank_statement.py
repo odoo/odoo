@@ -265,12 +265,12 @@ class AccountBankStatement(models.Model):
         """ Changes statement state to Running."""
         for statement in self:
             if not statement.name:
-                context = {'ir_sequence_date', statement.date}
+                context = {'ir_sequence_date': statement.date}
                 if statement.journal_id.sequence_id:
-                    st_number = statement.journal_id.sequence_id.with_context(context).next_by_id()
+                    st_number = statement.journal_id.sequence_id.with_context(**context).next_by_id()
                 else:
                     SequenceObj = self.env['ir.sequence']
-                    st_number = SequenceObj.with_context(context).next_by_code('account.bank.statement')
+                    st_number = SequenceObj.with_context(**context).next_by_code('account.bank.statement')
                 statement.name = st_number
             statement.state = 'open'
 

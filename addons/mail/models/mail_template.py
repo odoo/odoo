@@ -20,6 +20,8 @@ _logger = logging.getLogger(__name__)
 
 
 def format_date(env, date, pattern=False):
+    if not date:
+        return ''
     date = datetime.datetime.strptime(date[:10], tools.DEFAULT_SERVER_DATE_FORMAT)
     lang_code = env.context.get('lang') or 'en_US'
     if not pattern:
