@@ -97,7 +97,7 @@ var ListController = BasicController.extend({
      */
     renderButtons: function ($node) {
         if (!this.noLeaf && this.hasButtons) {
-            this.$buttons = $(qweb.render("ListView.buttons", {'widget': this}));
+            this.$buttons = $(qweb.render('ListView.buttons', {widget: this}));
             this.$buttons.find('.o_list_button_add')
                          .click(this._onCreateRecord.bind(this));
             this.$buttons.find('.o_list_button_save')

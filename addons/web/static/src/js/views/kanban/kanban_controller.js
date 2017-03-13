@@ -54,7 +54,7 @@ var KanbanController = BasicController.extend({
     renderButtons: function ($node) {
         var self = this;
         if (this.hasButtons && this.is_action_enabled('create')) {
-            this.$buttons = $(qweb.render("KanbanView.buttons", {}));
+            this.$buttons = $(qweb.render('KanbanView.buttons', {widget: this}));
             this.$buttons.on('click', 'button.o-kanban-button-new', function () {
                 var data = self.model.get(self.handle, {raw: true});
                 if (data.groupedBy.length > 0 && data.count > 0 && self.on_create === 'quick_create') {

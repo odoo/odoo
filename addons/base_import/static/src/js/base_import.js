@@ -3,10 +3,12 @@ odoo.define('base_import.import', function (require) {
 
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
-var time = require('web.time');
-var ListView = require('web.ListView');
+var KanbanController = require('web.KanbanController');
+var KanbanView = require('web.KanbanView');
 var ListController = require('web.ListController');
+var ListView = require('web.ListView');
 var session = require('web.session');
+var time = require('web.time');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -46,44 +48,106 @@ function jsonp(form, attributes, callback) {
     $(form).ajaxSubmit(attributes);
 }
 
-// if true, the 'Import', 'Export', etc... buttons will be shown
-ListView.include({
-    init: function(arch, fields, params) {
-        this._super.apply(this, arguments);
+// Mixins that enable the 'Import' feature
+var ImportViewMixin = {
+    init: function (arch, fields, params) {
         var importEnabled = 'import_enabled' in params ? params.import_enabled : true;
+        // if true, the 'Import' button will be visible
         this.controllerParams.importEnabled = importEnabled;
+    },
+};
+var ImportControllerMixin = {
+    init: function (parent, model, renderer, params) {
+        this.importEnabled = params.importEnabled;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds an event listener on the import button.
+     *
+     * @private
+     */
+    _bindImport: function () {
+        if (!this.$buttons) {
+            return;
+        }
+        var self = this;
+        this.$buttons.on('click', '.o_button_import', function () {
+            var state = self.model.get(self.handle, {raw: true});
+            self.do_action({
+                type: 'ir.actions.client',
+                tag: 'import',
+                params: {
+                    model: self.modelName,
+                    context: state.getContext(),
+                }
+            }, {
+                on_reverse_breadcrumb: self.reload.bind(self),
+            });
+        });
+    }
+};
+
+// Activate 'Import' feature on List views
+ListView.include({
+    init: function () {
+        this._super.apply(this, arguments);
+        ImportViewMixin.init.apply(this, arguments);
     },
 });
 
 ListController.include({
-    init: function(parent, model, renderer, params) {
+    init: function () {
         this._super.apply(this, arguments);
-        this.importEnabled = params.importEnabled;
+        ImportControllerMixin.init.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
-     * Extend the renderButtons function of ListView by adding an event listener
+     * Extends the renderButtons function of ListView by adding an event listener
      * on the import button.
-     * @return {jQuery} the rendered buttons
+     *
+     * @override
      */
-    renderButtons: function() {
+    renderButtons: function () {
         this._super.apply(this, arguments); // Sets this.$buttons
+        ImportControllerMixin._bindImport.call(this);
+    }
+});
 
-        if (!this.$buttons) { return; }
+// Activate 'Import' feature on Kanban views
+KanbanView.include({
+    init: function () {
+        this._super.apply(this, arguments);
+        ImportViewMixin.init.apply(this, arguments);
+    },
+});
 
-        this.$buttons.on('click', '.o_button_import', this.do_action.bind(this, {
-            type: 'ir.actions.client',
-            tag: 'import',
-            params: {
-                model: this.modelName,
-                // this.dataset.get_context() could be a compound?
-                // not sure. action's context should be evaluated
-                // so safer bet. Odd that timezone & al in it
-                // though
-                context: this.context,
-            }
-        }, {
-            on_reverse_breadcrumb: this.reload.bind(this),
-        }));
+KanbanController.include({
+    init: function () {
+        this._super.apply(this, arguments);
+        ImportControllerMixin.init.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Extends the renderButtons function of ListView by adding an event listener
+     * on the import button.
+     *
+     * @override
+     */
+    renderButtons: function () {
+        this._super.apply(this, arguments); // Sets this.$buttons
+        ImportControllerMixin._bindImport.call(this);
     }
 });
 
@@ -431,7 +495,6 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                     traverse(subfields[i], field_path, collection, type);
                 }
             }
-            
         }
         _(root.fields).each(function (field) {
             if (index === undefined) {
@@ -625,6 +688,6 @@ StateMachine.create({
 
 return {
     DataImport: DataImport,
-}
+};
 
 });
