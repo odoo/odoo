@@ -2449,6 +2449,26 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('statusbar with domain but no value (create mode)', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.trululu.domain = "[('bar', '=', True)]";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<header><field name="trululu" widget="statusbar"/></header>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('.o_statusbar_status button:disabled').length, 2, "should have 2 status");
+
+        form.destroy();
+    });
+
     QUnit.test('statusbar fold_field option and statusbar_visible attribute', function (assert) {
         assert.expect(2);
 
