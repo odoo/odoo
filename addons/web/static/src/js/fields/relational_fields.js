@@ -1178,6 +1178,7 @@ var FieldStatus = AbstractField.extend({
     init: function () {
         this._super.apply(this, arguments);
         this._setState();
+        this._onClickStage = _.debounce(this._onClickStage, 300, true); // TODO maybe not useful anymore ?
     },
 
     //--------------------------------------------------------------------------
@@ -1246,14 +1247,13 @@ var FieldStatus = AbstractField.extend({
 
     /**
      * Called when on status stage is clicked -> sets the field value.
-     * Note: this function is debounced...
      *
      * @private
      * @param {MouseEvent} e
      */
-    _onClickStage: _.debounce(function (e) {
+    _onClickStage: function (e) {
         this._setValue($(e.currentTarget).data("value"));
-    }, 300, true),
+    },
 });
 
 /**
