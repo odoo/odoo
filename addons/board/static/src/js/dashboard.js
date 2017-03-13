@@ -168,6 +168,8 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             action = result,
             view_mode = action_attrs.view_mode;
 
+        if (!action) { return; }
+
         // evaluate action_attrs context and domain
         action_attrs.context_string = action_attrs.context;
         action_attrs.context = instance.web.pyeval.eval(
