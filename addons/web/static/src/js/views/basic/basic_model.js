@@ -1421,11 +1421,13 @@ var BasicModel = AbstractModel.extend({
         }
 
         // avoid rpc if not necessary
-        var specialDataCache = {context: context, domain: domain};
-        if (_.isEqual(record._specialDataCache[fieldName], specialDataCache)) {
+        var hasChanged = this._saveSpecialDataCache(record, fieldName, {
+            context: context,
+            domain: domain,
+        });
+        if (!hasChanged) {
             return $.when();
         }
-        record._specialDataCache[fieldName] = specialDataCache;
 
         var self = this;
         return this._rpc(field.relation, 'search_read')
@@ -1472,11 +1474,13 @@ var BasicModel = AbstractModel.extend({
         var domain = record.getDomain({fieldName: fieldName});
 
         // avoid rpc if not necessary
-        var specialDataCache = {context: context, domain: domain};
-        if (_.isEqual(record._specialDataCache[fieldName], specialDataCache)) {
+        var hasChanged = this._saveSpecialDataCache(record, fieldName, {
+            context: context,
+            domain: domain,
+        });
+        if (!hasChanged) {
             return $.when();
         }
-        record._specialDataCache[fieldName] = specialDataCache;
 
         return this._rpc(field.relation, "name_search")
             .args(["", domain])
@@ -2139,6 +2143,25 @@ var BasicModel = AbstractModel.extend({
             self._sortList(list);
             return list;
         });
+    },
+    /**
+     * Allows to save a value in the specialData cache associated to a given
+     * record and fieldName. If the value in the cache was already the given
+     * one, nothing is done and the method indicates it by returning false
+     * instead of true.
+     *
+     * @private
+     * @param {Object} record - an element from the localData
+     * @param {string} fieldName - the name of the field
+     * @param {*} value - the cache value to save
+     * @returns {boolean} false if the value was already the given one
+     */
+    _saveSpecialDataCache: function (record, fieldName, value) {
+        if (_.isEqual(record._specialDataCache[fieldName], value)) {
+            return false;
+        }
+        record._specialDataCache[fieldName] = value;
+        return true;
     },
     /**
      * Do a /search_read to get data for a list resource.  This does a
