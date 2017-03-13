@@ -133,6 +133,7 @@ TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
 
 class view(osv.osv):
     _name = 'ir.ui.view'
+    _parent_name = 'inherit_id'     # used for recursion check
 
     def _get_model_data(self, cr, uid, ids, fname, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -283,6 +284,10 @@ class view(osv.osv):
         return True
 
     def _check_xml(self, cr, uid, ids, context=None):
+        # As all constraints are verified on create/write, we must re-check that there is no
+        # recursion before calling `read_combined` to avoid an infinite loop.
+        if not self._check_recursion(cr, uid, ids, context=context):
+            return True     # pretend arch is valid to avoid misleading user about the error.
         if context is None:
             context = {}
         context = dict(context, check_view_ids=ids)
@@ -322,6 +327,7 @@ class view(osv.osv):
     ]
     _constraints = [
         (_check_xml, 'Invalid view definition', ['arch', 'arch_base']),
+        (osv.osv._check_recursion, 'You cannot create recursive inherited views.', ['inherit_id']),
     ]
 
     def _auto_init(self, cr, context=None):
