@@ -125,8 +125,8 @@ class MrpProductProduce(models.TransientModel):
                         #Possibly the entire move is selected
                         remaining_qty = movelots.quantity - movelots.quantity_done
                         if remaining_qty > 0:
-                            new_move_lot = movelots.copy()
-                            new_move_lot.write({'quantity':movelots.quantity_done, 'lot_produced_id': self.lot_id.id})
+                            default = {'quantity': movelots.quantity_done, 'lot_produced_id': self.lot_id.id}
+                            new_move_lot = movelots.copy(default=default)
                             movelots.write({'quantity': remaining_qty, 'quantity_done': 0})
                         else:
                             movelots.write({'lot_produced_id': self.lot_id.id})
