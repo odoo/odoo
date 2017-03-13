@@ -36,7 +36,7 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <form string="Employee">
-                    <sheet>
+                    <sheet class="o_employee" id="o_employee">
                         <div class="oe_button_box" name="button_box">
                             <button name="toggle_active" type="object" groups="hr.group_hr_user"
                                     class="oe_stat_button" icon="fa-archive">
@@ -44,67 +44,69 @@
                                     options='{"terminology": "archive"}'/>
                             </button>
                         </div>
-                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name" placeholder="Employee's Name"/>
-                            </h1>
+                        <div id="o_employee_main">
+                            <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
+                            <div class="oe_title">
+                                <label for="name" class="oe_edit_only"/>
+                                <h1>
+                                    <field name="name" placeholder="Employee's Name"/>
+                                </h1>
+                            </div>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" options="{'no_create_edit': True}" groups="hr.group_hr_user"/>
+                            <notebook>
+                                <page name="public" string="Public Information">
+                                    <group>
+                                        <group string="Contact Information">
+                                            <field name="address_id"
+                                                context="{'show_address': 1}"
+                                                options='{"always_reload": True, "highlight_first_line": True}'/>
+                                            <field name="work_location"/>
+                                            <field name="work_email" widget="email"/>
+                                            <field name="mobile_phone"/>
+                                            <field name="work_phone"/>
+                                        </group>
+                                        <group string="Position">
+                                            <field name="department_id"/>
+                                            <field name="job_id"/>
+                                            <field name="parent_id"/>
+                                            <field name="coach_id"/>
+                                            <field name="resource_calendar_id"/>
+                                        </group>
+                                    </group>
+                                    <field name="notes" placeholder="Other Information ..." colspan="4"/>
+                                </page>
+                                <page name="personal_information" string="Personal Information" groups="hr.group_hr_user">
+                                    <group>
+                                        <group string="Citizenship &amp; Other Information">
+                                            <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                            <field name="identification_id" groups="hr.group_hr_user"/>
+                                            <field name="passport_id" groups="hr.group_hr_user"/>
+                                            <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
+                                        </group>
+                                        <group string="Contact Information">
+                                            <field name="address_home_id"
+                                                context="{'show_address': 1}"
+                                                options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        </group>
+                                        <group string="Status">
+                                            <field name="gender"/>
+                                            <field name="marital"/>
+                                        </group>
+                                        <group string="Birth">
+                                            <field name="birthday"/>
+                                        </group>
+                                    </group>
+                                </page>
+                                <page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">
+                                    <group>
+                                        <group string='Status' name="active_group">
+                                            <field name="company_id" groups="base.group_multi_company"/>
+                                            <field name="user_id" string="Related User"/>
+                                        </group>
+                                    </group>
+                                </page>
+                            </notebook>
                         </div>
-                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" options="{'no_create_edit': True}" groups="hr.group_hr_user"/>
-                        <notebook>
-                            <page name="public" string="Public Information">
-                                <group>
-                                    <group string="Contact Information">
-                                        <field name="address_id"
-                                            context="{'show_address': 1}"
-                                            options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="work_location"/>
-                                        <field name="work_email" widget="email"/>
-                                        <field name="mobile_phone"/>
-                                        <field name="work_phone"/>
-                                    </group>
-                                    <group string="Position">
-                                        <field name="department_id"/>
-                                        <field name="job_id"/>
-                                        <field name="parent_id"/>
-                                        <field name="coach_id"/>
-                                        <field name="resource_calendar_id"/>
-                                    </group>
-                                </group>
-                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
-                            </page>
-                            <page name="personal_information" string="Personal Information" groups="hr.group_hr_user">
-                                <group>
-                                    <group string="Citizenship &amp; Other Information">
-                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id" groups="hr.group_hr_user"/>
-                                        <field name="passport_id" groups="hr.group_hr_user"/>
-                                        <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
-                                    </group>
-                                    <group string="Contact Information">
-                                        <field name="address_home_id"
-                                            context="{'show_address': 1}"
-                                            options='{"always_reload": True, "highlight_first_line": True}'/>
-                                    </group>
-                                    <group string="Status">
-                                        <field name="gender"/>
-                                        <field name="marital"/>
-                                    </group>
-                                    <group string="Birth">
-                                        <field name="birthday"/>
-                                    </group>
-                                </group>
-                            </page>
-                            <page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">
-                                <group>
-                                    <group string='Status' name="active_group">
-                                        <field name="company_id" groups="base.group_multi_company"/>
-                                        <field name="user_id" string="Related User"/>
-                                    </group>
-                                </group>
-                            </page>
-                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>

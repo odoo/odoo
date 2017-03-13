@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="OrgChart">
+    <div class="o_org_chart">
+        computing...
+    </div>
+</t>
+
+<t t-name="OrgChartPerson">
+    <div>
+        <div>
+            <a href="#"><t t-esc="employee.name"/></a>
+        </div>
+        <div t-esc="employee.job" class="text-muted"/>
+    </div>
+</t>
+
+<t t-name="OrgChartDetail">
+    <div class="o_org_chart">
+        <div t-if="more_managers">
+            ...
+        </div>
+        <div t-foreach="data.managers" t-as="employee">
+            <t t-call="OrgChartPerson"/>
+        </div>
+        <t t-call="OrgChartPerson">
+            <t t-set="employee" t-value="data.self"/>
+        </t>
+        <div t-foreach="data.children" t-as="employee">
+            <t t-call="OrgChartPerson"/>
+        </div>
+    </div>
+</t>
+
+
+</templates>

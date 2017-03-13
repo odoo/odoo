@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Add Org Chart to Employee Form -->
+
+        <record id="view_employee_org_chart_form" model="ir.ui.view">
+            <field name="name">hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <div id="o_employee_main" position="before">
+                    <div id="o_employee_right" class="pull-right">
+                        <h2>Org Chart</h2>
+                        <field name="org_chart_data" widget="orgchart"/>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>
