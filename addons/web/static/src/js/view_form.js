@@ -4006,6 +4006,10 @@ instance.web.form.AddAnItemList = instance.web.ListView.List.extend({
                     }
                     self.view.ensure_saved().done(function () {
                         self.view.do_add_record();
+                        if (self.view.fields_view.arch.attrs.editable == 'top') {
+                            var $add_btn_row = $(e.target).closest('tr').detach();
+                            self.$current.prepend($add_btn_row);
+                        }
                     });
                 }));
 
@@ -4013,8 +4017,11 @@ instance.web.form.AddAnItemList = instance.web.ListView.List.extend({
         var $newrow = $('<tr>').append($cell);
         if ($padding.length) {
             $padding.before($newrow);
+        } else if (!this.view.fields_view.arch.attrs.editable ||
+                    this.view.fields_view.arch.attrs.editable == 'bottom') {
+            this.$current.append($newrow);
         } else {
-            this.$current.append($newrow)
+            this.$current.prepend($newrow);
         }
     }
 });
