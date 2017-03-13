@@ -50,7 +50,7 @@ class WebsiteEventTrackController(http.Controller):
                 for loc in locations.keys():
                     if locations[loc] and (locations[loc][-1][2] > start_date):
                         locations[loc][-1][3] += 1
-                    elif not locations[loc] or locations[loc][-1][2] < start_date:
+                    elif not locations[loc] or locations[loc][-1][2] <= start_date:
                         locations[loc].append([False, locations[loc] and locations[loc][-1][2] or dates[0][0], start_date, 1])
                         dates[-1][1][loc] = locations[loc][-1]
                 forcetr = not bool(location)
