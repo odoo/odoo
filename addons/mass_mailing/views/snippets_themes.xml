@@ -8,6 +8,11 @@
     <xpath expr="//div[@id='o_scroll']" position="replace">
         <div id="o_scroll">
             <div id="email_designer_themes">
+                <div data-name="basic"
+                     data-img="/mass_mailing/static/src/img/theme_imgs/basic_thumb"
+                     data-images-info='{"logo": {"format": "png"}}'>
+                    <t t-call="mass_mailing.theme_basic_template"/>
+                </div>
                 <div data-name="default"
                      data-img="/mass_mailing/static/src/img/theme_imgs/default_thumb"
                      data-images-info='{"logo": {"format": "png"}}'>
