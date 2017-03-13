@@ -215,7 +215,7 @@ class Quant(models.Model):
         picking_type = move.picking_id and move.picking_id.picking_type_id or False
         if check_lot and lot_id and move.product_id.tracking == 'serial' and (not picking_type or (picking_type.use_create_lots or picking_type.use_existing_lots)):
             other_quants = self.search([('product_id', '=', move.product_id.id), ('lot_id', '=', lot_id),
-                                        ('qty', '>', 0.0), ('location_id.usage', '=', 'internal')])
+                                        ('qty', '>', 0.0), ('location_id.usage', 'in', ['internal', 'production'])])
             if other_quants:
                 # We raise an error if:
                 # - the total quantity is strictly larger than 1.0
