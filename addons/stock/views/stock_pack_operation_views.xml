@@ -21,8 +21,8 @@
                         </div>
                     </group>
                     <group string="Locations" groups="stock.group_stock_multi_locations">
-                        <field name="location_id" domain="[('id', 'child_of', picking_source_location_id)]"/>
-                        <field name="location_dest_id" domain="[('id', 'child_of', picking_destination_location_id)]"/>
+                        <field name="location_id" domain="[('id', 'child_of', picking_source_location_id)]" options="{'no_create': True}"/>
+                        <field name="location_dest_id" domain="[('id', 'child_of', picking_destination_location_id)]" options="{'no_create': True}"/>
                     </group>
                     <group string="Packages" groups="stock.group_tracking_lot">
                         <field name="package_id" attrs="{'required': [('product_id', '=', False)]}" domain="[('location_id', '=', location_id)]" context="{'default_location_id': location_id}"/>

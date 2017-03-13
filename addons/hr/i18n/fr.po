@@ -14,18 +14,21 @@
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Miguel Vidali <mvidali129@gmail.com>, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # lucasdeliege <deliegelucas@gmail.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Quentin THEURET <quentin@theuret.net>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2016
+# Florian Hatat <mininet@wanadoo.fr>, 2017
+# Henri Cornuau <hcornuau@gmail.com>, 2017
+# Clo <clo@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Saad Thaifa <saad.thaifa@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Clo <clo@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,8 +53,8 @@ msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "<span>Reports</span>"
-msgstr "<span>Rapports</span>"
+msgid "<span>Reporting</span>"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -229,6 +232,16 @@ msgid "Efficiency Factor"
 msgstr "Facteur d'efficacité"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr "Alias courriel"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr "Discussion par courriel"
+
+#. module: hr
 #: model:ir.model,name:hr.model_hr_employee
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
@@ -287,7 +300,7 @@ msgid "Employees Tags"
 msgstr "Étiquettes d'employés"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:254
+#: code:addons/hr/models/hr.py:263
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Erreur ! Impossible de créer des services récursifs."
@@ -297,6 +310,11 @@ msgstr "Erreur ! Impossible de créer des services récursifs."
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Erreur ! Impossible de créer une hiérarchie d'employés récursive."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_event_count
+msgid "Events"
+msgstr "Évènements"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
@@ -336,6 +354,11 @@ msgid "Group By"
 msgstr "Regrouper par"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "HR Department"
+msgstr "Département RH"
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr "Paramètres RH"
@@ -349,11 +372,6 @@ msgstr "Employés recrutés"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Home Address"
 msgstr "Adresse personnelle"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "Hr Department"
-msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -412,8 +430,6 @@ msgstr "Poste Occupé"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
-#: model:ir.ui.menu,name:hr.menu_hr_job_position
-#: model:ir.ui.menu,name:hr.menu_hr_job_position_config
 msgid "Job Positions"
 msgstr "Postes"
 
@@ -465,6 +481,11 @@ msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_calendar_last_notif_ack
+msgid "Last notification marked as read from base Calendar"
+msgstr "Dernière notification marquée comme lue sur base du Calendrier"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_last_login
 msgid "Latest Connection"
 msgstr "Dernière connexion"
@@ -488,8 +509,14 @@ msgstr "Masculin"
 #: model:ir.model.fields,field_description:hr.field_hr_department_manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_parent_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
 msgstr "Gestionnaire"
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_attendance
+msgid "Manual Attendance"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_marital
@@ -563,6 +590,11 @@ msgid "Number of employees currently occupying this job position."
 msgstr "Nombre d'employés occupant actuellement ce poste."
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_res_users_event_count
+msgid "Number of events the partner has participated."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
@@ -584,6 +616,11 @@ msgstr ""
 "La structure des départements dans Odoo est utilisée pour suivre tous les documents\n"
 "liés aux employés par département : dépenses, feuilles de temps,\n"
 "congés et vacances, recrutements, etc."
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_user
+msgid "Officer"
+msgstr "Fonctionnaire"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -652,8 +689,8 @@ msgstr "Utilisateur associé à la ressource pour gérer les droits d'accès."
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
-msgid "Reports"
-msgstr "Rapports"
+msgid "Reporting"
+msgstr "Rapport"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_requirements
@@ -767,18 +804,11 @@ msgid "The name of the job position must be unique per department in company!"
 msgstr "Le nom du poste doit être unique par département de la société !"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+#: model:res.groups,comment:hr.group_hr_attendance
 msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
 msgstr ""
-"Ce champ représente l'efficacité d'une ressource pour terminer des tâches, "
-"par ex. la ressource affectée seule a une phase de 5 jours avec 5 tâches qui"
-" lui sont attribuées, montrera par défaut une charge de 100% pour cette "
-"phase, mais si nous définissons une efficacité de 200%, alors sa charge sera"
-" seulement de 50%."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
@@ -788,6 +818,16 @@ msgid ""
 msgstr ""
 "Ce champ contient l'image originale utilisée comme photo pour l'employé, "
 "limitée à 1024x1024px."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+msgid ""
+"This field is used to calculate the the expected duration of a work order at"
+" this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
@@ -835,6 +875,11 @@ msgstr ""
 "personne; informations de contact, position de travail, disponibilité, etc."
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
+msgid "Work Address"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
 msgid "Work Email"
 msgstr "Adresse électronique professionnelle"
@@ -855,11 +900,6 @@ msgid "Work Phone"
 msgstr "Téléphone professionnel"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
-msgid "Working Address"
-msgstr "Adresse professionnelle"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_calendar_id
 msgid "Working Time"
 msgstr "Temps de travail"
@@ -876,6 +916,25 @@ msgstr ""
 "ce poste."
 
 #. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr ""
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/mail_thread.py:41
+#, python-format
+msgid "alias %s does not accept unknown employees"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "département"
@@ -889,3 +948,23 @@ msgstr "i.e. Temps partiel"
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/mail_thread.py:41
+#, python-format
+msgid "skipping"
+msgstr ""
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_user
+msgid "the user will be able to approve document created by employees."
+msgstr "l'utilisateur pourra approuver les documents créés par les employés"
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_manager
+msgid ""
+"the user will have an access to the human resources configuration as well as"
+" statistic reports."
+msgstr ""
+"l'utilisateur aura un accès à la configuration des ressources humaines ainsi"
+" qu'aux rapports statistiques."

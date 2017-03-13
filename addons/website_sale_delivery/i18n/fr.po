@@ -11,17 +11,16 @@
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Miguel Vidali <mvidali129@gmail.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Fabri Yohann <psn@fabri.pw>, 2016
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
 # Francis Ndong <francissimel@hotmail.com>, 2016
-# Shark McGnark <peculiarcheese@gmail.com>, 2016
+# Shark McGnark <peculiarcheese@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: Shark McGnark <peculiarcheese@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Shark McGnark <peculiarcheese@gmail.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,12 +41,17 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
 msgid ""
 "A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
+" This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
-"Une description du produit que vous voulez communiquer à vos clients. Cette "
-"description sera inscrites sur tous les bons de commande, les bons de "
-"livraison et les factures/avoirs client."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
+msgid ""
+"Accessories show up when the customer reviews the cart before paying (cross-"
+"sell strategy, e.g. for computers: mouse, keyboard, etc.). An algorithm "
+"figures out a list of accessories based on all the products added to cart."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -55,14 +59,14 @@ msgid "Accessory Products"
 msgstr "Accessoires "
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_alternative_product_ids
-msgid "Appear on the product page"
-msgstr "Apparaît sur la page du produit"
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
+msgid "Adds an availability status on the web product page."
+msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
-msgid "Appear on the shopping cart"
-msgstr "Apparaît dans le panier"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_alternative_product_ids
+msgid "Alternative Products"
+msgstr "Produits alternatifs"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
@@ -78,6 +82,15 @@ msgstr ""
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
 msgid "Carrier"
 msgstr "Transporteur"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
+msgid ""
+"Categories can be published on the Shop page (online catalog grid) to help "
+"customers find all the items within a category. To publish them, go to the "
+"Shop page, hit Customize and turn *Product Categories* on. A product can "
+"belong to several categories."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -96,6 +109,7 @@ msgstr "Coût de livraison"
 
 #. module: website_sale_delivery
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.website_config_settings_view_form_inherit_sale_delivery
 msgid "Delivery Methods"
 msgstr "Méthodes de livraison"
 
@@ -150,6 +164,11 @@ msgid "Has delivery"
 msgstr "Livraison prévue"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_product_image_ids
+msgid "Images"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_intrastat_id
 msgid "Intrastat code"
 msgstr "Code Intrastat"
@@ -176,14 +195,16 @@ msgid "Optional Products"
 msgstr "Produits optionnels"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
+msgid ""
+"Optional Products are suggested whenever the customer hits *Add to Cart* "
+"(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_requisition
 msgid "Procurement"
 msgstr "Approvisionnement"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
-msgid "Products to propose when add to cart."
-msgstr "Produits à suggérer lors de l'ajout au panier."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
@@ -242,26 +263,16 @@ msgid "Styles"
 msgstr "Styles"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_alternative_product_ids
-msgid "Suggested Products"
-msgstr "Produits suggérés"
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_alternative_product_ids
+msgid ""
+"Suggest more expensive alternatives to your customers (upsell strategy). "
+"Those products show up on the product page."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
 msgid "The amount without tax."
 msgstr "Le total hors-taxe"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
-msgid ""
-"This field is used to display a availability banner with a message on the "
-"ecommerce"
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
-msgid "Those categories are used to group similar products for e-commerce."
-msgstr "Ces catégories sont utilisées pour grouper des produits semblables."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.shipping_tracking
@@ -302,3 +313,13 @@ msgstr "Mots clefs du site web"
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_title
 msgid "Website meta title"
 msgstr "Titre du site web"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_price
+msgid "Website price"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_public_price
+msgid "Website public price"
+msgstr ""

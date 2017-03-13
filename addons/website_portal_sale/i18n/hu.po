@@ -8,10 +8,10 @@
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -24,6 +24,21 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
 msgstr "<i class=\"fa fa-arrow-circle-right\"/> Fizetés most"
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
+msgid "<span class=\"h3\">Your Invoices and Payments</span>"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
+msgid "<span class=\"h3\">Your Orders</span>"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
+msgid "<span class=\"h3\">Your Quotations</span>"
+msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
@@ -158,17 +173,32 @@ msgid "<strong>Unit Price</strong>"
 msgstr "<strong>Egység ár</strong>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_backend_link
-msgid "Access the complete Sale application"
-msgstr "Teljes Értékesítési alkalmazás elérése"
-
-#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Amount Due"
 msgstr "Esedékes összeg"
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:181
+#: model:ir.model.fields,field_description:website_portal_sale.field_crm_team_pending_payment_transactions_amount
+msgid "Amount of pending transactions"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.model.fields,field_description:website_portal_sale.field_crm_team_authorized_payment_transactions_amount
+msgid "Amount of transactions to capture"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.actions.act_window,name:website_portal_sale.payment_transaction_action_authorized
+msgid "Authorized Payment Transactions"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "Awaiting Payment"
+msgstr ""
+
+#. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:222
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
@@ -179,7 +209,7 @@ msgstr ""
 "művelethez."
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:184
+#: code:addons/website_portal_sale/controllers/main.py:225
 #, python-format
 msgid ""
 "Changing your name is not allowed once invoices have been issued for your "
@@ -190,18 +220,16 @@ msgstr ""
 "művelethez."
 
 #. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:177
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
+#, python-format
 msgid "Due Date"
 msgstr "Fizetési határidő"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sales_backend_access
-msgid ""
-"If you wish to access the complete application to manage your orders, you "
-"can follow"
-msgstr ""
-"Ha a teljes alkalmazást el szeretné érni a megrendelései eléréséhez, akkor "
-"követheti"
+#: model:ir.model,name:website_portal_sale.model_account_invoice
+msgid "Invoice"
+msgstr "Számla"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
@@ -209,7 +237,9 @@ msgid "Invoice #"
 msgstr "Számla #"
 
 #. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:176
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
+#, python-format
 msgid "Invoice Date"
 msgstr "Számla kelte"
 
@@ -225,8 +255,26 @@ msgstr "Megrendeléseim"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
-msgid "My Quotes"
-msgstr "Árajánlataim"
+msgid "My Quotations"
+msgstr ""
+
+#. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:59
+#: code:addons/website_portal_sale/controllers/main.py:109
+#: code:addons/website_portal_sale/controllers/main.py:178
+#, python-format
+msgid "Name"
+msgstr "Név"
+
+#. module: website_portal_sale
+#: model:ir.model.fields,field_description:website_portal_sale.field_crm_team_pending_payment_transactions_count
+msgid "Number of pending transactions"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.model.fields,field_description:website_portal_sale.field_crm_team_authorized_payment_transactions_count
+msgid "Number of transactions to capture"
+msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
@@ -234,7 +282,11 @@ msgid "Order"
 msgstr "Rendelés"
 
 #. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:58
+#: code:addons/website_portal_sale/controllers/main.py:108
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
+#, python-format
 msgid "Order Date"
 msgstr "Rendelés dátuma"
 
@@ -249,6 +301,21 @@ msgid "Pay Now"
 msgstr "Fizessen most"
 
 #. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "Payment"
+msgstr "Kifizetés"
+
+#. module: website_portal_sale
+#: model:ir.model,name:website_portal_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Fizetési tranzakció"
+
+#. module: website_portal_sale
+#: model:ir.actions.act_window,name:website_portal_sale.payment_transaction_action_pending
+msgid "Pending Payment Transactions"
+msgstr ""
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
 msgid "Quotation"
 msgstr "Árajánlat"
@@ -260,18 +327,30 @@ msgstr "Árajánlat #"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
-msgid "Quotes"
+msgid "Quotations"
 msgstr "Árajánlatok"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
-msgid "Sale Order #"
-msgstr "Vásárlói megrendelés #"
+#: model:ir.model,name:website_portal_sale.model_crm_team
+msgid "Sales Channel"
+msgstr "Értékesítési csatorna"
 
 #. module: website_portal_sale
 #: model:ir.model,name:website_portal_sale.model_sale_order
+#: model:ir.model.fields,field_description:website_portal_sale.field_payment_transaction_sale_order_id
 msgid "Sales Order"
 msgstr "Vásárlói megrendelés"
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
+msgid "Sales Order #"
+msgstr ""
+
+#. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:179
+#, python-format
+msgid "Status"
+msgstr "Állapot"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
@@ -279,22 +358,34 @@ msgid "Taxes:"
 msgstr "Adók:"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
-msgid "There are currently no invoices for your account."
-msgstr "Jelenleg nincs számlája a fiókjához."
+msgid "There are currently no invoices and payments for your account."
+msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+msgid "There are currently no invoices and payments."
+msgstr ""
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "There are currently no orders for your account."
 msgstr "Jelenleg nincs rendelélse a fiókjához."
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+msgid "There are currently no orders."
+msgstr ""
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
-msgid "There are currently no quotes for your account."
-msgstr "Jelenleg nincs árajánlata a fiókjához."
+msgid "There are currently no quotations for your account."
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+msgid "There are currently no quotations."
+msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
@@ -314,23 +405,20 @@ msgstr "Érvényesség vége"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Your Invoices and Payments"
 msgstr "Számlái és azok kiegyenlítései"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Megrendelései"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
-msgid "Your Quotes"
-msgstr "Árajánlatai"
+msgid "Your Quotations"
+msgstr ""
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sales_backend_access
-msgid "this link"
-msgstr "ezt az elérési linket"
+#: model:ir.ui.view,arch_db:website_portal_sale.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "to Capture"
+msgstr ""

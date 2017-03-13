@@ -3,17 +3,14 @@
 # * payment_adyen
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-# Connie Xiao <connie.xiao@elico-corp.com>, 2016
-# Eddie Lim <bhweelim@yahoo.com>, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 14:07+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,70 +19,37 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:192
+#: code:addons/payment_adyen/models/payment.py:181
 #, python-format
 msgid "; multiple order found"
 msgstr "; 多订单"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:190
+#: code:addons/payment_adyen/models/payment.py:179
 #, python-format
 msgid "; no order found"
 msgstr "; 没有订单"
 
 #. module: payment_adyen
-#: model:payment.acquirer,cancel_msg:payment_adyen.payment_acquirer_adyen
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>取消,</i> 你的付款已被取消.</span>"
-
-#. module: payment_adyen
-#: model:payment.acquirer,done_msg:payment_adyen.payment_acquirer_adyen
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr "<span><i>完成,</i> 你的在线支付已成功完成. 感谢你的订单.</span>"
-
-#. module: payment_adyen
-#: model:payment.acquirer,error_msg:payment_adyen.payment_acquirer_adyen
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-"<span><i>错误,</i> 请注意交易中会发生的错误. 订单已确认但未支付. 如你有任何关于订单状态的问题, 请及时联系我们.</span>"
-
-#. module: payment_adyen
-#: model:payment.acquirer,pending_msg:payment_adyen.payment_acquirer_adyen
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr "<span><i>待定,</i> 你的在线支付已完成. 但是你的订单还未确认.</span>"
-
-#. module: payment_adyen
-#: model:payment.acquirer,name:payment_adyen.payment_acquirer_adyen
-msgid "Adyen"
-msgstr "Adyen"
-
-#. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:241
+#: code:addons/payment_adyen/models/payment.py:229
 #, python-format
 msgid "Adyen: feedback error"
 msgstr "Adyen: 反馈出错"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:203
+#: code:addons/payment_adyen/models/payment.py:191
 #, python-format
 msgid "Adyen: invalid merchantSig, received %s, computed %s"
 msgstr ""
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:188
+#: code:addons/payment_adyen/models/payment.py:177
 #, python-format
 msgid "Adyen: received data for reference %s"
 msgstr "Adyen: 供参照的接收数据 %s"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/adyen.py:181
+#: code:addons/payment_adyen/models/payment.py:170
 #, python-format
 msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
@@ -121,10 +85,3 @@ msgstr "皮肤代码"
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_hmac_key
 msgid "Skin HMAC Key"
 msgstr "Skin HMAC Key"
-
-#. module: payment_adyen
-#: model:payment.acquirer,pre_msg:payment_adyen.payment_acquirer_adyen
-msgid ""
-"You will be redirected to the Adyen website after clicking on the payment "
-"button."
-msgstr "点击支付按钮后您将被重定向到 Adyen 网站。"

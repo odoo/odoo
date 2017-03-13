@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -21,13 +21,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:376
+#: code:addons/account_asset/models/account_asset.py:399
 #, python-format
 msgid " (copy)"
 msgstr " (másolat)"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:511
+#: code:addons/account_asset/models/account_asset.py:534
 #, python-format
 msgid " (grouped)"
 msgstr "(csoportosított)"
@@ -46,6 +46,13 @@ msgstr "# értékcsökkenési sorok száma"
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_nbr
 msgid "# of Installment Lines"
 msgstr "# részletfizetési sorok száma"
+
+#. module: account_asset
+#: model:ir.actions.server,name:account_asset.account_asset_cron_ir_actions_server
+#: model:ir.cron,cron_name:account_asset.account_asset_cron
+#: model:ir.cron,name:account_asset.account_asset_cron
+msgid "Account Asset: Generate asset entries"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -93,7 +100,7 @@ msgid "Additional Options"
 msgstr "További műveletek"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:568
+#: code:addons/account_asset/models/account_asset.py:591
 #, python-format
 msgid "Amount"
 msgstr "Összeg"
@@ -141,7 +148,7 @@ msgid "Asset Durations to Modify"
 msgstr "Eszköz időtartamainak módosítása"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset End Date"
 msgstr "Vagyoni eszköz befejezés dátum"
 
@@ -156,7 +163,7 @@ msgid "Asset Name"
 msgstr "Vagyoni eszköz neve"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
 msgid "Asset Start Date"
 msgstr "Vagyoni eszköz kezdő dátum"
 
@@ -170,6 +177,7 @@ msgstr "Vagyoni eszköz típus"
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal_purchase
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal_purchase
+#: model:ir.ui.view,arch_db:account_asset.account_config_settings_view_form_inherit_account_asset
 msgid "Asset Types"
 msgstr "Vagyoni eszköz típusok"
 
@@ -182,7 +190,7 @@ msgid "Asset category"
 msgstr "Vagyoni eszköz kategória"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:263
+#: code:addons/account_asset/models/account_asset.py:286
 #, python-format
 msgid "Asset created"
 msgstr "Vagyoni eszköz létrehozva"
@@ -193,7 +201,7 @@ msgid "Asset depreciation line"
 msgstr "Vagyoni eszköz költségcsökkentési sor"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:296
+#: code:addons/account_asset/models/account_asset.py:319
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
@@ -399,7 +407,7 @@ msgid "Cumulative Depreciation"
 msgstr "Halmozódó költségcsökkentés"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:568
+#: code:addons/account_asset/models/account_asset.py:591
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -414,11 +422,6 @@ msgstr "Jelenleg"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_amount
 msgid "Current Depreciation"
 msgstr "Jelenlegi költségcsökkentés"
-
-#. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
-msgid "Customer"
-msgstr "Vásárló"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
@@ -475,11 +478,6 @@ msgid "Depreciation"
 msgstr "Értékcsökkenés"
 
 #. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-msgid "Depreciation Asset Account"
-msgstr "Értékcsökkenés eszköz számla"
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Board"
 msgstr "Értékcsökkenési tábla"
@@ -504,11 +502,6 @@ msgstr "Értékcsökkenő tételek: Kiadás, költség főkönyvi számla"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
 msgid "Depreciation Entry"
 msgstr "Értékcsökkentés bevitel"
-
-#. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-msgid "Depreciation Expense Account"
-msgstr "Értékcsökkenés költség főkönyvi számla"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -543,7 +536,7 @@ msgid "Depreciation board modified"
 msgstr "Értékcsökkenési tábla módosítva"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:571
+#: code:addons/account_asset/models/account_asset.py:594
 #, python-format
 msgid "Depreciation line posted."
 msgstr "Értékcsökkenés sorai könyvelve."
@@ -559,19 +552,19 @@ msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:299
+#: code:addons/account_asset/models/account_asset.py:322
 #, python-format
 msgid "Disposal Move"
 msgstr "Vagyoni eszköz mozgatása megsemmisítésre"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:302
+#: code:addons/account_asset/models/account_asset.py:325
 #, python-format
 msgid "Disposal Moves"
 msgstr "Vagyoni eszközök mozgatása megsemmisítésre"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:550
+#: code:addons/account_asset/models/account_asset.py:573
 #, python-format
 msgid "Document closed."
 msgstr "Dokumentum lezárva."
@@ -710,7 +703,7 @@ msgid "Journal"
 msgstr "Napló"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:410
+#: code:addons/account_asset/models/account_asset.py:433
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -817,10 +810,9 @@ msgid "One Entry Every"
 msgstr "Egy tétel mindegyikre"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:570
+#: code:addons/account_asset/models/account_asset.py:593
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #, python-format
 msgid "Partner"
 msgstr "Partner"
@@ -873,7 +865,7 @@ msgid "Prorata Temporis"
 msgstr "Arányos rész késleltetés"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:342
+#: code:addons/account_asset/models/account_asset.py:365
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -1059,26 +1051,26 @@ msgid "Year"
 msgstr "Év"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:107
+#: code:addons/account_asset/models/account_asset.py:111
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr "Nem törölhet olyan dokumentumot ami %s állapotú."
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:110
+#: code:addons/account_asset/models/account_asset.py:114
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr ""
 "Nem törölhet olyan dokumentumot ami könyvelésre feladott tételt tartalmaz."
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:579
+#: code:addons/account_asset/models/account_asset.py:602
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "Nem törölhet könyvelésre feladott értékcsökkentési tételsorokat."
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:581
+#: code:addons/account_asset/models/account_asset.py:604
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr "Nem törölhet könyvelésre feladott részletfizetési tételsorokat."

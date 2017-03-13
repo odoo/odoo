@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -19,6 +19,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.base_config_settings_view_form_inherit_auth_oauth
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
+msgstr ""
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:99
@@ -38,19 +43,18 @@ msgstr "Kintlévőség számla"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Allow users to sign in with Google"
 msgstr "Engedélyezze a felhasználók Google bejelentkezését"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.base_config_settings_view_form_inherit_auth_oauth
+msgid "Allow users to sign in with their Google account"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
 msgid "Allowed"
 msgstr "Engedélyezett"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Authentication"
-msgstr "Azonosítás"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
@@ -73,43 +77,20 @@ msgid "CSS class"
 msgstr "CSS osztály"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Check that the application type is set on <b>Web Application</b>. \n"
-"                                        Now configure the allowed pages on which you will be redirected."
-msgstr ""
-"Ellenőrizze, hogy az alkalmazás típusa beállított itt: <b>Web Alkalmazás</b>. \n"
-"                                        Most állítsa be a megengedett oldalakat melyekre át lesz irányítva."
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Click on <b>Create Project</b> and enter the project name and \n"
-"                                        other details."
-msgstr ""
-"Kattintson ide: <b>Projekt téma létrehozás</b> és írja be a projekt téma nevet és \n"
-"                                        egyéb részleteket."
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Click on <b>Use Google APIs</b>"
-msgstr "Kattintson ide: <b>Google APIs használata</b>"
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_client_id
 msgid "Client ID"
 msgstr "Ügyfál ID azonosító"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.base_config_settings_view_form_inherit_auth_oauth
+msgid "Client ID:"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_ref_company_ids
 msgid "Companies that refers to partner"
 msgstr "A partnerre hivatkozó vállalatok"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Connect to your Google account and go to"
-msgstr "Kapcsolódjon a google fiókjához és menjen a"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
@@ -134,8 +115,8 @@ msgstr "Pénznem"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
-msgid "Customer Payment Term"
-msgstr "Vásárló fizetési feltétele"
+msgid "Customer Payment Terms"
+msgstr "Vásárló fizetési feltételek"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
@@ -153,28 +134,19 @@ msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Fill in your address, email and the product name (for example odoo) \n"
-"                                        and then save."
-msgstr ""
-"Töltse ki a címét, email és termék nevet (például odoo) \n"
-"                                        és mentse."
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
 msgid "Fiscal Position"
 msgstr "Költségvetési pozíció"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Google Client ID:"
-msgstr "Google Ügyfél ID"
+#: model:ir.ui.view,arch_db:auth_oauth.base_config_settings_view_form_inherit_auth_oauth
+msgid "Google Authentification"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
-msgid "Has unreconciled entries"
-msgstr "Vannak egyeztetetlen tételek"
+msgid "Has Unreconciled Entries"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
@@ -246,6 +218,7 @@ msgstr "OAuth szolgáltató"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
+#: model:ir.ui.view,arch_db:auth_oauth.base_config_settings_view_form_inherit_auth_oauth
 msgid "OAuth Providers"
 msgstr "OAuth szolgáltatók"
 
@@ -275,26 +248,6 @@ msgid "Oauth Provider user_id"
 msgstr "Oauth szolgáltatói felhasználó_id"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"On the left side menu, select the sub menu <b>Credentials</b> \n"
-"                                        (from <b>API Manager</b>) then select <b>OAuth consent screen</b>."
-msgstr ""
-"A bal oldali menüben, válassza az almenüt <b>Megbízók</b> \n"
-"                                        (innen <b>API Kezelő</b>) majd válassza <b>OAuth jóváhagyó képernyő</b>."
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Once done, you receive two information (your <b>Client ID</b> and <b>\n"
-"                                        Client Secret</b>). You have to insert your <b>Client ID</b> in \n"
-"                                        the field below."
-msgstr ""
-"Miután kész, két információt kap ( <b>Kliens ID azonosító</b> és <b>\n"
-"                                        Kliens titkosítás</b>). Be kell illesztenie a <b>Kliens ID azonosító</b> alsó \n"
-"                                        mezőbe."
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
 msgid "Payable Limit"
 msgstr "Szállítói tartozás limitösszege"
@@ -308,11 +261,6 @@ msgstr "Szolgáltató neve"
 #: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
 msgid "Providers"
 msgstr "Szolgáltatók"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Return to Top"
-msgstr "Vissza a tetejére"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
@@ -341,16 +289,6 @@ msgid "Server uri"
 msgstr "Szerver uri"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Show Tutorial"
-msgstr "Bemutató megjelenítése"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
-msgid "Show tutorial"
-msgstr "Bemutató megjelenítése"
-
-#. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:97
 #, python-format
 msgid "Sign up is not allowed on this database."
@@ -372,20 +310,6 @@ msgid ""
 msgstr ""
 "Az ügyfélnek legalább egy könyveléssel egyeztetetlen terhelése és jóváírása "
 "van a legutóbbi számlák & fizetések egyeztetés végrehajtásától."
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Then click on <b>Add Credentials</b> and select the second option \n"
-"                                        (OAuth 2.0 Client ID)."
-msgstr ""
-"Ezután kattintson erre <b>Megbízók hozzáadása</b> és válassza a második lehetőséget \n"
-"                                        (OAuth 2.0 kliens ID azonosító)."
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Then click on <b>Create</b>."
-msgstr "Ezután kattintson erre: <b>Létrehoz</b>."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
@@ -417,29 +341,9 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
 msgid ""
-"This payment term will be used instead of the default one for sale orders "
+"This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
-"Ezt a fizetési feltételt használja az alapértelmezett helyett a vásárlói "
-"megrendeléseken és az értékesítési számlákon."
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
-"                                        Copy paste the following link in the box"
-msgstr ""
-"Ennek archiválásához, egészítse ki a mezőt : <b>Felhatalmazott átirányított URIs</b>.\n"
-"                                        Másolja, illessze a következő hivatkozást a dobozba"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"To setup the sign in process with Google, you have to perform \n"
-"                                    the following steps first."
-msgstr ""
-"Egy Google belépési folyamat végrehajtásához, először el kell \n"
-"                                    végezni a következő lépéseket"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
@@ -483,8 +387,8 @@ msgstr "URL elérési út érvényesítés"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
-msgid "Vendor Payment Term"
-msgstr "Beszállító kifizetési határidő"
+msgid "Vendor Payment Terms"
+msgstr "Beszállító kifizetési feltételek"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:101
@@ -510,14 +414,9 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+#: model:ir.ui.view,arch_db:auth_oauth.base_config_settings_view_form_inherit_auth_oauth
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "pl. 1234-xyz.apps.googleusercontent.com"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "https://console.developers.google.com/"
-msgstr "https://console.developers.google.com/"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter

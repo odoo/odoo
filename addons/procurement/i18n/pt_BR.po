@@ -3,10 +3,10 @@
 # * procurement
 # 
 # Translators:
-# francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
-# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2016
+# falexandresilva <falexandresilva@gmail.com>, 2016
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
-# grazziano <g.negocios@outlook.com.br>, 2016
+# grazziano <gra.negocia@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Clemilton Clementino <clemylton@hotmail.com>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
@@ -14,10 +14,10 @@
 # Adriel Kotviski <kotviski@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Adriel Kotviski <kotviski@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -152,7 +152,7 @@ msgstr "Criado em"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
 msgid "Delivery Type"
-msgstr ""
+msgstr "Tipo de Entrega"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -271,17 +271,15 @@ msgid "Leave Empty"
 msgstr "Deixe Vazio"
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr "Logística"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "Most common exceptions are products to purchase without\n"
 "                having a vendor defined on the product, and products to\n"
 "                manufacture without having a bill of materials."
 msgstr ""
+"Exceções mais comuns são os produtos a serem adquiridos sem ter um "
+"fornecedor definido no produto e produtos para fabricar sem ter uma lista de"
+" materiais."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -289,7 +287,7 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: procurement
-#: code:addons/procurement/models/procurement.py:189
+#: code:addons/procurement/models/procurement.py:203
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Nenhuma regra correspondente a essa aquisição"
@@ -377,6 +375,18 @@ msgid "Procurement started late"
 msgstr "Aquisição começou tarde"
 
 #. module: procurement
+#: model:ir.actions.server,name:procurement.procurement_order_server_action
+msgid "Procurement: Run Procurements"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.ir_cron_scheduler_action_ir_actions_server
+#: model:ir.cron,cron_name:procurement.ir_cron_scheduler_action
+#: model:ir.cron,name:procurement.ir_cron_scheduler_action
+msgid "Procurement: run MRP scheduler"
+msgstr ""
+
+#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
 #: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
 #: model:ir.ui.view,arch_db:procurement.product_product_view_form_procurement_button
@@ -431,6 +441,8 @@ msgid ""
 "Reference of the document that created this Procurement. This is "
 "automatically completed by Odoo."
 msgstr ""
+"Referência do documento que criou esta Aquisição.\n"
+"Ela é automaticamente lançada pelo Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -440,11 +452,6 @@ msgstr "Regra"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Run Procurement"
-msgstr "Processar Aquisição"
-
-#. module: procurement
-#: model:ir.actions.server,name:procurement.procurement_order_server_action
-msgid "Run Procurements"
 msgstr "Processar Aquisição"
 
 #. module: procurement
@@ -529,12 +536,16 @@ msgid ""
 "                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
+"Quando a ordem de aquisição for confirmada, automaticamente\n"
+"criará as operações necessárias a cumprir a necessidade: proposição de\n"
+"ordem de compra, ordem de produção, etc."
 
 #. module: procurement
-#: code:addons/procurement/models/procurement.py:144
+#: code:addons/procurement/models/procurement.py:158
 #, python-format
 msgid "You cannot delete procurements that are in cancel state."
 msgstr ""
+"Não é possível excluir aquisições que estejam no estado de cancelamento."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form

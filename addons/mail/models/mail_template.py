@@ -20,6 +20,8 @@ _logger = logging.getLogger(__name__)
 
 
 def format_date(env, date, pattern=False):
+    if not date:
+        return ''
     try:
         return tools.format_date(env, date, date_format=pattern)
     except babel.core.UnknownLocaleError:

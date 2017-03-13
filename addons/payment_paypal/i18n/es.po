@@ -4,58 +4,19 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
-# Humberto Garza De Koster <garzadekoster@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
-# Manuel Gómez <nuelgoz@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 14:07+0000\n"
-"Last-Translator: Manuel Gómez <nuelgoz@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: payment_paypal
-#: model:payment.acquirer,cancel_msg:payment_paypal.payment_acquirer_paypal
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Cancelado,</i> Su pago ha sido cancelado.</span>"
-
-#. module: payment_paypal
-#: model:payment.acquirer,done_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
-"<span><i>Aprobado,</i> su pago en línea ha sido porcesado "
-"satisfactoriamente. Gracias por su orden.</span>"
-
-#. module: payment_paypal
-#: model:payment.acquirer,error_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-"<span><i>Error,</i> considere por favor que ha ocurrido un error durante la "
-"transacción. La orden ha sido confirmada, pero no será pagada. No dude en "
-"contactarnos si usted tiene alguna pregunta sobre el estado de su "
-"orden.</span>"
-
-#. module: payment_paypal
-#: model:payment.acquirer,pending_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
-"<span><i>Pendiente,</i> su orden ha sido procesada satisfactoriamente, pero "
-"no ha sido validada satisfactoriamente.</span>"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
@@ -66,11 +27,6 @@ msgstr "Token de acceso"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token_validity
 msgid "Access Token Validity"
 msgstr "Validez del token de acceso"
-
-#. module: payment_paypal
-#: model:ir.model,name:payment_paypal.model_res_company
-msgid "Companies"
-msgstr "Compañías"
 
 #. module: payment_paypal
 #: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
@@ -86,11 +42,6 @@ msgstr "Método de pago"
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Transacción de pago"
-
-#. module: payment_paypal
-#: model:payment.acquirer,name:payment_paypal.payment_acquirer_paypal
-msgid "Paypal"
-msgstr "Paypal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
@@ -113,7 +64,7 @@ msgid "Paypal TX Details"
 msgstr "Detalles de transmisión de Paypal"
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/paypal.py:183
+#: code:addons/payment_paypal/models/payment.py:137
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr ""
@@ -151,12 +102,3 @@ msgstr "Usar IPN"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
 msgid "Use Rest API"
 msgstr "Usar API Rest"
-
-#. module: payment_paypal
-#: model:payment.acquirer,pre_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"You will be redirected to the Paypal website after clicking on the payment "
-"button."
-msgstr ""
-"Al hacer click en el botón de pago será redireccionado a la página web de "
-"Paypal"

@@ -3,29 +3,36 @@
 # * website_sale
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # glovebx <ruinning@163.com>, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# fausthuang <faust_huang@hotmail.com>, 2016
 # Talway <9010446@qq.com>, 2016
+# fausthuang <faust_huang@hotmail.com>, 2016
 # waveyeung <waveyeung@qq.com>, 2016
-# Siyuan Gu <siyuancn@hotmail.com>, 2016
 # Luke <cialuo@qq.com>, 2016
 # zhangpeiqing <zpq001@live.com>, 2016
-# lttlsnk <lttlsnk@gmail.com>, 2016
+# 菜小蛇 <lttlsnk@gmail.com>, 2016
+# Siyuan Gu <siyuancn@hotmail.com>, 2016
+# Gary Wei <Gary.wei@elico-corp.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
 # liulixia <liu.lixia@elico-corp.com>, 2016
-# Rona Lin <ssauapw@qq.com>, 2016
 # Denis Ledoux <dle@odoo.com>, 2016
 # 钟小华 <mackz@sina.com>, 2016
+# Shenglan Chen <dodolobox@gmail.com>, 2016
+# ben x <0668866@gmail.com>, 2016
+# Ted Wang <feiyuwang2012@gmail.com>, 2016
+# 苏州远鼎 <tiexinliu@126.com>, 2016
+# xiaobin wu <bd5dml@gmail.com>, 2017
+# Rona Lin <ssauapw@qq.com>, 2017
+# Li Xiang <lvx5013@foxmail.com>, 2017
+# Bo Cao <cao.poobo@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
-"Last-Translator: 钟小华 <mackz@sina.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Bo Cao <cao.poobo@hotmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,45 +41,27 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment
-msgid "(extra fees apply)"
+#: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
+msgid "! Some processing fees will be applied"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ", go to the 'Sales' tab"
-msgstr "进入“销售”页卡"
+#: model:ir.ui.view,arch_db:website_sale.confirmation
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ", go to the 'Variants' tab"
-msgstr "进入“变型”页卡"
+#: model:ir.ui.view,arch_db:website_sale.payment
+msgid "(processing fees apply)"
+msgstr "(处理手续费应用)"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid ""
 "30-day money-back guarantee<br/>\n"
-"              Free Shipping in U.S.<br/>\n"
-"              Buy now, get in 2 days"
+"                              Free Shipping in U.S.<br/>\n"
+"                              Buy now, get in 2 days"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<br/>\n"
-"                                <small>(don't forget to apply the changes)</small>"
-msgstr ""
-"<br/>\n"
-"<small>(不要忘记同意修改)</small>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<br/>\n"
-"                                <small>(you'll have to subscribe directly on each of the payment companies' websites)</small>"
-msgstr ""
-"<br/>\n"
-"                                <small>(你必须直接订阅每个支付公司的网站)</small>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
@@ -84,9 +73,23 @@ msgstr ""
 "<strong>付费状态:</strong>"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<br/>\n"
+"                                e.g. for computers:"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
+msgid ""
+"<i class=\"fa fa-3x fa-credit-card text-muted\" aria-hidden=\"true\"/><br/>\n"
+"                                                Are you sure you want to pay with this card: <br/>"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "<i class=\"fa fa-check\"/> Ship to this address"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> 送货到此地址"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
@@ -95,13 +98,8 @@ msgstr "<i class=\"fa fa-cog\"/>配置汇款细节"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<i class=\"fa fa-comment-o\"/> Website Live Chat on"
-msgstr "<i class=\"fa fa-comment-o\"/>网站在线聊天上"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<i class=\"fa fa-envelope-o\"/> Email Our Website Expert"
-msgstr "<i class=\"fa fa-envelope-o\"/>电子邮件给我们的网站专家"
+msgid "<i class=\"fa fa-envelope-o\"/> Ask Our Experts"
+msgstr "<i class=\"fa fa-envelope-o\"/> 请教我们的专家"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
@@ -121,15 +119,25 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.cart_lines
-msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
+#: code:addons/website_sale/models/crm_team.py:56
+#, python-format
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                        You can find all abandoned carts here, i.e. the carts generated by your website's visitors from over an hour ago that haven't been confirmed yet.</p>\n"
+"                        <p>You should send an email to the customers to encourage them!</p>\n"
+"                    "
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.extra_info
+#: model:ir.ui.view,arch_db:website_sale.terms
 msgid ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send o_default_snippet_text\">Send</span>\n"
-"                                <span id=\"o_website_form_result\" class=\"text-danger ml8\"/>"
+"<small class=\"text-muted pull-right\">Source: https://termsfeed.com/blog"
+"/sample-terms-and-conditions-template</small>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.cart_lines
+msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
 msgstr ""
 
 #. module: website_sale
@@ -152,6 +160,13 @@ msgid "<span class=\"col-xs-6 text-right text-muted\">Subtotal:</span>"
 msgstr "<span class=\"col-xs-6 text-right text-muted\">小计：</span>"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment
+msgid ""
+"<span class=\"fa fa-2x fa-credit-card\"/>\n"
+"                                                Saved Cards"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid ""
 "<span class=\"fa fa-check\"/>\n"
@@ -159,34 +174,39 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
-msgstr "<span class=\"fa fa-comment-o\"/> 网站即时聊天"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
+#: model:ir.ui.view,arch_db:website_sale.product
 msgid ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"                        At cost price is a good option for heavy or oversized packages."
-msgstr "<span class=\"fa fa-lightbulb-o fa-2x\"/>以成本价是一个很好的选择对于过重或过大的包装。."
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"                        Offering free delivery with a minimum amount or minimum number of items should drive up your average order value and help to compensate for the delivery costs."
+"<span class=\"fa fa-chevron-left\" aria-hidden=\"true\"/>\n"
+"                                            <span class=\"sr-only\">Previous</span>"
 msgstr ""
-"<span class=\"fa fa-lightbulb-o fa-"
-"2x\"/>提供免费送货的最低金额或最低物品数可以抬高你的平均订单价值，并有助于弥补运输成本"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.product
+msgid ""
+"<span class=\"fa fa-chevron-right\" aria-hidden=\"true\"/>\n"
+"                                            <span class=\"sr-only\">Next</span>"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"                        You can also create different rates based on order amount ranges, for example 10€ up to a 50€ order, then 5€ after."
+"                                Everything is editable in your Odoo website. Feel free to edit any page title, field or button label. Simply hit *Edit* in upper-right corner to start editing the page."
 msgstr ""
-"<span class=\"fa fa-lightbulb-o fa-"
-"2x\"/>您还可以创建基于订单金额范围，例如10€至50€顺序不同的价格，那么5€之后。"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
+"                                Offering free delivery with a minimum amount or minimum number of items should drive up your average order value and help to compensate for the delivery costs."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
+"                                You can create different rates based on order amount ranges (e.g. $10 up to a $50 order, then $5 beyond)."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.continue_shopping
@@ -199,6 +219,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"fa fa-long-arrow-left\"/> Back"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.extra_info
+msgid "<span class=\"fa fa-long-arrow-left\"/> Previous"
 msgstr ""
 
 #. module: website_sale
@@ -215,107 +240,156 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                            <span class=\"fa fa-shopping-cart\"/>\n"
-"                            <strong>2. On Add to Cart window:</strong> Show accessories, services\n"
-"                        </span>"
+#: model:ir.ui.view,arch_db:website_sale.payment
+msgid "<span class=\"js_radio fa fa-circle-o\"/>&amp;nbsp;"
 msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-shopping-cart\"/> <strong>2."
-" 添加到购物车窗口:</strong> 显示配件，服务</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                            <span class=\"fa fa-shopping-cart\"/>\n"
-"                            <strong>3. On Check-out page:</strong> Show optional products\n"
-"                        </span>"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Import a file</strong><br/>\n"
+"                                        <span class=\"small\">Recommended if &gt;50 items</span>\n"
+"                                    </span>"
 msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-shopping-cart\"/><strong>3. "
-"在结账界面:</strong>显示可选产品 </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                            <span class=\"fa fa-tag\"/>\n"
-"                            <strong> 1. On Product pages:</strong> Show suggested products\n"
-"                        </span>"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong> Create manually</strong><br/>\n"
+"                                        <span class=\"small\">Recommended if &lt;50 items</span>\n"
+"                                    </span>"
 msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-tag\"/><strong> 1. "
-"在产品界面:</strong> 显示建议产品</span>s%"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-cc-paypal\"/><strong> "
-"Paypal</strong> (Recommended for starters)</span>"
+"<span class=\"panel-title\">\n"
+"                                        <strong> Cross-selling</strong>\n"
+"                                    </span>"
 msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-cc-paypal\"/><strong> "
-"Paypal</strong> (推荐新手)</span>"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <strong> Rules &amp; Formulas</strong>\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>规则和公式</strong>\n"
+"                                    </span>"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Average baskets are &gt; 5 items?</strong><br/>\n"
+"                                            <span class=\"small\"/>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Several Prices</strong>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Unique Price</strong>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Upselling</strong>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>You have a broad catalog?</strong><br/>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                    <span class=\"fa fa-check-square-o\"/>\n"
+"                                    <strong>Customize you product catalog</strong><br/>\n"
+"                                        <span class=\"small\"/>\n"
+"                                </span>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                <span class=\"fa fa-check-square-o\"/>\n"
+"                                <strong>Customize the checkout process</strong><br/>\n"
+"                                    <span class=\"small\"/>\n"
+"                            </span>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<span class=\"panel-title\"><span class=\"fa fa-cc-paypal\"/><strong> Paypal</strong>\n"
+"                                    <span class=\"small\">Recommended for Starters</span>\n"
+"                                    </span>"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "<span class=\"panel-title\"><span class=\"fa fa-credit-card\"/><strong> "
-"Ogone, Adyen, Authorize.net, Buckaroo...</strong></span>"
+"Authorize.net, Ingenico, etc.</strong></span>"
 msgstr ""
-"<span class=\"面板-标题\"><span class=\"fa fa-credit-card\"/><strong> Ogone, "
-"Adyen, Authorize.net, Buckaroo...</strong></span> 31"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "<span class=\"panel-title\"><span class=\"fa fa-lock\"/><strong>Wire "
-"transfer</strong> (Slow and inefficient)</span>"
+"transfer</strong> (slow and inefficient)</span>"
 msgstr ""
 "<span class=\"panel-title\"><span class=\"fa fa-lock\"/><strong>电汇</strong> "
-"(慢且效率低下)</span>"
+"(慢且低效率t)</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-pencil-square-o\"/><strong> "
-"Web-Services</strong><br/>scripts development</span>"
-msgstr ""
-"<span class=\"面板标题\"><span class=\"fa fa-pencil-square-o\"/><strong> "
-"网站服务</strong><br/>脚本开发</span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-shopping-cart\"/><strong> At"
-" cost price</strong> (customer pay what you pay)</span>"
-msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-shopping-"
-"cart\"/><strong>以成本价</strong> (客户付你所支付)</span>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-sitemap\"/><strong> "
-"Import</strong><br/>by using a CSV file</span>"
+"<span class=\"panel-title\"><span class=\"fa fa-shopping-cart\"/><strong> At cost price</strong> (customer pays what you pay)<br/>\n"
+"                            <span class=\"small\">Advised if your packs vary in size/weight and/or if you ship worldwide</span>\n"
+"                            </span>"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-smile-o\"/><strong> Free "
-"delivery</strong> (risky, but has best potential)</span>"
+"<span class=\"panel-title\"><span class=\"fa fa-smile-o\"/><strong> Free delivery</strong><br/>\n"
+"                            </span>"
 msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-smile-o\"/><strong> "
-"包邮</strong> (有风险的，但最有潜力的)</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
-"<span class=\"panel-title\"><span class=\"fa fa-table\"/><strong> Flat "
-"rates</strong> (everybody pays the same)</span>"
+"<span class=\"panel-title\"><span class=\"fa fa-table\"/><strong> Flat rates</strong> (everybody pays the same)<br/>\n"
+"                            <span class=\"small\">Advised if you target a local audience</span>\n"
+"                            </span>"
 msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-table\"/><strong> "
-"扁平率</strong> (每个人都付一样)</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -323,10 +397,15 @@ msgid "<span>Next </span><span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment
+msgid "<span>No payment gateway is available for your country</span>"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid ""
 "<span>Sort by</span>\n"
-"                    <span class=\"caret\"/>"
+"                        <span class=\"caret\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -342,9 +421,9 @@ msgstr "<strong>奖金:</strong> 你得到的是最高的报价"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
-"<strong>Call to action</strong> short and clear: (Add to Cart, Ask for "
-"quote,...)"
-msgstr "<strong>调用</strong> 简短明确: (加入购物车, 要求报价,...)"
+"<strong>Call-to-action</strong> short and clear: Add to Cart, Ask for quote,"
+" etc."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -354,16 +433,14 @@ msgstr "<strong>缺点:</strong>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
-"<strong>Cons:</strong> The delivery cost may be discouraging for your "
-"cheapest items."
-msgstr "<STRONG>缺点：</STRONG>的传递成本可能会阻碍你的最便宜的物品。"
+"<strong>Cons:</strong> customers have to check out to find out the delivery "
+"price."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Cons:</strong> customers have to wait until checkout to find out the"
-" delivery price."
-msgstr "<STRONG>缺点：</STRONG>客户必须等到结账才知道交货价。"
+msgid "<strong>Cons:</strong> may be discouraging for your cheapest items"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -374,18 +451,6 @@ msgstr "<STRONG>缺点：</STRONG>会要求你要么消化成本或略有提高�
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Contact us now:</strong><br/>"
-msgstr "<strong>现在就联系我们：</strong><br/>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Customers review:</strong> what do the customers think of the "
-"product"
-msgstr "<STRONG>顾客点评：</STRONG>这个产品客户怎么想的"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "<strong>Features and benefits:</strong> what the product does and why that "
 "is good"
@@ -393,15 +458,22 @@ msgstr "<strong>功能和优点：</STRONG>什么产品呢？为什么这是好�
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>High-quality picture</strong>"
-msgstr "<strong>高画质图片</strong>"
+msgid ""
+"<strong>For complex imports</strong> (&gt;5000 items, product variants, "
+"pictures, etc.):"
+msgstr "<strong>对于复杂导入</strong> (&gt;5000项，产品变体，图片等):"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "<strong>High-quality pictures</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "<strong>Key features, emotional and commercial content</strong><br/>\n"
-"                            Recommended for at least for your top products, because it can have a big impact on your sales and conversion rates."
-msgstr "<STRONG>主要特点，情绪化和商业内容</strong><BR/>至少推荐你的顶级产品，因为它可以对你的销售和转化率有很大的影响。"
+"                            Recommended for at least your top products, because it may have a big impact on your sales and conversion rates."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -410,13 +482,8 @@ msgstr "<strong>必要内容</strong><br/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Name</strong> of your product"
-msgstr "你的商品的<strong>名称</strong>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Need help to import your products?</strong>"
-msgstr "<strong>需要帮助导入你的产品？</STRONG>"
+msgid "<strong>Next actions:</strong>"
+msgstr "<strong>下一行动:</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -424,7 +491,6 @@ msgid "<strong>Order Details:</strong>"
 msgstr "<strong>订单详情:</strong>"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "<strong>Payment Method:</strong>"
 msgstr "<strong>付款模式:</strong>"
@@ -436,24 +502,13 @@ msgstr "<strong>付款信息:</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Pictures gallery of the product:</strong> all angles, detailed view,"
-" package,etc."
-msgstr "该产品的<strong>产品图片库：</strong>各个角度，详细视图，包装等。"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>Price</strong> with currency"
 msgstr "<STRONG>价格</STRONG>与币种"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"<strong>Product variants</strong><br/>\n"
-"                            Product variants are used to offer variations of the same product to your customers on the products page.<br/>\n"
-"                            For example, the customer choose a T-shirt and then select its size or color."
-msgstr ""
-"<STRONG>产品变型</STRONG><BR/>产品的不同是用来提供同一产品的变化，以您的客户对产品的页面。<BR/>例如，客户选择一件T恤，然后选择其大小或颜色。"
+msgid "<strong>Product/Service name</strong>"
+msgstr "<strong>产品/服务名称</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -463,9 +518,9 @@ msgstr "<STRONG>优点：</STRONG>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
-"<strong>Pros:</strong> being transparent about your charges can win you the "
-"trust of your customers."
-msgstr "<STRONG>优点：</STRONG>透明费用可以为你赢得客户的信赖。"
+"<strong>Pros:</strong> being transparent about your charges can help you "
+"gain the trust of your customers."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -476,35 +531,25 @@ msgstr "<STRONG>优点：</STRONG>不提供一样的过滤让你比任何竞争�
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Pros:</strong> simple for your customers to understand."
-msgstr "<STRONG>优点：</STRONG>容易让你的客户了解。"
+msgid "<strong>Pros:</strong> simple to understand"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "<strong>Reassurance arguments</strong><br/>\n"
-"                            Anticipate your customers questions &amp; worries on practical details like Shipping rates &amp; policies, Return &amp; replacement policies, Payment methods &amp; security, General Conditions, etc."
-msgstr "<STRONG>放心参数</STRONG><BR/>预见客户的问题像运费实用的细节;政策，返回 替换政策，支付方式安全，一般条件，等等。"
+"                            Anticipate your customers questions &amp; worries on practical details like shipping rates &amp; policies, return &amp; replacement policies, payment methods &amp; security and your"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Recommended action:</strong>"
-msgstr "<strong>推荐的动作:</strong>"
+msgid "<strong>See it in action in Odoo</strong><br/>"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Recommended actions:</strong>"
-msgstr "<strong>推荐的动作：</strong>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>See it in action</strong><br/>"
-msgstr "<strong>查看它在行动</STRONG><BR/>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<strong>Short description</strong> of the product or service"
-msgstr "商品或服务<strong>简介</strong>"
+msgid "<strong>Short description</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -512,6 +557,14 @@ msgid ""
 "<strong>Technical information:</strong> what do you get and how does it "
 "work?"
 msgstr "<STRONG>技术信息：</STRONG>你得到了什么，它是如何工作的？"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"<strong>Tip for B2B users:</strong> you can create new manually-processed "
+"payment methods (check, purchase order, etc.) by renaming 'Wire Transfer' or"
+" duplicating it."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -527,13 +580,67 @@ msgstr "<STRONG>价值主张：</STRONG>什么是这款产品的最终利益，�
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "<strong>Variants</strong> like size or color"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.terms
 msgid ""
-"<strong>Variants</strong> of the product like size or color (see below)"
-msgstr "<STRONG>变体</STRONG>如大小或颜色的产品(见下文)"
+"A <b>Governing Law</b> will inform users which laws govern the agreement. "
+"This should the country in which your company is headquartered or the "
+"country from which you operate your web site and mobile app."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.terms
+msgid ""
+"A <b>Limit What Users Can Do</b> clause can inform users that by agreeing to"
+" use your service, they’re also agreeing to not do certain things. This can "
+"be part of a very long and thorough list in your Terms and Conditions "
+"agreements so as to encompass the most amount of negative uses."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.terms
+msgid ""
+"A <b>Links To Other Web Sites</b> clause will inform users that you are not "
+"responsible for any third party web sites that you link to. This kind of "
+"clause will generally inform users that they are responsible for reading and"
+" agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies"
+" of these third parties."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.terms
+msgid ""
+"A <b>Termination</b> clause will inform that users’ accounts on your website"
+" and mobile app or users’ access to your website and mobile (if users can’t "
+"have an account with you) can be terminated in case of abuses or at your "
+"sole discretion."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "A document to provide ?"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"A few % discount can bring you twice more customers! Here are a few kinds of"
+" discounts to boost your sales:"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.crm_team_salesteams_view_kanban_inherit_website_sale
+msgid "Abandoned Cart"
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/crm_team.py:48
+#: model:ir.ui.view,arch_db:website_sale.crm_team_salesteams_view_kanban_inherit_website_sale
+#, python-format
+msgid "Abandoned Carts"
 msgstr ""
 
 #. module: website_sale
@@ -547,42 +654,57 @@ msgid "Abandonned eCommerce Orders"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product_accessory_product_ids
+#: model:ir.model.fields,help:website_sale.field_product_template_accessory_product_ids
+msgid ""
+"Accessories show up when the customer reviews the cart before paying (cross-"
+"sell strategy, e.g. for computers: mouse, keyboard, etc.). An algorithm "
+"figures out a list of accessories based on all the products added to cart."
+msgstr ""
+"当客户付款前审查购物车时，显示货物相关配件（交叉销售策略，例如电脑的配件产品：鼠标，键盘等等。）。一种可以得出购物车中所有产品配件列表的算法。"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Accessories: screen, mouse"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_accessory_product_ids
 msgid "Accessory Products"
 msgstr "配件"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Activate 'Suggested products' from the 'Customize' menu."
-msgstr "在“自定义”界面激活“推荐商品“"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Activate the 'Support multiple variants per products' option in"
-msgstr "激活选项“每个产品都支持多个变种”"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Activate the payment options you want to use"
-msgstr "激活您要使用的付款方式"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_website_sale_delivery
-msgid "Add Delivery Costs to Online Sales"
-msgstr "添加交货成本到在线销售"
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_portal
+msgid "Activate the customer portal"
+msgstr "激活客户门户"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
-"Add as many variants as you need from 3 different types: radio buttons, "
-"drop-down menu or color buttons."
-msgstr "对于变体你需要以下3种不同的类型按钮：单选按钮，下拉菜单或颜色的按钮"
+"Add a step to request some extra customer data (picking preferences, etc.)"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Add to Cart"
 msgstr "加入购物车"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Add to Cart button"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Address"
+msgstr "地址"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product_availability
+#: model:ir.model.fields,help:website_sale.field_product_template_availability
+msgid "Adds an availability status on the web product page."
+msgstr "在web的产品页面增加一个有存货的状态。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.option_collapse_products_categories
@@ -591,33 +713,82 @@ msgid "All Products"
 msgstr "所有产品"
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_website_pricelist_selectable
+#: model:ir.model.fields,help:website_sale.field_product_pricelist_selectable
 msgid "Allow the end user to choose this price list"
 msgstr "允许最终用户选择此价格表"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "Allow to use on"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_alternative_product_ids
+#: model:ir.model.fields,field_description:website_sale.field_product_template_alternative_product_ids
+msgid "Alternative Products"
+msgstr "其他可选产品"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.recommended_products
+msgid "Alternative Products:"
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:32
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:31
 #, python-format
 msgid "Amount"
 msgstr "总额"
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_alternative_product_ids
-#: model:ir.model.fields,help:website_sale.field_product_template_alternative_product_ids
-msgid "Appear on the product page"
-msgstr "在产品网页显示"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_accessory_product_ids
-#: model:ir.model.fields,help:website_sale.field_product_template_accessory_product_ids
-msgid "Appear on the shopping cart"
-msgstr "在购物车显示"
+#: model:ir.model.fields,field_description:website_sale.field_crm_team_abandoned_carts_amount
+msgid "Amount of Abandoned Carts"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "Apply"
 msgstr "应用"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Apply Automatic Rates Update"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Apply multi-currencies"
+msgstr "启用多币种"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Apply shipping costs on orders"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Apply specific prices per country, discounts, etc."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Assignation"
+msgstr "指派"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Assignation of online orders"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Attributes"
+msgstr "属性"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_product_variant
+msgid "Attributes and Variants"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_availability
@@ -629,25 +800,24 @@ msgstr "可用"
 #: model:ir.model.fields,field_description:website_sale.field_product_product_availability_warning
 #: model:ir.model.fields,field_description:website_sale.field_product_template_availability_warning
 msgid "Availability Warning"
-msgstr ""
+msgstr "货品不足提示"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:22
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:21
 #, python-format
 msgid "Best Sellers"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.confirmation
-#: model:ir.ui.view,arch_db:website_sale.payment
+#: model:ir.ui.view,arch_db:website_sale.bill_to
 msgid "Bill To:"
 msgstr "账单地址："
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "Billing Address"
-msgstr ""
+msgstr "账单地址"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -655,9 +825,17 @@ msgid "Billing<span class=\"chevron\"/>"
 msgstr "开单<span class=\"chevron\"/>"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid ""
+"Boost your sales with two kinds of discount programs: promotions and coupon "
+"codes. Specific conditions can be set (products, customers, minimum purchase"
+" amount, period). Rewards can be discounts (% or amount) or free products."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Can take up to several days for you to receive the money"
-msgstr "最多可能需要数天才能收到钱"
+msgid "Can take up to several days to receive the money"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_cart_quantity
@@ -665,7 +843,13 @@ msgid "Cart Quantity"
 msgstr "购物车数量"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Cash amount or percentage discounts"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_catalog
+#: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Catalog"
 msgstr ""
 
@@ -675,6 +859,26 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "            touchscreen interface."
 msgstr "分类是通过使用触摸屏界面来浏览你的产品。"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product_public_categ_ids
+#: model:ir.model.fields,help:website_sale.field_product_template_public_categ_ids
+msgid ""
+"Categories can be published on the Shop page (online catalog grid) to help "
+"customers find all the items within a category. To publish them, go to the "
+"Shop page, hit Customize and turn *Product Categories* on. A product can "
+"belong to several categories."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Change"
+msgstr "找零："
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Checkout Process"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_child_id
@@ -694,11 +898,22 @@ msgid "City"
 msgstr "城市"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.products
+msgid ""
+"Click <i>'New'</i> in the top-right corner to create your first product."
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:33
 #, python-format
 msgid "Click here to set an image describing your product."
 msgstr "点击这儿添加一个图片说明你的产品."
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Click here to unfold a Good Product Page"
+msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -732,19 +947,34 @@ msgid "Color"
 msgstr "颜色"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Community &amp; Enterprise users:"
+msgstr "社区 &amp; 企业用户:"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Company Details"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Company Name"
 msgstr "公司名称"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Configure your bank account(s)"
-msgstr "配置您的银行帐户(s)"
+msgid "Configure your delivery methods (pricing, destinations)"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Configure your delivery prices"
-msgstr "配置您的发货价格"
+msgid "Configure your pricelists"
+msgstr "配置你的价格表"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
+msgid "Confirm"
+msgstr "确认"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
@@ -760,6 +990,11 @@ msgstr "确认订单"
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Confirm Order <span class=\"fa fa-long-arrow-right\"/>"
 msgstr "确认订单 <span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Confirmation Email"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -778,16 +1013,6 @@ msgid "Country"
 msgstr "国家"
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_res_country_group
-msgid "Country Group"
-msgstr "国家群组"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_country_group_ids
-msgid "Country Groups"
-msgstr "国家分组"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Country..."
 msgstr "国家..."
@@ -798,23 +1023,44 @@ msgid "Coupon Code"
 msgstr "优惠码"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Create your product items"
+msgstr "创建产品项目"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image_create_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_create_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_style_create_uid
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image_create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_style_create_date
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Customize your Payment message"
-msgstr "自定义您的付款消息"
+msgid "Currencies"
+msgstr "币种"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Customer Segments"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Customers review:"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "DHL"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_dhl
@@ -832,26 +1078,38 @@ msgid "Default Pricelist"
 msgstr "默认价格表"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
-msgid "Default Sales Team"
-msgstr "默认销售团队"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
-msgid "Default Salesperson"
-msgstr "默认销售人员"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Defining a good delivery strategy is difficult: you don't want to cut into "
-"your margins, but you want to be attractive to customers."
-msgstr "定义一个良好的交付战略是很难：你不希望减少你的利润，但你想成为吸引客户。"
+msgid "Default mode"
+msgstr ""
+
+#. module: website_sale
+#: selection:website.config.settings,default_invoice_policy:0
+msgid "Delivered quantities or service hours"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_sale_stock
+msgid "Delivery Orders"
+msgstr "交货单"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Delivery Strategy"
 msgstr "交付战略"
+
+#. module: website_sale
+#: selection:website.config.settings,sale_delivery_settings:0
+msgid ""
+"Delivery methods are only used internally: the customer doesn't pay for "
+"shipping costs"
+msgstr ""
+
+#. module: website_sale
+#: selection:website.config.settings,sale_delivery_settings:0
+msgid ""
+"Delivery methods are selectable on the website: the customer pays for "
+"shipping costs"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_quote_description
@@ -870,15 +1128,45 @@ msgid "Determine the display order in the Website E-commerce"
 msgstr "确定在电子商务网站显示顺序"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_website_sale_digital
+msgid "Digital Content"
+msgstr "数字内容"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Discount % or amounts, margins, roundings, periods, etc."
+msgstr "折扣，以及 金额，毛利，舍入 等"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_sale_coupon
+msgid "Discount Programs"
+msgstr "折扣项目"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_discount_per_so_line
+msgid "Discounted Prices"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image_display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_style_display_name
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: website_sale
 #: selection:product.template,availability:0
 msgid "Display Nothing"
+msgstr "不显示"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Display an images carousel on product pages"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Display crossed-out public prices"
 msgstr ""
 
 #. module: website_sale
@@ -894,6 +1182,11 @@ msgid "E-commerce Promotional Code"
 msgstr "电子商务促销代码"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Ease the product browsing with:"
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:27
 #, python-format
@@ -907,11 +1200,8 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Electronic payments have the advantage of being integrated into the buying "
-"process. This means your customers will be less likely to drop out before "
-"the payment, resulting in a higher conversion rate at the end."
-msgstr "电子支付有被整合到购买过程中的优势。这意味着您的客户将不太可能放弃在付款前，造成了较高的转化率底。"
+msgid "Edit your payment policies and security to reassure your visitors"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -919,22 +1209,26 @@ msgid "Email"
 msgstr "Email"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Email Template"
+msgstr "Email模板"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_website_config_settings_order_mail_template
+msgid "Email sent to customer at the end of the checkout process"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Email sent to the customer"
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:19
 #, python-format
 msgid "Enter a name for your new product"
 msgstr "为您的新产品输入一个名称"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Enter their identification credentials"
-msgstr "进入他们的身份凭证"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Enter your existing products into this CSV file, respecting its structure."
-msgstr "输入您现有的产品到这个CSV文件，按其结构"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_split_method
@@ -947,45 +1241,10 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/product.py:57
+#: code:addons/website_sale/models/product.py:89
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "错误！您不能创建循环类别。"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Example of Good Product Page"
-msgstr "良好的产品页面示例"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Example: you sell T-shirts in the US only. You can offer free delivery "
-"because your items are medium priced and the delivery costs are limited and "
-"well defined."
-msgstr "例：你只在美国出售的T恤衫。你可以提供免费送货，因为你的项目中的价格和快递费用是有限的，明确的。"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Example: you sell cheap specialized electronic components. You choose flat "
-"rates because the price of an item is sometimes lower than the delivery "
-"costs."
-msgstr "举例：你卖便宜专业化的电子元器件。您可以选择统一费率，因为商品的价格有时比运输成本低。"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Example: you sell custom-made wood sculptures, and because your customers "
-"are all over the world, each delivery is different and at cost price."
-msgstr "举例：你卖定做木雕，因为你的客户遍布世界各地，每个以成本价的交货价是不同的"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Export the 3 products you have already created by checking them and choosing"
-" 'Export' from the 'Action' menu"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info_option
@@ -998,21 +1257,33 @@ msgid "Extra Step"
 msgstr "额外的步骤"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "FedEx"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_fedex
 msgid "Fedex integration"
 msgstr "Fedex集成"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:62
+#, python-format
 msgid ""
-"Focus on adding content and improving the pages for your best-selling "
-"products: don't try to create complete pages for all your products at first!"
-msgstr "专注于增加的内容，提高了页面的最畅销产品：第一步不要试图创造所有的你的产品完整网页"
+"Follow the steps and advices in the Odoo Planner to deploy your e-Commerce "
+"website in no time!"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Free and easy to setup"
-msgstr "自由和易于设置"
+msgid "Free and no setup"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Free delivery (see Delivery Strategy section)"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -1020,14 +1291,14 @@ msgid "From Website"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "From a"
-msgstr "从"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Give us your feedback..."
-msgstr ""
+msgstr "给我们你的反馈....."
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_website_config_settings_module_portal
+msgid "Give your customers access to their documents."
+msgstr "让你的客户访问他们的单据"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_sequence
@@ -1036,8 +1307,15 @@ msgstr "显示产品列表的序列"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Go to the"
-msgstr "去"
+msgid ""
+"Go through the checkout process and make sure every single step is tailored "
+"to your activity:"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Go to the Sales module settings page to configure eBay."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_hs_code
@@ -1066,8 +1344,8 @@ msgstr "有优惠劵代码？在这里填写，并使用。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Here are <strong>some pros and cons</strong> to help you decide:"
-msgstr "以下是<STRONG>优点和缺点</strong>，以帮助您决定："
+msgid "Here are <strong>some pros and cons</strong> to help you decide:<br/>"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute_value_html_color
@@ -1082,38 +1360,66 @@ msgid "Hidden"
 msgstr "隐藏"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_sale_note
+msgid "I agree to the"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image_id
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11056
 msgid "ID"
 msgstr "ID"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
-"If you have an eCommerce, one of your objectives is of course to grow your revenues by\n"
-"                    selling more and pricier products. Luckily for you, Odoo integrates three powerful\n"
-"                    customizations for that."
-msgstr "如果你有一个电子商务，你的目标之一当然是通过销售更多，价格更高的产品，以增加你的收入。幸运的是，Odoo集成了三个功能强大的自定义设置的。"
+"If you deal with a major shipper (UPS, FedEx, DHL, etc.), activate the "
+"related connector in Odoo to compute accurate costs and print labels."
+msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.terms
+msgid ""
+"If your website or mobile apps allows users to create content and make that "
+"content public to other users, a <b>Content</b> section will inform users "
+"that they own the rights to the content they have created.<br/>The “Content”"
+" clause usually mentions that users must give you (the website or mobile app"
+" developer) a license so that you can share this content on your "
+"website/mobile app and to make it available to other users.<br/>Because the "
+"content created by users is public to other users, a DMCA notice clause (or "
+"Copyright Infringement ) section is helpful to inform users and copyright "
+"authors that, if any content is found to be a copyright infringement, you "
+"will respond to any DMCA take down notices received and you will take down "
+"the content."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image_image
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image
 msgid "Image"
 msgstr "图像"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Imagine a new customer who comes to your website, finds the product they want and add it to their cart.<br/>\n"
-"                        Then they get to the checkout page and are hit with the delivery and handling charges.<br/>\n"
-"                        Suddenly, a product that looked like it was a fair price seems little expensive, and the customer leaves your website disappointed."
+#: model:ir.ui.view,arch_db:website_sale.view_product_image_form
+msgid "Image Name"
 msgstr ""
-"想象一下，一个新的客户谁到你的网站，发现他们想要的产品，并将其添加到他们的购物车.然后他们到收银台页面，选择运费和手续费。突然，一个产品，看起来这是一个公平的价格似乎有点贵，然后客户失望地离开你的网站"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_product_image_ids
+#: model:ir.model.fields,field_description:website_sale.field_product_template_product_image_ids
+#: model:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid "Images"
+msgstr "图片"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Import Your Products"
-msgstr "导入你的产品"
+msgid ""
+"Imagine a new customer adds a product to cart and leaves your website "
+"because of shipping costs... Defining a good delivery strategy is difficult."
+" You don't want to cut into your margins, but you want to remain price-"
+"competitive."
+msgstr ""
 
 #. module: website_sale
 #: selection:product.template,availability:0
@@ -1122,27 +1428,21 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"In order to take money from customers, you need a way of accepting payments.<br/>\n"
-"                        That's what a payment gateway is for: it helps you make money, but that does cost money.<br/>\n"
-"                        That why it's important to choose the right provider for your online payments."
+msgid "Install Optional Products (cross-selling)"
 msgstr ""
-"为了从顾客那里拿到钱，你需要一个接受付款的方式。这就是一个支付网关：它可以帮助你赚钱，但这需要花费.这就是为什么要选择合适的供应商为您的网上支付是很重要的。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Increase your average cart amount by proposing complementary products to "
-"your visitors."
-msgstr "通过提出配套产品，使您的访客增加你的平均购物量。"
+msgid "Install shipping connectors"
+msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Increase your chances to make a sale by displaying suggested products."
-msgstr "通过展示建议的产品来增加行销售可能性"
+#: model:ir.model.fields,help:website_sale.field_website_config_settings_module_website_sale_options
+msgid "Installs *e-Commerce Optional Products*"
+msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:470
+#: code:addons/website_sale/controllers/main.py:474
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "不合规电邮！ 请输入有效的电子邮件地址。"
@@ -1154,10 +1454,20 @@ msgid "Invoices"
 msgstr "发票"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Invoicing"
+msgstr "开票"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_default_invoice_policy
+msgid "Invoicing Policy"
+msgstr "开票策略"
+
+#. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:115
 #, python-format
-msgid "It is forbidden to modify a sale order which is not in draft status"
-msgstr "禁止修改销售订单当它不是处于草案状态时"
+msgid "It is forbidden to modify a sales order which is not in draft status"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1172,34 +1482,82 @@ msgid "Landed Costs"
 msgstr "到岸成本"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image___last_update
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category___last_update
 #: model:ir.model.fields,field_description:website_sale.field_product_style___last_update
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist___last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_partner_last_website_so_id
-msgid "Last Online Sale Order"
-msgstr "最近的在线销售订单"
+msgid "Last Online Sales Order"
+msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image_write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_style_write_uid
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image_write_date
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_write_date
 #: model:ir.model.fields,field_description:website_sale.field_product_style_write_date
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
-msgid "Manage Deliveries"
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Legal Name"
+msgstr "法定名称"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Let the customer enter a shipping address"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Let them buy straight from catalog with:"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "List displaying"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Logo"
+msgstr "徽标"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Main Currency"
+msgstr "主币种"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"Make sure your customers can go through the shopping process in a very short"
+" time, otherwise they will leave your website. Here are some actions to "
+"tailor the process to your business."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Manage picking and deliveries"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Manage promotion &amp; coupon programs"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery
+msgid "Manage shipping internally"
 msgstr ""
 
 #. module: website_sale
@@ -1216,14 +1574,36 @@ msgid ""
 msgstr "中等尺寸的类别图像.它将保持长宽比,并被自动调整为128x128px大小.它将在一些表单界面或看板界面上显示."
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
-msgid "Merchant Connectors"
-msgstr "商家连接器"
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Min. qty or period"
+msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
-msgid "More Info"
-msgstr "更多信息"
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_multi_currency
+msgid "Multi-Currencies"
+msgstr "多币种"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_website_multiimage
+msgid "Multi-Images"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"Multi-buy offers (2 products sold together for less than their individual "
+"price)"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_sale_pricelist_setting_split_1
+msgid "Multiple Prices per Products"
+msgstr ""
+
+#. module: website_sale
+#: selection:website.config.settings,sale_pricelist_setting_split_2:0
+msgid "Multiple prices per product (e.g. customer segments, currencies)"
+msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -1233,19 +1613,30 @@ msgid "My Cart"
 msgstr "我的购物车"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image_name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_name
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Name"
 msgstr "名称"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.sort
+msgid "Name <i class=\"fa fa-carret-down\" aria-hidden=\"true\"/>"
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:906
+#: code:addons/website_sale/controllers/main.py:970
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:18
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
 msgid "New Product"
 msgstr "新产品"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.extra_info
+msgid "Next <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1258,9 +1649,24 @@ msgid "No product defined."
 msgstr "没有产品定义。"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Now you can also <strong>import your existing products:</strong>"
-msgstr "现在，您还可以导入现有的产品："
+#: selection:website.config.settings,sale_delivery_settings:0
+msgid "No shipping management on website"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
+msgid "No, choose another method"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "None website"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_crm_team_abandoned_carts_count
+msgid "Number of Abandoned Carts"
+msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -1270,23 +1676,11 @@ msgid "OK"
 msgstr "Ok"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Odoo offers an import service to handle the whole process for you!"
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid ""
+"Once activated, discounted prices can be applied from Pricelists setup form "
+"(Discount policy field)."
 msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Odoo's web-services allows developers to create scripts that will load data "
-"automatically into the system."
-msgstr "Odoo的网络服务，允许开发人员创建脚本，它会自动将数据加载到系统中。"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"On your website, go to the product page where you want to add suggested "
-"products."
-msgstr "在您的网站上，转至要添加建议产品的产品页面。"
 
 #. module: website_sale
 #. openerp-web
@@ -1296,14 +1690,40 @@ msgid "Once you click on <b>Save</b>, your product is updated."
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/models/crm_team.py:41
+#, python-format
+msgid "Online Sales"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Online users: we do it for you!"
+msgstr "在线用户：我们为您做！"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_only_services
 msgid "Only Services"
 msgstr "只是服务"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_website_sale_options
+msgid "Optional Products"
+msgstr "可选产品"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Options: warranty, software"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Order"
 msgstr "订单"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_order_mail_template
+msgid "Order Confirmation Email"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_website_order_line
@@ -1316,6 +1736,11 @@ msgid ""
 "Order Lines to be displayed on the website. They should not be used for "
 "computation purpose."
 msgstr "订单明细会显示在网站中，但不能用于统计分析。"
+
+#. module: website_sale
+#: selection:website.config.settings,default_invoice_policy:0
+msgid "Ordered quantities"
+msgstr "订购数量"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders
@@ -1334,8 +1759,8 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:719
-#: code:addons/website_sale/controllers/main.py:778
+#: code:addons/website_sale/controllers/main.py:727
+#: code:addons/website_sale/controllers/main.py:837
 #, python-format
 msgid "Pay Now"
 msgstr "现在付款"
@@ -1344,6 +1769,11 @@ msgstr "现在付款"
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay Now <span class=\"fa fa-long-arrow-right\"/>"
 msgstr "现在付款 <span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
+msgid "Payment"
+msgstr "付款"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_payment_acquirer_id
@@ -1371,6 +1801,29 @@ msgid "Payment Methods"
 msgstr "付款方法"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Payment must be reconciled manually"
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:761
+#, python-format
+msgid "Payment transaction (%s) failed : <%s>"
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:755
+#, python-format
+msgid "Payment transaction failed (%s)"
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:762
+#, python-format
+msgid "Payment transaction failed (Contact Administrator)"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info_option
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Payment<span class=\"chevron\"/>"
@@ -1382,9 +1835,19 @@ msgid "Phone"
 msgstr "电话"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Pictures gallery:"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Policies"
 msgstr "政策"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Prefered by some customers"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
@@ -1393,25 +1856,46 @@ msgid "Price"
 msgstr "价格"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_website_pricelist_ids
+#: model:ir.ui.view,arch_db:website_sale.sort
+msgid "Price <i class=\"fa fa-carret-down\" aria-hidden=\"true\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.sort
+msgid "Price <i class=\"fa fa-carret-up\" aria-hidden=\"true\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_ids
 msgid "Price list available for this Ecommerce/Website"
 msgstr "价目表可用于此电子商务/网站"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_pricelist_id
 msgid "Pricelist"
 msgstr "价格表"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_name
-msgid "Pricelist Name"
-msgstr "价格表名称"
-
-#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.website_product_pricelist3
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Pricelists"
 msgstr "价格表"
+
+#. module: website_sale
+#: selection:website.config.settings,sale_pricelist_setting_split_2:0
+msgid "Prices computed from formulas (discounts, margins, roundings)"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Pricing"
+msgstr "定价"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Pricing &amp; Discounts"
+msgstr "定价 & 折扣"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_requisition
@@ -1420,7 +1904,7 @@ msgstr "补货"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:30
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:29
 #: model:ir.model,name:website_sale.model_product_product
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.payment
@@ -1434,6 +1918,17 @@ msgid "Product Attribute"
 msgstr "产品属性"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Product Catalog"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.product_template_form_view
+#: model:ir.ui.view,arch_db:website_sale.view_product_image_form
+msgid "Product Images"
+msgstr "产品图片"
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Product Name"
 msgstr "产品名称"
@@ -1442,6 +1937,12 @@ msgstr "产品名称"
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Product Pages"
 msgstr "产品页"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_sale_show_tax
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Product Prices"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
@@ -1455,8 +1956,18 @@ msgstr "产品模板"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Product detail form"
-msgstr "产品细节界面"
+msgid "Product attributes filter"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Product categories list"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Product descriptions"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
@@ -1470,6 +1981,11 @@ msgid "Product not found!"
 msgstr "产品未找到!"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Product prices displaying in web catalog"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -1478,19 +1994,23 @@ msgid "Products"
 msgstr "产品"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Products list"
-msgstr "产品清单"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Products list view"
-msgstr "产品清单视图"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Promote"
 msgstr "促销"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Provide customers with links or content to download"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid ""
+"Provide customers with product-specific links or downloadable content in the"
+" confirmation page of the checkout process if the payment gets through. To "
+"do so, attach some files to a product using the new Files button and publish"
+" them."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_rating_rating_website_published
@@ -1521,13 +2041,13 @@ msgstr "上拉"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
-"Put the practical details (shipping, payment options,...) as links in the "
-"footer; that way, they will be accessible from all your product pages."
-msgstr "把实用的细节(运费，付款方式，...)作为底部的链接;这样一来，他们将所有的产品页面访问。"
+"Put the practical details (shipping, payment methods, etc.) as links in the footer; That way, they will be accessible \n"
+"                            all your product pages."
+msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:31
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:30
 #, python-format
 msgid "Qty Sold"
 msgstr ""
@@ -1538,11 +2058,21 @@ msgid "Qty:"
 msgstr "数量"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Quantities to invoice from sales orders"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Quantity"
 msgstr "数量"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Quantity-based discounts (B2B)"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1568,7 +2098,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "评级数"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_rating_last_value
@@ -1576,9 +2106,9 @@ msgid "Rating value: 0=Unhappy, 10=Happy"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Read the"
-msgstr "阅读"
+#: model:ir.model.fields,field_description:website_sale.field_product_image_product_tmpl_id
+msgid "Related Product"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.404
@@ -1591,21 +2121,29 @@ msgid "Review Order<span class=\"chevron\"/>"
 msgstr "查看订单"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Review your catalog"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products_item
 msgid "Sale"
 msgstr "销售"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:10
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:9
 #, python-format
 msgid "Sales /"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Sales / Settings"
-msgstr "销售/设置"
+#: model:ir.model,name:website_sale.model_crm_team
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_salesteam_id
+#: model:ir.model.fields,field_description:website_sale.field_website_salesteam_id
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Sales Channel"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order
@@ -1613,11 +2151,9 @@ msgid "Sales Order"
 msgstr "销售订单"
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_crm_team
-#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_salesteam_id
-#: model:ir.model.fields,field_description:website_sale.field_website_salesteam_id
-msgid "Sales Team"
-msgstr "销售团队"
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_sale_pricelist_setting_split_2
+msgid "Sales Price"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_salesperson_id
@@ -1626,14 +2162,39 @@ msgid "Salesperson"
 msgstr "销售员"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Save and import the modified CSV file from the 'More' menu of the"
-msgstr "保存然后从“更多”菜单导入修改后的CSV 文件"
+#: model:ir.ui.view,arch_db:website_sale.payment
+msgid "Save my payment data"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Save this page and come back here to set up the feature."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Secure Payment"
 msgstr "安全支付"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "See how to configure delivery methods and shipping connectors"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "See how to configure payment methods"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "See how to configure pricing &amp; discounts"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "See how to customize your catalog page"
+msgstr ""
 
 #. module: website_sale
 #: selection:product.attribute,type:0
@@ -1650,17 +2211,22 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Select a product from the"
-msgstr "从...选择一个产品"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "Select this address"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_selectable
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Select your pricing preference and allow discounts"
+msgstr "选择您的定价偏好设置并允许折扣"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Select your shipping management policy"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist_selectable
 msgid "Selectable"
 msgstr "可选"
 
@@ -1675,15 +2241,68 @@ msgid "Sell More"
 msgstr "卖得更多"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Sell in several currencies"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Sell your products on eBay"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid ""
+"Send delivery orders to your warehouse and get delivered quantities updated "
+"in sales orders accordingly."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_sequence
 msgid "Sequence"
 msgstr "序号"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.confirmation
-#: model:ir.ui.view,arch_db:website_sale.payment
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"Set alternatives, accessories and options in product detail form (in Sales "
+"tab)"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Set product attributes (e.g. color, size) to sell variants"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.bill_to
 msgid "Ship To:"
 msgstr "送货到:"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Ship with DHL"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Ship with FedEx"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Ship with UPS"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Ship with USPS"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Shipping"
+msgstr "送货"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -1691,15 +2310,35 @@ msgid "Shipping &amp;"
 msgstr "送货 &amp;"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_delivery_invoice_address
 #: model:ir.ui.view,arch_db:website_sale.address
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "Shipping Address"
+msgstr "送货地址"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Shipping Connectors"
+msgstr "送货连接器"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Shipping Costs"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
-msgid "Shipping Connectors"
-msgstr "送货连接器"
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_sale_delivery_settings
+msgid "Shipping Management"
+msgstr "送货管理"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid ""
+"Shipping connectors allow to compute accurate shipping costs, print shipping"
+" labels and request carrier picking at your warehouse to ship to the "
+"customer.Apply shipping connector from delivery methods."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products
@@ -1711,6 +2350,11 @@ msgstr "商店"
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "Shop - Checkout"
 msgstr "商店 - 结账"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
+msgid "Shop - Confirm payment"
+msgstr "商店 - 确认付款"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -1728,21 +2372,34 @@ msgid "Shopping Cart"
 msgstr "购物车"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.address
-msgid "Sign Up"
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Shopping Experience"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Simply add one or more products as an <strong>'Accessory Product'</strong>."
-msgstr "仅仅增加一个或多个产品作为附件产品"
+#: model:res.groups,name:website_sale.group_website_multi_image
+msgid "Show multi image on eCommerce"
+msgstr "在电子商务展示多个图片"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Simply add the product you want as an <strong>'Optional Product'</strong>"
-msgstr "仅仅增加一个或多个产品作为“可选产品”"
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_product_pricelist
+msgid "Show pricelists On Products"
+msgstr "显示产品的价目表"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_pricelist_item
+msgid "Show pricelists to customers"
+msgstr "给客户显示价目表"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_show_price_subtotal
+msgid "Show subtotal"
+msgstr "显示小计"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_show_price_total
+msgid "Show total"
+msgstr "显示总计"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
@@ -1776,11 +2433,13 @@ msgstr "中等尺寸保持长宽比的类别图像，自动调整为64x64px大�
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Some customers prefer to pay this way"
-msgstr "有些客户宁愿这种方式支付"
+msgid ""
+"Some acquirers like Authorize.net and Ingenico can be used as payment "
+"gateways with your own payment processor."
+msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:481
+#: code:addons/website_sale/controllers/main.py:485
 #, python-format
 msgid "Some required fields are empty."
 msgstr "一些必须的字段是空的"
@@ -1791,6 +2450,16 @@ msgid "Sorry, this product is not available anymore."
 msgstr "对不起，此产品已经不存在。"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Sort by price"
+msgstr "按价格排序"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.sort
+msgid "Sorting by :"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_split_method
 msgid "Split Method"
 msgstr "拆分方法"
@@ -1798,6 +2467,11 @@ msgstr "拆分方法"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_hs_code
 msgid "Standardized code for international shipping and goods declaration"
+msgstr "国际航运和货物申报代码规范"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Start your online shop by creating 3 products pages.<br/>"
 msgstr ""
 
 #. module: website_sale
@@ -1812,8 +2486,13 @@ msgstr "州/省..."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
-msgid "Street <span class=\"hidden-xs\"> and Number</span>"
+msgid "Street 2"
 msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "Street <span class=\"hidden-xs\"> and Number</span>"
+msgstr "街道 <span class=\"hidden-xs\"> 以及 号码</span>"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style_name
@@ -1838,24 +2517,56 @@ msgid "Subtotal:"
 msgstr "小计:"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.suggested_products_list
-msgid "Suggested Accessories:"
+#: model:ir.model.fields,help:website_sale.field_product_product_alternative_product_ids
+#: model:ir.model.fields,help:website_sale.field_product_template_alternative_product_ids
+msgid ""
+"Suggest more expensive alternatives to your customers (upsell strategy). "
+"Those products show up on the product page."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_alternative_product_ids
-#: model:ir.model.fields,field_description:website_sale.field_product_template_alternative_product_ids
-msgid "Suggested Products"
-msgstr "推荐的产品"
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "Suggest optional products when adding to cart"
+msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.recommended_products
-msgid "Suggested Products:"
-msgstr "建议的产品:"
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Suggest options and accessories"
+msgstr "建议选项和附件"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Suggest pricier alternatives"
+msgstr "建议替代价格"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.suggested_products_list
+msgid "Suggested Accessories:"
+msgstr "建议的附件:"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
+msgid "Summary"
+msgstr "摘要"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "TIN / VAT"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Tax ID"
+msgstr "税号"
+
+#. module: website_sale
+#: selection:website.config.settings,sale_show_tax:0
+msgid "Tax-Excluded Prices"
+msgstr ""
+
+#. module: website_sale
+#: selection:website.config.settings,sale_show_tax:0
+msgid "Tax-Included Prices"
 msgstr ""
 
 #. module: website_sale
@@ -1864,9 +2575,14 @@ msgid "Taxes:"
 msgstr "税金："
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_temando
-msgid "Temando integration"
-msgstr "Temando 集成"
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "Terms &amp; Conditions"
+msgstr "方式  &amp; 条件"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.terms
+msgid "Terms &amp;amp; Conditions"
+msgstr "条款& 条件"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -1874,11 +2590,20 @@ msgid "Thank you for your order."
 msgstr "感谢您的订购。"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.terms
+msgid ""
+"The <b>Intellectual Property</b> disclosure will inform users that the "
+"contents, logo and other visual media you created is your property and is "
+"protected by copyright laws."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
-"The best way to start your online shop is by creating 3 products pages directly in the website.<br/>\n"
-"                        To help you, here are some guidelines that will convert customers:"
-msgstr "开始你的网上商店，最好的方法是通过直接在网站上创建3个产品页面，这里有一些引导来转换客户"
+"The first step is to set up your company's information. This is used in "
+"several places: Contact us page, website header &amp; footer, printed "
+"business documents like orders and invoices, etc."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_website_url
@@ -1891,8 +2616,22 @@ msgid "The payment seems to have been canceled."
 msgstr "付款看起来被取消了。"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "There are two strategies to sell more to a customer:"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid ""
+"There are two ways to manage pricelists:                         Multiple "
+"prices per product: must be set in the Sales tab of the product detail form."
+"                         Price computed from formulas: must be set in the "
+"pricelist form."
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:24
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:23
 #, python-format
 msgid "There is no recent online sale."
 msgstr ""
@@ -1903,6 +2642,18 @@ msgid "There seems to be an error with your request."
 msgstr "你的请求可能有错误。"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "This adds the choice of a currency on pricelists."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid ""
+"This default value is applied to any new product created. This can be "
+"changed in the product detail form."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_image
 msgid ""
 "This field holds the image used as image for the category, limited to "
@@ -1910,28 +2661,22 @@ msgid ""
 msgstr "这个字段记录了这个分类使用的图像，限制在1024x1024像素。"
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_availability
-#: model:ir.model.fields,help:website_sale.field_product_template_availability
-msgid ""
-"This field is used to display a availability banner with a message on the "
-"ecommerce"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "This promo code is not available"
 msgstr "此促销代码不可用"
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_public_categ_ids
-#: model:ir.model.fields,help:website_sale.field_product_template_public_categ_ids
-msgid "Those categories are used to group similar products for e-commerce."
-msgstr "那些类别是为了将相似的产品进行分组以进行电子商务的销售."
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid ""
+"To collect payments, you can either request your customers to process it manually (wire transfer, etc.) or redirect them to payment acquirers.<br/>\n"
+"                        Using payment acquirers costs you money, so take some time to compare them."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "To use them:"
-msgstr "使用他们"
+msgid ""
+"To do so, take the most out of Odoo's <strong>pricing options</strong>:<br/>"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
@@ -1944,11 +2689,9 @@ msgid "Transaction"
 msgstr "交易"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Try to apply what you've learned above by manually creating three Product "
-"pages from the Content menu."
-msgstr "尝试运用上面你学到的手动创建三个产品网页从内容菜单"
+#: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
+msgid "Transaction processing ..."
+msgstr "交易处理中..."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_type
@@ -1956,9 +2699,19 @@ msgid "Type"
 msgstr "类型"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "UPS"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_ups
 msgid "UPS integration"
 msgstr "UPS集成"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "USPS"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_usps
@@ -1973,24 +2726,22 @@ msgstr "单价"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
 msgid "Unpaid Orders"
-msgstr ""
+msgstr "未支付的订单"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
 msgid "Unpaid eCommerce Orders"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.products
-msgid "Use the <i>'New Page'</i> top menu to create your first product."
-msgstr ""
+msgstr "未支付的电子商务订单"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Users will buy more accessories and services if they can add them to their "
-"cart in one click."
-msgstr "用户将购买更多的配件和服务，如果通过一次点击他们就可以将它们添加到自己的购物车中。"
+msgid "Use our import templates to get your catalog ready in no time!"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_sale_pricelist
+msgid "Use pricelists to adapt your price per customers"
+msgstr "为每个客户使用价格表来适配你的价格"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
@@ -2013,13 +2764,7 @@ msgid "Warning"
 msgstr "警告"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Web Service technical documentation."
-msgstr "Web服务的技术文档。"
-
-#. module: website_sale
 #: model:ir.model,name:website_sale.model_website
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_website_id
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Website"
 msgstr "网站"
@@ -2036,33 +2781,8 @@ msgid "Website Comments"
 msgstr "网站上的评论"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_country_group_website_pricelist_ids
-msgid "Website Price Lists"
-msgstr "网站价格表"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_pricelist_form_view
-#: model:ir.ui.view,arch_db:website_sale.website_pricelist_tree_view
-msgid "Website PriceLists"
-msgstr "网站价格表"
-
-#. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.website_sale_pricelists_by_website
-#: model:ir.model,name:website_sale.model_website_pricelist
-#: model:ir.ui.menu,name:website_sale.menu_website_sale_pricelists
-msgid "Website Pricelist"
-msgstr "网站价格表"
-
-#. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:454
-#, python-format
-msgid "Website Pricelist for %s"
-msgstr "...的网站价格表%s"
-
-#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
-#: model:ir.ui.menu,name:website_sale.menu_product_public_category
 msgid "Website Product Categories"
 msgstr "网站产品目录"
 
@@ -2082,7 +2802,7 @@ msgstr "网站公众种类"
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_sequence
 msgid "Website Sequence"
-msgstr ""
+msgstr "网站序列"
 
 #. module: website_sale
 #: model:ir.actions.act_url,name:website_sale.action_open_website
@@ -2110,21 +2830,31 @@ msgid "Website meta title"
 msgstr "网站meta标题"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_website_price
+#: model:ir.model.fields,field_description:website_sale.field_product_template_website_price
+msgid "Website price"
+msgstr "网站价格"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_website_public_price
+#: model:ir.model.fields,field_description:website_sale.field_product_template_website_public_price
+msgid "Website public price"
+msgstr "网站公开价格"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_website_ids
 msgid "Websites"
 msgstr "网站"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_crm_team_website_ids
-msgid "Websites using this sales team"
+msgid "Websites using this sales channel"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"You can also define different prices for the variants you created by "
-"activating the 'Use pricelists to adapt your price per customers' option in"
-msgstr "您也可以定义不同的价格为您激活“使用价格表，以适应每个客户的价格”选项中创建的变种"
+#: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
+msgid "Yes, pay with this card"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2147,11 +2877,6 @@ msgid "You don't have any unpaid order from the website."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "You have to reconcile the payment manually"
-msgstr "你必须手动调节付款"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Your Address"
 msgstr "你的地址"
@@ -2159,13 +2884,12 @@ msgstr "你的地址"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid ""
-"Your Address \n"
+"Your Address\n"
 "                                        <small> or </small>"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
-#: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "Your Order"
 msgstr "您的订单"
 
@@ -2184,6 +2908,11 @@ msgstr "你的购物车是空的！"
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "Your order has been confirmed, thank you for your loyalty."
 msgstr "您的订单已被确认，感谢您的惠顾"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.order_state_message
+msgid "Your payment has been authorized."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
@@ -2207,8 +2936,8 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "and fill in one or more <strong>'Suggested Products'</strong>."
-msgstr "并利用一个或多个“推荐产品”"
+msgid "all angles, detailed view, package, etc."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
@@ -2226,20 +2955,29 @@ msgid "comments"
 msgstr "备注"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "eBay"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_sale_ebay
 msgid "eBay connector"
 msgstr "eBay连接器"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
-#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
 msgid "eCommerce"
 msgstr "电子商务"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
+msgid "eCommerce Integrations"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
 msgid "eCommerce Orders"
-msgstr ""
+msgstr "电子商务订单"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.search count
@@ -2252,19 +2990,24 @@ msgid "items)"
 msgstr "项目)"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "of the Sales module"
-msgstr "在销售模块"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products
 msgid "pagination form-inline o_website_sale_search"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "product's availability (In Stock, Not Available, etc.)"
+msgstr "产品的可用性 ( 有库存, 不可用, etc.)"
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute_value
 msgid "product.attribute.value"
 msgstr "product.attribute.value"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_image
+msgid "product.image"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_style
@@ -2273,13 +3016,33 @@ msgstr "产品.风格"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "using one or several of the strategies above"
-msgstr "使用以上一个或几个阶段"
+msgid "set company logo"
+msgstr "设置公司logo"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_sale_note
+msgid "terms &amp; conditions"
+msgstr "条款& 条件"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "use Odoo API to import through scripts"
+msgstr "使用Odoo API通过脚本导入"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist_website_id
+msgid "website"
+msgstr "网站"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_config_settings
 msgid "website.config.settings"
 msgstr "website.config.settings"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_planner
+msgid "what do the customers think of the product"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart

@@ -3,14 +3,14 @@
 # * marketing_campaign
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +65,7 @@ msgid "Activity"
 msgstr "活动"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:376
+#: code:addons/marketing_campaign/models/marketing_campaign.py:394
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "在%(interval_nbr)d %(interval_type)s之后"
@@ -103,7 +103,7 @@ msgid "Automatic"
 msgstr "自动的"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:375
+#: code:addons/marketing_campaign/models/marketing_campaign.py:393
 #, python-format
 msgid "Automatic transition"
 msgstr "自动迁移"
@@ -226,7 +226,7 @@ msgid "Condition"
 msgstr "条件"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:377
+#: code:addons/marketing_campaign/models/marketing_campaign.py:395
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -332,7 +332,7 @@ msgid "Draft"
 msgstr "草稿"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:123
+#: code:addons/marketing_campaign/models/marketing_campaign.py:127
 #, python-format
 msgid "Duplicating campaigns is not supported."
 msgstr "不支持复制的营销活动。"
@@ -343,7 +343,7 @@ msgid "Email"
 msgstr "Email"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:578
+#: code:addons/marketing_campaign/models/marketing_campaign.py:596
 #, python-format
 msgid "Email Preview"
 msgstr "Email预览"
@@ -352,11 +352,6 @@ msgstr "Email预览"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
 msgstr "Email模板"
-
-#. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "Email模板预览"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
@@ -627,6 +622,20 @@ msgid "Marketing Campaign Statistics"
 msgstr "市场营销统计"
 
 #. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_hour_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+msgid "Marketing Campaign: Campaign workitems processing"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_day_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_day
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_day
+msgid "Marketing Campaign: Segment Sync"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_graph
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_pivot
@@ -645,7 +654,7 @@ msgid "Mode"
 msgstr "模式"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:194
+#: code:addons/marketing_campaign/models/marketing_campaign.py:198
 #, python-format
 msgid "Model of filter must be same as resource model of Campaign"
 msgstr ""
@@ -741,7 +750,7 @@ msgstr "从最近一次同步到现在被修改的记录（不重复）"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Outgoing Transitions"
-msgstr "出去的转换"
+msgstr "出向转换"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_partner_id
@@ -802,8 +811,8 @@ msgstr "报表"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.report_marketing_campaign
-msgid "Reports"
-msgstr "报表"
+msgid "Reporting"
+msgstr "报告"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -973,7 +982,7 @@ msgid "Test in Realtime"
 msgstr "实时检验"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:393
+#: code:addons/marketing_campaign/models/marketing_campaign.py:411
 #, python-format
 msgid "The To/From Activity of transition must be of the same Campaign"
 msgstr ""
@@ -984,13 +993,13 @@ msgid "The action to perform when this activity is activated"
 msgstr "活动激活时执行的操作"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:103
+#: code:addons/marketing_campaign/models/marketing_campaign.py:107
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr "营销活动的所有部分都结束了才能把营销活动标记为完成。"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:95
+#: code:addons/marketing_campaign/models/marketing_campaign.py:99
 #, python-format
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
@@ -998,13 +1007,13 @@ msgid ""
 msgstr "营销活动未启动，还未指定营销活动的起始活动项，请指定。"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:83
+#: code:addons/marketing_campaign/models/marketing_campaign.py:87
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
 msgstr "营销活动未启动，因为其不包含任何活动项。"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:601
+#: code:addons/marketing_campaign/models/marketing_campaign.py:619
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr "这步没有邮件或者报表。"

@@ -6,13 +6,14 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +45,11 @@ msgstr ""
 "productcategorieën."
 
 #. module: stock_account
+#: selection:wizard.valuation.history,compute_at_date:0
+msgid "At a Specific Date"
+msgstr ""
+
+#. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Average Price"
@@ -56,21 +62,27 @@ msgid "Cancel"
 msgstr "Annuleer"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:243
+#: code:addons/stock_account/models/stock.py:252
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"Kan geen voorraadtoename rekening vinden voor het product %s. Deze moet "
+"ingesteld worden op de productcategorie, of op de locatie, vóór het "
+"verwerken van deze operatie."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:245
+#: code:addons/stock_account/models/stock.py:254
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"Kan geen voorraadtoename rekening vinden voor het product %s. Deze moet "
+"ingesteld worden op de productcategorie, of op de locatie, vóór het "
+"verwerken van deze operatie."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -85,11 +97,9 @@ msgid "Change Standard Price"
 msgstr "Wijzig kostprijs"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
-msgid "Choose a date in the past to get the inventory at that date."
+#: model:ir.model.fields,help:stock_account.field_wizard_valuation_history_date
+msgid "Choose a date to get the inventory at that date"
 msgstr ""
-"Kies een datum die in het verleden ligt om de voorraad van die datum op te "
-"halen."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -100,6 +110,12 @@ msgstr ""
 "Kies de boekhouddatum op welke u de voorraadwaarde mutaties wilt waarderen "
 "die gemaakt zijn door de voorraad in plaats van de standaard (de voorraad "
 "einddatum)"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_wizard_valuation_history_compute_at_date
+msgid ""
+"Choose to analyze the current inventory or from a specific date in the past."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
@@ -113,18 +129,25 @@ msgid "Company"
 msgstr "Bedijf"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Compute from average price"
-msgstr "bereken van gemiddelde prijs"
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_compute_at_date
+msgid "Compute"
+msgstr "Bereken"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:316
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Compute from average cost"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:327
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
+"Configuratiefout. Configureer de prijsverschillen rekening op het product of"
+" de categorie om deze bewerking te verwerken."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -134,7 +157,7 @@ msgstr "Kostprijs"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
-msgid "Cost method"
+msgid "Cost Method"
 msgstr ""
 
 #. module: stock_account
@@ -147,7 +170,7 @@ msgstr "Kostprijsbepaling"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Tegenrekening"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -162,9 +185,9 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
-msgid "Date"
-msgstr "Datum"
+#: selection:wizard.valuation.history,compute_at_date:0
+msgid "Current Inventory"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
@@ -268,14 +291,17 @@ msgid "Inventory Valuation"
 msgstr "Voorraadwaardering"
 
 #. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
+msgid "Inventory Valuation Report"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_inventory_value
 msgid "Inventory Value"
 msgstr "Voorraadwaarde"
 
 #. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
-#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
-#: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
 msgid "Inventory at Date"
 msgstr "Voorraad op datum"
 
@@ -331,7 +357,7 @@ msgid "Manage Inventory Valuation and Costing Methods"
 msgstr "Beheer de voorraadwaarde en kostprijs methodes"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:109
+#: code:addons/stock_account/models/product.py:108
 #, python-format
 msgid "No difference between standard price and new price!"
 msgstr "Geen verschil tussen kostprijs en de nieuwe prijs."
@@ -419,15 +445,10 @@ msgid "Retrieve the Inventory Value"
 msgstr "Voorraadwaarde ophalen"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
-msgid "Retrieve the curent stock valuation."
-msgstr "Haal huidige voorraadwaarde op."
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Set standard price"
-msgstr "Kostprijs instellen"
+msgid "Set standard cost"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
@@ -441,8 +462,8 @@ msgid "Standard Price"
 msgstr "Kostprijs"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:126
-#: code:addons/stock_account/models/product.py:131
+#: code:addons/stock_account/models/product.py:125
+#: code:addons/stock_account/models/product.py:130
 #, python-format
 msgid "Standard Price changed"
 msgstr "Kostprijs veranderd"
@@ -455,6 +476,8 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Kostprijs: De kostprijs wordt handmatig bijgewerkt (meestal aan het eind van het jaar). Gemiddelde prijs: De kostprijs wordt bij elke binnenkomst van producten opnieuw berekend en gebruikt voor de voorraadwaarde. \n"
+"Werkelijke prijs: De kostprijs is de prijs van het laatste verkochte product (wordt bijvoorbeeld gebruikt in het geval van een voorraadverschil)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -471,6 +494,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Stock Accounting"
 msgstr "Voorraad boekhouding"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_stock_history
+msgid "Stock History"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -516,7 +544,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Voorraadwaarde rekening (uitgaand)"
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/wizard_valuation_history.py:24
+#: code:addons/stock_account/wizard/wizard_valuation_history.py:39
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_graph
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_pivot
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -531,13 +559,16 @@ msgid "Templates for Account Chart"
 msgstr "Sjabloon voor grootboekschema"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:271
+#: code:addons/stock_account/models/stock.py:281
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
 "probably a configuration error. Check the costing method and the standard "
 "price"
 msgstr ""
+"De gevonden voorraadwaarde rekening voor product %s is nul. Wat betekent dat"
+" er waarschijnlijk een fout is in de configuratie. Controleer de kosten "
+"methode en de kostprijs"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
@@ -672,7 +703,7 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr "Wizard welke de voorraadwaarde historie tabel opent"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:241
+#: code:addons/stock_account/models/stock.py:250
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -682,13 +713,15 @@ msgstr ""
 " u een rekeningschema heeft geïnstalleerd."
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:111
-#: code:addons/stock_account/models/stock.py:247
+#: code:addons/stock_account/models/product.py:110
+#: code:addons/stock_account/models/stock.py:256
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Er is geen voorraadwaardering rekening gedefinieerd op uw product categorie."
+" U moet een er vóór de verwerking van deze bewerking definiëren."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price

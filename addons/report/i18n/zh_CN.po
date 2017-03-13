@@ -3,28 +3,27 @@
 # * report
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2016
 # waveyeung <waveyeung@qq.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
+# Ryan Zhang <so_happy_boy@hotmail.com>, 2016
+# Talway <9010446@qq.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# xiaobin wu <bd5dml@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: xiaobin wu <bd5dml@gmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
-msgid "&amp;bull;"
-msgstr "&amp;bull;"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.minimal_layout
@@ -35,6 +34,20 @@ msgstr "&lt;!DOCTYPE html&gt;"
 #: selection:report.paperformat,format:0
 msgid ":B10    16  31 x 44 mm"
 msgstr ":B10 16 31 x 44 毫米"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.external_layout_background
+msgid "<i class=\"fa fa-building-o\"/> VAT:"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid ""
+"<strong>No logo found!</strong>\n"
+"                        To get a beautiful report, you might review your\n"
+"                        company data: upload a logo, set\n"
+"                        bank accounts, phone numbers, etc."
+msgstr ""
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -147,7 +160,12 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 毫米"
 
 #. module: report
-#: code:addons/report/models/report.py:273
+#: selection:res.company,external_report_layout:0
+msgid "Background"
+msgstr "背景"
+
+#. module: report
+#: code:addons/report/models/report.py:302
 #, python-format
 msgid "Bad Report Reference"
 msgstr "错误的报表引用"
@@ -158,9 +176,46 @@ msgid "Bottom Margin (mm)"
 msgstr "下边距（毫米）"
 
 #. module: report
+#: selection:res.company,external_report_layout:0
+msgid "Boxed"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Business Documents"
+msgstr ""
+
+#. module: report
 #: selection:report.paperformat,format:0
 msgid "C5E 24  163 x 229 mm"
 msgstr "C5E 24 163 x 229 毫米"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Change Report Template"
+msgstr ""
+
+#. module: report
+#: code:addons/report/models/base_config_settings.py:30
+#: code:addons/report/models/report.py:278
+#, python-format
+msgid "Choose Your Report Layout"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Choose your reports's header and footer layout."
+msgstr ""
+
+#. module: report
+#: selection:res.company,external_report_layout:0
+msgid "Clean"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "Close"
+msgstr "关闭"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -170,6 +225,11 @@ msgstr "Comm10E25105 x 241毫米，10个美国普通信封"
 #. module: report
 #: model:ir.model,name:report.model_res_company
 msgid "Companies"
+msgstr "公司"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "Company"
 msgstr "公司"
 
 #. module: report
@@ -201,7 +261,7 @@ msgstr "默认纸张格式？"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/xml/report.xml:12
+#: code:addons/report/static/src/xml/report.xml:18
 #, python-format
 msgid "Discard"
 msgstr "舍弃"
@@ -221,28 +281,18 @@ msgstr "显示标题行"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/xml/report.xml:8
+#: code:addons/report/static/src/xml/report.xml:14
 #, python-format
 msgid "Edit"
 msgstr "编辑"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
-msgid "Edit external footer"
-msgstr "编辑外部页脚"
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Edit Header"
+msgstr ""
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
-msgid "Edit external header"
-msgstr "编辑外部页眉"
-
-#. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
-msgid "Edit internal header"
-msgstr "编辑内部表头"
-
-#. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
+#: model:ir.ui.view,arch_db:report.external_layout_standard
 msgid "Email:"
 msgstr "电子邮件："
 
@@ -250,7 +300,7 @@ msgstr "电子邮件："
 #: code:addons/report/models/report_paperformat.py:68
 #, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
-msgstr ""
+msgstr "错误！你不能定义页面尺寸时选择固定格式。"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -263,7 +313,9 @@ msgid "Explicitly associated reports"
 msgstr "明确的相关报表"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
+#: model:ir.ui.view,arch_db:report.external_layout_boxed
+#: model:ir.ui.view,arch_db:report.external_layout_clean
+#: model:ir.ui.view,arch_db:report.external_layout_standard
 msgid "Fax:"
 msgstr "传真："
 
@@ -271,6 +323,11 @@ msgstr "传真："
 #: selection:report.paperformat,format:0
 msgid "Folio 27  210 x 330 mm"
 msgstr "Folio 27 210 x 330 毫米"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Format"
+msgstr "格式"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_http
@@ -336,6 +393,11 @@ msgid "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
 msgstr "Letter 2 8.5 x 11 尺寸, 215.9 x 279.4 毫米"
 
 #. module: report
+#: model:ir.ui.view,arch_db:report.external_layout_boxed
+msgid "Mail:"
+msgstr ""
+
+#. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_name
 msgid "Name"
 msgstr "名称"
@@ -361,9 +423,19 @@ msgid "Page width (mm)"
 msgstr "页宽 (mm)"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
-msgid "Page:"
-msgstr "页："
+#: model:ir.ui.view,arch_db:report.external_layout_background
+msgid ""
+"Page:\n"
+"                <span class=\"page\"/>\n"
+"                of\n"
+"                <span class=\"topage\"/>"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.external_layout_boxed
+#: model:ir.ui.view,arch_db:report.external_layout_standard
+msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
+msgstr ""
 
 #. module: report
 #: model:ir.ui.menu,name:report.paper_format_menuitem
@@ -376,6 +448,7 @@ msgid "Paper Format General Configuration"
 msgstr "纸张格式常规配置"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_paperformat_id
 #: model:ir.model.fields,field_description:report.field_res_company_paperformat_id
 msgid "Paper format"
@@ -393,7 +466,7 @@ msgid "Paper size"
 msgstr "纸张尺寸"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
+#: model:ir.ui.view,arch_db:report.external_layout_standard
 msgid "Phone:"
 msgstr "电话:"
 
@@ -403,20 +476,43 @@ msgid "Portrait"
 msgstr "纵向"
 
 #. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "Preview Background Template"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "Preview Boxed Template"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "Preview Clean Template"
+msgstr ""
+
+#. module: report
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
 msgid "Preview External Report"
 msgstr "预览外部报表"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_internalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
 msgid "Preview Internal Report"
 msgstr "预览内部报表"
 
 #. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "Preview Minimalist Template"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Preview Report"
+msgstr "预览报告"
+
+#. module: report
 #. openerp-web
-#: code:addons/report/static/src/xml/report.xml:5
+#: code:addons/report/static/src/xml/report.xml:11
 #, python-format
 msgid "Print"
 msgstr "打印"
@@ -433,16 +529,27 @@ msgstr "QWeb视图"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:95
+#: code:addons/report/static/src/js/qwebactionmanager.js:96
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
 msgstr "报表"
 
 #. module: report
-#: model:ir.actions.act_window,name:report.reports_action
+#: model:ir.model.fields,field_description:report.field_base_config_settings_external_report_layout
+#: model:ir.model.fields,field_description:report.field_res_company_external_report_layout
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Report Template"
+msgstr "报告模板"
+
+#. module: report
 #: model:ir.ui.menu,name:report.reporting_menuitem
 #: model:ir.ui.menu,name:report.reports_menuitem
+msgid "Reporting"
+msgstr "报告"
+
+#. module: report
+#: model:ir.actions.act_window,name:report.reports_action
 msgid "Reports"
 msgstr "报表"
 
@@ -453,7 +560,7 @@ msgstr "右边距（毫米）"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/xml/report.xml:11
+#: code:addons/report/static/src/xml/report.xml:17
 #, python-format
 msgid "Save"
 msgstr "保存"
@@ -464,14 +571,30 @@ msgid "Select Proper Paper size"
 msgstr "选择正确的纸张尺寸"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
-msgid "TIN:"
-msgstr "税务识别号码："
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Set the paper format of printed documents"
+msgstr ""
+
+#. module: report
+#: selection:res.company,external_report_layout:0
+msgid "Standard"
+msgstr "标准"
 
 #. module: report
 #: selection:report.paperformat,format:0
 msgid "Tabloid 29 279.4 x 431.8 mm"
 msgstr "Tabloid 29 279.4 x 431.8 毫米"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.external_layout_boxed
+#: model:ir.ui.view,arch_db:report.external_layout_clean
+msgid "Tel:"
+msgstr "电话:"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Template"
+msgstr "模板"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_externalreport
@@ -492,7 +615,7 @@ msgid ""
 msgstr ""
 
 #. module: report
-#: code:addons/report/models/report.py:273
+#: code:addons/report/models/report.py:302
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "该报表不能被载入到数据库:  %s。"
@@ -516,12 +639,26 @@ msgstr ""
 "wkhtmltopdf.org</a>"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
-msgid "Website:"
-msgstr "网站:"
+#: code:addons/report/models/report.py:155
+#, python-format
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr ""
 
 #. module: report
-#: code:addons/report/models/report.py:435
+#: model:ir.ui.view,arch_db:report.external_layout_boxed
+#: model:ir.ui.view,arch_db:report.external_layout_clean
+#: model:ir.ui.view,arch_db:report.external_layout_standard
+msgid "VAT:"
+msgstr "VAT:"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.external_layout_boxed
+#: model:ir.ui.view,arch_db:report.external_layout_standard
+msgid "Web:"
+msgstr ""
+
+#. module: report
+#: code:addons/report/models/report.py:464
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf 失败 (错误代码: %s). 消息: %s"
@@ -554,6 +691,21 @@ msgstr ""
 "target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:21
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The report will be "
+"shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
+"target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
+
+#. module: report
+#: model:ir.model,name:report.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
+
+#. module: report
 #: model:ir.model,name:report.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
@@ -564,6 +716,16 @@ msgid "ir.qweb.field.barcode"
 msgstr ""
 
 #. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "preview"
+msgstr ""
+
+#. module: report
 #: model:ir.model,name:report.model_report_abstract_report
 msgid "report.abstract_report"
 msgstr "report.abstract_report"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "⇒ Review Company Data"
+msgstr ""
