@@ -83,12 +83,13 @@ var MockServer = Class.extend({
      */
     performRpc: function (route, args) {
         var logLevel = this.logLevel;
+        args = JSON.parse(JSON.stringify(args));
         if (logLevel === 2) {
             console.log('%c[rpc] request ' + route, 'color: blue; font-weight: bold;', args);
         }
         var def;
         try {
-            def = this._performRpc(route, JSON.parse(JSON.stringify(args)));
+            def = this._performRpc(route, args);
         } catch (error) {
             def = $.Deferred().reject(error);
         }
@@ -129,10 +130,7 @@ var MockServer = Class.extend({
                 continue;
             }
             if (!(fieldName in record)) {
-                record[fieldName] = model.fields[fieldName].default;
-                if (model.fields[fieldName].type === 'boolean') {
-                    record[fieldName] = record[fieldName] || false;
-                }
+                record[fieldName] = model.fields[fieldName].default || false;
             }
         }
     },
@@ -525,6 +523,9 @@ var MockServer = Class.extend({
      * @private
      * @param {string} model a string describing an existing model
      * @param {Object} kwargs various options supported by read_group
+     * @param {string[]} kwargs.groupby fields that we are grouping
+     * @param {string[]} kwargs.fields fields that we are aggregating
+     * @param {Array} kwargs.domain the domain used for the read_group
      * @param {boolean} kwargs.lazy still mostly ignored
      * @param {integer} kwargs.limit ignored as well
      * @returns {Object[]}
@@ -569,13 +570,22 @@ var MockServer = Class.extend({
             var groupByFunction, formatValue;
             if (groupByFieldDescr.type === 'date') {
 
-                // var aggregateFunction = groupByField.split(':')[1] || 'month';
+                var aggregateFunction = groupByField.split(':')[1] || 'month';
+
                 groupByField = groupByField.split(':')[0];
                 groupByFunction = function (obj) {
-                    return moment(obj[groupByField]).format('MMMM YYYY');
+                    if (aggregateFunction === 'day') {
+                        return moment(obj[groupByField]).format('YYYY-MM-DD');
+                    } else {
+                        return moment(obj[groupByField]).format('MMMM YYYY');
+                    }
                 };
                 formatValue = function (val) {
-                    return moment(val).format('MMMM YYYY');
+                    if (aggregateFunction === 'day') {
+                        return moment(val).format('YYYY-MM-DD');
+                    } else {
+                        return moment(val).format('MMMM YYYY');
+                    }
                 };
             } else {
                 groupByFunction = function (obj) {
