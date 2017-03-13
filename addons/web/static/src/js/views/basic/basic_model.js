@@ -1413,7 +1413,7 @@ var BasicModel = AbstractModel.extend({
         var context = record.getContext({fieldName: fieldName});
         var domain = record.getDomain({fieldName: fieldName});
         if (domain.length) {
-            var localID = record.data[fieldName];
+            var localID = record._changes && record._changes[fieldName] || record.data[fieldName];
             if (localID) {
                 var element = this.localData[localID];
                 domain = ["|", ["id", "=", element.data.id]].concat(domain);
