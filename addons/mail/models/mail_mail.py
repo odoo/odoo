@@ -7,6 +7,7 @@ import logging
 import psycopg2
 import threading
 
+from collections import defaultdict
 from email.utils import formataddr
 
 from odoo import _, api, fields, models
@@ -111,7 +112,8 @@ class MailMail(models.Model):
                        ('scheduled_date', '=', False)]
             if 'filters' in self._context:
                 filters.extend(self._context['filters'])
-            ids = self.search(filters).ids
+            # TODO: make limit configurable
+            ids = self.search(filters, limit=10000).ids
         res = None
         try:
             # auto-commit except in testing mode
@@ -191,6 +193,25 @@ class MailMail(models.Model):
         return res
 
     @api.multi
+    def _split_by_server(self):
+        """Returns an iterator of pairs `(mail_server_id, record_ids)` for current recordset.
+
+        The same `mail_server_id` may repeat in order to limit batch size according to
+        the `mail.session.batch.size` system parameter.
+        """
+        groups = defaultdict(list)
+        # Turn prefetch OFF to avoid MemoryError on very large mail queues, we only care
+        # about the mail server ids in this case.
+        for mail in self.with_context(prefetch_fields=False):
+            groups[mail.mail_server_id.id].append(mail.id)
+        sys_params = self.env['ir.config_parameter'].sudo()
+        batch_size = int(sys_params.get_param('mail.session.batch.size', 1000))
+        for server_id, record_ids in groups.iteritems():
+            for mail_batch in tools.split_every(batch_size, record_ids):
+                yield server_id, mail_batch
+
+
+    @api.multi
     def send(self, auto_commit=False, raise_exception=False):
         """ Sends the selected emails immediately, ignoring their current
             state (mails that have already been sent should not be passed
@@ -206,10 +227,27 @@ class MailMail(models.Model):
                 email sending process has failed
             :return: True
         """
-        IrMailServer = self.env['ir.mail_server']
-
-        for mail in self:
+        for server_id, batch_ids in self._split_by_server():
+            smtp_session = None
             try:
+                smtp_session = self.env['ir.mail_server'].connect(mail_server_id=server_id)
+                self.browse(batch_ids)._send(
+                    auto_commit=auto_commit,
+                    raise_exception=raise_exception,
+                    smtp_session=smtp_session)
+                _logger.info(
+                    'Sent batch %s emails via mail server ID #%s',
+                    len(batch_ids), server_id)
+            finally:
+                if smtp_session:
+                    smtp_session.quit()
+
+    @api.multi
+    def _send(self, auto_commit=False, raise_exception=False, smtp_session=None):
+        IrMailServer = self.env['ir.mail_server']
+        for mail_id in self.ids:
+            try:
+                mail = self.browse(mail_id)
                 # TDE note: remove me when model_id field is present on mail.message - done here to avoid doing it multiple times in the sub method
                 if mail.model:
                     model = self.env['ir.model']._get(mail.model)[0]
@@ -275,7 +313,8 @@ class MailMail(models.Model):
                         subtype_alternative='plain',
                         headers=headers)
                     try:
-                        res = IrMailServer.send_email(msg, mail_server_id=mail.mail_server_id.id)
+                        res = IrMailServer.send_email(
+                            msg, mail_server_id=mail.mail_server_id.id, smtp_session=smtp_session)
                     except AssertionError as error:
                         if error.message == IrMailServer.NO_VALID_RECIPIENT:
                             # No valid recipient found for this particular

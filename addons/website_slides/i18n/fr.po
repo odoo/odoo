@@ -16,15 +16,16 @@
 # Shark McGnark <peculiarcheese@gmail.com>, 2016
 # Loic <loic.richard2@gmail.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
-# Frédéric LIETART <stuff@thelinuxfr.org>, 2016
+# Frédéric LIETART <stuff@tifred.fr>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
+# Jeanjean Noname <monsieur.spock@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: Olivier Dony <odo@odoo.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Jeanjean Noname <monsieur.spock@gmail.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +47,7 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
@@ -66,7 +67,7 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
@@ -426,7 +427,7 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:307
+#: code:addons/website_slides/models/slides.py:321
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -434,6 +435,11 @@ msgid ""
 msgstr ""
 "N'a pas pu aller chercher les données depuis l'url. Document ou les droits d'accès ne sont pas pas valables:\n"
 "%s"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.website_config_settings_view_form_inherit_website_slides
+msgid "Create a Google Project and Get a Key"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
@@ -481,7 +487,7 @@ msgstr "Description"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:72
+#: code:addons/website_slides/static/src/xml/website_slides.xml:71
 #, python-format
 msgid "Discard"
 msgstr "Annuler"
@@ -860,8 +866,8 @@ msgstr ""
 "cette slide"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:310
-#: code:addons/website_slides/models/slides.py:535
+#: code:addons/website_slides/models/slides.py:324
+#: code:addons/website_slides/models/slides.py:548
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Veuillez entrer un url Youtube ou Google Doc valide"
@@ -1098,6 +1104,8 @@ msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+"Le type du document sera définit automatiquement selon son URL et ses "
+"propriétés (ex: hauteur et largeur pour une présentation ou un document)"
 
 #. module: website_slides
 #: sql_constraint:slide.slide:0
@@ -1175,7 +1183,7 @@ msgid "Uncategorized presentation"
 msgstr "Présentation Non-catégorisée"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:524
+#: code:addons/website_slides/models/slides.py:537
 #, python-format
 msgid "Unknown document"
 msgstr "Document inconnu"
@@ -1237,12 +1245,6 @@ msgid "Videos"
 msgstr "Vidéos"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:449
-#, python-format
-msgid "View Slide"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Views"
@@ -1272,11 +1274,6 @@ msgstr "Site Web"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_message_ids
 msgid "Website Messages"
 msgstr "Messages du site web"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_website_config_settings
-msgid "Website Slides"
-msgstr "Diapositives du site internet."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_website_message_ids
@@ -1363,13 +1360,6 @@ msgstr "S'identifier"
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "on"
 msgstr "le"
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:70
-#, python-format
-msgid "or"
-msgstr "ou"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search

@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -117,8 +117,8 @@ msgstr "Megjelenített név"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_editor_id
-msgid "Editor id"
-msgstr "Szerkesztő id azonosító"
+msgid "Editor"
+msgstr "Szerkesztő"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_email
@@ -226,13 +226,13 @@ msgid "Name"
 msgstr "Név"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:107
+#: code:addons/event_sale/models/event.py:116
 #, python-format
 msgid "No more available seats for the ticket"
 msgstr "Nincs több elérhető ülőhely ehhez a belépő jegyhez"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:129
+#: code:addons/event_sale/models/event.py:138
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Nincs több elérhető ülőhely ehhez a belépő jegyhez"
@@ -261,6 +261,11 @@ msgstr "Ár"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce
 msgid "Price Reduce"
 msgstr "Ár csökkentés"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce_taxinc
+msgid "Price Reduce Tax inc"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
@@ -296,35 +301,27 @@ msgid "Reserved Seats"
 msgstr "Lefoglalt székek"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_sale_order_id
-msgid "Sale Order"
-msgstr "Vásárlói megrendelés"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_line_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_sale_order_line_id
-msgid "Sale Order Line"
-msgstr "Rendelési tétel"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_deadline
 msgid "Sales End"
 msgstr "Vevői megrendelések lezárva"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_sale_order_id
 msgid "Sales Order"
 msgstr "Vásárlói megrendelés"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
+#: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_line_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_sale_order_line_id
 msgid "Sales Order Line"
 msgstr "Vásárlói megrendelés tételsor"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_used
-msgid "Seats used"
-msgstr "Felhasznált ülőhelyek"
+msgid "Seats Used"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -333,8 +330,8 @@ msgstr "Kihagy"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_id
-msgid "Source Sale Order"
-msgstr "Forrás Vevői Megrendelés"
+msgid "Source Sales Order"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge

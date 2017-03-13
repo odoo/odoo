@@ -3,26 +3,27 @@
 # * website_slides
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # fausthuang <faust_huang@hotmail.com>, 2016
 # Siyuan Gu <siyuancn@hotmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
 # waveyeung <waveyeung@qq.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Talway <9010446@qq.com>, 2016
-# lttlsnk <lttlsnk@gmail.com>, 2016
+# 菜小蛇 <lttlsnk@gmail.com>, 2016
 # Wei "oldrev" Li <liwei@sandwych.com>, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2016
 # Joray <13637815@qq.com>, 2016
 # Eddie Lim <bhweelim@yahoo.com>, 2016
 # liulixia <liu.lixia@elico-corp.com>, 2016
+# 苏州远鼎 <tiexinliu@126.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: liulixia <liu.lixia@elico-corp.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: 苏州远鼎 <tiexinliu@126.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +45,7 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
@@ -64,7 +65,7 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
@@ -418,7 +419,7 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:307
+#: code:addons/website_slides/models/slides.py:321
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -426,6 +427,11 @@ msgid ""
 msgstr ""
 "无法从网址获得数据。文件或者访问权限不存在:\n"
 "%s"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.website_config_settings_view_form_inherit_website_slides
+msgid "Create a Google Project and Get a Key"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
@@ -472,7 +478,7 @@ msgstr "说明"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:72
+#: code:addons/website_slides/static/src/xml/website_slides.xml:71
 #, python-format
 msgid "Discard"
 msgstr "舍弃"
@@ -605,7 +611,7 @@ msgstr "特性政策"
 #: code:addons/website_slides/static/src/js/slides_upload.js:90
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
-msgstr ""
+msgstr "文件太大. 文件大小不能超过 25 MB"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
@@ -844,8 +850,8 @@ msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr "请<a href=\"/web?redirect=%s\">登录</A>投票这张幻灯片"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:310
-#: code:addons/website_slides/models/slides.py:535
+#: code:addons/website_slides/models/slides.py:324
+#: code:addons/website_slides/models/slides.py:548
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "请输入有效的YouTube或谷歌文档的URL"
@@ -1152,7 +1158,7 @@ msgid "Uncategorized presentation"
 msgstr "未分类的演示"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:524
+#: code:addons/website_slides/models/slides.py:537
 #, python-format
 msgid "Unknown document"
 msgstr "未知文档"
@@ -1160,7 +1166,7 @@ msgstr "未知文档"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Unpublished"
-msgstr ""
+msgstr "未发布"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
@@ -1210,12 +1216,6 @@ msgid "Videos"
 msgstr "视频"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:449
-#, python-format
-msgid "View Slide"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Views"
@@ -1245,11 +1245,6 @@ msgstr "网站"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_message_ids
 msgid "Website Messages"
 msgstr "网站消息"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_website_config_settings
-msgid "Website Slides"
-msgstr "网站幻灯片"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_website_message_ids
@@ -1335,13 +1330,6 @@ msgstr "登录"
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "on"
 msgstr "在"
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:70
-#, python-format
-msgid "or"
-msgstr "或"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search

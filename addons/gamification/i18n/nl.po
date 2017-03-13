@@ -8,46 +8,20 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: gamification
-#: model:mail.template,body_html:gamification.email_template_badge_received
-msgid ""
-"\n"
-"        <p>Congratulation, you have received the badge <strong>${object.badge_id.name}</strong> !\n"
-"            % if object.sender_id\n"
-"                This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
-"            % endif\n"
-"        </p>\n"
-"\n"
-"        % if object.comment\n"
-"            <p><em>${object.comment}</em></p>\n"
-"        % endif\n"
-"        "
-msgstr ""
-"\n"
-"        <p>Gefeliciteerd, u heeft de badge <strong>${object.badge_id.name}</strong>  ontvangen!\n"
-"            % if object.sender_id\n"
-"                deze badge is toegewezen door <strong>${object.sender_id.name}</strong>.\n"
-"            % endif\n"
-"        </p>\n"
-"\n"
-"        % if object.comment\n"
-"            <p><em>${object.comment}</em></p>\n"
-"        % endif\n"
-"        "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -60,6 +34,13 @@ msgid ""
 "    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
 msgstr ""
+"\n"
+"    <p>\n"
+"        <strong>Herinnering${object.name}</strong>\n"
+"    </p>\n"
+"    \n"
+"    <p>U heeft de voortgang niet bijgewerkt van de doelstelling ${object.definition_id.name} (momenteel op {object.completeness}%) voor minimaal ${object.remind_update_delay} dagen. Vergeet niet om dit te doen.</p>\n"
+"            "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -135,27 +116,66 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"<header> <strong>${object.name}</strong> </header> <p class=\"oe_grey\">The following message contains the current progress for the challenge ${object.name}</p> % if object.visibility_mode == 'personal': <table width=\"100%\" border=\"1\"> <tr> <th>Doelstelling</th> <th>Doel</th> <th>Huidig</th> <th>Volledigheid</th> </tr> % for line in ctx[\"challenge_lines\"]: <tr % if line['completeness'] >= 100: style=\"font-weight:bold;\" % endif > <td>${line['name']}</td> <td>${line['target']} % if line['suffix']: ${line['suffix']} % endif </td> <td>${line['current']} % if line['suffix']: ${line['suffix']} % endif </td> <td>${line['completeness']} %</td> </tr> % endfor </table> % else: % for line in ctx[\"challenge_lines\"]: <table width=\"100%\" border=\"1\"> <tr> <th colspan=\"4\">${line['name']}</th> </tr> <tr> <th>#</th> <th>Persoon</th> <th>Volledigheid</th> <th>Huidig</th> </tr> % for goal in line['goals']: <tr % if goal.completeness >= 100: style=\"font-weight:bold;\" % endif > <td>${goal['rank']}</td> <td>${goal['name']}</td> <td>${goal['completeness']}%</td> <td>${goal['current']}/${line['target']} % if line['suffix']: ${line['suffix']} % endif </td> </tr> % endfor </table> <br/><br/> % endfor % endif"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:591
+#: code:addons/gamification/models/challenge.py:586
 #, python-format
 msgid "%s has joined the challenge"
 msgstr "%s heeft zich aangesloten bij de uitdaging"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:600
+#: code:addons/gamification/models/challenge.py:595
 #, python-format
 msgid "%s has refused the challenge"
 msgstr "%s heeft de uitdaging geweigerd"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:657
+#: model:mail.template,body_html:gamification.email_template_badge_received
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<data><div>\n"
+"    <p>Congratulations ${object.user_id.name} !</p>\n"
+"    <p>You just received badge <strong>${object.badge_id.name}</strong> !</p>\n"
+"</div>\n"
+"<div>\n"
+"% if object.badge_id.description\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\">\n"
+"<tbody><tr>\n"
+"    <td valign=\"center\">\n"
+"        <img src=\"/web/image/gamification.badge/${object.badge_id.id}/image/80x80\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"    </td>\n"
+"    <td valign=\"center\">\n"
+"        <cite>${object.badge_id.description}</cite>\n"
+"    </td>\n"
+"</tr></tbody>\n"
+"</table>\n"
+"% endif\n"
+"</div>\n"
+"<div>\n"
+"    <p>\n"
+"% if object.sender_id\n"
+"        This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
+"% endif\n"
+"    </p>\n"
+"    <p>\n"
+"% if object.comment\n"
+"        <em>${object.comment}</em>\n"
+"% endif\n"
+"    </p>\n"
+"</div>\n"
+"</data>"
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/challenge.py:652
 #, python-format
 msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
 msgstr "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:654
+#: code:addons/gamification/models/challenge.py:649
 #, python-format
 msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
@@ -165,7 +185,7 @@ msgstr ""
 "deze uitdaging."
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:652
+#: code:addons/gamification/models/challenge.py:647
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
 msgstr ""
@@ -173,7 +193,7 @@ msgstr ""
 "%s."
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:662
+#: code:addons/gamification/models/challenge.py:657
 #, python-format
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
@@ -198,6 +218,9 @@ msgid ""
 "                It can be deserved automatically when some conditions are met or manually by users.\n"
 "                Some badges are harder than others to get with specific conditions."
 msgstr ""
+"Een badge is een symbolische token toegekend aan een gebruiker als teken van beloning.\n"
+"Het kan automatisch worden verdiend wanneer aan een aantal voorwaarden wordt voldaan of handmatig door gebruikers worden toegekend.\n"
+"Sommige badges zijn moeilijker te verkrijgen dan anderen met specifieke voorwaarden."
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -205,11 +228,13 @@ msgid ""
 "A goal definition is a technical model of goal defining a condition to reach.\n"
 "                The dates, values to reach or users are defined in goal instance."
 msgstr ""
+"Een doeldefinitie is een technisch model of doeldefinitie die een conditie definieert om te voldoen.\n"
+"De datums, waardes om te behalen of de gebruikers zijn gedefinieerd in de doelstelling instantie."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition_3030
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition_3164
 msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
@@ -223,6 +248,8 @@ msgid ""
 "A goal is defined by a user and a goal definition.\n"
 "                Goals can be created automatically by using challenges."
 msgstr ""
+"Een doel is gedefinieerd door een gebruiker en een doeldefinitie.\n"
+"Doelen kunnen automatisch aangemaakt worden door uitdagingen te gebruiken."
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -271,6 +298,9 @@ msgid ""
 "                The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                The goals are created for the specified users or member of the group."
 msgstr ""
+"Wijs een lijst van doelen toe aan een groep gebruikers om ze te evalueren. \n"
+"De uitdaging kan over een periode lopen (week, maand...) om doelen automatisch aan te maken. \n"
+"De doelen worden aangemaakt voor de specifieke gebruikers of leden van een groep."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_user_ids
@@ -572,7 +602,7 @@ msgstr ""
 "bewerking wordt opgeslagen in et veld 'Huidig'."
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3039
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3173
 msgid "Definition Description"
 msgstr "Definitie-beschrijving"
 
@@ -768,6 +798,13 @@ msgid "Gamification user badge"
 msgstr "Gamification gebruikers badge"
 
 #. module: gamification
+#: model:ir.actions.server,name:gamification.ir_cron_check_challenge_ir_actions_server
+#: model:ir.cron,cron_name:gamification.ir_cron_check_challenge
+#: model:ir.cron,name:gamification.ir_cron_check_challenge
+msgid "Gamification: Goal Challenge Check"
+msgstr ""
+
+#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_goal_id
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 #: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
@@ -776,7 +813,7 @@ msgstr "Doel"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3041
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3175
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_name
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
@@ -807,7 +844,7 @@ msgstr "Doellijst"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_condition
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3030
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3164
 msgid "Goal Performance"
 msgstr "Prestaties doel"
 
@@ -898,7 +935,7 @@ msgstr "Hoe het doel te bereiken?"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Human Resources / Engagement"
-msgstr ""
+msgstr "Personeelsbeheer / Betrokkenheid"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_id
@@ -1132,6 +1169,11 @@ msgid "Never reminded if no value or zero is specified."
 msgstr "Nooit meer herinneren als er geen waardes of nul is ingegeven."
 
 #. module: gamification
+#: model:mail.template,subject:gamification.email_template_badge_received
+msgid "New badge ${object.badge_id.name} granted"
+msgstr ""
+
+#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_next_report_date
 msgid "Next Report Date"
 msgstr "Volgende rapport datum"
@@ -1152,7 +1194,7 @@ msgid "No one, assigned through challenges"
 msgstr "Niemand aangeduid via uitdagingen"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:669
+#: code:addons/gamification/models/challenge.py:664
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr ""
@@ -1499,7 +1541,7 @@ msgstr "Abonnementen"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_full_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3035
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3169
 msgid "Suffix"
 msgstr "Achtervoegsel"
 
@@ -1525,7 +1567,7 @@ msgstr ""
 "De actie welke wordt aangeroepen om de doelstelling waarde bij te werken."
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:648
+#: code:addons/gamification/models/challenge.py:643
 #, python-format
 msgid "The challenge %s is finished."
 msgstr "Het doel %s is voltooid."
@@ -1533,7 +1575,7 @@ msgstr "Het doel %s is voltooid."
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_full_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_full_suffix
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix_3035
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix_3169
 msgid "The currency and suffix field"
 msgstr "Het valuta en achtervoegsel veld"
 
@@ -1634,6 +1676,9 @@ msgid ""
 "\n"
 "%s not stored"
 msgstr ""
+"Het domein voor de definitie %s lijkt niet juist, graag controleren.\n"
+"\n"
+"%s niet opgeslagen"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_model_id
@@ -1731,6 +1776,10 @@ msgid ""
 "There is no goals associated to this challenge matching your search.\n"
 "            Make sure that your challenge is active and assigned to at least one user."
 msgstr ""
+"Er is geen bijbehorende doelstelling bij deze uitdaging welke overeenkomt met uw zoekactie.\n"
+"Zorg ervoor dat uw uitdaging actief is en is toegewezen aan tenminste één gebruiker.\n"
+"              \n"
+"            "
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_closed
@@ -1738,7 +1787,7 @@ msgid "These goals will not be recomputed."
 msgstr "Deze doelen worden niet herberekend."
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:213
+#: code:addons/gamification/models/badge.py:210
 #, python-format
 msgid "This badge can not be sent by users."
 msgstr "Deze badge kan niet door gebruikers verstuurd worden."
@@ -1851,7 +1900,7 @@ msgid "Yearly"
 msgstr "Jaarlijks"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:215
+#: code:addons/gamification/models/badge.py:212
 #, python-format
 msgid "You are not in the user allowed list."
 msgstr "U bevind zich niet in de toegestane gebruikerslijst."
@@ -1879,13 +1928,13 @@ msgid "You did great at your job."
 msgstr "U heeft uw job geweldig gedaan."
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:217
+#: code:addons/gamification/models/badge.py:214
 #, python-format
 msgid "You do not have the required badges."
 msgstr "U hebt niet de benodigde badges"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:219
+#: code:addons/gamification/models/badge.py:216
 #, python-format
 msgid "You have already sent this badge too many time this month."
 msgstr "U hebt deze badge al te vaak verstuurd deze maand."

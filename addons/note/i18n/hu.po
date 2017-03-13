@@ -9,10 +9,10 @@
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -133,15 +133,14 @@ msgid "Later"
 msgstr "Később"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
+msgstr "Tevékenységeim"
+
+#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Új"
-
-#. module: note
-#: code:addons/note/models/note.py:128
-#, python-format
-msgid "New Note"
-msgstr "Új jegyzet"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -179,6 +178,11 @@ msgid "Notes"
 msgstr "Megjegyzések"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Overdue Activities"
+msgstr "Lejárt tevékenységek"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
 #: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
@@ -194,6 +198,13 @@ msgstr "A jegyzet szakasz tulajdonosa"
 #: model:ir.model.fields,field_description:note.field_note_stage_sequence
 msgid "Sequence"
 msgstr "Sorszám"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Mutassa az összes rekordot melyre a következő műveleti dátum a mai nap "
+"előtti"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -256,6 +267,16 @@ msgstr "Ezen a héten"
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
 msgstr "Ma"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr "Mai napi tevékenységek"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Upcoming Activities (7 days)"
+msgstr "Elkövetkező műveletek (7 nap)"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note

@@ -3,7 +3,7 @@
 # * fetchmail
 # 
 # Translators:
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
@@ -18,10 +18,10 @@
 # AX Tech <axatech01@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: AX Tech <axatech01@gmail.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -62,17 +62,12 @@ msgid "Configuration"
 msgstr "Configuración"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
-msgid "Configure the incoming email gateway"
-msgstr "Configurar la pasarela de correo electrónico entrante"
-
-#. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Confirmed"
 msgstr "Confirmado"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "La prueba de conexión ha fallado: %s"
@@ -92,13 +87,11 @@ msgid "Create a New Record"
 msgstr "Crear un nuevo registro"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Creado el"
@@ -111,7 +104,6 @@ msgstr ""
 " prioridad."
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "Nombre a mostrar"
@@ -127,7 +119,6 @@ msgid "Hostname or IP of the mail server"
 msgstr "Nombre del host o IP del servidor de correo"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -151,6 +142,11 @@ msgstr "Si se requiere SSL"
 #: model:ir.model.fields,field_description:fetchmail.field_mail_mail_fetchmail_server_id
 msgid "Inbound Mail Server"
 msgstr "Servidor de correo entrante"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.base_config_settings_view_form_inherit_fetchmail
+msgid "Incoming Email Servers"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -180,19 +176,16 @@ msgid "Last Fetch Date"
 msgstr "Última fecha de búsqueda"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "Última actualización por"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Última actualización el"
@@ -206,6 +199,13 @@ msgstr "Servidor local"
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
 msgstr "Información conexión"
+
+#. module: fetchmail
+#: model:ir.actions.server,name:fetchmail.ir_cron_mail_gateway_action_ir_actions_server
+#: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
+#: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
+msgid "Mail: Fetchmail Service"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -231,6 +231,11 @@ msgid ""
 msgstr ""
 "Acción personalizada del servidor opcional para ser lanzada en cada correo "
 "entrante, en el registro que ha sido creado o actualizado por este correo."
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.base_config_settings_view_form_inherit_fetchmail
+msgid "Outgoing Email Servers"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -378,8 +383,3 @@ msgid ""
 msgstr ""
 "Indica si los adjuntos deben ser descargados. Si no se habilita, a los "
 "correos entrantes se les quitarán cualquier adjunto antes de ser procesados."
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr "Parámetros de configuración del recolector de correo"

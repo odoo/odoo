@@ -5,13 +5,14 @@
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2016
 # Oregional <geza.nagy@oregional.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,27 +26,39 @@ msgid "<span class=\"oe_snippet_thumbnail_title\">Twitter Scroller</span>"
 msgstr "<span class=\"oe_snippet_thumbnail_title\">Twitter görgető</span>"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "<strong>Callback URL: </strong> leave it blank"
 msgstr "<strong>Visszahívó URL: </strong> hagyja üresen"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "<strong>Description: </strong> Odoo Tweet Scroller"
 msgstr "<strong>Leírás: </strong> Odoo rendszer Tweet görgetője"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "<strong>Name: </strong> Odoo Tweet Scroller"
 msgstr "<strong>Név: </strong> Odoo rendszer Tweet görgetője"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "<strong>Website: </strong>"
 msgstr "<strong>Weboldal: </strong>"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_key
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+msgid "API Key"
+msgstr "API kulcs"
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_secret
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+msgid "API secret"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "Accept terms of use and click on the Create button at the bottom"
 msgstr ""
 "Fogadja el a használati feltételeket és kattintson lent a Létrehozás gombra"
@@ -61,12 +74,17 @@ msgstr ""
 "tweet-ek védettek."
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+msgid "Close"
+msgstr "Bezárás"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "Copy/Paste API Key and Secret below"
 msgstr "Másolás/beillesztés API kulcs és titkosítás lentebb"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "Create a new Twitter application on"
 msgstr "Hozzon létre egy új Twitter elkelmazást ezen"
 
@@ -86,7 +104,7 @@ msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid ""
 "Enter the screen name from which you want to load favorite Tweets (does not "
 "need to be the same as the API keys)"
@@ -96,6 +114,11 @@ msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_screen_name
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+msgid "Favorites From"
+msgstr ""
+
+#. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_screen_name
 msgid "Get favorites from this screen name"
 msgstr "Ehhez a képernyő képhez kapcsolódó kedvenceket kapja"
@@ -107,7 +130,7 @@ msgid "HTTP Error: Something is misconfigured"
 msgstr "HTTP hiba: Valami tévesen konfigurált"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "How to configure the Twitter API access"
 msgstr "Hogyan állítsa be a Twitter API hozzáférést?"
 
@@ -195,21 +218,12 @@ msgstr ""
 "egyezik az API kulcs/Titkosítás."
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
-msgid ""
-"Set your Twitter API access below to be able to use the Twitter Scroller Website snippet.<br/>\n"
-"                             You can get your API credentials from"
-msgstr ""
-"Állítsa be a saját Twitter API hozzáférését lentebb a Twitter Görgető Weboldal kisablakainak hasznáűlatához.<br/>\n"
-"                             Elérheti az API megbízásokat innen"
-
-#. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_tutorial
 msgid "Show me how to obtain the Twitter API Key and Secret"
 msgstr "Mutassa meg, hogyan szerzi be a Twitter API kulcsot és titkosítást!"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "Switch to the API Keys tab: <br/>"
 msgstr "Váltson az API kulcsok fülre: <br/>"
 
@@ -257,6 +271,11 @@ msgid "There was no new data to return."
 msgstr "Nem volt vissza nyerhető új adat."
 
 #. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+msgid "Tutorial"
+msgstr ""
+
+#. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet_id
 msgid "Tweet ID"
 msgstr "Tweet ID azonosító"
@@ -267,12 +286,6 @@ msgid "Tweets"
 msgstr "Tweet-ek"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
-msgid "Twitter API"
-msgstr "Twitter API"
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_key
 #: model:ir.model.fields,help:website_twitter.field_website_twitter_api_key
 msgid "Twitter API Key"
 msgstr "Twitter API kulcs"
@@ -289,22 +302,18 @@ msgstr "Twitter API kulcs"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_api_key
-msgid "Twitter API key you can get it from https://apps.twitter.com/app/new"
+msgid "Twitter API key you can get it from https://apps.twitter.com/"
 msgstr ""
-"Twitter API kulcsot beszerezhet innen https://apps.twitter.com/app/new"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_secret
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_secret
 msgid "Twitter API secret"
 msgstr "Twitter API titkosítás"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_api_secret
-msgid ""
-"Twitter API secret you can get it from https://apps.twitter.com/app/new"
+msgid "Twitter API secret you can get it from https://apps.twitter.com/"
 msgstr ""
-"Twitter API titkosítást beszerezheti innen https://apps.twitter.com/app/new"
 
 #. module: website_twitter
 #. openerp-web
@@ -346,6 +355,13 @@ msgstr ""
 " meg többet vagy válasszon egy másik képernyő nevet."
 
 #. module: website_twitter
+#: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
+#: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
+#: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
+msgid "Twitter: Fetch new favorites"
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/website_twitter_config.py:56
 #: code:addons/website_twitter/models/website_twitter_config.py:57
 #, python-format
@@ -359,12 +375,12 @@ msgid "Website"
 msgstr "Weboldal"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
-msgid "https://apps.twitter.com/app/new"
-msgstr "https://apps.twitter.com/app/new"
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+msgid "https://apps.twitter.com/"
+msgstr ""
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "https://www.odoo.com"
 msgstr "https://www.odoo.com"
 
@@ -379,6 +395,6 @@ msgid "website.twitter.tweet"
 msgstr "website.twitter.tweet"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "with the following values:"
 msgstr "a következő értékekkel:"

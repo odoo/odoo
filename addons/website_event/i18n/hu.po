@@ -8,10 +8,10 @@
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -19,6 +19,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "(Free)"
+msgstr "(Szabad)"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -94,6 +99,11 @@ msgstr "<strong>Részvétel Twitter-en</strong>"
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong>Phone</strong> <span class=\"text-muted\">(Optional)</span>"
 msgstr "<strong>Telefon</strong> <span class=\"text-muted\">(Választható)</span>"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<strong>Use this tag:</strong>"
+msgstr "<strong>Használja ezt a címkét:</strong>"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:96
@@ -290,7 +300,6 @@ msgstr ""
 "                            és csatlakozz a beszélgetéshez."
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Free"
 msgstr "Szabad"
@@ -324,7 +333,7 @@ msgstr "Név"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:184
+#: code:addons/website_event/controllers/main.py:182
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
@@ -505,11 +514,6 @@ msgstr ""
 "létrehozásához."
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Use this tag:"
-msgstr "Használja ezt a címkét:"
-
-#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_website_published
 msgid "Visible in Website"
 msgstr "Látható a weboldalon"
@@ -564,16 +568,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Your registration"
 msgstr "Regisztrációja"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "or"
-msgstr "vagy"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "pull-right"
-msgstr "húzza jobbra"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_details

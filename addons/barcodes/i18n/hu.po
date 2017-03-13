@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -155,6 +155,13 @@ msgid "Credit Card"
 msgstr "Hitel kártya"
 
 #. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:102
+#, python-format
+msgid "Discard"
+msgstr "Elvetés"
+
+#. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Discounted Product"
 msgstr "Árengedményes termék"
@@ -188,14 +195,14 @@ msgstr "Kódolás"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:56
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:64
 #, python-format
 msgid "Error : Document not editable"
 msgstr "Hiba : Dokumentum nem szerkezthető"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:60
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:68
 #, python-format
 msgid "Error : No last scanned barcode"
 msgstr "Hiba : Nincs legutoljára szkennelt vonalkód"
@@ -284,13 +291,20 @@ msgid "Rules"
 msgstr "Szabályok"
 
 #. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:88
+#, python-format
+msgid "Select"
+msgstr "Kiválasztás"
+
+#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_sequence
 msgid "Sequence"
 msgstr "Sorszám"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:77
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:87
 #, python-format
 msgid "Set quantity"
 msgstr "Mennyiség beállítása"
@@ -333,7 +347,7 @@ msgstr ""
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:56
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:64
 #, python-format
 msgid "To modify this document, please first start edition."
 msgstr ""
@@ -341,7 +355,7 @@ msgstr ""
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:60
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:68
 #, python-format
 msgid "To set the quantity please scan a barcode first."
 msgstr "A mennyiség beállításához először szkennelje be a vonalkódot."

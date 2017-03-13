@@ -8,6 +8,7 @@ from lxml import etree
 from lxml.builder import E
 from psycopg2 import IntegrityError
 
+from odoo.exceptions import ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger
 
@@ -231,6 +232,24 @@ class TestViewInheritance(ViewCase):
         self.assertFalse(self.View.default_view(model='does.not.exist', view_type='form'))
         self.assertFalse(self.View.default_view(model=self.model, view_type='graph'))
 
+    def test_no_recursion(self):
+        r1 = self.makeView('R1')
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            r1.write({'inherit_id': r1.id})
+
+        r2 = self.makeView('R2', r1.id)
+        r3 = self.makeView('R3', r2.id)
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            r2.write({'inherit_id': r3.id})
+
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            r1.write({'inherit_id': r3.id})
+
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            r1.write({
+                'inherit_id': r1.id,
+                'arch': self.arch_for('itself', parent=True),
+            })
 
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base

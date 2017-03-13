@@ -3,7 +3,7 @@
 # * stock_landed_costs
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # Talway <9010446@qq.com>, 2016
 # 卓忆科技 <zhanghao@jointd.com>, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2016
@@ -11,10 +11,10 @@
 # liAnGjiA <liangjia@qq.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -24,10 +24,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:355
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:359
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:376
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:380
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:353
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:357
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:374
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:378
 #, python-format
 msgid " already out"
 msgstr "已退订"
@@ -144,14 +144,6 @@ msgstr "日期"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_name
 msgid "Description"
 msgstr "说明"
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/purchase_config_settings.py:18
-#, python-format
-msgid ""
-"Disabling the costing methods will prevent you to use the landed costs "
-"feature."
-msgstr "禁用成本计算方法这个功能将不能用到岸成本这个特性"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
@@ -318,7 +310,7 @@ msgid "Pickings"
 msgstr "分拣"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:322
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:320
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "请配置产品: %s的库存费用帐户。"
@@ -389,7 +381,7 @@ msgstr "库存移动"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Stock Valuation Adjustment Lines"
-msgstr "库存计价调整行"
+msgstr "库存计价调整明细行"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:171
@@ -431,12 +423,6 @@ msgid "Volume"
 msgstr "体积"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/purchase_config_settings.py:17
-#, python-format
-msgid "Warning!"
-msgstr "警告!"
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_weight
 msgid "Weight"
 msgstr "重量"
@@ -445,8 +431,3 @@ msgstr "重量"
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "describe the product characteristics..."
 msgstr "描述产品特征"
-
-#. module: stock_landed_costs
-#: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
-msgid "purchase.config.settings"
-msgstr "purchase.config.settings"

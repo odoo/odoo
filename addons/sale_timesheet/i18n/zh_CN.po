@@ -3,18 +3,20 @@
 # * sale_timesheet
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2016
 # Xu Lei <xulei8@qq.com>, 2016
 # waveyeung <waveyeung@qq.com>, 2016
+# 苏州远鼎 <tiexinliu@126.com>, 2016
+# 卓忆科技 <zhanghao@jointd.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: waveyeung <waveyeung@qq.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: 卓忆科技 <zhanghao@jointd.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,9 +25,19 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_account_id
+msgid "Account"
+msgstr "科目"
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
 msgid "Analytic Line"
 msgstr "分析行"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
+msgid "Assign to Order"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_company
@@ -36,8 +48,8 @@ msgstr "公司"
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
 #: model:ir.model.fields,help:sale_timesheet.field_product_template_project_id
 msgid ""
-"Create a task under this project on sale order validation. This setting must"
-" be set for each company."
+"Create a task under this project on sales order validation. This setting "
+"must be set for each company."
 msgstr ""
 
 #. module: sale_timesheet
@@ -46,15 +58,48 @@ msgid "Employee"
 msgstr "员工"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be"
+" computed on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Order Line"
 msgstr "订单行"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
-#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
 msgid "Procurement"
 msgstr "补货"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_procurement_id
+msgid ""
+"Procurement of the sale order line on which the timesheets should be "
+"assigned"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
@@ -96,7 +141,7 @@ msgstr "项目"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
 msgid "Project associated to this sale"
-msgstr ""
+msgstr "该销售单关联的项目"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -117,11 +162,11 @@ msgid "Task"
 msgstr "任务"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/procurement.py:72
-#: code:addons/sale_timesheet/models/procurement.py:74
+#: code:addons/sale_timesheet/models/procurement.py:80
 #, python-format
-msgid "Task created"
-msgstr "任务已创建"
+msgid ""
+"Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
@@ -133,6 +178,14 @@ msgstr "任务"
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
 msgstr "和该销售关联的任务"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/procurement.py:84
+#, python-format
+msgid ""
+"This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -168,49 +221,18 @@ msgid "Timesheets"
 msgstr "工时单"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr "此处表明当新序列号生成时，商品生成提醒前的天数。"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"此处表明当新序列号生成时，商品变危险以至于不能使用前的天数。When a new a Serial Number is issued, this is "
-"the number of days before the goods may become dangerous and must not be "
-"consumed."
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr "此处表明当新序列号生成时，商品需要提前多少天从库存移除。"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr "此处表明当新序列号生成时，商品变质前（未变危险）的天数。"
-
-#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:55
 #, python-format
 msgid ""
-"You can use only one product on timesheet within the same sale order. You "
+"You can use only one product on timesheet within the same sales order. You "
 "should split your order to include only one contract based on time and "
 "material."
-msgstr "在同一销售订单中你只能在工时表用一个产品。你应该把订单分成只包含一份基于时间和材料的合同"
+msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:17
 #, python-format
 msgid ""
-"You cannot delete a task related to a Sale Order. You can only archive this "
-"task."
-msgstr "不能删除已经关联销售订单的任务。你只能归档该任务"
+"You cannot delete a task related to a Sales Order. You can only archive this"
+" task."
+msgstr ""

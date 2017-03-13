@@ -3,7 +3,7 @@
 # * website_twitter
 # 
 # Translators:
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Alejandro Die Sanchis <marketing@domatix.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
@@ -15,10 +15,10 @@
 # Galileo Sanchez <galileopy@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Galileo Sanchez <galileopy@gmail.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -33,27 +33,39 @@ msgid "<span class=\"oe_snippet_thumbnail_title\">Twitter Scroller</span>"
 msgstr "<span class=\"oe_snippet_thumbnail_title\">Twitter Scroller</span>"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "<strong>Callback URL: </strong> leave it blank"
 msgstr "<strong>Callback URL: </strong> déjalo en blanco"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "<strong>Description: </strong> Odoo Tweet Scroller"
 msgstr "<strong>Descripción: </strong> Odoo Tweet Scroller"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "<strong>Name: </strong> Odoo Tweet Scroller"
 msgstr "<strong>Nombre: </strong> Odoo Tweet Scroller"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "<strong>Website: </strong>"
 msgstr "<strong>Sitio web: </strong>"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_key
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+msgid "API Key"
+msgstr "Clave API"
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_secret
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+msgid "API secret"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "Accept terms of use and click on the Create button at the bottom"
 msgstr ""
 "Aceptar términos de uso y pulsar en el botón Crear de la parte inferior"
@@ -67,12 +79,17 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+msgid "Close"
+msgstr "Cerrar"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "Copy/Paste API Key and Secret below"
 msgstr "Copiar/Pegar clave API y palabra secreta a continuación"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "Create a new Twitter application on"
 msgstr "Crear una nueva aplicación Twiter en"
 
@@ -92,7 +109,7 @@ msgid "Display Name"
 msgstr "Nombre a mostrar"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid ""
 "Enter the screen name from which you want to load favorite Tweets (does not "
 "need to be the same as the API keys)"
@@ -102,6 +119,11 @@ msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_screen_name
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+msgid "Favorites From"
+msgstr ""
+
+#. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_screen_name
 msgid "Get favorites from this screen name"
 msgstr "Obtener favoritos desde este nombre"
@@ -113,7 +135,7 @@ msgid "HTTP Error: Something is misconfigured"
 msgstr "Error HTTP: Algo está mal configurado"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "How to configure the Twitter API access"
 msgstr "Cómo configurar el acceso al API de Twitter"
 
@@ -198,20 +220,13 @@ msgstr ""
 "No tiene porque ser la misma que la de la clave de API."
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
-msgid ""
-"Set your Twitter API access below to be able to use the Twitter Scroller Website snippet.<br/>\n"
-"                             You can get your API credentials from"
-msgstr ""
-
-#. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_tutorial
 msgid "Show me how to obtain the Twitter API Key and Secret"
 msgstr ""
 "Muéstreme cómo obtener la clave de API y la palabra secreta de Twitter"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "Switch to the API Keys tab: <br/>"
 msgstr ""
 
@@ -255,6 +270,11 @@ msgid "There was no new data to return."
 msgstr ""
 
 #. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+msgid "Tutorial"
+msgstr ""
+
+#. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet_id
 msgid "Tweet ID"
 msgstr "ID del tuit"
@@ -265,12 +285,6 @@ msgid "Tweets"
 msgstr "Tuits"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
-msgid "Twitter API"
-msgstr "API de Twiter"
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_key
 #: model:ir.model.fields,help:website_twitter.field_website_twitter_api_key
 msgid "Twitter API Key"
 msgstr "Clave del API de Twiter"
@@ -287,24 +301,18 @@ msgstr "Clave del API de Twitter"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_api_key
-msgid "Twitter API key you can get it from https://apps.twitter.com/app/new"
+msgid "Twitter API key you can get it from https://apps.twitter.com/"
 msgstr ""
-"Clave de la API de Twitter que puede obtener de "
-"https://apps.twitter.com/app/new"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_secret
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_secret
 msgid "Twitter API secret"
 msgstr "Palaba secreta de la API de Twitter"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_api_secret
-msgid ""
-"Twitter API secret you can get it from https://apps.twitter.com/app/new"
+msgid "Twitter API secret you can get it from https://apps.twitter.com/"
 msgstr ""
-"Palabra secreta de la API de Twitter que puede obtener de "
-"https://apps.twitter.com/app/new"
 
 #. module: website_twitter
 #. openerp-web
@@ -344,6 +352,13 @@ msgstr ""
 "favor más o escoja un nombre diferente."
 
 #. module: website_twitter
+#: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
+#: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
+#: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
+msgid "Twitter: Fetch new favorites"
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/website_twitter_config.py:56
 #: code:addons/website_twitter/models/website_twitter_config.py:57
 #, python-format
@@ -357,12 +372,12 @@ msgid "Website"
 msgstr "Sitio web"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
-msgid "https://apps.twitter.com/app/new"
-msgstr "https://apps.twitter.com/app/new"
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+msgid "https://apps.twitter.com/"
+msgstr ""
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "https://www.odoo.com"
 msgstr "https://www.odoo.com"
 
@@ -377,6 +392,6 @@ msgid "website.twitter.tweet"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
+#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
 msgid "with the following values:"
 msgstr "con los siguientes valores:"

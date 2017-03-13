@@ -6,19 +6,25 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "(Free)"
+msgstr "(Gratis)"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -96,6 +102,11 @@ msgid "<strong>Phone</strong> <span class=\"text-muted\">(Optional)</span>"
 msgstr "<strong>Telefoon</strong> <span class=\"text-muted\">(Optioneel)</span>"
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<strong>Use this tag:</strong>"
+msgstr "<strong>Gebruik dit label:</strong>"
+
+#. module: website_event
 #: code:addons/website_event/controllers/main.py:96
 #, python-format
 msgid "All Categories"
@@ -163,6 +174,8 @@ msgid ""
 "Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
 "Technical Training"
 msgstr ""
+"Maak een naam voor uw evenment aan en klik op <em>'Doorgaan'</em>. Bijv.: "
+"Technische traing"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event_show_menu
@@ -198,7 +211,7 @@ msgstr "Wijzig badges"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "End of Registration"
-msgstr ""
+msgstr "Einde van registratie"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -244,7 +257,7 @@ msgstr "Evenement gepubliceerd"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Event registration is closed."
-msgstr ""
+msgstr "Evenement registratie is gesloten."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -288,7 +301,6 @@ msgstr ""
 "                            en neem deel aan het het gesprek."
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Free"
 msgstr "Vrij"
@@ -302,7 +314,7 @@ msgstr "Introductie"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
 msgid "Is Participating"
-msgstr ""
+msgstr "Is deelnemer"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:55
@@ -322,7 +334,7 @@ msgstr "Naam"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:184
+#: code:addons/website_event/controllers/main.py:182
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
@@ -502,11 +514,6 @@ msgstr ""
 "Gebruik het boven menu <i>'Inhoud'</i> om het eerste evenement aan te maken."
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Use this tag:"
-msgstr "Gebruik dit label:"
-
-#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_website_published
 msgid "Visible in Website"
 msgstr "Zichtbaar in website"
@@ -514,12 +521,12 @@ msgstr "Zichtbaar in website"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Visualize on Google Maps"
-msgstr ""
+msgstr "Visualiseer in Google Maps"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "We are glad to confirm your registration to our event"
-msgstr ""
+msgstr "Wij zijn blij uw inschrijving voor ons evenement te bevestigen"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -560,17 +567,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Your registration"
-msgstr ""
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "or"
-msgstr "of"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "pull-right"
-msgstr "trek-rechts"
+msgstr "Uw inschrijving"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_details

@@ -7,13 +7,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +45,9 @@ msgid ""
 "* 'Auto popup' displays the button and automatically open the conversation pane.\n"
 "* 'Hide the button' hides the chat button on the pages."
 msgstr ""
+"* Selecteer 'Toon de knop' om simpelweg de chatknop te tonen op de pagina's:\n"
+"* Selecteer 'Auto pop-up' om de knop te tonen en automatisch het conversatie venster te openen.\n"
+"* Selecteer 'Verberg de knop' om de chat knop te verbergen op de pagina's."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -51,14 +55,9 @@ msgid ""
 "<span>Define rules for your live support channel. You can apply an action "
 "(disable the support, automatically open your support, or just make the "
 "button available) for the given URL, and per country.<br/>To identify the "
-"country, GeoIP must be install on your server, otherwise, the countries of "
-"the rule will not be taken into account.</span>"
+"country, GeoIP must be installed on your server, otherwise, the countries of"
+" the rule will not be taken into account.</span>"
 msgstr ""
-"<span>Definieer regels voor uw live ondersteuningskanaal. U kan een actie "
-"toepassen (schakel ondersteuning uit, open automatisch de ondersteuning, of "
-"maak de knop beschikbaar) voor de gegeven URL, en dit per land.<br/>Om het "
-"land te identificeren moet GeoIP geïnstalleerd zijn op uw server, anders "
-"wordt de landactie niet mee in rekening genomen.</span>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_action
@@ -135,6 +134,10 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
+"Met standaard antwoorden kunt u voorgeschreven reacties toevoegen in uw\n"
+"uw berichten door te typen <i>:snelkoppeling</i>. De snelkoppeling is\n"
+"direct vervangen in uw bericht, zodat u het nog kan bewerken\n"
+"voordat het verzonden wordt."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
@@ -276,6 +279,9 @@ msgid ""
 "selected action must be 'Auto popup' otherwise this parameter will not be "
 "taken into account."
 msgstr ""
+"Vertraging (in seconden) om automatisch het conversatiescherm te openen. "
+"Opmerking: de geselecteerde actie moet 'Auto pop-up' zijn, anders zal de "
+"parameter niet mee in rekening worden genomen."
 
 #. module: im_livechat
 #. openerp-web
@@ -328,12 +334,9 @@ msgstr "Verklaar uw notitie"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "For website built with Odoo CMS, please install the website_livechat module."
-" Then go to Settings &gt; Website Settings and select the Website Live Chat "
-"Channel you want to add on your website."
+" Then go to Website Admin &gt; Configuration &gt; Settings and select the "
+"Website Live Chat Channel you want to add on your website."
 msgstr ""
-"Voor website gemaakt met Odoo CMS, installeer aub de  website_livechat "
-"module. Ga dan naar  Instellingen > Website instellingen en selecteer het "
-"Website live chatkanaal wat u wilt gebruiken op uw website."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_sequence
@@ -460,6 +463,11 @@ msgid "Last Week"
 msgstr "Laatste week"
 
 #. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Leave"
+msgstr "Verlof"
+
+#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
 msgstr "Kanaal verlaten"
@@ -494,6 +502,10 @@ msgid ""
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
+"Live chat ondersteuningskanaal statistieken staan u toe om gemakkelijk de "
+"prestaties van uw bedrijf zijn live chat sessies te analyseren. Haal "
+"informatie uit de gemiste sessies, de doelgroep, de duur van een sessie, "
+"etc."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -620,6 +632,8 @@ msgid ""
 "Operators that do not show any activity In Odoo for more than 30 minutes "
 "will be considered as disconnected."
 msgstr ""
+"Operators die geen activiteiten toont in Odoo voor meer dan 30 minuten wordt"
+" beschouwd als niet meer verbonden."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -633,18 +647,13 @@ msgstr ""
 "Percentage van mensen die blij hebben beoordeeld over de afgelopen 7 dagen"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Quit"
-msgstr "Afsluiten"
-
-#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
 msgid "Rating"
 msgstr "Beoordeling"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:309
+#: code:addons/im_livechat/static/src/js/im_livechat.js:311
 #, python-format
 msgid "Rating: :rating_%d"
 msgstr "Beoordeling: :rating_%d"
@@ -760,6 +769,10 @@ msgid ""
 "located in these 2 countries. This feature requires GeoIP installed on your "
 "server."
 msgstr ""
+"De werkelijke regel zal enkel overeenkomen voor dit land. Dus wanneer u de "
+"landen 'België' en 'Frankrijk' selecteert en de actie instelt op 'Verberg "
+"knop' zullen deze 2 landen de ondersteuningsknop voor de opgegeven URL niet "
+"zien. Deze optie vereist de installatie van GeoIP op uw server."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
@@ -858,6 +871,9 @@ msgid ""
 "                to integrate the website live chat widget, allowing your website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
+"U kan kanalen aanmaken voor elke website welke u de\n"
+"website live chat widget wilt integreren, dit staat u toe om uw websitebezoekers\n"
+"live te praten met uw operators."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.mail_channel_action

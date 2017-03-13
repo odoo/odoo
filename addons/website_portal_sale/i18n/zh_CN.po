@@ -4,20 +4,19 @@
 # 
 # Translators:
 # Luke <cialuo@qq.com>, 2016
-# fausthuang <faust_huang@hotmail.com>, 2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # glovebx <ruinning@163.com>, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2016
-# Alex Duan <alex.duan@elico-corp.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
+# fausthuang <faust_huang@hotmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: fausthuang <faust_huang@hotmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +28,21 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
 msgstr "<i class=\"fa fa-arrow-circle-right\"/> 付款"
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
+msgid "<span class=\"h3\">Your Invoices and Payments</span>"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
+msgid "<span class=\"h3\">Your Orders</span>"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
+msgid "<span class=\"h3\">Your Quotations</span>"
+msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
@@ -163,17 +177,32 @@ msgid "<strong>Unit Price</strong>"
 msgstr "<strong>单价</strong>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_backend_link
-msgid "Access the complete Sale application"
-msgstr "访问全部销售应用程序"
-
-#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Amount Due"
 msgstr "截止金额"
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:181
+#: model:ir.model.fields,field_description:website_portal_sale.field_crm_team_pending_payment_transactions_amount
+msgid "Amount of pending transactions"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.model.fields,field_description:website_portal_sale.field_crm_team_authorized_payment_transactions_amount
+msgid "Amount of transactions to capture"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.actions.act_window,name:website_portal_sale.payment_transaction_action_authorized
+msgid "Authorized Payment Transactions"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "Awaiting Payment"
+msgstr ""
+
+#. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:222
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
@@ -181,7 +210,7 @@ msgid ""
 msgstr ""
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:184
+#: code:addons/website_portal_sale/controllers/main.py:225
 #, python-format
 msgid ""
 "Changing your name is not allowed once invoices have been issued for your "
@@ -189,24 +218,26 @@ msgid ""
 msgstr ""
 
 #. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:177
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
+#, python-format
 msgid "Due Date"
 msgstr "截止日期"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sales_backend_access
-msgid ""
-"If you wish to access the complete application to manage your orders, you "
-"can follow"
-msgstr "如果你想使用完整的应用程序来管理你的命令，你可以按照"
+#: model:ir.model,name:website_portal_sale.model_account_invoice
+msgid "Invoice"
+msgstr "发票"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Invoice #"
-msgstr "发票号"
+msgstr "发票 #"
 
 #. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:176
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
+#, python-format
 msgid "Invoice Date"
 msgstr "开票日期"
 
@@ -222,7 +253,25 @@ msgstr "我的订餐单"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
-msgid "My Quotes"
+msgid "My Quotations"
+msgstr "我的报价单"
+
+#. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:59
+#: code:addons/website_portal_sale/controllers/main.py:109
+#: code:addons/website_portal_sale/controllers/main.py:178
+#, python-format
+msgid "Name"
+msgstr "名称"
+
+#. module: website_portal_sale
+#: model:ir.model.fields,field_description:website_portal_sale.field_crm_team_pending_payment_transactions_count
+msgid "Number of pending transactions"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.model.fields,field_description:website_portal_sale.field_crm_team_authorized_payment_transactions_count
+msgid "Number of transactions to capture"
 msgstr ""
 
 #. module: website_portal_sale
@@ -231,7 +280,11 @@ msgid "Order"
 msgstr "订单"
 
 #. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:58
+#: code:addons/website_portal_sale/controllers/main.py:108
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
+#, python-format
 msgid "Order Date"
 msgstr "单据日期"
 
@@ -246,6 +299,21 @@ msgid "Pay Now"
 msgstr "现在付款"
 
 #. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "Payment"
+msgstr "付款"
+
+#. module: website_portal_sale
+#: model:ir.model,name:website_portal_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "付款交易"
+
+#. module: website_portal_sale
+#: model:ir.actions.act_window,name:website_portal_sale.payment_transaction_action_pending
+msgid "Pending Payment Transactions"
+msgstr ""
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
 msgid "Quotation"
 msgstr "报价单"
@@ -257,18 +325,30 @@ msgstr "报价单 #"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
-msgid "Quotes"
+msgid "Quotations"
+msgstr "报价单"
+
+#. module: website_portal_sale
+#: model:ir.model,name:website_portal_sale.model_crm_team
+msgid "Sales Channel"
 msgstr ""
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
-msgid "Sale Order #"
-msgstr "销售订单#"
-
-#. module: website_portal_sale
 #: model:ir.model,name:website_portal_sale.model_sale_order
+#: model:ir.model.fields,field_description:website_portal_sale.field_payment_transaction_sale_order_id
 msgid "Sales Order"
 msgstr "销售订单"
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
+msgid "Sales Order #"
+msgstr ""
+
+#. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:179
+#, python-format
+msgid "Status"
+msgstr "状态"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
@@ -276,22 +356,34 @@ msgid "Taxes:"
 msgstr "税金："
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
-msgid "There are currently no invoices for your account."
-msgstr "现在你的账户没有发票"
+msgid "There are currently no invoices and payments for your account."
+msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+msgid "There are currently no invoices and payments."
+msgstr ""
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "There are currently no orders for your account."
 msgstr "现在你的账户没有订单"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+msgid "There are currently no orders."
+msgstr ""
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
-msgid "There are currently no quotes for your account."
-msgstr "现在你的账户没有报价"
+msgid "There are currently no quotations for your account."
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+msgid "There are currently no quotations."
+msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
@@ -311,23 +403,20 @@ msgstr "有效期至"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Your Invoices and Payments"
 msgstr "您的发票和付款"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "Your Orders"
 msgstr "你的订单"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
-msgid "Your Quotes"
-msgstr "您的报价"
+msgid "Your Quotations"
+msgstr ""
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sales_backend_access
-msgid "this link"
-msgstr "链接"
+#: model:ir.ui.view,arch_db:website_portal_sale.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "to Capture"
+msgstr ""

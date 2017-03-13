@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -268,11 +268,6 @@ msgid "Leave Empty"
 msgstr "Hagyja üresen"
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr "Logisztika"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "Most common exceptions are products to purchase without\n"
@@ -289,7 +284,7 @@ msgid "Name"
 msgstr "Név"
 
 #. module: procurement
-#: code:addons/procurement/models/procurement.py:189
+#: code:addons/procurement/models/procurement.py:203
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Ehhez a beszerzéshez nincs szabály"
@@ -377,6 +372,18 @@ msgid "Procurement started late"
 msgstr "A beszerzés később indult"
 
 #. module: procurement
+#: model:ir.actions.server,name:procurement.procurement_order_server_action
+msgid "Procurement: Run Procurements"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.ir_cron_scheduler_action_ir_actions_server
+#: model:ir.cron,cron_name:procurement.ir_cron_scheduler_action
+#: model:ir.cron,name:procurement.ir_cron_scheduler_action
+msgid "Procurement: run MRP scheduler"
+msgstr ""
+
+#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
 #: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
 #: model:ir.ui.view,arch_db:procurement.product_product_view_form_procurement_button
@@ -443,11 +450,6 @@ msgstr "Szabály"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Run Procurement"
 msgstr "Beszerzés fut"
-
-#. module: procurement
-#: model:ir.actions.server,name:procurement.procurement_order_server_action
-msgid "Run Procurements"
-msgstr "Beszerzések futtatása"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
@@ -537,7 +539,7 @@ msgstr ""
 "                megrendelés javaslat, gyártási megrendelés, stb."
 
 #. module: procurement
-#: code:addons/procurement/models/procurement.py:144
+#: code:addons/procurement/models/procurement.py:158
 #, python-format
 msgid "You cannot delete procurements that are in cancel state."
 msgstr "Nem törölhet olyan beszerzéseket, melyek megszakított állapotúak."

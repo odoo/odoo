@@ -7,10 +7,10 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/models/resource.py:692
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -92,11 +92,6 @@ msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-msgid "Duration"
-msgstr "Tijdsduur"
-
-#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
 msgid "Efficiency Factor"
 msgstr "Efficiëntie Factor"
@@ -108,7 +103,8 @@ msgid "End Date"
 msgstr "Einddatum"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:741
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "Fout! Verlof begindatum moet liggen vóór de verlof einddatum !"
 
@@ -343,15 +339,12 @@ msgstr "Zondag"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"This field is used to calculate the the expected duration of a work order at"
+" this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
 msgstr ""
-"Dit veld toont de efficiëntie van de resource om taken te voltooien. Bijv. "
-"resource alleen gedurende 5 dagen met 5 toegewezen taken zal standaard 100% "
-"belasting tonen, maar als we de efficiëntie op 200% zetten, dan zal zijn "
-"belasting slechts 50% zijn."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0

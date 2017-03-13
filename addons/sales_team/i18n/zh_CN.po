@@ -3,21 +3,20 @@
 # * sales_team
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # xiaobin wu <bd5dml@gmail.com>, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# zhangpeiqing <zpq001@live.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Gary Wei <Gary.wei@elico-corp.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
 # Xu Lei <xulei8@qq.com>, 2016
 # Talway <9010446@qq.com>, 2016
 # waveyeung <waveyeung@qq.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: waveyeung <waveyeung@qq.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -35,21 +34,21 @@ msgstr "3 预计结束"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:137
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:139
 #, python-format
 msgid "35,029.39€"
 msgstr "35,029.39€"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:124
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:125
 #, python-format
 msgid "78,140.03€"
 msgstr "78,140.03€"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:169
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:171
 #, python-format
 msgid "80.000€"
 msgstr "80.000€"
@@ -61,13 +60,18 @@ msgstr "<span>新</span>"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
-msgid "<span>Reports</span>"
-msgstr "<span>报表</span>"
+msgid "<span>Reporting</span>"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
 msgstr "<span>视图</span>"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_account_accountant
+msgid "Accounting"
+msgstr "会计"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_active
@@ -82,41 +86,73 @@ msgid "Activities Done"
 msgstr "活动结束"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
-msgid "Apply"
-msgstr "应用"
-
-#. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Archived"
 msgstr "已归档"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_res_partner_bank_form
 #: model:ir.ui.menu,name:sales_team.menu_config_bank_accounts
 msgid "Bank Accounts"
 msgstr "银行帐户"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+#: model:ir.ui.menu,name:sales_team.menu_action_res_bank_form
+msgid "Banks"
+msgstr "银行"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_type:0
+msgid "Bar"
+msgstr ""
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:235
+#, python-format
+msgid "Big Pretty Button :)"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_crm
+msgid "CRM"
+msgstr "CRM"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
 msgid "Cancel"
 msgstr "取消"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
+msgid "Channel Leader"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
+msgid "Channel Members"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_team_type
+msgid "Channel Type"
+msgstr "频道类型"
 
 #. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
-msgid "Click here to define a new sales team."
-msgstr "点击这里创建一个行的销售团队"
+msgid "Click here to define a new sales channel."
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:148
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:152
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:161
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:165
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:174
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:178
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:182
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:150
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:154
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:163
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:167
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:176
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:180
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:184
 #, python-format
 msgid "Click to set"
 msgstr "点击设置"
@@ -128,19 +164,18 @@ msgstr "颜色索引"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_company_id
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_company_id
 msgid "Company"
 msgstr "公司"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_sale_config
-#: model:ir.ui.menu,name:sales_team.menu_sale_config_sales
 msgid "Configuration"
 msgstr "配置"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.action_sale_config
-#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
 msgid "Configure Sales"
 msgstr "配置销售"
 
@@ -160,6 +195,11 @@ msgid "Contacts"
 msgstr "联系人"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_model
+msgid "Content"
+msgstr "内容"
+
+#. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_country_partner
 msgid "Countries"
 msgstr "国家"
@@ -171,7 +211,7 @@ msgstr "国家群组"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:215
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:219
 #, python-format
 msgid "Create a few opportunities in it."
 msgstr ""
@@ -189,23 +229,44 @@ msgid "Created on"
 msgstr "创建时间"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_currency_form
+msgid "Currencies"
+msgstr "币种"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_currency_id
+msgid "Currency"
+msgstr "币种"
+
+#. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_partner_form
 msgid "Customers"
 msgstr "客户"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:16
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:18
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
 #: model:ir.ui.menu,name:sales_team.menu_sales_team_act
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #, python-format
 msgid "Dashboard"
 msgstr "仪表板"
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.team_sales_department
-msgid "Direct Sales"
-msgstr "直销"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_button_name
+msgid "Dashboard Button"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_data
+msgid "Dashboard Graph Data"
+msgstr ""
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Day"
+msgstr "日"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
@@ -226,8 +287,13 @@ msgid ""
 msgstr "跟踪此销售团队，自动跟踪此团队中用户关联的事件。"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Graph"
+msgstr "图形"
+
+#. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:214
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:218
 #, python-format
 msgid "Great sales journeys start with a clean pipeline."
 msgstr "伟大的销售旅程从清晰的l漏斗开始"
@@ -238,11 +304,26 @@ msgid "Group By..."
 msgstr "分组..."
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_group
+msgid "Group by"
+msgstr "分组"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_helpdesk
+msgid "Helpdesk"
+msgstr "服务台"
+
+#. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:213
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:217
 #, python-format
 msgid "Hi there!"
 msgstr "你好！"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_group
+msgid "How this channel's dashboard graph will group the results."
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_id
@@ -254,23 +335,33 @@ msgstr "ID"
 #: model:ir.model.fields,help:sales_team.field_res_partner_team_id
 #: model:ir.model.fields,help:sales_team.field_res_users_team_id
 msgid ""
-"If set, sale team used notably for sales and assignations related to this "
-"partner"
+"If set, this sales channel will be used for sales and assignations related "
+"to this partner"
 msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
 msgid ""
 "If the active field is set to false, it will allow you to hide the sales "
-"team without removing it."
-msgstr "如果active字段设为true，它将允许你隐藏销售团队而不用删除它。"
+"channel without removing it."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Integrations"
+msgstr "集成"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:140
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:142
 #, python-format
 msgid "Invoiced"
 msgstr "已开票"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_model:0
+msgid "Invoices"
+msgstr "发票"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
@@ -280,7 +371,7 @@ msgstr "最后修改日"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:188
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:190
 #, python-format
 msgid "Last Month"
 msgstr "上月"
@@ -298,14 +389,24 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_crm_config_lead
-msgid "Leads & Opportunities"
-msgstr "线索及商机"
+#: selection:crm.team,dashboard_graph_type:0
+msgid "Line"
+msgstr "行"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_localisation
 msgid "Localization"
 msgstr "本地化"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Manage leads, opportunities, meetings and activities"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_sale_contract
+msgid "Manage subscriptions and recurring invoicing"
+msgstr "管理订阅和再开具的发票"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -320,20 +421,20 @@ msgid "Meetings"
 msgstr "会议"
 
 #. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Month"
+msgstr "月份"
+
+#. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "更多 <i class=\"fa fa-caret-down\"/>"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "More Info"
-msgstr "更多信息"
-
-#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:220
 #, python-format
 msgid "My Pipeline"
 msgstr "我的漏斗"
@@ -354,20 +455,15 @@ msgstr "接下来7天"
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:38
 #, python-format
-msgid "Next Actions"
-msgstr "下一行动"
+msgid "Next Activities"
+msgstr "下一步活动"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:65
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "仅整型数值是合法的。"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_crm_config_opportunity
-msgid "Opportunities"
-msgstr "商机"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
@@ -382,9 +478,34 @@ msgid "Performance"
 msgstr "绩效"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_period
+msgid "Period"
+msgstr "期间"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_model:0
+msgid "Pipeline"
+msgstr "漏斗"
+
+#. module: sales_team
+#: selection:crm.team,team_type:0
+msgid "Point of Sale"
+msgstr "POS"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Recommended Apps"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_reply_to
 msgid "Reply-To"
 msgstr "回复 至"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_report
+msgid "Reporting"
+msgstr "报告"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
@@ -392,9 +513,12 @@ msgid "Sale Pricelist"
 msgstr "销售价格表"
 
 #. module: sales_team
+#: selection:crm.team,dashboard_graph_model:0
+#: model:crm.team,name:sales_team.team_sales_department
+#: selection:crm.team,team_type:0
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_sale
 #: model:ir.ui.menu,name:sales_team.menu_base_partner
 #: model:ir.ui.menu,name:sales_team.menu_sales
-#: model:ir.ui.menu,name:sales_team.menu_sales_config
 msgid "Sales"
 msgstr "销售"
 
@@ -406,26 +530,27 @@ msgstr "销售"
 #: model:ir.model.fields,field_description:sales_team.field_res_users_team_id
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_tree
-msgid "Sales Team"
-msgstr "销售团队"
+msgid "Sales Channel"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users_sale_team_id
 msgid ""
-"Sales Team the user is member of. Used to compute the members of a sales "
-"team through the inverse one2many"
+"Sales Channel the user is member of. Used to compute the members of a sales "
+"channel through the inverse one2many"
 msgstr ""
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
-msgid "Sales Teams"
-msgstr "销售团队"
+#: model:ir.ui.menu,name:sales_team.sales_team_config
+msgid "Sales Channels"
+msgstr ""
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Sales team"
-msgstr "销售团队"
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Salesperson"
+msgstr "销售员"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -438,6 +563,26 @@ msgid "Salesteams Search"
 msgstr "销售团队查询"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Save"
+msgstr "保存"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Sell recurring services with automated billing"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Send quotations and manage invoicing"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Send, sign and approve documents online"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_sale_general_settings
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Settings"
@@ -445,41 +590,71 @@ msgstr "设置"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:146
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:148
 #, python-format
 msgid "Target"
 msgstr "目标"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Team Leader"
 msgstr "团队领导"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "团队成员"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
-msgid "The color of the team"
-msgstr "团队的颜色"
+msgid "The color of the channel"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
 msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
-"cases in this sales team"
-msgstr "有关本销售团队的案例的邮件，其被Odoo放在“回复至”一栏的电子邮件地址"
+"cases in this sales channel"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_model
+msgid "The graph this channel will display in the Dashboard.\n"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_period
+msgid "The time period this channel's dashboard graph will consider."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_type
+msgid "The type of graph this channel will display in the dashboard."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_team_type
+msgid ""
+"The type of this channel, it will define the resources this channel uses."
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:102
+#: selection:crm.team,dashboard_graph_period:0
 #, python-format
 msgid "This Month"
 msgstr "本月"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_period:0
+msgid "This Week"
+msgstr "本周"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_period:0
+msgid "This Year"
+msgstr "本年度"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users_property_product_pricelist
@@ -500,7 +675,7 @@ msgstr "至活动"
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:105
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:189
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:191
 #, python-format
 msgid "To Activity Report"
 msgstr "至活动报告"
@@ -515,8 +690,8 @@ msgstr "至日历"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:131
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:199
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:132
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:202
 #, python-format
 msgid "To Invoice Report"
 msgstr "至发票报告"
@@ -531,7 +706,7 @@ msgstr "至商机"
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:118
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:194
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:196
 #, python-format
 msgid "To Opportunity Report"
 msgstr "至商机报告"
@@ -551,16 +726,30 @@ msgid "Today"
 msgstr "今日"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Track after-sales tickets"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_type
+msgid "Type"
+msgstr "类型"
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:122
+#: code:addons/sales_team/models/crm_team.py:125
+#, python-format
+msgid "Undefined graph model for Sales Channel: %s"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid ""
-"Use sales team to organize your different salespersons or\n"
-"                    departments into separate teams. Each team will work in\n"
-"                    its own list of opportunities."
+"Use sales channels to organize your sales departments. \n"
+"                    Each channel will work with a separate pipeline."
 msgstr ""
-"使用销售团队来组织您不同的销售人员或部门到独立的团队。 \n"
-"每个团队将它自己的机会列表。 "
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -578,18 +767,34 @@ msgid "Users"
 msgstr "用户"
 
 #. module: sales_team
+#: model:crm.team,name:sales_team.salesteam_website_sales
+#: selection:crm.team,team_type:0
+msgid "Website"
+msgstr "网站"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Week"
+msgstr "周"
+
+#. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:127
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:128
 #, python-format
 msgid "Won in Opportunities"
 msgstr "赢取商机"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:65
 #, python-format
 msgid "Wrong value entered!"
 msgstr "错误值输入!"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_website_sign
+msgid "eSign"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -597,11 +802,6 @@ msgstr "错误值输入!"
 #, python-format
 msgid "exp. closing"
 msgstr "预计结束"
-
-#. module: sales_team
-#: model:ir.model,name:sales_team.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr "ir.ui.view"
 
 #. module: sales_team
 #. openerp-web

@@ -111,8 +111,9 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered_updateable(self):
         for line in self:
             if line.product_id.type not in ('consu', 'product'):
-                return super(SaleOrderLine, self)._compute_qty_delivered_updateable()
-            line.qty_delivered_updateable = False
+                super(SaleOrderLine, line)._compute_qty_delivered_updateable()
+            else:
+                line.qty_delivered_updateable = False
 
     @api.onchange('product_id')
     def _onchange_product_id_set_customer_lead(self):

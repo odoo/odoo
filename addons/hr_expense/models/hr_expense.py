@@ -5,7 +5,7 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import email_split
+from odoo.tools import email_split, float_is_zero
 
 import odoo.addons.decimal_precision as dp
 
@@ -249,7 +249,7 @@ class HrExpense(models.Model):
             elif expense.product_id:
                 account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
                 if not account:
-                    raise UserError(_("No Expense account found for the product %s (or for it's category), please configure one.") % (expense.product_id.name))
+                    raise UserError(_("No Expense account found for the product %s (or for its category), please configure one.") % (expense.product_id.name))
             else:
                 account = self.env['ir.property'].with_context(force_company=expense.company_id.id).get('property_account_expense_categ_id', 'product.category')
                 if not account:
@@ -511,7 +511,9 @@ class HrExpenseSheet(models.Model):
         if any(not sheet.journal_id for sheet in self):
             raise UserError(_("Expenses must have an expense journal specified to generate accounting entries."))
 
-        res = self.mapped('expense_line_ids').action_move_create()
+        res = self.mapped('expense_line_ids')\
+            .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.user.company_id.currency_id).rounding))\
+            .action_move_create()
 
         if not self.accounting_date:
             self.accounting_date = self.account_move_id.date

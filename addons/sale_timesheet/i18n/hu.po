@@ -7,10 +7,10 @@
 # krnkris <krnkris@freemail.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -20,9 +20,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_account_id
+msgid "Account"
+msgstr "Főkönyvi számla"
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
 msgid "Analytic Line"
 msgstr "Analitikus/elemző tételsor"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
+msgid "Assign to Order"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_company
@@ -33,16 +43,41 @@ msgstr "Vállalatok"
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
 #: model:ir.model.fields,help:sale_timesheet.field_product_template_project_id
 msgid ""
-"Create a task under this project on sale order validation. This setting must"
-" be set for each company."
+"Create a task under this project on sales order validation. This setting "
+"must be set for each company."
 msgstr ""
-"Hozzon létre egy feladatot a vásárlói megrendelés jóváhagyáson lévő projekt "
-"téma alá. Ezt a beállítást be kell állítani a mindegyik vállalathoz."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
 msgid "Employee"
 msgstr "Alkalmazott"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be"
+" computed on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed on the lot/serial number."
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
@@ -51,9 +86,15 @@ msgstr "Rendelési tételsor"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
-#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
 msgid "Procurement"
 msgstr "Beszerzés"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_procurement_id
+msgid ""
+"Procurement of the sale order line on which the timesheets should be "
+"assigned"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
@@ -116,11 +157,13 @@ msgid "Task"
 msgstr "Fladat"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/procurement.py:72
-#: code:addons/sale_timesheet/models/procurement.py:74
+#: code:addons/sale_timesheet/models/procurement.py:80
 #, python-format
-msgid "Task created"
-msgstr "Feladat létrehozva"
+msgid ""
+"Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
+msgstr ""
+"Feladat létrehozva (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
@@ -134,18 +177,28 @@ msgid "Tasks associated to this sale"
 msgstr "Ezzel az értékesítéssel összefüggő munka"
 
 #. module: sale_timesheet
+#: code:addons/sale_timesheet/models/procurement.py:84
+#, python-format
+msgid ""
+"This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
+msgstr ""
+"Ezt a feladatot ebből hozta létre: <a href=# data-oe-model=sale.order data-"
+"oe-id=%d>%s</a> (%s)"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
 "Ez állítja be a projektekben és a feladatokban használt mértékegységet. \n"
-"Ha használja a projektekhez kapcsolt munkaidő-kimutatást (project_timesheet modul), ne felejtse el beállítani a helyes mértékegységet az alkalmazotti űrlapon."
+"Ha használja a projektekhez kapcsolt munkaidő-kiosztás (project_timesheet modul), ne felejtse el beállítani a helyes mértékegységet az alkalmazotti űrlapon."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Költség Munkaidő-kimutatás"
+msgstr "Költség Munkaidő-kiosztás"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -160,7 +213,7 @@ msgstr "Időkimutatás tevékenységek"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr "Ezzel az oldallal összefüggő munkaidő-kimutatás tevékenységek"
+msgstr "Ezzel az oldallal összefüggő munkaidő-kiosztás tevékenységek"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
@@ -169,59 +222,18 @@ msgid "Timesheets"
 msgstr "Munkaidő-beosztás"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt "
-"egy vészjelzést ki kell adni."
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"Ha egy szériaszám hozzáadásra került, akkor ez a szám annak a napoknak a "
-"száma mielőtt a termék fogyaszthatatlanná válik és veszélyes lesz."
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt a"
-" terméket ki kell vonni a raktárból."
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt a"
-" termék romlásnak indulna, de még nem veszélyes."
-
-#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:55
 #, python-format
 msgid ""
-"You can use only one product on timesheet within the same sale order. You "
+"You can use only one product on timesheet within the same sales order. You "
 "should split your order to include only one contract based on time and "
 "material."
 msgstr ""
-"Csak egy terméket használhat ugyanazon vásárlói megrendelésen lévő munkaidő-"
-"kimutatásán. Szét kell bontania a megrendelést, hogy beilleszthessen csak "
-"egy időn és anyagon alapuló szerződést."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:17
 #, python-format
 msgid ""
-"You cannot delete a task related to a Sale Order. You can only archive this "
-"task."
+"You cannot delete a task related to a Sales Order. You can only archive this"
+" task."
 msgstr ""
-"Nem tud vásárlói megrendeléshez kapcsolódó feladatot törölni. Csak "
-"archiválni tudja a feladatot."

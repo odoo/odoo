@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,8 +39,8 @@ msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "<span>Reports</span>"
-msgstr "<span>Rapporten</span>"
+msgid "<span>Reporting</span>"
+msgstr "<span>Rapportering</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -218,6 +218,16 @@ msgid "Efficiency Factor"
 msgstr "Efficiëntie Factor"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr "E-mail Aliassen"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr "E-mail discussie"
+
+#. module: hr
 #: model:ir.model,name:hr.model_hr_employee
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
@@ -276,7 +286,7 @@ msgid "Employees Tags"
 msgstr "Werknemer labels"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:254
+#: code:addons/hr/models/hr.py:263
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Fout! het is niet toegestaan recursieve afdelingen aan te maken."
@@ -288,6 +298,11 @@ msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
 "Fout! Het is niet toegestaan om een recursieve werknemer hiërarchie aan te "
 "maken."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_event_count
+msgid "Events"
+msgstr "Evenementen"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
@@ -327,6 +342,11 @@ msgid "Group By"
 msgstr "Groepeer op"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "HR Department"
+msgstr "HR afdeling"
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr "Personeelsbeheer instellingen"
@@ -340,11 +360,6 @@ msgstr "Aangenomen werknemers"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Home Address"
 msgstr "Privé-adres"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "Hr Department"
-msgstr "HR afdeling"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -403,8 +418,6 @@ msgstr "Functie"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
-#: model:ir.ui.menu,name:hr.menu_hr_job_position
-#: model:ir.ui.menu,name:hr.menu_hr_job_position_config
 msgid "Job Positions"
 msgstr "Functies"
 
@@ -458,6 +471,11 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_calendar_last_notif_ack
+msgid "Last notification marked as read from base Calendar"
+msgstr "Laatste melding is gemarkeerd als gelezen vanaf agenda"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_last_login
 msgid "Latest Connection"
 msgstr "Laatste verbinding"
@@ -481,8 +499,14 @@ msgstr "Man"
 #: model:ir.model.fields,field_description:hr.field_hr_department_manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_parent_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
 msgstr "Beheerder"
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_attendance
+msgid "Manual Attendance"
+msgstr "Handmatige aanwezigheid"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_marital
@@ -556,6 +580,11 @@ msgid "Number of employees currently occupying this job position."
 msgstr "Huidig aantal werknemers welke deze functie bekleden."
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_res_users_event_count
+msgid "Number of events the partner has participated."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
@@ -578,6 +607,11 @@ msgstr ""
 "Odoo's departement structuur is gebruikt om alle documenten te beheren\n"
 "die gerelateerd zijn aan werknemers per departement: uitgaven, urenstaten,\n"
 "afwezigheden en vakanties, aanwervingen, enz."
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_user
+msgid "Officer"
+msgstr "Functionaris"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -647,7 +681,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
-msgid "Reports"
+msgid "Reporting"
 msgstr "Rapportages"
 
 #. module: hr
@@ -761,17 +795,13 @@ msgid "The name of the job position must be unique per department in company!"
 msgstr "De naam van de vacature moet uniek zijn per afdeling in het bedrijf!"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+#: model:res.groups,comment:hr.group_hr_attendance
 msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
 msgstr ""
-"Dit veld toont de efficiëntie van de resource om taken te voltooien. Bijv. "
-"resource alleen gedurende 5 dagen met 5 toegewezen taken zal standaard 100% "
-"belasting tonen, maar als we de efficiëntie op 200% zetten, dan zal zijn "
-"belasting slechts 50% zijn."
+"De gebruiker krijgt toegang tot het HR aanwezigheid menu, dit geeft de "
+"mogelijkheid om eigen aanwezigheid aan te passen."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
@@ -781,6 +811,16 @@ msgid ""
 msgstr ""
 "Dit veld bevat de afbeelding, welke wordt gebruikt als foto voor de "
 "werknemer. Maximale grootte 1024x1024px."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+msgid ""
+"This field is used to calculate the the expected duration of a work order at"
+" this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
@@ -828,6 +868,11 @@ msgstr ""
 "contact data, job positie, beschikbaarheid, enz."
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
+msgid "Work Address"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
 msgid "Work Email"
 msgstr "E-mail werk"
@@ -848,11 +893,6 @@ msgid "Work Phone"
 msgstr "Telefoon werk"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
-msgid "Working Address"
-msgstr "Werkadres"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_calendar_id
 msgid "Working Time"
 msgstr "Werktijd"
@@ -869,6 +909,28 @@ msgstr ""
 "positie."
 
 #. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr "Uw document is niet aangemaakt"
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr ""
+"Uw document is niet aangemaakt omdat uw e-mail adres niet is herkend. Stuur "
+"e-mails met het e-mail adres ingesteld op uw medewerker kaart, of neem "
+"contract op met uw HR manager."
+
+#. module: hr
+#: code:addons/hr/models/mail_thread.py:41
+#, python-format
+msgid "alias %s does not accept unknown employees"
+msgstr "alias %s accepteert geen onbekende medewerkers"
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "afdeling"
@@ -882,3 +944,23 @@ msgstr "Bijv. Parttime"
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr "Bijv. Verkoopmanager"
+
+#. module: hr
+#: code:addons/hr/models/mail_thread.py:41
+#, python-format
+msgid "skipping"
+msgstr "overslaan"
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_user
+msgid "the user will be able to approve document created by employees."
+msgstr "de gebruiker kan documenten aangemaakt door de werknemers goedkeuren."
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_manager
+msgid ""
+"the user will have an access to the human resources configuration as well as"
+" statistic reports."
+msgstr ""
+"De gebruiker krijgt toegang tot de HR instellingen en de statistische "
+"rapportages."

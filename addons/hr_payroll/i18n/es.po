@@ -10,7 +10,7 @@
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # Antonio Trueba <atgayol@gmail.com>, 2016
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
 # David Perez <david@closemarketing.es>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
@@ -19,14 +19,14 @@
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # AX Tech <axatech01@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: AX Tech <axatech01@gmail.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +36,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:46
+#: code:addons/hr_payroll/models/hr_payroll.py:48
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -52,6 +52,13 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Cuando la nómina es creada el estado es 'Borrador'\n"
+"                \n"
+"* Si la nómina está bajo verificación el estado es 'En Espera'.\n"
+"                \n"
+"* Si la nómina está confirmada entonces el estado se cambia a 'Finalizado'.\n"
+"                \n"
+"* Cuando el usuario cancela la nómina el estado es 'Rechazado'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -245,8 +252,14 @@ msgid "Cancel Payslip"
 msgstr "Cancelar nómina"
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:240
+#, python-format
+msgid "Cannot cancel a payslip that is done."
+msgstr "No se puede cancelar una nómina que ya está finalizada."
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9022
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7480
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr "Categoría"
@@ -572,7 +585,7 @@ msgid "Employees"
 msgstr "Empleados"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:41
+#: code:addons/hr_payroll/models/hr_payroll.py:43
 #, python-format
 msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr "¡Error! No puede crear una estructura salarial recursiva."
@@ -700,6 +713,10 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"Es usada para calcular el porcentaje y la cantidad fija, por ejemplo, un "
+"vale de alimentos con una cantidad fija de 1€ por día trabajado puede tener "
+"una cantidad definida en la expresión como "
+"worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
@@ -784,6 +801,11 @@ msgid "Made Payment Order ? "
 msgstr "¿Realizar orden de pago? "
 
 #. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_manager
+msgid "Manager"
+msgstr "Responsable"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_max
 msgid "Maximum Range"
@@ -819,7 +841,7 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:321
+#: code:addons/hr_payroll/models/hr_payroll.py:325
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "Días de trabajo normales pagados al 100%"
@@ -838,6 +860,11 @@ msgstr "Número de días"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_hours
 msgid "Number of Hours"
 msgstr "Número de horas"
+
+#. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_user
+msgid "Officer"
+msgstr "Oficial"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -925,7 +952,7 @@ msgid "Payslip"
 msgstr "Nómina"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:223
+#: code:addons/hr_payroll/models/hr_payroll.py:226
 #, python-format
 msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr "'Fecha de' de la nómina debe ser antes de 'Fecha a'."
@@ -981,7 +1008,7 @@ msgstr "Nombre de nómina"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Run"
-msgstr ""
+msgstr "Correr Nómina"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1110,7 +1137,7 @@ msgid "Refund"
 msgstr "Abono"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:241
+#: code:addons/hr_payroll/models/hr_payroll.py:246
 #, python-format
 msgid "Refund: "
 msgstr "Devolución: "
@@ -1181,8 +1208,8 @@ msgid "Salary Rules"
 msgstr "Reglas salariales"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:546
-#: code:addons/hr_payroll/models/hr_payroll.py:593
+#: code:addons/hr_payroll/models/hr_payroll.py:552
+#: code:addons/hr_payroll/models/hr_payroll.py:600
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "Nómina salarial de %s para %s"
@@ -1388,37 +1415,37 @@ msgid "Worked Days & Inputs"
 msgstr "Días trabajados y entradas"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:768
+#: code:addons/hr_payroll/models/hr_payroll.py:775
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr "Porcentaje base o cantidad errónea para la regla de salario %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:774
+#: code:addons/hr_payroll/models/hr_payroll.py:781
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "Código python erróneo en la regla de salario %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:797
+#: code:addons/hr_payroll/models/hr_payroll.py:804
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "Código python erróneo en la regla de salario %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:761
+#: code:addons/hr_payroll/models/hr_payroll.py:768
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr "Cantidad errónea definida para la regla de salario %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:791
+#: code:addons/hr_payroll/models/hr_payroll.py:798
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr "Rango de condición erróneo para la regla de salario %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:266
+#: code:addons/hr_payroll/models/hr_payroll.py:270
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
@@ -1431,7 +1458,7 @@ msgid "You must select employee(s) to generate payslip(s)."
 msgstr "Debe seleccionar un empleado(s) para crear la(s) nómina(s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:836
+#: code:addons/hr_payroll/models/hr_payroll.py:843
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr "Debe crear un contrato para crear una línea de colilla de pago."

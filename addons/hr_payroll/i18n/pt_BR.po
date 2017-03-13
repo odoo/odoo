@@ -5,17 +5,18 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
-# grazziano <g.negocios@outlook.com.br>, 2016
-# francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
+# grazziano <gra.negocia@gmail.com>, 2016
+# falexandresilva <falexandresilva@gmail.com>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:46
+#: code:addons/hr_payroll/models/hr_payroll.py:48
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -40,6 +41,10 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Quando o holerite é criado o estado é 'Provisório'.\n"
+"* Se o holerite está sob verificação, a situação 'Aguardando'.\n"
+"* Se o holerite é confirmado em seguida a situação é definida como 'Concluído'.\n"
+"* Quando o usuário cancelar o holerite a situação é 'Rejeitado'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -233,8 +238,14 @@ msgid "Cancel Payslip"
 msgstr "Cancelar Holerite"
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:240
+#, python-format
+msgid "Cannot cancel a payslip that is done."
+msgstr "Não é possível cancelar um holerite que está feito."
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9022
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7480
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr "Categoria"
@@ -561,7 +572,7 @@ msgid "Employees"
 msgstr "Funcionários"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:41
+#: code:addons/hr_payroll/models/hr_payroll.py:43
 #, python-format
 msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr "Erro! Você não pode criar uma estrutura de salários recursiva."
@@ -688,6 +699,10 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"Ele é usado no cálculo da percentagem e, por uma porcentagem de valor fixo ."
+" Por exemplo A regra vale-refeição para ter valor fixo de R$ 10 por dia de "
+"trabalho pode ter sua quantidade definida na expressão como "
+"worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
@@ -773,6 +788,11 @@ msgid "Made Payment Order ? "
 msgstr "Feito Ordem de Pagamento? "
 
 #. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_manager
+msgid "Manager"
+msgstr "Gerente"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_max
 msgid "Maximum Range"
@@ -808,7 +828,7 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:321
+#: code:addons/hr_payroll/models/hr_payroll.py:325
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "Dias normais trabalhados pagos 100%"
@@ -827,6 +847,11 @@ msgstr "Numero de dias"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_hours
 msgid "Number of Hours"
 msgstr "Número de Horas"
+
+#. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_user
+msgid "Officer"
+msgstr "Oficial"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -914,7 +939,7 @@ msgid "Payslip"
 msgstr "Holerite"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:223
+#: code:addons/hr_payroll/models/hr_payroll.py:226
 #, python-format
 msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr "Recibo de Pagamento 'Date From' deve ser antes 'Date To'."
@@ -970,7 +995,7 @@ msgstr "Nome Recibo de Pagamento"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Run"
-msgstr ""
+msgstr "Rodar Holerite"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1099,7 +1124,7 @@ msgid "Refund"
 msgstr "Devolução"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:241
+#: code:addons/hr_payroll/models/hr_payroll.py:246
 #, python-format
 msgid "Refund: "
 msgstr "Reembolso: "
@@ -1170,8 +1195,8 @@ msgid "Salary Rules"
 msgstr "Regras de Salários"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:546
-#: code:addons/hr_payroll/models/hr_payroll.py:593
+#: code:addons/hr_payroll/models/hr_payroll.py:552
+#: code:addons/hr_payroll/models/hr_payroll.py:600
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "Folha de Pagamento de %s para %s"
@@ -1378,39 +1403,39 @@ msgid "Worked Days & Inputs"
 msgstr "Dias Trabalhados & Entradas"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:768
+#: code:addons/hr_payroll/models/hr_payroll.py:775
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
 "Percentual base errada ou quantidade definida para a regra salário %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:774
+#: code:addons/hr_payroll/models/hr_payroll.py:781
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "Código Python errado definido para a regra de salário %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:797
+#: code:addons/hr_payroll/models/hr_payroll.py:804
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "Condição python errada definida para a regra de salário %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:761
+#: code:addons/hr_payroll/models/hr_payroll.py:768
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr "Quantidade errada definida para a regra de salário %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:791
+#: code:addons/hr_payroll/models/hr_payroll.py:798
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
 "Condição de intervalo errada definido para a regra de salário %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:266
+#: code:addons/hr_payroll/models/hr_payroll.py:270
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
@@ -1423,10 +1448,10 @@ msgid "You must select employee(s) to generate payslip(s)."
 msgstr "Você precisa selecionar o funcionário para gerar o holerite."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:836
+#: code:addons/hr_payroll/models/hr_payroll.py:843
 #, python-format
 msgid "You must set a contract to create a payslip line."
-msgstr ""
+msgstr "Você deve definir um contrato para criar uma linha de salários."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings

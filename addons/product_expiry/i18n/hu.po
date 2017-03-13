@@ -7,10 +7,10 @@
 # krnkris <krnkris@freemail.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -20,9 +20,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid ""
+"<span class=\"label label-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
 msgid "<span class=\"pull-right\">Expiry Date</span>"
 msgstr "<span class=\"pull-right\">Lejárati idő</span>"
+
+#. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span>days</span>"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
@@ -45,14 +57,51 @@ msgid "End of Life Date"
 msgstr "Határidő lejárati vég dátum"
 
 #. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration alerts"
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
 msgstr "Szett/Széria"
 
 #. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be"
+" computed on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
 msgid "Product Alert Time"
 msgstr "Termék riasztási idő"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_product_expiry_alert
+msgid "Product Expiry Alert"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_life_time
@@ -84,6 +133,11 @@ msgstr "Mennyiségek (csomagok)"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant_removal_date
 msgid "Removal Date"
 msgstr "Eltávolítás időpontja"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_product_expiry_alert
+msgid "The Alert Date has been reached."
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_alert_date
@@ -121,39 +175,3 @@ msgid ""
 msgstr ""
 "Ez az a dátum amikor az ezzel a szériaszámmal ellátott áru elkezd romlani, "
 "anélkül, hogy az még veszélyes lenne."
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt "
-"egy vészjelzést ki kell adni."
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"Ha egy szériaszám hozzáadásra került, akkor ez a szám annak a napoknak a "
-"száma mielőtt a termék fogyaszthatatlanná válik és veszélyes lesz."
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt a"
-" terméket ki kell vonni a raktárból."
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt a"
-" termék romlásnak indulna, de még nem veszélyes."
