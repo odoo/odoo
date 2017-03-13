@@ -132,17 +132,9 @@ function createAsyncView(params) {
 
     var view = new params.View(fields_view.arch, fields_view.fields, viewOptions);
 
-    // remove src attribute on images and iframes to remove not found error in tests
-    function removeSrcAttribute () {
-        $('img, iframe[src]', this).each(function () {
-            var src = $(this).attr('src');
-            if (src[0] !== '#') {
-                $(this).attr('src', '#test:' + $(this).attr('src'));
-                widget._rpc(src).exec();
-            }
-        });
-    }
-    $('#qunit-fixture').on('DOMNodeInserted', removeSrcAttribute);
+    $('#qunit-fixture').on('DOMNodeInserted.removeSRC', function () {
+        removeSrcAttribute($(this), widget);
+    });
 
     if (params.with_modifiers) {
         _.each(params.with_modifiers, function (modifier, name) {
@@ -170,7 +162,7 @@ function createAsyncView(params) {
             // when it will be called the second time (by its parent)
             delete view.destroy;
             widget.destroy();
-            $('#qunit-fixture').off('DOMNodeInserted', removeSrcAttribute);
+            $('#qunit-fixture').off('DOMNodeInserted.removeSRC');
         };
         return view.appendTo($view_manager).then(function () {
             view.$el.on('click', 'a', function (ev) {
@@ -388,6 +380,24 @@ function triggerMouseEvent($el, type) {
     $el.trigger(e);
 }
 
+/**
+ * Removes the src attribute on images and iframes to prevent not found errors,
+ * and optionally triggers an rpc with the src url as route on a widget.
+ *
+ * @param {JQueryElement} $el
+ * @param {[Widget]} widget the widget on which the rpc should be performed
+ */
+function removeSrcAttribute($el, widget) {
+    $el.find('img, iframe[src]').each(function () {
+        var src = $(this).attr('src');
+        if (src[0] !== '#') {
+            $(this).attr('src', '#test:' + $(this).attr('src'));
+            if (widget) {
+                widget._rpc(src).exec();
+            }
+        }
+    });
+}
 
 return session.is_bound.then(function () {
     setTimeout(function () {
@@ -404,6 +414,7 @@ return session.is_bound.then(function () {
         addMockEnvironment: addMockEnvironment,
         dragAndDrop: dragAndDrop,
         triggerMouseEvent: triggerMouseEvent,
+        removeSrcAttribute: removeSrcAttribute,
     };
 });
 
