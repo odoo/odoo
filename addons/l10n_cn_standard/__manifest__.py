@@ -30,7 +30,7 @@ Including the following data in the Accounting Standards for Business Enterprise
     """,
     'depends': ['l10n_cn'],
     'data': [
-        'data/l10n_chart_china_standard_business_chart_data.xml',
+        'data/l10n_cn_standard_chart_data.xml',
         'data/account.account.template.csv',
         'data/account_tax_templates.xml',
         'data/account_chart_template_data.xml',
