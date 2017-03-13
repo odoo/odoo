@@ -1512,6 +1512,56 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
+     * Fetches the number of records associated to the domain the value of the
+     * given field represents.
+     *
+     * @param {Object} record - an element from the localData
+     * @param {Object} fieldName - the name of the field
+     * @returns {Deferred<any>}
+     *          The deferred is resolved with the fetched special data. If this
+     *          data is the same as the previously fetched one (for the given
+     *          parameters), no RPC is done and the deferred is resolved with
+     *          the undefined value.
+     */
+    _fetchSpecialDomain: function (record, fieldName) {
+        var context = record.getContext({fieldName: fieldName});
+
+        var domainModel = record.fieldAttrs[fieldName].options.model;
+        if (record.data.hasOwnProperty(domainModel)) {
+            domainModel = record._changes && record._changes[domainModel] || record.data[domainModel];
+        }
+        var domainValue = record._changes && record._changes[fieldName] || record.data[fieldName];
+
+        // avoid rpc if not necessary
+        var hasChanged = this._saveSpecialDataCache(record, fieldName, {
+            context: context,
+            domainModel: domainModel,
+            domainValue: domainValue,
+        });
+        if (!hasChanged) {
+            return $.when();
+        }
+
+        var def = $.Deferred();
+
+        this._rpc(domainModel, "search_count")
+            .args([domainValue])
+            .withContext(context)
+            .exec()
+            .then(_.identity, function (error, e) {
+                e.preventDefault(); // prevent traceback (the search_count might be intended to break)
+                return false;
+            })
+            .always(function (nbRecords) {
+                def.resolve({
+                    model: domainModel,
+                    nbRecords: nbRecords,
+                });
+            });
+
+        return def;
+    },
+    /**
      * Fetch all data in a ungrouped list
      *
      * @param {Object} list a valid resource object

@@ -714,7 +714,7 @@ var PriorityWidget = AbstractField.extend({
     },
     supportedFieldTypes: ['selection'],
 
-    is_set: function() {
+    is_set: function () {
         return true;
     },
     render_star: function (tag, is_full, index, tip) {
@@ -732,7 +732,7 @@ var PriorityWidget = AbstractField.extend({
         }) : 0;
         this.$el.empty();
         this.empty_value = this.field.selection[0][0];
-        _.each(this.field.selection.slice(1), function(choice, index) {
+        _.each(this.field.selection.slice(1), function (choice, index) {
             self.$el.append(self.render_star('<a href="#">', index_value >= index+1, index+1, choice[1]));
         });
     },
@@ -1208,11 +1208,11 @@ var JournalDashboardGraph = AbstractField.extend({
  */
 var FieldDomain = AbstractField.extend({
     /**
-     * The model this field widget works with could be dependant on another
-     * field value. This field widget must then be reset when a field is changed
-     * in the view.
+     * Fetches the number of records which are matched by the domain (if the
+     * domain is not server-valid, the value is false) and the model the
+     * field must work with.
      */
-    resetOnAnyFieldChange: true,
+    specialData: "_fetchSpecialDomain",
 
     events: _.extend({}, AbstractField.prototype.events, {
         "click .o_domain_show_selection_button": "_onShowSelectionButtonClick",
@@ -1230,7 +1230,6 @@ var FieldDomain = AbstractField.extend({
         this._super.apply(this, arguments);
 
         this.inDialog = !!this.nodeOptions.in_dialog;
-        this.modelOption = this.nodeOptions.model;
         this.fsFilters = this.nodeOptions.fs_filters || {};
 
         this.className = "o_form_field_domain";
@@ -1241,7 +1240,7 @@ var FieldDomain = AbstractField.extend({
             this.className += " o_inline_mode";
         }
 
-        this._initModel();
+        this._setState();
     },
 
     //--------------------------------------------------------------------------
@@ -1274,7 +1273,7 @@ var FieldDomain = AbstractField.extend({
      */
     _render: function () {
         // If there is no model, only change the non-domain-selector content
-        if (!this.domainModel) {
+        if (!this._domainModel) {
             this._replaceContent();
             return $.when();
         }
@@ -1286,7 +1285,7 @@ var FieldDomain = AbstractField.extend({
         // Create the domain selector or change the value of the current one...
         var def;
         if (!this.domainSelector) {
-            this.domainSelector = new DomainSelector(this, this.domainModel, domain, {
+            this.domainSelector = new DomainSelector(this, this._domainModel, domain, {
                 readonly: this.mode === "readonly" || this.inDialog,
                 filters: this.fsFilters,
                 debugMode: session.debug,
@@ -1295,22 +1294,8 @@ var FieldDomain = AbstractField.extend({
         } else {
             def = this.domainSelector.setDomain(domain);
         }
-        // ... then query the model to get the number of matched record if valid
-        var self = this;
-        return def.then(function () {
-            return self._rpc(self.domainModel, "search_count")
-                .args([domain])
-                .withContext(self.record.getContext({fieldName: self.name}))
-                .exec()
-                .then(function (data) {
-                    self._isValidForModel = true;
-                    return data;
-                }, function (error, e) {
-                    e.preventDefault();
-                    self._isValidForModel = false;
-                })
-                .always(self._replaceContent.bind(self));
-        });
+        // ... then replace the other content (matched records, etc)
+        return def.then(this._replaceContent.bind(this));
     },
     /**
      * Render the field DOM except for the domain selector part. The full field
@@ -1318,16 +1303,15 @@ var FieldDomain = AbstractField.extend({
      * followed by other content. This other content is handled by this method.
      *
      * @private
-     * @param {integer} [nbRecords=0] - The number of records the domain matches
      */
-    _replaceContent: function (nbRecords) {
+    _replaceContent: function () {
         if (this._$content) {
             this._$content.remove();
         }
         this._$content = $(qweb.render("FieldDomain.content", {
-            hasModel: !!this.domainModel,
+            hasModel: !!this._domainModel,
             isValid: !!this._isValidForModel,
-            nbRecords: nbRecords || 0,
+            nbRecords: this.record.specialData[this.name].nbRecords || 0,
             inDialogEdit: this.inDialog && this.mode === "edit",
         }));
         this._$content.appendTo(this.$el);
@@ -1335,28 +1319,30 @@ var FieldDomain = AbstractField.extend({
     /**
      * @override _reset from AbstractField
      * Check if the model the field works with has (to be) changed.
+     *
+     * @private
      */
     _reset: function () {
         this._super.apply(this, arguments);
-        var oldDomainModel = this.domainModel;
-        this._initModel();
-        if (this.domainSelector && this.domainModel !== oldDomainModel) {
+        var oldDomainModel = this._domainModel;
+        this._setState();
+        if (this.domainSelector && this._domainModel !== oldDomainModel) {
             // If the model has changed, destroy the current domain selector
             this.domainSelector.destroy();
             this.domainSelector = null;
         }
     },
     /**
-     * Checks the model the field must work with. It is either directly given
-     * in the field option or it is the value of another field in the view.
+     * Sets the model the field must work with and whether or not the current
+     * domain value is valid for this particular model. This is inferred from
+     * the received special data.
      *
      * @private
      */
-    _initModel: function () {
-        this.domainModel = this.modelOption;
-        if (this.recordData.hasOwnProperty(this.domainModel)) {
-            this.domainModel = this.recordData[this.domainModel];
-        }
+    _setState: function () {
+        var specialData = this.record.specialData[this.name];
+        this._domainModel = specialData.model;
+        this._isValidForModel = (specialData.nbRecords !== false);
     },
 
     //--------------------------------------------------------------------------
@@ -1373,7 +1359,7 @@ var FieldDomain = AbstractField.extend({
         e.preventDefault();
         new view_dialogs.SelectCreateDialog(this, {
             title: _t("Selected records"),
-            res_model: this.domainModel,
+            res_model: this._domainModel,
             domain: this.value || "[]",
             no_create: true,
             readonly: true,
@@ -1388,7 +1374,7 @@ var FieldDomain = AbstractField.extend({
      */
     _onDialogEditButtonClick: function (e) {
         e.preventDefault();
-        new DomainSelectorDialog(this, this.domainModel, this.value || "[]", {
+        new DomainSelectorDialog(this, this._domainModel, this.value || "[]", {
             readonly: this.mode === "readonly",
             filters: this.fsFilters,
             debugMode: session.debug,
