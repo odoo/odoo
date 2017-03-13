@@ -25,16 +25,16 @@
       </t>
     </t>
     <t t-jquery="tbody tr.paymentline.selected">
-      this.removeAttr("class");
-      this.attr('t-attf-class', 'paymentline selected #{line.mercury_swipe_pending ? "o_pos_mercury_swipe_pending" : ""}');
+      this.removeAttr('class');
+      this.attr('t-attf-class', 'paymentline selected #{line.mercury_swipe_pending ? \'o_pos_mercury_swipe_pending\' : \'\'}');
     </t>
     <t t-jquery="tbody tr.paymentline[t-att-data-cid*='line.cid']">
-      this.removeAttr("class");
-      this.attr('t-attf-class', 'paymentline #{line.mercury_swipe_pending ? "o_pos_mercury_swipe_pending" : ""}');
+      this.removeAttr('class');
+      this.attr('t-attf-class', 'paymentline #{line.mercury_swipe_pending ? \'o_pos_mercury_swipe_pending\' : \'\'}');
     </t>
     <t t-jquery="tbody tr td.col-tendered.edit">
-      this.removeAttr("class");
-      this.attr('t-attf-class', 'col-tendered edit #{line.mercury_swipe_pending ? "o_pos_mercury_swipe_pending" : ""}');
+      this.removeAttr('class');
+      this.attr('t-attf-class', 'col-tendered edit #{line.mercury_swipe_pending ? \'o_pos_mercury_swipe_pending\' : \'\'}');
     </t>
   </t>
 
