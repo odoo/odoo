@@ -572,7 +572,7 @@ class ResourceCalendar(models.Model):
         backwards = (days < 0)
         intervals = []
         planned_days, iterations = 0, 0
-        current_datetime = day_dt.replace(hour=0, minute=0, second=0)
+        current_datetime = day_dt.replace(hour=0, minute=0, second=0, microsecond=0)
 
         while planned_days < abs(days) and iterations < 100:
             working_intervals = self._get_day_work_intervals(

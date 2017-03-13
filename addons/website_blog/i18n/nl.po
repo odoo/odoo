@@ -6,13 +6,14 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,20 +42,22 @@ msgid ""
 "(Un)archiving a blog automatically (un)archives its posts. Do you want to "
 "proceed?"
 msgstr ""
+"(On)archiveren van een blog (on)archiveert automatisch de berichten. Wilt u "
+"verder gaan?"
 
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:53
 #, python-format
-msgid "<b>Click on Save</b> to record yoru changes."
-msgstr ""
+msgid "<b>Click on Save</b> to record your changes."
+msgstr "<b>Klik op opslaan</b>om uw wijzingen op te slaan."
 
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:69
 #, python-format
 msgid "<b>Publish your blog post</b> to make it visible to your visitors."
-msgstr ""
+msgstr "<b>Publiceer uw blog</b> om het zichtbaar te maken voor uw bezoekers."
 
 #. module: website_blog
 #. openerp-web
@@ -64,6 +67,8 @@ msgid ""
 "<b>That's it, your blog post is published!</b> Discover more features "
 "through the <i>Customize</i> menu."
 msgstr ""
+"<b>Dat is het. Je blog is gepubliceerd!</b> Ontdek meer mogelijkheden in het"
+" <i>Wijzigen</i> menu."
 
 #. module: website_blog
 #. openerp-web
@@ -74,6 +79,10 @@ msgid ""
 " image or table, set bold or italic, etc. Drag and drop building blocks for "
 "more graphical blogs."
 msgstr ""
+"<b>Schrijf hier uw verhaal.</b>Gebruik de bovenste toolbar om uw tekst te "
+"stijlen: voeg een afbeelding of tabel toe, stel vetgedrukt of schuingedrukt "
+"in, enz. Sleep de bouwstenen op de pagina's en laat ze los voor meer "
+"grafische blogs."
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
@@ -221,14 +230,16 @@ msgstr "Kies een afbeelding uit de bibliotheek."
 #. openerp-web
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:30
 #, python-format
-msgid "Clich here to change your post cover."
-msgstr ""
+msgid "Click here to change your post cover."
+msgstr "Klik hier om uw afbeelding te wijzigen."
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "Click on \"Content\" on the top menu to write your first blog post."
+msgid ""
+"Click on \"New Page\" in the top-right corner to write your first blog post."
 msgstr ""
-"Klik op \"inhoud\" in het bovenmenu om uw eerste blogbericht te schrijven."
+"Klik op \"Nieuwe pagina\" in het rechter bovenmenu om uw eerste blogbericht "
+"te schrijven."
 
 #. module: website_blog
 #. openerp-web
@@ -287,24 +298,14 @@ msgid "Duplicate"
 msgstr "Dupliceer"
 
 #. module: website_blog
-#: model:ir.model,name:website_blog.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "E-mail samenstellen wizard"
-
-#. module: website_blog
-#: model:ir.model,name:website_blog.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "E-mail opmaak wizard voor enquête"
-
-#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Filter Color"
-msgstr ""
+msgstr "Filter kleur"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Filter Intensity"
-msgstr ""
+msgstr "Filter intensiteit"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -392,7 +393,7 @@ msgstr "Bericht"
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Mid screen"
-msgstr ""
+msgstr "Middenscherm"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_name
@@ -448,6 +449,8 @@ msgstr "Geen"
 #, python-format
 msgid "Once you have reviewed the content on mobile, close the preview."
 msgstr ""
+"Eenmaal u de inhoud heeft gecontroleerd op mobiel sluit u de "
+"voorbeeldweergave."
 
 #. module: website_blog
 #: model:blog.blog,name:website_blog.blog_blog_1
@@ -470,7 +473,7 @@ msgid "Posts"
 msgstr "Berichten"
 
 #. module: website_blog
-#: code:addons/website_blog/controllers/main.py:262
+#: code:addons/website_blog/controllers/main.py:269
 #, python-format
 msgid "Public user cannot post comments on blog post."
 msgstr "Publieke gebruiker kan geen reacties plaatsen op blogbericht."
@@ -533,7 +536,7 @@ msgstr "Selecteer dit menu item om een nieuw blogbericht aan te maken."
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:26
 #, python-format
 msgid "Set a blog post <b>cover</b>."
-msgstr ""
+msgstr "Voeg aan blog <b> een cover</b> toe."
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -553,7 +556,7 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/models/website_blog.py:100
+#: code:addons/website_blog/models/website_blog.py:120
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:52
 #, python-format
 msgid "Start writing here..."
@@ -646,6 +649,8 @@ msgstr "Naamloze post"
 #, python-format
 msgid "Use this icon to preview your blog post on <b>mobile devices</b>."
 msgstr ""
+"Gebruik dit icoon om uw blogberichten te bekijken op <b>mobiele "
+"toestellen</b>."
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_tag_form
@@ -661,12 +666,6 @@ msgid ""
 msgstr ""
 "Gebruikt om berichten weer te geven op een paragraaf gebaseerde chatter met "
 "behulp van een uniek pad."
-
-#. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:212
-#, python-format
-msgid "View Blog Post"
-msgstr "Bekijk blogbericht"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website
@@ -726,7 +725,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
 msgid "blog. Click here to access the blog :"
-msgstr ""
+msgstr "blog. Klik hier om de blog te bekijken:"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short

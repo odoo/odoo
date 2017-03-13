@@ -168,6 +168,21 @@ class TestQWebNS(TransactionCase):
 
         self.assertEquals(dedent_and_strip(view1.render()), dedent_and_strip(expected_result))
 
+    def test_render_static_xml_with_namespace_3(self):
+        expected_result = """
+            <cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd"></cfdi:Comprobante>
+        """
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">%s</t>
+            """ % expected_result
+        })
+
+        self.assertEquals(dedent_and_strip(view1.render()), dedent_and_strip(expected_result))
+
     def test_render_dynamic_xml_with_namespace_t_esc(self):
         """ Test that rendering a template containing a node having both an ns declaration and a t-esc attribute correctly
         handles the t-esc attribute and keep the ns declaration.
@@ -324,6 +339,36 @@ class TestQWebNS(TransactionCase):
         """
 
         self.assertEquals(dedent_and_strip(view1.render(dict(version_id=1.0))), dedent_and_strip(expected_result))
+
+    def test_render_static_xml_with_namespaced_attributes(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd">abc</cfdi:Comprobante>
+                </t>
+            """
+        })
+
+        expected_result = """<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd">abc</cfdi:Comprobante>"""
+
+        self.assertEquals(dedent_and_strip(view1.render()), dedent_and_strip(expected_result))
+
+    def test_render_dynamic_xml_with_namespaced_attributes(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd" t-esc="'abc'"/>
+                </t>
+            """
+        })
+
+        expected_result = """<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd">abc</cfdi:Comprobante>"""
+
+        self.assertEquals(dedent_and_strip(view1.render()), dedent_and_strip(expected_result))
 
     def test_render_static_xml_with_t_call(self):
         view1 = self.env['ir.ui.view'].create({

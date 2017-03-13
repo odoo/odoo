@@ -3,7 +3,7 @@
 # * website_payment
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
 # fausthuang <faust_huang@hotmail.com>, 2016
 # glovebx <ruinning@163.com>, 2016
@@ -12,10 +12,10 @@
 # Gary Wei <Gary.wei@elico-corp.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Gary Wei <Gary.wei@elico-corp.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -51,18 +51,6 @@ msgid "Configure payment acquirers"
 msgstr "配置付款托收方"
 
 #. module: website_payment
-#: model:ir.model.fields,field_description:website_payment.field_account_config_settings_default_acquirer
-msgid "Default Acquirer"
-msgstr "默认收单方"
-
-#. module: website_payment
-#: model:ir.model.fields,help:website_payment.field_account_config_settings_default_acquirer
-msgid ""
-"Default payment acquirer for website payments; your provider needs to be "
-"visible in the website."
-msgstr "网站付款的默认付款收单方;你的供应商需要在该网站上看到。"
-
-#. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Delete <span class=\"fa fa-long-arrow-right\"/>"
 msgstr "删除 <span class=\"fa fa-long-arrow-right\"/>"
@@ -88,7 +76,7 @@ msgid "Manage your payment methods"
 msgstr "管理您的付款方式"
 
 #. module: website_payment
-#: code:addons/website_payment/controllers/main.py:44
+#: code:addons/website_payment/controllers/main.py:45
 #, python-format
 msgid "Pay Now"
 msgstr "现在付款"
@@ -115,11 +103,6 @@ msgid "Payment Methods"
 msgstr "付款方法"
 
 #. module: website_payment
-#: model:ir.model,name:website_payment.model_payment_transaction
-msgid "Payment Transaction"
-msgstr "付款交易"
-
-#. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "Payment processed by"
 msgstr "付款被...处理过"
@@ -131,16 +114,6 @@ msgid "Reference"
 msgstr "参考"
 
 #. module: website_payment
-#: model:ir.model.fields,field_description:website_payment.field_payment_transaction_sale_order_id
-msgid "Sale Order"
-msgstr "销售订单"
-
-#. module: website_payment
-#: model:ir.model,name:website_payment.model_sale_order
-msgid "Sales Order"
-msgstr "销售订单"
-
-#. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "This transaction will be processed by"
 msgstr "本次交易将...被处理"
@@ -149,11 +122,6 @@ msgstr "本次交易将...被处理"
 #: model:ir.model,name:website_payment.model_website
 msgid "Website"
 msgstr "网站"
-
-#. module: website_payment
-#: model:ir.model,name:website_payment.model_account_config_settings
-msgid "account.config.settings"
-msgstr "会计.配置.设定"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm

@@ -1,19 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_action_rule
+# * base_automation
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Eric Geens <ericgeens@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,205 +22,259 @@ msgstr ""
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid "<b>Please choose the document type before setting the conditions.</b>"
-msgstr "<b>Kies aub het soort document voordat u de voorwaarden instelt.</b>"
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_website_published
+msgid ""
+"A code server action can be executed from the website, using a dedicated "
+"controller. The address is <base>/website/action/<website_path>. Set this "
+"field as True to allow users to run this action. If it is set to False the "
+"action cannot be run through the website."
+msgstr ""
+"Een code server actie kan worden uitgevoerd vanaf de website, met behulp van"
+" een speciale controller. Het adres is <base>/website/action/<website_path>."
+" Stel dit veld in als Waar om gebruikers in staat te stellen om deze actie "
+"uit te voeren. Als deze is ingesteld op Onwaar kan de de actie niet worden "
+"uitgevoerd via de website."
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_tree
-msgid "Action Rule"
-msgstr "Actieregel"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_help
+msgid "Action Description"
+msgstr "Actieomschrijving"
 
-#. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_name
+msgid "Action Name"
+msgstr "Naam actie"
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Action Rule Line Test"
 msgstr "Actieregel test"
 
-#. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Action Rule Test"
 msgstr "Actieregel test"
 
-#. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_base_action_rule
-msgid "Action Rules"
-msgstr "Actieregels"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_state
+msgid "Action To Do"
+msgstr "Actie Te doen"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid "Actions"
-msgstr "Acties"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_type
+msgid "Action Type"
+msgstr "Soort actie"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_active
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_active
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_menu_ir_values_id
+msgid "Action on Object"
+msgstr "Actie op object"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_active
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_active
 msgid "Active"
 msgstr "Actief"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_followers
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_channel_ids
+msgid "Add Channels"
+msgstr "Voeg kanalen toe"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_partner_ids
 msgid "Add Followers"
 msgstr "Volgers toevoegen"
 
-#. module: base_action_rule
-#: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
-#: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation
+msgid "Automated Action"
+msgstr "Geautomatiseerde ctie"
+
+#. module: base_automation
+#: model:ir.actions.act_window,name:base_automation.base_automation_act
+#: model:ir.ui.menu,name:base_automation.menu_base_automation_form
 msgid "Automated Actions"
 msgstr "Geautomatiseerde acties"
 
-#. module: base_action_rule
-#: selection:base.action.rule,kind:0
+#. module: base_automation
+#: model:ir.ui.view,arch_db:base_automation.view_base_automation_tree
+msgid "Automation"
+msgstr "Automatisering"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_website_published
+msgid "Available on the Website"
+msgstr "Beschikbaar op de website"
+
+#. module: base_automation
+#: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
+#: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
+#: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
+msgid "Base Action Rule: check and execute"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_model_id
+msgid "Base Model"
+msgstr "Base Model"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_model_id
+msgid "Base model on which the server action runs."
+msgstr "Basis model waarop de server loopt"
+
+#. module: base_automation
+#: selection:base.automation,trigger:0
 msgid "Based on Form Modification"
 msgstr "Gebaseerd op formulier wijziging"
 
-#. module: base_action_rule
-#: selection:base.action.rule,kind:0
+#. module: base_automation
+#: selection:base.automation,trigger:0
 msgid "Based on Timed Condition"
 msgstr "Gebaseerd op tijd"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_domain
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_domain
 msgid "Before Update Domain"
 msgstr "Voor domein update"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_id
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_id
 msgid "Before Update Filter"
 msgstr "Voor filter update"
 
-#. module: base_action_rule
-#: selection:base.action.rule.lead.test,state:0
+#. module: base_automation
+#: selection:base.automation.lead.test,state:0
 msgid "Cancelled"
 msgstr "Geannuleerd"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_lead_test_customer
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_lead_test_customer
 msgid "Check this box if this contact is a customer."
 msgstr "Vink dit aan indien deze relatie een klant is."
 
-#. module: base_action_rule
-#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
-msgid "Click to setup a new automated action rule."
-msgstr "Klik om een nieuwe automatische actieregel op te zetten."
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_child_ids
+msgid "Child Actions"
+msgstr "Onderliggende acties"
 
-#. module: base_action_rule
-#: selection:base.action.rule.lead.test,state:0
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_child_ids
+msgid ""
+"Child server actions that will be executed. Note that the last return "
+"returned action value will be used as global return value."
+msgstr ""
+"Onderliggende server acties welke worden uitgevoerd. Let op dat de laatste "
+"geretourneerde actie waarde wordt gebruikt als globale return waarde."
+
+#. module: base_automation
+#: model:ir.actions.act_window,help:base_automation.base_automation_act
+msgid "Click to setup a new automated automation."
+msgstr ""
+
+#. module: base_automation
+#: selection:base.automation.lead.test,state:0
 msgid "Closed"
 msgstr "Afgesloten"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
 msgstr "Komma gesplitste lijst van veldnamen die de onchange doen afgaan."
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid "Conditions"
-msgstr "Voorwaarden"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_id
+msgid "Create/Write Target Model"
+msgstr "Aanmaken/Schrijven doel model"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_uid
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_uid
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_uid
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_create_uid
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_create_uid
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_date
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_date
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_create_date
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_create_date
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
+#. module: base_automation
+#: selection:base.automation,trg_date_range_type:0
 msgid "Days"
 msgstr "Dagen"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid "Delay After Trigger Date"
-msgstr "Vertraging na activeerdatum"
-
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Vertraging na de aanroep datum. \n"
+"U kunt een negatieve waarde invoeren, indien u een actie wilt uitvoeren voor de aanroep datum, bijvoorbeeld een herinnering 15 minuten voor een afspraak."
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_range
 msgid "Delay after trigger date"
 msgstr "Vertraging na activeerdatum"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range_type
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_range_type
 msgid "Delay type"
 msgstr "Soort vertraging"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_display_name
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_display_name
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_display_name
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_display_name
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_display_name
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergave naam"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_domain
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_domain
 msgid "Domain"
 msgstr "Domein"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_server_action_ids
-msgid "Examples: email reminders, call object service, etc."
-msgstr ""
-"Voorbeelden: e-mail herinneringen, aanroepen van objecten service, etc."
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_template_id
+msgid "Email Template"
+msgstr "E-mailsjabloon"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid "Fields to Change"
-msgstr "Te veranderen velden"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_xml_id
+msgid "External ID"
+msgstr "Externe ID"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_id
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_id
 msgid "Filter"
 msgstr "Filter"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_sequence
-msgid "Gives the sequence order when displaying a list of rules."
-msgstr "Geeft de volgorde aan waarin de lijst van regels wordt weergegeven."
-
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid ""
-"Go to your \"Related Document Model\" page and set the filter parameters in "
-"the \"Search\" view (Example of filter based on Leads/Opportunities: "
-"Creation Date \"is equal to\" 01/01/2012)"
-msgstr ""
-"Ga naar de betreffende functionaliteit pagina en stel de filter parameters "
-"in, in de ¨Zoek¨ functie. (Voorbeeld van een filter op leads/prospects: "
-"Aanmaakdatum ¨is gelijk aan¨ 01/01/2012."
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
+#. module: base_automation
+#: selection:base.automation,trg_date_range_type:0
 msgid "Hours"
 msgstr "Uren"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_id
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_id
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_id
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_id
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_id
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_id
 msgid "ID"
 msgstr "ID"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_domain
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_id
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "ID van de actie indien gedefinieerd in een XML bestand"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_filter_domain
+#: model:ir.model.fields,help:base_automation.field_base_automation_filter_id
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
@@ -227,9 +282,9 @@ msgstr ""
 "Indien aanwezig, moet deze conditie zijn voldaan voordat de actie regel "
 "wordt uitgevoerd."
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_id
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_domain
+#: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_id
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
@@ -237,220 +292,271 @@ msgstr ""
 "Indien aanwezig, moet aan deze conditie zijn voldaan, voor het bijwerken van"
 " het record."
 
-#. module: base_action_rule
-#: selection:base.action.rule.lead.test,state:0
+#. module: base_automation
+#: selection:base.automation.lead.test,state:0
 msgid "In Progress"
-msgstr "In Behandeling"
+msgstr "In behandeling"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid ""
-"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
-" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
-"users\""
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_menu_ir_values_id
+msgid "IrValues entry of the related more menu entry action"
 msgstr ""
-"In dezelfde ¨Zoek¨ weergave, selecteer in het menu ¨Sla huidig filter op¨ en"
-" geef een naam in (Bijv. Aanmaakdatum 01/01/2012) en selecteer de optie "
-"¨Deel met alle gebruikers¨"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_customer
 msgid "Is a Customer"
 msgstr "Is een klant"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_date_action_last
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_date_action_last
 msgid "Last Action"
 msgstr "Laatste actie"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule___last_update
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test___last_update
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test___last_update
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation___last_update
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test___last_update
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test___last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_last_run
+msgid "Last Run"
+msgstr "Laatst uitgevoerd"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_write_uid
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_write_uid
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_date
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_date
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_date
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_write_date
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_write_date
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
-msgid "Last run"
-msgstr ""
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_lead_id
+msgid "Lead"
+msgstr "Lead"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
-msgid "Lead id"
-msgstr ""
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_line_ids
+msgid "Line"
+msgstr "Regel"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
-msgid "Line ids"
-msgstr "Regel Ids"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_link_field_id
+msgid "Link using field"
+msgstr "Koppel door gebruik van veld"
 
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
+#. module: base_automation
+#: selection:base.automation,trg_date_range_type:0
 msgid "Minutes"
 msgstr "Minuten"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_model
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_model_name
 msgid "Model"
 msgstr "Model"
 
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_name
+msgid "Model Description"
+msgstr "Omschrijving model"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_crud_model_id
+msgid ""
+"Model for record creation / update. Set this field only to specify a "
+"different model than the base model."
+msgstr ""
+"Model voor creatie / update van record. Stel dit veld enkel in voor een "
+"ander model dan de base module."
+
+#. module: base_automation
+#: selection:base.automation,trg_date_range_type:0
 msgid "Months"
 msgstr "Maanden"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_name
 msgid "Name"
 msgstr "Naam"
 
-#. module: base_action_rule
-#: selection:base.action.rule.lead.test,state:0
+#. module: base_automation
+#: selection:base.automation.lead.test,state:0
 msgid "New"
 msgstr "Nieuw"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_on_change_fields
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_on_change_fields
 msgid "On Change Fields Trigger"
 msgstr "On change veld trigger"
 
-#. module: base_action_rule
-#: selection:base.action.rule,kind:0
+#. module: base_automation
+#: selection:base.automation,trigger:0
 msgid "On Creation"
 msgstr "Bij aanmaken"
 
-#. module: base_action_rule
-#: selection:base.action.rule,kind:0
+#. module: base_automation
+#: selection:base.automation,trigger:0
 msgid "On Creation & Update"
 msgstr "Bij aanmaken & bijwerken"
 
-#. module: base_action_rule
-#: selection:base.action.rule,kind:0
+#. module: base_automation
+#: selection:base.automation,trigger:0
 msgid "On Deletion"
 msgstr "Bij het verwijderen"
 
-#. module: base_action_rule
-#: selection:base.action.rule,kind:0
+#. module: base_automation
+#: selection:base.automation,trigger:0
 msgid "On Update"
 msgstr "Bij bijwerken"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_partner_id
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_help
+msgid ""
+"Optional help text for the users with a description of the target view, such"
+" as its usage and purpose."
+msgstr ""
+"Optionele helptekst voor de gebruikers met een beschrijving van de weergave,"
+" zoals haar gebruik en bedoeling."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_partner_id
 msgid "Partner"
 msgstr "Relatie"
 
-#. module: base_action_rule
-#: selection:base.action.rule.lead.test,state:0
+#. module: base_automation
+#: selection:base.automation.lead.test,state:0
 msgid "Pending"
 msgstr "In afwachting"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_model_id
-msgid "Related Document Model"
-msgstr "Gerelateerde document model"
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_link_field_id
+msgid ""
+"Provide the field used to link the newly created recordon the record on used"
+" by the server action."
+msgstr ""
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_user_id
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_code
+msgid "Python Code"
+msgstr "Python Code"
+
+#. module: base_automation
+#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Remove Action"
+msgstr "Verwijder actie"
+
+#. module: base_automation
+#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Remove the contextual action related to this server action"
+msgstr "Verwijder de contextuele actie behorende bij deze server actie"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_user_id
 msgid "Responsible"
 msgstr "Verantwoordelijke"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_name
-msgid "Rule Name"
-msgstr "Regelnaam"
-
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid ""
-"Select when the action must be run, and choose records and/or timing "
-"conditions."
-msgstr ""
-"Selecteer wanneer de actie moet uitgevoerd worden, en kies items en/of "
-"tijdscondities."
-
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_sequence
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_sequence
 msgid "Sequence"
 msgstr "Reeks"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_server_action_ids
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_action_server_id
 msgid "Server Actions"
 msgstr "Server-acties"
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
-msgid "Server actions to run"
-msgstr "Uit te voeren server actie"
-
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_user_id
-msgid "Set Responsible"
-msgstr "Verantwoordelijke instellen"
-
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
+#. module: base_automation
+#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Set selection based on a search filter:"
-msgstr "Zet selectie gebaseerd op een zoekfilter:"
+msgstr "Stel selectie in gebaseerd op een zoekfilter:"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_state
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state
 msgid "Status"
 msgstr "Status"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_name
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_name
 msgid "Subject"
 msgstr "Onderwerp"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_website_url
+msgid "The full URL to access the server action through the website."
+msgstr "De volledige URL om toegang tot de server te krijgen via de website."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_id
 msgid "Trigger Date"
 msgstr "Activeringsdatum"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_calendar_id
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_trigger
+msgid "Trigger condition"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_state
+msgid ""
+"Type of server action. The following values are available:\n"
+"- 'Execute Python Code': a block of python code that will be executed\n"
+"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
+"- 'Write on a Record': update the values of a record\n"
+"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Add Followers': add followers to a record (available in Discuss)\n"
+"- 'Send Email': automatically send an email (available in email_template)"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_usage
+msgid "Usage"
+msgstr "Gebruik"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_calendar_id
 msgid "Use Calendar"
 msgstr "Gebruik kalender"
 
-#. module: base_action_rule
-#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+#. module: base_automation
+#: model:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
 "                various screens. Example: a lead created by a specific user may\n"
-"                be automatically set to a specific sales team, or an\n"
+"                be automatically set to a specific sales channel, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
-"Gebruik automatisch acties om automatisch acties te doen afgaan voor\n"
-"verschillende schermen. Bijvoorbeeld: een lead die aangemaakt wordt door een specifieke gebruiker\n"
-"mag automatisch toegewezen worden aan een specifiek verkoopteam, of een\n"
-"prospect die na 14 dagen nog de status in afwachting heeft kan\n"
-"een automatische herinnering e-mail doen afgaan."
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
-msgid "User id"
-msgstr "Gebruiker id"
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_user_id
+msgid "User"
+msgstr "Gebruiker"
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_fields_lines
+msgid "Value Mapping"
+msgstr "Waarde verdeling"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_website_path
+msgid "Website Path"
+msgstr "Website pad"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_website_url
+msgid "Website Url"
+msgstr "Website url"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_calendar_id
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
@@ -458,30 +564,43 @@ msgstr ""
 "Bij het berekenen van een dag gebaseerde conditie, is het mogelijk om een "
 "kalender te gebruiken gebaseerd op werkdagen."
 
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_sequence
+msgid ""
+"When dealing with multiple actions, the execution order is based on the "
+"sequence. Low number means high priority."
+msgstr ""
+"Wanneer u meerdere acties heeft zal de volgorde van uitvoering bepaald "
+"worden aan de hand van de sequentie. Een laag nummer betekent een hoge "
+"prioriteit."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Wanneer moet de conditie worden aangeroepen.\n"
+"Indien aanwezig wordt deze aangevinkt door de planner. Indien leeg, wordt deze aangevinkt bij het aanmaken en bijwerken."
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
-msgid "When to Run"
-msgstr "Wanneer uitvoeren"
-
-#. module: base_action_rule
-#: model:ir.model.fields,help:base_action_rule.field_base_action_rule_active
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_active
 msgid "When unchecked, the rule is hidden and will not be executed."
 msgstr ""
 "Wanneer uitgevinkt, is de regel onzichtbaar en zal deze niet worden "
 "uitgevoerd."
 
-#. module: base_action_rule
-#: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_code
 msgid ""
-"You may also use filters instead of choosing records. In order to create a "
-"new filter:"
+"Write Python code that the action will execute. Some variables are available"
+" for use; help about pyhon expression is given in the help tab."
 msgstr ""
-"U kan ook filters gebruiken in plaats van items te kiezen. Om een nieuwe "
-"filter aan te maken:"
+"Schrijf Python code die de actie uitvoert. Sommige variabelen zijn "
+"beschikbaar voor gebruik; help over Python expressies is gegeven in het hulp"
+" tabblad."
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_ir_actions_server
+msgid "ir.actions.server"
+msgstr "ir.actions.server"
