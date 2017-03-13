@@ -5,6 +5,8 @@
             <div class="row">
                 <form action="/mail/mailing/unsubscribe" method="POST" id="unsubscribe_form">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="res_id" t-att-value="res_id"/>
+                    <input type="hidden" name="token" t-att-value="token"/>
                     <input type="hidden" name="email" t-att-value="email"/>
                     <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
 
