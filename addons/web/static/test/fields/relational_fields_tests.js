@@ -94,18 +94,21 @@ QUnit.module('relational_fields', {
                     turtle_qux: {string: "Qux", type: "float", digits: [16,1], required: true, default: 1.5},
                     turtle_trululu: {string: "Trululu", type: "many2one", relation: 'partner'},
                     product_id: {string: "Product", type: "many2one", relation: 'product', required: true},
+                    partner_ids: {string: "Partner", type: "one2many", relation: 'partner'},
                 },
                 records: [{
                     id: 1,
                     display_name: "leonardo",
                     turtle_bar: true,
                     turtle_foo: "yop",
+                    partner_ids: [],
                 }, {
                     id: 2,
                     display_name: "donatello",
                     turtle_bar: true,
                     turtle_foo: "blip",
                     turtle_int: 9,
+                    partner_ids: [2,4],
                 }, {
                     id: 3,
                     display_name: "raphael",
@@ -113,6 +116,7 @@ QUnit.module('relational_fields', {
                     turtle_foo: "kawa",
                     turtle_int: 21,
                     turtle_qux: 9.8,
+                    partner_ids: [],
                 }],
             }
         };
@@ -1972,6 +1976,47 @@ QUnit.module('relational_fields', {
         });
 
         form.$('.oe_kanban_action_button').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many inception part 1', function (assert) {
+        assert.expect(2);
+
+        this.data.turtle.records[1].product_id = 37;
+        this.data.partner.records[0].turtles = [2,3];
+        this.data.partner.records[2].turtles = [1,3];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="int_field"/>' +
+                        '<field name="turtles">' +
+                            '<form string="Turtles">' +
+                                '<group>' +
+                                    '<field name="product_id"/>' +
+                                '</group>' +
+                            '</form>' +
+                            '<tree>' +
+                                '<field name="display_name"/>' +
+                                '<field name="partner_ids"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            'should display the 2 turtles');
+
+        form.$('.o_data_row:first').click();
+
+        assert.strictEqual($('.modal .o_form_field').text(), "xphone",
+            'should display the form view dialog with the many2one value');
 
         form.destroy();
     });
