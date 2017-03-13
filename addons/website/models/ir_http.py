@@ -196,9 +196,9 @@ class Http(models.AbstractModel):
                     if request.lang != request.website.default_lang_code:
                         path.insert(1, request.lang)
                     path = '/'.join(path) or '/'
+                    request.context = context
                     redirect = request.redirect(path + '?' + request.httprequest.query_string)
                     redirect.set_cookie('website_lang', request.lang)
-                    request.context = context
                     return redirect
                 elif url_lang:
                     request.uid = None
@@ -363,6 +363,8 @@ class ModelConverter(ir.ir_http.ModelConverter):
 
     def generate(self, query=None, args=None):
         Model = request.env[self.model]
+        if request.context.get('use_public_user'):
+            Model = Model.sudo(request.website.user_id.id)
         domain = safe_eval(self.domain, (args or {}).copy())
         if query:
             domain.append((Model._rec_name, 'ilike', '%' + query + '%'))

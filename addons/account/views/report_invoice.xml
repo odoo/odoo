@@ -171,6 +171,8 @@
     <xpath expr="//h2" position="replace">
         <h2>
             <span>Duplicate</span>
+            <span t-if="o.type == 'out_refund'">refund</span>
+            <span t-if="o.type == 'out_invoice'">invoice</span>
             <span t-field="o.number"/>
         </h2>
     </xpath>

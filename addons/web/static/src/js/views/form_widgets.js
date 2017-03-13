@@ -202,7 +202,7 @@ var KanbanSelection = common.AbstractField.extend({
     prepare_dropdown_selection: function() {
         var self = this;
         var _data = [];
-        var current_stage_id = self.view.datarecord.stage_id[0];
+        var current_stage_id = self.view.datarecord.stage_id && self.view.datarecord.stage_id[0];
         var stage_data = {
             id: current_stage_id,
             legend_normal: self.view.datarecord.legend_normal || undefined,
