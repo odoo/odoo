@@ -2469,6 +2469,33 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('clickable statusbar should change m2o fetching domain in edit mode', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.trululu.domain = "[('bar', '=', True)]";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<header><field name="trululu" widget="statusbar" clickable="True"/></header>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        var $buttons = form.$('.o_statusbar_status button:not(.dropdown-toggle)');
+        assert.strictEqual($buttons.length, 3, "there should be 3 status");
+        $buttons.last().click(); // (last is visually the first here (css))
+        assert.strictEqual(form.$('.o_statusbar_status button:not(.dropdown-toggle)').length, 2,
+            "there should be 2 status left");
+
+        form.destroy();
+    });
+
     QUnit.test('statusbar fold_field option and statusbar_visible attribute', function (assert) {
         assert.expect(2);
 
