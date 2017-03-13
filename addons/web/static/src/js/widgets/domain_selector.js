@@ -14,12 +14,12 @@ var _lt = core._lt;
 // "child_of", "parent_of", "like", "not like", "=like", "=ilike"
 // are only used if user entered them manually or if got from demo data
 var operator_mapping = {
-    "=": _lt("is equal to"),
-    "!=": _lt("is not equal to"),
-    ">": _lt("greater than"),
-    "<": _lt("less than"),
-    ">=": _lt("greater than or equal to"),
-    "<=": _lt("less than or equal to"),
+    "=": "=",
+    "!=": _lt("not"),
+    ">": ">",
+    "<": "<",
+    ">=": ">=",
+    "<=": "<=",
     "ilike": _lt("contains"),
     "not ilike": _lt("not contains"),
     "in": _lt("in"),
