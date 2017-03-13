@@ -147,7 +147,11 @@ var MentionManager = Widget.extend({
     proposition_navigation: function (keycode) {
         var $active = this.$('.o_mention_proposition.active');
         if (keycode === $.ui.keyCode.ENTER) { // selecting proposition
-            $active.click();
+            if ($active.length) {
+                $active.click();
+            } else {
+                this.reset_suggestions();
+            }
         } else { // navigation in propositions
             var $to;
             if (keycode === $.ui.keyCode.DOWN) {
@@ -158,6 +162,8 @@ var MentionManager = Widget.extend({
             if ($to.length) {
                 $active.removeClass('active');
                 $to.addClass('active');
+            } else if (!$active.length) {
+                this.$('.o_mention_proposition').first().addClass('active');
             }
         }
     },
@@ -308,8 +314,7 @@ var MentionManager = Widget.extend({
             }));
             this.$el
                 .addClass('open')
-                .find('ul').css("max-width", this.composer.$input.width())
-                .find('.o_mention_proposition').first().addClass('active');
+                .find('ul').css("max-width", this.composer.$input.width());
             this.open = true;
         } else {
             this.$el.removeClass('open');
