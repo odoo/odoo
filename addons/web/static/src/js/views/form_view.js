@@ -639,11 +639,11 @@ var FormView = View.extend(common.FieldManagerMixin, {
         }
     },
     disable_button: function () {
-        this.$('.oe_form_buttons').add(this.$buttons).find('button').addClass('o_disabled').prop('disabled', true);
+        this.$('.oe_form_buttons,.o_statusbar_buttons').add(this.$buttons).find('button').addClass('o_disabled').prop('disabled', true);
         this.is_disabled = true;
     },
     enable_button: function () {
-        this.$('.oe_form_buttons').add(this.$buttons).find('button.o_disabled').removeClass('o_disabled').prop('disabled', false);
+        this.$('.oe_form_buttons,.o_statusbar_buttons').add(this.$buttons).find('button.o_disabled').removeClass('o_disabled').prop('disabled', false);
         this.is_disabled = false;
     },
     on_button_save: function() {
@@ -658,8 +658,10 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 self.to_view_mode();
                 core.bus.trigger('do_reload_needaction');
                 core.bus.trigger('form_view_saved', self);
+            }).always(function() {
+                self.enable_button();
             });
-        }).always(function(){
+        }).fail(function(){
             self.enable_button();
         });
     },
