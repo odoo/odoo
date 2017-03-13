@@ -52,6 +52,19 @@ var DomainNode = Widget.extend({
             e.stopPropagation();
             this.trigger_up("add_node_clicked", {newBranch: !!$(e.currentTarget).data("branch"), child: this});
         },
+        /// Hovering a button, assign the according animation class to the parent
+        "mouseenter button": function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.$el.addClass('o_hover_btns');
+            this.$el.toggleClass('o_hover_add_node', $(e.target).hasClass('o_domain_add_node_button'));
+            this.$el.toggleClass('o_hover_add_inset_node', $(e.target).hasClass('o_domain_add_node_inset_button'));
+        },
+        "mouseleave button": function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.$el.removeClass('o_hover_btns o_hover_add_node o_hover_add_inset_node');
+        },
     },
     /// A DomainNode needs a model and domain to work. It can also receives a set of options
     /// @param model - a string with the model name
@@ -307,6 +320,7 @@ var DomainSelector = DomainTree.extend({
         // Display technical domain if in debug mode
         this.$debugInput = this.$(".o_domain_debug_input");
         if (this.$debugInput.length) {
+            this.$debugInput.prepend("<span>Console</span>");
             this.$debugInput.val(domainUtils.domainToString(this.getDomain()));
         }
     },

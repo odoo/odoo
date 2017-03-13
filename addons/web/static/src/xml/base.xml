@@ -686,10 +686,12 @@
 </div>
 
 <t t-name="DomainNode.ControlPanel">
-    <div t-if="!widget.readonly &amp;&amp; !widget.noControlPanel" class="btn-group btn-group-sm pull-right o_domain_node_control_panel">
-        <button class="btn btn-default o_domain_delete_node_button"><i class="fa fa-minus"/></button>
-        <button class="btn btn-default o_domain_add_node_button"><i class="fa fa-plus"/></button>
-        <button class="btn btn-default o_domain_add_node_button" data-branch="1"><i class="fa fa-ellipsis-h"/></button>
+    <div t-if="!widget.readonly &amp;&amp; !widget.noControlPanel" class="o_domain_node_control_panel">
+        <button class="btn o_domain_delete_node_button">&#215;</button>
+        <span>
+            <button class="btn o_domain_add_node_button"><i class="fa fa-plus-circle"/></button>
+            <button class="btn o_domain_add_node_button o_domain_add_node_inset_button" data-branch="1"><i class="fa fa-ellipsis-h"/></button>
+        </span>
     </div>
 </t>
 <t t-name="DomainTree.OperatorSelector">
@@ -727,8 +729,8 @@
 
         <div class="o_domain_node_children_container"/>
     </t>
-
-    <input t-if="widget.debug &amp;&amp; !widget.readonly" type="text" class="o_domain_debug_input mt16"/>
+    <div t-if="widget.debug &amp;&amp; !widget.readonly"  class="o_domain_debug_label small mt32"># Code editor</div>
+    <input t-if="widget.debug &amp;&amp; !widget.readonly" type="text" class="o_domain_debug_input"/>
 </div>
 <div t-name="DomainTree" class="o_domain_node o_domain_tree">
     <t t-call="DomainNode.ControlPanel"/>
