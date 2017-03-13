@@ -2110,6 +2110,27 @@ var BasicModel = AbstractModel.extend({
                     // add many2one records
                     self._parseServerData(list.fieldNames, dataPoint.fields, dataPoint.data);
                     list._cache[id] = dataPoint.id;
+
+                    _.each(list.fieldNames, function (fieldName) {
+                        var field = dataPoint.fields[fieldName];
+                        var val = dataPoint.data[fieldName];
+                        if (field.type === 'one2many' || field.type === 'many2many') {
+                            var r = self._makeDataPoint({
+                                count: val.length,
+                                fieldAttrs: field.fieldAttrs,
+                                fields: field.relatedFields,
+                                limit: field.limit,
+                                modelName: field.relation,
+                                res_ids: val,
+                                static: true,
+                                type: 'list',
+                                parentID: list.id,
+                                rawContext: field.context,
+                                relationField: field.relation_field,
+                            });
+                            dataPoint.data[fieldName] = r.id;
+                        }
+                    });
                 }
                 list.data.push(dataPoint.id);
             });
