@@ -15,10 +15,10 @@
 # Fabri Yohann <psn@fabri.pw>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Fabri Yohann <psn@fabri.pw>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgid ""
 "    <p>A password reset was requested for the Odoo account linked to this email.</p>\n"
 "    <p>You may change your password by following this link which will remain valid during 24 hours:</p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
-"        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\">Change password</a>\n"
+"        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Change password</a>\n"
 "    </div>\n"
 "    <p>If you do not expect this, you can safely ignore this email.</p>\n"
 "    <p>Best regards,</p>\n"
@@ -53,7 +53,7 @@ msgid ""
 "<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
 "    ${user.signature | safe}\n"
 "    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
-"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #a24689;\">Odoo</a></strong>\n"
+"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
@@ -80,14 +80,14 @@ msgid ""
 "        To accept the invitation, click on the following link:\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
-"         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\">Accept invitation to \"${object.company_id.name}\"</a>\n"
+"         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Accept invitation to \"${object.company_id.name}\"</a>\n"
 "    </div>\n"
 "    <p>Best regards,</p>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
 "    ${user.signature | safe}\n"
 "    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
-"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #a24689;\">Odoo</a></strong>\n"
+"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
@@ -122,6 +122,11 @@ msgid "Allow external users to sign up"
 msgstr "Autorise les utilisateurs externes à se connecter"
 
 #. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+msgid "Allow external users to sign up from Login page"
+msgstr ""
+
+#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:61
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
@@ -136,7 +141,7 @@ msgid "Another user is already registered using this email address."
 msgstr "Un autre utilisateur est déjà enregistré avec cette adresse courriel."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:110
 #, python-format
 msgid "Authentication Failed."
 msgstr "Authentification échouée."
@@ -183,20 +188,26 @@ msgid "Could not reset your password"
 msgstr "Impossible de réinitialiser votre mot de passe"
 
 #. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+msgid "Default Access Rights"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
 msgid "Enable password reset from Login page"
 msgstr ""
 "Permettre la réinitialisation du mot de passe depuis la page de connexion"
 
 #. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_uninvited
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
 msgid "If unchecked, only invited users may sign up."
 msgstr ""
 "Si la case est décochée, seules les utilisateurs invités pourront se "
 "connecter."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:91
+#: code:addons/auth_signup/controllers/main.py:90
 #, python-format
 msgid "Invalid signup token"
 msgstr "La session d'authentification est invalide"
@@ -215,6 +226,11 @@ msgstr "Partenaire"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Password"
 msgstr "Mot de passe"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+msgid "Password Reset"
+msgstr ""
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
@@ -251,6 +267,18 @@ msgid "Sign up"
 msgstr "S'enregistrer"
 
 #. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
+msgid "Signup Expiration"
+msgstr "Expiration de la session de connexion"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
+msgid "Signup Token"
+msgstr "Session de connexion"
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
 msgid "Signup Token Type"
@@ -269,18 +297,6 @@ msgid "Signup URL"
 msgstr "Url d'authentification"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
-msgid "Signup expiration"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
-msgid "Signup token"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
 msgstr "Statut"
@@ -297,11 +313,9 @@ msgid "The full URL to access the document through the website."
 msgstr "Le lien complet afin d'accéder au document à travers le site web."
 
 #. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
-msgid "This allows users to trigger a password reset from the Login page."
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+msgid "User Signup"
 msgstr ""
-"Permet à l'utilisateur de demander un changement de mot de passe depuis la "
-"page d'identification."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users

@@ -6,15 +6,19 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
-# Luis Martinez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Luis Martínez Ontalba <luismaront@gmail.com>, 2016
+# Eric Antones <eantones@users.noreply.github.com>, 2016
+# Galileo Sanchez <galileopy@gmail.com>, 2017
+# Antonio Trueba <atgayol@gmail.com>, 2017
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: Luis Martinez Ontalba <tecnisagra.ontalba@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +43,37 @@ msgstr "&amp;times;"
 msgid ""
 "<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
 "                                <span id=\"o_website_form_result\"/>"
+msgstr ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Enviar</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_config_settings_crm_default_team_id
+msgid "Default Sales Channel"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_team_id
+msgid "Default Sales Channels"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_config_settings_crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_user_id
+msgid "Default Salesperson"
+msgstr "Vendedor Predeterminado"
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_website_config_settings_crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website_crm_default_team_id
+msgid ""
+"Default sales channel for new leads created through the Contact Us form."
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_website_config_settings_crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_website_crm_default_user_id
+msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
 
 #. module: website_crm
@@ -83,6 +118,16 @@ msgid "Phone Number"
 msgstr "Nº teléfono"
 
 #. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.website_config_settings_view_form_inherit_website_crm
+msgid "Sales Channel"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.website_config_settings_view_form_inherit_website_crm
+msgid "Salesperson"
+msgstr "Comercial"
+
+#. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Subject"
 msgstr "Asunto"
@@ -103,6 +148,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "We will get back to you shortly."
 msgstr "Le contestaremos en breve."
+
+#. module: website_crm
+#: model:ir.model,name:website_crm.model_website
+msgid "Website"
+msgstr "Sitio web"
 
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
@@ -128,3 +178,8 @@ msgstr "Su pregunta"
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "Your message has been sent successfully."
 msgstr "Su mensaje se ha enviado correctamente."
+
+#. module: website_crm
+#: model:ir.model,name:website_crm.model_website_config_settings
+msgid "website.config.settings"
+msgstr "website.config.settings"

@@ -8,13 +8,14 @@
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:46
+#: code:addons/hr_payroll/models/hr_payroll.py:48
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -39,6 +40,13 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Wanneer een loonafschrift is aangemaakt is de status 'Concept'. \n"
+"\n"
+"* Wanneer een loonafschrift ter goedkeuring is ingediend, is de status 'Wachtend'. \n"
+"\n"
+"* Wanneer een loonafschrift is goedgekeurd, is de status 'Gereed'. \n"
+"\n"
+"* Wanneer een loonafschrift is geannuleerd, is de status 'Afgewezen'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -233,8 +241,14 @@ msgid "Cancel Payslip"
 msgstr "Loonafschrift annuleren"
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:240
+#, python-format
+msgid "Cannot cancel a payslip that is done."
+msgstr "Kan niet een loonstrook annuleren die voltooid is."
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9022
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7480
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr "Categorie"
@@ -561,7 +575,7 @@ msgid "Employees"
 msgstr "Werknemers"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:41
+#: code:addons/hr_payroll/models/hr_payroll.py:43
 #, python-format
 msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr "Fout! U kunt geen recursieve salarisstructuur aanmaken."
@@ -689,6 +703,10 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"Het wordt gebruikt in berekening voor percentage en vaste totaalbedrag. Voor"
+" bijvoorbeeld een regel van een maaltijdbon, met vast bedrag van 1 € per "
+"gewerkt dag, kan de hoeveelheid gedefinieerd worden als "
+"worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
@@ -774,6 +792,11 @@ msgid "Made Payment Order ? "
 msgstr "Betalingsopdracht uitgevoerd? "
 
 #. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_manager
+msgid "Manager"
+msgstr "Manager"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_max
 msgid "Maximum Range"
@@ -809,7 +832,7 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:321
+#: code:addons/hr_payroll/models/hr_payroll.py:325
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "Standaard werkdagen 100% betaald"
@@ -828,6 +851,11 @@ msgstr "Aantal dagen"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_hours
 msgid "Number of Hours"
 msgstr "Aantal uren"
+
+#. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_user
+msgid "Officer"
+msgstr "Functionaris"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -915,7 +943,7 @@ msgid "Payslip"
 msgstr "Loonafschrift"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:223
+#: code:addons/hr_payroll/models/hr_payroll.py:226
 #, python-format
 msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr "Loonstrook \"Datum van' moet voor 'Datum tot' liggen."
@@ -971,7 +999,7 @@ msgstr "Loonafschrift naam"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Run"
-msgstr ""
+msgstr "Loonafschrift run"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1100,7 +1128,7 @@ msgid "Refund"
 msgstr "Creditering"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:241
+#: code:addons/hr_payroll/models/hr_payroll.py:246
 #, python-format
 msgid "Refund: "
 msgstr "Credit: "
@@ -1171,8 +1199,8 @@ msgid "Salary Rules"
 msgstr "Salaris definities"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:546
-#: code:addons/hr_payroll/models/hr_payroll.py:593
+#: code:addons/hr_payroll/models/hr_payroll.py:552
+#: code:addons/hr_payroll/models/hr_payroll.py:600
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "Loonafschrift van %s voor %s"
@@ -1377,7 +1405,7 @@ msgid "Worked Days & Inputs"
 msgstr "Gewerkte dagen & ingaves"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:768
+#: code:addons/hr_payroll/models/hr_payroll.py:775
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
@@ -1385,31 +1413,31 @@ msgstr ""
 "(%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:774
+#: code:addons/hr_payroll/models/hr_payroll.py:781
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "Foutieve python code gedefinieerd voor salarisregel %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:797
+#: code:addons/hr_payroll/models/hr_payroll.py:804
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "Foutieve python voorwaarde gedefinieerd voor salarisregel %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:761
+#: code:addons/hr_payroll/models/hr_payroll.py:768
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr "Verkeerd aantal gedefinieerd voor salarisregel %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:791
+#: code:addons/hr_payroll/models/hr_payroll.py:798
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr "Verkeerde bereikvoorwaarde gedefinieerd voor salarisregel %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:266
+#: code:addons/hr_payroll/models/hr_payroll.py:270
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
@@ -1422,10 +1450,11 @@ msgid "You must select employee(s) to generate payslip(s)."
 msgstr "U dient werknemer(s) te selecteren om loonafschrift(en) te genereren."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:836
+#: code:addons/hr_payroll/models/hr_payroll.py:843
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr ""
+"U dient een contract in te stellen om een loonafschrift lijn te maken."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings

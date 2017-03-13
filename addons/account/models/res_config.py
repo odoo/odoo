@@ -105,3 +105,14 @@ class AccountConfigSettings(models.TransientModel):
     def onchange_account_yodlee(self):
         if self.module_account_yodlee:
             self.module_account_plaid = True
+
+    @api.model
+    def create(self, values):
+        # Optimisation purpose, saving a res_config even without changing any values will trigger the write of all
+        # related values, including the currency_id field on res_company. This in turn will trigger the recomputation
+        # of account_move_line related field company_currency_id which can be slow depending on the number of entries 
+        # in the database. Thus, if we do not explicitely change the currency_id, we should not write it on the company
+        if ('company_id' in values and 'currency_id' in values):
+            if self.env['res.company'].browse(values.get('company_id')).currency_id.id == values.get('currency_id'):
+                values.pop('currency_id')
+        return super(AccountConfigSettings, self).create(values)

@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
-# grazziano <g.negocios@outlook.com.br>, 2016
+# grazziano <gra.negocia@gmail.com>, 2016
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 14:07+0000\n"
-"Last-Translator: grazziano <g.negocios@outlook.com.br>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,18 @@ msgid "Channel"
 msgstr "Canal"
 
 #. module: bus
+#: model:ir.model.fields,help:bus.field_res_users_country_enforce_cities
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_city_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
 msgid "Create date"
 msgstr "Data de Criação"
@@ -52,6 +65,16 @@ msgid "Display Name"
 msgstr "Nome para Exibição"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number2
+msgid "Door Number"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_country_enforce_cities
+msgid "Enforce Cities"
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
 msgid "Geo Latitude"
 msgstr "Latitude Geográfica"
@@ -64,6 +87,11 @@ msgstr "Longitude Geográfica"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_date_localization
 msgid "Geolocation Date"
+msgstr "Data de Geolocalização"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number
+msgid "House Number"
 msgstr ""
 
 #. module: bus
@@ -124,6 +152,11 @@ msgstr "Online"
 #: model:ir.model,name:bus.model_res_partner
 msgid "Partner"
 msgstr "Parceiro"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_name
+msgid "Street Name"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence

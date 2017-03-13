@@ -3,16 +3,20 @@
 # * delivery
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# Joray <13637815@qq.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# 苏州远鼎 <tiexinliu@126.com>, 2016
+# Ted Wang <feiyuwang2012@gmail.com>, 2016
+# Xiaoming Deng <sumandeng@hotmail.com>, 2016
+# Talway <9010446@qq.com>, 2017
+# Joray <13637815@qq.com>, 2017
+# Yuan Xulei <hi@yxl.name>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Joray <13637815@qq.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Yuan Xulei <hi@yxl.name>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +52,7 @@ msgstr "# 制造订单"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
 msgid "# Product Variants"
-msgstr "# 产品变型"
+msgstr "# 产品变体"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
@@ -68,9 +72,12 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent\">\n"
+"                    升级到 Odoo企业版可以获取更多的提供商。\n"
+"                </p>"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "<span>kg</span>"
 msgstr "<span>kg</span>"
 
@@ -90,9 +97,9 @@ msgstr "<strong>重量</strong>"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
 msgid ""
 "A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
+" This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr "一个传达给客户的、关于该产品的说明。这个描述将会拷贝到每一个销售单，交货单和客户发票/退款单。"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
@@ -127,7 +134,7 @@ msgstr "需要行动"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "行动在验证交货的订单"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -149,7 +156,7 @@ msgstr "免费送货的订单金额，以公司本位币显示"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "已归档"
+msgstr "已存档"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
@@ -252,7 +259,7 @@ msgstr "销售"
 msgid ""
 "Can be changed during the 'put in pack' to adjust the weight of the "
 "shipping."
-msgstr ""
+msgstr "可以在“加入包装”时调节航运的重量。"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -322,14 +329,14 @@ msgid "Cost"
 msgstr "成本"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
+msgid "Cost Method"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_standard_price
 msgid "Cost Price"
 msgstr "成本价"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
-msgid "Cost method"
-msgstr "成本方法"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_standard_price
@@ -352,17 +359,19 @@ msgstr "国家"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_project_id
 msgid ""
-"Create a task under this project on sale order validation. This setting must"
-" be set for each company."
+"Create a task under this project on sales order validation. This setting "
+"must be set for each company."
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_date
 msgid "Created on"
@@ -395,7 +404,7 @@ msgstr "客户提前期"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
 msgid "Customer Ref"
-msgstr "客户参考"
+msgstr "客户单号"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -420,7 +429,7 @@ msgstr "会籍到哪一天结束"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_id
 msgid "Default Unit of Measure used for all stock operation."
-msgstr "所有库存操作的默认计量单位"
+msgstr "所有库存作业的默认计量单位"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_po_id
@@ -449,7 +458,7 @@ msgstr "交货承运商"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "交货信息"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -461,8 +470,20 @@ msgstr "交货方法"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
+#: model:ir.ui.view,arch_db:delivery.sale_config_settings_view_form_inherit_delivery
 msgid "Delivery Methods"
 msgstr "交货方式"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_choose_delivery_package
+msgid "Delivery Package Selection Wizard"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_delivery_packaging_id
+#: model:ir.ui.menu,name:delivery.menu_delivery_packagings
+msgid "Delivery Packaging"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
@@ -487,9 +508,19 @@ msgid "Description"
 msgstr "说明"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_pickingout
+msgid "Description on Delivery Orders"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
 msgid "Description on Picking"
 msgstr "分拣说明"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_pickingin
+msgid "Description on Receptions"
+msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -509,11 +540,12 @@ msgid "Determine the display order"
 msgstr "决定显示顺序"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Discard"
 msgstr "舍弃"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
 msgid "Display Name"
@@ -594,7 +626,7 @@ msgstr "如果你打算根据发货的实际数量开票的话，就填写这一
 msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
-msgstr ""
+msgstr "填写此表，您可以根据您的客户的送货地址进行过滤。"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -630,7 +662,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"预测数量(计算为 在手数量 - 出货 + 进货) \n"
+"预测数量(计算为 在手数量 - 出向 + 入向) \n"
 "对于单一库存位置来说，这包括了存储在这个位置及其子位置的货物。\n"
 "对于单一仓库来说，这包括了存储在这个仓库的库存位置及其子位置的货物。\n"
 "否则，这包括存储在任何“内部”类型位置的货物。"
@@ -658,10 +690,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
-msgid ""
-"Gives the different ways to package the same product. This has no impact on "
-"the picking order and is mainly used if you use the EDI module."
-msgstr "指定同一产品的多种包装方式。此处与分拣单并不冲突且主要用于 EDI 模块。"
+msgid "Gives the different ways to package the same product."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
@@ -687,9 +717,10 @@ msgstr "高度"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr ""
+msgstr "高度必须是正数。"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_id
 msgid "ID"
@@ -715,7 +746,7 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
-"如果一个产品能够被永久的估值，系统将会自动创建与标识为特别“成本方法”的带有产品价格的库存移动一致的日记账分录，在产品种类上设置的库存变变更科目的余额将代表目前的库存价值，而入库科目和出库科目将会是产品出入库的对应科目"
+"如果为产品启用永续计价，系统将自动创建与库存移动相对应的日记帐分录，具有“成本计算方法”指定的产品价格。产品类别上设置的库存计价科目将代表当前库存值，而库存输入和库存输出科目将持有入向产品和出向产品的对应凭证。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
@@ -736,21 +767,21 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "产品变型的图像(如果为False,采用大尺寸图像模板). 它保持图像的宽高比,并自动调整图像大小为1024 x 1024px."
+msgstr "产品变体的图像(如果为False,采用大尺寸图像模板). 它保持图像的宽高比,并自动调整图像大小为1024 x 1024px."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "产品变型的图像(如果为Flase,采用产品模板的中尺寸图像)"
+msgstr "产品变体的图像(如果为Flase,采用产品模板的中尺寸图像)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr "产品变型的图像(如果为Flase,采用产品模板的小尺寸图像)"
+msgstr "产品变体的图像(如果为Flase,采用产品模板的小尺寸图像)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
@@ -760,17 +791,17 @@ msgstr "收入科目"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_incoming_qty
 msgid "Incoming"
-msgstr "将要来的"
+msgstr "入向"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "增加更多供应商"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "基础等级"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
@@ -801,7 +832,7 @@ msgstr "库存计价"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr "发货发票"
+msgstr "基于交货单开票"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
@@ -835,18 +866,21 @@ msgid "Last Message Date"
 msgstr "最后消息日期"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package___last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_write_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_date
 msgid "Last Updated on"
@@ -860,7 +894,7 @@ msgstr "长度"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Length must be positive"
-msgstr ""
+msgstr "长度必须为正"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
@@ -868,21 +902,16 @@ msgid "Location"
 msgstr "地点"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
-msgid "Logistical Units"
-msgstr "逻辑单位"
-
-#. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Manage Package Type"
-msgstr ""
+msgstr "管理封装类型"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
 msgid ""
 "Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sale order validation and track the work hours."
+"Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 
 #. module: delivery
@@ -913,12 +942,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "最大重量"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "最大重量必须是正数"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
@@ -928,7 +957,7 @@ msgstr "最大值"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr ""
+msgstr "可交付最大重量包装。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
@@ -1015,6 +1044,33 @@ msgid "Number of Packages"
 msgstr "包裹件数"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be"
+" computed on the lot/serial number."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "需要行动消息的数量"
@@ -1046,24 +1102,24 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty
 msgid "Outgoing"
-msgstr "出局"
+msgstr "出向"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
 msgstr "包裹"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
 msgid "Package Code"
-msgstr ""
+msgstr "封装代码"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:35
+#: code:addons/delivery/models/stock_picking.py:36
 #: code:addons/delivery/models/stock_picking.py:128
 #, python-format
 msgid "Package Details"
-msgstr ""
+msgstr "包装明细行"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1072,7 +1128,13 @@ msgstr "包裹"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
 msgid "Packaging"
+msgstr "包装"
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
+msgid "Packagings"
 msgstr "包装"
 
 #. module: delivery
@@ -1119,14 +1181,14 @@ msgid "Pricelist"
 msgstr "价格表"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
+msgid "Pricelist Item"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
 msgid "Pricelist Items"
 msgstr "价格表项目"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
-msgid "Pricelist item ids"
-msgstr "价格表项目 ids "
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1142,6 +1204,11 @@ msgstr "定价规则"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_procurement
 msgid "Procurement Location"
 msgstr "补货位置"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_id
+msgid "Product"
+msgstr "产品"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_alert_time
@@ -1276,19 +1343,19 @@ msgid "Receipt"
 msgstr "收货"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
-msgid "Reordering Rules"
-msgstr "订货规则"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
-msgid "Reordering max qty"
-msgstr "订货最大数量"
+msgid "Reordering Max Qty"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
-msgid "Reordering min qty"
-msgstr "订货最小数量"
+msgid "Reordering Min Qty"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
+msgid "Reordering Rules"
+msgstr "订货规则"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -1336,7 +1403,7 @@ msgid "Sales Order Line"
 msgstr "销售订单行"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Save"
 msgstr "保存"
 
@@ -1390,8 +1457,8 @@ msgstr ""
 #: code:addons/delivery/models/stock_picking.py:147
 #, python-format
 msgid ""
-"Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost:"
-" %.2f %s"
+"Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
+"%.2f %s"
 msgstr ""
 
 #. module: delivery
@@ -1400,9 +1467,10 @@ msgid "Shipping Cost"
 msgstr "发货成本"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_shipping_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "发货重量"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1427,12 +1495,15 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"标准价格：成本价格在特定时期结束时（通常每年一次）手动更新\n"
+"平均价格：成本价格在每次进货时重新计算，并用于产品计价\n"
+"实际价格：显示的成本价格是最后一个出向产品的价格（例如，使用在库存损失的情况）。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
-msgstr ""
+msgstr "国际航运和货物申报代码规范"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1446,6 +1517,7 @@ msgstr "仓库进货科目"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
 msgid "Stock Move"
 msgstr "库存移动"
 
@@ -1455,14 +1527,14 @@ msgid "Stock Output Account"
 msgstr "仓库出货科目"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
-msgid "Stock move ids"
-msgstr "仓库移动 ids"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
+msgid "Stock Quant"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
-msgid "Stock quant ids"
-msgstr "库存份ids "
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
+msgid "Stock Quant Package"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
@@ -1501,7 +1573,7 @@ msgstr "供应商发票中数量总和"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_pricelist_id
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
-msgstr ""
+msgstr "技术字段。用于在价格表搜索，未存储在数据库中。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
@@ -1528,7 +1600,7 @@ msgstr "只能对草稿状态的订单增加交货明细"
 msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
-msgstr ""
+msgstr "销售价格是由产品模板管理。点击“变体价格”按钮来设置附加属性的价格。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
@@ -1581,7 +1653,7 @@ msgstr "这个交货方式会用在当从分拣开发票时。"
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr "该字段保存产品的图像，限制图像大小须小于 1024x1024px."
+msgstr "该字段保存产品变体的图像，限制图像大小须小于 1024x1024px."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_price_extra
@@ -1591,7 +1663,7 @@ msgstr "这是所有属性额外价格的总和"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "这个百分比将被添加到航运价格。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
@@ -1622,7 +1694,7 @@ msgstr "这些类别用于为POS的类似产品分组。"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_to_weight
 msgid "To Weigh With Scale"
-msgstr "称重"
+msgstr "用秤称重"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
@@ -1658,7 +1730,7 @@ msgstr "追踪"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "跟踪参考"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1720,12 +1792,12 @@ msgstr "可变系数"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_variant
 msgid "Variant Image"
-msgstr "变型图像"
+msgstr "变体图像"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_extra
 msgid "Variant Price Extra"
-msgstr "变型价格额外"
+msgstr "变体价格额外"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
@@ -1775,43 +1847,12 @@ msgstr "重量* 体积"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
 msgid "Weight Unit of Measure"
-msgstr ""
+msgstr "测量的重量单位"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr "此处表明当新序列号生成时，商品生成提醒前的天数。"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"此处表明当新序列号生成时，商品变危险以至于不能使用前的天数。When a new a Serial Number is issued, this is "
-"the number of days before the goods may become dangerous and must not be "
-"consumed."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr "此处表明当新序列号生成时，商品需要提前多少天从库存移除。"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr "此处表明当新序列号生成时，商品变质前（未变危险）的天数。"
+msgstr "航运重量"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_input
@@ -1820,7 +1861,8 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr "在进行实时库存估值时，除非为源库位指定一个库存核算科目，否则所有的入库调拨日记账明细将登入这科目。当没在产品设定时，使用产品类别的设定。"
+msgstr ""
+"在进行实时库存估值时，除非为源库位指定一个库存核算科目，否则所有的入向库存移动的日记账项目将登帐到这科目。当没在产品设定时，使用产品类别的设定。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
@@ -1829,7 +1871,9 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr "在进行实时估值时，除非对目标库位指定一个核算科目否则出库调拨日记账分录将登入这个科目。当产品没设定时，它默认继承产品的类别的设定。"
+msgstr ""
+"在进行实时库存计价时，除非在目标位置上设置了特定的计价科目，否则所有出向库存移动的对应日记帐项目将登帐到此科目。 "
+"当产品上没有设置时，将使用产品类别中的那个。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
@@ -1847,7 +1891,7 @@ msgstr "宽度"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Width must be positive"
-msgstr ""
+msgstr "宽度必须是正数"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:187
@@ -1856,6 +1900,8 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"您在同一批货出货不同的包装类型。\n"
+"包装类型：％s"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:163

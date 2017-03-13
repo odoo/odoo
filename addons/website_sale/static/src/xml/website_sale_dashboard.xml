@@ -23,9 +23,9 @@
                 </a>
                 <t t-set="vignette_nbr" t-value="vignette_nbr + 1"/>
             </div>
-            <div t-if="widget.dashboards_data.sales.summary.order_carts_abandonned_count" class="o_inner_box o_main o_box_item" title="Send a recovery email to visitors who haven't completed their order.">
-                <a href="#" class="o_dashboard_action" name="website_sale.action_abandonned_orders_ecommerce">
-                    <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_carts_abandonned_count"/></div>
+            <div t-if="widget.dashboards_data.sales.summary.order_carts_abandoned_count" class="o_inner_box o_main o_box_item" title="Send a recovery email to visitors who haven't completed their order.">
+                <a href="#" class="o_dashboard_action" name="website_sale.action_abandoned_orders_ecommerce">
+                    <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_carts_abandoned_count"/></div>
                     Abandoned Carts
                 </a>
                 <t t-set="vignette_nbr" t-value="vignette_nbr + 1"/>

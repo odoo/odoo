@@ -8,10 +8,10 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid ""
+"<span class=\"label label-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
 msgid "<span class=\"pull-right\">Expiry Date</span>"
 msgstr "<span class=\"pull-right\">Verval datum</span>"
+
+#. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span>days</span>"
+msgstr "<span>dagen</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
@@ -46,14 +58,53 @@ msgid "End of Life Date"
 msgstr "Einde levensduur datum"
 
 #. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration alerts"
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
 msgstr "Partij/Serienummer"
 
 #. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+"Aantal dagen voordat een waarschuwing getoond moet worden op het "
+"lot/serienummer."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be"
+" computed on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
 msgid "Product Alert Time"
 msgstr "Product signalering tijd"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_product_expiry_alert
+msgid "Product Expiry Alert"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_life_time
@@ -85,6 +136,11 @@ msgstr "Aantallen"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant_removal_date
 msgid "Removal Date"
 msgstr "Verwijderdatum"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_product_expiry_alert
+msgid "The Alert Date has been reached."
+msgstr "De waarschuwingsdatum is bereikt."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_alert_date
@@ -122,41 +178,3 @@ msgid ""
 msgstr ""
 "Dit de de datum waarop de producten met dit partijnummer in kwaliteit "
 "achteruit gaan, maar nog niet gevaarlijk zijn voor de volksgezondheid."
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-"Wanneer een nieuw partijnummer wordt aangemaakt, is dit het het aantal dagen"
-" voordat een waarschuwing wordt gegeven."
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen "
-"voordat de producten gevaarlijk zijn en niet meer mogen worden geconsumeerd."
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen "
-"waarop de producten met dit partijnummer moeten worden verwijderd van de "
-"voorraad."
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen "
-"waarop de producten verminderen in kwaliteit, maar nog niet gevaarlijk zijn "
-"voor de volksgezondheid."

@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -69,7 +69,7 @@ msgid "Activity"
 msgstr "Tevékenység"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:376
+#: code:addons/marketing_campaign/models/marketing_campaign.py:394
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "Után %(interval_nbr)d %(interval_type)s"
@@ -110,7 +110,7 @@ msgid "Automatic"
 msgstr "Automatikus"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:375
+#: code:addons/marketing_campaign/models/marketing_campaign.py:393
 #, python-format
 msgid "Automatic transition"
 msgstr "Automatikus átállás"
@@ -235,7 +235,7 @@ msgid "Condition"
 msgstr "Feltétel"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:377
+#: code:addons/marketing_campaign/models/marketing_campaign.py:395
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -348,7 +348,7 @@ msgid "Draft"
 msgstr "Tervezet"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:123
+#: code:addons/marketing_campaign/models/marketing_campaign.py:127
 #, python-format
 msgid "Duplicating campaigns is not supported."
 msgstr "Kampány sokszorozás nem támogatott művelet."
@@ -359,7 +359,7 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:578
+#: code:addons/marketing_campaign/models/marketing_campaign.py:596
 #, python-format
 msgid "Email Preview"
 msgstr "E-mail előnézet"
@@ -368,11 +368,6 @@ msgstr "E-mail előnézet"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
 msgstr "E-mail sablon"
-
-#. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "E-mail sablon előnézet"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
@@ -659,6 +654,20 @@ msgid "Marketing Campaign Statistics"
 msgstr "Marketing kampány statisztikák"
 
 #. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_hour_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+msgid "Marketing Campaign: Campaign workitems processing"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_day_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_day
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_day
+msgid "Marketing Campaign: Segment Sync"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_graph
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_pivot
@@ -677,7 +686,7 @@ msgid "Mode"
 msgstr "Mód"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:194
+#: code:addons/marketing_campaign/models/marketing_campaign.py:198
 #, python-format
 msgid "Model of filter must be same as resource model of Campaign"
 msgstr ""
@@ -842,8 +851,8 @@ msgstr "Kimutatás"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.report_marketing_campaign
-msgid "Reports"
-msgstr "Kimutatások"
+msgid "Reporting"
+msgstr "Riport készítés"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -1026,7 +1035,7 @@ msgid "Test in Realtime"
 msgstr "Valós idejű teszt"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:393
+#: code:addons/marketing_campaign/models/marketing_campaign.py:411
 #, python-format
 msgid "The To/From Activity of transition must be of the same Campaign"
 msgstr ""
@@ -1038,14 +1047,14 @@ msgid "The action to perform when this activity is activated"
 msgstr "Az elvégzett művelet miután tevékenység aktiválásra került"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:103
+#: code:addons/marketing_campaign/models/marketing_campaign.py:107
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr ""
 "Minden szakasz lezárása előtt a kampányt nem lehet elvégzettnek jelölni."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:95
+#: code:addons/marketing_campaign/models/marketing_campaign.py:99
 #, python-format
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
@@ -1055,13 +1064,13 @@ msgstr ""
 "Módosítsa a kampány tevékenységet, legyen egy induló pontja."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:83
+#: code:addons/marketing_campaign/models/marketing_campaign.py:87
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
 msgstr "A kampány nem indítható el. Nincs tevékenység benne."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:601
+#: code:addons/marketing_campaign/models/marketing_campaign.py:619
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""

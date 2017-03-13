@@ -466,24 +466,21 @@ class Lead(models.Model):
         """
         title = "%s : %s\n" % (_('Merged opportunity') if self.type == 'opportunity' else _('Merged lead'), self.name)
         body = [title]
-        for field_name in fields:
-            field = self._fields.get(field_name)
-            if field is None:
-                continue
-
-            value = self[field_name]
-            if field.type == 'selection':
+        fields = self.env['ir.model.fields'].search([('name', 'in', fields or []), ('model_id.model', '=', self._name)])
+        for field in fields:
+            value = self[field.name]
+            if field.ttype == 'selection':
                 value = dict(field.get_values(self.env)).get(value, value)
-            elif field.type == 'many2one':
+            elif field.ttype == 'many2one':
                 if value:
                     value = value.sudo().name_get()[0][1]
-            elif field.type == 'many2many':
+            elif field.ttype == 'many2many':
                 if value:
                     value = ','.join(
                         val.name_get()[0][1]
                         for val in value.sudo()
                     )
-            body.append("%s: %s" % (field.string, value or ''))
+            body.append("%s: %s" % (field.field_description, value or ''))
         return "<br/>".join(body + ['<br/>'])
 
     @api.multi

@@ -7,10 +7,10 @@
 # krnkris <krnkris@freemail.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr ""
+msgstr "<strong>Vásárló hivatkozása:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
@@ -31,39 +31,27 @@ msgid "<strong>Incoterms:</strong>"
 msgstr "<strong>Incoterms:</strong>"
 
 #. module: sale_stock
-#: selection:sale.config.settings,module_delivery:0
-msgid "Allow adding shipping costs"
-msgstr "Szállítási ár hozzáadásának engedélyezése"
+#: model:ir.ui.menu,name:sale_stock.menu_aftersale
+msgid "After-Sale"
+msgstr "Értékesítés utáni"
 
 #. module: sale_stock
-#: selection:sale.config.settings,group_mrp_properties:0
-msgid "Allow setting manufacturing order properties per order line (advanced)"
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
 msgstr ""
-"Lehetővé teszi a gyártási megrendelés tételemkénti tulajdonságainak a "
-"beállítását (haladó)"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
-msgid "Allows you to tag sales order lines with properties."
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+msgid ""
+"By default Odoo computes the expected delivery date this way: order date + "
+"highest customer lead time of products. With this option, you can set a "
+"specific delivery date on orders rather than setting lead times on products."
 msgstr ""
-"Lehetővé teszi a vásárlói megrendelési tételek tulajdonságokkal való "
-"címkézését"
-
-#. module: sale_stock
-#: selection:sale.config.settings,group_route_so_lines:0
-msgid "Choose specific routes on sales order lines (advanced)"
-msgstr ""
-"Válasszon egyedi útvonalakat a vásárlói megrendelések tételsorain (haladó)"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
 msgstr "Vállalatok"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
-msgid "Default Shipping Policy"
-msgstr "alapértelmezett szállítási szabályok"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -81,14 +69,24 @@ msgid "Delivery"
 msgstr "Szállítás"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_sale_order_dates
+msgid "Delivery Date"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
 msgid "Delivery Orders"
 msgstr "Szállítólevelek / Szállítási rendelések"
 
 #. module: sale_stock
-#: selection:sale.config.settings,group_mrp_properties:0
-msgid "Don't use manufacturing properties (recommended as its easier)"
-msgstr "Ne használjon gyártási tulajdonságokat (javasolt, mivel egyszerűbb)"
+#: model:res.groups,name:sale_stock.group_display_incoterm
+msgid "Display incoterms on Sales Order and related invoices"
+msgstr "Vásárlói megrendelések kapcsolódó számláin az Incoterms megjelenítése"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+msgid "Display incoterms on orders &amp; invoices"
+msgstr ""
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -97,7 +95,9 @@ msgstr "Útvonal bekapcsolás a vásárlói megrendelés tétel sorain"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_display_incoterm
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
 msgid "Incoterms"
 msgstr "Nemzetközi Kereskedelmi Feltételek INCOTERMS"
 
@@ -137,7 +137,13 @@ msgid "Invoice Line"
 msgstr "Számla tételsor"
 
 #. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_invoiced
+msgid "Invoicing"
+msgstr "Számlázás"
+
+#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,help:sale_stock.field_sale_config_settings_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
@@ -148,18 +154,6 @@ msgstr ""
 "előre nem látható késésével számítva."
 
 #. module: sale_stock
-#: selection:sale.config.settings,group_route_so_lines:0
-msgid "No order specific routes like MTO or drop shipping"
-msgstr ""
-"Nincsenek a megrendelésre egyedi útvonalak, mint MTO /gyártás rendelésre/ "
-"vagy közvetlenül gyártótól vevőig szállítás"
-
-#. module: sale_stock
-#: selection:sale.config.settings,module_delivery:0
-msgid "No shipping costs on sales orders"
-msgstr "Nincsenek szállítási árak a vásárlói megrendeléseken"
-
-#. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:145
 #, python-format
 msgid "Not enough inventory!"
@@ -167,8 +161,8 @@ msgstr "Nincs elég raktárkészlet!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
-msgid "Order Routing"
-msgstr "Megrendelési eljárás"
+msgid "Order-Specific Routes"
+msgstr ""
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:156
@@ -192,6 +186,11 @@ msgid "Procurement"
 msgstr "Beszerzés"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_procurement_group
+msgid "Procurement Requisition"
+msgstr "Beszerzési hivatkozás"
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
 msgid "Product"
 msgstr "Termék"
@@ -200,11 +199,6 @@ msgstr "Termék"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
 msgid "Product Template"
 msgstr "Terméksablon"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
-msgid "Properties on SO Lines"
-msgstr "Tulajdonság a VM Vásárlói Megrendelés tétel sorain"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking
@@ -217,17 +211,18 @@ msgid "Route"
 msgstr "Útvonal"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+msgid "Routes for Sales Order Lines"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_order_id
 msgid "Sale Order"
 msgstr "Vásárlói megrendelés"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
-msgid "Sale Order Lines"
-msgstr "Vásárlói megrendelés tételsorai"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
 msgid "Sales Order"
 msgstr "Vásárlói megrendelés"
 
@@ -235,6 +230,11 @@ msgstr "Vásárlói megrendelés"
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Vásárlói megrendelés tételsor"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
+msgid "Sales Order Lines"
+msgstr "Vevői megrendelési tételek"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -247,27 +247,19 @@ msgid "Sales Safety Days"
 msgstr "Értékesítések Biztonsági napszámok"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
+msgid "Security Lead Time"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
 msgid "Selectable on Sales Order Line"
 msgstr "Kiválasztható a vásárlói megrendelési soron"
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_picking_policy:0
-msgid "Ship all products at once, without back orders"
-msgstr "Összes terméket egyszerre szállít, újrarendelések nélkül"
-
-#. module: sale_stock
-#: selection:sale.config.settings,default_picking_policy:0
-msgid "Ship products when some are available, and allow back orders"
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+msgid "Set a delivery date on orders"
 msgstr ""
-"Terméket szállításba ad ha egy része rendelkezésre áll, újrarendelések "
-"engedélyezése"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
-#: model:ir.ui.view,arch_db:sale_stock.view_sales_config_inherit_sale_stock
-msgid "Shipping"
-msgstr "Szállítás"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -285,20 +277,29 @@ msgid "Stock Move"
 msgstr "Készletmozgás"
 
 #. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+msgid ""
+"This allows to apply a special route on sales order lines (e.g. "
+"dropshipping, make-to-order) in case of unusual order scenario. To be "
+"available in sales orders, routes must have 'Sales Order Line' option "
+"checked in their setup form."
+msgstr ""
+
+#. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:202
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr ""
+msgstr "Ezt a terméket csomagolta %.2f %s. Értékesíteni kell %.2f %s."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
 msgid "To Refund"
-msgstr ""
+msgstr "Jóváirandó"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
 msgid "To Refund in SO"
-msgstr ""
+msgstr "Jóváirandó a Vásárlói megrendelésen"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -309,7 +310,7 @@ msgstr "Átvitel"
 #: model:ir.model.fields,help:sale_stock.field_stock_move_to_refund_so
 #: model:ir.model.fields,help:sale_stock.field_stock_return_picking_line_to_refund_so
 msgid ""
-"Trigger a decrease of the delivered quantity in the associated Sale Order"
+"Trigger a decrease of the delivered quantity in the associated Sales Order"
 msgstr ""
 
 #. module: sale_stock
@@ -341,6 +342,8 @@ msgid ""
 "You plan to sell %s %s but you only have %s %s available!\n"
 "The stock on hand is %s %s."
 msgstr ""
+"Tervezi a %s %s értékesítést,  de csak %s %s elérhető!\n"
+"Valós készlet %s %s."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings

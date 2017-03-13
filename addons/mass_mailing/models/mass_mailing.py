@@ -6,7 +6,7 @@ import hmac
 from datetime import datetime
 import random
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import html_translate
@@ -427,7 +427,7 @@ class MassMailing(models.Model):
         """
         secret = self.env["ir.config_parameter"].sudo().get_param(
             "database.secret")
-        token = (self.env.cr.dbname, self.id, res_id, email)
+        token = (self.env.cr.dbname, self.id, int(res_id), tools.ustr(email))
         return hmac.new(str(secret), repr(token), hashlib.sha512).hexdigest()
 
     def _compute_next_departure(self):

@@ -14,6 +14,7 @@ class MassMailController(http.Controller):
     def mailing(self, mailing_id, email=None, res_id=None, token="", **post):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
         if mailing.exists():
+            res_id = res_id and int(res_id)
             res_ids = []
             if mailing.mailing_model == 'mail.mass_mailing.contact':
                 contacts = request.env['mail.mass_mailing.contact'].sudo().search([
@@ -25,7 +26,7 @@ class MassMailController(http.Controller):
                 res_ids = [res_id]
 
             right_token = mailing._unsubscribe_token(res_id, email)
-            if not consteq(token, right_token):
+            if not consteq(str(token), right_token):
                 raise exceptions.AccessDenied()
             mailing.update_opt_out(email, res_ids, True)
             return _('You have been unsubscribed successfully')

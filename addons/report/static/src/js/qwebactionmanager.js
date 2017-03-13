@@ -111,9 +111,9 @@ ActionManager.include({
                         ];
                         trigger_download(self.session, response, c, current_action, options);
 
-                        treated_actions.push(current_action)
+                        treated_actions.push(current_action);
                         current_action = current_action.next_report_to_generate;
-                    } while (current_action != null && !treated_actions.includes(current_action))
+                    } while (current_action && !_.contains(treated_actions, current_action));
                     //Second part of the condition for security reasons (avoids infinite loop possibilty).
 
                     return;

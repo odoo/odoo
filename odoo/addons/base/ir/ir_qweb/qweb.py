@@ -702,10 +702,10 @@ class QWeb(object):
 
     def _compile_static_node(self, el, options):
         """ Compile a purely static element into a list of AST nodes. """
-        extra_attrib = {}
         if not el.nsmap:
             unqualified_el_tag = el_tag = el.tag
             content = self._compile_directive_content(el, options)
+            attrib = el.attrib
         else:
             # Etree will remove the ns prefixes indirection by inlining the corresponding
             # nsmap definition into the tag attribute. Restore the tag and prefix here.
@@ -714,13 +714,25 @@ class QWeb(object):
             if el.prefix:
                 el_tag = '%s:%s' % (el.prefix, el_tag)
 
+            attrib = {}
             # If `el` introduced new namespaces, write them as attribute by using the
-            # `extra_attrib` dict.
+            # `attrib` dict.
             for ns_prefix, ns_definition in set(el.nsmap.items()) - set(options['nsmap'].items()):
                 if ns_prefix is None:
-                    extra_attrib['xmlns'] = ns_definition
+                    attrib['xmlns'] = ns_definition
                 else:
-                    extra_attrib['xmlns:%s' % ns_prefix] = ns_definition
+                    attrib['xmlns:%s' % ns_prefix] = ns_definition
+
+            # Etree will also remove the ns prefixes indirection in the attributes. As we only have
+            # the namespace definition, we'll use an nsmap where the keys are the definitions and
+            # the values the prefixes in order to get back the right prefix and restore it.
+            nsprefixmap = {v: k for k, v in options['nsmap'].items() + el.nsmap.items()}
+            for key, value in el.attrib.items():
+                attrib_qname = etree.QName(key)
+                if attrib_qname.namespace:
+                    attrib['%s:%s' % (nsprefixmap[attrib_qname.namespace], attrib_qname.localname)] = value
+                else:
+                    attrib[key] = value
 
             # Update the dict of inherited namespaces before continuing the recursion. Note:
             # since `options['nsmap']` is a dict (and therefore mutable) and we do **not**
@@ -733,7 +745,7 @@ class QWeb(object):
 
         if unqualified_el_tag == 't':
             return content
-        tag = u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in chain(el.attrib.iteritems(), extra_attrib.iteritems())]))
+        tag = u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in attrib.iteritems()]))
         if unqualified_el_tag in self._void_elements:
             return [self._append(ast.Str(tag + '/>'))] + content
         else:
@@ -742,15 +754,26 @@ class QWeb(object):
     def _compile_static_attributes(self, el, options):
         """ Compile the static attributes of the given element into a list of
         pairs (name, expression AST). """
+        # Etree will also remove the ns prefixes indirection in the attributes. As we only have
+        # the namespace definition, we'll use an nsmap where the keys are the definitions and
+        # the values the prefixes in order to get back the right prefix and restore it.
+        nsprefixmap = {v: k for k, v in options['nsmap'].items() + el.nsmap.items()}
+
         nodes = []
         for key, value in el.attrib.iteritems():
             if not key.startswith('t-'):
+                attrib_qname = etree.QName(key)
+                if attrib_qname.namespace:
+                    key = '%s:%s' % (nsprefixmap[attrib_qname.namespace], attrib_qname.localname)
                 nodes.append((key, ast.Str(value)))
         return nodes
 
     def _compile_dynamic_attributes(self, el, options):
         """ Compile the dynamic attributes of the given element into a list of
-        pairs (name, expression AST). """
+        pairs (name, expression AST).
+
+        We do not support namespaced dynamic attributes.
+        """
         nodes = []
         for name, value in el.attrib.iteritems():
             if name.startswith('t-attf-'):
@@ -883,6 +906,7 @@ class QWeb(object):
         else:
             # Etree will remove the ns prefixes indirection by inlining the corresponding
             # nsmap definition into the tag attribute. Restore the tag and prefix here.
+            # Note: we do not support namespace dynamic attributes.
             unqualified_el_tag = etree.QName(el.tag).localname
             el_tag = unqualified_el_tag
             if el.prefix:

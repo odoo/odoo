@@ -4,16 +4,15 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -21,11 +20,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
-msgid "&amp;bull;"
-msgstr "&amp;bull;"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.minimal_layout
@@ -36,6 +30,20 @@ msgstr "&lt;!DOCTYPE html&gt;"
 #: selection:report.paperformat,format:0
 msgid ":B10    16  31 x 44 mm"
 msgstr ":B10    16  31 x 44 mm"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.external_layout_background
+msgid "<i class=\"fa fa-building-o\"/> VAT:"
+msgstr "<i class=\"fa fa-building-o\"/> BTW:"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid ""
+"<strong>No logo found!</strong>\n"
+"                        To get a beautiful report, you might review your\n"
+"                        company data: upload a logo, set\n"
+"                        bank accounts, phone numbers, etc."
+msgstr ""
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -148,7 +156,12 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9  23  33 x 62 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:273
+#: selection:res.company,external_report_layout:0
+msgid "Background"
+msgstr "Achtergrond"
+
+#. module: report
+#: code:addons/report/models/report.py:302
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Foute rapport referentie"
@@ -159,9 +172,46 @@ msgid "Bottom Margin (mm)"
 msgstr "Ondermarge (mm)"
 
 #. module: report
+#: selection:res.company,external_report_layout:0
+msgid "Boxed"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Business Documents"
+msgstr ""
+
+#. module: report
 #: selection:report.paperformat,format:0
 msgid "C5E 24  163 x 229 mm"
 msgstr "C5E 24  163 x 229 mm"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Change Report Template"
+msgstr "Wijzig rapportsjabloon"
+
+#. module: report
+#: code:addons/report/models/base_config_settings.py:30
+#: code:addons/report/models/report.py:278
+#, python-format
+msgid "Choose Your Report Layout"
+msgstr "Kies uw rapport layout"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Choose your reports's header and footer layout."
+msgstr ""
+
+#. module: report
+#: selection:res.company,external_report_layout:0
+msgid "Clean"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "Close"
+msgstr "Sluiten"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -172,6 +222,11 @@ msgstr "Comm10E 25  105 x 241 mm, U.S. Common 10 Enveloppe"
 #: model:ir.model,name:report.model_res_company
 msgid "Companies"
 msgstr "Bedrijven"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "Company"
+msgstr "Bedrijf"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_create_uid
@@ -202,7 +257,7 @@ msgstr "Standaard papier formaat?"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/xml/report.xml:12
+#: code:addons/report/static/src/xml/report.xml:18
 #, python-format
 msgid "Discard"
 msgstr "Negeren"
@@ -222,28 +277,18 @@ msgstr "Kopregel weergeven"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/xml/report.xml:8
+#: code:addons/report/static/src/xml/report.xml:14
 #, python-format
 msgid "Edit"
 msgstr "Bewerken"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
-msgid "Edit external footer"
-msgstr "Wijzig externe voettekst"
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Edit Header"
+msgstr "Wijzig hoofding"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
-msgid "Edit external header"
-msgstr "Wijzig externe koptekst"
-
-#. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
-msgid "Edit internal header"
-msgstr "Wijzig interne koptekst"
-
-#. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
+#: model:ir.ui.view,arch_db:report.external_layout_standard
 msgid "Email:"
 msgstr "E-mail:"
 
@@ -252,6 +297,7 @@ msgstr "E-mail:"
 #, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
 msgstr ""
+"Fout! U kan geen formaat EN specifieke pagina breedte/hoogte selecteren."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -264,7 +310,9 @@ msgid "Explicitly associated reports"
 msgstr "Explicite bijbehorende rapportages"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
+#: model:ir.ui.view,arch_db:report.external_layout_boxed
+#: model:ir.ui.view,arch_db:report.external_layout_clean
+#: model:ir.ui.view,arch_db:report.external_layout_standard
 msgid "Fax:"
 msgstr "Fax:"
 
@@ -272,6 +320,11 @@ msgstr "Fax:"
 #: selection:report.paperformat,format:0
 msgid "Folio 27  210 x 330 mm"
 msgstr "Folio 27  210 x 330 mm"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Format"
+msgstr "Formaat"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_http
@@ -337,6 +390,11 @@ msgid "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
 msgstr "Brief 2 8.5 x 11 inches, 215.9 x 279.4 mm"
 
 #. module: report
+#: model:ir.ui.view,arch_db:report.external_layout_boxed
+msgid "Mail:"
+msgstr "Mail:"
+
+#. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_name
 msgid "Name"
 msgstr "Naam"
@@ -362,9 +420,23 @@ msgid "Page width (mm)"
 msgstr "Pagina breedte (mm)"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
-msgid "Page:"
-msgstr "Pagina:"
+#: model:ir.ui.view,arch_db:report.external_layout_background
+msgid ""
+"Page:\n"
+"                <span class=\"page\"/>\n"
+"                of\n"
+"                <span class=\"topage\"/>"
+msgstr ""
+"Pagina:\n"
+"<span class=\"page\"/>\n"
+"van\n"
+"<span class=\"topage\"/>"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.external_layout_boxed
+#: model:ir.ui.view,arch_db:report.external_layout_standard
+msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
+msgstr "Pagina: <span class=\"page\"/> / <span class=\"topage\"/>"
 
 #. module: report
 #: model:ir.ui.menu,name:report.paper_format_menuitem
@@ -377,6 +449,7 @@ msgid "Paper Format General Configuration"
 msgstr "Papier formaat algemene instellingen"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_paperformat_id
 #: model:ir.model.fields,field_description:report.field_res_company_paperformat_id
 msgid "Paper format"
@@ -394,7 +467,7 @@ msgid "Paper size"
 msgstr "Papierformaat"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
+#: model:ir.ui.view,arch_db:report.external_layout_standard
 msgid "Phone:"
 msgstr "Telefoon:"
 
@@ -404,20 +477,43 @@ msgid "Portrait"
 msgstr "Staand"
 
 #. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "Preview Background Template"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "Preview Boxed Template"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "Preview Clean Template"
+msgstr ""
+
+#. module: report
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
 msgid "Preview External Report"
 msgstr "Voorbeeldweergave extern rapport"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_internalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
 msgid "Preview Internal Report"
 msgstr "Voorbeeldweergave intern rapport"
 
 #. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "Preview Minimalist Template"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Preview Report"
+msgstr "Rapport voorbeeldweergave"
+
+#. module: report
 #. openerp-web
-#: code:addons/report/static/src/xml/report.xml:5
+#: code:addons/report/static/src/xml/report.xml:11
 #, python-format
 msgid "Print"
 msgstr "Afdrukken"
@@ -425,25 +521,36 @@ msgstr "Afdrukken"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
 msgid "Printed Report Name"
-msgstr ""
+msgstr "Rapportnaam bij afdrukken"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
 msgid "QWeb views"
-msgstr ""
+msgstr "Qweb weergaven"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:95
+#: code:addons/report/static/src/js/qwebactionmanager.js:96
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
 msgstr "Rapport"
 
 #. module: report
-#: model:ir.actions.act_window,name:report.reports_action
+#: model:ir.model.fields,field_description:report.field_base_config_settings_external_report_layout
+#: model:ir.model.fields,field_description:report.field_res_company_external_report_layout
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Report Template"
+msgstr "Rapportsjabloon"
+
+#. module: report
 #: model:ir.ui.menu,name:report.reporting_menuitem
 #: model:ir.ui.menu,name:report.reports_menuitem
+msgid "Reporting"
+msgstr "Rapportages"
+
+#. module: report
+#: model:ir.actions.act_window,name:report.reports_action
 msgid "Reports"
 msgstr "Rapportages"
 
@@ -454,7 +561,7 @@ msgstr "Rechtermarge (mm)"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/xml/report.xml:11
+#: code:addons/report/static/src/xml/report.xml:17
 #, python-format
 msgid "Save"
 msgstr "Opslaan"
@@ -465,14 +572,30 @@ msgid "Select Proper Paper size"
 msgstr "Juiste papiergrootte selecteren"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
-msgid "TIN:"
-msgstr "BTW:"
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Set the paper format of printed documents"
+msgstr "Stel het papierformaat van afgedrukte documenten in"
+
+#. module: report
+#: selection:res.company,external_report_layout:0
+msgid "Standard"
+msgstr "Standaard"
 
 #. module: report
 #: selection:report.paperformat,format:0
 msgid "Tabloid 29 279.4 x 431.8 mm"
 msgstr "Tabloid 29 279.4 x 431.8 mm"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.external_layout_boxed
+#: model:ir.ui.view,arch_db:report.external_layout_clean
+msgid "Tel:"
+msgstr "Tel:"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Template"
+msgstr "Sjabloon"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_externalreport
@@ -491,9 +614,12 @@ msgid ""
 "change the report filename. You can use a python expression with the object "
 "and time variables."
 msgstr ""
+"Dit is de bestandsnaam van het rapport dat gedownload wordt. Laat leeg om de"
+" bestandsnaam niet te wijzigen. U kan een Python expressie gebruiken met het"
+" object en de tijdsvariabelen."
 
 #. module: report
-#: code:addons/report/models/report.py:273
+#: code:addons/report/models/report.py:302
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "Dit rapport is niet geladen in de database: %s"
@@ -517,12 +643,28 @@ msgstr ""
 "wkhtmltopdf.org</a>"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.external_layout_footer
-msgid "Website:"
-msgstr "Website:"
+#: code:addons/report/models/report.py:155
+#, python-format
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr ""
+"Wkhtmltopdf kon niet gevonden worden op het systeem. De PDF kan niet "
+"gegenereerd worden."
 
 #. module: report
-#: code:addons/report/models/report.py:435
+#: model:ir.ui.view,arch_db:report.external_layout_boxed
+#: model:ir.ui.view,arch_db:report.external_layout_clean
+#: model:ir.ui.view,arch_db:report.external_layout_standard
+msgid "VAT:"
+msgstr "BTW:"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.external_layout_boxed
+#: model:ir.ui.view,arch_db:report.external_layout_standard
+msgid "Web:"
+msgstr "Web:"
+
+#. module: report
+#: code:addons/report/models/report.py:464
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Fout in Wkhtmltopdf (fout code: %s). Bericht: %s"
@@ -554,6 +696,21 @@ msgstr ""
 "target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:21
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The report will be "
+"shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
+"target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
+
+#. module: report
+#: model:ir.model,name:report.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
+
+#. module: report
 #: model:ir.model,name:report.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
@@ -564,6 +721,16 @@ msgid "ir.qweb.field.barcode"
 msgstr "ir.qweb.field.barcode"
 
 #. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "preview"
+msgstr "voorbeeld"
+
+#. module: report
 #: model:ir.model,name:report.model_report_abstract_report
 msgid "report.abstract_report"
 msgstr "report.abstract_report"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.view_company_report_form
+msgid "⇒ Review Company Data"
+msgstr ""

@@ -4,26 +4,33 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
-# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # Antonio Trueba <atgayol@gmail.com>, 2016
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
+# Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
-"Last-Translator: Antonio Trueba <atgayol@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "(Free)"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -101,6 +108,11 @@ msgid "<strong>Phone</strong> <span class=\"text-muted\">(Optional)</span>"
 msgstr "<strong>Teléfono</strong> <span class=\"text-muted\">(Opcional)</span>"
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<strong>Use this tag:</strong>"
+msgstr ""
+
+#. module: website_event
 #: code:addons/website_event/controllers/main.py:96
 #, python-format
 msgid "All Categories"
@@ -120,7 +132,7 @@ msgstr "Todos los eventos"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Attendee #%s"
-msgstr ""
+msgstr "Asistente #%s"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -293,7 +305,6 @@ msgstr ""
 "conversación."
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Free"
 msgstr "Libre"
@@ -327,7 +338,7 @@ msgstr "Nombre"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:184
+#: code:addons/website_event/controllers/main.py:182
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
@@ -506,11 +517,6 @@ msgid "Use the top menu <i>'Content'</i> to create your first event."
 msgstr "Usa el menú superior <i>\"Contenido\"</i> para crear su primer evento."
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Use this tag:"
-msgstr "Utilice esta etiqueta:"
-
-#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_website_published
 msgid "Visible in Website"
 msgstr "Visible en el sitio web"
@@ -523,7 +529,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "We are glad to confirm your registration to our event"
-msgstr ""
+msgstr "Nos complace confirmar su suscripción a nuestro evento"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -564,16 +570,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Your registration"
 msgstr ""
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "or"
-msgstr "o"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "pull-right"
-msgstr "pull-right"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_details

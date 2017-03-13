@@ -221,22 +221,22 @@
                                 <field name="reference"/>
                                 <label for="amount"/>
                                 <div class="o_row">
-                                    <field name="amount" class="oe_inline" />
-                                    <field name="currency_id" options="{'no_open': True, 'no_create': True}" class="oe_inline" />
+                                    <field name="amount"/>
+                                    <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
                                 </div>
                                 <field name="fees"/>
                                 <field name="partner_id"/>
                                 <label for="partner_details" string="Customer Details"/>
-                                <div name="partner_details">
-                                    <field name="partner_name" placeholder="Name" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
-                                    <field name="partner_address" placeholder="Address" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
-                                    <div class="o_row">
-                                        <field name="partner_zip" class="oe_inline" placeholder="ZIP" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
-                                        <field name="partner_city" class="oe_inline" placeholder="City" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
+                                <div>
+                                    <div name="partner_details" class="o_address_format">
+                                        <field name="partner_name" placeholder="Name" attrs="{'readonly': [('partner_id', '!=', False)]}" class="o_address_street"/>
+                                        <field name="partner_address" placeholder="Address" attrs="{'readonly': [('partner_id', '!=', False)]}" class="o_address_street"/>
+                                        <field name="partner_city" placeholder="City" attrs="{'readonly': [('partner_id', '!=', False)]}" class="o_address_city"/>
+                                        <field name="partner_zip" placeholder="ZIP" attrs="{'readonly': [('partner_id', '!=', False)]}" class="o_address_zip"/>
+                                        <field name="partner_country_id" placeholder="Country" attrs="{'readonly': [('partner_id', '!=', False)]}" class="o_address_country"/>
+                                        <field name="partner_lang" attrs="{'readonly': [('partner_id', '!=', False)]}" class="o_address_street"/>
+                                        <field name="partner_email" placeholder="E-mail" attrs="{'readonly': [('partner_id', '!=', False)]}" class="o_address_street"/>
                                     </div>
-                                    <field name="partner_country_id" placeholder="Country" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
-                                    <field name="partner_lang" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
-                                    <field name="partner_email" placeholder="E-mail" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
                                 </div>
                             </group>
                             <group>

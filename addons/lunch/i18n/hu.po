@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -82,7 +82,7 @@ msgid "Add"
 msgstr "Hozzáad"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:263
+#: code:addons/lunch/models/lunch.py:290
 #, python-format
 msgid "Alert"
 msgstr "Figyelmeztetés"
@@ -114,11 +114,6 @@ msgid "And"
 msgstr "És"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
-msgid "Archive/Unarchive"
-msgstr "Archivál/Archiválásból visszatölt"
-
-#. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Archived"
@@ -126,8 +121,8 @@ msgstr "Archivált"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_balance_visible
-msgid "Balance visible"
-msgstr "Látható egyenleg"
+msgid "Balance Visible"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_start_hour
@@ -175,11 +170,6 @@ msgid "Cancel"
 msgstr "Mégse"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
-msgid "Cancel meals"
-msgstr "Ételek lemondása"
-
-#. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "Cancelled"
@@ -192,8 +182,8 @@ msgstr "Pénz mozgatás"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_cash_move_balance
-msgid "Cash move balance"
-msgstr "Pénz mozgatás egyenlege"
+msgid "Cash Move Balance"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id
@@ -432,7 +422,7 @@ msgstr "Én nem érzem magam gazdagnak"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1868
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1690
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_id
 msgid "ID"
 msgstr "Azonosító ID"
@@ -492,19 +482,39 @@ msgid "Lunch Alert"
 msgstr "Ebéd figyelmeztető"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:234
+#: code:addons/lunch/models/lunch.py:261
 #, python-format
 msgid "Lunch Cashmove"
 msgstr "Ebéd készpénzmozgás"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:63
+#: code:addons/lunch/models/lunch.py:64
 #: model:ir.actions.report.xml,name:lunch.action_report_lunch_order
 #: model:ir.model,name:lunch.model_lunch_order
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
 #, python-format
 msgid "Lunch Order"
 msgstr "Ebédrendelés"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
+msgid "Lunch: Archive/Restore products"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
+msgid "Lunch: Cancel meals"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_order_line_action_order
+msgid "Lunch: Order meals"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_order_line_action_confirm
+msgid "Lunch: Receive meals"
+msgstr ""
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
@@ -576,19 +586,19 @@ msgid "Note"
 msgstr "Jegyzet"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:194
+#: code:addons/lunch/models/lunch.py:221
 #, python-format
 msgid "Only your lunch manager cancels the orders."
 msgstr "Csak az ebéd manager törölheti a megrendeléseket."
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:163
+#: code:addons/lunch/models/lunch.py:190
 #, python-format
 msgid "Only your lunch manager processes the orders."
 msgstr "Csak az ebéd manager hajthatja végre a megrendeléseket."
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:183
+#: code:addons/lunch/models/lunch.py:210
 #, python-format
 msgid "Only your lunch manager sets the orders as received."
 msgstr "Csak az ebéd manager állíthatja beérkezettre a megrendeléseket."
@@ -611,11 +621,6 @@ msgstr "Megrendelés hónapja"
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Order lines Tree"
 msgstr "Megrendelés tételsor fa"
-
-#. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_order_line_action_order
-msgid "Order meals"
-msgstr "Ételek megrendelése"
 
 #. module: lunch
 #: selection:lunch.order.line,state:0
@@ -645,14 +650,19 @@ msgid "Payment"
 msgstr "Kifizetés"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_ids
+msgid "Previous Order"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_widget
+msgid "Previous Order Widget"
+msgstr ""
+
+#. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
 msgid "Previous Orders"
 msgstr "Előző megrendelések"
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_ids
-msgid "Previous order ids"
-msgstr "Előző megrendelések azonosítói"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_price
@@ -717,11 +727,6 @@ msgstr "Termékek fa szerkezete"
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Receive"
 msgstr "Beérkeztetés"
-
-#. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_order_line_action_confirm
-msgid "Receive meals"
-msgstr "Ételek beérkezése"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -808,7 +813,7 @@ msgid "The company this user is currently working for."
 msgstr "A cég, amelynek a jelenlegi felhasználó dolgozik."
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:99
+#: code:addons/lunch/models/lunch.py:126
 #, python-format
 msgid "The date of your order is in the past."
 msgstr "Megrendelésének dátuma a múltban van."
@@ -957,8 +962,3 @@ msgstr "ebéd termék kategória"
 #: model:ir.model,name:lunch.model_lunch_order_line_lucky
 msgid "lunch.order.line.lucky"
 msgstr "lunch.order.line.lucky"
-
-#. module: lunch
-#: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
-msgid "or"
-msgstr "vagy"

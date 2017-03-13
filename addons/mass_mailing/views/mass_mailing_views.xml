@@ -351,7 +351,7 @@
                                 <field name="mailing_model_real" invisible="1"/>
                                 <field name="mailing_domain" widget="domain"
                                     attrs="{'invisible': [('mailing_model', '=', 'mail.mass_mailing.list')]}"
-                                    options="{'model': 'mailing_model'}"
+                                    options="{'model': 'mailing_model_real'}"
                                     context="{'search_default_not_opt_out':1}"/>
                                 <div attrs="{'invisible': [('mailing_model', '!=', 'mail.mass_mailing.list')]}">
                                     <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>

@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -69,11 +69,6 @@ msgid "Click to add a new template."
 msgstr "Kattintson egy új sablon hozzáadásához."
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
-msgid "Configure your templates"
-msgstr "Állítsa be a sablonjait"
-
-#. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_uid
 msgid "Created by"
 msgstr "Készítette"
@@ -126,6 +121,11 @@ msgstr "Google Drive beállítás"
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name_template
 msgid "Google Drive Name Pattern"
 msgstr "Google Drive Név minta"
+
+#. module: google_drive
+#: model:ir.ui.view,arch_db:google_drive.base_config_settings_view_form_inherit_google_drive
+msgid "Google Drive Templates"
+msgstr ""
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:61
@@ -273,11 +273,6 @@ msgid ""
 msgstr ""
 "Nem állított a be a Google-től létrehozott 'Engedélyezési kód'-ot, Kérem "
 "hozza létre és állítsa be ."
-
-#. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
-msgid "and paste it here"
-msgstr "és ide illessze be"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_base_config_settings

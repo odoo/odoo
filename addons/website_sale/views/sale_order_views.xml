@@ -45,11 +45,11 @@
         <field name="help">You don't have any unpaid order from the website.</field>
     </record>
 
-    <record id="action_abandonned_orders_ecommerce" model="ir.actions.act_window">
+    <record id="action_abandoned_orders_ecommerce" model="ir.actions.act_window">
         <field name="name">Abandoned Carts</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('state', '=', 'draft'), ('order_line', '!=', False), ('date_order', '&lt;=', (context_today() + datetime.timedelta(hours=-1)).strftime('%Y-%m-%d'))]</field>
+        <field name="domain">[('state', '=', 'draft'), ('order_line', '!=', False), ('date_order', '&lt;=', (context_today() - datetime.timedelta(hours=1)).strftime('%Y-%m-%d'))]</field>
         <field name="context">{'show_sale': True, 'search_default_from_website': 1, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="xml">
@@ -93,8 +93,8 @@
     <menuitem id="menu_orders_unpaid_orders" name="Unpaid Orders"
         action="action_unpaid_orders_ecommerce"
         parent="menu_orders" sequence="2"/>
-    <menuitem id="menu_orders_abandonned_orders" name="Abandoned Carts"
-        action="action_abandonned_orders_ecommerce"
+    <menuitem id="menu_orders_abandoned_orders" name="Abandoned Carts"
+        action="action_abandoned_orders_ecommerce"
         parent="menu_orders" sequence="3"/>
     <menuitem id="menu_orders_customers" name="Customers"
         action="base.action_partner_customer_form"

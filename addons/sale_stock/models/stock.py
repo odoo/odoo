@@ -59,11 +59,12 @@ class StockPicking(models.Model):
         res = super(StockPicking, self)._create_backorder(backorder_moves)
         for picking in self.filtered(lambda pick: pick.picking_type_id.code == 'outgoing'):
             backorder = picking.search([('backorder_id', '=', picking.id)])
-            order = self.env['sale.order'].search([('procurement_group_id', '=', backorder.group_id.id)])
-            backorder.message_post_with_view(
-                'mail.message_origin_link',
-                values={'self': backorder, 'origin': order},
-                subtype_id=self.env.ref('mail.mt_note').id)
+            if backorder.group_id: # origin from a sale
+                order = self.env['sale.order'].search([('procurement_group_id', '=', backorder.group_id.id)])
+                backorder.message_post_with_view(
+                    'mail.message_origin_link',
+                    values={'self': backorder, 'origin': order},
+                    subtype_id=self.env.ref('mail.mt_note').id)
         return res
 
 
