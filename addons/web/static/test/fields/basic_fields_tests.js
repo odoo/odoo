@@ -17,6 +17,7 @@ QUnit.module('basic_fields', {
             partner: {
                 fields: {
                     date: {string: "A date", type: "date", searchable: true},
+                    datetime: {string: "A datetime", type: "datetime", searchable: true},
                     display_name: {string: "Displayed name", type: "char", searchable: true},
                     foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true},
                     bar: {string: "Bar", type: "boolean", default: true, searchable: true},
@@ -31,6 +32,7 @@ QUnit.module('basic_fields', {
                 records: [{
                     id: 1,
                     date: "2017-02-03",
+                    datetime: "2017-02-08 10:00:00",
                     display_name: "first record",
                     bar: true,
                     foo: "yop",
@@ -571,6 +573,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+
     QUnit.module('FieldDate');
 
     QUnit.test('date field is empty if no date is set', function (assert) {
@@ -589,7 +592,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('date field in edit mode', function (assert) {
+    QUnit.test('date field in form view', function (assert) {
         assert.expect(7);
 
         var form = createView({
@@ -604,6 +607,9 @@ QUnit.module('basic_fields', {
                 }
                 return this._super.apply(this, arguments);
             },
+            translateParameters: {  // Avoid issues due to localization formats
+              date_format: '%m/%d/%Y',
+            }
         });
 
         assert.strictEqual(form.$('.o_form_field_date').text(), '02/03/2017',
@@ -617,6 +623,10 @@ QUnit.module('basic_fields', {
         // click on the input and select another value
         form.$('.o_datepicker_input').click();
         assert.ok(form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        form.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        form.$('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
         form.$('.day:contains(22)').click(); // select the 22 February
         assert.ok(!form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
         assert.strictEqual(form.$('.o_datepicker_input').val(), '02/22/2017',
@@ -629,28 +639,170 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('field date in editable list view', function (assert) {
-        assert.expect(2);
-
-        this.data.partner.fields.date.default = "2017-02-10";
-        this.data.partner.records = [];
+    QUnit.test('date field in editable list view', function (assert) {
+        assert.expect(8);
 
         var list = createView({
             View: ListView,
             model: 'partner',
             data: this.data,
-            arch: '<tree string="Phonecalls" editable="top">' +
+            arch: '<tree editable="bottom">' +
                     '<field name="date"/>' +
-                '</tree>',
+                  '</tree>',
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            }
         });
 
-        list.$buttons.find('.o_list_button_add').click();
+        var $cell = list.$('tr.o_data_row td:not(.o_list_record_selector)').first();
+        assert.strictEqual($cell.text(), '02/03/2017',
+            'the date should be displayed correctly in readonly');
+        $cell.click();
 
         assert.strictEqual(list.$('input.o_datepicker_input').length, 1,
             "the view should have a date input for editable mode");
 
         assert.strictEqual(list.$('input.o_datepicker_input').get(0), document.activeElement,
             "date input should have the focus");
+
+        assert.strictEqual(list.$('input.o_datepicker_input').val(), '02/03/2017',
+            'the date should be correct in edit mode');
+
+        // click on the input and select another value
+        list.$('input.o_datepicker_input').click();
+        assert.ok(list.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        list.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        list.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        list.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        list.$('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
+        list.$('.day:contains(22)').click(); // select the 22 February
+        assert.ok(!list.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+        assert.strictEqual(list.$('.o_datepicker_input').val(), '02/22/2017',
+            'the selected date should be displayed in the input');
+
+        // save
+        list.$buttons.find('.o_list_button_save').click();
+        assert.strictEqual(list.$('tr.o_data_row td:not(.o_list_record_selector)').text(), '02/22/2017',
+            'the selected date should be displayed after saving');
+
+        list.destroy();
+    });
+
+
+    QUnit.module('FieldDatetime');
+
+    QUnit.test('datetime field in form view', function(assert) {
+        assert.expect(6);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="datetime"/></form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            }
+        });
+
+        var expectedDateString = "02/08/2017 10:00:00";
+        assert.strictEqual(form.$('.o_form_field_date').text(), expectedDateString,
+            'the datetime should be correctly displayed in readonly');
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_datepicker_input').val(), expectedDateString,
+            'the datetime should be correct in edit mode');
+        // click on the input and select 22 February at 8:23:33
+        form.$('.o_datepicker_input').click();
+        assert.ok(form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        form.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        form.$('.bootstrap-datetimepicker-widget .month').eq(3).click();  // April
+        form.$('.bootstrap-datetimepicker-widget .day:contains(22)').click();
+        form.$('.bootstrap-datetimepicker-widget .fa-clock-o').click();
+        form.$('.bootstrap-datetimepicker-widget .timepicker-hour').click();
+        form.$('.bootstrap-datetimepicker-widget .hour:contains(08)').click();
+        form.$('.bootstrap-datetimepicker-widget .timepicker-minute').click();
+        form.$('.bootstrap-datetimepicker-widget .minute:contains(25)').click();
+        form.$('.bootstrap-datetimepicker-widget .timepicker-second').click();
+        form.$('.bootstrap-datetimepicker-widget .second:contains(35)').click();
+        form.$('.bootstrap-datetimepicker-widget .fa-times').click();  // close
+        assert.ok(!form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+
+        var newExpectedDateString = "04/22/2017 08:25:35";
+        assert.strictEqual(form.$('.o_datepicker_input').val(), newExpectedDateString,
+            'the selected date should be displayed in the input');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_form_field_date').text(), newExpectedDateString,
+            'the selected date should be displayed after saving');
+
+        form.destroy();
+    });
+
+    QUnit.test('datetime field in editable list view', function (assert) {
+        assert.expect(8);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="datetime"/>' +
+                  '</tree>',
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            }
+        });
+
+        var expectedDateString = "02/08/2017 10:00:00";
+        var $cell = list.$('tr.o_data_row td:not(.o_list_record_selector)').first();
+        assert.strictEqual($cell.text(), expectedDateString,
+            'the datetime should be correctly displayed in readonly');
+
+        // switch to edit mode
+        $cell.click();
+        assert.strictEqual(list.$('input.o_datepicker_input').length, 1,
+            "the view should have a date input for editable mode");
+
+        assert.strictEqual(list.$('input.o_datepicker_input').get(0), document.activeElement,
+            "date input should have the focus");
+
+        assert.strictEqual(list.$('input.o_datepicker_input').val(), expectedDateString,
+            'the date should be correct in edit mode');
+
+        // click on the input and select 22 February at 8:23:33
+        list.$('input.o_datepicker_input').click();
+        assert.ok(list.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        list.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        list.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        list.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        list.$('.bootstrap-datetimepicker-widget .month').eq(3).click();  // April
+        list.$('.bootstrap-datetimepicker-widget .day:contains(22)').click();
+        list.$('.bootstrap-datetimepicker-widget .fa-clock-o').click();
+        list.$('.bootstrap-datetimepicker-widget .timepicker-hour').click();
+        list.$('.bootstrap-datetimepicker-widget .hour:contains(08)').click();
+        list.$('.bootstrap-datetimepicker-widget .timepicker-minute').click();
+        list.$('.bootstrap-datetimepicker-widget .minute:contains(25)').click();
+        list.$('.bootstrap-datetimepicker-widget .timepicker-second').click();
+        list.$('.bootstrap-datetimepicker-widget .second:contains(35)').click();
+        list.$('.bootstrap-datetimepicker-widget .fa-times').click();  // close
+        assert.ok(!list.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+
+        var newExpectedDateString = "04/22/2017 08:25:35";
+        assert.strictEqual(list.$('.o_datepicker_input').val(), newExpectedDateString,
+            'the selected datetime should be displayed in the input');
+
+        // save
+        list.$buttons.find('.o_list_button_save').click();
+        assert.strictEqual(list.$('tr.o_data_row td:not(.o_list_record_selector)').text(), newExpectedDateString,
+            'the selected datetime should be displayed after saving');
+
         list.destroy();
     });
 
