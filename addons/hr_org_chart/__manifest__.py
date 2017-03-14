@@ -14,7 +14,7 @@ This module extend the employee form with a organizational chart.
 (N+1, N+2, direct subordinates)
         """,
     'depends': ['hr'],
-    'auto_install': True,
+    'auto_install': False,
     'data': [
         'views/hr_template.xml',
         'views/hr_views.xml'
