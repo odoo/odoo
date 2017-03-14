@@ -14,7 +14,10 @@ class PosController(http.Controller):
     @http.route('/pos/web', type='http', auth='user')
     def pos_web(self, debug=False, **k):
         # if user not logged in, log him in
-        pos_sessions = request.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', request.session.uid)])
+        pos_sessions = request.env['pos.session'].search([
+            ('state', '=', 'opened'),
+            ('user_id', '=', request.session.uid),
+            ('name', 'not like', '(RESCUE FOR')])
         if not pos_sessions:
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
         pos_sessions.login()

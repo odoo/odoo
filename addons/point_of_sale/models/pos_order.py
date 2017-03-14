@@ -66,24 +66,21 @@ class PosOrder(models.Model):
                         order['name'],
                         order['amount_total'])
 
-        open_sessions = PosSession.search([('state', '=', 'opened'),
-                                           ('rescue', '=', True),
-                                           ('config_id', '=', closed_session.config_id.id),
-                                           ('name', 'ilike', closed_session.name)],
-                                          limit=1, order="start_at DESC")
-        if open_sessions:
-            new_session = open_sessions[0]
-            _logger.warning('using existing recovery session %s for saving order %s', new_session, order['name'])
-        else:
-            _logger.warning('attempting to create recovery session for saving order %s', order['name'])
-            new_session = PosSession.create({
-                'config_id': closed_session.config_id.id,
-                'name': _('(RESCUE FOR %(session)s)') % {'session': closed_session.name},
-                'rescue': True,    # avoid conflict with live sessions
-            })
-            # bypass opening_control (necessary when using cash control)
-            new_session.signal_workflow('open')
+        rescue_session = PosSession.search([
+            ('name', 'like', '(RESCUE FOR %(session)s)' % {'session': closed_session.name}),
+            ('state', 'not in', ('closed', 'closing_control')),
+        ], limit=1)
+        if rescue_session:
+            _logger.warning('reusing recovery session %s for saving order %s', rescue_session.name, order['name'])
+            return rescue_session
 
+        _logger.warning('attempting to create recovery session for saving order %s', order['name'])
+        new_session = PosSession.create({
+            'config_id': closed_session.config_id.id,
+            'name': _('(RESCUE FOR %(session)s)') % {'session': closed_session.name},
+        })
+        # bypass opening_control (necessary when using cash control)
+        new_session.signal_workflow('open')
         return new_session
 
     def _match_payment_to_invoice(self, order):
