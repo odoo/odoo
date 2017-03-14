@@ -210,9 +210,9 @@
                                     <field name="payment_difference_handling" widget="radio" nolabel="1"/>
                                     <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
                                         <label for="writeoff_account_id" class="oe_edit_only" string="Post Difference In"/>
-                                        <field name="writeoff_account_id" string="Post Difference In" required="1"/>
+                                        <field name="writeoff_account_id" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
                                         <label for="writeoff_label" class="oe_edit_only" string="Label"/>
-                                        <field name="writeoff_label" required="1"/>
+                                        <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
                                     </div>
                                 </div>
                             </group>
