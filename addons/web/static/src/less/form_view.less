@@ -174,7 +174,7 @@
 
     .o_form_invalid {
         &.o_form_input, .o_form_input, &.o_form_textarea, .o_form_textarea {
-            border-color: @brand-danger;
+            border-color: @brand-danger!important; // enterprise o_form_required rule overrides this without !important
         }
     }
 
