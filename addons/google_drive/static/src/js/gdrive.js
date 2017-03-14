@@ -38,7 +38,7 @@ openerp.google_drive = function (instance, m) {
                                 }
                                 if (!already_there){
                                     self.add_items('other', [{
-                                            label: res.name+ '<img style="position:absolute;right:5px;height:20px;width:20px;" title="Google Drive" src="google_drive/static/src/img/drive_icon.png"/>',
+                                            label: res.name,
                                             config_id: res.id,
                                             res_id: res_id,
                                             res_model: view.dataset.model,
