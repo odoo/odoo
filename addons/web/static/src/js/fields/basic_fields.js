@@ -562,8 +562,7 @@ var FieldHtml = InputField.extend({
 });
 
 /**
- * displays a handle and allows the resequencing
- * This widget works for integer fields
+ * Displays a handle to modify the sequence.
  */
 var HandleWidget = AbstractField.extend({
     tagName: 'span',
@@ -578,8 +577,10 @@ var HandleWidget = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * content is only "set" with pure css...
+     * The display of this widget is handled by css thanks to the class names.
+     *
      * @override
+     * @private
      */
     _render: function () {
         this.$el.empty();
