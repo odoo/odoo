@@ -410,18 +410,17 @@ class AccountBankStatementLine(models.Model):
     @api.multi
     def button_cancel_reconciliation(self):
         aml_to_unbind = self.env['account.move.line']
-        aml_to_cancel = self.env['account.move']
+        aml_to_cancel = self.env['account.move.line']
         payment_to_unreconcile = self.env['account.payment']
         payment_to_cancel = self.env['account.payment']
         for st_line in self:
             aml_to_unbind |= st_line.journal_entry_ids
-            for move in st_line.journal_entry_ids:
-                for line in move.line_ids:
-                    payment_to_unreconcile |= line.payment_id
-                    if st_line.move_name and line.payment_id.payment_reference == st_line.move_name:
-                        #there can be several moves linked to a statement line but maximum one created by the line itself
-                        aml_to_cancel |= st_line.journal_entry_ids
-                        payment_to_cancel |= line.payment_id
+            for line in st_line.journal_entry_ids:
+                payment_to_unreconcile |= line.payment_id
+                if st_line.move_name and line.payment_id.payment_reference == st_line.move_name:
+                    #there can be several moves linked to a statement line but maximum one created by the line itself
+                    aml_to_cancel |= st_line.journal_entry_ids
+                    payment_to_cancel |= line.payment_id
         aml_to_unbind = aml_to_unbind - aml_to_cancel
 
         if aml_to_unbind:
@@ -433,7 +432,7 @@ class AccountBankStatementLine(models.Model):
 
         if aml_to_cancel:
             aml_to_cancel.remove_move_reconcile()
-            moves_to_cancel = set([x.move_id for x in aml_to_cancel])
+            moves_to_cancel = aml_to_cancel.mapped('move_id')
             moves_to_cancel.button_cancel()
             moves_to_cancel.unlink()
         if payment_to_cancel:
