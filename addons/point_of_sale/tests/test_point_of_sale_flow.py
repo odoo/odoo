@@ -586,6 +586,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         rescue_session = self.PosSession.search([
             ('config_id', '=', self.pos_config.id),
             ('state', '=', 'opened'),
+            ('rescue', '=', True)
         ])
         self.assertEqual(len(rescue_session), 1, "One (and only one) rescue session should be created for orphan orders")
         self.assertIn("(RESCUE FOR %s)" % current_session.name, rescue_session.name, "Rescue session is not linked to the previous one")

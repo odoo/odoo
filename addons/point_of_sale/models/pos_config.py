@@ -148,7 +148,7 @@ class PosConfig(models.Model):
         for pos_config in self:
             session = pos_config.session_ids.filtered(lambda r: r.user_id.id == self.env.uid and \
                 not r.state == 'closed' and \
-                '(RESCUE FOR' not in r.name)
+                not r.rescue)
             # sessions ordered by id desc
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
@@ -171,7 +171,7 @@ class PosConfig(models.Model):
     @api.depends('session_ids')
     def _compute_current_session_user(self):
         for pos_config in self:
-            session = pos_config.session_ids.filtered(lambda s: s.state == 'opened' and '(RESCUE FOR' not in s.name)
+            session = pos_config.session_ids.filtered(lambda s: s.state == 'opened' and not s.rescue)
             pos_config.pos_session_username = session and session[0].user_id.name or False
 
     @api.constrains('company_id', 'stock_location_id')
