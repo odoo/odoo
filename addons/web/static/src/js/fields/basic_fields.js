@@ -447,33 +447,29 @@ var FieldFloat = InputField.extend({
 
 var FieldFloatTime = FieldFloat.extend({
     supportedFieldTypes: ['float'],
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Format the float time value into a human-readable time format.
+     *
+     * @override
+     * @private
+     */
     _formatValue: function (value) {
-        var pattern = '%02d:%02d';
-        if (value < 0) {
-            value = Math.abs(value);
-            pattern = '-' + pattern;
-        }
-        var hour = Math.floor(value);
-        var min = Math.round((value % 1) * 60);
-        if (min === 60){
-            min = 0;
-            hour = hour + 1;
-        }
-        return _.str.sprintf(pattern, hour, min);
+        return field_utils.format.float_time(value);
     },
+
+    /**
+     * Parse the human-readable formatted time value into a float.
+     *
+     * @override
+     * @private
+     */
     _parseValue: function (value) {
-        var factor = 1;
-        if (value[0] === '-') {
-            value = value.slice(1);
-            factor = -1;
-        }
-        var float_time_pair = value.split(":");
-        if (float_time_pair.length !== 2) {
-            return factor * field_utils.parse.float(value, this.field);
-        }
-        var hours = field_utils.parse.integer(float_time_pair[0]);
-        var minutes = field_utils.parse.integer(float_time_pair[1]);
-        return factor * (hours + (minutes / 60));
+        return field_utils.parse.float_time(value);
     },
 });
 

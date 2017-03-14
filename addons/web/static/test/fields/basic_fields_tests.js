@@ -1060,6 +1060,49 @@ QUnit.module('basic_fields', {
     });
 
 
+    QUnit.module('FieldFloatTime');
+
+    QUnit.test('float_time field in form view', function(assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="float_time"/>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    // 48 / 60 = 0.8
+                    assert.strictEqual(args.args[1].qux, -11.8, 'the correct float value should be saved');
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 5,
+        });
+
+        // 9 + 0.1 * 60 = 9.06
+        assert.strictEqual(form.$('.o_form_field').first().text(), '09:06',
+            'The formatted time value should be displayed properly.')
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input.o_form_input').val(), '09:06',
+            'The value should be rendered correctly in the input.')
+
+        form.$('input.o_form_input').val('-11:48').trigger('input');
+        assert.strictEqual(form.$('input.o_form_input').val(), '-11:48',
+            'The new value should be displayed properly in the input.')
+
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_form_field').first().text(), '-11:48',
+            'The new value should be saved and displayed properly.')
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDomain');
 
     QUnit.test('basic domain field usage is ok', function (assert) {
