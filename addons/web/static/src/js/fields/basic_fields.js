@@ -258,16 +258,36 @@ var FieldDateTime = FieldDate.extend({
 var FieldMonetary = InputField.extend({
     className: 'o_list_number',
     supportedFieldTypes: ['float', 'monetary'],
-    // FieldMonetary overrides _formatValue to ensure that the format_monetary
-    // method is used.  This allows this widget to be used with other field
-    // types, such as float.
-    _formatValue: function (value) {
-        var options = _.extend({}, this.nodeOptions, { data: this.recordData });
-        return field_utils.format.monetary(value, this.field, options);
-    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * For monetary fields, 0 is a valid value.
+     *
+     * @override
+     */
     isSet: function () {
-        return this.value !== false;
-    }
+        return this.value === 0 || this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * FieldMonetary overrides _formatValue to ensure that the format_monetary
+     * method is used.  This allows this widget to be used with other field
+     * types, such as float.
+     *
+     * @override
+     * @private
+     * @param {float} value
+     */
+    _formatValue: function (value) {
+        return field_utils.format.monetary(value, this.field, this.record_data, this.node_options);
+    },
 });
 
 var FieldBoolean = AbstractField.extend({
