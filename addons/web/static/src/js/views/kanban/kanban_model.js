@@ -1,26 +1,30 @@
 odoo.define('web.KanbanModel', function (require) {
 "use strict";
 
+/**
+ * The KanbanModel extends the BasicModel to add Kanban specific features like
+ * moving a record from a group to another, resequencing records...
+ */
+
 var BasicModel = require('web.BasicModel');
 
-return BasicModel.extend({
-    load: function (params) {
-        this.defaultGroupedBy = params.groupBy;
-        params.groupedBy = params.groupedBy.length ? params.groupedBy : this.defaultGroupedBy;
-        return this._super(params);
-    },
-    reload: function (id, options) {
-        // if the groupBy is given in the options and if it is an empty array,
-        // fallback on the default groupBy
-        if (options && options.groupBy && !options.groupBy.length) {
-            options.groupBy = this.defaultGroupedBy;
-        }
-        return this._super(id, options);
-    },
-    addRecordToGroup: function (group_id, res_id) {
-        var group = this.localData[group_id];
+var KanbanModel = BasicModel.extend({
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds a record to a group in the localData, and fetch the record.
+     *
+     * @param {string} groupID localID of the group
+     * @param {integer} resId id of the record
+     * @returns {Deferred<string>} resolves to the local id of the new record
+     */
+    addRecordToGroup: function (groupID, resId) {
+        var group = this.localData[groupID];
         var new_record = this._makeDataPoint({
-            res_id: res_id,
+            res_id: resId,
             modelName: group.model,
             fields: group.fields,
             fieldNames: group.fieldNames,
@@ -34,60 +38,13 @@ return BasicModel.extend({
                 return result.id;
             });
     },
-    moveRecord: function (record_id, group_id, parent_id) {
-        var self = this;
-        var parent = this.localData[parent_id];
-        var new_group = this.localData[group_id];
-        var changes = {};
-        var groupedFieldName = parent.groupedBy[0];
-        var groupedField = parent.fields[groupedFieldName];
-        if (groupedField.type === 'many2one') {
-            changes[groupedFieldName] = {
-                id: new_group.res_id,
-                display_name: new_group.value,
-            };
-        } else {
-            changes[groupedFieldName] = new_group.value;
-        }
-        return this.notifyChanges(record_id, changes).then(function () {
-            return self.save(record_id);
-        }).then(function (result) {
-            // Remove record from its current group
-            var old_group;
-            for (var i = 0; i < parent.count; i++) {
-                old_group = self.localData[parent.data[i]];
-                var index = _.indexOf(old_group.data, record_id);
-                if (index >= 0) {
-                    old_group.data.splice(index, 1);
-                    old_group.count--;
-                    break;
-                }
-            }
-            // Add record to its new group
-            new_group.data.push(result.id);
-            new_group.count++;
-            return [old_group.id, new_group.id];
-        });
-    },
-    resequence: function (modelName, res_ids, parent_id) {
-        if ((res_ids.length <= 1)) {
-            return $.when(parent_id); // there is nothing to sort
-        }
-        var self = this;
-        var data = self.localData[parent_id];
-        var def;
-        if (data.fields.sequence) {
-            def = this._rpc('/web/dataset/resequence')
-                .params({model: modelName, ids: res_ids})
-                .exec();
-        }
-        return $.when(def).then(function () {
-            data.data = _.sortBy(data.data, function (d) {
-                return _.indexOf(res_ids, d.res_id);
-            });
-            return parent_id;
-        });
-    },
+    /**
+     * Creates a new group from a name (performs a name_create).
+     *
+     * @param {string} name
+     * @param {string} parentID localID of the parent of the group
+     * @returns {Deferred<string>} resolves to the local id of the new group
+     */
     createGroup: function (name, parentID) {
         var self = this;
         var parent = this.localData[parentID];
@@ -121,6 +78,97 @@ return BasicModel.extend({
                 return newGroup.id;
             });
     },
+    /**
+     * @override
+     */
+    load: function (params) {
+        this.defaultGroupedBy = params.groupBy;
+        params.groupedBy = params.groupedBy.length ? params.groupedBy : this.defaultGroupedBy;
+        return this._super(params);
+    },
+    /**
+     * Moves a record from a group to another.
+     *
+     * @param {string} recordID localID of the record
+     * @param {string} groupID localID of the new group of the record
+     * @param {string} parentID localID of the parent
+     * @returns {Deferred<string[]>} resolves to a pair [oldGroupID, newGroupID]
+     */
+    moveRecord: function (recordID, groupID, parentID) {
+        var self = this;
+        var parent = this.localData[parentID];
+        var new_group = this.localData[groupID];
+        var changes = {};
+        var groupedFieldName = parent.groupedBy[0];
+        var groupedField = parent.fields[groupedFieldName];
+        if (groupedField.type === 'many2one') {
+            changes[groupedFieldName] = {
+                id: new_group.res_id,
+                display_name: new_group.value,
+            };
+        } else {
+            changes[groupedFieldName] = new_group.value;
+        }
+        return this.notifyChanges(recordID, changes).then(function () {
+            return self.save(recordID);
+        }).then(function (result) {
+            // Remove record from its current group
+            var old_group;
+            for (var i = 0; i < parent.count; i++) {
+                old_group = self.localData[parent.data[i]];
+                var index = _.indexOf(old_group.data, recordID);
+                if (index >= 0) {
+                    old_group.data.splice(index, 1);
+                    old_group.count--;
+                    break;
+                }
+            }
+            // Add record to its new group
+            new_group.data.push(result.id);
+            new_group.count++;
+            return [old_group.id, new_group.id];
+        });
+    },
+    /**
+     * @override
+     */
+    reload: function (id, options) {
+        // if the groupBy is given in the options and if it is an empty array,
+        // fallback on the default groupBy
+        if (options && options.groupBy && !options.groupBy.length) {
+            options.groupBy = this.defaultGroupedBy;
+        }
+        return this._super(id, options);
+    },
+    /**
+     * Resequences records.
+     *
+     * @param {string} modelName
+     * @param {Array[integer]} resIDs the new sequence of ids
+     * @param {string]} parentID the localID of the parent
+     * @returns {Deferred<string>} resolves to the local id of the parent
+     */
+    resequence: function (modelName, resIDs, parentID) {
+        if ((resIDs.length <= 1)) {
+            return $.when(parentID); // there is nothing to sort
+        }
+        var self = this;
+        var data = self.localData[parentID];
+        var def;
+        if (data.fields.sequence) {
+            def = this._rpc('/web/dataset/resequence')
+                .params({model: modelName, ids: resIDs})
+                .exec();
+        }
+        return $.when(def).then(function () {
+            data.data = _.sortBy(data.data, function (d) {
+                return _.indexOf(resIDs, d.res_id);
+            });
+            return parentID;
+        });
+    },
 });
+
+return KanbanModel;
 
 });

@@ -4,36 +4,33 @@ odoo.define('web.KanbanColumn', function (require) {
 var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var view_dialogs = require('web.view_dialogs');
-var quick_create = require('web.kanban_quick_create');
+var kanban_quick_create = require('web.kanban_quick_create');
 var KanbanRecord = require('web.KanbanRecord');
+var view_dialogs = require('web.view_dialogs');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 var QWeb = core.qweb;
-var RecordQuickCreate = quick_create.RecordQuickCreate;
+var RecordQuickCreate = kanban_quick_create.RecordQuickCreate;
 
 var KanbanColumn = Widget.extend({
-    template: "KanbanView.Group",
-    events: {
-        'click .o_column_edit': 'edit_column',
-        'click .o_column_delete': 'delete_column',
-        'click .o_column_archive': 'archive_records',
-        'click .o_column_unarchive': 'unarchive_records',
-        'click .o_kanban_quick_add': 'add_quick_create',
-        'click .o_kanban_load_more': 'load_more',
-        'click .o_kanban_toggle_fold': 'toggle_fold',
-    },
+    template: 'KanbanView.Group',
     custom_events: {
-        'kanban_record_delete': 'delete_record',
-        'cancel_quick_create': 'cancel_quick_create',
-        'quick_create_add_record': 'quick_create_add_record',
+        cancel_quick_create: '_onCancelQuickCreate',
+        kanban_record_delete: '_onDeleteRecord',
+        quick_create_add_record: '_onQuickCreateAddRecord',
+    },
+    events: {
+        'click .o_column_edit': '_onEditColumn',
+        'click .o_column_delete': '_onDeleteColumn',
+        'click .o_column_archive': '_onArchiveRecords',
+        'click .o_column_unarchive': '_onUnarchiveRecords',
+        'click .o_kanban_quick_add': '_onAddQuickCreate',
+        'click .o_kanban_load_more': '_onLoadMore',
+        'click .o_kanban_toggle_fold': '_onToggleFold',
     },
     /**
-     * @param {any} parent
-     * @param {any} data
-     * @param {any} options
-     * @param {any} recordOptions
+     * @override
      */
     init: function (parent, data, options, recordOptions) {
         this._super(parent);
@@ -81,14 +78,14 @@ var KanbanColumn = Widget.extend({
         }
     },
     /**
-     * @returns {Deferred}
+     * @override
      */
     start: function () {
         var self = this;
         this.$header = this.$('.o_kanban_header');
 
         for (var i = 0; i < this.data_records.length; i++) {
-            this.add_record(this.data_records[i], {no_update: true});
+            this.addRecord(this.data_records[i], {no_update: true});
         }
         this.$header.tooltip();
 
@@ -105,7 +102,7 @@ var KanbanColumn = Widget.extend({
                 cursor: 'move',
                 over: function () {
                     self.$el.addClass('o_kanban_hover');
-                    self.update_column();
+                    self._update();
                 },
                 out: function () {
                     self.$el.removeClass('o_kanban_hover');
@@ -118,34 +115,61 @@ var KanbanColumn = Widget.extend({
                     if (index >= 0) {
                         if ($.contains(self.$el[0], record.$el[0])) {
                             // resequencing records
-                            self.trigger_up('kanban_column_resequence', {ids: self.get_ids()});
+                            self.trigger_up('kanban_column_resequence', {ids: self._getIDs()});
                         }
                     } else {
                         // adding record to this column
-                        self.trigger_up('kanban_column_add_record', {record: record, ids: self.get_ids()});
+                        self.trigger_up('kanban_column_add_record', {record: record, ids: self._getIDs()});
                     }
                 }
             });
         }
         this.$el.click(function (event) {
             if (self.folded) {
-                self.toggle_fold(event);
+                self._onToggleFold(event);
             }
         });
-        this.update_column();
+        this._update();
 
         return this._super.apply(this, arguments);
     },
 
-    is_empty: function () {
-        return !this.records.length;
-    },
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
 
-    add_record: function (data, options) {
-        var record = new KanbanRecord(this, data, this.record_options);
+    /**
+     * Adds the quick create record to the top of the column.
+     */
+    addQuickCreate: function () {
+        if (this.quickCreateWidget) {
+            return;
+        }
+        var self = this;
+        var width = this.records.length ? this.records[0].$el.innerWidth() : this.$el.width() - 8;
+        this.quickCreateWidget = new RecordQuickCreate(this, width);
+        this.quickCreateWidget.insertAfter(this.$header);
+        this.quickCreateWidget.$el.focusout(function () {
+            var hasFocus = (self.quickCreateWidget.$(':focus').length > 0);
+            if (! hasFocus && self.quickCreateWidget) {
+                self._cancelQuickCreate();
+            }
+        });
+    },
+    /**
+     * Adds a record in the column.
+     *
+     * @param {Object} recordState
+     * @param {Object} options
+     * @params {string} options.position 'before' to add the record at the top,
+     *                  added at the bottom by default
+     * @params {Boolean} options.no_update set to true not to update the column
+     */
+    addRecord: function (recordState, options) {
+        var record = new KanbanRecord(this, recordState, this.record_options);
         this.records.push(record);
         if (options.position === 'before') {
-            record.insertAfter(this.quick_create_widget ? this.quick_create_widget.$el : this.$header);
+            record.insertAfter(this.quickCreateWidget ? this.quickCreateWidget.$el : this.$header);
         } else {
             var $load_more = this.$('.o_kanban_load_more');
             if ($load_more.length) {
@@ -155,19 +179,43 @@ var KanbanColumn = Widget.extend({
             }
         }
         if (!options.no_update) {
-            this.update_column();
+            this._update();
         }
     },
+    /**
+     * @returns {Boolean} true iff the column is empty
+     */
+    isEmpty: function () {
+        return !this.records.length;
+    },
 
-    get_ids: function () {
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Destroys the QuickCreate widget.
+     *
+     * @private
+     */
+    _cancelQuickCreate: function () {
+        this.quickCreateWidget.destroy();
+        this.quickCreateWidget = undefined;
+    },
+    /**
+     * @returns {integer[]} the res_ids of the records in the column
+     */
+    _getIDs: function () {
         var ids = [];
         this.$('.o_kanban_record').each(function (index, r) {
             ids.push($(r).data('record').id);
         });
         return ids;
     },
-
-    update_column: function () {
+    /**
+     * @private
+     */
+    _update: function () {
         var title = this.folded ? this.title + ' (' + this.size + ')' : this.title;
         this.$header.find('.o_column_title').text(title);
         this.$header.find('.o-kanban-count').text(this.records.length);
@@ -183,29 +231,42 @@ var KanbanColumn = Widget.extend({
         }
     },
 
-    archive_records: function (event) {
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onAddQuickCreate: function () {
+        this.addQuickCreate();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onArchiveRecords: function (event) {
         event.preventDefault();
         this.trigger_up('kanban_column_archive_records', {archive: true});
     },
-
-    unarchive_records: function (event) {
-        event.preventDefault();
-        this.trigger_up('kanban_column_archive_records', {archive: false});
+    /**
+     * @private
+     */
+    _onCancelQuickCreate: function () {
+        this.cancelQuickCreate();
     },
-
-    toggle_fold: function (event) {
-        event.preventDefault();
-        this.trigger_up('column_toggle_fold');
-    },
-
-    delete_column: function (event) {
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onDeleteColumn: function (event) {
         event.preventDefault();
         var buttons = [
             {
                 text: _t("Ok"),
                 classes: 'btn-primary',
                 close: true,
-                click: this.trigger_up.bind(this, 'kanban_column_delete')
+                click: this.trigger_up.bind(this, 'kanban_column_delete'),
             },
             {text: _t("Cancel"), close: true}
         ];
@@ -217,8 +278,24 @@ var KanbanColumn = Widget.extend({
             }),
         }).open();
     },
-
-    edit_column: function (event) {
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onDeleteRecord: function (event) {
+        var self = this;
+        event.data.parent_id = this.db_id;
+        event.data.after = function cleanup() {
+            var index = self.records.indexOf(event.data.record);
+            self.records.splice(index, 1);
+            self._update();
+        };
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onEditColumn: function (event) {
         event.preventDefault();
         new view_dialogs.FormViewDialog(this, {
             res_model: this.relation,
@@ -227,47 +304,37 @@ var KanbanColumn = Widget.extend({
             on_saved: this.trigger_up.bind(this, 'reload'),
         }).open();
     },
-
-    delete_record: function (event) {
-        var self = this;
-        event.data.parent_id = this.db_id;
-        event.data.after = function cleanup() {
-            var index = self.records.indexOf(event.data.record);
-            self.records.splice(index, 1);
-            self.update_column();
-        };
-    },
-
-    add_quick_create: function () {
-        if (this.quick_create_widget) {
-            return;
-        }
-        var self = this;
-        var width = this.records.length ? this.records[0].$el.innerWidth() : this.$el.width() - 8;
-        this.quick_create_widget = new RecordQuickCreate(this, width);
-        this.quick_create_widget.insertAfter(this.$header);
-        this.quick_create_widget.$el.focusout(function () {
-            var hasFocus = (self.quick_create_widget.$(':focus').length > 0);
-            if (! hasFocus && self.quick_create_widget) {
-                self.cancel_quick_create();
-            }
-        });
-    },
-
-    cancel_quick_create: function () {
-        this.quick_create_widget.destroy();
-        this.quick_create_widget = undefined;
-    },
-
-    quick_create_add_record: function (event) {
-        this.trigger_up('quick_create_record', event.data);
-    },
-
-    load_more: function (event) {
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onLoadMore: function (event) {
         event.preventDefault();
         this.trigger_up('kanban_load_more');
     },
-
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onQuickCreateAddRecord: function (event) {
+        this.trigger_up('quick_create_record', event.data);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onToggleFold: function (event) {
+        event.preventDefault();
+        this.trigger_up('column_toggle_fold');
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onUnarchiveRecords: function (event) {
+        event.preventDefault();
+        this.trigger_up('kanban_column_archive_records', {archive: false});
+    },
 });
 
 return KanbanColumn;

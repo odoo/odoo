@@ -59,7 +59,7 @@ var KanbanController = BasicController.extend({
                 var data = self.model.get(self.handle, {raw: true});
                 if (data.groupedBy.length > 0 && data.count > 0 && self.on_create === 'quick_create') {
                     // Activate the quick create in the first column
-                    self.renderer.add_quick_create();
+                    self.renderer.addQuickCreate();
                 } else if (self.on_create && self.on_create !== 'quick_create') {
                     // Execute the given action
                     self.do_action(self.on_create, {
@@ -101,7 +101,7 @@ var KanbanController = BasicController.extend({
      * @param {string} id local id from the basic record data
      */
     _confirmSave: function (id) {
-        this.renderer.update_record(this.model.get(id));
+        this.renderer.updateRecord(this.model.get(id));
     },
     /**
      * @todo this is dead code right now. resurrect this?
@@ -181,7 +181,7 @@ var KanbanController = BasicController.extend({
                     .then(function () {
                         _.each(column_db_ids, function (db_id) {
                             var data = self.model.get(db_id);
-                            self.renderer.update_column(db_id, data);
+                            self.renderer.updateColumn(db_id, data);
                         });
                 });
             }).fail(this.reload.bind(this));
@@ -207,7 +207,7 @@ var KanbanController = BasicController.extend({
                 .toggleActive(record_ids, active_value, column.db_id)
                 .then(function (db_id) {
                     var data = self.model.get(db_id);
-                    self.renderer.update_column(db_id, data);
+                    self.renderer.updateColumn(db_id, data);
                 });
         }
     },
@@ -228,8 +228,8 @@ var KanbanController = BasicController.extend({
         this.model
             .deleteRecords([column.db_id], relatedModelName, this.handle)
             .done(function () {
-                if (column.is_empty()) {
-                    self.renderer.remove_widget(column);
+                if (column.isEmpty()) {
+                    self.renderer.removeWidget(column);
                     self._updateButtons();
                 } else {
                     self.reload();
@@ -255,7 +255,7 @@ var KanbanController = BasicController.extend({
         var column = event.target;
         this.model.load_more(column.db_id).then(function (db_id) {
             var data = self.model.get(db_id);
-            self.renderer.update_column(db_id, data);
+            self.renderer.updateColumn(db_id, data);
         });
     },
     /**
@@ -297,7 +297,7 @@ var KanbanController = BasicController.extend({
             return self.model
                 .addRecordToGroup(data.id, records[0])
                 .then(function (db_id) {
-                    column.add_record(self.model.get(db_id), {position: 'before'});
+                    column.addRecord(self.model.get(db_id), {position: 'before'});
                 });
         }
         data.context['default_' + data.groupedBy[0]] = column.id;
@@ -347,7 +347,7 @@ var KanbanController = BasicController.extend({
         var column = event.target;
         this.model.toggleGroup(column.db_id).then(function (db_id) {
             var data = self.model.get(db_id);
-            self.renderer.update_column(db_id, data);
+            self.renderer.updateColumn(db_id, data);
         });
     },
     /**
