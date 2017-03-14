@@ -2,6 +2,9 @@
 
 import re
 
+from urlparse import urljoin
+from werkzeug import url_encode
+
 from odoo import api, fields, models, _
 from odoo.addons.website.models.website import slug
 
@@ -16,7 +19,7 @@ class EventType(models.Model):
 
 class Event(models.Model):
     _name = 'event.event'
-    _inherit = ['event.event', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = ['event.event', 'website.seo.metadata', 'website.published.mixin','utm.mixin']
 
     website_published = fields.Boolean(track_visibility='onchange')
     website_message_ids = fields.One2many(
@@ -125,3 +128,32 @@ class Event(models.Model):
             'target': 'new',
             'url': '/report/html/%s/%s?enable_editor' % ('event.event_event_report_template_badge', self.id),
         }
+
+
+class RegistrationSource(models.Model):
+    _description = 'source of attendee registration'
+    _name = 'event.registration.source'
+    _inherits = {"utm.source": "source_id"}
+
+    source_id = fields.Many2one('utm.source', "Source", ondelete='cascade', required=True)
+    url = fields.Char(compute='_compute_url', string='Url Parameters')
+    event_id = fields.Many2one('event.event', string='Event', required=True, readonly=True)
+
+    @api.depends('source_id', 'source_id.name', 'event_id')
+    def _compute_url(self):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url_utm_campaign_event = self.env.ref('website_event.utm_campaign_event')
+        url_utm_medium = self.env.ref('utm.utm_medium_website')
+        for source in self:
+            source.url = urljoin(base_url, "%s/register?%s" % (source.event_id.website_url,
+                url_encode({
+                    'utm_campaign': url_utm_campaign_event.name,
+                    'utm_medium': url_utm_medium.name,
+                    'utm_source': source.source_id.name
+                })
+            ))
+
+
+class EventRegistration(models.Model):
+    _name = 'event.registration'
+    _inherit = ['event.registration','utm.mixin']

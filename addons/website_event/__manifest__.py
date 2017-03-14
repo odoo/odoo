@@ -9,7 +9,7 @@
     'description': """
 Online Events
         """,
-    'depends': ['website', 'website_partner', 'website_mail', 'event'],
+    'depends': ['website', 'website_partner', 'website_mail', 'event', 'utm'],
     'data': [
         'data/event_data.xml',
         'views/event_config_settings_views.xml',

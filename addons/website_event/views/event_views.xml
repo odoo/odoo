@@ -25,12 +25,58 @@
         </field>
     </record>
 
+    <!-- Source Tree View -->
+    <record id="event_registration_source_tree" model="ir.ui.view">
+        <field name="name">event.registration.source.tree</field>
+        <field name="model">event.registration.source</field>
+        <field name="arch" type="xml">
+            <tree string="Sources of Attendees" editable="top">
+                <field name="source_id"/>
+                <field name="url"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_event_registration_form_inherit" model="ir.ui.view">
+        <field name="name">event.registration.form.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='attendee']" position="inside">
+                <field name="source_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_event_registration_sources" model="ir.actions.act_window">
+        <field name="name">Event Sources</field>
+        <field name="res_model">event.registration.source</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('event_id', '=', active_id)]</field>
+        <field name="context">{'default_event_id': active_id}</field>
+        <field name="help" type="html">
+              <p>
+                Generate some URLs that will allow you to track where attendees come from.
+              </p>
+              <p>
+                When the attendee arrives here through one of these URLs, you'll know where he came from.
+              </p>
+        </field>
+    </record>
+
     <record id="event_event_view_form_inherit_website" model="ir.ui.view">
         <field name="name">event.event.view.form.inherit.website</field>
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
             <button name="toggle_active" position="before">
+                <button class="oe_stat_button" type="action"
+                    name="%(action_event_registration_sources)d" icon="fa-share"
+                    context="{'default_event_id': active_id}">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_text">Trackers</span>
+                    </div>
+                </button>
                 <field name="website_url" invisible="1"/>
                 <button name="website_publish_button"
                         type="object"
