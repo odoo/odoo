@@ -171,6 +171,11 @@ var FieldDate = InputField.extend({
     replace_element: true,
     supportedFieldTypes: ['date'],
 
+    /**
+     * In edit mode, instantiates a DateWidget datepicker and listen to changes.
+     *
+     * @override
+     */
     start: function () {
         var self = this;
         var def;
@@ -195,6 +200,12 @@ var FieldDate = InputField.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Automatically selects the input associated with the datepicker widget.
+     * When entering this field via a tab mechanism in list view for example.
+     *
+     * @override
+     */
     activate: function () {
         var $input = this.datewidget.$input;
         $input.focus();
@@ -205,9 +216,21 @@ var FieldDate = InputField.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Instantiates a new DateWidget datepicker.
+     *
+     * @private
+     */
     _makeDatePicker: function () {
         return new datepicker.DateWidget(this, {defaultDate: this.value});
     },
+
+    /**
+     * Set the datepicker to the right value rather than the default one.
+     *
+     * @override
+     * @private
+     */
     _renderEdit: function () {
         this.datewidget.set_value(this.value);
     },
@@ -221,6 +244,12 @@ var FieldDateTime = FieldDate.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Instantiates a new DateTimeWidget datepicker rather than DateWidget.
+     *
+     * @override
+     * @private
+     */
     _makeDatePicker: function () {
         return new datepicker.DateTimeWidget(this, {defaultDate: this.value});
     },
