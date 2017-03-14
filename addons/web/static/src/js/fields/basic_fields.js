@@ -283,11 +283,22 @@ var FieldBoolean = AbstractField.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Automatically selects the field.
+     *
+     * @override
+     */
     activate: function () {
         this.$input.focus();
         setTimeout(this.$input.select.bind(this.$input), 0);
     },
-    isSet: function () {
+
+    /**
+     * A boolean field is always set since false is a valid value.
+     *
+     * @override
+     */
+    isSet: function () {
         return true;
     },
 
@@ -295,11 +306,28 @@ var FieldBoolean = AbstractField.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * The actual checkbox is designed in css to have full control over its
+     * appearance, as opposed to letting the browser and the os decide how
+     * a checkbox should look. The actual input is disabled and hidden.
+     *
+     * @override
+     * @private
+     */
     _renderReadonly: function () {
         var $checkbox = this._formatValue(this.value);
         this.$input = $checkbox.find('input');
         this.$el.empty().append($checkbox);
     },
+
+    /**
+     * The actual checkbox is designed in css to have full control over its
+     * appearance, as opposed to letting the browser and the os decide how
+     * a checkbox should look. The actual input is hidden.
+     *
+     * @override
+     * @private
+     */
     _renderEdit: function () {
         this._renderReadonly();
         this.$input.prop('disabled', false);
@@ -309,10 +337,22 @@ var FieldBoolean = AbstractField.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Properly update the value when the checkbox is (un)ticked to trigger
+     * possible onchanges.
+     *
+     * @private
+     */
     _onChange: function () {
         this._setValue(this.$input[0].checked);
     },
+
     /**
+     * Implement keyboard movements.  Mostly useful for its environment, such
+     * as a list view.
+     *
+     * @override
+     * @private
      * @param {KeyEvent} event
      */
     _onKeydown: function (event) {

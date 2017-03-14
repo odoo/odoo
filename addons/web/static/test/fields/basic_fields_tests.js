@@ -90,23 +90,112 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldBoolean');
 
-    QUnit.test('boolean field rendering in list view', function (assert) {
-        assert.expect(2);
+    QUnit.test('boolean field in form view', function(assert) {
+        assert.expect(7);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="bar"/></form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_boolean input:checked').length, 1,
+            "checkbox should be checked");
+
+        // switch to edit mode and check the result
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_boolean input:checked').length, 1,
+            "checkbox should still be checked");
+
+        // uncheck the checkbox
+        form.$('.o_field_boolean input:checked').click();
+        assert.strictEqual(form.$('.o_field_boolean input:checked').length, 0,
+            "checkbox should no longer be checked");
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_field_boolean input:checked').length, 0,
+            "checkbox should still no longer be checked");
+
+        // switch to edit mode and test the opposite change
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_boolean input:checked').length, 0,
+            "checkbox should still be unchecked");
+        // check the checkbox
+        form.$('.o_field_boolean input').click();
+        assert.strictEqual(form.$('.o_field_boolean input:checked').length, 1,
+            "checkbox should now be checked");
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_field_boolean input:checked').length, 1,
+            "checkbox should still be checked");
+        form.destroy();
+    });
+
+    QUnit.test('boolean field in editable list view', function(assert) {
+        assert.expect(11);
 
         var list = createView({
             View: ListView,
             model: 'partner',
             data: this.data,
-            arch: '<tree><field name="bar"/></tree>',
+            arch: '<tree editable="bottom"><field name="bar"/></tree>',
         });
 
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 4,
-            "should have 4 checked input");
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input').length, 5,
             "should have 5 checkboxes");
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 4,
+            "should have 4 checked input");
 
+        // Edit a line
+        var $cell = list.$('tr.o_data_row:has(.o_checkbox input:checked) td:not(.o_list_record_selector)').first();
+        assert.ok($cell.find('.o_checkbox input:checked').prop('disabled'),
+            "input should be disabled in readonly mode")
+        $cell.click();
+        assert.ok(!$cell.find('.o_checkbox input:checked').prop('disabled'),
+            "input should not have the disabled property in edit mode")
+        $cell.find('.o_checkbox input:checked').click();
+
+        // save
+        list.$buttons.find('.o_list_button_save').click();
+        $cell = list.$('tr.o_data_row:has(.o_checkbox input:not(:checked)) td:not(.o_list_record_selector)').first();
+        assert.ok($cell.find('.o_checkbox input:not(:checked)').prop('disabled'),
+            "input should be disabled again")
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input').length, 5,
+            "should still have 5 checkboxes");
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 3,
+            "should now have only 3 checked input");
+
+        // Re-Edit the line and fake-check the checkbox
+        $cell.click();
+        var $checkbox = $cell.find('.o_checkbox input:not(:checked)');
+        $checkbox.click();  // Change the checkbox
+        $checkbox.click();  // Undo the change
+
+        // Save
+        list.$buttons.find('.o_list_button_save').click();
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input').length, 5,
+            "should still have 5 checkboxes");
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 3,
+            "should still have only 3 checked input");
+
+        // Re-Edit the line to check the checkbox back
+        $cell = list.$('tr.o_data_row:has(.o_checkbox input:not(:checked)) td:not(.o_list_record_selector)').first();
+        $cell.click();
+        $cell.find('.o_checkbox input:not(:checked)').click();
+
+        // save
+        list.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input').length, 5,
+            "should still have 5 checkboxes");
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 4,
+            "should now have 4 checked input back");
         list.destroy();
     });
+
 
     QUnit.module('FieldBooleanButton');
 
