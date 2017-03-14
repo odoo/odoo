@@ -101,7 +101,7 @@ class WebsiteSaleForm(WebsiteForm):
 
         order = request.website.sale_get_order()
         if data['record']:
-            order.write(data['record'])
+            order.sudo().write(data['record'])
 
         if data['custom']:
             values = {
