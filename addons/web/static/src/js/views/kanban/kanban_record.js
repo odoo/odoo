@@ -14,14 +14,12 @@ var _t = core._t;
 
 var KanbanRecord = Widget.extend({
     template: 'KanbanView.record',
-
     events: {
         'click .oe_kanban_action': 'on_kanban_action_clicked',
         'click .o_kanban_manage_toggle_button': 'toggle_manage_pane',
     },
-
     custom_events: {
-        'kanban_update_record': 'update_record',
+        kanban_update_record: 'update_record',
     },
 
     init: function (parent, state, options) {

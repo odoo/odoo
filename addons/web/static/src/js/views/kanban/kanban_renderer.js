@@ -15,7 +15,7 @@ var ColumnQuickCreate = quick_create.ColumnQuickCreate;
 
 var qweb = core.qweb;
 
-function find_in_node(node, predicate) {
+function findInNode(node, predicate) {
     if (predicate(node)) {
         return node;
     }
@@ -23,25 +23,25 @@ function find_in_node(node, predicate) {
         return undefined;
     }
     for (var i = 0; i < node.children.length; i++) {
-        if (find_in_node(node.children[i], predicate)) {
+        if (findInNode(node.children[i], predicate)) {
             return node.children[i];
         }
     }
 }
 
-function qweb_add_if(node, condition) {
+function qwebAddIf(node, condition) {
     if (node.attrs[qweb.prefix + '-if']) {
         condition = _.str.sprintf("(%s) and (%s)", node.attrs[qweb.prefix + '-if'], condition);
     }
     node.attrs[qweb.prefix + '-if'] = condition;
 }
 
-function transform_qweb_template(node, fields) {
+function transformQwebTemplate(node, fields) {
     // Process modifiers
     if (node.tag && node.attrs.modifiers) {
         var modifiers = JSON.parse(node.attrs.modifiers || "{}");
         if (modifiers.invisible) {
-            qweb_add_if(node, _.str.sprintf("!kanban_compute_domain(%s)", JSON.stringify(modifiers.invisible)));
+            qwebAddIf(node, _.str.sprintf("!kanban_compute_domain(%s)", JSON.stringify(modifiers.invisible)));
         }
     }
     switch (node.tag) {
@@ -108,116 +108,136 @@ function transform_qweb_template(node, fields) {
     }
     if (node.children) {
         for (var i = 0, ii = node.children.length; i < ii; i++) {
-            transform_qweb_template(node.children[i], fields);
+            transformQwebTemplate(node.children[i], fields);
         }
     }
 }
 
-return BasicRenderer.extend({
-    className: "o_kanban_view",
+var KanbanRenderer = BasicRenderer.extend({
+    className: 'o_kanban_view',
+    /**
+     * @override
+     */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
 
         this.qweb = new QWeb(session.debug, {_s: session.origin});
-        var templates = find_in_node(this.arch, function (n) { return n.tag === 'templates';});
-        transform_qweb_template(templates, state.fields);
+        var templates = findInNode(this.arch, function (n) { return n.tag === 'templates';});
+        transformQwebTemplate(templates, state.fields);
         this.qweb.add_template(utils.json_node_to_xml(templates));
 
-        this.record_options = _.extend({}, params.record_options, { qweb: this.qweb });
-        this.column_options = _.extend({}, params.column_options, { qweb: this.qweb });
+        this.recordOptions = _.extend({}, params.record_options, { qweb: this.qweb });
+        this.columnOptions = _.extend({}, params.column_options, { qweb: this.qweb });
     },
-    update: function (state, fields) {
-        this.fields = fields;
-        return this._super(state);
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Displays the quick create record in the first column.
+     */
+    addQuickCreate: function () {
+        this.widgets[0].addQuickCreate();
     },
-    update_record: function (record_state) {
-        var is_grouped = !!this.state.groupedBy.length;
+    /**
+     * Removes a widget (record if ungrouped, column if grouped) from the view.
+     *
+     * @param {Widget} widget the instance of the widget to remove
+     */
+    removeWidget: function (widget) {
+        this.widgets.splice(this.widgets.indexOf(widget), 1);
+        widget.destroy();
+    },
+    /**
+     * Updates a given column with its new state.
+     *
+     * @param {string} localID the column id
+     * @param {Object} columnState
+     *
+     * @returns {Deferred}
+     */
+    updateColumn: function (localID, columnState) {
+        var column = _.findWhere(this.widgets, {db_id: localID});
+        this.widgets.splice(_.indexOf(this.widgets, column), 1); // remove column from widgets' list
+        var newColumn = new KanbanColumn(this, columnState, this.columnOptions, this.recordOptions);
+        this.widgets.push(newColumn);
+        return newColumn.insertAfter(column.$el).then(column.destroy.bind(column));
+    },
+    /**
+     * Updates a given record with its new state.
+     *
+     * @param {Object} recordState
+     */
+    updateRecord: function (recordState) {
+        var isGrouped = !!this.state.groupedBy.length;
         var record;
 
-        if (is_grouped) {
-            // if grouped, this.widgets are kanban columns
-            // so we need to find the kanban record inside
+        if (isGrouped) {
+            // if grouped, this.widgets are kanban columns so we need to find
+            // the kanban record inside
             _.each(this.widgets, function (widget) {
-                record = record || _.findWhere(widget.records, {db_id: record_state.id});
+                record = record || _.findWhere(widget.records, {
+                    db_id: recordState.id,
+                });
             });
         } else {
-            record = _.findWhere(this.widgets, {db_id: record_state.id});
+            record = _.findWhere(this.widgets, {db_id: recordState.id});
         }
 
         if (record) {
-            record.update(record_state);
+            record.update(recordState);
         }
     },
-    update_column: function (column_db_id, data) {
-        var column = _.findWhere(this.widgets, {db_id: column_db_id});
-        this.widgets.splice(_.indexOf(this.widgets, column), 1); // remove column from widgets' list
-        var new_column = new KanbanColumn(this, data, this.column_options, this.record_options);
-        this.widgets.push(new_column);
-        return new_column.insertAfter(column.$el).then(column.destroy.bind(column));
-    },
-    _renderView: function () {
-        var is_grouped = !!this.state.groupedBy.length;
-        this.$el.toggleClass('o_kanban_grouped', is_grouped);
-        this.$el.toggleClass('o_kanban_ungrouped', !is_grouped);
-        this.$el.empty();
 
-        var fragment = document.createDocumentFragment();
-        if (is_grouped) {
-            this._renderGrouped(fragment);
-        } else {
-            this._render_ungrouped(fragment);
-        }
-        this.$el.append(fragment);
-        return this._super.apply(this, arguments);
-    },
-    _render_ungrouped: function (fragment) {
-        var self = this;
-        _.each(this.state.data, function (record) {
-            var kanban_record = new KanbanRecord(self, record, self.record_options);
-            self.widgets.push(kanban_record);
-            kanban_record.appendTo(fragment);
-        });
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-        // append ghost divs to ensure that all kanban records are left aligned
-        this._appendGhostDivs(fragment, 6);
-    },
     /**
-     * Appends empty invisible divs to a document fragment.
+     * Renders empty invisible divs in a document fragment.
      *
+     * @private
      * @param {DocumentFragment} fragment
      * @param {integer} nbDivs the number of divs to append
      */
-    _appendGhostDivs: function (fragment, nbDivs) {
+    _renderGhostDivs: function (fragment, nbDivs) {
         for (var $ghost, i = 0; i < nbDivs; i++) {
             $ghost = $('<div>').addClass('o_kanban_record o_kanban_ghost');
             $ghost.appendTo(fragment);
         }
     },
+    /**
+     * Renders an grouped kanban view in a fragment.
+     *
+     * @private
+     * @param {DocumentFragment} fragment
+     */
     _renderGrouped: function (fragment) {
         var self = this;
-        var group_by_field_attrs = this.state.fields[this.state.groupedBy[0]];
+        var groupByFieldAttrs = this.state.fields[this.state.groupedBy[0]];
         // Deactivate the drag'n'drop if the groupedBy field:
         // - is a date or datetime since we group by month or
         // - is readonly
         var draggable = true;
-        if (group_by_field_attrs) {
-            if (group_by_field_attrs.type === "date" || group_by_field_attrs.type === "datetime") {
+        if (groupByFieldAttrs) {
+            if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
                 draggable = false;
-            } else if (group_by_field_attrs.readonly !== undefined) {
-                draggable = !(group_by_field_attrs.readonly);
+            } else if (groupByFieldAttrs.readonly !== undefined) {
+                draggable = !(groupByFieldAttrs.readonly);
             }
         }
-        var grouped_by_m2o = group_by_field_attrs && (group_by_field_attrs.type === 'many2one');
-        var grouped_by_field = grouped_by_m2o && group_by_field_attrs.relation;
-        this.column_options = _.extend(this.column_options, {
+        var groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
+        var grouped_by_field = groupedByM2O && groupByFieldAttrs.relation;
+        this.columnOptions = _.extend(this.columnOptions, {
             draggable: draggable,
-            grouped_by_m2o: grouped_by_m2o,
+            grouped_by_m2o: groupedByM2O,
             relation: grouped_by_field,
         });
 
         // Render columns
         _.each(this.state.data, function (group) {
-            var column = new KanbanColumn(self, group, self.column_options, self.record_options);
+            var column = new KanbanColumn(self, group, self.columnOptions, self.recordOptions);
             if (!group.value) {
                 column.prependTo(fragment); // display the 'Undefined' group first
                 self.widgets.unshift(column);
@@ -247,18 +267,49 @@ return BasicRenderer.extend({
         });
 
         // Column quick create
-        if (this.column_options.group_creatable && grouped_by_m2o) {
-            this.column_quick_create = new ColumnQuickCreate(this);
-            this.column_quick_create.appendTo(fragment);
+        if (this.columnOptions.group_creatable && groupedByM2O) {
+            var quickCreate = new ColumnQuickCreate(this);
+            quickCreate.appendTo(fragment);
         }
     },
-    add_quick_create: function () {
-        this.widgets[0].add_quick_create();
+    /**
+     * Renders an ungrouped kanban view in a fragment.
+     *
+     * @private
+     * @param {DocumentFragment} fragment
+     */
+    _renderUngrouped: function (fragment) {
+        var self = this;
+        _.each(this.state.data, function (record) {
+            var kanbanRecord = new KanbanRecord(self, record, self.recordOptions);
+            self.widgets.push(kanbanRecord);
+            kanbanRecord.appendTo(fragment);
+        });
+
+        // append ghost divs to ensure that all kanban records are left aligned
+        this._renderGhostDivs(fragment, 6);
     },
-    remove_widget: function (widget) {
-        this.widgets.splice(this.widgets.indexOf(widget), 1);
-        widget.destroy();
-    }
+    /**
+     * @override
+     * @private
+     */
+    _renderView: function () {
+        var isGrouped = !!this.state.groupedBy.length;
+        this.$el.toggleClass('o_kanban_grouped', isGrouped);
+        this.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
+        this.$el.empty();
+
+        var fragment = document.createDocumentFragment();
+        if (isGrouped) {
+            this._renderGrouped(fragment);
+        } else {
+            this._renderUngrouped(fragment);
+        }
+        this.$el.append(fragment);
+        return this._super.apply(this, arguments);
+    },
 });
+
+return KanbanRenderer;
 
 });
