@@ -178,10 +178,19 @@ return BasicRenderer.extend({
             kanban_record.appendTo(fragment);
         });
 
-        // add empty invisible divs to make sure that all kanban records are left aligned
-        for (var i = 0, ghost_div; i < 6; i++) {
-            ghost_div = $("<div>").addClass("o_kanban_record o_kanban_ghost");
-            ghost_div.appendTo(fragment);
+        // append ghost divs to ensure that all kanban records are left aligned
+        this._appendGhostDivs(fragment, 6);
+    },
+    /**
+     * Appends empty invisible divs to a document fragment.
+     *
+     * @param {DocumentFragment} fragment
+     * @param {integer} nbDivs the number of divs to append
+     */
+    _appendGhostDivs: function (fragment, nbDivs) {
+        for (var $ghost, i = 0; i < nbDivs; i++) {
+            $ghost = $('<div>').addClass('o_kanban_record o_kanban_ghost');
+            $ghost.appendTo(fragment);
         }
     },
     _renderGrouped: function (fragment) {
