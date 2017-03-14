@@ -29,6 +29,18 @@ class ir_http(orm.AbstractModel):
     rerouting_limit = 10
     geo_ip_resolver = None
 
+    def _serve_attachment(self):
+        response = super(ir_http, self)._serve_attachment()
+        if response and response.mimetype == 'application/octet-stream':
+            # Try to set mimetype via attachment miemtype field
+            domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
+            attach = self.pool['ir.attachment'].search_read(
+                request.cr, openerp.SUPERUSER_ID, domain, ['mimetype'],
+                context=request.context)
+            if attach and attach[0].get('mimetype'):
+                response.mimetype = attach[0].get('mimetype')
+        return response
+
     def _get_converters(self):
         return dict(
             super(ir_http, self)._get_converters(),
