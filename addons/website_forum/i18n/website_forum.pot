@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"POT-Creation-Date: 2017-03-14 14:20+0000\n"
+"PO-Revision-Date: 2017-03-14 14:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -254,6 +254,22 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_badges
 msgid "<i class=\"text-muted\">awarded users</i>"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:57
+#, python-format
+msgid "<section class=\"bg-info\" style=\"height: 168px;\"><div class=\"container\">\n"
+"                        <div class=\"row\">\n"
+"                            <div class=\"col-md-12\">\n"
+"                                <h1 class=\"text-center\" style=\"text-align: left;\">Welcome!</h1>\n"
+"                                <p class=\"text-muted text-center\" style=\"text-align: left;\">This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.</p>\n"
+"                            </div>\n"
+"                            <div class=\"col-md-12\">\n"
+"                                <a href=\"#\" class=\"js_close_intro\">Hide Intro</a>    <a class=\"btn btn-primary forum_register_url\" href=\"/web/login\">Register</a> </div>\n"
+"                            </div>\n"
+"                        </div>\n"
+"                    </section>"
 msgstr ""
 
 #. module: website_forum
@@ -2382,6 +2398,11 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.js:75
 #, python-format
 msgid "This post is already flagged"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "This post is currently awaiting moderation and not yet published... Do you want <i>Accept</i> or <i>Reject</i> this post ?"
 msgstr ""
 
 #. module: website_forum

@@ -54,7 +54,7 @@ class Forum(models.Model):
                 'build your professional profile and become a better marketer together.')
     welcome_message = fields.Html(
         'Welcome Message',
-        default = """<section class="bg-info" style="height: 168px;"><div class="container">
+        default = _("""<section class="bg-info" style="height: 168px;"><div class="container">
                         <div class="row">
                             <div class="col-md-12">
                                 <h1 class="text-center" style="text-align: left;">Welcome!</h1>
@@ -64,7 +64,7 @@ class Forum(models.Model):
                                 <a href="#" class="js_close_intro">Hide Intro</a>    <a class="btn btn-primary forum_register_url" href="/web/login">Register</a> </div>
                             </div>
                         </div>
-                    </section>""")
+                    </section>"""))
     default_order = fields.Selection([
         ('create_date desc', 'Newest'),
         ('write_date desc', 'Last Updated'),
