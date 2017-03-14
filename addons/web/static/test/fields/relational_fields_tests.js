@@ -1980,6 +1980,37 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many without inline tree arch', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [2,3];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="p" widget="many2many_tags"/>' + // check if the view don not call load view (widget without useSubview)
+                        '<field name="turtles"/>' +
+                        '<field name="timmy" invisible="1"/>' + // check if the view don not call load view in invisible
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                "turtle,false,list": '<tree string="Turtles"><field name="turtle_bar"/><field name="display_name"/><field name="partner_ids"/></tree>',
+            }
+        });
+
+        assert.strictEqual(form.$('.o_form_field[name="turtles"] .o_list_view').length, 1,
+            'should display one2many list view in the modal');
+
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            'should display the 2 turtles');
+
+        form.destroy();
+    });
+
     QUnit.test('many2one and many2many in one2many', function (assert) {
         assert.expect(4);
 
@@ -2007,7 +2038,6 @@ QUnit.module('relational_fields', {
                         '</field>' +
                     '</group>' +
                 '</form>',
-            debug: true,
             res_id: 1,
         });
 
@@ -2028,6 +2058,50 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual($('.modal .o_form_field').text(), "xphone",
             'should display the form view dialog with the many2one value');
+
+        form.destroy();
+    });
+
+    QUnit.test('load view for x2many in one2many', function (assert) {
+        assert.expect(2);
+
+        this.data.turtle.records[1].product_id = 37;
+        this.data.partner.records[0].turtles = [2,3];
+        this.data.partner.records[2].turtles = [1,3];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="int_field"/>' +
+                        '<field name="turtles">' +
+                            '<form string="Turtles">' +
+                                '<group>' +
+                                    '<field name="product_id"/>' +
+                                    '<field name="partner_ids"/>' +
+                                '</group>' +
+                            '</form>' +
+                            '<tree>' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                "partner,false,list": '<tree string="Partners"><field name="display_name"/></tree>',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            'should display the 2 turtles');
+
+        form.$('.o_data_row:first').click();
+
+        assert.strictEqual($('.modal .o_form_field[name="partner_ids"] .o_list_view').length, 1,
+            'should display many2many list view in the modal');
 
         form.destroy();
     });
@@ -2391,7 +2465,7 @@ QUnit.module('relational_fields', {
                     '<header><field name="trululu" widget="statusbar"/></header>' +
                     // the following field seem useless, but its presence was the
                     // cause of a crash when evaluating the field domain.
-                    '<field name="timmy"/>' +
+                    '<field name="timmy" invisible="1"/>' +
                 '</form>',
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
