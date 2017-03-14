@@ -480,15 +480,20 @@ var FieldText = AbstractField.extend({
         },
     }),
     supportedFieldTypes: ['text'],
+
+    /**
+     * In edit mode, the text widget contains a textarea. We append it in
+     * start() instead of _renderEdit() to keep the same textarea even
+     * if several _renderEdit are done. This allows to keep the cursor
+     * position and to autoresize only once.
+     *
+     * @override
+     */
     start: function () {
         this.$el.addClass('o_list_text o_form_textarea');
         this.$el.attr('id', this.idForLabel);
 
         if (this.mode === 'edit') {
-            // in edit mode, the widget contains a textarea. We append it in
-            // start() instead of _renderEdit() to keep the same textarea even
-            // if several _renderEdit are done. This allows to keep the cursor
-            // position and to autoresize only once
             this.$textarea = $('<textarea>').appendTo(this.$el);
             if (this.attrs.placeholder) {
                 this.$textarea.attr('placeholder', this.attrs.placeholder);
@@ -503,6 +508,11 @@ var FieldText = AbstractField.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Automatically selects the content of the field.
+     *
+     * @override
+     */
     activate: function () {
         var $textarea = this.$('textarea');
         $textarea.focus();
@@ -513,9 +523,22 @@ var FieldText = AbstractField.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Format the value and put it in the textarea.
+     *
+     * @override
+     * @private
+     */
     _renderEdit: function () {
         this.$textarea.val(this._formatValue(this.value));
     },
+
+    /**
+     * Format the value and display it.
+     *
+     * @override
+     * @private
+     */
     _renderReadonly: function () {
         this.$el.empty().text(this._formatValue(this.value));
     },
