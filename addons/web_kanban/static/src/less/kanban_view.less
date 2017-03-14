@@ -106,12 +106,12 @@
         }
 
         .o_kanban_tags {
-            margin: 0 0 @o-kanban-inside-vgutter -@o-kanban-inside-hgutter;
+            margin-left: -@o-kanban-inside-hgutter;
             @media (max-width: @screen-xs-max) {
                 margin-left:  -@o-kanban-inside-hgutter-mobile;
             }
-            max-height: 9px;
             .o_tag {
+                margin-bottom: @o-kanban-inside-vgutter;
                 width: 40px;
                 height: 9px;
                 display: inline-block;
