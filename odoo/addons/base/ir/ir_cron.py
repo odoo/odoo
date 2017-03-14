@@ -11,6 +11,7 @@ from dateutil.relativedelta import relativedelta
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -95,8 +96,10 @@ class ir_cron(models.Model):
                 end_time = time.time()
                 _logger.debug('%.3fs (cron %s, server action %d with uid %d)', end_time - start_time, cron_name, server_action_id, self.env.uid)
             self.pool.signal_caches_change()
-        except Exception, e:
+            return True
+        except Exception as e:
             self._handle_callback_exception(cron_name, server_action_id, job_id, e)
+            return False
 
     @classmethod
     def _process_job(cls, job_cr, job, cron_cr):
@@ -107,6 +110,7 @@ class ir_cron(models.Model):
         :param cron_cr: cursor holding lock on the cron job row, to use to update the next exec date,
             must not be committed/rolled back!
         """
+        job_success = False
         try:
             with api.Environment.manage():
                 cron = api.Environment(job_cr, job['user_id'], {})[cls._name]
@@ -123,7 +127,7 @@ class ir_cron(models.Model):
                     if numbercall > 0:
                         numbercall -= 1
                     if not ok or job['doall']:
-                        cron._callback(job['cron_name'], job['ir_actions_server_id'], job['id'])
+                        job_success = cron._callback(job['cron_name'], job['ir_actions_server_id'], job['id'])
                     if numbercall:
                         nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
                     ok = True
@@ -137,6 +141,7 @@ class ir_cron(models.Model):
         finally:
             job_cr.commit()
             cron_cr.commit()
+        return job_success
 
     @classmethod
     def _acquire_job(cls, db_name):
@@ -176,6 +181,7 @@ class ir_cron(models.Model):
         except Exception:
             _logger.warning('Exception in cron:', exc_info=True)
 
+        res = dict(success=0, failed=0, nextcall=None, nextcall_epoch=None)
         for job in jobs:
             lock_cr = db.cursor()
             try:
@@ -200,9 +206,11 @@ class ir_cron(models.Model):
                 job_cr = db.cursor()
                 try:
                     registry = odoo.registry(db_name)
-                    registry[cls._name]._process_job(job_cr, job, lock_cr)
+                    success = registry[cls._name]._process_job(job_cr, job, lock_cr)
+                    res['success' if success else 'failed'] += 1
                 except Exception:
                     _logger.exception('Unexpected exception while processing cron job %r', job)
+                    res['failed'] += 1
                 finally:
                     job_cr.close()
 
@@ -218,8 +226,21 @@ class ir_cron(models.Model):
                 # we're exiting due to an exception while acquiring the lock
                 lock_cr.close()
 
+        try:
+            with db.cursor() as cr:
+                cr.execute("SELECT MIN(nextcall) as nextcall FROM ir_cron WHERE active = 't'")
+                row = cr.dictfetchone()
+                if row:
+                    res['nextcall'] = row['nextcall']
+                    min_cron = datetime.strptime(row['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT)
+                    epoch = datetime.utcfromtimestamp(0)
+                    res['nextcall_epoch'] = int((min_cron - epoch).total_seconds())
+        except Exception:
+            pass
+
         if hasattr(threading.current_thread(), 'dbname'):  # cron job could have removed it as side-effect
             del threading.current_thread().dbname
+        return res
 
     @api.multi
     def _try_lock(self):
