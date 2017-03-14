@@ -141,7 +141,7 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
     """
     # Do not use 'information_schema' here, as those views are awfully slow!
     deltype = _CONFDELTYPES.get(ondelete.upper(), 'a')
-    query = """ SELECT con.conname, c2.relname, a2.attnum, con.confdeltype as deltype
+    query = """ SELECT con.conname, c2.relname, a2.attname, con.confdeltype as deltype
                   FROM pg_constraint as con, pg_class as c1, pg_class as c2,
                        pg_attribute as a1, pg_attribute as a2
                  WHERE con.contype='f' AND con.conrelid=c1.oid AND con.confrelid=c2.oid
