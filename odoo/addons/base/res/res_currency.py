@@ -177,7 +177,7 @@ class Currency(models.Model):
             function += "if (arguments[1] === %s) { %s }" % (currency.id, return_str)
             if (currency == company_currency):
                 company_currency_format = return_str
-        function = "if (arguments[1] === false || arguments[1] === undefined) {" + company_currency_format + " }" + function
+                function = "if (arguments[1] === false || arguments[1] === undefined) {" + company_currency_format + " }" + function
         return function
 
     def _select_companies_rates(self):
