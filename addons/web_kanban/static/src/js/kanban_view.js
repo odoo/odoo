@@ -65,7 +65,7 @@ var KanbanView = View.extend({
         this.qweb.default_dict = _.clone(QWeb.default_dict);
 
         this.limit = this.options.limit || parseInt(this.fields_view.arch.attrs.limit, 10) || 40;
-        this.fields = {};
+        this.fields = this.fields_view.fields;
         this.fields_keys = _.keys(this.fields_view.fields);
         this.grouped = undefined;
         this.group_by_field = undefined;
@@ -106,7 +106,7 @@ var KanbanView = View.extend({
                 this.qweb.add_template(utils.json_node_to_xml(child));
                 break;
             } else if (child.tag === 'field') {
-                var ftype = child.attrs.widget || this.fields_view.fields[child.attrs.name].type;
+                var ftype = child.attrs.widget || this.fields[child.attrs.name].type;
                 if(ftype === "many2many" && "context" in child.attrs) {
                     this.m2m_context[child.attrs.name] = child.attrs.context;
                 }
@@ -123,7 +123,7 @@ var KanbanView = View.extend({
     do_search: function(domain, context, group_by) {
         var self = this;
         var group_by_field = group_by[0] || this.default_group_by;
-        var field = this.fields_view.fields[group_by_field];
+        var field = this.fields[group_by_field];
         var options = {};
         var fields_def;
         if (field === undefined) {
@@ -247,7 +247,7 @@ var KanbanView = View.extend({
                 _.each(groups, function (group) {
                     var value = group.attributes.value;
                     group.id = value instanceof Array ? value[0] : value;
-                    var field = self.fields_view.fields[options.group_by_field];
+                    var field = self.fields[options.group_by_field];
                     if (field && field.type === "selection") {
                         value= _.find(field.selection, function (s) { return s[0] === group.id; });
                     }
@@ -303,7 +303,7 @@ var KanbanView = View.extend({
         return this._super(action);
     },
     has_active_field: function() {
-        return this.fields_view.fields.active;
+        return this.fields.active;
     },
     _is_quick_create_enabled: function() {
         if (!this.quick_creatable || !this.is_action_enabled('create'))
@@ -376,7 +376,7 @@ var KanbanView = View.extend({
         this.record_options = {
             editable: this.is_action_enabled('edit'),
             deletable: this.is_action_enabled('delete'),
-            fields: this.fields_view.fields,
+            fields: this.fields,
             qweb: this.qweb,
             model: this.model,
             read_only_mode: this.options.read_only_mode,
@@ -427,7 +427,7 @@ var KanbanView = View.extend({
             grouped_by_m2o: this.grouped_by_m2o,
             relation: this.relation,
             qweb: this.qweb,
-            fields: this.fields_view.fields,
+            fields: this.fields,
             quick_create: this._is_quick_create_enabled(),
         };
     },
@@ -436,7 +436,7 @@ var KanbanView = View.extend({
         var self = this;
 
         // Drag'n'drop activation/deactivation
-        var group_by_field_attrs = this.fields_view.fields[this.group_by_field] || this.fields[this.group_by_field];
+        var group_by_field_attrs = this.fields[this.group_by_field];
 
         // Deactivate the drag'n'drop if:
         // - field is a date or datetime since we group by month
