@@ -72,22 +72,12 @@ var BasicView = AbstractView.extend({
                 innerFieldsView.fields = result.view_fields;
             });
             if (field.type === 'one2many' || field.type === 'many2many') {
-                if (field.views && field.views.tree) {
-                    field.relatedFields = field.views.tree.fields;
-                    field.fieldAttrs = field.views.tree.fieldAttrs;
-                    field.limit = 80;
-                } else if (field.views && field.views.kanban) {
-                    field.relatedFields = field.views.kanban.fields;
-                    field.fieldAttrs = field.views.kanban.fieldAttrs;
-                    field.limit = 40;
-                } else {
-                    field.relatedFields = {
-                        color: {type: 'int'},
-                        display_name: {type: 'char'},
-                        id: {type: 'integer'},
-                    };
-                    field.fieldAttrs = {};
-                }
+                field.relatedFields = {
+                    color: {type: 'int'},
+                    display_name: {type: 'char'},
+                    id: {type: 'integer'},
+                };
+                field.fieldAttrs = {};
             }
         }
 

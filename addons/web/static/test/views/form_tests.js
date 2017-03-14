@@ -270,8 +270,8 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<sheet><group>' +
-                        '<field name="product_id"/>' +
-                        '<field name="timmy"/>' +
+                        '<field name="product_id" invisible="1"/>' +
+                        '<field name="timmy" invisible="1"/>' +
                         '<field name="foo" class="foo_field" attrs=\'{"invisible": [["product_id", "=", false]]}\'/>' +
                         '<field name="bar" class="bar_field" attrs=\'{"invisible":[("bar","=",False),("timmy","=",[])]}\'/>' +
                     '</group></sheet>' +

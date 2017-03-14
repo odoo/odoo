@@ -509,6 +509,11 @@ var FieldX2Many = AbstractField.extend({
     }),
 
     /**
+     * useSubview is used in form view to load view of the related model of the x2many field
+     */
+    useSubview: true,
+
+    /**
      * @override
      */
     init: function (parent, name, record, options) {
