@@ -49,6 +49,14 @@ class Task(models.Model):
         return res
 
     @api.multi
+    def action_open_rating_view(self):
+        self.ensure_one()
+        rating_action = self.env.ref('rating_project.rating_rating_action_project').read()[0]
+        rating_action['domain'] = [('res_model', '=', 'project.task'), ('res_id', '=', self.id), ('consumed', '=', True)]
+        rating_action['help'] = """<p>Customer ratings on tasks. If you have no rating, change your project Settings to activate it.</p>"""
+        return rating_action
+
+    @api.multi
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
         return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype="rating_project.mt_task_rating")
 
