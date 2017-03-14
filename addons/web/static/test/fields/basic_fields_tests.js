@@ -46,7 +46,7 @@ QUnit.module('basic_fields', {
                     display_name: "second record",
                     bar: true,
                     foo: "blip",
-                    int_field: 9,
+                    int_field: 0,
                     qux: 13,
                     p: [],
                     timmy: [],
@@ -57,6 +57,7 @@ QUnit.module('basic_fields', {
                     display_name: "aaa",
                     foo: "abc",
                     sequence: 9,
+                    int_field: false,
                 },
                 {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3, m2o: 1, m2m: []},
                 {id: 4, bar: false, foo: "blip", int_field: -4, qux: 9, m2o: 1, m2m: [1]}],
@@ -894,6 +895,90 @@ QUnit.module('basic_fields', {
 
         list.destroy();
     });
+
+
+    QUnit.module('FieldInteger');
+
+    QUnit.test('integer field when unset', function(assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="int_field"/></form>',
+            res_id: 4,
+        });
+
+        assert.ok(form.$('.o_form_field').hasClass('o_form_field_empty'),
+            'Non-set integer field should be recognized as unset.');
+
+        form.destroy();
+    });
+
+    QUnit.test('integer field in form view', function(assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="int_field"/></form>',
+            res_id: 2,
+        });
+
+        assert.ok(!form.$('.o_form_field').hasClass('o_form_field_empty'),
+            'Integer field should be considered set for value 0.');
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input.o_form_input').val(), '0',
+            'The value should be rendered correctly in edit mode.')
+
+        form.$('input.o_form_input').val('-18').trigger('input');
+        assert.strictEqual(form.$('input.o_form_input').val(), '-18',
+            'The value should be correctly displayed in the input.')
+
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_form_field').text(), '-18',
+            'The new value should be saved and displayed properly.')
+
+        form.destroy();
+    });
+
+    QUnit.test('integer field in editable list view', function (assert) {
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="int_field"/>' +
+                  '</tree>',
+        });
+
+        var zeroValues = list.$('td').filter(function() {return $(this).text() === '0'});
+        assert.strictEqual(zeroValues.length, 1,
+            'Unset integer values should not be rendered as zeros.');
+
+        // switch to edit mode
+        var $cell = list.$('tr.o_data_row td:not(.o_list_record_selector)').first();
+        $cell.click();
+
+        assert.strictEqual(list.$('input.o_form_input').length, 1,
+            'The view should have 1 input for editable integer.')
+
+        list.$('input.o_form_input').val('-28').trigger('input');
+        assert.strictEqual(list.$('input.o_form_input').val(), '-28',
+            'The value should be displayed properly in the input.')
+
+        list.$buttons.find('.o_list_button_save').click();
+        assert.strictEqual(list.$('td:not(.o_list_record_selector)').first().text(), '-28',
+            'The new value should be saved and displayed properly.')
+
+        list.destroy();
+    });
+
 
     QUnit.module('FieldDomain');
 
