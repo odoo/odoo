@@ -643,13 +643,17 @@ class PosOrder(models.Model):
         has_wrong_lots = False
         for order in self:
             for pack_operation in (picking or self.picking_id).pack_operation_ids:
+                picking_type = (picking or self.picking_id).picking_type_id
+                lots_necessary = True
+                if picking_type:
+                    lots_necessary = picking_type and picking_type.use_existing_lots
                 qty = 0
                 qty_done = 0
                 pack_lots = []
                 pos_pack_lots = PosPackOperationLot.search([('order_id', '=',  order.id), ('product_id', '=', pack_operation.product_id.id)])
                 pack_lot_names = [pos_pack.lot_name for pos_pack in pos_pack_lots]
 
-                if pack_lot_names:
+                if pack_lot_names and lots_necessary:
                     for lot_name in list(set(pack_lot_names)):
                         stock_production_lot = StockProductionLot.search([('name', '=', lot_name), ('product_id', '=', pack_operation.product_id.id)])
                         if stock_production_lot:
@@ -662,7 +666,7 @@ class PosOrder(models.Model):
                             pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
                         else:
                             has_wrong_lots = True
-                elif pack_operation.product_id.tracking == 'none':
+                elif pack_operation.product_id.tracking == 'none' or not lots_necessary:
                     qty_done = pack_operation.product_qty
                 else:
                     has_wrong_lots = True
