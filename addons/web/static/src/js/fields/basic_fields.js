@@ -383,8 +383,14 @@ var FieldBoolean = AbstractField.extend({
 
 var FieldInteger = InputField.extend({
     supportedFieldTypes: ['integer'],
+
+    /**
+     * For integer fields, 0 is a valid value.
+     *
+     * @override
+     */
     isSet: function () {
-        return this.value !== false;
+        return this.value === 0 || this._super.apply(this, arguments);
     },
 });
 
