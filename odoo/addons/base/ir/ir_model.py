@@ -167,9 +167,6 @@ class IrModel(models.Model):
                 # prevent screwing up fields that depend on these models' fields
                 model.field_id._prepare_update()
 
-        imc = self.env['ir.model.constraint'].search([('model', 'in', self.ids)])
-        imc.unlink()
-
         self._drop_table()
         res = super(IrModel, self).unlink()
 
@@ -811,7 +808,7 @@ class IrModelConstraint(models.Model):
     name = fields.Char(string='Constraint', required=True, index=True,
                        help="PostgreSQL constraint or foreign key name.")
     definition = fields.Char(help="PostgreSQL constraint definition")
-    model = fields.Many2one('ir.model', required=True, index=True)
+    model = fields.Many2one('ir.model', required=True, ondelete="cascade", index=True)
     module = fields.Many2one('ir.module.module', required=True, index=True)
     type = fields.Char(string='Constraint Type', required=True, size=1, index=True,
                        help="Type of the constraint: `f` for a foreign key, "
