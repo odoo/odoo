@@ -28,6 +28,7 @@ QUnit.module('basic_fields', {
                     timmy: {string: "pokemon", type: "many2many", relation: 'partner_type', searchable: true},
                     product_id: {string: "Product", type: "many2one", relation: 'product', searchable: true},
                     sequence: {type: "integer", string: "Sequence", searchable: true},
+                    currency_id: {string: "Currency", type: "many2one", relation: "currency", searchable: true},
                 },
                 records: [{
                     id: 1,
@@ -51,7 +52,8 @@ QUnit.module('basic_fields', {
                     p: [],
                     timmy: [],
                     trululu: 1,
-                    sequence: 4
+                    sequence: 4,
+                    currency_id: 2,
                 }, {
                     id: 4,
                     display_name: "aaa",
@@ -61,7 +63,7 @@ QUnit.module('basic_fields', {
                     qux: false,
                 },
                 {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3.89859, m2o: 1, m2m: []},
-                {id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, m2o: 1, m2m: [1]}],
+                {id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, m2o: 1, m2m: [1], currency_id: 1}],
                 onchanges: {},
             },
             product: {
@@ -85,6 +87,21 @@ QUnit.module('basic_fields', {
                     {id: 12, display_name: "gold", color: 2},
                     {id: 14, display_name: "silver", color: 5},
                 ]
+            },
+            currency: {
+                fields: {
+                    symbol: {string: "Currency Sumbol", type: "char", searchable: true},
+                    position: {string: "Currency Position", type: "char", searchable: true},
+                },
+                records: [{
+                    id: 1,
+                    symbol: "$",
+                    position: "before",
+                }, {
+                    id: 2,
+                    symbol: "€",
+                    position: "after",
+                }]
             },
         };
     }
@@ -1039,6 +1056,143 @@ QUnit.module('basic_fields', {
         list.$buttons.find('.o_list_button_save').click();
         assert.strictEqual(list.$('tr.o_data_row td:not(.o_list_record_selector)').text(), newExpectedDateString,
             'the selected datetime should be displayed after saving');
+
+        list.destroy();
+    });
+
+
+    QUnit.module('FieldMonetary');
+
+    QUnit.test('monetary field in form view', function(assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="monetary"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 5,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_form_field').first().text(), '$\u00a09.10',
+            'The value should be displayed properly.');
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input.o_form_input').val(), '9.10',
+            'The input should be rendered without the currency symbol.');
+        assert.strictEqual(form.$('input.o_form_input').parent().children().first().text(), '$',
+            'The input should be preceded by a span containing the currency symbol.');
+
+        form.$('input.o_form_input').val('108.2458938598598').trigger('input');
+        assert.strictEqual(form.$('input.o_form_input').val(), '108.2458938598598',
+            'The value should not be formated yet.');
+
+        form.$buttons.find('.o_form_button_save').click();
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_form_field').first().text(), '$\u00a0108.25',
+            'The new value should be rounded properly.');
+
+        form.destroy();
+    });
+
+    QUnit.test('monetary field with currency symbol after', function(assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="monetary"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_form_field').first().text(), '0.00\u00a0€',
+            'The value should be displayed properly.');
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input.o_form_input').val(), '0.00',
+            'The input should be rendered without the currency symbol.');
+        assert.strictEqual(form.$('input.o_form_input').parent().children().eq(1).text(), '€',
+            'The input should be followed by a span containing the currency symbol.');
+
+        form.$('input.o_form_input').val('108.2458938598598').trigger('input');
+        assert.strictEqual(form.$('input.o_form_input').val(), '108.2458938598598',
+            'The value should not be formated yet.');
+
+        form.$buttons.find('.o_form_button_save').click();
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_form_field').first().text(), '108.25\u00a0€',
+            'The new value should be rounded properly.');
+
+        form.destroy();
+    });
+
+    QUnit.test('monetary field in editable list view', function (assert) {
+        assert.expect(9);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="qux" widget="monetary"/>' +
+                    '<field name="currency_id" invisible="1"/>' +
+                  '</tree>',
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        var dollarValues = list.$('td').filter(function() {return _.str.include($(this).text(), '$')});
+        assert.strictEqual(dollarValues.length, 1,
+            'Only one line has dollar as a currency.');
+
+        var euroValues = list.$('td').filter(function() {return _.str.include($(this).text(), '€')});
+        assert.strictEqual(euroValues.length, 1,
+            'One one line has euro as a currency.');
+
+        var zeroValues = list.$('td').filter(function() {return _.str.include($(this).text(), '0.00')});
+        assert.strictEqual(zeroValues.length, 2,
+            'Unset float values should be rendered as zeros.');
+
+        // switch to edit mode
+        var $cell = list.$('tr.o_data_row td:not(.o_list_record_selector):contains($)');
+        $cell.click();
+
+        assert.strictEqual($cell.children().length, 1,
+            'The cell td should only contain the special div of monetary widget.');
+        assert.strictEqual(list.$('input.o_form_input').length, 1,
+            'The view should have 1 input for editable monetary float.');
+        assert.strictEqual(list.$('input.o_form_input').val(), '9.10',
+            'The input should be rendered without the currency symbol.');
+        assert.strictEqual(list.$('input.o_form_input').parent().children().first().text(), '$',
+            'The input should be preceded by a span containing the currency symbol.');
+
+        list.$('input.o_form_input').val('108.2458938598598').trigger('input');
+        assert.strictEqual(list.$('input.o_form_input').val(), '108.2458938598598',
+            'The typed value should be correctly displayed.');
+
+        list.$buttons.find('.o_list_button_save').click();
+        assert.strictEqual(list.$('tr.o_data_row td:not(.o_list_record_selector):contains($)').text(), '$\u00a0108.25',
+            'The new value should be rounded properly.');
 
         list.destroy();
     });
