@@ -31,16 +31,28 @@ var InputField = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'input': '_onInput',
     }),
+
+    /**
+     * The very purpose of this field is to be an input tag in edit mode.
+     *
+     * @override
+     */
     init: function () {
         this._super.apply(this, arguments);
         if (this.mode === 'edit') {
             this.tagName = 'input';
         }
     },
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Automatically selects the content of the field.
+     *
+     * @override
+     */
     activate: function () {
         this.$el.focus();
         setTimeout(this.$el.select.bind(this.$el), 0);
@@ -65,6 +77,12 @@ var InputField = AbstractField.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Formats the HTML input tag for edit mode and stores selection status.
+     *
+     * @override
+     * @private
+     */
     _renderEdit: function () {
         this.$el.addClass('o_form_input');
         this.$el.attr('type', 'text');
@@ -79,6 +97,13 @@ var InputField = AbstractField.extend({
         this.el.selectionStart = selectionStart;
         this.el.selectionEnd = selectionEnd;
     },
+
+    /**
+     * Resets the content to the formated value in readonly mode.
+     *
+     * @override
+     * @private
+     */
     _renderReadonly: function () {
         this.$el.empty().html(this._formatValue(this.value));
     },
@@ -92,6 +117,7 @@ var InputField = AbstractField.extend({
      * as a list view.
      *
      * @override
+     * @private
      * @param {any} event
      */
     _onKeydown: function (event) {
@@ -122,9 +148,12 @@ var InputField = AbstractField.extend({
         }
         this._super.apply(this, arguments);
     },
+
     /**
      * We notify the outside world for each change in this input value. It does
      * not necessarily mean that onchanges will be triggered instantly.
+     *
+     * @private
      */
     _onInput: function () {
         this._setValue(this.$el.val());
