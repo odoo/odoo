@@ -620,26 +620,53 @@ var EmailWidget = InputField.extend({
 
 var FieldPhone = EmailWidget.extend({
     prefix: 'tel',
+
+    /**
+     * The phone widget is an extension of email, with the distinction that, in
+     * some cases, we do not want to show a clickable widget in readonly.
+     * In particular, we only want to make it clickable if the device can call
+     * this particular number. This is controlled by the _canCall function.
+     *
+     * @override
+     */
     init: function () {
         this._super.apply(this, arguments);
-        if (this.mode === 'readonly' && !this._can_call()) {
+        if (this.mode === 'readonly' && !this._canCall()) {
             this.tagName = 'span';
         }
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * In readonly, we only make the widget clickable if the device can call it.
+     * Additionally, we obfuscate the phone number to prevent Skype from seeing it.
+     *
+     * @override
+     * @private
+     */
     _renderReadonly: function () {
         this._super();
-        if(this._can_call()) {
+        if(this._canCall()) {
             var text = this.$el.text();
             this.$el.html(text.substr(0, text.length/2) + "&shy;" + text.substr(text.length/2)); // To prevent Skype app to find the phone number
         } else {
             this.$el.removeClass('o_form_uri');
         }
     },
-    _can_call: function () {
-        // Phone fields are clickable in readonly on small screens ~= on phones
-        // This can be overriden by call-capable modules to display a clickable
-        // link in different situations, like always regardless of screen size,
-        // or only allow national calls for example.
+
+    /**
+     * Phone fields are clickable in readonly on small screens ~= on phones.
+     * This can be overriden by call-capable modules to display a clickable
+     * link in different situations, like always regardless of screen size,
+     * or only allow national calls for example.
+     *
+     * @override
+     * @private
+     */
+    _canCall: function () {
         return config.device.size_class <= config.device.SIZES.XS;
     }
 });
