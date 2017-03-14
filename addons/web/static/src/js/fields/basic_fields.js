@@ -590,10 +590,27 @@ var HandleWidget = AbstractField.extend({
 var EmailWidget = InputField.extend({
     prefix: 'mailto',
     supportedFieldTypes: ['char'],
+
+    /**
+     * In readonly, emails should be a link, not a span.
+     *
+     * @override
+     */
     init: function () {
         this._super.apply(this, arguments);
         this.tagName = this.mode === 'readonly' ? 'a' : 'input';
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * In readonly, emails should be a mailto: link with proper formatting.
+     *
+     * @override
+     * @private
+     */
     _renderReadonly: function () {
         this.$el.text(this.value)
             .addClass('o_form_uri o_text_overflow')
