@@ -1525,17 +1525,19 @@ class Date(Field):
         return (context_today or today).strftime(DATE_FORMAT)
 
     @staticmethod
-    def from_string(value):
+    def from_string(value, dformat=None):
         """ Convert an ORM ``value`` into a :class:`date` value. """
         if not value:
             return None
-        value = value[:DATE_LENGTH]
-        return datetime.strptime(value, DATE_FORMAT).date()
+        date_length = dformat and len(date.today().strftime(format)) or DATE_LENGTH
+        date_format = dformat or DATE_FORMAT
+        value = value[:date_length]
+        return datetime.strptime(value, date_format).date()
 
     @staticmethod
-    def to_string(value):
+    def to_string(value, dformat=None):
         """ Convert a :class:`date` value into the format expected by the ORM. """
-        return value.strftime(DATE_FORMAT) if value else False
+        return value.strftime(dformat or DATE_FORMAT) if value else False
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
@@ -1593,19 +1595,21 @@ class Datetime(Field):
         return utc_timestamp
 
     @staticmethod
-    def from_string(value):
+    def from_string(value, dformat=None):
         """ Convert an ORM ``value`` into a :class:`datetime` value. """
         if not value:
             return None
-        value = value[:DATETIME_LENGTH]
-        if len(value) == DATE_LENGTH:
+        datetime_length = dformat and len(datetime.now().strftime(DATETIME_FORMAT)) or DATETIME_LENGTH
+        datetime_format = dformat or DATETIME_FORMAT
+        value = value[:datetime_length]
+        if datetime_format == DATETIME_FORMAT and len(value) == DATE_LENGTH:
             value += " 00:00:00"
-        return datetime.strptime(value, DATETIME_FORMAT)
+        return datetime.strptime(value, datetime_format)
 
     @staticmethod
-    def to_string(value):
+    def to_string(value, dformat=None):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
-        return value.strftime(DATETIME_FORMAT) if value else False
+        return value.strftime(dformat or DATETIME_FORMAT) if value else False
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
