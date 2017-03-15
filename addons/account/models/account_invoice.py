@@ -914,16 +914,19 @@ class AccountInvoice(models.Model):
         return True
 
     @api.multi
-    def invoice_validate(self):
-        for invoice in self.filtered(lambda invoice: invoice.partner_id not in invoice.message_partner_ids):
-            invoice.message_subscribe([invoice.partner_id.id])
-
+    def _check_duplicate_supplier_reference(self):
         for invoice in self:
             #refuse to validate a vendor bill/refund if there already exists one with the same reference for the same partner,
             #because it's probably a double encoding of the same bill/refund
             if invoice.type in ('in_invoice', 'in_refund') and invoice.reference:
                 if self.search([('type', '=', invoice.type), ('reference', '=', invoice.reference), ('company_id', '=', invoice.company_id.id), ('commercial_partner_id', '=', invoice.commercial_partner_id.id), ('id', '!=', invoice.id)]):
                     raise UserError(_("Duplicated vendor reference detected. You probably encoded twice the same vendor bill/refund."))
+
+    @api.multi
+    def invoice_validate(self):
+        for invoice in self.filtered(lambda invoice: invoice.partner_id not in invoice.message_partner_ids):
+            invoice.message_subscribe([invoice.partner_id.id])
+        self._check_duplicate_supplier_reference()
         return self.write({'state': 'open'})
 
     @api.model
