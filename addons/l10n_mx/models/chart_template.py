@@ -34,8 +34,8 @@ class AccountChartTemplate(models.Model):
             'ITAXR_10-OUT': account_obj.search([('code', '=', '216.10.20')]),
             'ITAX_1067-OUT': account_obj.search([('code', '=', '216.10.20')]),
             'ITAX_167-OUT': account_obj.search([('code', '=', '216.10.20')]),
-            'ITAX_010-OUT': account_obj.search([('code', '=', '208.01.01')]),
-            'ITAX_160-OUT': account_obj.search([('code', '=', '208.01.01')])}
+            'ITAX_010-OUT': account_obj.search([('code', '=', '118.01.01')]),
+            'ITAX_160-OUT': account_obj.search([('code', '=', '118.01.01')])}
 
         for tax in self.tax_template_ids:
             if tax.description not in taxes_acc:
