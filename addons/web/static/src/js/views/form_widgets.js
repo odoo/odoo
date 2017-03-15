@@ -288,6 +288,7 @@ var FieldPriority = common.AbstractField.extend({
             readonly: this.get('readonly'),
             value: this.get('value'),
             values: this.field.selection || [],
+            no_title: this.options.no_title,
         });
 
         this.priority.on('update', this, function(update) {

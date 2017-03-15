@@ -56,6 +56,7 @@ var Priority = Widget.extend({
         this.value = options.value;
         this.values = options.values;
         this.empty_value = this.values[0][0];
+        this.no_title = options.no_title || false;
     },
     start: function() {
         this._render_value();
