@@ -1776,7 +1776,7 @@ class Meeting(models.Model):
                 new_args.append(new_arg)
 
         # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
-        events = super(Meeting, self).search(new_args, offset=0, limit=0, order=None, count=False)
+        events = super(Meeting, self).with_context(virtual_id=False).search(new_args, offset=0, limit=0, order=None, count=False)
         events = self.browse(events.get_recurrent_ids(args, order=order))
         if count:
             return len(events)
