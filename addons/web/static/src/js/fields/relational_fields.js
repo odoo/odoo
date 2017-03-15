@@ -117,6 +117,14 @@ var FieldMany2One = AbstractField.extend({
         this.$input.focus();
         setTimeout(this.$input.select.bind(this.$input), 0);
     },
+    /**
+     * Focuses the input.
+     */
+    focus: function () {
+        if (this.mode === "edit") {
+            this.$input.focus();
+        }
+    },
     reinitialize: function (value) {
         this.floating = false;
         this._setValue(value);
@@ -173,14 +181,6 @@ var FieldMany2One = AbstractField.extend({
             tmp["default_" + field] = name;
         }
         return tmp;
-    },
-    /**
-     * @private
-     */
-    _focus: function () {
-        if (this.mode === "edit") {
-            this.$input.focus();
-        }
     },
     /**
      * @private
@@ -358,7 +358,7 @@ var FieldMany2One = AbstractField.extend({
             disable_multiple_selection: true,
             on_selected: function (element_ids) {
                 self.reinitialize({id: element_ids[0]});
-                self._focus();
+                self.focus();
             }
         })).open();
     },

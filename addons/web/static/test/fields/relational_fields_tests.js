@@ -2776,6 +2776,49 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('fieldmany2many tags in editable list', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].timmy = [12];
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch:'<tree editable="bottom">' +
+                    '<field name="foo"/>' +
+                    '<field name="timmy" widget="many2many_tags"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_row:first .o_form_field_many2manytags .badge').length, 1,
+            "m2m field should contain one tag");
+
+        // edit first row
+        list.$('.o_data_row:first td:nth(2)').click();
+
+        var $m2o = list.$('.o_data_row:first .o_form_field_many2manytags .o_form_field_many2one');
+        assert.strictEqual($m2o.length, 1, "a many2one widget should have been instantiated");
+
+        // add a tag
+        var $input = $m2o.find('input');
+        $input.click();
+        $input.autocomplete('widget').find('li:first()').click(); // adds a tag
+
+        assert.strictEqual(list.$('.o_data_row:first .o_form_field_many2manytags .badge').length, 2,
+            "m2m field should contain 2 tags");
+        assert.ok(list.$('.o_data_row:first .o_many2many_tags_cell').hasClass('o_field_dirty'),
+            "edited cell should have class o_field_dirty");
+
+        // leave edition
+        list.$('.o_data_row:nth(1) td:nth(2)').click();
+
+        assert.strictEqual(list.$('.o_data_row:first .o_form_field_many2manytags .badge').length, 2,
+            "m2m field should contain 2 tags");
+
+        list.destroy();
+    });
+
     QUnit.module('FieldRadio');
 
     QUnit.test('fieldradio widget on a many2one in a new record', function (assert) {
