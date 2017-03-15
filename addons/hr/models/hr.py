@@ -125,7 +125,7 @@ class Employee(models.Model):
         ('married', 'Married'),
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
-    ], string='Marital Status', default='single')
+    ], string='Marital Status', required=True, default='single')
     department_id = fields.Many2one('hr.department', string='Department')
     address_id = fields.Many2one('res.partner', string='Work Address')
     address_home_id = fields.Many2one('res.partner', string='Home Address')

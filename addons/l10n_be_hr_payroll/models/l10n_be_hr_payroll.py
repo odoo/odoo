@@ -52,7 +52,7 @@ class HrContract(models.Model):
         for contract in self:
             if contract.car_id:
                 contract.car_atn = contract.car_id.atn
-                contract.company_car_total_depreciated_cost = contract.car_id.company_car_total_depreciated_cost
+                contract.company_car_total_depreciated_cost = contract.car_id.total_depreciated_cost
             elif contract.new_car and contract.new_car_model_id:
                 contract.car_atn = contract.new_car_model_id.default_atn
                 contract.company_car_total_depreciated_cost = contract.new_car_model_id.default_total_depreciated_cost
