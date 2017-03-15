@@ -736,6 +736,47 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('onchange send only the present fields to the server', function (assert) {
+        assert.expect(1);
+        this.data.partner.records[0].product_id = false;
+        this.data.partner.onchanges.foo = function (obj) {
+            obj.foo = obj.foo + " alligator";
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="bar"/>' +
+                            '<field name="product_id"/>' +
+                        '</tree>' +
+                    '</field>' +
+                    '<field name="timmy"/>' +
+                '</form>',
+            archs: {
+                "partner_type,false,list": '<tree><field name="name"/></tree>'
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === "onchange") {
+                    assert.deepEqual(args.args[3], 
+                        {"foo": "1", "p": "", "p.bar": "", "p.product_id": "", "timmy": "", "timmy.name": ""},
+                        "should send only the fields used in the views");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input:first').val("tralala").trigger('input');
+
+        form.destroy();
+    });
+
     QUnit.test('evaluate in python field options', function (assert) {
         assert.expect(1);
 

@@ -89,6 +89,7 @@ var FormView = BasicView.extend({
                             field.views[viewName === 'list' ? 'tree' : viewName] = view;
                             field.relatedFields = fieldView.view_fields;
                             field.fieldAttrs = fieldView.fieldAttrs;
+                            view.fieldAttrs = fieldView.fieldAttrs;
                         }
                     }));
             }
