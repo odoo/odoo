@@ -1239,8 +1239,8 @@ var BasicModel = AbstractModel.extend({
             var field = record.fields[name];
             specs[name] = (field.onChange) || "";
             _.each(field.views, function (view) {
-                _.each(view.fields, function (field, subname) {
-                    specs[name + '.' + subname] = (field.onChange) || "";
+                _.each(view.fieldAttrs, function (field, subname) {
+                    specs[name + '.' + subname] = (view.fields[subname].onChange) || "";
                 });
             });
         });
