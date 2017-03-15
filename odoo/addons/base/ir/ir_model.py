@@ -133,6 +133,9 @@ class IrModel(models.Model):
                 # prevent screwing up fields that depend on these models' fields
                 model.field_id._prepare_update()
 
+        imc = self.env['ir.model.constraint'].search([('model', 'in', self.ids)])
+        imc.unlink()
+
         self._drop_table()
         res = super(IrModel, self).unlink()
 
