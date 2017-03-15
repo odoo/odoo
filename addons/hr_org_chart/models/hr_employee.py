@@ -38,7 +38,8 @@ class Employee(models.Model):
         managers = []
         if manager: manager = self.browse(manager)
         i = 0
-        while manager and i<2:
+        # FIXME: workaround to test the prototype
+        while manager and i<3:
             managers.insert(0, to_data(manager))
             manager = manager.parent_id
             i += 1
