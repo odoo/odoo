@@ -37,7 +37,8 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="after">
-                    <field name="user_id" required="1" options='{"no_open": True}'/>
+                    <field name="employee_id" required="1" options='{"no_open": True}'/>
+                    <field name="user_id" invisible="1"/>
                 </xpath>
             </field>
         </record>
@@ -47,7 +48,7 @@
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
                 <pivot string="Timesheet">
-                    <field name="user_id" type="row"/>
+                    <field name="employee_id" type="row"/>
                     <field name="date" interval="month" type="col"/>
                     <field name="unit_amount" type="measure"/>
                 </pivot>
@@ -89,7 +90,8 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='company_id']" position="before">
-                    <field name="user_id" required="1" options='{"no_open": True}'/>
+                    <field name="employee_id" required="1" options='{"no_open": True}'/>
+                    <field name="user_id" invisible="1"/>
                 </xpath>
             </field>
         </record>
@@ -98,7 +100,7 @@
             <field name="name">account.analytic.line.calendar</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <calendar string="Timesheets" date_start="date" color="user_id">
+                <calendar string="Timesheets" date_start="date" color="employee_id">
                     <field name="name"/>
                     <field name="project_id"/>
                 </calendar>
@@ -111,7 +113,7 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <field name="date"/>
-                    <field name="user_id"/>
+                    <field name="employee_id"/>
                     <field name="project_id"/>
                     <field name="task_id"/>
                     <field name="name"/>
@@ -130,7 +132,7 @@
                                 ('date', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d')),
                             ]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Users" name="groupby_user" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Employee" name="groupby_employee" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Project" name="groupby_project" domain="[]" context="{'group_by':'project_id'}"/>
                         <filter string="Task" name="groupby_task" domain="[]" context="{'group_by':'task_id'}"/>
                         <filter string="Timesheet Month" name="groupby_date" domain="[]" context="{'group_by':'date'}" help="Timesheet by Month"/>
@@ -191,7 +193,7 @@
             <field name="res_model">account.analytic.line</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="domain">[('project_id', '!=', False)]</field>
-            <field name="context">{'search_default_week':1, 'search_default_groupby_user':1}</field>
+            <field name="context">{'search_default_week':1, 'search_default_groupby_employee':1}</field>
         </record>
 
         <record id="timesheet_action_view_all_tree" model="ir.actions.act_window.view">
