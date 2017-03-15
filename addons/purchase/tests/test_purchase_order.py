@@ -76,10 +76,11 @@ class TestPurchaseOrder(AccountingTestCase):
         self.picking.do_new_transfer()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [5.0, 5.0], 'Purchase: all products should be received"')
 
-        self.invoice = self.AccountInvoice.create({
-            'partner_id': self.partner_id.id,
-            'purchase_id': self.po.id,
-            'account_id': self.partner_id.property_account_payable_id.id,
-        })
+        self.invoice = self.AccountInvoice.with_context(
+            type='in_invoice').create({
+                'partner_id': self.partner_id.id,
+                'purchase_id': self.po.id,
+                'account_id': self.partner_id.property_account_payable_id.id,
+            })
         self.invoice.purchase_order_change()
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [5.0, 5.0], 'Purchase: all products should be invoiced"')
