@@ -159,7 +159,7 @@ class WebsiteForm(http.Controller):
         # def website_form_input_filter(self, values):
         #     values['name'] = '%s\'s Application' % values['partner_name']
         #     return values
-        dest_model = request.env[model.model]
+        dest_model = request.env[model.sudo().model]
         if hasattr(dest_model, "website_form_input_filter"):
             data['record'] = dest_model.website_form_input_filter(request, data['record'])
 
