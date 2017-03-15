@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="timesheet_action_from_employee" model="ir.actions.act_window">
+        <field name="name">Timesheets</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="search_view_id" ref="hr_timesheet_line_search"/>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="context">{
+            'search_default_month':1,
+            'search_default_employee_id': [active_id],
+            'default_employee_id': active_id
+        }</field>
+    </record>
+
+    <record id="hr_employee_view_form_inherit_timesheet" model="ir.ui.view">
+        <field name="name">hr.employee.form.timesheet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='active_group']" position="before">
+                <!-- Empty invisible group to be filled by timesheet_grid and sale_timesheet -->
+                <group string="Timesheets" name="timesheet" invisible="1">
+                </group>
+            </xpath>
+            <xpath expr="//button[@name='toggle_active']" position="before">
+                <button class="oe_stat_button" type="action" name="%(timesheet_action_from_employee)d" icon="fa-calendar">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Timesheets</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
