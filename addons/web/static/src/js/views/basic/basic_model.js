@@ -1300,7 +1300,6 @@ var BasicModel = AbstractModel.extend({
     _fetchRecord: function (record, fieldNames) {
         var self = this;
         fieldNames = fieldNames || _.uniq(record.fieldNames.concat(['display_name']));
-        var oldData = record.data;
         return this._rpc(record.model, 'read')
             .args([[record.res_id], fieldNames])
             // .withContext({ bin_size: true })  // FIXME: when editing a subrecord in the partner form view, it tries to write the bin_size on the image field
@@ -1313,7 +1312,7 @@ var BasicModel = AbstractModel.extend({
                 self._parseServerData(fieldNames, record.fields, record.data);
             })
             .then(function () {
-                return self._fetchX2Manys(record, oldData, fieldNames).then(function () {
+                return self._fetchX2Manys(record, fieldNames).then(function () {
                     return self._postprocess(record);
                 });
             });
@@ -1591,44 +1590,32 @@ var BasicModel = AbstractModel.extend({
      * useless rpcs.
      *
      * @param {Object} record local resource
-     * @param {Object} oldData the data fetched previously
      * @param {string[]} [fieldNames] list of fields to fetch
      * @returns {Deferred}
      */
-    _fetchX2Manys: function (record, oldData, fieldNames) {
+    _fetchX2Manys: function (record, fieldNames) {
         var self = this;
         var defs = [];
         fieldNames = fieldNames || record.fieldNames;
         _.each(fieldNames, function (fieldName) {
             var field = record.fields[fieldName];
             if (field.type === 'one2many' || field.type === 'many2many') {
-                var list;
-
-                // a previously loaded list exists
-                if (oldData[fieldName]) {
-                    list = self.localData[oldData[fieldName]];
-                    list.res_ids = record.data[fieldName];
-                    list.count = list.res_ids.length;
-                    list.offset = list.offset < list.count ? list.offset : 0;
-                } else {
-                    // need to create a list from scratch
-                    var attrs = record.fieldAttrs[fieldName];
-                    var rawContext = attrs && attrs.context;
-                    var ids = record.data[fieldName] || [];
-                    list = self._makeDataPoint({
-                        count: ids.length,
-                        fieldAttrs: field.fieldAttrs,
-                        fields: field.relatedFields,
-                        limit: field.limit,
-                        modelName: field.relation,
-                        res_ids: ids,
-                        static: true,
-                        type: 'list',
-                        parentID: record.id,
-                        rawContext: rawContext,
-                        relationField: field.relation_field,
-                    });
-                }
+                var attrs = record.fieldAttrs[fieldName];
+                var rawContext = attrs && attrs.context;
+                var ids = record.data[fieldName] || [];
+                var list = self._makeDataPoint({
+                    count: ids.length,
+                    fieldAttrs: field.fieldAttrs,
+                    fields: field.relatedFields,
+                    limit: field.limit,
+                    modelName: field.relation,
+                    res_ids: ids,
+                    static: true,
+                    type: 'list',
+                    parentID: record.id,
+                    rawContext: rawContext,
+                    relationField: field.relation_field,
+                });
                 record.data[fieldName] = list.id;
                 if (!field.__no_fetch) {
                     var def = self._readUngroupedList(list).then(function () {
