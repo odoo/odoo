@@ -95,7 +95,7 @@
                 </header>
             </xpath>
             <xpath expr="//field[@name='order_count']/.." position="before">
-                <button class="oe_stat_button" type="action" icon="fa-xing" name="%(sale_coupon.sale_coupon_action)d">
+                <button class="oe_stat_button" type="action" icon="fa-ellipsis-v" name="%(sale_coupon.sale_coupon_action)d">
                     <field name="coupon_count" string="Coupons" widget="statinfo"/>
                 </button>
             </xpath>
@@ -185,7 +185,7 @@
                 <h1><field name="name" class="oe_title" placeholder="Promotion Program Name..." height="20px"/></h1>
             </xpath>
             <xpath expr="//field[@name='order_count']/.." position="before">
-                <button class="oe_stat_button" type="action" icon="fa-xing" name="%(sale_coupon.sale_coupon_action)d" attrs="{'invisible': [('promo_applicability', '=', 'on_current_order')]}">
+                <button class="oe_stat_button" type="action" icon="fa-ellipsis-v" name="%(sale_coupon.sale_coupon_action)d" attrs="{'invisible': [('promo_applicability', '=', 'on_current_order')]}">
                     <field name="coupon_count" string="Coupons" widget="statinfo"/>
                 </button>
             </xpath>
