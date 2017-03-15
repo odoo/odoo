@@ -19,6 +19,8 @@
                 <div>
                     <field name="has_commission_on_target" nolabel="1"/>
                     <label for="has_commission_on_target"/>
+                    <field name="has_warrants" nolabel="1" attrs="{'invisible': [('has_commission_on_target', '=', False)]}"/>
+                    <label for="has_warrants" attrs="{'invisible': [('has_commission_on_target', '=', False)]}"/>
                 </div>
                 <field name="transport_mode" widget="radio"/>
                 <label for="car_id" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}"/>

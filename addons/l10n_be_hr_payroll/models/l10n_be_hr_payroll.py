@@ -15,6 +15,7 @@ class HrContract(models.Model):
     has_internet = fields.Boolean('Internet', help="Enable this option if the employee has its internet reimbursed by the company")
     has_mobile = fields.Boolean('Mobile', help="Enable this option if the employee has its mobile contract reimbursed by the company")
     has_commission_on_target = fields.Boolean('Commissions on Target')
+    has_warrants = fields.Boolean('Warrants', help="If the employees get their commissions as warrants")
     international_communication = fields.Boolean('International Communication')
     transport_mode = fields.Selection([
         ('company_car', 'Company car'),
