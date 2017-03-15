@@ -933,7 +933,7 @@ var BasicModel = AbstractModel.extend({
             group.isOpen = true;
             var def;
             if (group.count > 0) {
-                def = this._fetchUngroupedList(group);
+                def = this._load(group);
             }
             return $.when(def).then(function () {
                 return groupId;
@@ -2048,6 +2048,7 @@ var BasicModel = AbstractModel.extend({
         var fields = _.uniq(list.fieldNames.concat(list.groupedBy));
         return this._rpc(list.model, 'read_group')
             .withFields(fields)
+            .withDomain(list.domain)
             .withContext(list.context)
             .groupBy(list.groupedBy)
             .lazy(true)
@@ -2071,7 +2072,7 @@ var BasicModel = AbstractModel.extend({
                     var newGroup = self._makeDataPoint({
                         modelName: list.model,
                         count: group[rawGroupBy + '_count'],
-                        domain: group.__domain,
+                        domain: list.domain.concat(group.__domain),
                         context: list.context,
                         fields: list.fields,
                         fieldNames: list.fieldNames,
@@ -2082,7 +2083,7 @@ var BasicModel = AbstractModel.extend({
                         orderedBy: list.orderedBy,
                         limit: list.limit,
                         openGroupByDefault: list.openGroupByDefault,
-                        type: 'list', // nested groupedBys not handled yet
+                        type: 'list',
                     });
                     list.data.push(newGroup.id);
                     var old_group = _.find(previousGroups, function (g) {
@@ -2090,13 +2091,15 @@ var BasicModel = AbstractModel.extend({
                     });
                     if (old_group) {
                         newGroup.isOpen = old_group.isOpen;
+                        // copy the oldGroup data to keep 'isOpen' state of sub-groups
+                        newGroup.data = newGroup.isOpen ? old_group.data : [];
                     } else if (!newGroup.openGroupByDefault) {
                         newGroup.isOpen = false;
                     } else {
                         newGroup.isOpen = '__fold' in group ? !group.__fold : true;
                     }
                     if (newGroup.isOpen && newGroup.count > 0) {
-                        defs.push(self._fetchUngroupedList(newGroup));
+                        defs.push(self._load(newGroup));
                     }
                 });
                 return $.when.apply($, defs).then(function () {

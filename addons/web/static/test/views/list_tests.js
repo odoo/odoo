@@ -1077,6 +1077,126 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('list view with nested groups', function (assert) {
+        assert.expect(36);
+
+        this.data.foo.records.push({id: 5, foo: "blip", int_field: -7, m2o: 1});
+
+        var nbRPCs = {readGroup: 0, searchRead: 0};
+        var groupID;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="id"/><field name="int_field"/></tree>',
+            groupBy: ['m2o', 'foo'],
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    if (args.kwargs.groupby[0] === 'foo') { // nested read_group
+                        // called twice (once when opening the group, once when sorting)
+                        assert.deepEqual(args.kwargs.domain, [['m2o', '=', 1]],
+                            "nested read_group should be called with correct domain");
+                    }
+                    nbRPCs.readGroup++;
+                } else if (route === '/web/dataset/search_read') {
+                    // called twice (once when opening the group, once when sorting)
+                    assert.deepEqual(args.domain, [['m2o', '=', 1], ['foo', '=', 'blip']],
+                        "nested search_read should be called with correct domain");
+                    nbRPCs.searchRead++;
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                open_record: function (event) {
+                    event.stopPropagation();
+                    assert.strictEqual(event.data.id, groupID,
+                        "'open_record' event should have been triggered");
+                },
+            },
+        });
+
+        assert.strictEqual(nbRPCs.readGroup, 1, "should have done one read_group");
+        assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
+
+        // basic rendering tests
+        assert.strictEqual(list.$('tbody').length, 1, "there should be 1 tbody");
+        assert.strictEqual(list.$('.o_group_header').length, 2,
+            "should contain 2 groups at first level");
+        assert.strictEqual(list.$('.o_group_name:first').text(), 'Value 1 (4)',
+            "group should have correct name and count");
+        assert.strictEqual(list.$('.o_group_name .fa-caret-right').length, 2,
+            "the carret of closed groups should be right");
+        assert.strictEqual(list.$('.o_group_name:first span').css('padding-left'),
+            '0px', "groups of level 1 should have a 0px padding-left");
+        assert.strictEqual(list.$('.o_group_header:first td:last').text(), '16',
+            "group aggregates are correctly displayed");
+
+        // open the first group
+        nbRPCs = {readGroup: 0, searchRead: 0};
+        list.$('.o_group_header:first').click();
+        assert.strictEqual(nbRPCs.readGroup, 1, "should have done one read_group");
+        assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
+
+        var $openGroup = list.$('tbody:nth(1)');
+        assert.strictEqual(list.$('tbody').length, 3, "there should be 3 tbodys");
+        assert.strictEqual(list.$('.o_group_name:first .fa-caret-down').length, 1,
+            "the carret of open groups should be down");
+        assert.strictEqual($openGroup.find('.o_group_header').length, 3,
+            "open group should contain 3 groups");
+        assert.strictEqual($openGroup.find('.o_group_name:nth(2)').text(), 'blip (2)',
+            "group should have correct name and count");
+        assert.strictEqual($openGroup.find('.o_group_name:nth(2) span').css('padding-left'),
+            '20px', "groups of level 2 should have a 20px padding-left");
+        assert.strictEqual($openGroup.find('.o_group_header:nth(2) td:last').text(), '-11',
+            "inner group aggregates are correctly displayed");
+
+        // open subgroup
+        nbRPCs = {readGroup: 0, searchRead: 0};
+        $openGroup.find('.o_group_header:nth(2)').click();
+        assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
+        assert.strictEqual(nbRPCs.searchRead, 1, "should have done one search_read");
+
+        var $openSubGroup = list.$('tbody:nth(2)');
+        assert.strictEqual(list.$('tbody').length, 4, "there should be 4 tbodys");
+        assert.strictEqual($openSubGroup.find('.o_data_row').length, 2,
+            "open subgroup should contain 2 data rows");
+        assert.strictEqual($openSubGroup.find('.o_data_row:first td:last').text(), '-4',
+            "first record in open subgroup should be res_id 4 (with int_field -4)");
+
+        // open a record (should trigger event 'open_record')
+        var $row = $openSubGroup.find('.o_data_row:first');
+        groupID = $row.data('id');
+        $openSubGroup.find('.o_data_row:first').click();
+
+        // sort by int_field (ASC) and check that open groups are still open
+        nbRPCs = {readGroup: 0, searchRead: 0};
+        list.$('thead th:last').click();
+        assert.strictEqual(nbRPCs.readGroup, 2, "should have done two read_groups");
+        assert.strictEqual(nbRPCs.searchRead, 1, "should have done one search_read");
+
+        $openSubGroup = list.$('tbody:nth(2)');
+        assert.strictEqual(list.$('tbody').length, 4, "there should be 4 tbodys");
+        assert.strictEqual($openSubGroup.find('.o_data_row').length, 2,
+            "open subgroup should contain 2 data rows");
+        assert.strictEqual($openSubGroup.find('.o_data_row:first td:last').text(), '-7',
+            "first record in open subgroup should be res_id 5 (with int_field -7)");
+
+        // close first level group
+        nbRPCs = {readGroup: 0, searchRead: 0};
+        list.$('.o_group_header:first').click();
+        assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
+        assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
+
+        assert.strictEqual(list.$('tbody').length, 1, "there should be 1 tbody");
+        assert.strictEqual(list.$('.o_group_header').length, 2,
+            "should contain 2 groups at first level");
+        assert.strictEqual(list.$('.o_group_name .fa-caret-right').length, 2,
+            "the carret of closed groups should be right");
+
+        list.destroy();
+    });
 });
 
 });

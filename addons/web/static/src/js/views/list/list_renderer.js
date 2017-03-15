@@ -354,9 +354,10 @@ var ListRenderer = BasicRenderer.extend({
      *
      * @private
      * @param {Object} group
+     * @param {integer} groupLevel the nesting level (0 for root groups)
      * @returns {jQueryElement} a <tr> element
      */
-    _renderGroupRow: function (group) {
+    _renderGroupRow: function (group, groupLevel) {
         var aggregateValues = _.mapObject(group.aggregateValues, function (value) {
             return { value: value };
         });
@@ -370,7 +371,9 @@ var ListRenderer = BasicRenderer.extend({
                     .addClass('o_group_name')
                     .text(name + ' (' + group.count + ')');
         if (group.count > 0) {
-            var $arrow = $('<span style="padding-right: 5px;">')
+            var $arrow = $('<span>')
+                            .css('padding-left', (groupLevel * 20) + 'px')
+                            .css('padding-right', '5px')
                             .addClass('fa')
                             .toggleClass('fa-caret-right', !group.isOpen)
                             .toggleClass('fa-caret-down', group.isOpen);
@@ -390,23 +393,33 @@ var ListRenderer = BasicRenderer.extend({
      * row, then possibly a bunch of rows for each record.
      *
      * @private
+     * @param {Object} data the dataPoint containing the groups
+     * @param {integer} [groupLevel=0] the nesting level. 0 is for the root group
      * @returns {jQueryElement[]} a list of <tbody>
      */
-    _renderGroups: function () {
+    _renderGroups: function (data, groupLevel) {
         var self = this;
+        groupLevel = groupLevel || 0;
         var result = [];
         var $tbody = $('<tbody>');
-        _.each(this.state.data, function (group) {
+        _.each(data, function (group) {
             if (!$tbody) {
                 $tbody = $('<tbody>');
             }
-            $tbody.append(self._renderGroupRow(group));
+            $tbody.append(self._renderGroupRow(group, groupLevel));
             if (group.data.length) {
                 result.push($tbody);
-                var $records = _.map(group.data, function (record) {
-                    return self._renderRow(record).prepend($('<td>'));
-                });
-                result.push($('<tbody>').append($records));
+                // render an opened group
+                if (group.groupedBy.length) {
+                    // the opened group contains subgroups
+                    result = result.concat(self._renderGroups(group.data, groupLevel + 1));
+                } else {
+                    // the opened group contains records
+                    var $records = _.map(group.data, function (record) {
+                        return self._renderRow(record).prepend($('<td>'));
+                    });
+                    result.push($('<tbody>').append($records));
+                }
                 $tbody = null;
             }
         });
@@ -548,7 +561,7 @@ var ListRenderer = BasicRenderer.extend({
         if (is_grouped) {
             $table
                 .append(this._renderHeader(true))
-                .append(this._renderGroups())
+                .append(this._renderGroups(this.state.data))
                 .append(this._renderFooter(true));
         } else {
             $table
