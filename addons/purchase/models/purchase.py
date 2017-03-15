@@ -554,6 +554,9 @@ class PurchaseOrderLine(models.Model):
 
     @api.multi
     def write(self, values):
+        if values.get('product_qty'):
+            if any(self.filtered(lambda x: x.order_id.state == 'purchase' and x.product_id.type in ['consu', 'product'] and x.product_id not in x.move_ids.mapped('product_id'))):
+                raise UserError(_('You can not update the quantities for a kit. Please, create a new PO or cancel the backorder(s).'))
         result = super(PurchaseOrderLine, self).write(values)
         orders = self.filtered(lambda x: x.order_id.state == 'purchase').mapped('order_id')
         orders._create_picking()

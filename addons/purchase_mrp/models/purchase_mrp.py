@@ -22,11 +22,13 @@ class PurchaseOrderLine(models.Model):
     def _get_bom_delivered(self, bom=False):
         self.ensure_one()
 
-        # In the case of a kit, we need to check if all components are shipped. Since the BOM might
+        # In the case of a kit, we need to check if some of components are shipped. Since the BOM might
         # have changed, we don't compute the quantities but verify the move state.
         if bom:
-            bom_delivered = all([move.state == 'done' for move in self.move_ids])
-            if bom_delivered:
-                return self.product_qty
-            else:
-                return 0.0
+            move_product_dict = dict(map(lambda x: (x.id, {'done': 0.0, 'qty': 0.0}), self.move_ids.mapped('product_id')))
+            for move in self.move_ids:
+                move_product_dict[move.product_id.id]['qty'] += move.product_uom_qty
+                if move.state == 'done':
+                    move_product_dict[move.product_id.id]['done'] += move.product_uom_qty
+            min_transfer = min(move_product_dict[key]['done'] / move_product_dict[key]['qty'] for key in move_product_dict)
+            return min_transfer * self.product_qty
