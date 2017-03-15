@@ -91,7 +91,7 @@ class Lead(models.Model):
     type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
         help="Type is used to separate Leads and Opportunities")
-    priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Rating', index=True, default=crm_stage.AVAILABLE_PRIORITIES[0][0])
+    priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority', index=True, default=crm_stage.AVAILABLE_PRIORITIES[0][0])
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
 
     stage_id = fields.Many2one('crm.stage', string='Stage', track_visibility='onchange', index=True,
