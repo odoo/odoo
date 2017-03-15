@@ -164,7 +164,7 @@ class Warehouse(models.Model):
                 if to_add:
                     warehouse.create_resupply_routes(to_add, warehouse.default_resupply_wh_id)
                 if to_remove:
-                    Route.search([('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', 'in', to_remove.ids)]).unlink()
+                    Route.search([('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', 'in', to_remove.ids)]).write({'active': False})
                     # TDE FIXME: shouldn't we remove procurement rules also ? because this could make them global (not sure)
 
         return res
@@ -279,8 +279,8 @@ class Warehouse(models.Model):
             if warehouse.reception_route_id:
                 reception_route = warehouse.reception_route_id
                 reception_route.write({'name':  warehouse._format_routename(route_type=warehouse.reception_steps)})
-                reception_route.pull_ids.unlink()
-                reception_route.push_ids.unlink()
+                reception_route.pull_ids.write({'active': False})
+                reception_route.push_ids.write({'active': False})
             else:
                 reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
             # push / procurement (pull) rules for reception
@@ -289,9 +289,29 @@ class Warehouse(models.Model):
                 routings, values={'active': True, 'route_id': reception_route.id},
                 push_values=None, pull_values={'procure_method': 'make_to_order'})
             for push_vals in push_rules_list:
-                self.env['stock.location.path'].create(push_vals)
+                existing_push = self.env['stock.location.path'].search([
+                    ('picking_type_id', '=', push_vals['picking_type_id']),
+                    ('location_from_id', '=', push_vals['location_from_id']),
+                    ('location_dest_id', '=', push_vals['location_dest_id']),
+                    ('route_id', '=', push_vals['route_id']),
+                    ('active', '=', False),
+                ])
+                if not existing_push:
+                    self.env['stock.location.path'].create(push_vals)
+                else:
+                    existing_push.write({'active': True})
             for pull_vals in pull_rules_list:
-                self.env['procurement.rule'].create(pull_vals)
+                existing_pull = self.env['procurement.rule'].search([
+                    ('picking_type_id', '=', pull_vals['picking_type_id']),
+                    ('location_src_id', '=', pull_vals['location_src_id']),
+                    ('location_id', '=', pull_vals['location_id']),
+                    ('route_id', '=', pull_vals['route_id']),
+                    ('active', '=', False),
+                ])
+                if not existing_pull:
+                    self.env['procurement.rule'].create(pull_vals)
+                else:
+                    existing_pull.write({'active': True})
         return reception_route
 
     def _create_or_update_delivery_route(self, routes_data):
@@ -301,7 +321,7 @@ class Warehouse(models.Model):
             if warehouse.delivery_route_id:
                 delivery_route = warehouse.delivery_route_id
                 delivery_route.write({'name': warehouse._format_routename(route_type=warehouse.delivery_steps)})
-                delivery_route.pull_ids.unlink()
+                delivery_route.pull_ids.write({'active': False})
             else:
                 delivery_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.delivery_steps))
             # procurement (pull) rules for delivery
@@ -309,7 +329,17 @@ class Warehouse(models.Model):
             dummy, pull_rules_list = warehouse._get_push_pull_rules_values(
                 routings, values={'active': True, 'route_id': delivery_route.id})
             for pull_vals in pull_rules_list:
-                self.env['procurement.rule'].create(pull_vals)
+                existing_pull = self.env['procurement.rule'].search([
+                    ('picking_type_id', '=', pull_vals['picking_type_id']),
+                    ('location_src_id', '=', pull_vals['location_src_id']),
+                    ('location_id', '=', pull_vals['location_id']),
+                    ('route_id', '=', pull_vals['route_id']),
+                    ('active', '=', False),
+                ])
+                if not existing_pull:
+                    self.env['procurement.rule'].create(pull_vals)
+                else:
+                    existing_pull.write({'active': True})
         return delivery_route
 
     def _create_or_update_mto_pull(self, routes_data):
@@ -540,7 +570,7 @@ class Warehouse(models.Model):
             Pull.search([
                 '&', ('route_id', '=', self._get_mto_route().id),
                 ('location_id.usage', '=', 'transit'),
-                ('location_src_id', '=', self.lot_stock_id.id)]).unlink()
+                ('location_src_id', '=', self.lot_stock_id.id)]).write({'active': False})
 
     def _check_reception_resupply(self, new_location):
         """ Check routes being delivered by the warehouses (resupply routes) and
@@ -555,9 +585,7 @@ class Warehouse(models.Model):
         routes_data = self.get_routes_dict()
         # change the default source and destination location and (de)activate operation types
         self._update_picking_type()
-        # update delivery route and rules: unlink the existing rules of the warehouse delivery route and recreate it
         self._create_or_update_delivery_route(routes_data)
-        # update receipt route and rules: unlink the existing rules of the warehouse receipt route and recreate it
         self._create_or_update_reception_route(routes_data)
         self._create_or_update_crossdock_route(routes_data)
         self._create_or_update_mto_pull(routes_data)
