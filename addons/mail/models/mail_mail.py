@@ -210,7 +210,6 @@ class MailMail(models.Model):
             for mail_batch in tools.split_every(batch_size, record_ids):
                 yield server_id, mail_batch
 
-
     @api.multi
     def send(self, auto_commit=False, raise_exception=False):
         """ Sends the selected emails immediately, ignoring their current
@@ -231,6 +230,14 @@ class MailMail(models.Model):
             smtp_session = None
             try:
                 smtp_session = self.env['ir.mail_server'].connect(mail_server_id=server_id)
+            except Exception as exc:
+                if raise_exception:
+                    # To be consistent and backward compatible with mail_mail.send() raised
+                    # exceptions, it is encapsulated into an Odoo MailDeliveryException
+                    raise MailDeliveryException(_('Unable to connect to SMTP Server'), exc)
+                else:
+                    self.browse(batch_ids).write({'state': 'exception', 'failure_reason': exc})
+            else:
                 self.browse(batch_ids)._send(
                     auto_commit=auto_commit,
                     raise_exception=raise_exception,
