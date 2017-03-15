@@ -1113,6 +1113,19 @@ class Lead(models.Model):
                 update_vals[key] = res.group(2).lower()
         return super(Lead, self).message_update(msg_dict, update_vals=update_vals)
 
+    def _message_post_after_hook(self, message):
+        if self.email_from and not self.partner_id:
+            # we consider that posting a message with a specified recipient (not a follower, a specific one)
+            # on a document without customer means that it was created through the chatter using
+            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
+            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
+            if new_partner:
+                self.search([
+                    ('partner_id', '=', False),
+                    ('email_from', '=', new_partner.email),
+                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
+        return super(Lead, self)._message_post_after_hook(message)
+
     @api.multi
     def message_partner_info_from_emails(self, emails, link_mail=False):
         result = super(Lead, self).message_partner_info_from_emails(emails, link_mail=link_mail)
