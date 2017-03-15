@@ -8,9 +8,16 @@
         <template id="assets_backend" name="im_livechat assets backend" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_backend.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/js/copy_clipboard.js"></script>
+                <link rel="stylesheet" href="/im_livechat/static/src/less/copy_clipboard.less"/>
             </xpath>
         </template>
 
+        <template id="qunit_suite" name="im_livechat tests" inherit_id="web.qunit_suite">
+            <xpath expr="//script[contains(@src, '/web/static/tests/views/form_tests.js')]" position="after">
+                <script type="text/javascript" src="/im_livechat/static/tests/copy_clipboard_tests.js"></script>
+            </xpath>
+        </template>
 
         <!--
             Template rendering the external HTML support page
