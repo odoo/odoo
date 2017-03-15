@@ -25,7 +25,7 @@
                 <field name="transport_mode" widget="radio"/>
                 <label for="car_id" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}"/>
                 <div attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}">
-                    <field name="car_id" nolabel="1"/>
+                    <field name="car_id" nolabel="1" attrs="{'invisible': [('new_car', '=', True)]}"/>
                     <field name="available_cars_amount" invisible="1"/>
                     <div>
                         <field name="new_car" attrs="{'invisible': [('available_cars_amount', '&gt;', 3)]}" nolabel="1"/>
