@@ -17,9 +17,9 @@
 <p>Dear ${object.partner_id.name}
 % set access_action = object.with_context(force_website=True).get_access_action()
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
-% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'
-% set access_name = is_online and object.template_id and doc_name == 'quotation' and 'Accept and pay %s online' % doc_name or 'View %s' % doc_name
-% set access_url = is_online and '/mail/view?model=sale.order&res_id=%d' % (object.id) or ''
+% set pay_sign_name =  ('require_payment' in object and object.require_payment and 'pay') or 'sign'
+% set access_name = is_online and object.template_id and object.state in ('draft', 'sent')  and 'Accept and %s online' % pay_sign_name or 'View %s' % doc_name
+% set access_url = is_online and access_action['url'] or ''
 
 % if object.partner_id.parent_id:
     (<i>${object.partner_id.parent_id.name}</i>)
