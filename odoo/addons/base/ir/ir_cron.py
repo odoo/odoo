@@ -146,14 +146,18 @@ class ir_cron(models.Model):
     @classmethod
     def _acquire_job(cls, db_name):
         # TODO remove 'check' argument from addons/base_automation/base_automation.py
-        """ Try to process one cron job.
+        """Processes pending cron jobs.
 
         This selects in database all the jobs that should be processed. It then
         tries to lock each of them and, if it succeeds, run the cron job (if it
         doesn't succeed, it means the job was already locked to be taken care
         of by another thread) and return.
 
-        If a job was processed, returns True, otherwise returns False.
+        Returns a dictionary holding the following information:
+
+            ``successes``: the number of successfully triggered jobs
+            ``failures``: the number of failed jobs (error during execution)
+            ``nextcall``: the date of the next planned job
         """
         db = odoo.sql_db.db_connect(db_name)
         threading.current_thread().dbname = db_name
@@ -181,7 +185,7 @@ class ir_cron(models.Model):
         except Exception:
             _logger.warning('Exception in cron:', exc_info=True)
 
-        res = dict(success=0, failed=0, nextcall=None, nextcall_epoch=None)
+        res = dict(successes=0, failures=0, nextcall=None)
         for job in jobs:
             lock_cr = db.cursor()
             try:
@@ -207,10 +211,10 @@ class ir_cron(models.Model):
                 try:
                     registry = odoo.registry(db_name)
                     success = registry[cls._name]._process_job(job_cr, job, lock_cr)
-                    res['success' if success else 'failed'] += 1
+                    res['successes' if success else 'failures'] += 1
                 except Exception:
                     _logger.exception('Unexpected exception while processing cron job %r', job)
-                    res['failed'] += 1
+                    res['failures'] += 1
                 finally:
                     job_cr.close()
 
@@ -226,17 +230,11 @@ class ir_cron(models.Model):
                 # we're exiting due to an exception while acquiring the lock
                 lock_cr.close()
 
-        try:
-            with db.cursor() as cr:
-                cr.execute("SELECT MIN(nextcall) as nextcall FROM ir_cron WHERE active = 't'")
-                row = cr.dictfetchone()
-                if row:
-                    res['nextcall'] = row['nextcall']
-                    min_cron = datetime.strptime(row['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT)
-                    epoch = datetime.utcfromtimestamp(0)
-                    res['nextcall_epoch'] = int((min_cron - epoch).total_seconds())
-        except Exception:
-            pass
+        with db.cursor() as cr:
+            cr.execute("SELECT MIN(nextcall) as nextcall FROM ir_cron WHERE active")
+            row = cr.dictfetchone()
+            if row:
+                res['nextcall'] = row['nextcall']
 
         if hasattr(threading.current_thread(), 'dbname'):  # cron job could have removed it as side-effect
             del threading.current_thread().dbname
