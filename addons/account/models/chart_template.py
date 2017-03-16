@@ -927,15 +927,17 @@ class WizardMultiChartsAccounts(models.TransientModel):
             of the accounts that have been generated from them.
         '''
         self.ensure_one()
+        bank_journals = self.env['account.journal']
         # Create the journals that will trigger the account.account creation
         for acc in self.bank_account_ids:
-            self.env['account.journal'].create({
+            bank_journals += self.env['account.journal'].create({
                 'name': acc.acc_name,
                 'type': acc.account_type,
                 'company_id': company.id,
                 'currency_id': acc.currency_id.id,
                 'sequence': 10
             })
+        return bank_journals
 
 
 class AccountBankAccountsWizard(models.TransientModel):
