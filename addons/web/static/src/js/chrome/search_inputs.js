@@ -170,6 +170,7 @@ var Field = Input.extend( /** @lends instance.web.search.Field# */ {
             return domains[0];
         }
 
+        _.each(domains, Domain.prototype.normalizeArray);
         var ors = _.times(domains.length - 1, _.constant("|"));
         return ors.concat.apply(ors, domains);
     }
@@ -619,10 +620,14 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
      * @return {*} combined domains of the enabled filters in this group
      */
     get_domain: function (facet) {
+        var userContext = this.getSession().user_context;
         var domains = facet.values.chain()
             .map(function (f) { return f.get('value').attrs.domain; })
             .without('[]')
             .reject(_.isEmpty)
+            .map(function (d) {
+                return Domain.prototype.stringToArray(d, userContext);
+            })
             .value();
 
         if (!domains.length) {
@@ -632,6 +637,7 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
             return domains[0];
         }
 
+        _.each(domains, Domain.prototype.normalizeArray);
         var ors = _.times(domains.length - 1, _.constant("|"));
         return ors.concat.apply(ors, domains);
     },

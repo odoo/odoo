@@ -129,7 +129,6 @@ QUnit.module('chrome', {}, function () {
         assert.strictEqual(query.length, 0, 'Should have removed the facet');
     });
 
-
     QUnit.test('Intermediate emptiness should not remove the facet', function (assert) {
         assert.expect(3);
 
@@ -167,5 +166,7 @@ QUnit.module('chrome', {}, function () {
         ]);
     });
 
+    // TODO add a test to check that combining two filters with a or normalizes the two filters before
+    // Note: maybe domain.js will be improved to make this easier
 });
 });
