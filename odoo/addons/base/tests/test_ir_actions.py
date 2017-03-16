@@ -423,3 +423,16 @@ class TestCustomFields(common.TransactionCase):
         field = self.create_field('x_foo')
         with self.assertRaises(ValidationError):
             field.name = 'x_foo bar'
+
+    def test_create_unique(self):
+        """ one cannot create two fields with the same name on a given model """
+        self.create_field('x_foo')
+        with self.assertRaises(ValidationError):
+            self.create_field('x_foo')
+
+    def test_rename_unique(self):
+        """ one cannot create two fields with the same name on a given model """
+        field1 = self.create_field('x_foo')
+        field2 = self.create_field('x_bar')
+        with self.assertRaises(ValidationError):
+            field2.name = field1.name

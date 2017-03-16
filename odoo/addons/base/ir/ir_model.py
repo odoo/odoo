@@ -297,6 +297,14 @@ class IrModelFields(models.Model):
                 msg = _("Field names can only contain characters, digits and underscores (up to 63).")
                 raise ValidationError(msg)
 
+    @api.constrains('model', 'name')
+    def _unique_name(self):
+        # fix on stable branch (to be converted into an SQL constraint)
+        for field in self:
+            count = self.search_count([('model', '=', field.model), ('name', '=', field.name)])
+            if count > 1:
+                raise ValidationError(_("Field names must be unique per model."))
+
     _sql_constraints = [
         ('size_gt_zero', 'CHECK (size>=0)', 'Size of the field cannot be negative.'),
     ]
@@ -565,8 +573,6 @@ class IrModelFields(models.Model):
                     item._prepare_update()
                     if column_rename:
                         raise UserError(_('Can only rename one field at a time!'))
-                    if vals['name'] in obj._fields:
-                        raise UserError(_('Cannot rename field to %s, because that field already exists!') % vals['name'])
                     column_rename = (obj._table, item.name, vals['name'], item.index)
 
                 # We don't check the 'state', because it might come from the context
