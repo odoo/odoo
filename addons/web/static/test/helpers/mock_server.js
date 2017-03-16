@@ -601,7 +601,7 @@ var MockServer = Class.extend({
                     __domain: [[
                         groupByField, "=",
                         val instanceof Array ? val[0] : (val || false)
-                    ]]
+                    ]].concat(kwargs.domain || []),
                 };
                 var field = self.data[model].fields[groupByField];
                 if (field.type === 'many2one' && !_.isArray(val)) {
