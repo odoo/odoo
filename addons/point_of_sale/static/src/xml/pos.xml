@@ -1110,7 +1110,7 @@
                 <p class="title"><t t-esc=" widget.options.title || 'Select' " /></p>
                 <div class='selection scrollable-y touch-scrollable'>
                     <t t-foreach="widget.list || []" t-as="item">
-                        <div class='selection-item' t-att-data-item-index='item_index'>
+                        <div t-attf-class="selection-item {{ widget.is_selected.call(widget, item.item) ? 'selected' : '' }}" t-att-data-item-index='item_index'>
                             <t t-esc='item.label'/>
                         </div>
                     </t>

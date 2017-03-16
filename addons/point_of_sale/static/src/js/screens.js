@@ -2042,6 +2042,9 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
                 var order = self.pos.get_order();
                 order.fiscal_position = fiscal_position;
                 order.trigger('change');
+            },
+            is_selected: function (fiscal_position) {
+                return fiscal_position === self.pos.get_order().fiscal_position;
             }
         });
     },
@@ -2056,9 +2059,8 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
                 name = fiscal_position.display_name;
             }
         }
-
-        return name;
-    }
+         return name;
+    },
 });
 
 define_action_button({

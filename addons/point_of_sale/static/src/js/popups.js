@@ -155,11 +155,12 @@ gui.define_popup({name:'confirm', widget: ConfirmPopupWidget});
 var SelectionPopupWidget = PopupWidget.extend({
     template: 'SelectionPopupWidget',
     show: function(options){
-        options = options || {};
         var self = this;
+        options = options || {};
         this._super(options);
 
-        this.list    = options.list    || [];
+        this.list = options.list || [];
+        this.is_selected = options.is_selected || function (item) { return false; };
         this.renderElement();
     },
     click_item : function(event) {
