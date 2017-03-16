@@ -244,10 +244,10 @@ var Gui = core.Class.extend({
         }
 
         this.show_popup('selection',{
-            'title': options.title || _t('Select User'),
+            title: options.title || _t('Select User'),
             list: list,
             confirm: function(user){ def.resolve(user); },
-            cancel:  function(){ def.reject(); },
+            cancel: function(){ def.reject(); },
             is_selected: function(user){ return user === self.pos.get_cashier(); },
         });
 
