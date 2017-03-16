@@ -23,7 +23,11 @@ class WebsiteSaleBackend(WebsiteBackend):
                 order_to_invoice_count=0, order_carts_abandoned_count=0,
                 payment_to_capture_count=0, total_sold=0,
                 order_per_day_ratio=0, order_sold_ratio=0, order_convertion_pctg=0,
-            )
+            ),
+            evl_summary=dict(
+                evl_order_count=0, evl_total_sold=0, evl_order_carts_count=0,
+                evl_order_per_day_ratio=0, evl_order_sold_ratio=0, evl_order_convertion_pctg=0,
+            ),
         )
         results['dashboards']['sales'] = sales_values
 
@@ -104,6 +108,18 @@ class WebsiteSaleBackend(WebsiteBackend):
         sales_values['summary']['order_sold_ratio'] = round(float(sales_values['summary']['total_sold']) / sales_values['summary']['order_count'], 2) if sales_values['summary']['order_count'] else 0
         sales_values['summary']['order_convertion_pctg'] = 100.0 * sales_values['summary']['order_count'] / sales_values['summary']['order_carts_count'] if sales_values['summary']['order_carts_count'] else 0
 
+        # Previous Sale-based results computation
+        previous_datetime_from = (datetime_from - timedelta(days=date_diff_days))
+        previous_summary = self._compute_previous_sale_evolution(previous_datetime_from, datetime_from, date_diff_days)
+        sales_values['evl_summary'].update(
+            evl_order_count=round((float(sales_values['summary']['order_count']) / previous_summary['pre_order_count'] * 100) - 100, 2) if previous_summary['pre_order_count'] > 0 else round((float(sales_values['summary']['order_count']) * 100), 2),
+            evl_total_sold=round((float(sales_values['summary']['total_sold']) / previous_summary['pre_total_sold'] * 100) - 100, 2) if previous_summary['pre_total_sold'] > 0 else round((float(sales_values['summary']['total_sold']) * 100), 2),
+            evl_order_carts_count=round((float(sales_values['summary']['order_carts_count']) / previous_summary['pre_order_carts_count'] * 100) - 100, 2) if previous_summary['pre_order_carts_count'] > 0 else round((float(sales_values['summary']['order_carts_count']) * 100), 2),
+            evl_order_per_day_ratio=round((float(sales_values['summary']['order_per_day_ratio']) / previous_summary['pre_order_per_day_ratio'] * 100) - 100, 2) if previous_summary['pre_order_per_day_ratio'] > 0 else round((float(sales_values['summary']['order_per_day_ratio']) * 100), 2),
+            evl_order_sold_ratio=round((float(sales_values['summary']['order_sold_ratio']) / previous_summary['pre_order_sold_ratio'] * 100) - 100, 2) if previous_summary['pre_order_sold_ratio'] > 0 else round((float(sales_values['summary']['order_sold_ratio']) * 100), 2),
+            evl_order_convertion_pctg=round((float(sales_values['summary']['order_convertion_pctg']) / previous_summary['pre_order_convertion_pctg'] * 100) - 100, 2) if previous_summary['pre_order_convertion_pctg'] > 0 else round((float(sales_values['summary']['order_convertion_pctg']) * 100), 2),
+        )
+
         # Graphes computation
         if date_diff_days == 7:
             previous_sale_label = _('Previous Week')
@@ -147,3 +163,39 @@ class WebsiteSaleBackend(WebsiteBackend):
         } for d in date_list]
 
         return sales_graph
+
+    def _compute_previous_sale_evolution(self, date_from, date_to, date_diff_days):
+        previous_summary = dict(
+            pre_order_count=0,  pre_order_carts_count=0, pre_total_sold=0,
+            pre_order_per_day_ratio=0, pre_order_sold_ratio=0, pre_order_convertion_pctg=0,
+        )
+
+        previous_sale_order_domain = [
+            ('team_id', 'in', request.env['crm.team'].search([('team_type', '=', 'website')]).ids),
+            ('date_order', '>=', fields.Datetime.to_string(date_from)),
+            ('date_order', '<', fields.Datetime.to_string(date_to))]
+        pre_so_group_data = request.env['sale.order'].read_group(previous_sale_order_domain, fields=['state'], groupby='state')
+        for res in pre_so_group_data:
+            if res.get('state') in ['sale', 'done']:
+                previous_summary['pre_order_count'] += res['state_count']
+            previous_summary['pre_order_carts_count'] += res['state_count']
+
+        pre_report_price_lines = request.env['sale.report'].read_group(
+            domain=[
+                ('team_id.team_type', '=', 'website'),
+                ('state', 'in', ['sale', 'done']),
+                ('date', '>=', fields.Datetime.to_string(date_from)),
+                ('date', '<', fields.Datetime.to_string(date_to))],
+            fields=['team_id', 'price_subtotal'],
+            groupby=['team_id'],
+        )
+        previous_summary.update(
+            pre_total_sold=sum(price_line['price_subtotal'] for price_line in pre_report_price_lines)
+        )
+
+        # Previous Ratio computation
+        previous_summary['pre_order_per_day_ratio'] = round(float(previous_summary['pre_order_count']) / date_diff_days, 2)
+        previous_summary['pre_order_sold_ratio'] = round(float(previous_summary['pre_total_sold']) / previous_summary['pre_order_count'], 2) if previous_summary['pre_order_count'] else 0
+        previous_summary['pre_order_convertion_pctg'] = 100.0 * previous_summary['pre_order_count'] / previous_summary['pre_order_carts_count'] if previous_summary['pre_order_carts_count'] else 0
+
+        return previous_summary
