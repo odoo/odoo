@@ -1107,7 +1107,7 @@ QUnit.module('Views', {
                     nbRPCs.readGroup++;
                 } else if (route === '/web/dataset/search_read') {
                     // called twice (once when opening the group, once when sorting)
-                    assert.deepEqual(args.domain, [['m2o', '=', 1], ['foo', '=', 'blip']],
+                    assert.deepEqual(args.domain, [['foo', '=', 'blip'], ['m2o', '=', 1]],
                         "nested search_read should be called with correct domain");
                     nbRPCs.searchRead++;
                 }

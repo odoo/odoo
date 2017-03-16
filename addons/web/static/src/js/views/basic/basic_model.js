@@ -2072,7 +2072,7 @@ var BasicModel = AbstractModel.extend({
                     var newGroup = self._makeDataPoint({
                         modelName: list.model,
                         count: group[rawGroupBy + '_count'],
-                        domain: list.domain.concat(group.__domain),
+                        domain: group.__domain,
                         context: list.context,
                         fields: list.fields,
                         fieldNames: list.fieldNames,
