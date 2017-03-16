@@ -24,9 +24,10 @@ var DECORATIONS = [
 ];
 
 var FIELD_CLASSES = {
-    'monetary': 'o_list_number',
-    'text': 'o_list_text',
-    'float': 'o_list_number',
+    float: 'o_list_number',
+    integer: 'o_list_number',
+    monetary: 'o_list_number',
+    text: 'o_list_text',
 };
 
 var ListRenderer = BasicRenderer.extend({
@@ -479,7 +480,7 @@ var ListRenderer = BasicRenderer.extend({
             .toggleClass('o-sort-up', isNodeSorted ? order[0].asc : false)
             .addClass(field.sortable && 'o_column_sortable');
 
-        if (field.type === 'float' || field.type === 'monetary') {
+        if (field.type === 'float' || field.type === 'integer' || field.type === 'monetary') {
             $th.css({textAlign: 'right'});
         }
 
