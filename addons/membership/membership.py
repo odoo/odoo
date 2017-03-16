@@ -136,6 +136,8 @@ class membership_line(osv.osv):
             res[line.id] = state
         return res
 
+    def __get_state(self, cr, uid, ids, name, args, context=None):
+        return self._state(cr, uid, ids, name, args, context=context)
 
     _description = __doc__
     _name = 'membership.membership_line'
@@ -149,7 +151,7 @@ class membership_line(osv.osv):
         'member_price': fields.float('Membership Fee', digits_compute= dp.get_precision('Product Price'), required=True, help='Amount for the membership'),
         'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
         'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
-        'state': fields.function(_state,
+        'state': fields.function(__get_state,
                         string='Membership Status', type='selection',
                         selection=STATE, store = {
                         'account.invoice': (_get_membership_lines, ['state'], 10),
