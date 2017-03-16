@@ -412,6 +412,23 @@ var FieldFloat = InputField.extend({
         }
     },
 
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * For float fields, 0 is a valid value.
+     *
+     * @override
+     */
+    isSet: function () {
+        return this.value === 0 || this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * Format value according to precision parameter.
      *
@@ -425,9 +442,6 @@ var FieldFloat = InputField.extend({
         }
         var $span = $('<span>').addClass('o_form_field o_form_field_number').text(this._formatValue(value));
         this.$el.html($span);
-    },
-    isSet: function () {
-        return this.value !== '';
     },
 });
 
