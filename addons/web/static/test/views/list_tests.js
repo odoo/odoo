@@ -75,7 +75,7 @@ QUnit.module('Views', {
     QUnit.module('ListView');
 
     QUnit.test('simple readonly list', function (assert) {
-        assert.expect(7);
+        assert.expect(9);
 
         var list = createView({
             View: ListView,
@@ -90,6 +90,11 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('td:contains(gnap)').length, 1, "should contain gnap");
         assert.strictEqual(list.$('tbody tr').length, 4, "should have 4 rows");
         assert.strictEqual(list.$('th.o_column_sortable').length, 1, "should have 1 sortable column");
+
+        assert.strictEqual(list.$('thead th:nth(2)').css('text-align'), 'right',
+            "header cells of integer fields should be right aligned");
+        assert.strictEqual(list.$('tbody tr:first td:nth(2)').css('text-align'), 'right',
+            "integer cells should be right aligned");
 
         assert.ok(list.$buttons.find('.o_list_button_add').is(':visible'),
             "should have a visible Create button");
@@ -132,7 +137,6 @@ QUnit.module('Views', {
             "should have a visible discard button");
         list.destroy();
     });
-
 
     QUnit.test('invisible columns are not displayed', function (assert) {
         assert.expect(1);
