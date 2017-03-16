@@ -686,7 +686,7 @@ class IntegerConverter(osv.AbstractModel):
             context = {}
 
         lang_code = context.get('lang') or 'en_US'
-        return self.pool['res.lang'].format(cr, uid, [lang_code], '%d', value, grouping=True)
+        return self.pool['res.lang'].format(cr, uid, [lang_code], '%d', value, grouping=True).replace(r'-', u'\u2011')
 
 class FloatConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.float'
@@ -704,7 +704,7 @@ class FloatConverter(osv.AbstractModel):
 
         lang_code = context.get('lang') or 'en_US'
         lang = self.pool['res.lang']
-        formatted = lang.format(cr, uid, [lang_code], fmt.format(precision=precision), value, grouping=True)
+        formatted = lang.format(cr, uid, [lang_code], fmt.format(precision=precision), value, grouping=True).replace(r'-', u'\u2011')
 
         # %f does not strip trailing zeroes. %g does but its precision causes
         # it to switch to scientific notation starting at a million *and* to
@@ -889,7 +889,7 @@ class MonetaryConverter(osv.AbstractModel):
         lang = self.pool['res.lang']
         formatted_amount = lang.format(cr, uid, [lang_code],
             fmt, Currency.round(cr, uid, display_currency, from_amount),
-            grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}')
+            grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'\u2011')
 
         pre = post = u''
         if display_currency.position == 'before':
@@ -1056,7 +1056,7 @@ class QwebWidgetMonetary(osv.AbstractModel):
         lang_code = qwebcontext.context.get('lang') or 'en_US'
         formatted_amount = self.pool['res.lang'].format(
             qwebcontext.cr, qwebcontext.uid, [lang_code], fmt, inner, grouping=True, monetary=True
-        ).replace(r' ', u'\N{NO-BREAK SPACE}')
+        ).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'\u2011')
         pre = post = u''
         if display.position == 'before':
             pre = u'{symbol}\N{NO-BREAK SPACE}'
