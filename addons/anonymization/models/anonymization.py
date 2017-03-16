@@ -29,7 +29,7 @@ class IrModelFieldsAnonymization(models.Model):
     state = fields.Selection(selection=FIELD_STATES, string='Status', required=True, readonly=True, default='clear')
 
     _sql_constraints = [
-        ('model_id_field_id_uniq', 'unique (model_name, field_name)', _("You cannot have two fields with the same name on the same object!")),
+        ('model_id_field_id_uniq', 'unique (model_name, field_name)', "You cannot have two fields with the same name on the same object!"),
     ]
 
     @api.model

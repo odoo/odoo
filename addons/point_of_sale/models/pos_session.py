@@ -97,7 +97,7 @@ class PosSession(models.Model):
     statement_ids = fields.One2many('account.bank.statement', 'pos_session_id', string='Bank Statement', readonly=True)
     picking_count = fields.Integer(compute='_compute_picking_count')
 
-    _sql_constraints = [('uniq_name', 'unique(name)', _("The name of this POS Session must be unique !"))]
+    _sql_constraints = [('uniq_name', 'unique(name)', "The name of this POS Session must be unique !")]
 
     @api.multi
     def _compute_picking_count(self):

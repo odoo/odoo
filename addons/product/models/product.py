@@ -168,7 +168,7 @@ class ProductProduct(models.Model):
         help="Gives the different ways to package the same product.")
 
     _sql_constraints = [
-        ('barcode_uniq', 'unique(barcode)', _("A barcode can only be assigned to one product !")),
+        ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
     ]
 
     def _compute_product_price(self):
