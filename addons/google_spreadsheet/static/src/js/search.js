@@ -33,7 +33,7 @@ FavoriteMenu.include({
             ds = new data.DataSet(this, 'google.drive.config');
 
         _.each(sv_data.domains, function (d) {
-            domain.push(Domain.prototype.stringToArray(d));
+            domain.push.apply(domain, Domain.prototype.stringToArray(d));
         });
         ds.call('set_spreadsheet', [model, Domain.prototype.arrayToString(domain), groupbys, list_view_id])
             .done(function (res) {

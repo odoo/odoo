@@ -404,7 +404,7 @@ FavoriteMenu.include({
             domain = this.searchview.dataset.get_domain() || [];
         _.each(search_data.contexts, context.add, context);
         _.each(search_data.domains, function (d) {
-            domain.push(Domain.prototype.stringToArray(d));
+            domain.push.apply(domain, Domain.prototype.stringToArray(d));
         });
 
         context.add({
