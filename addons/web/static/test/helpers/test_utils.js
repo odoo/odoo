@@ -10,6 +10,7 @@ odoo.define('web.test_utils', function (require) {
  * instance of a view, appended in the dom, ready to be tested.
  */
 
+var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 var MockServer = require('web.MockServer');
@@ -246,6 +247,19 @@ function addMockEnvironment(widget, params) {
                 delete session[key];
             }
             _.extend(session, initialSession);
+            widgetDestroy.call(this);
+        };
+    }
+
+    if ('config' in params) {
+        var initialConfig = _.extend({}, config);
+        _.extend(config, params.config);
+        var widgetDestroy = widget.destroy;
+        widget.destroy = function () {
+            for (var key in config) {
+                delete config[key];
+            }
+            _.extend(config, initialConfig);
             widgetDestroy.call(this);
         };
     }
