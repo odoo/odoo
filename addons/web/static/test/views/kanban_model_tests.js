@@ -155,6 +155,36 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('kanban model does not allow nested groups', function (assert) {
+        assert.expect(2);
+
+        var model = createModel({
+            Model: KanbanModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.deepEqual(args.kwargs.groupby, ['product_id'],
+                        "the second level of groupBy should have been removed");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var params = _.extend(this.params, {
+            groupedBy: ['product_id', 'qux'],
+            fieldNames: ['foo'],
+        });
+
+        model.load(params).then(function (resultID) {
+            var state = model.get(resultID);
+
+            assert.deepEqual(state.groupedBy, ['product_id'],
+                "the second level of groupBy should have been removed");
+
+            model.destroy();
+        });
+    });
+
 });
 
 });
