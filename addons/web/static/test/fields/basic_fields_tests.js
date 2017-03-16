@@ -37,7 +37,7 @@ QUnit.module('basic_fields', {
                     bar: true,
                     foo: "yop",
                     int_field: 10,
-                    qux: 0.44,
+                    qux: 0.44444,
                     p: [],
                     timmy: [],
                     trululu: 4,
@@ -47,7 +47,7 @@ QUnit.module('basic_fields', {
                     bar: true,
                     foo: "blip",
                     int_field: 0,
-                    qux: 13,
+                    qux: 0,
                     p: [],
                     timmy: [],
                     trululu: 1,
@@ -58,9 +58,10 @@ QUnit.module('basic_fields', {
                     foo: "abc",
                     sequence: 9,
                     int_field: false,
+                    qux: false,
                 },
-                {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3, m2o: 1, m2m: []},
-                {id: 4, bar: false, foo: "blip", int_field: -4, qux: 9, m2o: 1, m2m: [1]}],
+                {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3.89859, m2o: 1, m2m: []},
+                {id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, m2o: 1, m2m: [1]}],
                 onchanges: {},
             },
             product: {
@@ -234,18 +235,25 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldFloat');
 
-    QUnit.test('float field rendering in list view', function (assert) {
+    QUnit.test('float field when unset', function(assert) {
         assert.expect(1);
 
-        var list = createView({
-            View: ListView,
+        var form = createView({
+            View: FormView,
             model: 'partner',
             data: this.data,
-            arch: '<tree><field name="qux"/></tree>',
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                    '<field name="qux" digits="[5,3]"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 4,
         });
 
-        assert.strictEqual(list.$('.o_list_number').length, 5, "should have 5 cells with .o_list_number");
-        list.destroy();
+        assert.ok(form.$('.o_form_field').hasClass('o_form_field_empty'),
+        'Non-set float field should be recognized as unset.');
+
+        form.destroy();
     });
 
     QUnit.test('float fields use correct digit precision', function (assert) {
@@ -268,6 +276,78 @@ QUnit.module('basic_fields', {
                             "should contain a number rounded to 1 decimal");
         form.destroy();
     });
+
+    QUnit.test('float field in form view', function(assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="float" digits="[5,3]"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.ok(!form.$('.o_form_field').hasClass('o_form_field_empty'),
+            'Float field should be considered set for value 0.');
+        assert.strictEqual(form.$('.o_form_field.o_form_field_number').first().text(), '0.000',
+            'The value should be displayed properly.')
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input.o_form_input').val(), '0.000',
+            'The value should be rendered with correct precision.')
+
+        form.$('input.o_form_input').val('108.2458938598598').trigger('input');
+        assert.strictEqual(form.$('input.o_form_input').val(), '108.2458938598598',
+            'The value should not be formated yet.')
+
+        form.$('input.o_form_input').val('18.8958938598598').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_form_field.o_form_field_number').first().text(), '18.896',
+            'The new value should be rounded properly.')
+
+        form.destroy();
+    });
+
+    QUnit.test('float field in editable list view', function (assert) {
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="qux" widget="float" digits="[5,3]"/>' +
+                  '</tree>',
+        });
+
+        var zeroValues = list.$('td').filter(function() {return $(this).text() === '0.000'});
+        assert.strictEqual(zeroValues.length, 2,
+            'Unset float values should be rendered as zeros.');
+
+        // switch to edit mode
+        var $cell = list.$('tr.o_data_row td:not(.o_list_record_selector)').first();
+        $cell.click();
+
+        assert.strictEqual(list.$('input.o_form_input').length, 1,
+            'The view should have 1 input for editable float.')
+
+        list.$('input.o_form_input').val('108.2458938598598').trigger('input');
+        assert.strictEqual(list.$('input.o_form_input').val(), '108.2458938598598',
+            'The value should not be formated yet.')
+
+        list.$('input.o_form_input').val('18.8958938598598').trigger('input');
+        list.$buttons.find('.o_list_button_save').click();
+        assert.strictEqual(list.$('.o_form_field.o_form_field_number').first().text(), '18.896',
+            'The new value should be rounded properly.')
+
+        list.destroy();
+    });
+
 
     QUnit.module('EmailWidget');
 
