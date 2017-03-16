@@ -286,6 +286,17 @@ class IrModelFields(models.Model):
             raise UserError(_("The Selection Options expression is not a valid Pythonic expression."
                               "Please provide an expression in the [('key','Label'), ...] format."))
 
+    @api.constrains('name', 'state')
+    def _check_name(self):
+        for field in self:
+            if field.state == 'manual' and not field.name.startswith('x_'):
+                raise ValidationError(_("Custom fields must have a name that starts with 'x_' !"))
+            try:
+                models.check_pg_name(field.name)
+            except ValidationError:
+                msg = _("Field names can only contain characters, digits and underscores (up to 63).")
+                raise ValidationError(msg)
+
     _sql_constraints = [
         ('size_gt_zero', 'CHECK (size>=0)', 'Size of the field cannot be negative.'),
     ]
@@ -492,9 +503,6 @@ class IrModelFields(models.Model):
         res = super(IrModelFields, self).create(vals)
 
         if vals.get('state', 'manual') == 'manual':
-            if not vals['name'].startswith('x_'):
-                raise UserError(_("Custom fields must have a name that starts with 'x_' !"))
-
             if vals.get('relation') and not self.env['ir.model'].search([('model', '=', vals['relation'])]):
                 raise UserError(_("Model %s does not exist!") % vals['relation'])
 
@@ -559,10 +567,6 @@ class IrModelFields(models.Model):
                         raise UserError(_('Can only rename one field at a time!'))
                     if vals['name'] in obj._fields:
                         raise UserError(_('Cannot rename field to %s, because that field already exists!') % vals['name'])
-                    if vals.get('state', 'manual') == 'manual' and not vals['name'].startswith('x_'):
-                        raise UserError(_('New field name must still start with x_ , because it is a custom field!'))
-                    if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
-                        raise ValueError('Invalid character in column name')
                     column_rename = (obj._table, item.name, vals['name'], item.index)
 
                 # We don't check the 'state', because it might come from the context
