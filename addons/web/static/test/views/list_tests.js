@@ -1079,9 +1079,10 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list view with nested groups', function (assert) {
-        assert.expect(36);
+        assert.expect(37);
 
         this.data.foo.records.push({id: 5, foo: "blip", int_field: -7, m2o: 1});
+        this.data.foo.records.push({id: 6, foo: "blip", int_field: 5, m2o: 2});
 
         var nbRPCs = {readGroup: 0, searchRead: 0};
         var groupID;
@@ -1140,6 +1141,8 @@ QUnit.module('Views', {
         assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
 
         var $openGroup = list.$('tbody:nth(1)');
+        assert.strictEqual(list.$('.o_group_name:first').text(), 'Value 1 (4)',
+            "group should have correct name and count (of records, not inner subgroups)");
         assert.strictEqual(list.$('tbody').length, 3, "there should be 3 tbodys");
         assert.strictEqual(list.$('.o_group_name:first .fa-caret-down').length, 1,
             "the carret of open groups should be down");
