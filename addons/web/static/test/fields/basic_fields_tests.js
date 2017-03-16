@@ -202,10 +202,10 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+
     QUnit.module('FieldChar');
 
-
-    QUnit.test('widget isValid method works', function (assert) {
+    QUnit.test('char widget isValid method works', function (assert) {
         assert.expect(1);
 
         this.data.partner.fields.foo.required = true;
@@ -224,8 +224,8 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('char fields in edit mode', function (assert) {
-        assert.expect(1);
+    QUnit.test('char field in form view', function (assert) {
+        assert.expect(4);
 
         var form = createView({
             View: FormView,
@@ -241,11 +241,58 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
+        assert.strictEqual(form.$('.o_form_field').text(), 'yop',
+            "the value should be displayed properly");
+
+        // switch to edit mode and check the result
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('input[type="text"].o_form_input.o_form_field').length, 1,
-                    "should have an input for the char field foo");
+            "should have an input for the char field");
+        assert.strictEqual(form.$('input[type="text"].o_form_input.o_form_field').val(), 'yop',
+            "input should contain field value in edit mode");
+
+        // change value in edit mode
+        form.$('input[type="text"].o_form_input.o_form_field').val('limbo').trigger('input');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_form_field').text(), 'limbo',
+            'the new value should be displayed');
         form.destroy();
     });
+
+    QUnit.test('char field in editable list view', function(assert) {
+        assert.expect(6);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+        });
+
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').length, 5,
+            "should have 5 cells");
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
+            "value should be displayed properly as text");
+
+        // Edit a line and check the result
+        var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
+        $cell.click();
+        assert.ok($cell.hasClass('o_edit_mode'), 'should be set as edit mode');
+        assert.strictEqual($cell.find('input').val(), 'yop',
+            'should have the corect value in internal input');
+        $cell.find('input').val('brolo').trigger('input');;
+
+        // save
+        list.$buttons.find('.o_list_button_save').click();
+        $cell = list.$('tbody td:not(.o_list_record_selector)').first();
+        assert.ok(!$cell.hasClass('o_edit_mode'), 'should not be in edit mode anymore');
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'brolo',
+            "value should be properly updated");
+        list.destroy();
+    });
+
 
     QUnit.module('UrlWidget');
 
