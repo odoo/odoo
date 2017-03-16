@@ -543,33 +543,46 @@ QUnit.module('Views', {
     });
 
     QUnit.test('can sort records when clicking on header', function (assert) {
-        assert.expect(6);
+        assert.expect(9);
 
         this.data.foo.fields.foo.sortable = true;
+
+        var nbSearchRead = 0;
         var list = createView({
             View: ListView,
             model: 'foo',
             data: this.data,
             arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            mockRPC: function (route) {
+                if (route === '/web/dataset/search_read') {
+                    nbSearchRead++;
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
+        assert.strictEqual(nbSearchRead, 1, "should have done one search_read");
         assert.ok(list.$('tbody tr:first td:contains(yop)').length,
             "record 1 should be first");
         assert.ok(list.$('tbody tr:eq(3) td:contains(blip)').length,
             "record 3 should be first");
 
+        nbSearchRead = 0;
         list.$('thead th:contains(Foo)').click();
-
+        assert.strictEqual(nbSearchRead, 1, "should have done one search_read");
         assert.ok(list.$('tbody tr:first td:contains(blip)').length,
             "record 3 should be first");
         assert.ok(list.$('tbody tr:eq(3) td:contains(yop)').length,
             "record 1 should be first");
 
+        nbSearchRead = 0;
         list.$('thead th:contains(Foo)').click();
+        assert.strictEqual(nbSearchRead, 1, "should have done one search_read");
         assert.ok(list.$('tbody tr:first td:contains(yop)').length,
             "record 3 should be first");
         assert.ok(list.$('tbody tr:eq(3) td:contains(blip)').length,
             "record 1 should be first");
+
         list.destroy();
     });
 
