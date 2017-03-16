@@ -52,15 +52,12 @@ class SaleOrder(models.Model):
             if so.state not in ['sale', 'done']:
                 so.website_url = '/quote/%s' % (so.id)
 
-    def _get_default_template_id(self):
-        return self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
-
     access_token = fields.Char(
         'Security Token', copy=False, default=lambda self: str(uuid.uuid4()),
         required=True)
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
-        default=_get_default_template_id, readonly=True,
+        readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     website_description = fields.Html('Description', sanitize_attributes=False, translate=html_translate)
     options = fields.One2many(

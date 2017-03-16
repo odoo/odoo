@@ -92,6 +92,10 @@
             </field>
         </record>
 
+        <function id="ir_values_set_sale_order_default_template_id"
+            model="ir.values" name="set_default"
+            eval="('sale.order', 'template_id', ref('website_quote_template_default'))"/>
+
         <record id="confirmation_mail" model="mail.template">
             <field name="name">Online Quote: confirmation e-mail</field>
             <field name="email_from">${(object.user_id.email or object.company_id.email or 'noreply@localhost')|safe}</field>
