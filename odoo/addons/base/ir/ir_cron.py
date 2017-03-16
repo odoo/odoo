@@ -11,7 +11,6 @@ from dateutil.relativedelta import relativedelta
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
