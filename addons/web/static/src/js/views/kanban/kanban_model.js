@@ -167,6 +167,25 @@ var KanbanModel = BasicModel.extend({
             return parentID;
         });
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Ensures that there is no nested groups in Kanban (only the first grouping
+     * level is taken into account).
+     *
+     * @override
+     * @private
+     * @param {Object} list valid resource object
+     */
+    _readGroup: function (list) {
+        if (list.groupedBy.length > 1) {
+            list.groupedBy = [list.groupedBy[0]];
+        }
+        return this._super.apply(this, arguments);
+    },
 });
 
 return KanbanModel;
