@@ -248,6 +248,7 @@ var Gui = core.Class.extend({
             list: list,
             confirm: function(user){ def.resolve(user); },
             cancel:  function(){ def.reject(); },
+            is_selected: function(user){ return user === self.pos.get_cashier(); },
         });
 
         return def.then(function(user){
