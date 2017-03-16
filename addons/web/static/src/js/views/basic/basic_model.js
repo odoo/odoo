@@ -2059,7 +2059,7 @@ var BasicModel = AbstractModel.extend({
                     return self.localData[groupID];
                 });
                 list.data = [];
-                list.count = groups.length;
+                list.count = 0;
                 var defs = [];
 
                 _.each(groups, function (group) {
@@ -2086,6 +2086,7 @@ var BasicModel = AbstractModel.extend({
                         type: 'list',
                     });
                     list.data.push(newGroup.id);
+                    list.count += newGroup.count;
                     var old_group = _.find(previousGroups, function (g) {
                         return g.res_id === newGroup.res_id && g.value === newGroup.value;
                     });
