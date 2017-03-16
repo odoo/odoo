@@ -368,3 +368,58 @@ class TestServerActions(TestServerActionsBase):
             self.action.write({
                 'child_ids': [(6, 0, [self.action.id])]
             })
+
+
+class TestCustomFields(common.TransactionCase):
+    MODEL = 'res.partner'
+
+    def setUp(self):
+        # use a test cursor instead of a real cursor
+        registry = odoo.registry()
+        registry.enter_test_mode()
+        fnames = set(registry[self.MODEL]._fields)
+
+        @self.addCleanup
+        def callback():
+            registry.leave_test_mode()
+            # the tests may have modified the registry, reset it
+            with registry.cursor() as cr:
+                registry.clear_manual_fields()
+                registry.setup_models(cr)
+                assert set(registry[self.MODEL]._fields) == fnames
+
+        super(TestCustomFields, self).setUp()
+
+    def create_field(self, name):
+        """ create a custom field and return it """
+        model = self.env['ir.model'].search([('model', '=', self.MODEL)])
+        field = self.env['ir.model.fields'].create({
+            'model_id': model.id,
+            'name': name,
+            'field_description': name,
+            'ttype': 'char',
+        })
+        self.assertIn(name, self.env[self.MODEL]._fields)
+        return field
+
+    def test_create_custom(self):
+        """ custom field names must be start with 'x_' """
+        with self.assertRaises(ValidationError):
+            self.create_field('foo')
+
+    def test_rename_custom(self):
+        """ custom field names must be start with 'x_' """
+        field = self.create_field('x_foo')
+        with self.assertRaises(ValidationError):
+            field.name = 'foo'
+
+    def test_create_valid(self):
+        """ field names must be valid pg identifiers """
+        with self.assertRaises(ValidationError):
+            self.create_field('x_foo bar')
+
+    def test_rename_valid(self):
+        """ field names must be valid pg identifiers """
+        field = self.create_field('x_foo')
+        with self.assertRaises(ValidationError):
+            field.name = 'x_foo bar'
