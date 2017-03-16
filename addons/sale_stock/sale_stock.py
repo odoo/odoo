@@ -195,7 +195,8 @@ class SaleOrderLine(models.Model):
         qty = 0.0
         for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
             if move.location_dest_id.usage == "customer":
-                qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+                if not move.origin_returned_move_id:
+                    qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
             elif move.location_dest_id.usage == "internal" and move.to_refund_so:
                 qty -= self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
         return qty
