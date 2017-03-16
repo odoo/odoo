@@ -4,9 +4,9 @@ odoo.define('web.FormController', function (require) {
 var BasicController = require('web.BasicController');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
-var data = require('web.data');
 var Dialog = require('web.Dialog');
 var Sidebar = require('web.Sidebar');
+var Context = require('web.Context');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -522,16 +522,13 @@ var FormController = BasicController.extend({
         if (event.data.form_view) {
             fieldsViewDef = $.when(event.data.form_view);
         } else {
-            var context = event.data.context;
-            var domain = event.data.domain;
-            var dataset = new data.DataSetSearch(this, model, context, domain);
-            fieldsViewDef = this.loadFieldView(dataset, false, 'form');
+            fieldsViewDef = this.loadViews(model, new Context(event.data.context), [[null, 'form']], {});
         }
-        fieldsViewDef.then(function (form_fields_view) {
+        fieldsViewDef.then(function (views) {
             new dialogs.FormViewDialog(self, {
                 res_model: model,
                 res_id: res_id,
-                fields_view: form_fields_view,
+                fields_view: views.form,
                 context: record.getContext(),
                 readonly: event.data.readonly,
                 title: _t("Open: ") + event.data.string,
