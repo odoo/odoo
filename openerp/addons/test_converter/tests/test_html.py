@@ -67,8 +67,8 @@ class TestFloatExport(TestBasicExport):
     def test_float(self):
         converter = self.get_converter('float')
 
-        value = converter(42.0)
-        self.assertEqual(value, "42.0")
+        value = converter(-42.0)
+        self.assertEqual(value, u"\u201142.0")
 
         value = converter(42.0100)
         self.assertEqual(value, "42.01")
@@ -120,7 +120,7 @@ class TestCurrencyExport(TestExport):
 
     def test_currency_post(self):
         currency = self.create(self.Currency, name="Test", symbol=u"test")
-        obj = self.create(self.Model, value=0.12)
+        obj = self.create(self.Model, value=-0.12)
 
         converted = self.convert(obj, dest=currency)
 
@@ -129,7 +129,7 @@ class TestCurrencyExport(TestExport):
             '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
                   'data-oe-field="value" data-oe-type="monetary" '
                   'data-oe-expression="obj.value">'
-                      '<span class="oe_currency_value">0.12</span>'
+                      u'<span class="oe_currency_value">\u20110.12</span>'
                       u'\N{NO-BREAK SPACE}{symbol}</span>'.format(
                 obj=obj,
                 symbol=currency.symbol.encode('utf-8')
