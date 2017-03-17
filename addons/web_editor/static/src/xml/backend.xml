@@ -38,11 +38,11 @@
                     -webkit-border-radius: 3px;
                     border-radius: 3px;
                     background: white;">
+                <option value="en_US" t-att-selected="'en_US' == widget.lang ? 'selected' : null">
+                    <t t-if="!widget.get('effective_readonly')">English (edit mode)</t>
+                    <t t-if="widget.get('effective_readonly')">English</t>
+                </option>
                 <t t-foreach="widget.languages" t-as="lang">
-                    <option value="en_US" t-att-selected="'en_US' == widget.lang ? 'selected' : null">
-                        <t t-if="!widget.get('effective_readonly')">English (edit mode)</t>
-                        <t t-if="widget.get('effective_readonly')">English</t>
-                    </option>
                     <option t-att-value="lang.code" t-att-selected="lang.code == widget.lang ? 'selected' : null"><t t-esc="lang.name"/></option>
                 </t>
             </select>
