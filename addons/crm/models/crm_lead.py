@@ -30,7 +30,6 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'city',
     'contact_name',
     'description',
-    'email',
     'fax',
     'mobile',
     'partner_name',
@@ -468,7 +467,7 @@ class Lead(models.Model):
         body = [title]
         fields = self.env['ir.model.fields'].search([('name', 'in', fields or []), ('model_id.model', '=', self._name)])
         for field in fields:
-            value = self[field.name]
+            value = getattr(self, field.name, False)
             if field.ttype == 'selection':
                 value = dict(field.get_values(self.env)).get(value, value)
             elif field.ttype == 'many2one':

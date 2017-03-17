@@ -385,31 +385,57 @@ class InventoryLine(models.Model):
             ('owner_id', '=', self.partner_id.id),
             ('package_id', '=', self.package_id.id)])
 
+    def _get_move_values(self, qty, location_id, location_dest_id):
+        self.ensure_one()
+        return {
+            'name': _('INV:') + (self.inventory_id.name or ''),
+            'product_id': self.product_id.id,
+            'product_uom': self.product_uom_id.id,
+            'product_uom_qty': qty,
+            'date': self.inventory_id.date,
+            'company_id': self.inventory_id.company_id.id,
+            'inventory_id': self.inventory_id.id,
+            'state': 'confirmed',
+            'restrict_lot_id': self.prod_lot_id.id,
+            'restrict_partner_id': self.partner_id.id,
+            'location_id': location_id,
+            'location_dest_id': location_dest_id,
+        }
+
+    def _fixup_negative_quants(self):
+        """ This will handle the irreconciable quants created by a force availability followed by a
+        return. When generating the moves of an inventory line, we look for quants of this line's
+        product created to compensate a force availability. If there are some and if the quant
+        which it is propagated from is still in the same location, we move it to the inventory
+        adjustment location before getting it back. Getting the quantity from the inventory
+        location will allow the negative quant to be compensated.
+        """
+        self.ensure_one()
+        for quant in self._get_quants().filtered(lambda q: q.propagated_from_id.location_id.id == self.location_id.id):
+            # send the quantity to the inventory adjustment location
+            move_out_vals = self._get_move_values(quant.qty, self.location_id.id, self.product_id.property_stock_inventory.id)
+            move_out = self.env['stock.move'].create(move_out_vals)
+            self.env['stock.quant'].quants_reserve([(quant, quant.qty)], move_out)
+            move_out.action_done()
+
+            # get back the quantity from the inventory adjustment location
+            move_in_vals = self._get_move_values(quant.qty, self.product_id.property_stock_inventory.id, self.location_id.id)
+            move_in = self.env['stock.move'].create(move_in_vals)
+            move_in.action_done()
+
     def _generate_moves(self):
         moves = self.env['stock.move']
         Quant = self.env['stock.quant']
         for line in self:
+            line._fixup_negative_quants()
+
             if float_utils.float_compare(line.theoretical_qty, line.product_qty, precision_rounding=line.product_id.uom_id.rounding) == 0:
                 continue
             diff = line.theoretical_qty - line.product_qty
-            vals = {
-                'name': _('INV:') + (line.inventory_id.name or ''),
-                'product_id': line.product_id.id,
-                'product_uom': line.product_uom_id.id,
-                'date': line.inventory_id.date,
-                'company_id': line.inventory_id.company_id.id,
-                'inventory_id': line.inventory_id.id,
-                'state': 'confirmed',
-                'restrict_lot_id': line.prod_lot_id.id,
-                'restrict_partner_id': line.partner_id.id}
             if diff < 0:  # found more than expected
-                vals['location_id'] = line.product_id.property_stock_inventory.id
-                vals['location_dest_id'] = line.location_id.id
-                vals['product_uom_qty'] = abs(diff)
+                vals = self._get_move_values(abs(diff), line.product_id.property_stock_inventory.id, line.location_id.id)
             else:
-                vals['location_id'] = line.location_id.id
-                vals['location_dest_id'] = line.product_id.property_stock_inventory.id
-                vals['product_uom_qty'] = diff
+                vals = self._get_move_values(abs(diff), line.location_id.id, line.product_id.property_stock_inventory.id)
             move = moves.create(vals)
 
             if diff > 0:
