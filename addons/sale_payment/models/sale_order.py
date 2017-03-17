@@ -9,6 +9,7 @@ class SaleOrder(models.Model):
 
     payment_tx_ids = fields.One2many('payment.transaction', 'sale_order_id', string='Transactions')
     payment_tx_id = fields.Many2one('payment.transaction', string='Last Transaction', copy=False)
+    payment_state = fields.Selection(related='payment_tx_id.state', readonly=True, store=True, track_visibility=None)
     payment_acquirer_id = fields.Many2one('payment.acquirer', string='Payment Acquirer', related='payment_tx_id.acquirer_id', store=True)
     payment_transaction_count = fields.Integer(
         string="Number of payment transactions",
