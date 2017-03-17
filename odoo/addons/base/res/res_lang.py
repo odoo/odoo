@@ -218,8 +218,9 @@ class Lang(models.Model):
             raise UserError(_("Language code cannot be modified."))
         if vals.get('active') == False and self.env['res.users'].search([('lang', 'in', lang_codes)]):
             raise UserError(_("Cannot unactivate a language that is currently used by users."))
+        res = super(Lang, self).write(vals)
         self.clear_caches()
-        return super(Lang, self).write(vals)
+        return res
 
     @api.multi
     def unlink(self):

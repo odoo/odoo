@@ -578,7 +578,7 @@ class Warehouse(models.Model):
         routes = self.env['stock.location.route'].search([('supplied_wh_id', 'in', self.ids)])
         self.env['procurement.rule'].search([
             '&', ('route_id', 'in', routes.ids),
-            ('location_src_id.usage', '=', 'transit')]).write({'location_id': new_location})
+            ('location_src_id.usage', '=', 'transit')]).write({'location_id': new_location.id})
 
     @api.multi
     def _update_routes(self):
