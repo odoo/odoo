@@ -671,7 +671,7 @@ class IntegerConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, field, options=None):
-        return self.user_lang().format('%d', value, grouping=True)
+        return self.user_lang().format('%d', value, grouping=True).replace(r'-', u'\u2011')
 
 
 class FloatConverter(models.AbstractModel):
@@ -688,7 +688,7 @@ class FloatConverter(models.AbstractModel):
         precision = self.precision(field, options=options)
         fmt = '%f' if precision is None else '%.{precision}f'
         lang = self.user_lang()
-        formatted = lang.format(fmt.format(precision=precision), value, grouping=True)
+        formatted = lang.format(fmt.format(precision=precision), value, grouping=True).replace(r'-', u'\u2011')
 
         # %f does not strip trailing zeroes. %g does but its precision causes
         # it to switch to scientific notation starting at a million *and* to
@@ -877,7 +877,7 @@ class MonetaryConverter(models.AbstractModel):
 
         lang = self.user_lang()
         formatted_amount = lang.format(fmt, display_currency.round(from_amount),
-                                       grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}')
+                                       grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'\u2011')
 
         pre = post = u''
         if display_currency.position == 'before':
@@ -1047,7 +1047,7 @@ class QwebWidgetMonetary(models.AbstractModel):
         fmt = "%.{0}f".format(-precision if precision < 0 else 0)
         lang_code = qwebcontext.context.get('lang') or 'en_US'
         lang = qwebcontext.env['res.lang']._lang_get(lang_code)
-        formatted_amount = lang.format(fmt, inner, grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}')
+        formatted_amount = lang.format(fmt, inner, grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'\u2011')
         pre = post = u''
         if display.position == 'before':
             pre = u'{symbol}\N{NO-BREAK SPACE}'
