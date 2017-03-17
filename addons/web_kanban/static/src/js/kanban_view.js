@@ -376,7 +376,7 @@ var KanbanView = View.extend({
         this.record_options = {
             editable: this.is_action_enabled('edit'),
             deletable: this.is_action_enabled('delete'),
-            fields: this.fields,
+            fields: this.fields_view.fields,
             qweb: this.qweb,
             model: this.model,
             read_only_mode: this.options.read_only_mode,
@@ -427,7 +427,7 @@ var KanbanView = View.extend({
             grouped_by_m2o: this.grouped_by_m2o,
             relation: this.relation,
             qweb: this.qweb,
-            fields: this.fields,
+            fields: this.fields_view.fields,
             quick_create: this._is_quick_create_enabled(),
         };
     },
