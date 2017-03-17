@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<template id="leaflet_map">
+&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <title>World Map</title>
+        <link rel="stylesheet" type="text/css" href="/website_leaflet_map/static/src/leaflet_map.css" />
+        <link rel="stylesheet" type="text/css" href="/website_leaflet_map/static/src/leaflet.css" />
+    </head>
+    <body t-att-data-partner-url="partner_url or None">
+        <script>
+            var odoo_partner_data = <t t-raw="partner_data"/>;
+        </script>
+        <div id="odoo-leaflet-map"></div>
+        <script type="text/javascript" src="/website_leaflet_map/static/src/leaflet.js"></script>
+        <script type="text/javascript" src="/website_leaflet_map/static/src/leaflet_map.js"></script>
+    </body>
+</html>
+</template>
+</data>
+</odoo>
