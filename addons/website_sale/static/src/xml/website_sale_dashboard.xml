@@ -30,14 +30,14 @@
         <div t-if="widget.groups.sale_salesman" class="row o_dashboard_sales">
             <div class="col-xs-12 o_box">
                 <div t-if="widget.dashboards_data.sales.summary.order_count">
-                    <div class="col-md-7 col-xs-12">
+                    <div class="col-md-6 col-xs-12">
                         <t t-if="widget.date_range">
                             <h2>Sales Since Last <t t-esc="widget.date_range"></t></h2>
                         </t>
                         <t t-else=""><h2>Sales</h2></t>
                         <div id="o_graph_sales" class="o_graph" data-type="sales"/>
                     </div>
-                    <div class="col-md-5 col-xs-12">
+                    <div class="col-md-6 col-xs-12">
                         <t t-call="website_sale.products_table"/>
                     </div>
                 </div>
