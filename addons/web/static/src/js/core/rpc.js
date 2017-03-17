@@ -192,6 +192,7 @@ var SearchRPCBuilder = BaseRPCBuilder.extend({
             fields: this._fields,
             limit: this._limit,
             model: this._model,
+            offset: this._offset,
             sort: this._orderBy
         };
     },
