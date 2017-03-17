@@ -199,6 +199,33 @@ class MultiLine(models.Model):
     partner = fields.Many2one('res.partner')
 
 
+class Edition(models.Model):
+    _name = 'test_new_api.creativework.edition'
+
+    name = fields.Char()
+    res_id = fields.Integer(required=True)
+    res_model_id = fields.Many2one('ir.model', required=True)
+    res_model = fields.Char(related='res_model_id.model', store=True)
+
+
+class Book(models.Model):
+    _name = 'test_new_api.creativework.book'
+
+    name = fields.Char()
+    editions = fields.One2many(
+        'test_new_api.creativework.edition', 'res_id', domain=[('res_model', '=', _name)]
+    )
+
+
+class Movie(models.Model):
+    _name = 'test_new_api.creativework.movie'
+
+    name = fields.Char()
+    editions = fields.One2many(
+        'test_new_api.creativework.edition', 'res_id', domain=[('res_model', '=', _name)]
+    )
+
+
 class MixedModel(models.Model):
     _name = 'test_new_api.mixed'
 

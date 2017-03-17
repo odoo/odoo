@@ -920,19 +920,23 @@ class expression(object):
             elif field.type == 'one2many':
                 call_null = True
 
+                domain = field.domain
+                if callable(domain):
+                    domain = domain(model)
+                is_integer_m2o = comodel._fields[field.inverse_name].type == 'integer'
                 if right is not False:
                     if isinstance(right, basestring):
                         op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
-                        domain = field.domain
-                        if callable(domain):
-                            domain = domain(model)
                         ids2 = [x[0] for x in comodel.name_search(right, domain or [], op, limit=None)]
                         if ids2:
                             operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                    elif isinstance(right, collections.Iterable):
-                        ids2 = right
                     else:
-                        ids2 = [right]
+                        if isinstance(right, collections.Iterable):
+                            ids2 = right
+                        else:
+                            ids2 = [right]
+                        if ids2 and is_integer_m2o and domain:
+                            ids2 = comodel.search([('id', 'in', ids2)] + domain).ids
 
                     if not ids2:
                         if operator in ['like', 'ilike', 'in', '=']:
@@ -945,7 +949,9 @@ class expression(object):
                             ids1 = select_from_where(cr, field.inverse_name, comodel._table, 'id', ids2, operator)
                         else:
                             recs = comodel.browse(ids2).sudo().with_context(prefetch_fields=False)
-                            ids1 = recs.mapped(field.inverse_name).ids
+                            ids1 = recs.mapped(field.inverse_name)
+                            if not is_integer_m2o:
+                                ids1 = ids1.ids
                         if ids1:
                             call_null = False
                             o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
@@ -958,12 +964,16 @@ class expression(object):
                 if call_null:
                     o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
                     # determine ids from field.inverse_name
-                    if comodel._fields[field.inverse_name].store:
+                    if comodel._fields[field.inverse_name].store and not (is_integer_m2o and domain):
                         ids1 = select_distinct_from_where_not_null(cr, field.inverse_name, comodel._table)
                     else:
-                        domain = [(field.inverse_name, '!=', False)]
-                        recs = comodel.search(domain).sudo().with_context(prefetch_fields=False)
-                        ids1 = recs.mapped(field.inverse_name).ids
+                        comodel_domain = [(field.inverse_name, '!=', False)]
+                        if is_integer_m2o and domain:
+                            comodel_domain += domain
+                        recs = comodel.search(comodel_domain).sudo().with_context(prefetch_fields=False)
+                        ids1 = recs.mapped(field.inverse_name)
+                        if not is_integer_m2o:
+                            ids1 = ids1.ids
                     push(create_substitution_leaf(leaf, ('id', o2m_op, ids1), model))
 
             elif field.type == 'many2many':

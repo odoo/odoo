@@ -642,8 +642,8 @@ var CalendarView = View.extend({
             date_stop = m_start.toDate();
         }
         var r = {
-            'start': moment(date_start).format('YYYY-MM-DD HH:mm:ss'),
-            'end': moment(date_stop).format('YYYY-MM-DD HH:mm:ss'),
+            'start': moment(date_start).toISOString(),
+            'end': moment(date_stop).toISOString(),
             'title': the_title,
             'allDay': (this.fields[this.date_start].type == 'date' || (this.all_day && evt[this.all_day]) || false),
             'id': evt.id,

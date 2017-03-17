@@ -11,8 +11,8 @@ class BaseConfigSettings(models.TransientModel):
     group_multi_company = fields.Boolean("Manage multiple companies", implied_group='base.group_multi_company')
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
-    default_user_rights = fields.Boolean("Default Access Rights", default_model='base.config.settings')
-    default_external_email_server = fields.Boolean("External Email Servers", default_model='base.config.settings')
+    default_user_rights = fields.Boolean("Default Access Rights")
+    default_external_email_server = fields.Boolean("External Email Servers")
     module_base_import = fields.Boolean("Allow users to import data from CSV/XLS/XLSX/ODS files")
     module_pad = fields.Boolean("External Pads")
     module_google_calendar = fields.Boolean(
@@ -27,11 +27,28 @@ class BaseConfigSettings(models.TransientModel):
         help="Share your partners to all companies defined in your instance.\n"
              " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
              " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies.")
-    default_custom_report_footer = fields.Boolean("Custom Report Footer", default_model='base.config.settings')
+    default_custom_report_footer = fields.Boolean("Custom Report Footer")
     rml_footer = fields.Text(related="company_id.rml_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.")
     group_multi_currency = fields.Boolean(string='Allow multi currencies',
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
+
+    @api.model
+    def get_default_fields(self, fields):
+        default_external_email_server = self.env['ir.config_parameter'].sudo().get_param('base_setup.default_external_email_server', default=False)
+        default_user_rights = self.env['ir.config_parameter'].sudo().get_param('base_setup.default_user_rights', default=False)
+        default_custom_report_footer = self.env['ir.config_parameter'].sudo().get_param('base_setup.default_custom_report_footer', default=False)
+        return {
+            'default_external_email_server': default_external_email_server,
+            'default_user_rights': default_user_rights,
+            'default_custom_report_footer': default_custom_report_footer,
+        }
+
+    @api.multi
+    def set_default_fields(self):
+        self.env['ir.config_parameter'].sudo().set_param("base_setup.default_external_email_server", self.default_external_email_server)
+        self.env['ir.config_parameter'].sudo().set_param("base_setup.default_user_rights", self.default_user_rights)
+        self.env['ir.config_parameter'].sudo().set_param("base_setup.default_custom_report_footer", self.default_custom_report_footer)
 
     @api.multi
     def open_company(self):

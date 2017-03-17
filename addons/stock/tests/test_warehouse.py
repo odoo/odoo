@@ -103,6 +103,134 @@ class TestInventory(TestStockCommon):
         self.assertEqual(product.qty_available, 8.0)
         self.assertEqual(product.with_context(location=self.env.ref('stock.stock_location_customers').id).qty_available, 7.0)
 
+    def test_inventory_adjustment_and_negative_quants_1(self):
+        """Make sure negative quants from returns get wiped out with an inventory adjustment"""
+        productA = self.env['product.product'].create({'name': 'Product A', 'type': 'product'})
+        stock_location = self.env.ref('stock.stock_location_stock')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        location_loss = self.env.ref('stock.location_inventory')
+
+        # Create a picking out and force availability
+        picking_out = self.env['stock.picking'].create({
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+        })
+        self.env['stock.move'].create({
+            'name': productA.name,
+            'product_id': productA.id,
+            'product_uom_qty': 1,
+            'product_uom': productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+        })
+        picking_out.action_confirm()
+        picking_out.force_assign()
+        picking_out.do_transfer()
+
+        # Create return picking for all goods
+        default_data = self.env['stock.return.picking']\
+            .with_context(active_ids=picking_out.ids, active_id=picking_out.ids[0])\
+            .default_get([
+                'move_dest_exists',
+                'original_location_id',
+                'product_return_moves',
+                'parent_location_id',
+                'location_id',
+            ])
+        return_wiz = self.env['stock.return.picking']\
+            .with_context(active_ids=picking_out.ids, active_id=picking_out.ids[0])\
+            .create(default_data)
+        res = return_wiz.create_returns()
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick.action_assign()
+        return_pick.do_transfer()
+
+        # Make an inventory adjustment to set the quantity to 0
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Starting for product_1',
+            'filter': 'product',
+            'location_id': stock_location.id,
+            'product_id': productA.id,
+        })
+        inventory.prepare_inventory()
+        self.assertEqual(len(inventory.line_ids), 1, "Wrong inventory lines generated.")
+        self.assertEqual(inventory.line_ids.theoretical_qty, 0, "Theoretical quantity should be zero.")
+        inventory.action_done()
+
+        # The inventory adjustment should have created two moves
+        self.assertEqual(len(inventory.move_ids), 2)
+        quantity = inventory.move_ids.mapped('product_qty')
+        self.assertEqual(quantity, [1, 1], "Moves created with wrong quantity.")
+        location_ids = inventory.move_ids.mapped('location_id').ids
+        self.assertEqual(set(location_ids), {stock_location.id, location_loss.id})
+
+        # There should be no quant in the stock location
+        quants = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
+        self.assertEqual(len(quants), 0)
+
+        # There should be one quant in the inventory loss location
+        quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', location_loss.id)])
+        self.assertEqual(len(quant), 1)
+        self.assertEqual(quant.qty, 1)
+
+    def test_inventory_adjustment_and_negative_quants_2(self):
+        """Make sure negative quants get wiped out with an inventory adjustment"""
+        productA = self.env['product.product'].create({'name': 'Product A', 'type': 'product'})
+        stock_location = self.env.ref('stock.stock_location_stock')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        location_loss = self.env.ref('stock.location_inventory')
+
+        # Create a picking out and force availability
+        picking_out = self.env['stock.picking'].create({
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+        })
+        self.env['stock.move'].create({
+            'name': productA.name,
+            'product_id': productA.id,
+            'product_uom_qty': 1,
+            'product_uom': productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+        })
+        picking_out.action_confirm()
+        picking_out.force_assign()
+        picking_out.do_transfer()
+
+        # Make an inventory adjustment to set the quantity to 0
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Starting for product_1',
+            'filter': 'product',
+            'location_id': stock_location.id,
+            'product_id': productA.id,
+        })
+        inventory.prepare_inventory()
+        self.assertEqual(len(inventory.line_ids), 1, "Wrong inventory lines generated.")
+        self.assertEqual(inventory.line_ids.theoretical_qty, -1, "Theoretical quantity should be -1.")
+        inventory.line_ids.product_qty = 0  # Put the quantity back to 0
+        inventory.action_done()
+
+        # The inventory adjustment should have created one
+        self.assertEqual(len(inventory.move_ids), 1)
+        quantity = inventory.move_ids.mapped('product_qty')
+        self.assertEqual(quantity, [1], "Moves created with wrong quantity.")
+        location_ids = inventory.move_ids.mapped('location_id').ids
+        self.assertEqual(set(location_ids), {location_loss.id})
+
+        # There should be no quant in the stock location
+        quants = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
+        self.assertEqual(len(quants), 0)
+
+        # There should be no quant in the inventory loss location
+        quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', location_loss.id)])
+        self.assertEqual(len(quant), 0)
+
 
 class TestResupply(TestStockCommon):
     def setUp(self):

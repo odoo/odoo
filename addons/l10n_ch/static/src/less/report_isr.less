@@ -1,15 +1,33 @@
-body.o_in_iframe {
-    #l10n_ch_isr {
-        background: url(/l10n_ch/static/src/img/background_virgin_isr.png) bottom no-repeat;
-        background-size: 100%;
+body.l10n_ch_isr {
+    /*
+        all elements are positionned for A4 format (210 x 297mm) but the viewport
+        is bigger than this, hence we zoom the whole page to be bigger than the viewport
+        which will then be resized down by wkhtmltopdf to get back to an A4 format
+     */
+    zoom: 1.25;
 
-        &.isr-print-bank {
-            background-image: url(/l10n_ch/static/src/img/background_virgin_isr_bank.png);
+    &.o_in_iframe {
+        zoom: 1;
+
+        /* display dummy check bacground in html rendering to help see the end result */
+        #isr {
+            background: url(/l10n_ch/static/src/img/background_virgin_isr.png) bottom no-repeat;
+            background-size: 100%;
+
+            &.isr-print-bank {
+                background-image: url(/l10n_ch/static/src/img/background_virgin_isr_bank.png);
+            }
         }
     }
 }
 
-#l10n_ch_isr {
+/* content outside isr needs margins to not overlap header */
+body.l10n_ch_isr #content_outside_isr {
+    padding: 15px;
+    padding-top: 150px;
+}
+
+body.l10n_ch_isr #isr {
     height: 106mm;
     width: 210mm;
 
@@ -164,7 +182,12 @@ body.o_in_iframe {
             bottom: 4/6in;
 
             text-align: right;
-            font-height: 1/6in;
+
+            /* Letter spacing is set for OCRB of Tsukurimashou Font Family */
+            font-family: OCRB, Courier, monospace;
+            line-height: 0.1in;
+            font-size: 10pt;
+            letter-spacing: -0.3px;
         }
     }
 }
