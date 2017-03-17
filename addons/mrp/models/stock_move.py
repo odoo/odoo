@@ -28,6 +28,16 @@ class StockMoveLots(models.Model):
     done_move = fields.Boolean('Move Done', related='move_id.is_done', store=True)  # TDE FIXME: naming
     plus_visible = fields.Boolean("Plus Visible", compute='_compute_plus')
 
+    @api.one
+    @api.constrains('lot_id')
+    def _check_lot_id(self):
+        if self.move_id.product_id.tracking == 'serial':
+            lots = set([])
+            for move_lot in self.move_id.move_lot_ids.filtered(lambda r: not r.lot_produced_id):
+                if move_lot.lot_id in lots:
+                    raise exceptions.UserError(_('You cannot use the same serial number in two different lines.'))
+                lots.add(move_lot.lot_id)
+
     def _compute_plus(self):
         for movelot in self:
             if movelot.move_id.product_id.tracking == 'serial':
