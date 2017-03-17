@@ -58,7 +58,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.fields = {};
         this.fields_order = [];
         this.datarecord = {};
-        this._onchange_specs = {};
         this.onchanges_mutex = new utils.Mutex();
         this.default_focus_field = null;
         this.default_focus_button = null;
@@ -84,7 +83,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.rendering_engine = new FormRenderingEngine(this);
         self.set({actual_mode: self.options.initial_mode});
         this.has_been_loaded.done(function() {
-            self._build_onchange_specs();
             self.check_actual_mode();
             self.on("change:actual_mode", self, self.check_actual_mode);
             self.on("change:actual_mode", self, self.toggle_buttons);
@@ -373,8 +371,11 @@ var FormView = View.extend(common.FieldManagerMixin, {
         });
         return $.when.apply(null, set_values).then(function() {
             if (!record.id) {
-                // trigger onchanges
-                self.do_onchange(null);
+                // trigger onchange for new record after x2many with non-embedded views are loaded
+                var fields_loaded = _.pluck(self.fields, 'is_loaded');
+                $.when.apply(null, fields_loaded).done(function() {
+                    self.do_onchange(null);
+                });
             }
             self.on_form_changed();
             self.rendering_engine.init_fields().then(function() {
@@ -472,7 +473,24 @@ var FormView = View.extend(common.FieldManagerMixin, {
         _.each(this.fields, function(field, name) {
             self._onchange_fields.push(name);
             self._onchange_specs[name] = find(name, field.node);
-            _.each(field.field.views, function(view) {
+
+            // we get the list of first-level fields of x2many firstly by
+            // getting them from the field embedded views, then if no embedded
+            // view is present for a loaded view, we get them from the default
+            // view that has been loaded
+
+            // gather embedded view objects
+            var views = _.clone(field.field.views);
+            // also gather default view objects
+            if (field.viewmanager) {
+                _.each(field.viewmanager.views, function(view, view_type) {
+                    // add default view if it was not embedded and it is loaded
+                    if (views[view_type] === undefined && view.controller) {
+                        views[view_type] = view.controller.fields_view;
+                    }
+                });
+            }
+            _.each(views, function(view) {
                 _.each(view.fields, function(_, subname) {
                     self._onchange_specs[name + '.' + subname] = find(subname, view.arch);
                 });
@@ -501,6 +519,9 @@ var FormView = View.extend(common.FieldManagerMixin, {
 
     do_onchange: function(widget) {
         var self = this;
+        if (self._onchange_specs === undefined) {
+            self._build_onchange_specs();
+        }
         var onchange_specs = self._onchange_specs;
         try {
             var def = $.when({});
