@@ -161,6 +161,7 @@ QUnit.module('core', {}, function () {
                     domain: ['a', '=', 1],
                     fields: ['name'],
                     limit: 32,
+                    offset: 2,
                     model: 'partner',
                     sort: 'yop ASC, aa DESC',
                 }, "should have correct args");
@@ -170,6 +171,7 @@ QUnit.module('core', {}, function () {
             .withDomain(['a', '=', 1])
             .withFields(['name'])
             .withLimit(32)
+            .withOffset(2)
             .orderBy([{name: 'yop', asc: true}, {name: 'aa', asc: false}])
             .exec();
     });
