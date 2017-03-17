@@ -32,7 +32,6 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'city',
     'contact_name',
     'description',
-    'email',
     'fax',
     'mobile',
     'partner_name',
