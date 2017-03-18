@@ -35,18 +35,18 @@
 
         <!-- Email template for new users -->
         <record id="set_password_email" model="mail.template">
-            <field name="name">Odoo Enterprise Connection</field>
+            <field name="name">fixit Connection</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="email_from"><![CDATA[${object.company_id.name} <${(object.company_id.email or user.email)|safe}>]]></field>
             <field name="email_to">${object.email|safe}</field>
-            <field name="subject"><![CDATA[${object.company_id.name} invitation to connect on Odoo]]></field>
+            <field name="subject"><![CDATA[${object.company_id.name} invitation to connect on fixit]]></field>
             <field name="body_html">
                 <![CDATA[
                     <p>
                         ${object.name},
                     </p>
                     <p>
-                        You have been invited to connect to "${object.company_id.name}" in order to get access to your documents in Odoo.
+                        You have been invited to connect to "${object.company_id.name}" in order to get access to your documents in fixit.
                     </p>
                     <p>
                         To accept the invitation, click on the following link:
