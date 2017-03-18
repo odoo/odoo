@@ -120,8 +120,8 @@ class TestCurrencyExport(TestExport):
         converted = self.convert(obj, dest=currency)
 
         self.assertEqual(
-            converted, '<span class="oe_currency_value">\u20110.12</span>'
-                      u'\N{NO-BREAK SPACE}{symbol}'.format(
+            converted, u'<span class="oe_currency_value">\u20110.12</span>'
+                       u'\N{NO-BREAK SPACE}{symbol}'.format(
                 obj=obj,
                 symbol=currency.symbol.encode('utf-8')
             ),)
