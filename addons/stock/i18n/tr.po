@@ -20,7 +20,6 @@
 # selim kartal <kartalselim37@gmail.com>, 2016
 # Doğan Altunbay <doganaltunbay@gmail.com>, 2016
 # checkyoursix <batuhan.akpinar@gmail.com>, 2016
-# Azar Huseynli <azerbay1984@gmail.com>, 2016
 # Alexander B. <road2monstercat@gmail.com>, 2016
 # cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016
 # Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2016
@@ -210,6 +209,8 @@ msgid ""
 "<span class=\"o_stat_text\">Min:</span>\n"
 "                                <span class=\"o_stat_text\">Max:</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Min:</span>\n"
+"<span class=\"o_stat_text\">Mak:</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -554,7 +555,7 @@ msgstr "<strong>Kaynak</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>State</strong>"
-msgstr ""
+msgstr "<strong>Durumu</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -667,7 +668,7 @@ msgstr "Gelişmiş"
 #. module: stock
 #: selection:stock.config.settings,group_stock_adv_location:0
 msgid "Advanced routing of products using rules"
-msgstr ""
+msgstr "Kurallar kullanarak ürünlerin gelişmiş yönlendirilmesi"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -1003,7 +1004,7 @@ msgstr "Toplu İçerik"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Lots"
-msgstr "Türe göre"
+msgstr "Lot"
 
 #. module: stock
 #: selection:product.template,tracking:0
@@ -1173,7 +1174,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
 msgid "Click to add a location."
-msgstr ""
+msgstr "Bir konum eklemek için tıklayın."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -1253,7 +1254,7 @@ msgstr "Renk"
 #. module: stock
 #: model:ir.model,name:stock.model_res_company
 msgid "Companies"
-msgstr "Şirketler"
+msgstr "Firmalar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_company_id
@@ -1822,7 +1823,7 @@ msgstr "Teslimatlar"
 #: model:ir.model.fields,field_description:stock.field_product_product_delivery_count
 #: model:ir.ui.view,arch_db:stock.product_kanban_stock_view
 msgid "Delivery"
-msgstr "Teslim"
+msgstr "Teslimat"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:206
@@ -1840,7 +1841,7 @@ msgstr "Teslimat Rotası"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_delivery
 msgid "Delivery Slip"
-msgstr "Teslim Makbuzu"
+msgstr "Teslimat Makbuzu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
@@ -1981,7 +1982,7 @@ msgstr "Gönderim Bölgesi"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_display_name
 msgid "Display Name"
-msgstr "Adı Göstermek"
+msgstr "Ad Görünümü"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_line_date
@@ -2270,12 +2271,12 @@ msgstr "Evrensel"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_procurement_rules
 msgid "Global Procurement Rules"
-msgstr ""
+msgstr "Global Satın Alma Kuralları"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_location_path
 msgid "Global Push Rules"
-msgstr ""
+msgstr "Global İtme Kuralları"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_default_resupply_wh_id
@@ -2614,7 +2615,7 @@ msgstr "Eğer bunu kendiniz yapmak isterseniz:"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer
 msgid "Immediate Transfer"
-msgstr ""
+msgstr "Acil Transfer"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:792
@@ -3346,7 +3347,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_production_lot
 msgid "Lots and Serial Numbers"
-msgstr ""
+msgstr "Lot ve Seri Numaralar"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3457,12 +3458,12 @@ msgstr "Çoklu depo yönetinmi"
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
 msgid "Manage only 1 Warehouse with only 1 stock location"
-msgstr ""
+msgstr "Sadece 1 Stokta konumu ile sadece 1 Depo yönetme"
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
 msgid "Manage only 1 Warehouse, composed by several stock locations"
-msgstr ""
+msgstr "Birkaç stok konumundan oluşan sadece 1 Depoyu yönetin"
 
 #. module: stock
 #: selection:stock.config.settings,module_stock_picking_wave:0
@@ -3488,7 +3489,7 @@ msgstr ""
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
 msgid ""
 "Manage several Warehouses, each one composed by several stock locations"
-msgstr ""
+msgstr "Birkaç depo yönetin, her biri birkaç stok konumdan oluşur"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_locations
@@ -4334,7 +4335,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Periodical Tasks"
-msgstr ""
+msgstr "Periyodik Görevler"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -4399,7 +4400,7 @@ msgstr "Toplama Listeleri"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr ""
+msgstr "Toplama İşlemleri"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_picking_type_id
@@ -5229,7 +5230,7 @@ msgstr "İade"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_location_id
 msgid "Return Location"
-msgstr ""
+msgstr "İade Konumu"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -5416,7 +5417,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:93
 #, python-format
 msgid "Select products manually"
-msgstr ""
+msgstr "Ürünleri manuel olarak seçin"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -6829,7 +6830,7 @@ msgstr "Depolar"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_warehouse_and_location_usage_level
 msgid "Warehouses and Locations usage level"
-msgstr "Depolar ve Lokasyon kullanım seviyesi"
+msgstr "Depo ve Konumlar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_warning_stock
