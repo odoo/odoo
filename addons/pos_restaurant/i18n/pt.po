@@ -3,19 +3,15 @@
 # * pos_restaurant
 # 
 # Translators:
-# Dawilson Daio <dawilsondaio@gmail.com>, 2016
+# cafonso <cafonso62@gmail.com>, 2016
 # Manuela Silva <manuela.silva@sky.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
-# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
-# Vitor Fernandes <vmlf01@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:55+0000\n"
 "PO-Revision-Date: 2016-09-07 08:55+0000\n"
-"Last-Translator: Vitor Fernandes <vmlf01@gmail.com>, 2016\n"
+"Last-Translator: Manuela Silva <manuela.silva@sky.com>, 2016\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +35,7 @@ msgid ""
 "                define and position the tables."
 msgstr ""
 "Uma sala de restaurante representa o lugar aonde os clientes são servidos, é"
-" aqui aonde podes definir eposicionar as mesas"
+" aqui aonde podes definir e posicionar as mesas"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_active
@@ -76,7 +72,7 @@ msgstr "Uma identificação interna da impressora"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_name
 msgid "An internal identification of the restaurant floor"
-msgstr "Uma identificação interna de um piso no restaurante"
+msgstr "Uma identificação interna de uma sala de restaurante"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
@@ -88,7 +84,7 @@ msgstr "Aspecto"
 #: code:addons/pos_restaurant/static/src/js/floors.js:550
 #, python-format
 msgid "Are you sure ?"
-msgstr "Tens certeza ?"
+msgstr "Tens a certeza ?"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -210,6 +206,10 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
+"Cada impressora de pedidos tem um endereço IP que define a PosBox/Hardware\n"
+"                Proxy onde a impressora pode ser encontrada e uma lista de categorias de produto.\n"
+"                Uma impressora de pedidos só irá imprimir actualizações para produtos \n"
+"                pertencentes às suas categorias"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
@@ -328,7 +328,7 @@ msgstr "Nota"
 #: code:addons/pos_restaurant/static/src/js/floors.js:483
 #, python-format
 msgid "Number of Seats ?"
-msgstr "Número de pessoas"
+msgstr "Número de pessoas?"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -539,7 +539,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_seats
 msgid "The default number of customer served at this table."
-msgstr "Numero de clientes por defeito, servidos nesta mesa"
+msgstr "Numero de clientes por omissão, servidos nesta mesa"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_table_ids
@@ -561,8 +561,7 @@ msgstr "A mesa aonde esta ordem foi servida"
 msgid ""
 "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
-"A cor da mesa expressa como um background no valor da  propriedade  CSS "
-"valida"
+"A cor da mesa expressa como valor válido da propriedade CSS 'background'"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_height
@@ -574,18 +573,20 @@ msgstr "Altura da mesa em pixeis"
 msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
-msgstr "As mesas posição horizontal do topo para a mesa centro em pixeis"
+msgstr ""
+"A posição horizontal da mesa do lado esquerdo para o centro da mesa em "
+"pixeis"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr "As mesas posição vertical do topo para a mesa centro em pixeis"
+msgstr "A posição vertical do topo do centro da mesa em pixeis"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_width
 msgid "The table's width in pixels"
-msgstr "As mesas em pixeis"
+msgstr "A largura da mesa em pixeis"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -604,7 +605,7 @@ msgstr "Transferir"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_sequence
 msgid "Used to sort Floors"
-msgstr "usado para mesas pequenas"
+msgstr "usado para ordenar salas"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -616,7 +617,7 @@ msgstr "IVA:"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_position_v
 msgid "Vertical Position"
-msgstr "posição vertical"
+msgstr "Posição Vertical"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_width
@@ -637,7 +638,7 @@ msgstr "Com um"
 #: code:addons/pos_restaurant/static/src/js/floors.js:412
 #, python-format
 msgid "You must be connected to the internet to save your changes."
-msgstr ""
+msgstr "Tem que estar ligado à internet para guardaralterações"
 
 #. module: pos_restaurant
 #. openerp-web

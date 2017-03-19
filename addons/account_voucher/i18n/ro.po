@@ -28,6 +28,10 @@ msgid ""
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+"* Starea 'Ciornă' este utilizata atunci când un utilizator înregistrează o Chitanță nouă și neconfirmată.\n"
+"* 'Pro-forma' este atunci când chitanța este în starea Pro-forma, iar chitanța nu are număr.\n"
+"* Starea 'Postat' este atunci când utilizatorul creează chitanța, este generat un număr pentru chitanță și sunt create notele contabilitate\n"
+"* Starea 'Anulat' este atunci când utilizatorul anulează chitanța."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -48,7 +52,7 @@ msgstr "Dată contabilă"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr "Contabilitate voucher"
+msgstr "Contabilitate Chitanță"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
@@ -64,7 +68,7 @@ msgstr "Cont analitic"
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Are you sure you want to cancel this receipt?"
-msgstr "Sunteti sigur(a) ca doriti sa anulati aceasta chitanta?"
+msgstr "Sunteți sigur că doriți să anulați această chitanță?"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
@@ -81,7 +85,7 @@ msgstr "Informații factură"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "Referință factură"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -438,7 +442,7 @@ msgstr "Valoare taxă"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
 msgid "Tax correction"
-msgstr ""
+msgstr "Corecție taxă"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
@@ -497,7 +501,7 @@ msgstr "Furnizor"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr ""
+msgstr "Chitanță furnizor"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:97
