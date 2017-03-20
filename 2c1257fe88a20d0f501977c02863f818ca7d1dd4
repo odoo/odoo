@@ -1,0 +1,10 @@
+[FIX] crm: migration tolerant lead merge
+
+At commit 13bfc8e, we remove a field that has been dropped in a previous
+version.
+During migrations between version, the fields are not dropped so similar issue
+may appear in the future.
+As the content of ir.model.fields may not be synchronised with the content of
+self._fields, muse a getattr.
+
+opw-725112
