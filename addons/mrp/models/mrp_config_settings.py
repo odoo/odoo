@@ -11,7 +11,7 @@ class MrpConfigSettings(models.TransientModel):
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
     manufacturing_lead = fields.Float(related='company_id.manufacturing_lead', string="Manufacturing Lead Time")
-    default_use_manufacturing_lead = fields.Boolean(string="Default Manufacturing Lead Time", default_model='mrp.config.settings')
+    default_manufacturing_lead = fields.Boolean(string="Default Manufacturing Lead Time", default_model='mrp.config.settings')
     group_product_variant = fields.Boolean("Attributes & Variants",
         implied_group='product.group_product_variant')
     module_mrp_byproduct = fields.Boolean("By-Products")
