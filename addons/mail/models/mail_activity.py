@@ -71,7 +71,7 @@ class MailActivity(models.Model):
     summary = fields.Char('Summary')
     note = fields.Html('Note')
     feedback = fields.Html('Feedback')
-    date_deadline = fields.Date('Deadline', index=True, required=True, default=fields.Date.today)
+    date_deadline = fields.Date('Due Date', index=True, required=True, default=fields.Date.today)
     # description
     user_id = fields.Many2one(
         'res.users', 'Assigned to',
