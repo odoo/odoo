@@ -651,12 +651,21 @@ var MockServer = Class.extend({
      *
      * @private
      * @param {Object} args
+     * @param {Array} args.domain
+     * @param {string} args.model
+     * @param {Array} [args.fields] defaults to the list of all fields
+     * @param {integer} [args.limit]
+     * @param {integer} [args.offset=0]
+     * @param {string[]} [args.sort]
      * @returns {Object}
      */
     _mockSearchRead: function (args) {
         var self = this;
         var records = this._getRecords(args.model, args.domain);
         var fields = args.fields || _.keys(this.data[args.model].fields);
+        var nbRecords = records.length;
+        var offset = args.offset || 0;
+        records = records.slice(offset, args.limit ? (offset + args.limit) : nbRecords);
         var processedRecords = _.map(records, function (r) {
             var result = {};
             _.each(_.uniq(fields.concat(['id'])), function (fieldName) {
@@ -687,7 +696,7 @@ var MockServer = Class.extend({
             });
         }
         var result = {
-            length: records.length,
+            length: nbRecords,
             records: processedRecords,
         };
         return $.extend(true, {}, result);
