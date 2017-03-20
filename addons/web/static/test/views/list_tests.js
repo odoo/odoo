@@ -1204,6 +1204,44 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('grouped list with a pager in a group', function (assert) {
+        assert.expect(6);
+        this.data.foo.records[3].bar = true;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            groupBy: ['bar'],
+            viewOptions: {
+                limit: 3,
+            },
+        });
+
+        var headerHeight = list.$('.o_group_header').css('height');
+
+        // basic rendering checks
+        list.$('.o_group_header').click();
+        assert.strictEqual(list.$('.o_group_header').css('height'), headerHeight,
+            "height of group header shouldn't have changed");
+        assert.ok(list.$('.o_group_header td:last').hasClass('o_group_pager'),
+            "last cell of open group header should have classname 'o_group_header'");
+        assert.strictEqual(list.$('.o_pager_value').text(), '1-3',
+            "pager's value should be correct");
+        assert.strictEqual(list.$('.o_data_row').length, 3,
+            "open group should display 3 records");
+
+        // go to next page
+        list.$('.o_pager_next').click();
+        assert.strictEqual(list.$('.o_pager_value').text(), '4-4',
+            "pager's value should be correct");
+        assert.strictEqual(list.$('.o_data_row').length, 1,
+            "open group should display 1 record");
+
+        list.destroy();
+    });
 });
 
 });
