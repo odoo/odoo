@@ -678,7 +678,7 @@
         <field name="name">maintenance.team.tree</field>
         <field name="model">maintenance.team</field>
         <field name="arch" type="xml">
-            <tree string="Maintenance Team" editable="top">
+            <tree string="Maintenance Team">
                 <field name="name"/>
             </tree>
         </field>
@@ -808,7 +808,7 @@
         <field name="res_model">maintenance.team</field>
         <field name="view_mode">tree</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="maintenance_team_view_tree"/>
+        <field name="view_mode">tree,form</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add a team in the maintenance request.
