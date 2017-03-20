@@ -140,8 +140,8 @@ var FormViewDialog = ViewDialog.extend({
      * If we changed some fieldAttrs, we need to restore them now.
      */
     destroy: function () {
-        if (this.recordID && this.fieldAttrs) {
-            this.setFieldProps(this.recordID, this.previousFieldProps);
+        if (this.recordID && this.previousFieldProps) {
+            this.model.setFieldProps(this.recordID, this.previousFieldProps);
         }
         this._super.apply(this, arguments);
     },
