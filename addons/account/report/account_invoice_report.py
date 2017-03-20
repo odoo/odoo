@@ -50,8 +50,8 @@ class AccountInvoiceReport(models.Model):
     type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
         ('in_invoice', 'Vendor Bill'),
-        ('out_refund', 'Customer Refund'),
-        ('in_refund', 'Vendor Refund'),
+        ('out_refund', 'Customer Credit Note'),
+        ('in_refund', 'Vendor Credit Note'),
         ], readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -132,7 +132,7 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN product_uom u ON u.id = ail.uom_id
                 LEFT JOIN product_uom u2 ON u2.id = pt.uom_id
                 JOIN (
-                    -- Temporary table to decide if the qty should be added or retrieved (Invoice vs Refund) 
+                    -- Temporary table to decide if the qty should be added or retrieved (Invoice vs Credit Note)
                     SELECT id,(CASE
                          WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
                             THEN -1

@@ -47,7 +47,7 @@
         <field name="context">{'group_by': ['date:month', 'categ_id'], 'residual_invisible':True}</field>
     </record>
     <record id="filter_invoice_refund" model="ir.filters">
-        <field name="name">By Refund</field>
+        <field name="name">By Credit Note</field>
         <field name="model_id">account.invoice.report</field>
         <field name="domain">[('type', '=', 'out_refund')]</field>
         <field name="user_id" eval="False"/>
@@ -81,7 +81,7 @@
                 <filter string="Vendor" name="supplier" domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"/>
                 <separator/>
                 <filter string="Invoice" domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"/>
-                <filter string="Refund" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"/>
+                <filter string="Credit Note" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"/>
                 <field name="partner_id" operator="child_of"/>
                 <field name="user_id" />
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>

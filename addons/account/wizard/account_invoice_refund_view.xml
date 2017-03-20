@@ -40,7 +40,7 @@
                          </group>
                     </group>
                     <footer>
-                        <button string='Create Refund' name="invoice_refund" type="object" class="btn-primary"/>
+                        <button string='Add Credit Note' name="invoice_refund" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                </form>
@@ -48,7 +48,7 @@
         </record>
 
         <record id="action_account_invoice_refund" model="ir.actions.act_window">
-            <field name="name">Refund Invoice</field>
+            <field name="name">Credit Note</field>
             <field name="res_model">account.invoice.refund</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

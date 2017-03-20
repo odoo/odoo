@@ -11,11 +11,11 @@
     <record id="account_intrastatinvoices" model="ir.actions.report.xml">
         <field name="print_report_name">(object.type == 'out_invoice' and object.state == 'draft' and 'Intrastat Invoice' or
         object.type == 'out_invoice' and object.state in ('open','paid') and 'Intrastat Invoice'+'-'+(object.number) or
-        object.type == 'out_refund' and object.state == 'draft' and 'Intrastat Refund' or
-        object.type == 'out_refund' and 'Intrastat Refund'+'-'+(object.number) or
+        object.type == 'out_refund' and object.state == 'draft' and 'Intrastat Credit Note' or
+        object.type == 'out_refund' and 'Intrastat Credit Note'+'-'+(object.number) or
         object.type == 'in_invoice' and object.state == 'draft' and 'Intrastat Vendor Bill' or
         object.type == 'in_invoice' and object.state in ('open','paid') and 'Intrastat Vendor Bill'+'-'+(object.number) or
-        object.type == 'in_refund' and object.state == 'draft' and 'Intrastat Vendor Refund' or
-        object.type == 'in_refund' and 'Intrastat Vendor Refund'+'-'+(object.number))</field>
+        object.type == 'in_refund' and object.state == 'draft' and 'Intrastat Vendor Credit Note' or
+        object.type == 'in_refund' and 'Intrastat Vendor Credit Note'+'-'+(object.number))</field>
     </record>
 </odoo>
