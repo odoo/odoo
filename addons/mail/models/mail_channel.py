@@ -232,6 +232,16 @@ class Channel(models.Model):
         message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
         return message
 
+    def _alias_check_contact(self, message, message_dict, alias):
+        if alias.alias_contact == 'followers' and self.ids:
+            author = self.env['res.partner'].browse(message_dict.get('author_id', False))
+            if not author or author not in self.channel_partner_ids:
+                return {
+                    'error_mesage': _('restricted to channel members'),
+                }
+            return True
+        return super(Channel, self)._alias_check_contact(message, message_dict, alias)
+
     @api.model_cr
     def init(self):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_channel_partner_seen_message_id_idx',))
