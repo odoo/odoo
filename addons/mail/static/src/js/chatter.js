@@ -243,9 +243,7 @@ var Chatter = Widget.extend(chat_mixin, {
             this.suggested_partners_def = $.Deferred();
             var method = 'message_get_suggested_recipients';
             var args = [[this.context.default_res_id], this.context];
-            this._rpc(this.record.model, method)
-                .args(args)
-                .exec()
+            this._rpc({model: this.record.model, method: method, args: args})
                 .then(function (result) {
                     if (!self.suggested_partners_def) {
                         return; // widget has been reset (e.g. we just switched to another record)

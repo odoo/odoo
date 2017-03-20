@@ -49,8 +49,10 @@ if(!$('.o_website_links_create_tracked_url').length) {
             });
         },
         fetch_objects: function() {
-            return rpc.query({model: this.obj, method: 'search_read'})
-                .exec({type: "ajax"})
+            return rpc.query({
+                    model: this.obj,
+                    method: 'search_read',
+                })
                 .then(function(result) {
                     return _.map(result, function(val) {
                         return {id: val.id, text:val.name};
@@ -70,9 +72,11 @@ if(!$('.o_website_links_create_tracked_url').length) {
         create_object: function(name) {
             var self = this;
 
-            return rpc.query({model: this.obj, method: 'create'})
-                .args([{name:name}])
-                .exec({type: "ajax"})
+            return rpc.query({
+                    model: this.obj,
+                    method: 'create',
+                    args: [{name:name}],
+                })
                 .then(function(record) {
                     self.element.attr('value', record);
                     self.objects.push({'id': record, 'text': name});

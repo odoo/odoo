@@ -127,10 +127,12 @@ return AbstractModel.extend({
      * @returns
      */
     deleteRecords: function (ids, model) {
-        return this._rpc(model, 'unlink')
-            .args([ids])
-            .withContext(session.user_context) // todo: combine with view context
-            .exec();
+        return this._rpc({
+                model: model,
+                method: 'unlink',
+                args: [ids],
+                context: session.user_context, // todo: combine with view context
+            });
     },
     /**
      * @override
@@ -168,8 +170,8 @@ return AbstractModel.extend({
         if (!this.preload_def) {
             this.preload_def = $.Deferred();
             $.when(
-                this._rpc(this.modelName, 'check_access_rights').args(["write", false]).exec(),
-                this._rpc(this.modelName, 'check_access_rights').args(["create", false]).exec())
+                this._rpc({model: this.modelName, method: 'check_access_rights', args: ["write", false]}),
+                this._rpc({model: this.modelName, method: 'check_access_rights', args: ["create", false]}))
             .then(function (write, create) {
                 self.write_right = write;
                 self.create_right = create;
@@ -364,13 +366,15 @@ return AbstractModel.extend({
         var defs = _.map(this.data.filters, this._loadFilter.bind(this));
 
         return $.when.apply($, defs).then(function () {
-            return self._rpc(self.modelName, 'search_read')
-                .withContext(self.data.context)
-                .withFields(self.fieldNames)
-                .withDomain(self.data.domain.concat(self._getRangeDomain()).concat(self._getFilterDomain()))
-                .exec()
+            return self._rpc({
+                    model: self.modelName,
+                    method: 'search_read',
+                    context: self.data.context,
+                    fields: self.fieldNames,
+                    domain: self.data.domain.concat(self._getRangeDomain()).concat(self._getFilterDomain())
+                })
                 .then(function (events) {
-                    self.data.data = _.map(events.records, self._recordToCalendarEvent.bind(self));
+                    self.data.data = _.map(events, self._recordToCalendarEvent.bind(self));
                     return $.when(
                         self._loadColors(self.data, self.data.data),
                         self._loadRecordsToFilters(self.data, self.data.data)
@@ -404,12 +408,14 @@ return AbstractModel.extend({
         }
 
         var field = this.fields[filter.fieldName];
-        return this._rpc(filter.write_model, 'search_read')
-            .withDomain([["user_id", "=", session.uid]])
-            .withFields([filter.write_field])
-            .exec()
+        return this._rpc({
+                model: filter.write_model,
+                method: 'search_read',
+                domain: [["user_id", "=", session.uid]],
+                fields: [filter.write_field],
+            })
             .then(function (res) {
-                var records = _.map(res.records, function (record) {
+                var records = _.map(res, function (record) {
                     var _value = record[filter.write_field];
                     var value = _.isArray(_value) ? _value[0] : _value;
                     var f = _.find(filter.filters, function (f) {return f.value === value;});
@@ -511,9 +517,11 @@ return AbstractModel.extend({
 
         var defs = [];
         _.each(to_read, function (ids, model) {
-            defs.push(self._rpc(model, 'name_get')
-                .args([_.uniq(ids)])
-                .exec()
+            defs.push(self._rpc({
+                    model: model,
+                    method: 'name_get',
+                    args: [_.uniq(ids)],
+                })
                 .then(function (res) {
                     to_read[model] = _.object(res);
                 }));

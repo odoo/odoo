@@ -18,10 +18,12 @@ options.registry.subscribe = options.Class.extend({
             window_title: _t("Add a Subscribe Button"),
             select: _t("Discussion List"),
             init: function (field) {
-                return rpc.query({model: 'mail.channel', method: 'name_search'})
-                    .args(['', [['public','=','public']]])
-                    .withContext(base.get_context())
-                    .exec({type: "ajax"});
+                return rpc.query({
+                        model: 'mail.channel',
+                        method: 'name_search',
+                        args: ['', [['public','=','public']]],
+                        context: base.get_context(),
+                    });
             },
         }).then(function (mail_channel_id) {
             self.$target.attr("data-id", mail_channel_id);

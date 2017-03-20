@@ -122,10 +122,12 @@ var QuickCreate = Dialog.extend({
      */
     _quickCreate: function (data, options) {
         var self = this;
-        return this._rpc(this.modelName, 'create')
-            .args([$.extend({}, this.data_template, data)])
-            .withContext(_.pick(options, 'context'))
-            .exec()
+        return this._rpc({
+                model: this.modelName,
+                method: 'create',
+                args: [$.extend({}, this.data_template, data)],
+                context: _.pick(options, 'context'),
+            })
             .then(function (id) {
                 self.trigger('added', id);
                 self.$input.val("");

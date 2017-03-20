@@ -559,9 +559,10 @@ var ActionManager = Widget.extend({
             if (warm) {
                 this.null_action();
             }
-            action_loaded = this._rpc('/web/session/get_session_action')
-                .params({key: state.sa})
-                .exec()
+            action_loaded = this._rpc({
+                    route: '/web/session/get_session_action',
+                    params: {key: state.sa},
+                })
                 .then(function(action) {
                     if (action) {
                         return self.do_action(action);
@@ -835,12 +836,13 @@ var ActionManager = Widget.extend({
     },
     ir_actions_server: function (action, options) {
         var self = this;
-        return this._rpc('/web/action/run')
-            .params({
-                action_id: action.id,
-                context: action.context || {}
+        return this._rpc({
+                route: '/web/action/run',
+                params: {
+                    action_id: action.id,
+                    context: action.context || {}
+                },
             })
-            .exec()
             .then(function (action) {
                 return self.do_action(action, options);
             });

@@ -499,18 +499,17 @@ exports.PosModel = Backbone.Model.extend({
                 if( model.model ){
                     var method = model.ids ? 'read' : 'search_read';
                     var args = model.ids ? [ids, fields] : [domain, fields];
-                    var query = rpc
-                        .query({model: model.model, method: method})
-                        .args(args)
-                        .withContext(context);
+                    var params = {
+                        model: model.model,
+                        method: method,
+                        args: args,
+                        context: context,
+                    };
                     if (method === 'search_read') {
-                        query = query.orderBy(order);
+                        params.orderBy = order;
                     }
-                    query.exec({type: "ajax"}).then(function(result){
+                    rpc.query(params).then(function(result){
                         try{    // catching exceptions in model.loaded(...)
-                            if (method === 'search_read') {
-                                result = result.records;
-                            }
                             $.when(model.loaded(self,result,tmp))
                                 .then(function(){ load_model(index + 1); },
                                       function(err){ loaded.reject(err); });
@@ -551,11 +550,16 @@ exports.PosModel = Backbone.Model.extend({
         var def  = new $.Deferred();
         var fields = _.find(this.models,function(model){ return model.model === 'res.partner'; }).fields;
         var domain = [['customer','=',true],['write_date','>',this.db.get_partner_write_date()]];
-        rpc.query({model: 'res.partner', method: 'search_read'})
-            .args([domain, fields])
-            .exec({type: "ajax", options: {timeout:3000, shadow: true}})
+        rpc.query({
+                model: 'res.partner',
+                method: 'search_read',
+                args: [domain, fields],
+            }, {
+                timeout: 3000,
+                shadow: true,
+            })
             .then(function(partners){
-                if (self.db.add_partners(partners.records)) {   // check if the partners we got were real updates
+                if (self.db.add_partners(partners)) {   // check if the partners we got were real updates
                     def.resolve();
                 } else {
                     def.reject();
@@ -888,10 +892,14 @@ exports.PosModel = Backbone.Model.extend({
                 order.to_invoice = options.to_invoice || false;
                 return order;
             })];
-        var rpcOptions = {timeout: timeout, shadow: !options.to_invoice};
-        return rpc.query({model: 'pos.order', method: 'create_from_ui'})
-            .args(args)
-            .exec({type: "ajax", options: rpcOptions})
+        return rpc.query({
+                model: 'pos.order',
+                method: 'create_from_ui',
+                args: args,
+            }, {
+                timeout: timeout,
+                shadow: !options.to_invoice
+            })
             .then(function (server_ids) {
                 _.each(order_ids_to_sync, function (order_id) {
                     self.db.remove_order(order_id);

@@ -388,9 +388,13 @@ PaymentScreenWidget.include({
             });
         }
 
-        rpc.query({model: 'pos_mercury.mercury_transaction', method: 'do_payment'})
-            .args([transaction])
-            .exec({type: "ajax", options: {timeout: self.server_timeout_in_ms}})
+        rpc.query({
+                model: 'pos_mercury.mercury_transaction',
+                method: 'do_payment',
+                args: [transaction],
+            }, {
+                timeout: self.server_timeout_in_ms,
+            })
             .then(function (data) {
                 // if not receiving a response from Mercury, we should retry
                 if (data === "timeout") {
@@ -546,9 +550,13 @@ PaymentScreenWidget.include({
             });
         }
 
-        rpc.query({model: 'pos_mercury.mercury_transaction', method: rpc_method})
-            .args([request_data])
-            .exec({type: "ajax", options: {timeout: self.server_timeout_in_ms}})
+        rpc.query({
+                model: 'pos_mercury.mercury_transaction',
+                method: rpc_method,
+                args: [request_data],
+            }, {
+                timeout: self.server_timeout_in_ms
+            })
             .then(function (data) {
                 if (data === "timeout") {
                     self.retry_mercury_transaction(def, null, retry_nr, true, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);

@@ -197,10 +197,12 @@ var FieldMany2One = AbstractField.extend({
         var self = this;
         var slowCreate = this._searchCreatePopup.bind(this, "form", false, this._createContext(name));
         if (this.nodeOptions.quick_create) {
-            this._rpc(this.field.relation, "name_create")
-                .args([name])
-                .kwargs({context: this.record.getContext({fieldName: this.name})})
-                .exec()
+            this._rpc({
+                    model: this.field.relation,
+                    method: 'name_create',
+                    args: [name],
+                    context: this.record.getContext({fieldName: this.name})
+                })
                 .then(function (result) {
                     if (self.mode === "edit") {
                         self.reinitialize({id: result[0], display_name: result[1]});
@@ -267,15 +269,16 @@ var FieldMany2One = AbstractField.extend({
             domain.push(['id', 'not in', blacklisted_ids]);
         }
 
-        this._rpc(this.field.relation, "name_search")
-            .kwargs({
+        this._rpc({
+            model: this.field.relation,
+            method: "name_search",
+            kwargs: {
                 name: search_val,
                 args: domain,
                 operator: "ilike",
                 limit: this.limit + 1,
                 context: context,
-            })
-            .exec()
+            }})
             .then(function (result) {
                 // possible selections for the m2o
                 var values = _.map(result, function (x) {
@@ -294,16 +297,18 @@ var FieldMany2One = AbstractField.extend({
                     values.push({
                         label: _t("Search More..."),
                         action: function () {
-                            self._rpc(self.field.relation, "name_search")
-                                .kwargs({
-                                name: search_val,
-                                args: domain,
-                                operator: "ilike",
-                                limit: 160,
-                                context: context,
-                            })
-                            .exec()
-                            .then(self._searchCreatePopup.bind(self, "search"));
+                            self._rpc({
+                                    model: self.field.relation,
+                                    method: 'name_search',
+                                    kwargs: {
+                                        name: search_val,
+                                        args: domain,
+                                        operator: "ilike",
+                                        limit: 160,
+                                        context: context,
+                                    },
+                                })
+                                .then(self._searchCreatePopup.bind(self, "search"));
                         },
                         classname: 'o_m2o_dropdown_option',
                     });
@@ -385,10 +390,12 @@ var FieldMany2One = AbstractField.extend({
         if (this.mode === 'readonly' && !this.nodeOptions.no_open) {
             event.preventDefault();
             event.stopPropagation();
-            this._rpc(this.field.relation, 'get_formview_action')
-                .args([[this.value.res_id]])
-                .withContext(this.record.getContext({fieldName: this.name}))
-                .exec()
+            this._rpc({
+                    model: this.field.relation,
+                    method: 'get_formview_action',
+                    args: [[this.value.res_id]],
+                    context: this.record.getContext({fieldName: this.name}),
+                })
                 .then(function (action) {
                     self.trigger_up('do_action', {action: action});
                 });
@@ -404,10 +411,12 @@ var FieldMany2One = AbstractField.extend({
         }
         var self = this;
         var context = this.record.getContext({fieldName: this.name});
-        this._rpc(this.field.relation, 'get_formview_id')
-            .args([[this.value.res_id]])
-            .withContext(context)
-            .exec()
+        this._rpc({
+                model: this.field.relation,
+                method: 'get_formview_id',
+                args: [[this.value.res_id]],
+                context: context,
+            })
             .then(function (view_id) {
                 new dialogs.FormViewDialog(self, {
                     res_model: self.field.relation,

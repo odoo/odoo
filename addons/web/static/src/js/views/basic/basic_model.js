@@ -194,10 +194,12 @@ var BasicModel = AbstractModel.extend({
     deleteRecords: function (recordIds, modelName, parentID) {
         var self = this;
         var records = _.map(recordIds, function (id) { return self.localData[id]; });
-        return this._rpc(modelName, 'unlink')
-            .args([_.pluck(records, 'res_id')])
-            .withContext(session.user_context) // todo: combine with view context
-            .exec()
+        return this._rpc({
+                model: modelName,
+                method: 'unlink',
+                args: [_.pluck(records, 'res_id')],
+                context: session.user_context, // todo: combine with view context
+            })
             .then(function () {
                 _.each(records, function (record) {
                     record.res_ids.splice(record.offset, 1)[0];
@@ -230,10 +232,12 @@ var BasicModel = AbstractModel.extend({
     duplicateRecord: function (recordID) {
         var self = this;
         var record = this.localData[recordID];
-        return this._rpc(record.model, 'copy')
-            .args([record.data.id])
-            .withContext(this._getContext(record))
-            .exec()
+        return this._rpc({
+                model: record.model,
+                method: 'copy',
+                args: [record.data.id],
+                context: this._getContext(record),
+            })
             .then(function (res_id) {
                 var index = record.res_ids.indexOf(record.res_id);
                 record.res_ids.splice(index + 1, 0, res_id);
@@ -439,10 +443,12 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var fields_key = _.without(params.fieldNames, '__last_update');
 
-        return this._rpc(modelName, 'default_get')
-            .args([fields_key])
-            .withContext(params.context)
-            .exec()
+        return this._rpc({
+                model: modelName,
+                method: 'default_get',
+                args: [fields_key],
+                context: params.context,
+            })
             .then(function (result) {
                 // fill default values for missing fields
                 for (var i = 0; i < params.fieldNames.length; i++) {
@@ -813,11 +819,12 @@ var BasicModel = AbstractModel.extend({
             // in the case of a write, only perform the RPC if there are changes to save
             if (method === 'create' || Object.keys(changes).length) {
                 var args = method === 'write' ? [[record.data.id], changes] : [changes];
-                return self._rpc(record.model, method)
-                    .args(args)
-                    .withContext(session.user_context) // todo: combine with view context
-                    .exec()
-                    .then(function (id) {
+                return self._rpc({
+                        model: record.model,
+                        method: method,
+                        args: args,
+                        context: session.user_context // todo: combine with view context
+                    }).then(function (id) {
                         if (method === 'create') {
                             record.res_id = id;  // create returns an id, write returns a boolean
                             record.data.id = id;
@@ -911,9 +918,11 @@ var BasicModel = AbstractModel.extend({
         var resIDs = _.map(recordIDs, function (recordID) {
             return self.localData[recordID].res_id;
         });
-        return this._rpc(parent.model, 'write')
-            .args([resIDs, { active: value }])
-            .exec()
+        return this._rpc({
+                model: parent.model,
+                method: 'write',
+                args: [resIDs, { active: value }],
+            })
             .then(this.reload.bind(this, parentID));
 
     },
@@ -969,10 +978,12 @@ var BasicModel = AbstractModel.extend({
         var def;
         if (rel_data.display_name === undefined) {
             var field = record.fields[fieldName];
-            def = this._rpc(field.relation, 'name_get')
-                .args([data.id])
-                .withContext(record.context)
-                .exec()
+            def = this._rpc({
+                    model: field.relation,
+                    method: 'name_get',
+                    args: [data.id],
+                    context: record.context,
+                })
                 .then(function (result) {
                     rel_data.display_name = result[0][1];
                 });
@@ -1022,9 +1033,11 @@ var BasicModel = AbstractModel.extend({
             fields = fields[0];
         }
         return this.mutex.exec(function () {
-            return self._rpc(record.model, 'onchange')
-                .args([idList, currentData, fields, onchange_spec, context])
-                .exec()
+            return self._rpc({
+                    model: record.model,
+                    method: 'onchange',
+                    args: [idList, currentData, fields, onchange_spec, context],
+                })
                 .then(function (result) {
                     if (result.warning) {
                         self.trigger_up('warning', {
@@ -1176,9 +1189,11 @@ var BasicModel = AbstractModel.extend({
                 // _changes so this is a very specific case)
                 // this could be optimized by registering the fetched records in the list's _cache
                 // so that if a record is removed and then re-added, it won't be fetched twice
-                var def = this._rpc(list.model, 'read')
-                    .args([_.pluck(data, 'id'), list.fieldNames])
-                    .exec()
+                var def = this._rpc({
+                        model: list.model,
+                        method: 'read',
+                        args: [_.pluck(data, 'id'), list.fieldNames]
+                    })
                     .then(function (records) {
                         _.each(records, function (record) {
                             list_records[record.id].data = record;
@@ -1262,10 +1277,12 @@ var BasicModel = AbstractModel.extend({
     _fetchMany2OneGroup: function (group) {
         var ids = _.uniq(_.pluck(group, 'res_id'));
 
-        return this._rpc(group[0].model, 'name_get')
-            .args([ids])
-            .withContext(group[0].context)
-            .exec()
+        return this._rpc({
+                model: group[0].model,
+                method: 'name_get',
+                args: [ids],
+                context: group[0].context
+            })
             .then(function (name_gets) {
                 _.each(group, function (record) {
                     var nameGet = _.find(name_gets, function (n) { return n[0] === record.res_id;});
@@ -1286,10 +1303,12 @@ var BasicModel = AbstractModel.extend({
             model = many2oneRecord.model;
             return many2oneRecord.res_id;
         });
-        return this._rpc(model, 'name_get')
-            .args([ids])
-            .withContext(list.context)
-            .exec()
+        return this._rpc({
+                model: model,
+                method: 'name_get',
+                args: [ids],
+                context: list.context,
+            })
             .then(function (name_gets) {
                 for (var i = 0; i < name_gets.length; i++) {
                     records[i].data.display_name = name_gets[i][1];
@@ -1307,10 +1326,12 @@ var BasicModel = AbstractModel.extend({
     _fetchRecord: function (record, fieldNames) {
         var self = this;
         fieldNames = fieldNames || _.uniq(record.fieldNames.concat(['display_name']));
-        return this._rpc(record.model, 'read')
-            .args([[record.res_id], fieldNames])
-            // .withContext({ bin_size: true })  // FIXME: when editing a subrecord in the partner form view, it tries to write the bin_size on the image field
-            .exec()
+        return this._rpc({
+                model: record.model,
+                method: 'read',
+                args: [[record.res_id], fieldNames],
+                // context: {bin_size: true} // FIXME: when editing a subrecord in the partner form view, it tries to write the bin_size on the image field
+            })
             .then(function (result) {
                 result = result[0];
                 record.data = _.extend({}, record.data, result);
@@ -1436,25 +1457,29 @@ var BasicModel = AbstractModel.extend({
         }
 
         var self = this;
-        return this._rpc(field.relation, 'search_read')
-            .withFields(["id"].concat(fieldsToRead || []))
-            .withContext(context)
-            .withDomain(domain)
-            .exec()
-            .then(function (result) {
-                var ids = _.pluck(result.records, 'id');
-                return self._rpc(field.relation, 'name_get')
-                    .args([ids])
-                    .withContext(context)
-                    .exec()
+        return this._rpc({
+                model: field.relation,
+                method: 'search_read',
+                fields: ["id"].concat(fieldsToRead || []),
+                context: context,
+                domain: domain,
+            })
+            .then(function (records) {
+                var ids = _.pluck(records, 'id');
+                return self._rpc({
+                        model: field.relation,
+                        method: 'name_get',
+                        args: [ids],
+                        context: context,
+                    })
                     .then(function (name_gets) {
-                        _.each(result.records, function (rec) {
+                        _.each(records, function (rec) {
                             var name_get = _.find(name_gets, function (n) {
                                 return n[0] === rec.id;
                             });
                             rec.display_name = name_get[1];
                         });
-                        return result.records;
+                        return records;
                     });
             });
     },
@@ -1488,10 +1513,12 @@ var BasicModel = AbstractModel.extend({
             return $.when();
         }
 
-        return this._rpc(field.relation, "name_search")
-            .args(["", domain])
-            .withContext(context)
-            .exec();
+        return this._rpc({
+                model: field.relation,
+                method: 'name_search',
+                args: ["", domain],
+                context: context
+            });
     },
     /**
      * Fetches all the m2o records associated to the given fieldName. If the
@@ -1550,10 +1577,12 @@ var BasicModel = AbstractModel.extend({
 
         var def = $.Deferred();
 
-        this._rpc(domainModel, "search_count")
-            .args([Domain.prototype.stringToArray(domainValue)])
-            .withContext(context)
-            .exec()
+        this._rpc({
+                model: domainModel,
+                method: 'search_count',
+                args: [Domain.prototype.stringToArray(domainValue)],
+                context: context
+            })
             .then(_.identity, function (error, e) {
                 e.preventDefault(); // prevent traceback (the search_count might be intended to break)
                 return false;
@@ -1670,10 +1699,12 @@ var BasicModel = AbstractModel.extend({
         }
 
         // step 2: fetch data from server
-        return this._rpc(field.relation, 'read')
-            .args([ids, _.keys(fieldInfo.relatedFields)])
-            .withContext({}) // FIXME
-            .exec()
+        return this._rpc({
+                model: field.relation,
+                method: 'read',
+                args: [ids, _.keys(fieldInfo.relatedFields)],
+                context: {}, // FIXME
+            })
             .then(function (results) {
                 // step 3: assign values to correct datapoints
                 var dataPoints = _.map(results, function (result) {
@@ -2038,10 +2069,12 @@ var BasicModel = AbstractModel.extend({
             if (options.always_reload) {
                 if (record.fields[name].type === 'many2one' && record.data[name]) {
                     var element = self.localData[record.data[name]];
-                    defs.push(self._rpc(field.relation, 'name_get')
-                        .args([element.data.id])
-                        .withContext(self._getContext(record, {fieldName: name}))
-                        .exec()
+                    defs.push(self._rpc({
+                            model: field.relation,
+                            method: 'name_get',
+                            args: [element.data.id],
+                            context: self._getContext(record, {fieldName: name}),
+                        })
                         .then(function (result) {
                             element.data.display_name = result[0][1];
                         }));
@@ -2066,13 +2099,15 @@ var BasicModel = AbstractModel.extend({
     _readGroup: function (list) {
         var self = this;
         var fields = _.uniq(list.fieldNames.concat(list.groupedBy));
-        return this._rpc(list.model, 'read_group')
-            .withFields(fields)
-            .withDomain(list.domain)
-            .withContext(list.context)
-            .groupBy(list.groupedBy)
-            .lazy(true)
-            .exec()
+        return this._rpc({
+                model: list.model,
+                method: 'read_group',
+                fields: fields,
+                domain: list.domain,
+                context: list.context,
+                groupBy: list.groupedBy,
+                lazy: true,
+            })
             .then(function (groups) {
                 var rawGroupBy = list.groupedBy[0].split(':')[0];
                 var previousGroups = _.map(list.data, function (groupID) {
@@ -2158,10 +2193,12 @@ var BasicModel = AbstractModel.extend({
             }
         }
         if (missingIds.length) {
-            def = this._rpc(list.model, 'read')
-                .args([missingIds, list.fieldNames])
-                .withContext({}) // FIXME
-                .exec();
+            def = this._rpc({
+                model: list.model,
+                method: 'read',
+                args: [missingIds, list.fieldNames],
+                context: {} // FIXME
+            });
         } else {
             def = $.when();
         }
@@ -2219,33 +2256,35 @@ var BasicModel = AbstractModel.extend({
      */
     _searchReadUngroupedList: function (list) {
         var self = this;
-        return this._rpc(list.model, 'search_read')
-            .withFields(list.fieldNames)
-            .withDomain(list.domain || [])
-            .withLimit(list.limit)
-            .withOffset(list.offset)
-            .orderBy(list.orderedBy)
-            .exec()
-            .then(function (result) {
-                list.count = result.length;
-                var data = _.map(result.records, function (record) {
-                    var dataPoint = self._makeDataPoint({
-                        data: record,
-                        fields: list.fields,
-                        fieldNames: list.fieldNames,
-                        fieldsInfo: list.fieldsInfo,
-                        modelName: list.model,
-                        parentID: list.id,
-                    });
-
-                    // add many2one records
-                    self._parseServerData(list.fieldNames, dataPoint.fields, dataPoint.data);
-                    return dataPoint.id;
+        return this._rpc({
+            route: '/web/dataset/search_read',
+            model: list.model,
+            fields: list.fieldNames,
+            domain: list.domain || [],
+            limit: list.limit,
+            offset: list.offset,
+            orderBy: list.orderedBy,
+        })
+        .then(function (result) {
+            list.count = result.length;
+            var data = _.map(result.records, function (record) {
+                var dataPoint = self._makeDataPoint({
+                    data: record,
+                    fields: list.fields,
+                    fieldNames: list.fieldNames,
+                    fieldsInfo: list.fieldsInfo,
+                    modelName: list.model,
+                    parentID: list.id,
                 });
-                list.data = data;
-                list.res_ids = _.pluck(result.records, 'id');
-                return list;
+
+                // add many2one records
+                self._parseServerData(list.fieldNames, dataPoint.fields, dataPoint.data);
+                return dataPoint.id;
             });
+            list.data = data;
+            list.res_ids = _.pluck(result.records, 'id');
+            return list;
+        });
     },
     /**
      * Change the offset of a record. Note that this does not reload the data.

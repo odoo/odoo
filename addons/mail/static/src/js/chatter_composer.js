@@ -124,10 +124,11 @@ var ChatterComposer = composer.BasicComposer.extend({
         // have unknown names -> call message_get_partner_info_from_emails to try to find partner_id
         var def;
         if (names_to_find.length > 0) {
-            var args = [[this.context.default_res_id], names_to_find];
-            def = this._rpc(this.model, 'message_partner_info_from_emails')
-                .args(args)
-                .exec();
+            def = this._rpc({
+                    model: this.model,
+                    method: 'message_partner_info_from_emails',
+                    args: [[this.context.default_res_id], names_to_find],
+                });
         }
 
         // for unknown names + incomplete partners -> open popup - cancel = remove from recipients
@@ -172,10 +173,11 @@ var ChatterComposer = composer.BasicComposer.extend({
                 var new_names_to_find = _.difference(names_to_find, names_to_remove);
                 var def;
                 if (new_names_to_find.length > 0) {
-                    var args = [[self.context.default_res_id], new_names_to_find, true];
-                    self._rpc(self.model, 'message_partner_info_from_emails')
-                        .args(args)
-                        .exec();
+                    self._rpc({
+                            model: self.model,
+                            method: 'message_partner_info_from_emails',
+                            args: [[self.context.default_res_id], new_names_to_find, true],
+                        });
                 }
                 $.when(def).pipe(function (result) {
                     result = result || [];

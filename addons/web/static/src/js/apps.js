@@ -40,8 +40,7 @@ var Apps = Widget.extend({
         if (apps_client) {
             return check_client_available(apps_client);
         } else {
-            return this._rpc('ir.module.module', 'get_apps_server')
-                .exec()
+            return this._rpc({model: 'ir.module.module', method: 'get_apps_server'})
                 .then(function(u) {
                     var link = $(_.str.sprintf('<a href="%s"></a>', u))[0];
                     var host = _.str.sprintf('%s//%s', link.protocol, link.host);
@@ -90,9 +89,7 @@ var Apps = Widget.extend({
                 });
             },
             'Model': function(m) {
-                return this._rpc(m.model, m.method)
-                    .args(m.args)
-                    .exec()
+                return this._rpc({model: m.model, method: m.method, args: m.args})
                     .then(function(r) {
                         var w = self.$ifr[0].contentWindow;
                         w.postMessage({id: m.id, result: r}, client.origin);

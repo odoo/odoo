@@ -29,8 +29,10 @@ return session.is_bound.then(function () {
     // tours being only available for the admin. For the backend, the list of consumed is directly
     // in the page source.
     if (session.is_frontend && session.is_superuser) {
-        var def = rpc.query({model: 'web_tour.tour', method: 'get_consumed_tours'})
-            .exec({type: "ajax"});
+        var def = rpc.query({
+                model: 'web_tour.tour',
+                method: 'get_consumed_tours',
+            });
         defs.push(def);
     }
     return $.when.apply($, defs).then(function (consumed_tours) {

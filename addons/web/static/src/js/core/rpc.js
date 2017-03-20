@@ -2,199 +2,88 @@ odoo.define('web.rpc', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
-var Class = require('web.Class');
 
-var BaseRPCBuilder = Class.extend({
+return {
     /**
-     * @param {Widget} parent the rpc will go through this widget
-     * @param {Object} params
-     * @param {string} [params.model]
-     * @param {string} [params.method]
-     * @param {string} [params.route]
+     * Perform a RPC.  Please note that this is not the preferred way to do a
+     * rpc if you are in the context of a widget.  In that case, you should use
+     * the this._rpc method.
+     *
+     * @param {Object} params @see buildQuery for a description
+     * @param {Object} options
+     * @returns {Deferred<any>}
      */
-    init: function (parent, params) {
-        this.parent = parent;
-        this._route = params.route;
-        if (!this._route) {
-            this._route = '/web/dataset/call_kw/' + params.model + '/' + params.method;
+    query: function (params, options) {
+        var query = this.buildQuery(params);
+        return ajax.rpc(query.route, query.params, options);
+    },
+    /**
+     * @param {Object} options
+     * @param {any[]} [options.args]
+     * @param {Object} [options.context]
+     * @param {any[]} [options.domain]
+     * @param {string[]} [options.fields]
+     * @param {string[]} [options.groupBy]
+     * @param {Object} [options.kwargs]
+     * @param {integer|false} [options.limit]
+     * @param {string} [options.method]
+     * @param {string} [options.model]
+     * @param {integer} [options.offset]
+     * @param {string[]} [options.orderBy]
+     * @param {Object} [options.params]
+     * @param {string} [options.route]
+     * @returns {Object} with 2 keys: route and params
+     */
+    buildQuery: function (options) {
+        var route;
+        var params = options.params || {};
+        if (options.route) {
+            route = options.route;
+        } else if (options.model && options.method) {
+            route = '/web/dataset/call_kw/' + options.model + '/' + options.method;
         }
-        this._model = params.model;
-        this._method = params.method;
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @param {Array} args
-     * @returns {BaseRPCBuilder}
-     */
-    args: function (args) {
-        if (!(args instanceof Array)) {
-            throw new Error("Arguments should be an array");
+        if (options.method) {
+            params.args = options.args || [];
+            params.model = options.model;
+            params.method = options.method;
+            params.kwargs = options.kwargs || {};
+            params.kwargs.context = options.context || params.kwargs.context;
         }
-        this._args = args;
-        return this;
-    },
-    /**
-     * @param {Object} [params]
-     * @param {string} [params.type=event] if type=event, the rpc will be done
-     *   by triggering an event.  It will work if the parent is in a component
-     *   tree with a component with a ServiceProvider somewhere up.  If
-     *   type=ajax, then it will instead perform directly an ajax call.  This is
-     *   discouraged, if possible.
-     * @param {Object} [params.options] options that will be sent to the low
-     *   level ajax call.  Typically, shadow=true.
-     * @return {Deferred<*>}
-     */
-    exec: function (params) {
-        var route = this._getRoute();
-        var options = (params && params.options) ? params.options : {};
-        var type = (params && params.type) ? params.type : 'event';
 
-        if (type === 'event') {
-            return this.parent.call('ajax', 'rpc', route, this._getParams(), options);
-        } else if (type === 'ajax') {
-            return ajax.rpc(route, this._getParams(), options);
+        if (options.method === 'read_group') {
+            params.kwargs.groupby = options.groupBy || params.kwargs.groupby || [];
+            params.kwargs.domain = options.domain || params.kwargs.domain || [];
+            params.kwargs.fields = options.fields || params.kwargs.fields || [];
+            params.kwargs.lazy = options.lazy || params.kwargs.lazy;
+            var orderBy = options.orderBy || params.orderBy;
+            params.kwargs.orderby = orderBy ? this._serializeSort(orderBy) : false;
         }
-    },
-    /**
-     * @param {Object} kwargs
-     * @returns {BaseRPCBuilder}
-     */
-    kwargs: function (kwargs) {
-        this._kwargs = kwargs;
-        return this;
-    },
-    /**
-     * @param {Object} params
-     * @returns {BaseRPCBuilder}
-     */
-    params: function (params) {
-        this._params = params;
-        return this;
-    },
-    /**
-     * @param {Object} context
-     * @returns {BaseRPCBuilder}
-     */
-    withContext: function (context) {
-        this._context = context;
-        return this;
-    },
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @returns {Object}
-     */
-    _getParams: function () {
-        var kwargs = _.extend({}, this._kwargs);
-        if (this._context) {
-            kwargs.context = this._context;
+        if (options.method === 'search_read') {
+            // call the model method
+            params.args = [
+                options.domain || [],
+                options.fields || false,
+                options.offset || 0,
+                options.limit || false,
+                this._serializeSort(options.orderBy || params.orderBy || []),
+            ];
         }
-        var params = {
-            method: this._method,
-            model: this._model,
-            args: this._args || (this._method ? [] : undefined),
-            kwargs: this._method ? kwargs : undefined,
-        };
-        return _.defaults(params, this._params);
-    },
-    /**
-     * @private
-     * @returns {string}
-     */
-    _getRoute: function () {
-        return this._route;
-    },
-});
 
-var SearchRPCBuilder = BaseRPCBuilder.extend({
-    init: function () {
-        this._super.apply(this, arguments);
-        this._route = '/web/dataset/search_read';
-        this._orderBy = false;
-        this._domain = [];
-        this._fields = false;
-    },
+        if (options.route === '/web/dataset/search_read') {
+            // specifically call the controller
+            params.model = options.model || params.model;
+            params.domain = options.domain || params.domain || [];
+            params.fields = options.fields || params.fields  || false;
+            params.limit = options.limit || params.limit;
+            params.offset = options.offset || params.offset ;
+            params.sort = this._serializeSort(options.orderBy || params.orderBy || []);
+            params.context = options.context || params.context || {};
+        }
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @param {Object[]} orderBy
-     * @returns {BaseRPCBuilder}
-     */
-    orderBy: function (orderBy) {
-        // todo: serialize properly this
-        this._orderBy = this._serializeSort(orderBy);
-        return this;
-    },
-    /**
-     * @param {Object} context
-     * @returns {BaseRPCBuilder}
-     */
-    withContext: function (context) {
-        this._context = context;
-        return this;
-    },
-    /**
-     * @param {Object} domain
-     * @returns {BaseRPCBuilder}
-     */
-    withDomain: function (domain) {
-        this._domain = domain;
-        return this;
-    },
-    /**
-     * @param {string[]} fields
-     * @returns {BaseRPCBuilder}
-     */
-    withFields: function (fields) {
-        this._fields = fields;
-        return this;
-    },
-    /**
-     * @param {Object} limit
-     * @returns {BaseRPCBuilder}
-     */
-    withLimit: function (limit) {
-        this._limit = limit;
-        return this;
-    },
-    /**
-     * @param {Object} offset
-     * @returns {BaseRPCBuilder}
-     */
-    withOffset: function (offset) {
-        this._offset = offset;
-        return this;
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     * @private
-     * @returns {Object}
-     */
-    _getParams: function () {
         return {
-            context: this._context || {},
-            domain: this._domain,
-            fields: this._fields,
-            limit: this._limit,
-            model: this._model,
-            offset: this._offset,
-            sort: this._orderBy
+            route: route,
+            params: JSON.parse(JSON.stringify(params)),
         };
     },
     /**
@@ -211,85 +100,6 @@ var SearchRPCBuilder = BaseRPCBuilder.extend({
         return _.map(orderBy, function (order) {
             return order.name + (order.asc !== false ? ' ASC' : ' DESC');
         }).join(', ');
-    },
-});
-
-var ReadGroupRPCBuilder = SearchRPCBuilder.extend({
-    init: function () {
-        this._super.apply(this, arguments);
-        this._route = '/web/dataset/call_kw/' + this._model + '/read_group';
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * We need to make sure that arguments are properly set.
-     * @override
-     * @returns {Deferred<*>}
-     */
-    exec: function () {
-        if (!this._groupBy) {
-            throw new Error("read_group must have a group_by argument");
-        }
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @param {string[]} groupBy
-     * @returns {BaseRPCBuilder}
-     */
-    groupBy: function (groupBy) {
-        // todo: serialize properly this
-        this._groupBy = groupBy;
-        return this;
-    },
-    /**
-     * @param {boolean} lazy
-     * @returns {BaseRPCBuilder}
-     */
-    lazy: function (lazy) {
-        // todo: serialize properly this
-        this._lazy = lazy;
-        return this;
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     * @private
-     * @returns {Object}
-     */
-    _getParams: function () {
-        var kwargs = _.defaults({}, this._kwargs, {
-            context: this._context || {},
-            domain: this._domain || [],
-            fields: this._fields,
-            groupby: this._groupBy,
-            lazy: !!this._lazy,
-            orderby: this._orderBy,
-        });
-        return {
-            args: this._args || [],
-            kwargs: kwargs,
-            method: 'read_group',
-            model: this._model,
-        };
-    },
-});
-
-return {
-    builders: {
-        default: BaseRPCBuilder,
-        search_read: SearchRPCBuilder,
-        read_group: ReadGroupRPCBuilder,
-    },
-    query: function (params) {
-        var Builder = this.builders[params.method] || this.builders.default;
-        return new Builder(params.parent, params);
     },
 };
 

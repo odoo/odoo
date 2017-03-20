@@ -308,10 +308,12 @@ var KanbanController = BasicController.extend({
         var context = columnState.getContext();
         context['default_' + state.groupedBy[0]] = columnState.res_id;
 
-        this._rpc(state.model, "name_create")
-            .args([name])
-            .withContext(context)
-            .exec()
+        this._rpc({
+                model: state.model,
+                method: 'name_create',
+                args: [name],
+                context: context,
+            })
             .then(add_record)
             .fail(function (error, event) {
                 event.preventDefault();

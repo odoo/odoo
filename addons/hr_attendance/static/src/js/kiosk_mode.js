@@ -23,9 +23,11 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
     start: function () {
         var self = this;
         self.session = Session;
-        this._rpc('res.company', 'search_read')
-            .args([[['id', '=', self.session.company_id]], ['name']])
-            .exec()
+        this._rpc({
+                model: 'res.company',
+                method: 'search_read',
+                args: [[['id', '=', self.session.company_id]], ['name']],
+            })
             .then(function (companies){
                 self.company_name = companies[0].name;
                 self.company_image_url = self.session.url('/web/image', {model: 'res.company', id: self.session.company_id, field: 'logo',});
@@ -37,9 +39,11 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
 
     on_barcode_scanned: function(barcode) {
         var self = this;
-        this._rpc('hr.employee', 'attendance_scan')
-            .args([barcode, ])
-            .exec()
+        this._rpc({
+                model: 'hr.employee',
+                method: 'attendance_scan',
+                args: [barcode, ],
+            })
             .then(function (result) {
                 if (result.action) {
                     self.do_action(result.action);

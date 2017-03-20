@@ -13,10 +13,12 @@ var PlannerLauncher = planner.PlannerLauncher.extend({
     },
     _fetch_planner_data: function () {
         var planner_by_menu = this.planner_by_menu = {};
-        return this._rpc('web.planner', 'search_read')
-            .exec()
-            .then(function (res) {
-                _.each(res.records, function (planner) {
+        return this._rpc({
+                model: 'web.planner',
+                method: 'search_read',
+            })
+            .then(function (records) {
+                _.each(records, function (planner) {
                     planner.data = $.parseJSON(planner.data) || {};
                     planner_by_menu[planner.menu_id[0]] = planner;
                 });

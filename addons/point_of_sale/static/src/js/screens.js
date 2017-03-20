@@ -1209,9 +1209,11 @@ var ClientListScreenWidget = ScreenWidget.extend({
         fields.id           = partner.id || false;
         fields.country_id   = fields.country_id || false;
 
-        rpc.query({model: 'res.partner', method: 'create_from_ui'})
-            .args([fields])
-            .exec({type: "ajax"})
+        rpc.query({
+                model: 'res.partner',
+                method: 'create_from_ui',
+                args: [fields],
+            })
             .then(function(partner_id){
                 self.saved_client_details(partner_id);
             },function(err,event){

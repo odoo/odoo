@@ -490,9 +490,11 @@ var Configurator = Dialog.extend({
             def.resolve(null);
         } else {
             var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'];
-            this._rpc(obj.model, 'read')
-                .args([[obj.id], fields, base.get_context()])
-                .exec()
+            this._rpc({
+                    model: obj.model,
+                    method: 'read',
+                    args: [[obj.id], fields, base.get_context()],
+                })
                 .then(function (data) {
                     if (data.length) {
                         var meta = data[0];
@@ -512,9 +514,11 @@ var Configurator = Dialog.extend({
         if (!obj) {
             return $.Deferred().reject();
         } else {
-            return this._rpc(obj.model, 'write')
-                .args([[obj.id], data, base.get_context()])
-                .exec();
+            return this._rpc({
+                    model: obj.model,
+                    method: 'write',
+                    args: [[obj.id], data, base.get_context()],
+                });
         }
     },
     titleChanged: function () {

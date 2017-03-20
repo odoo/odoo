@@ -103,9 +103,11 @@ var CalendarController = AbstractController.extend({
     _updateRecord: function (record) {
         // Cannot modify actual name yet
         var data = _.omit(this.model.calendarEventToRecord(record), 'name');
-        this._rpc(this.model.modelName, 'write')
-            .args([record.id, data])
-            .exec()
+        this._rpc({
+                model: this.model.modelName,
+                method: 'write',
+                args: [record.id, data],
+            })
             .then(this.reload.bind(this));
     },
 
@@ -231,9 +233,11 @@ var CalendarController = AbstractController.extend({
                         click: function () {
                             Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), {
                                 confirm_callback: function () {
-                                    self._rpc(self.modelName, 'unlink')
-                                        .args([id])
-                                        .exec()
+                                    self._rpc({
+                                            model: self.modelName,
+                                            method: 'unlink',
+                                            args: [id],
+                                        })
                                         .then(function () {
                                             self.dialog.destroy();
                                             self.reload();

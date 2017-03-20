@@ -666,9 +666,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
         var def = $.Deferred();
         clearTimeout(this.mention_fetch_timer);
         this.mention_fetch_timer = setTimeout(function () {
-            return self._rpc(model, method)
-                .kwargs(kwargs)
-                .exec()
+            return self._rpc({model: model, method: method, kwargs: kwargs})
                 .then(function (results) {
                     def.resolve(results);
                 });

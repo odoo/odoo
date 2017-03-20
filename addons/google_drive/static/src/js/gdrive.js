@@ -59,9 +59,11 @@ Sidebar.include({
         var self = this;
         var domain = [['id', '=', doc_item.config_id]];
         var fields = ['google_drive_resource_id', 'google_drive_client_id'];
-        this._rpc('google.drive.config', 'search_read')
-            .args([domain, fields])
-            .exec()
+        this._rpc({
+                model: 'google.drive.config',
+                method: 'search_read',
+                args: [domain, fields],
+            })
             .then(function (configs) {
                 var ds = new data.DataSet(self, 'google.drive.config');
                 ds.call('get_google_drive_url', [doc_item.config_id, doc_item.res_id,configs[0].google_drive_resource_id, self.dataset.context]).done(function (url) {

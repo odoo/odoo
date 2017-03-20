@@ -427,14 +427,16 @@ var ManyToOneField = CharField.extend({
                 args = [];
             }
         }
-        return this._rpc(this.attrs.relation, 'name_search')
-            .kwargs({
-                name: needle,
-                args: args,
-                limit: 8,
-                context: context
+        return this._rpc({
+                model: this.attrs.relation,
+                method: 'name_search',
+                kwargs: {
+                    name: needle,
+                    args: args,
+                    limit: 8,
+                    context: context
+                },
             })
-            .exec()
             .then(function (results) {
                 if (_.isEmpty(results)) { return null; }
                 return _(results).map(function (result) {
@@ -459,10 +461,12 @@ var ManyToOneField = CharField.extend({
         }
         var context = pyeval.eval('contexts', [this.searchview.dataset.get_context()]);
 
-        return this._rpc(this.attrs.relation, 'name_get')
-            .args([value])
-            .withContext(context)
-            .exec()
+        return this._rpc({
+                model: this.attrs.relation,
+                method: 'name_get',
+                args: [value],
+                context: context,
+            })
             .then(function (names) {
                 if (_(names).isEmpty()) { return null; }
                 return facet_from(self, names[0]);

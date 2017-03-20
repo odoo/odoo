@@ -103,9 +103,11 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         }
 
         var self = this;
-        this._rpc('ir.config_parameter', 'set_param')
-            .args(['google_management_client_id', ga_client_id])
-            .exec()
+        this._rpc({
+                model: 'ir.config_parameter',
+                method: 'set_param',
+                args: ['google_management_client_id', ga_client_id],
+            })
             .then(function(){
                 self.on_date_range_button('week');
             });

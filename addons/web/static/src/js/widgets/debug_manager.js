@@ -63,13 +63,17 @@ var DebugManager = Widget.extend({
         // whether the current user is an administrator
         this._is_admin = session.is_system;
         return $.when(
-            this._rpc('res.users', 'check_access_rights')
-                .kwargs({operation: 'write', raise_exception: false})
-                .exec(),
+            this._rpc({
+                    model: 'res.users',
+                    method: 'check_access_rights',
+                    kwargs: {operation: 'write', raise_exception: false},
+                }),
             session.user_has_group('base.group_no_one'),
-            this._rpc('ir.model.data', 'xmlid_to_res_id')
-                .kwargs({xmlid: 'base.group_no_one'})
-                .exec(),
+            this._rpc({
+                    model: 'ir.model.data',
+                    method: 'xmlid_to_res_id',
+                    kwargs: {xmlid: 'base.group_no_one'},
+                }),
             this._super()
         ).then(function (can_write_user, has_group_no_one, group_no_one_id) {
             this._features_group = can_write_user && group_no_one_id;
@@ -165,11 +169,13 @@ var DebugManager = Widget.extend({
             title: _t('Select a view'),
             disable_multiple_selection: true,
             on_selected: function (element_ids) {
-                self._rpc('ir.ui.view', 'search_read')
-                    .withDomain([['id', '=', element_ids[0]]])
-                    .withFields(['name', 'model', 'type'])
-                    .withLimit(1)
-                    .exec()
+                self._rpc({
+                        model: 'ir.ui.view',
+                        method: 'search_read',
+                        domain: [['id', '=', element_ids[0]]],
+                        fields: ['name', 'model', 'type'],
+                        limit: 1,
+                    })
                     .then(function (view) {
                         self.do_action({
                             type: 'ir.actions.act_window',
@@ -228,11 +234,13 @@ DebugManager.include({
     get_view_fields: function () {
         var self = this;
         var model = this._action.res_model;
-        this._rpc(model, 'fields_get')
-            .kwargs({
-                attributes: ['string', 'searchable', 'required', 'readonly', 'type', 'store', 'sortable', 'relation', 'help']
+        this._rpc({
+                model: model,
+                method: 'fields_get',
+                kwargs: {
+                    attributes: ['string', 'searchable', 'required', 'readonly', 'type', 'store', 'sortable', 'relation', 'help']
+                },
             })
-            .exec()
             .done(function (fields) {
                 new Dialog(self, {
                     title: _.str.sprintf(_t("Fields of %s"), model),
@@ -266,9 +274,11 @@ DebugManager.include({
         });
     },
     translate: function() {
-        this._rpc("ir.translation", 'get_technical_translations')
-            .args([this._action.res_model])
-            .exec()
+        this._rpc({
+                model: 'ir.translation',
+                method: 'get_technical_translations',
+                args: [this._action.res_model],
+            })
             .then(this.do_action);
     }
 });
@@ -283,9 +293,11 @@ DebugManager.include({
         this._can_edit_views = false;
         return $.when(
             this._super(),
-            this._rpc('ir.ui.view', 'check_access_rights')
-                .kwargs({operation: 'write', raise_exception: false})
-                .exec()
+            this._rpc({
+                    model: 'ir.ui.view',
+                    method: 'check_access_rights',
+                    kwargs: {operation: 'write', raise_exception: false},
+                })
                 .then(function (ar) {
                     this._can_edit_views = ar;
                 }.bind(this))
