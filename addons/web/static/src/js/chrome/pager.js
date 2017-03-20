@@ -12,9 +12,9 @@ var direction = {
 var Pager = Widget.extend({
     template: "Pager",
     events: {
-        'click .o_pager_previous': 'previous',
-        'click .o_pager_next': 'next',
-        'click .o_pager_value': '_edit',
+        'click .o_pager_next': '_onNext',
+        'click .o_pager_previous': '_onPrevious',
+        'click .o_pager_value': '_onEdit',
     },
     /**
      * The pager goes from 1 to size (included).
@@ -69,28 +69,30 @@ var Pager = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Disables the pager's arrows
+     * Disables the pager's arrows and the edition
      */
-    disable: function() {
-        this.$('button').prop("disabled", true);
+    disable: function () {
+        this.disabled = true;
+        this._updateArrows();
     },
     /**
-     * Enables the pager's arrows
+     * Enables the pager's arrows and the edition
      */
-    enable: function() {
-        this.$('button').prop("disabled", false);
+    enable: function () {
+        this.disabled = false;
+        this._updateArrows();
     },
     /**
      * Executes the next action on the pager
      */
-    next: function() {
-        this._change_selection(direction.next);
+    next: function () {
+        this._changeSelection(direction.next);
     },
     /**
      * Executes the previous action on the pager
      */
-    previous: function() {
-        this._change_selection(direction.previous);
+    previous: function () {
+        this._changeSelection(direction.previous);
     },
     /**
      * Sets the state of the pager and renders it
@@ -110,7 +112,7 @@ var Pager = Widget.extend({
      *
      * @param {int} [direction] the action (previous or next) on the pager
      */
-    _change_selection: function (direction) {
+    _changeSelection: function (direction) {
         var self = this;
         this.options.validate().then(function() {
             var size = self.state.size;
@@ -128,14 +130,18 @@ var Pager = Widget.extend({
             }
 
             self.state.current_min = current_min;
-            self.trigger('pager_changed', _.clone(self.state));
+            // The re-rendering of the pager must be done before the trigger of
+            // event 'pager_changed' as the rendering may enable the pager
+            // (and a common use is to disable the pager when this event is
+            // triggered, and to re-enable it when the data have been reloaded)
             self._render();
+            self.trigger('pager_changed', _.clone(self.state));
         });
     },
     /**
      * Private function that displays an input to edit the pager's state
      */
-    _edit: function() {
+    _edit: function () {
         if (this.options.can_edit) {
             var self = this;
             var $input = $('<input>', {type: 'text', value: this.$value.html()});
@@ -167,18 +173,12 @@ var Pager = Widget.extend({
         var size = this.state.size;
         var current_min = this.state.current_min;
         var current_max = this.state.current_max;
-        var single_page = 1 === current_min && current_max === size;
 
-        if (size === 0 || (single_page && this.options.single_page_hidden)) {
+        if (size === 0 || (this.options.single_page_hidden && this._singlePage())) {
             this.do_hide();
         } else {
             this.do_show();
-
-            if (single_page) {
-                this.disable();
-            } else {
-                this.enable();
-            }
+            this._updateArrows();
 
             var value = "" + current_min;
             if (this.state.limit > 1) {
@@ -187,12 +187,13 @@ var Pager = Widget.extend({
             this.$value.html(value);
             this.$limit.html(size);
         }
-    },    /**
+    },
+    /**
      * Private function that saves the state from the content of the input
      *
      * @param {jQuery} [$input] the jQuery element containing the new state
      */
-    _save: function($input) {
+    _save: function ($input) {
         var self = this;
         this.options.validate().then(function() {
             var value = $input.val().split("-");
@@ -214,7 +215,55 @@ var Pager = Widget.extend({
             self._render();
         });
     },
+    /**
+     * @private
+     * @returns {boolean} true iff there is only one page
+     */
+    _singlePage: function () {
+        var state = this.state;
+        return (1 === state.current_min) && (state.current_max === state.size);
+    },
+    /**
+     * Updates the arrows' disable attribute: true iff the pager is disabed or
+     * if there is only one page
+     *
+     * @private
+     */
+    _updateArrows: function () {
+        var disabled = this.disabled || this._singlePage();
+        this.$('button').prop('disabled', disabled);
+    },
 
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onEdit: function (event) {
+        event.stopPropagation();
+        if (!this.disabled) {
+            this._edit();
+        }
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onNext: function (event) {
+        event.stopPropagation();
+        this.next();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onPrevious: function (event) {
+        event.stopPropagation();
+        this.previous();
+    },
 });
 
 return Pager;
