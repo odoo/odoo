@@ -6,6 +6,7 @@ var config = require('web.config');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
+var Pager = require('web.Pager');
 var session = require('web.session');
 var utils = require('web.utils');
 
@@ -72,6 +73,7 @@ var ListRenderer = BasicRenderer.extend({
             }).value();
         this.hasSelectors = params.hasSelectors;
         this.selection = [];
+        this.pagers = []; // instantiated pagers (only for grouped lists)
     },
 
     //--------------------------------------------------------------------------
@@ -351,6 +353,36 @@ var ListRenderer = BasicRenderer.extend({
         return $('<tfoot>').append($('<tr>').append($cells));
     },
     /**
+     * Renders the pager for a given group
+     *
+     * @private
+     * @param {Object} group
+     * @returns {JQueryElement} the pager's $el
+     */
+    _renderGroupPager: function (group) {
+        var pager = new Pager(this, group.count, group.offset + 1, group.limit);
+        pager.on('pager_changed', this, function (newState) {
+            var self = this;
+            pager.disable();
+            this.trigger_up('load', {
+                id: group.id,
+                limit: newState.limit,
+                offset: newState.current_min - 1,
+                on_success: function (reloadedGroup) {
+                    _.extend(group, reloadedGroup);
+                    self._renderView();
+                },
+                on_fail: pager.enable.bind(pager),
+            });
+        });
+        // register the pager so that it can be destroyed on next rendering
+        this.pagers.push(pager);
+
+        var fragment = document.createDocumentFragment();
+        pager.appendTo(fragment); // starts the pager
+        return pager.$el;
+    },
+    /**
      * Render the row that represent a group
      *
      * @private
@@ -379,6 +411,11 @@ var ListRenderer = BasicRenderer.extend({
                             .toggleClass('fa-caret-right', !group.isOpen)
                             .toggleClass('fa-caret-down', group.isOpen);
             $th.prepend($arrow);
+        }
+        if (group.isOpen && !group.groupedBy.length && (group.count > group.data.length)) {
+            var $pager = this._renderGroupPager(group);
+            var $lastCell = $cells[$cells.length-1];
+            $lastCell.addClass('o_group_pager').append($pager);
         }
         return $('<tr>')
                     .addClass('o_group_header')
@@ -553,6 +590,11 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderView: function () {
         var self = this;
+
+        // destroy the previously instantiated pagers, if any
+        _.invoke(this.pagers, 'destroy');
+        this.pagers = [];
+
         var $table = $('<table>').addClass('o_list_view table table-condensed table-striped');
         this.$el.empty().append($table);
         var is_grouped = !!this.state.groupedBy.length;
