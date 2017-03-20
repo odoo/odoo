@@ -101,12 +101,52 @@
             </form>
         </field>
     </record>
+
+    <record model="ir.ui.view" id="view_pos_order_kanban">
+        <field name="name">pos.order.kanban</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="amount_total"/>
+                <field name="date_order"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="row mb4">
+                                <div class="col-xs-6">
+                                    <strong><span><t t-esc="record.user_id.value"/></span></strong>
+                                </div>
+                                <div class="col-xs-6 pull-right text-right">
+                                    <strong><field name="amount_total"/></strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-8 text-muted">
+                                    <span><t t-esc="record.name.value"/> <t t-esc="record.date_order.value"/></span>
+                                </div>
+                                <div class="col-xs-4">
+                                    <span class="pull-right text-right">
+                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default',
+                                        'invoiced': 'success', 'cancel': 'danger'}}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="action_pos_pos_form" model="ir.actions.act_window">
         <field name="name">Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" eval="False"/>
         <field name="domain">[]</field>
         <field name="help" type="html">
