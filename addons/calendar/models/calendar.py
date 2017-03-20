@@ -1054,7 +1054,7 @@ class Meeting(models.Model):
 
                 if [True for item in new_pile if not item]:
                     continue
-                result_data.append(meeting.get_search_fields(order_fields, r_date=r_date))
+                result_data.append(meeting.get_search_fields(order_fields, r_date=r_start_date))
 
         if order_fields:
             uniq = lambda it: collections.OrderedDict((id(x), x) for x in it).values()
