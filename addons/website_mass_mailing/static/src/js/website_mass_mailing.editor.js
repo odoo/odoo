@@ -21,10 +21,12 @@ var mass_mailing_common = options.Class.extend({
             'window_title': this.popup_title,
             'select': _t("Newsletter"),
             'init': function (field) {
-                return rpc.query({model: 'mail.mass_mailing.list', method: 'name_search'})
-                        .args(['', []])
-                        .withContext(base.get_context())
-                        .exec({type: "ajax"});
+                return rpc.query({
+                        model: 'mail.mass_mailing.list',
+                        method: 'name_search',
+                        args: ['', []],
+                        context: base.get_context(),
+                    });
             },
         });
         def.then(function (mailing_list_id) {

@@ -148,13 +148,14 @@ var Sidebar = Widget.extend({
                 new Context(
                     sidebar_eval_context, active_ids_context));
 
-                self._rpc("/web/action/load")
-                    .params({
-                        action_id: item.action.id,
-                        context: new Context(
-                            dataset.get_context(), active_ids_context).eval()
+                self._rpc({
+                        route: '/web/action/load',
+                        params: {
+                            action_id: item.action.id,
+                            context: new Context(
+                                dataset.get_context(), active_ids_context).eval()
+                        },
                     })
-                    .exec()
                     .done(function(result) {
                         result.context = new Context(
                             result.context || {}, active_ids_context)

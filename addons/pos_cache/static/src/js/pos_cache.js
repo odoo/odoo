@@ -31,9 +31,11 @@ models.PosModel = models.PosModel.extend({
         }
 
         return posmodel_super.load_server_data.apply(this, arguments).then(function () {
-            var records = rpc.query({model: 'pos.config', method: 'get_products_from_cache'})
-                .args([self.pos_session.config_id[0], product_fields, product_domain])
-                .exec({type: "ajax"});
+            var records = rpc.query({
+                    model: 'pos.config',
+                    method: 'get_products_from_cache',
+                    args: [self.pos_session.config_id[0], product_fields, product_domain],
+                });
             self.chrome.loading_message(_t('Loading') + ' product.product', 1);
             return records.then(function (product) {
                 self.db.add_products(product);

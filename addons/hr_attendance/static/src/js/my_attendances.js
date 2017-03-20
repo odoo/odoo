@@ -19,9 +19,11 @@ var MyAttendances = Widget.extend({
     start: function () {
         var self = this;
 
-        this._rpc('hr.employee', 'search_read')
-            .args([[['user_id', '=', self.session.uid]], ['attendance_state', 'name']])
-            .exec()
+        this._rpc({
+                model: 'hr.employee',
+                method: 'search_read',
+                args: [[['user_id', '=', self.session.uid]], ['attendance_state', 'name']],
+            })
             .then(function (res) {
                 if (_.isEmpty(res) ) {
                     self.$('.o_hr_attendance_employee').append(_t("Error : Could not find employee linked to user"));
@@ -36,9 +38,11 @@ var MyAttendances = Widget.extend({
 
     update_attendance: function () {
         var self = this;
-        this._rpc('hr.employee', 'attendance_manual')
-            .args([[self.employee.id], 'hr_attendance.hr_attendance_action_my_attendances'])
-            .exec()
+        this._rpc({
+                model: 'hr.employee',
+                method: 'attendance_manual',
+                args: [[self.employee.id], 'hr_attendance.hr_attendance_action_my_attendances'],
+            })
             .then(function(result) {
                 if (result.action) {
                     self.do_action(result.action);

@@ -19,9 +19,11 @@ DebugManager.include({
     consume_tours: function () {
         var active_tours = get_active_tours();
         if (active_tours.length > 0) { // tours might have been consumed meanwhile
-            this._rpc('web_tour.tour', 'consume')
-                .args([active_tours])
-                .exec()
+            this._rpc({
+                    model: 'web_tour.tour',
+                    method: 'consume',
+                    args: [active_tours],
+                })
                 .then(function () {
                     window.location.reload();
                 });

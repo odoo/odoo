@@ -649,7 +649,7 @@ var MockServer = Class.extend({
         return this._getRecords(model, args[0]).length;
     },
     /**
-     * Simulate a 'search_read' operation
+     * Simulate a 'search_read' operation on a model
      *
      * @private
      * @param {Object} args
@@ -661,7 +661,33 @@ var MockServer = Class.extend({
      * @param {string[]} [args.sort]
      * @returns {Object}
      */
-    _mockSearchRead: function (args) {
+    _mockSearchRead: function (model, args, kwargs) {
+        var result = this._mockSearchReadController({
+            model: model,
+            domain: args[0],
+            fields: args[1],
+            offset: args[2],
+            limit: args[3],
+            sort: args[4],
+            context: kwargs.context,
+        });
+        return result.records;
+    },
+    /**
+     * Simulate a 'search_read' operation, from the controller point of view
+     *
+     * @private
+     * @private
+     * @param {Object} args
+     * @param {Array} args.domain
+     * @param {string} args.model
+     * @param {Array} [args.fields] defaults to the list of all fields
+     * @param {integer} [args.limit]
+     * @param {integer} [args.offset=0]
+     * @param {string[]} [args.sort]
+     * @returns {Object}
+     */
+    _mockSearchReadController: function (args) {
         var self = this;
         var records = this._getRecords(args.model, args.domain);
         var fields = args.fields || _.keys(this.data[args.model].fields);
@@ -765,7 +791,7 @@ var MockServer = Class.extend({
                 return $.when(this._mockLoadAction(args));
 
             case '/web/dataset/search_read':
-                return $.when(this._mockSearchRead(args));
+                return $.when(this._mockSearchReadController(args));
         }
         if (route.indexOf('/web/image/') === 0) {
             return $.when();
@@ -803,6 +829,9 @@ var MockServer = Class.extend({
 
             case 'search_count':
                 return $.when(this._mockSearchCount(args.model, args.args));
+
+            case 'search_read':
+                return $.when(this._mockSearchRead(args.model, args.args, args.kwargs));
 
             case 'unlink':
                 return $.when(this._mockUnlink(args.model, args.args));

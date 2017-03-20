@@ -62,9 +62,11 @@ options.registry.company_data = options.Class.extend({
         if (proto.__link_deferred === undefined) {
             proto.__link_deferred = $.Deferred();
             return ajax.jsonRpc("/web/session/get_session_info", "call").then(function (session) {
-                return rpc.query({model: "res.users", method: "read"})
-                    .args([session.uid, ["company_id"]])
-                    .exec({type: "ajax"})
+                return rpc.query({
+                        model: 'res.users',
+                        method: 'read',
+                        args: [session.uid, ['company_id']],
+                    })
                     .then(function (res) {
                         proto.__link_deferred.resolve(
                             "/web#action=base.action_res_company_form&view_type=form&id=" + (res && res[0] && res[0].company_id[0] || 1)

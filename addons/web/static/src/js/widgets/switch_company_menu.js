@@ -18,9 +18,11 @@ var SwitchCompanyMenu = Widget.extend({
         this.$el.on('click', '.dropdown-menu li a[data-menu]', _.debounce(function(ev) {
             ev.preventDefault();
             var company_id = $(ev.currentTarget).data('company-id');
-            self._rpc('res.users', 'write')
-                .args([[session.uid], {'company_id': company_id}])
-                .exec()
+            self._rpc({
+                    model: 'res.users',
+                    method: 'write',
+                    args: [[session.uid], {'company_id': company_id}],
+                })
                 .then(function() {
                     location.reload();
                 });

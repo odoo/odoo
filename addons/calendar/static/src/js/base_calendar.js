@@ -22,11 +22,12 @@ var CalendarNotification = Notification.extend({
             'click .link2event': function() {
                 var self = this;
 
-                this._rpc("/web/action/load")
-                    .params({
-                        action_id: "calendar.action_calendar_event_notify",
+                this._rpc({
+                        route: '/web/action/load',
+                        params: {
+                            action_id: 'calendar.action_calendar_event_notify',
+                        },
                     })
-                    .exec()
                     .then(function(r) {
                         r.res_id = self.eid;
                         return self.do_action(r);
@@ -39,8 +40,7 @@ var CalendarNotification = Notification.extend({
 
             'click .link2showed': function() {
                 this.destroy(true);
-                this._rpc("/calendar/notify_ack")
-                    .exec();
+                this._rpc({route: '/calendar/notify_ack'});
             },
         });
     },

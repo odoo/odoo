@@ -31,9 +31,11 @@ KanbanRecord.include({
             if (isNaN(value)) {
                 self.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
             } else {
-                self._rpc('crm.team', 'write')
-                    .args([[self.id], { 'invoiced_target': value }])
-                    .exec()
+                self._rpc({
+                        model: 'crm.team',
+                        method: 'write',
+                        args: [[self.id], { 'invoiced_target': value }],
+                    })
                     .done(function() {
                         self.trigger_up('kanban_record_update', {id: self.id});
                     });

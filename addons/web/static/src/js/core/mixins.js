@@ -453,13 +453,9 @@ var ServicesMixin = {
      * @param {string} method if a model is given, this argument is a method
      * @returns {RPCBuilder}
      */
-    _rpc: function (arg1, method) {
-        return rpc.query({
-            method: method,
-            model: method && arg1,
-            parent: this,
-            route: !method && arg1,
-        });
+    _rpc: function (params, options) {
+        var query = rpc.buildQuery(params);
+        return this.call('ajax', 'rpc', query.route, query.params, options);
     },
     loadFieldView: function (dataset, view_id, view_type, options) {
         return this.loadViews(dataset.model, dataset.get_context(), [[view_id, view_type]], options).then(function (result) {

@@ -131,9 +131,11 @@ var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
         if (this.return_to_main_menu) {  // in case of multiple scans in the greeting message view, delete the timer, a new one will be created.
             clearTimeout(this.return_to_main_menu);
         }
-        this._rpc('hr.employee', 'attendance_scan')
-            .args([barcode, ])
-            .exec()
+        this._rpc({
+                model: 'hr.employee',
+                method: 'attendance_scan',
+                args: [barcode, ],
+            })
             .then(function (result) {
                 if (result.action) {
                     self.do_action(result.action);

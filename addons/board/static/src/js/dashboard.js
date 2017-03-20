@@ -56,9 +56,10 @@ var DashBoard = form_common.FormWidget.extend({
                 delete(action.attrs.colspan);
                 var action_id = _.str.toNumber(action.attrs.name);
                 if (!_.isNaN(action_id)) {
-                    self._rpc('/web/action/load')
-                        .params({action_id: action_id})
-                        .exec()
+                    self._rpc({
+                            route: '/web/action/load',
+                            params: {action_id: action_id}
+                        })
                         .done(function(result) {
                             self.on_load_action(result, column_index + '_' + action_index, action.attrs);
                         });
@@ -174,12 +175,13 @@ var DashBoard = form_common.FormWidget.extend({
             board.columns.push(actions);
         });
         var arch = QWeb.render('DashBoard.xml', board);
-        this._rpc('/web/view/add_custom')
-            .params({
-                view_id: this.view.fields_view.view_id,
-                arch: arch
-            })
-            .exec();
+        this._rpc({
+                route: '/web/view/add_custom',
+                params: {
+                    view_id: this.view.fields_view.view_id,
+                    arch: arch
+                }
+            });
     },
     on_load_action: function(result, index, action_attrs) {
         var self = this,
@@ -421,15 +423,16 @@ FavoriteMenu.include({
         c.dashboard_merge_domains_contexts = false;
         var name = self.$add_dashboard_input.val();
 
-        return self._rpc('/board/add_to_dashboard')
-            .params({
-                action_id: self.action_id || false,
-                context_to_save: c,
-                domain: domain,
-                view_mode: self.view_manager.active_view.type,
-                name: name,
+        return self._rpc({
+                route: '/board/add_to_dashboard',
+                params: {
+                    action_id: self.action_id || false,
+                    context_to_save: c,
+                    domain: domain,
+                    view_mode: self.view_manager.active_view.type,
+                    name: name,
+                },
             })
-            .exec()
             .then(function (r) {
                 if (r) {
                     self.do_notify(_.str.sprintf(_t("'%s' added to dashboard"), name), '');

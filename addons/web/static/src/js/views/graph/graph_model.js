@@ -130,13 +130,15 @@ return AbstractModel.extend({
         if (this.chart.measure !== '__count__') {
             fields = fields.concat(this.chart.measure);
         }
-        return this._rpc(this.modelName, 'read_group')
-            .withContext(this.chart.context)
-            .withDomain(this.chart.domain)
-            .withFields(fields)
-            .groupBy(this.chart.groupedBy)
-            .lazy(false)
-            .exec()
+        return this._rpc({
+                model: this.modelName,
+                method: 'read_group',
+                context: this.chart.context,
+                domain: this.chart.domain,
+                fields: fields,
+                groupBy: this.chart.groupedBy,
+                lazy: false,
+            })
             .then(this._processData.bind(this));
     },
     /**

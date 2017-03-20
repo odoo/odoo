@@ -39,10 +39,12 @@ KanbanRecord.include({
             ev.preventDefault();
 
             var domain = [['res_model', '=', 'project.task'], ['res_id', '=', this.id], ['mimetype', 'ilike', 'image']];
-            this._rpc('ir.attachment', 'search_read')
-                .withDomain(domain)
-                .withFields(['id', 'name'])
-                .exec()
+            this._rpc({
+                    model: 'ir.attachment',
+                    method: 'search_read',
+                    domain: domain,
+                    fields: ['id', 'name'],
+                })
                 .then(open_cover_images_dialog);
         } else {
             this._super.apply(this, arguments, ev);

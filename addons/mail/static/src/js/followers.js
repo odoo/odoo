@@ -195,9 +195,10 @@ var Followers = AbstractField.extend({
         var missing_ids = _.difference(this.value.res_ids, _.pluck(this.followers, 'id'));
         var def;
         if (missing_ids.length) {
-            def = this._rpc('/mail/read_followers')
-                .params({ follower_ids: missing_ids, res_model: this.model })
-                .exec();
+            def = this._rpc({
+                    route: '/mail/read_followers',
+                    params: { follower_ids: missing_ids, res_model: this.model }
+                });
         }
         return $.when(def).then(function (results) {
             if (results) {
@@ -220,10 +221,12 @@ var Followers = AbstractField.extend({
             partner_ids: [this.partnerID],
             context: {}, // FIXME
         };
-        this._rpc(this.model, 'message_subscribe')
-            .args([[this.res_id]])
-            .kwargs(kwargs)
-            .exec()
+        this._rpc({
+                model: this.model,
+                method: 'message_subscribe',
+                args: [[this.res_id]],
+                kwargs: kwargs,
+            })
             .then(this._reload.bind(this));
     },
     /**
@@ -243,9 +246,11 @@ var Followers = AbstractField.extend({
                     ids.channel_ids,
                     {}, // FIXME
                 ];
-                self._rpc(self.model, 'message_unsubscribe')
-                    .args(args)
-                    .exec()
+                self._rpc({
+                        model: self.model,
+                        method: 'message_unsubscribe',
+                        args: args
+                    })
                     .then(self._reload.bind(self));
                 def.resolve();
             },
@@ -287,10 +292,12 @@ var Followers = AbstractField.extend({
             var kwargs = _.extend({}, ids);
             kwargs.subtype_ids = checklist;
             kwargs.context = {}; // FIXME
-            this._rpc(this.model, 'message_subscribe')
-                .args([[this.res_id]])
-                .kwargs(kwargs)
-                .exec()
+            this._rpc({
+                    model: this.model,
+                    method: 'message_subscribe',
+                    args: [[this.res_id]],
+                    kwargs: kwargs,
+                })
                 .then(this._reload.bind(this));
         }
     },
@@ -308,9 +315,10 @@ var Followers = AbstractField.extend({
         var self = this;
         var $currentTarget = $(event.currentTarget);
         var follower_id = $currentTarget.data('follower-id'); // id of model mail_follower
-        return this._rpc('/mail/read_subscription_data')
-            .params({res_model: this.model, follower_id: follower_id})
-            .exec()
+        return this._rpc({
+                route: '/mail/read_subscription_data',
+                params: {res_model: this.model, follower_id: follower_id},
+            })
             .then(function (data) {
                 var res_id = $currentTarget.data('oe-id'); // id of model res_partner or mail_channel
                 var is_channel = $currentTarget.data('oe-model') === 'mail.channel';

@@ -67,10 +67,12 @@ var PlannerDialog = Dialog.extend({
      * Fetch the planner's rendered template
      */
     willStart: function() {
-        var def = rpc.query({model: 'web.planner', method: 'render'})
-            .args([this.planner.view_id[0], this.planner.planner_application])
-            .withContext(session.user_context)
-            .exec({type: "ajax"})
+        var def = rpc.query({
+                model: 'web.planner',
+                method: 'render',
+                args: [this.planner.view_id[0], this.planner.planner_application],
+                context: session.user_context,
+            })
             .then((function (template) {
                 this.$template = $(template);
             }).bind(this));
@@ -352,9 +354,11 @@ var PlannerDialog = Dialog.extend({
         this._save_planner_data();
     },
     _save_planner_data: function() {
-        return rpc.query({model: 'web.planner', method: 'write'})
-            .args([this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}])
-            .exec({type: "ajax"});
+        return rpc.query({
+                model: 'web.planner',
+                method: 'write',
+                args: [this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}],
+            });
     },
     show_enterprise: function () {
         var buttons = [{
@@ -362,9 +366,11 @@ var PlannerDialog = Dialog.extend({
             classes: 'btn-primary',
             close: true,
             click: function () {
-                rpc.query({model: "res.users", method: "search_count"})
-                    .args([[["share", "=", false]]])
-                    .exec({type: "ajax"})
+                rpc.query({
+                        model: "res.users",
+                        method: "search_count",
+                        args: [[["share", "=", false]]],
+                    })
                     .then(function (data) {
                         window.location = "https://www.odoo.com/odoo-enterprise/upgrade?utm_medium=community_upgrade&num_users=" + data;
                     });

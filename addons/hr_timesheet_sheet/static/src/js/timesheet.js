@@ -57,9 +57,11 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         var commands = this.field_manager.get_field_value("timesheet_ids");
         var self = this;
 
-        this._rpc(this.view.model, "resolve_2many_commands")
-            .args(["timesheet_ids", commands, []])
-            .exec()
+        this._rpc({
+                model: this.view.model,
+                method: 'resolve_2many_commands',
+                args: ['timesheet_ids', commands, []],
+            })
             .done(function(result) {
                 self.set({sheets: result});
                 self.querying = false;
@@ -111,10 +113,12 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         var default_get;
         var self = this;
         return this.render_drop.add(
-            this._rpc("account.analytic.line", "default_get")
-                .args([['account_id','general_account_id','journal_id','date','name','user_id','product_id','product_uom_id','amount','unit_amount','project_id']])
-                .withContext({'user_id': self.get('user_id')} )
-                .exec()
+            this._rpc({
+                    model: 'account.analytic.line',
+                    method: 'default_get',
+                    args: [['account_id','general_account_id','journal_id','date','name','user_id','product_id','product_uom_id','amount','unit_amount','project_id']],
+                    context: {'user_id': self.get('user_id')},
+                })
                 .then(function(result) {
             default_get = result;
             // calculating dates
@@ -163,10 +167,12 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
             }).value();
 
             // we need the name_get of the projects
-            this._rpc("project.project", "name_get")
-                .args([_.pluck(projects, "project")])
-                .exec()
-                .then(function(result) {
+            this._rpc({
+                    model: 'project.project',
+                    method: 'name_get',
+                    args: [_.pluck(projects, 'project')],
+                })
+                .then(function (result) {
                     project_names = {};
                     _.each(result, function(el) {
                         project_names[el[0]] = el[1];

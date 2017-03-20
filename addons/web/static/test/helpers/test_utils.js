@@ -424,7 +424,7 @@ function removeSrcAttribute($el, widget) {
         if (src[0] !== '#') {
             $(this).attr('src', '#test:' + $(this).attr('src'));
             if (widget) {
-                widget._rpc(src).exec();
+                widget._rpc({route: src});
             }
         }
     });

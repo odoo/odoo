@@ -11,9 +11,11 @@ var _t = core._t;
 
 contentMenu.TopBar.include({
     new_blog_post: function () {
-        rpc.query({model: 'blog.blog', method: 'name_search'})
-            .withContext(base.get_context())
-            .exec({type: "ajax"})
+        rpc.query({
+                model: 'blog.blog',
+                method: 'name_search',
+                context: base.get_context(),
+            })
             .then(function (blog_ids) {
                 if (blog_ids.length === 1) {
                     document.location = '/blog/' + blog_ids[0][0] + '/post/new';

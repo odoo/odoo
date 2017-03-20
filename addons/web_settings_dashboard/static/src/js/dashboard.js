@@ -25,8 +25,7 @@ var Dashboard = Widget.extend({
     load: function(dashboards){
         var self = this;
         var loading_done = new $.Deferred();
-        this._rpc("/web_settings_dashboard/data")
-            .exec()
+        this._rpc({route: '/web_settings_dashboard/data'})
             .then(function (data) {
                 // Load each dashboard
                 var all_dashboards_defs = [];
@@ -90,9 +89,11 @@ var DashboardInvitations = Widget.extend({
             $target.prop('disabled', true);
             $target.find('i.fa-cog').removeClass('hidden');
             // Try to create user accountst
-            this._rpc("res.users", "web_dashboard_create_users")
-                .args([user_emails])
-                .exec()
+            this._rpc({
+                    model: 'res.users',
+                    method: 'web_dashboard_create_users',
+                    args: [user_emails],
+                })
                 .then(function() {
                     self.reload();
                 })
@@ -167,10 +168,12 @@ var DashboardPlanner = Widget.extend({
 
     willStart: function () {
         var self = this;
-        return this._rpc('web.planner', 'search_read')
-            .exec()
+        return this._rpc({
+                model: 'web.planner',
+                method: 'search_read',
+            })
             .then(function(res) {
-                self.planners = res.records;
+                self.planners = res;
                 _.each(self.planners, function(planner) {
                     self.planner_by_menu[planner.menu_id[0]] = planner;
                     self.planner_by_menu[planner.menu_id[0]].data = $.parseJSON(planner.data) || {};

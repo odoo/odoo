@@ -36,10 +36,11 @@ var AbstractFieldUpgrade = {
      * @returns {Deferred}
      */
     _confirmUpgrade: function () {
-        var args = [[["share", "=", false]]];
-        return this._rpc('res.users', 'search_count')
-            .args(args)
-            .exec()
+        return this._rpc({
+                model: 'res.users',
+                method: 'search_count',
+                args: [[["share", "=", false]]],
+            })
             .then(function (data) {
                 framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?num_users=" + data);
             });

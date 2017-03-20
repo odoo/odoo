@@ -56,12 +56,13 @@ CalendarRenderer.include({
                     var text = _.str.sprintf(confirm_text1 + "\n" + confirm_text2 + "\n\n" + confirm_text3, o.info.new_name, o.info.old_name);
                     Dialog.confirm(self, text, {
                         confirm_callback: function() {
-                            self._rpc('/google_calendar/remove_references')
-                                .params({
-                                    model: self.state.model,
-                                    local_context: context,
+                            self._rpc({
+                                    route: '/google_calendar/remove_references',
+                                    params: {
+                                        model: self.state.model,
+                                        local_context: context,
+                                    },
                                 })
-                                .exec()
                                 .done(function(o) {
                                     if (o.status === "OK") {
                                         Dialog.alert(self, _t("All events have been disconnected from your previous account. You can now restart the synchronization"), {

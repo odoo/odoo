@@ -12,11 +12,12 @@ var qweb = core.qweb;
 
 var WebsitePlannerLauncher = planner.PlannerLauncher.extend({
     _fetch_planner_data: function () {
-        return rpc.query({model: 'web.planner', method: 'search_read'})
-            .args([[['planner_application', '=', 'planner_website']]])
-            .exec({type: "ajax"})
+        return rpc.query({
+                model: 'web.planner',
+                method: 'search_read',
+                args: [[['planner_application', '=', 'planner_website']]],
+            })
             .then((function (planner) {
-                planner = planner.records;
                 if (!planner.length) return;
 
                 planner[0].data = $.parseJSON(planner[0].data) || {};

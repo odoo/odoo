@@ -218,18 +218,19 @@ var DataExport = Dialog.extend({
         this.$fields_list = this.$('.o_fields_list');
         this.$import_compat_radios = this.$('.o_import_compat input');
 
-        waitFor.push(this._rpc('/web/export/formats').exec().then(do_setup_export_formats));
+        waitFor.push(this._rpc({route: '/web/export/formats'}).then(do_setup_export_formats));
 
         var got_fields = new $.Deferred();
         this.$import_compat_radios.change(function(e) {
             self.$('.o_field_tree_structure').remove();
 
-            self._rpc("/web/export/get_fields")
-                .params({
-                    model: self.dataset.model,
-                    import_compat: !!$(e.target).val(),
+            self._rpc({
+                    route: '/web/export/get_fields',
+                    params: {
+                        model: self.dataset.model,
+                        import_compat: !!$(e.target).val(),
+                    },
                 })
-                .exec()
                 .done(function (records) {
                     var compatible_fields = _.map(records, function (record) {return record.id});
                     self.$fields_list
@@ -299,12 +300,13 @@ var DataExport = Dialog.extend({
                 self.$fields_list.empty();
                 var export_id = self.$('.o_exported_lists_select option:selected').val();
                 if(export_id) {
-                    self._rpc('/web/export/namelist')
-                        .params({
-                            model: self.dataset.model,
-                            export_id: parseInt(export_id, 10),
+                    self._rpc({
+                            route: '/web/export/namelist',
+                            params: {
+                                model: self.dataset.model,
+                                export_id: parseInt(export_id, 10),
+                            },
                         })
-                        .exec()
                         .then(do_load_export_field);
                 }
             });
@@ -347,16 +349,17 @@ var DataExport = Dialog.extend({
 
         if(!record.loaded) {
             var self = this;
-            this._rpc("/web/export/get_fields")
-                .params({
-                    model: model,
-                    prefix: prefix,
-                    parent_name: name,
-                    import_compat: !!this.$import_compat_radios.filter(':checked').val(),
-                    parent_field_type : record['field_type'],
-                    exclude: exclude_fields
+            this._rpc({
+                    route: '/web/export/get_fields',
+                    params: {
+                        model: model,
+                        prefix: prefix,
+                        parent_name: name,
+                        import_compat: !!this.$import_compat_radios.filter(':checked').val(),
+                        parent_field_type : record['field_type'],
+                        exclude: exclude_fields
+                    },
                 })
-                .exec()
                 .done(function(results) {
                     record.loaded = true;
                     self.on_show_data(results, record.id);

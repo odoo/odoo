@@ -44,8 +44,10 @@ options.registry.website_sale = options.Class.extend({
         if (size_y >= 4) $select = $select.add($size.find('tr:eq(3) td:lt('+size_x+')'));
         $select.addClass("selected");
 
-        rpc.query({model: 'product.style', method: 'search_read'})
-            .exec({type: "ajax"})
+        rpc.query({
+                model: 'product.style',
+                method: 'search_read',
+            })
             .then(function (data) {
                 var $ul = self.$el.find('ul[name="style"]');
                 for (var k in data) {

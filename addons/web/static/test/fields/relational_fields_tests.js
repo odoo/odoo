@@ -2531,9 +2531,9 @@ QUnit.module('relational_fields', {
                     '<field name="timmy" invisible="1"/>' +
                 '</form>',
             mockRPC: function (route, args) {
-                if (route === '/web/dataset/search_read') {
+                if (args.method === 'search_read') {
                     count++;
-                    nb_fields_fetched = args.fields.length;
+                    nb_fields_fetched = args.args[1].length;
                 }
                 return this._super.apply(this, arguments);
             },
@@ -2687,7 +2687,7 @@ QUnit.module('relational_fields', {
                     '<field name="foo"/>' +
                 '</form>',
             mockRPC: function (route, args) {
-                if (route === '/web/dataset/search_read') {
+                if (args.method === 'search_read') {
                     rpcCount++;
                 }
                 return this._super.apply(this, arguments);

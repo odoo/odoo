@@ -240,9 +240,11 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         );
     },
     create_model: function() {
-        return this._rpc('base_import.import', 'create')
-            .args([{res_model: this.res_model}])
-            .exec();
+        return this._rpc({
+                model: 'base_import.import',
+                method: 'create',
+                args: [{res_model: this.res_model}],
+            });
     },
     renderButtons: function() {
         var self = this;

@@ -53,10 +53,12 @@ var KanbanModel = BasicModel.extend({
         if (!groupByField || groupByField.type !== 'many2one') {
             return $.Deferred().reject(); // only supported when grouped on m2o
         }
-        return this._rpc(groupByField.relation, 'name_create')
-            .args([name])
-            .withContext(parent.context) // todo: combine with view context
-            .exec()
+        return this._rpc({
+                model: groupByField.relation,
+                method: 'name_create',
+                args: [name],
+                context: parent.context, // todo: combine with view context
+            })
             .then(function (result) {
                 var newGroup = self._makeDataPoint({
                     modelName: parent.model,
@@ -154,9 +156,10 @@ var KanbanModel = BasicModel.extend({
         }
         var self = this;
         var data = this.localData[parentID];
-        return this._rpc('/web/dataset/resequence')
-            .params({model: modelName, ids: resIDs})
-            .exec()
+        return this._rpc({
+                route: '/web/dataset/resequence',
+                params: {model: modelName, ids: resIDs},
+            })
             .then(function () {
                 data.data = _.sortBy(data.data, function (d) {
                     return _.indexOf(resIDs, self.localData[d].res_id);

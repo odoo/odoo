@@ -247,14 +247,18 @@ var TableWidget = PosBaseWidget.extend({
         // and the id ...
         serializable_table.id = this.table.id;
 
-        rpc.query({model: 'restaurant.table', method: 'create_from_ui'})
-            .args([serializable_table])
-            .exec({type: "ajax"})
+        rpc.query({
+                model: 'restaurant.table',
+                method: 'create_from_ui',
+                args: [serializable_table],
+            })
             .then(function (table_id){
-                rpc.query({model: 'restaurant.table', method: 'search_read'})
-                    .args([[['id', '=', table_id]], fields])
-                    .withLimit(1)
-                    .exec({type: "ajax"})
+                rpc.query({
+                        model: 'restaurant.table',
+                        method: 'search_read',
+                        args: [[['id', '=', table_id]], fields],
+                        limit: 1,
+                    })
                     .then(function (table){
                         for (var field in table) {
                             self.table[field] = table[field];
@@ -275,9 +279,11 @@ var TableWidget = PosBaseWidget.extend({
     // available on the database for the orders that depend on it.
     trash: function(){
         var self  = this;
-        rpc.query({model: 'restaurant.table', method: 'create_from_ui'})
-            .args([{'active':false,'id':this.table.id}])
-            .exec({type: "ajax"})
+        rpc.query({
+                model: 'restaurant.table',
+                method: 'create_from_ui',
+                args: [{'active':false,'id':this.table.id}],
+            })
             .then(function (table_id){
                 // Removing all references from the table and the table_widget in in the UI ...
                 for (var i = 0; i < self.pos.floors.length; i++) {
@@ -413,9 +419,11 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
     set_background_color: function(background) {
         var self = this;
         this.floor.background_color = background;
-        rpc.query({model: 'restaurant.floor', method: 'write'})
-            .args([[this.floor.id], {'background_color': background}])
-            .exec({type: "ajax"})
+        rpc.query({
+                model: 'restaurant.floor',
+                method: 'write',
+                args: [[this.floor.id], {'background_color': background}],
+            })
             .fail(function (err, event){
                 self.gui.show_popup('error',{
                     'title':_t('Changes could not be saved'),

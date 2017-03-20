@@ -99,9 +99,10 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             }
             return $.when(
                     deferred,
-                    self.rpc('/web/webclient/bootstrap_translations', {mods: self.module_list}).then(function (trans) {
-                        _t.database.set_bundle(trans);
-                    })
+                    self.rpc('/web/webclient/bootstrap_translations', {mods: self.module_list})
+                        .then(function (trans) {
+                            _t.database.set_bundle(trans);
+                        })
             );
         });
     },

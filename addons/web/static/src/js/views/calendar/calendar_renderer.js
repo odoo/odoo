@@ -92,9 +92,11 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
         var self = this;
         event.stopPropagation();
         var value = event.data.changes[this.write_field].id;
-        this._rpc(this.write_model, 'create')
-            .args([{'user_id': session.uid,'partner_id': value,}])
-            .exec()
+        this._rpc({
+                model: this.write_model,
+                method: 'create',
+                args: [{'user_id': session.uid,'partner_id': value,}],
+            })
             .then(function () {
                 self.trigger_up('changeFilter', {
                     'fieldName': self.fieldName,
@@ -119,9 +121,11 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
         var $filter = $(e.currentTarget).closest('.o_calendar_filter_item');
         Dialog.confirm(this, _t("Do you really want to delete this filter from favorites ?"), {
             confirm_callback: function () {
-                self._rpc(self.write_model, 'unlink')
-                    .args([[$filter.data('id')]])
-                    .exec()
+                self._rpc({
+                        model: self.write_model,
+                        method: 'unlink',
+                        args: [[$filter.data('id')]],
+                    })
                     .then(function () {
                         self.trigger_up('changeFilter', {
                             'fieldName': self.fieldName,

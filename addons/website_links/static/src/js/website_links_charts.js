@@ -133,39 +133,49 @@ if(!$('.o_website_links_chart').length) {
         var links_domain = ['link_id', '=', parseInt(link_id)];
 
         var total_clicks = function() {
-            return rpc.query({model: 'link.tracker.click', method: 'search_count'})
-                .args([[links_domain]])
-                .exec({type: "ajax"});
+            return rpc.query({
+                    model: 'link.tracker.click',
+                    method: 'search_count',
+                    args: [[links_domain]],
+                });
         };
 
         var clicks_by_day = function() {
-            return rpc.query({model: 'link.tracker.click', method: 'read_group'})
-                .args([[links_domain], ['create_date']])
-                .kwargs({'groupby':'create_date:day'})
-                .exec({type: "ajax"});
+            return rpc.query({
+                    model: 'link.tracker.click',
+                    method: 'read_group',
+                    args: [[links_domain], ['create_date']],
+                    kwargs: {groupby:'create_date:day'},
+                });
         };
 
         var clicks_by_country = function() {
-            return rpc.query({model: 'link.tracker.click', method: 'read_group'})
-                .args([[links_domain], ['country_id']])
-                .kwargs({'groupby':'country_id'})
-                .exec({type: "ajax"});
+            return rpc.query({
+                    model: 'link.tracker.click',
+                    method: 'read_group',
+                    args: [[links_domain], ['country_id']],
+                    kwargs: {groupby:'country_id'},
+                });
         };
 
         var last_week_clicks_by_country = function() {
             var interval = moment().subtract(7, 'days').format("YYYY-MM-DD");
-            return rpc.query({model: 'link.tracker.click', method: 'read_group'})
-                .args([[links_domain, ['create_date', '>', interval]], ['country_id']])
-                .kwargs({'groupby':'country_id'})
-                .exec({type: "ajax"});
+            return rpc.query({
+                    model: 'link.tracker.click',
+                    method: 'read_group',
+                    args: [[links_domain, ['create_date', '>', interval]], ['country_id']],
+                    kwargs: {groupby:'country_id'},
+                });
         };
 
         var last_month_clicks_by_country = function() {
             var interval = moment().subtract(30, 'days').format("YYYY-MM-DD");
-            return rpc.query({model: 'link.tracker.click', method: 'read_group'})
-                .args([[links_domain, ['create_date', '>', interval]], ['country_id']])
-                .kwargs({'groupby':'country_id'})
-                .exec({type: "ajax"});
+            return rpc.query({
+                    model: 'link.tracker.click',
+                    method: 'read_group',
+                    args: [[links_domain, ['create_date', '>', interval]], ['country_id']],
+                    kwargs: {groupby: 'country_id'},
+                });
         };
 
         $.when(total_clicks(), 

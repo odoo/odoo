@@ -12,9 +12,11 @@ var KioskConfirm = Widget.extend({
         "click .o_hr_attendance_sign_in_out_icon": function () {
             var self = this;
             this.$('.o_hr_attendance_sign_in_out_icon').attr("disabled", "disabled");
-            this._rpc('hr.employee', 'attendance_manual')
-                .args([[this.employee_id], this.next_action])
-                .exec()
+            this._rpc({
+                    model: 'hr.employee',
+                    method: 'attendance_manual',
+                    args: [[this.employee_id], this.next_action],
+                })
                 .then(function(result) {
                     if (result.action) {
                         self.do_action(result.action);
@@ -38,9 +40,11 @@ var KioskConfirm = Widget.extend({
         'click .o_hr_attendance_pin_pad_button_ok': function() {
             var self = this;
             this.$('.o_hr_attendance_pin_pad_button_ok').attr("disabled", "disabled");
-            this._rpc('hr.employee', 'attendance_manual')
-                .args([[this.employee_id], this.next_action, this.$('.o_hr_attendance_PINbox').val()])
-                .exec()
+            this._rpc({
+                    model: 'hr.employee',
+                    method: 'attendance_manual',
+                    args: [[this.employee_id], this.next_action, this.$('.o_hr_attendance_PINbox').val()],
+                })
                 .then(function(result) {
                     if (result.action) {
                         self.do_action(result.action);
