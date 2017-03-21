@@ -764,7 +764,7 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === "onchange") {
                     assert.deepEqual(args.args[3], 
-                        {"foo": "1", "p": "", "p.bar": "", "p.product_id": "", "timmy": "", "timmy.name": ""},
+                        {"foo": "1", "p": "", "p.bar": "", "p.display_name": "", "p.product_id": "", "timmy": "", "timmy.name": ""},
                         "should send only the fields used in the views");
                 }
                 return this._super(route, args);
@@ -1750,7 +1750,7 @@ QUnit.module('Views', {
     QUnit.test('attrs are properly transmitted to new records', function (assert) {
         assert.expect(2);
 
-        // this test checks that the fieldAttrs have been transmitted to the
+        // this test checks that the fieldsInfo have been transmitted to the
         // load function when creating a new record
 
         var terminology = {

@@ -383,7 +383,7 @@ var DomainLeaf = DomainNode.extend({
                 this.displayValue = this.value;
                 try {
                     var f = this.fieldSelector.selectedField;
-                    if (!f.relation) { // TODO in this case, the value should be m2o input, etc...
+                    if (f && !f.relation) { // TODO in this case, the value should be m2o input, etc...
                         this.displayValue = field_utils.format[f.type](this.value, f);
                     }
                 } catch (err) {/**/}

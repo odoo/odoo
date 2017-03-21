@@ -88,8 +88,9 @@ var AbstractField = Widget.extend({
         // such as the type, the comodel (relation), ...
         this.field = record.fields[name];
 
-        // the 'attrs' property contains the attributes of the xml 'field' tag
-        this.attrs = record.fieldAttrs[name] || {};
+        // the 'attrs' property contains the attributes of the xml 'field' tag,
+        // the inner views...
+        this.attrs = record.fieldsInfo && record.fieldsInfo[name] || {};
 
         // modifiers
         this.modifiers =  JSON.parse(this.attrs.modifiers || "{}");

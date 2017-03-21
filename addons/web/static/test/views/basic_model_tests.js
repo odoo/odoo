@@ -310,6 +310,10 @@ QUnit.module('Views', {
 
         this.params.res_id = 1;
         this.params.fieldNames = ['category'];
+        this.params.fieldsInfo = {category: {
+            relatedFields: {display_name: {type: "char"}},
+            fieldsInfo: {display_name: {}},
+        }};
 
         var model = createModel({
             Model: BasicModel,
@@ -319,9 +323,9 @@ QUnit.module('Views', {
         model.load(this.params).then(function (resultID) {
             var record = model.get(resultID);
             assert.strictEqual(record.data.category.data[0].res_id, 12,
-                "should have loaded many2omany res_ids");
+                "should have loaded many2many res_ids");
             assert.strictEqual(record.data.category.data[0].data.display_name, "gold",
-                "should have loaded many2omany display_name");
+                "should have loaded many2many display_name");
             record = model.get(resultID, {raw: true});
             assert.deepEqual(record.data.category, [12],
                 "with option raw, category should only return ids");
@@ -333,6 +337,10 @@ QUnit.module('Views', {
         assert.expect(2);
 
         this.params.fieldNames = ['category'];
+        this.params.fieldsInfo = {category: {
+            relatedFields: {date: {type: "date"}},
+            fieldsInfo: {date: {}},
+        }};
 
         var model = createModel({
             Model: BasicModel,
@@ -909,7 +917,7 @@ QUnit.module('Views', {
             data: this.data,
         });
 
-        this.params.fieldAttrs = {
+        this.params.fieldsInfo = {
             product_id: {
                 context: "{'hello2': 'world', 'test2': foo}",
                 domain: "[['hello2', 'like', 'world'], ['test2', 'like', foo]]",

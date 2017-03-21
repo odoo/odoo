@@ -520,7 +520,7 @@ var FieldX2Many = AbstractField.extend({
         this._super.apply(this, arguments);
         this.operations = [];
         this.isReadonly = this.mode === 'readonly';
-        this.view = this.field.views.tree || this.field.views.kanban;
+        this.view = this.attrs.views.list || this.attrs.views.kanban;
         this.activeActions = {};
         var arch = this.view && this.view.arch;
         if (arch) {
@@ -704,7 +704,7 @@ var FieldX2Many = AbstractField.extend({
         _.extend(event.data, {
             context: this.record.getContext({fieldName: this.name}),
             domain: this.record.getDomain({fieldName: this.name}),
-            form_view: this.field.views && this.field.views.form,
+            form_view: this.attrs.views && this.attrs.views.form,
             readonly: this.mode === 'readonly',
             string: this.string,
         });
@@ -799,6 +799,7 @@ var FieldOne2Many = FieldX2Many.extend({
                 domain: this.record.getDomain({fieldName: this.name}),
                 context: this.record.getContext({fieldName: this.name}),
                 field: this.field,
+                attrs: this.attrs,
                 on_save: function (record) {
                     this._setValue({
                         operation: 'ADD',
@@ -867,7 +868,7 @@ var FieldMany2Many = FieldX2Many.extend({
             context: this.record.getContext({fieldName: this.name}),
             title: _t("Add: ") + this.string,
             no_create: this.nodeOptions.no_create || !this.activeActions.create,
-            fields_view: this.field.views.form,
+            fields_view: this.attrs.views.form,
             on_selected: function (res_ids) {
                 var new_ids = _.difference(res_ids, self.value.res_ids);
                 if (new_ids.length) {
@@ -910,6 +911,8 @@ var FieldMany2ManyTags = AbstractField.extend({
         'click .o_delete': '_onDeleteTag',
         'keydown .o_form_field_many2one input': '_onKeyDown',
     }),
+
+    fetchSubFields: true,
 
     //--------------------------------------------------------------------------
     // Public

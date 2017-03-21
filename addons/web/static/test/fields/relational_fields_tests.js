@@ -1395,7 +1395,7 @@ QUnit.module('relational_fields', {
                 rpcCount++;
                 if (args.method === 'write') {
                     assert.deepEqual(args.args[1].p, [[0, false, {
-                        int_field: 123, product_id: 41
+                        display_name: false, int_field: 123, product_id: 41
                     }]]);
                 }
                 return this._super(route, args);
@@ -2103,6 +2103,71 @@ QUnit.module('relational_fields', {
 
         form.destroy();
     });
+
+    QUnit.test('one2many (who contains a one2many) with tree view and without form view', function (assert) {
+        assert.expect(1);
+
+        // avoid error in _postprocess
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree>' +
+                                '<field name="partner_ids"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                "turtle,false,form": '<form string="Turtles"><field name="turtle_foo"/></form>',
+            },
+        });
+
+        form.$('.o_data_row:first').click();
+
+        assert.strictEqual($('.modal .o_form_field[name="turtle_foo"]').text(), 'blip',
+            'should open the modal and display the form field');
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many (who contains display_name) with tree view and without form view', function (assert) {
+        assert.expect(1);
+
+        // avoid error in _fetchX2Manys
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree>' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                "turtle,false,form": '<form string="Turtles"><field name="turtle_foo"/></form>',
+            },
+        });
+
+        form.$('.o_data_row:first').click();
+
+        assert.strictEqual($('.modal .o_form_field[name="turtle_foo"]').text(), 'blip',
+            'should open the modal and display the form field');
+
+        form.destroy();
+    });
+
 
     QUnit.module('FieldMany2Many');
 

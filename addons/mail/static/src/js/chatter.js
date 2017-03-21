@@ -56,7 +56,7 @@ var Chatter = Widget.extend(chat_mixin, {
         }
         if (mailFields.mail_thread) {
             this.fields.thread = new ThreadField(this, mailFields.mail_thread, record, options);
-            var nodeOptions = this.record.fieldAttrs[mailFields.mail_thread].options;
+            var nodeOptions = this.record.fieldsInfo[mailFields.mail_thread].options;
             this.hasLogButton = nodeOptions.display_log_button;
         }
     },

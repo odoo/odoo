@@ -175,7 +175,7 @@ ListRenderer.include({
         if (field.readonly) {
             return true;
         }
-        var Widget = this.state.fieldAttrs[node.attrs.name].Widget;
+        var Widget = this.state.fieldsInfo[node.attrs.name].Widget;
         if (Widget && Widget.prototype.readonly) {
             return true;
         }
@@ -268,7 +268,7 @@ ListRenderer.include({
             return;
         }
         var $td = this._findTd($row, colIndex);
-        var widget = new this.state.fieldAttrs[name].Widget(this, name, record, {
+        var widget = new this.state.fieldsInfo[name].Widget(this, name, record, {
             mode: 'edit'
         });
         if (widget.replace_element) {

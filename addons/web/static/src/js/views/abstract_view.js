@@ -60,8 +60,10 @@ var AbstractView = Class.extend({
      *
      * @constructs AbstractView
      *
-     * @param {any} arch
-     * @param {any} fields
+     * @param {Object} viewInfo
+     * @param {Object} viewInfo.arch
+     * @param {Object} viewInfo.fields
+     * @param {Object} viewInfo.fieldsInfo
      * @param {Object} params
      * @param {string} params.modelName The actual model name
      * @param {Object} params.context
@@ -72,17 +74,17 @@ var AbstractView = Class.extend({
      * @param {number[]} [params.ids]
      * @param {string} [params.action.help]
      */
-    init: function (arch, fields, params) {
+    init: function (viewInfo, params) {
         this.rendererParams = {
-            arch: arch
+            arch: viewInfo.arch,
         };
 
         this.controllerParams = {
             modelName: params.modelName,
             activeActions: {
-                edit: arch.attrs.edit ? JSON.parse(arch.attrs.edit) : true,
-                create: arch.attrs.create ? JSON.parse(arch.attrs.create) : true,
-                delete: arch.attrs.delete ? JSON.parse(arch.attrs.delete) : true,
+                edit: viewInfo.arch.attrs.edit ? JSON.parse(viewInfo.arch.attrs.edit) : true,
+                create: viewInfo.arch.attrs.create ? JSON.parse(viewInfo.arch.attrs.create) : true,
+                delete: viewInfo.arch.attrs.delete ? JSON.parse(viewInfo.arch.attrs.delete) : true,
             },
             noContentHelp: params.action && params.action.help,
         };

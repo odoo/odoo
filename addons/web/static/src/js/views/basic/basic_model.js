@@ -25,7 +25,7 @@ odoo.define('web.BasicModel', function (require) {
  *      domain: {*[]},
  *      fieldNames: {string[]},
  *      fields: {Object},
- *      fieldAttrs: {Object},
+ *      fieldsInfo: {Object},
  *      getContext: {function},
  *      getDomain: {function},
  *      groupedBy: {string[]},
@@ -160,7 +160,7 @@ var BasicModel = AbstractModel.extend({
         var position = (options && options.position) || 'top';
         var params = {
             context: context,
-            fieldAttrs: list.fieldAttrs,
+            fieldsInfo: list.fieldsInfo,
             fieldNames: list.fieldNames,
             fields: list.fields,
             parentID: list.id,
@@ -238,7 +238,7 @@ var BasicModel = AbstractModel.extend({
                 var index = record.res_ids.indexOf(record.res_id);
                 record.res_ids.splice(index + 1, 0, res_id);
                 return self.load({
-                    fieldAttrs: record.fieldAttrs,
+                    fieldsInfo: record.fieldsInfo,
                     fieldNames: record.fieldNames,
                     fields: record.fields,
                     modelName: record.model,
@@ -395,7 +395,7 @@ var BasicModel = AbstractModel.extend({
      * @todo document all params
      *
      * @param {any} params
-     * @param {Object} [params.fieldAttrs={}] contains the attrs of each field
+     * @param {Object} [params.fieldsInfo={}] contains the fieldInfo of each field
      * @param {Array} [params.fieldNames] the name of fields to load, the list
      *   of all fields by default
      * @param {Object} params.fields contains the description of each field
@@ -428,7 +428,7 @@ var BasicModel = AbstractModel.extend({
      * @param {any} params
      * @param {string} modelName model name
      * @param {Object} params.context the context for the new record
-     * @param {Object} [params.fieldAttrs={}] contains the attrs of each field
+     * @param {Object} [params.fieldsInfo={}] contains the fieldInfo of each field
      * @param {Array} params.fieldNames the name of fields to load, the list
      *   of all fields by default
      * @param {Object} params.fields contains the description of each field
@@ -463,7 +463,7 @@ var BasicModel = AbstractModel.extend({
                     data: data,
                     fields: params.fields,
                     fieldNames: params.fieldNames,
-                    fieldAttrs: params.fieldAttrs,
+                    fieldsInfo: params.fieldsInfo,
                     context: params.context,
                     parentID: params.parentID,
                     relationField: params.relationField,
@@ -483,15 +483,17 @@ var BasicModel = AbstractModel.extend({
                         });
                         record._changes[name] = rec.id;
                     } else if (field.type === 'one2many' || field.type === 'many2many') {
-                        var attrs = record.fieldAttrs[name];
+                        var fieldInfo = record.fieldsInfo[name];
+                        var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
+
                         var x2manyList = self._makeDataPoint({
                             context: record.context,
-                            fieldAttrs: field.fieldAttrs,
-                            fields: field.relatedFields,
-                            limit: field.limit,
+                            fieldsInfo: fieldInfo.fieldsInfo || view && view.fieldsInfo,
+                            fields: fieldInfo.relatedFields || view && view.fields,
+                            limit: fieldInfo.limit,
                             modelName: field.relation,
                             parentID: record.id,
-                            rawContext: attrs && attrs.context,
+                            rawContext: fieldInfo && fieldInfo.context,
                             relationField: field.relation_field,
                             res_ids: [],
                             static: true,
@@ -508,8 +510,8 @@ var BasicModel = AbstractModel.extend({
                                     r = self._makeDataPoint({
                                         modelName: x2manyList.model,
                                         context: x2manyList.context,
-                                        fields: field.relatedFields,
-                                        fieldAttrs: field.fieldAttrs,
+                                        fieldsInfo: fieldInfo.fieldsInfo || view && view.fieldsInfo,
+                                        fields: fieldInfo.relatedFields || view && view.fields,
                                     });
                                     x2manyList._changes.push(r.id);
                                     r._changes = value[2];
@@ -540,8 +542,8 @@ var BasicModel = AbstractModel.extend({
                                 r = self._makeDataPoint({
                                     modelName: x2manyList.model,
                                     context: x2manyList.context,
-                                    fields: field.relatedFields,
-                                    fieldAttrs: field.fieldAttrs,
+                                    fieldsInfo: fieldInfo.fieldsInfo || view && view.fieldsInfo,
+                                    fields: fieldInfo.relatedFields || view && view.fields,
                                     res_id: value,
                                 });
                                 if (!x2manyList._changes) {
@@ -599,10 +601,10 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {string} model name of the model
      * @param {Object[]} fields a description of field properties
-     * @param {Object} [attrs] various field attrs that we want to set
+     * @param {Object} [fieldInfo] various field fieldInfo that we want to set
      * @returns {string} the local id for the created resource
      */
-    makeRecord: function (model, fields, attrs) {
+    makeRecord: function (model, fields, fieldInfo) {
         var self = this;
         var record_fields = {};
         _.each(fields, function (field) {
@@ -611,7 +613,7 @@ var BasicModel = AbstractModel.extend({
         var record = this._makeDataPoint({
             modelName: model,
             fields: record_fields,
-            fieldAttrs: attrs,
+            fieldsInfo: fieldInfo,
         });
         _.each(fields, function (field) {
             if ('value' in field) {
@@ -704,7 +706,7 @@ var BasicModel = AbstractModel.extend({
             if ('currentId' in options && !options.currentId) {
                 var params = {
                     context: element.context,
-                    fieldAttrs: element.fieldAttrs,
+                    fieldsInfo: element.fieldsInfo,
                     fieldNames: element.fieldNames,
                     fields: element.fields,
                 };
@@ -836,7 +838,7 @@ var BasicModel = AbstractModel.extend({
     /**
      * Set fieldNames.
      * Set fields on a record element (current fields as defaults)
-     * Set fieldattrs.
+     * Set fieldsInfo.
      * It is mostly useful for the cases where a record element is shared
      * between various views, such as a one2many with a tree and a form view.
      *
@@ -844,22 +846,23 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} props
      * @param {Object} props.fieldNames
      * @param {Object} props.fields
-     * @param {Object} props.fieldAttrs
+     * @param {Object} props.fieldsInfo
      * @return {Object}
      * @return {Object} result.fieldNames the previous field names
      * @return {Object} result.fields the previous description fields
-     * @return {Object} result.fieldattrs the previous field attrs
+     * @return {Object} result.fieldsInfo the previous field fieldInfo
      */
     setFieldProps: function (recordID, props) {
         var record = this.localData[recordID];
         var result = {
             fieldNames: record.fieldNames,
             fields: record.fields,
-            fieldAttrs: record.fieldAttrs,
+            fieldsInfo: record.fieldsInfo,
         };
-        record.fieldNames = props.fieldNames;
+        record.mode = props.mode;
+        record.fieldNames = Object.keys(props.fieldsInfo);
         record.fields = _.defaults(props.fields, record.fields);
-        record.fieldAttrs = props.fieldAttrs;
+        record.fieldsInfo = props.fieldsInfo;
         return result;
     },
     /**
@@ -979,6 +982,7 @@ var BasicModel = AbstractModel.extend({
                 context: record.context,
                 data: rel_data,
                 fields: {},
+                fieldsInfo: {},
                 modelName: record.fields[fieldName].relation,
             });
             record._changes[fieldName] = rec.id;
@@ -1063,7 +1067,7 @@ var BasicModel = AbstractModel.extend({
                                     var params = {
                                         context: context,
                                         fields: list.fields,
-                                        fieldAttrs: list.fieldAttrs,
+                                        fieldsInfo: list.fieldsInfo,
                                         modelName: list.model,
                                         fieldNames: _.keys(command[2]),
                                     };
@@ -1128,6 +1132,8 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var list = this.localData[record._changes[fieldName] || record.data[fieldName]];
         var field = record.fields[fieldName];
+        var fieldInfo = record.fieldsInfo[fieldName];
+        var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
         var rec;
         var defs = [];
         list._changes = list._changes || list.data;
@@ -1158,8 +1164,8 @@ var BasicModel = AbstractModel.extend({
                     rec = self._makeDataPoint({
                         context: record.context,
                         modelName: field.relation,
-                        fields: field.relatedFields,
-                        fieldAttrs: field.fieldAttrs,
+                        fields: fieldInfo.relatedFields || view && view.fields,
+                        fieldsInfo: fieldInfo.fieldsInfo || view && view.fieldsInfo,
                         res_id: d.id,
                     });
                     list_records[d.id] = rec;
@@ -1237,9 +1243,10 @@ var BasicModel = AbstractModel.extend({
         var specs = {};
         _.each(record.fieldNames, function (name) {
             var field = record.fields[name];
+            var fieldInfo = record.fieldsInfo[name];
             specs[name] = (field.onChange) || "";
-            _.each(field.views, function (view) {
-                _.each(view.fieldAttrs, function (field, subname) {
+            _.each(fieldInfo.views, function (view) {
+                _.each(view.fieldsInfo, function (field, subname) {
                     specs[name + '.' + subname] = (view.fields[subname].onChange) || "";
                 });
             });
@@ -1374,8 +1381,8 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var fieldNames = [];
         return $.when.apply($, _.map(record.fieldNames, function (name) {
-            var attrs = record.fieldAttrs[name] || {};
-            var Widget = attrs.Widget;
+            var fieldInfo = record.fieldsInfo[name] || {};
+            var Widget = fieldInfo.Widget;
             if (Widget && Widget.prototype.specialData) {
                 return self[Widget.prototype.specialData](record, name).then(function (data) {
                     if (data === undefined) {
@@ -1501,7 +1508,7 @@ var BasicModel = AbstractModel.extend({
      *          the undefined value.
      */
     _fetchSpecialStatus: function (record, fieldName) {
-        var foldField = record.fieldAttrs[fieldName].options.fold_field;
+        var foldField = record.fieldsInfo[fieldName].options.fold_field;
         var fieldsToRead = foldField ? [foldField] : [];
         return this._fetchSpecialMany2ones(record, fieldName, fieldsToRead).then(function (m2os) {
             _.each(m2os, function (m2o) {
@@ -1525,7 +1532,7 @@ var BasicModel = AbstractModel.extend({
     _fetchSpecialDomain: function (record, fieldName) {
         var context = record.getContext({fieldName: fieldName});
 
-        var domainModel = record.fieldAttrs[fieldName].options.model;
+        var domainModel = record.fieldsInfo[fieldName].options.model;
         if (record.data.hasOwnProperty(domainModel)) {
             domainModel = record._changes && record._changes[domainModel] || record.data[domainModel];
         }
@@ -1600,14 +1607,15 @@ var BasicModel = AbstractModel.extend({
         _.each(fieldNames, function (fieldName) {
             var field = record.fields[fieldName];
             if (field.type === 'one2many' || field.type === 'many2many') {
-                var attrs = record.fieldAttrs[fieldName];
-                var rawContext = attrs && attrs.context;
+                var fieldInfo = record.fieldsInfo[fieldName];
+                var rawContext = fieldInfo && fieldInfo.context;
+                var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
                 var ids = record.data[fieldName] || [];
                 var list = self._makeDataPoint({
                     count: ids.length,
-                    fieldAttrs: field.fieldAttrs,
-                    fields: field.relatedFields,
-                    limit: field.limit,
+                    fieldsInfo: fieldInfo.fieldsInfo || view && view.fieldsInfo,
+                    fields: fieldInfo.relatedFields || view && view.fields,
+                    limit: fieldInfo.limit,
                     modelName: field.relation,
                     res_ids: ids,
                     static: true,
@@ -1617,7 +1625,7 @@ var BasicModel = AbstractModel.extend({
                     relationField: field.relation_field,
                 });
                 record.data[fieldName] = list.id;
-                if (!field.__no_fetch) {
+                if (!fieldInfo.__no_fetch) {
                     var def = self._readUngroupedList(list).then(function () {
                         return self._fetchX2ManysBatched(list);
                     });
@@ -1638,6 +1646,8 @@ var BasicModel = AbstractModel.extend({
     _fetchX2ManyBatched: function (list, fieldName) {
         var self = this;
         var field = list.fields[fieldName];
+        var fieldInfo = list.fieldsInfo[fieldName];
+        var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
 
         // step 1: collect ids
         var ids = [];
@@ -1645,8 +1655,8 @@ var BasicModel = AbstractModel.extend({
             var record = self.localData[dataPoint];
             ids = _.unique(ids.concat(record.data[fieldName] || []));
             var m2mList = self._makeDataPoint({
-                fieldAttrs: field.fieldAttrs,
-                fields: field.relatedFields,
+                fieldsInfo: fieldInfo.fieldsInfo || view && view.fieldsInfo,
+                fields: fieldInfo.relatedFields || view && view.fields,
                 modelName: field.relation,
                 res_ids: record.data[fieldName],
                 static: true,
@@ -1655,13 +1665,13 @@ var BasicModel = AbstractModel.extend({
             record.data[fieldName] = m2mList.id;
         });
 
-        if (!ids.length || field.__no_fetch) {
+        if (!ids.length || fieldInfo.__no_fetch) {
             return $.when();
         }
 
         // step 2: fetch data from server
         return this._rpc(field.relation, 'read')
-            .args([ids, _.keys(field.relatedFields)])
+            .args([ids, _.keys(fieldInfo.relatedFields)])
             .withContext({}) // FIXME
             .exec()
             .then(function (results) {
@@ -1670,8 +1680,8 @@ var BasicModel = AbstractModel.extend({
                     return self._makeDataPoint({
                         modelName: field.relation,
                         data: result,
-                        fields: field.relatedFields,
-                        fieldAttrs: field.fieldAttrs,
+                        fieldsInfo: fieldInfo.fieldsInfo || view && view.fieldsInfo,
+                        fields: fieldInfo.relatedFields || view && view.fields,
                     });
                 });
 
@@ -1796,9 +1806,9 @@ var BasicModel = AbstractModel.extend({
         context.set_eval_context(this._getEvalContext(element));
 
         if (options && options.fieldName) {
-            var attrs = element.fieldAttrs[options.fieldName];
-            if (attrs && attrs.context) {
-                context.add(attrs.context);
+            var fieldInfo = element.fieldsInfo[options.fieldName];
+            if (fieldInfo && fieldInfo.context) {
+                context.add(fieldInfo.context);
             } else {
                 var fieldParams = element.fields[options.fieldName];
                 if (fieldParams.context) {
@@ -1828,10 +1838,10 @@ var BasicModel = AbstractModel.extend({
      */
     _getDomain: function (element, options) {
         if (options && options.fieldName) {
-            var attrs = element.fieldAttrs[options.fieldName];
-            if (attrs && attrs.domain) {
+            var fieldInfo = element.fieldsInfo[options.fieldName];
+            if (fieldInfo && fieldInfo.domain) {
                 return Domain.prototype.stringToArray(
-                    attrs.domain,
+                    fieldInfo.domain,
                     this._getEvalContext(element)
                 );
             }
@@ -1899,7 +1909,7 @@ var BasicModel = AbstractModel.extend({
      * the resource in the localData object.
      *
      * @param {Object} params
-     * @param {Object} [params.fieldAttrs={}] contains the attrs of each field
+     * @param {Object} [params.fieldsInfo={}] contains the fieldInfo of each field
      * @param {Array} [params.fieldNames] the name of fields to load, the list
      *   of all fields by default
      * @param {Object} params.fields contains the description of each field
@@ -1907,7 +1917,6 @@ var BasicModel = AbstractModel.extend({
      */
     _makeDataPoint: function (params) {
         var type = params.type || ('domain' in params && 'list') || 'record';
-
         var res_id, value;
         var res_ids = params.res_ids || [];
         if (type === 'record') {
@@ -1923,6 +1932,13 @@ var BasicModel = AbstractModel.extend({
             id: {type: 'integer'},
         }, params.fields);
 
+        if (!params.fieldsInfo) {
+            params.fieldsInfo = {};
+            for (var fieldName in fields) {
+                params.fieldsInfo[fieldName] = {};
+            }
+        }
+
         var dataPoint = {
             _cache: type === 'list' ? {} : undefined,
             _changes: null,
@@ -1931,9 +1947,9 @@ var BasicModel = AbstractModel.extend({
             count: params.count || res_ids.length,
             data: params.data || (type === 'record' ? {} : []),
             domain: params.domain || [],
-            fieldNames: params.fieldNames || Object.keys(fields),
+            fieldNames: params.fieldNames || Object.keys(params.fieldsInfo),
             fields: fields,
-            fieldAttrs: params.fieldAttrs || {},
+            fieldsInfo: params.fieldsInfo || {},
             groupedBy: params.groupedBy || [],
             id: _.uniqueId(params.modelName + '_'),
             isOpen: params.isOpen,
@@ -1979,6 +1995,10 @@ var BasicModel = AbstractModel.extend({
                     // the many2one value is of the form [id, display_name]
                     var r = self._makeDataPoint({
                         modelName: field.relation,
+                        fields: {
+                            display_name: {type: 'char'},
+                            id: {type: 'integer'},
+                        },
                         data: {
                             display_name: val[1],
                             id: val[0],
@@ -2013,8 +2033,8 @@ var BasicModel = AbstractModel.extend({
         var defs = [];
         _.each(record.fieldNames, function (name) {
             var field = record.fields[name];
-            var attrs = record.fieldAttrs[name] || {};
-            var options = attrs.options || {};
+            var fieldInfo = record.fieldsInfo[name] || {};
+            var options = fieldInfo.options || {};
             if (options.always_reload) {
                 if (record.fields[name].type === 'many2one' && record.data[name]) {
                     var element = self.localData[record.data[name]];
@@ -2076,7 +2096,7 @@ var BasicModel = AbstractModel.extend({
                         context: list.context,
                         fields: list.fields,
                         fieldNames: list.fieldNames,
-                        fieldAttrs: list.fieldAttrs,
+                        fieldsInfo: list.fieldsInfo,
                         value: group[rawGroupBy],
                         aggregateValues: aggregateValues,
                         groupedBy: list.groupedBy.slice(1),
@@ -2152,7 +2172,7 @@ var BasicModel = AbstractModel.extend({
                 } else {
                     dataPoint = self._makeDataPoint({
                         data: _.findWhere(records, {id: id}),
-                        fieldAttrs: list.fieldAttrs,
+                        fieldsInfo: list.fieldsInfo,
                         fieldNames: list.fieldNames,
                         fields: list.fields,
                         modelName: list.model,
@@ -2211,7 +2231,7 @@ var BasicModel = AbstractModel.extend({
                         data: record,
                         fields: list.fields,
                         fieldNames: list.fieldNames,
-                        fieldAttrs: list.fieldAttrs,
+                        fieldsInfo: list.fieldsInfo,
                         modelName: list.model,
                         parentID: list.id,
                     });

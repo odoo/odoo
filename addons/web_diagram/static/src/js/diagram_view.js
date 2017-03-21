@@ -28,13 +28,13 @@ var DiagramView = BasicView.extend({
     },
     /**
      * @override
-     * @param {Object} arch
-     * @param {Object} fields
+     * @param {Object} viewInfo
      * @param {Object} params
      */
-    init: function (arch, fields, params) {
+    init: function (viewInfo, params) {
         this._super.apply(this, arguments);
         var self = this;
+        var arch = viewInfo.arch;
         // Compute additional data for diagram model
         function toTitleCase(str) {
             return str.replace(/\w\S*/g, function (txt) {

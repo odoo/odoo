@@ -268,7 +268,8 @@ return BasicRenderer.extend({
             required: is_required,
             idForLabel: this._getIDForLabel(name),
         };
-        var widget = new this.state.fieldAttrs[name].Widget(this, name, this.state, options);
+        var attrs = this.state.fieldsInfo[name];
+        var widget = new attrs.Widget(this, name, this.state, options);
         this.widgets.push(widget);
         var def = widget.__widgetRenderAndInsert(function () {});
         if (def.state() === 'pending') {

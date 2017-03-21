@@ -137,7 +137,7 @@ var FormViewDialog = ViewDialog.extend({
         this._super(parent, options);
     },
     /**
-     * If we changed some fieldAttrs, we need to restore them now.
+     * If we changed some fieldsInfo, we need to restore them now.
      */
     destroy: function () {
         if (this.recordID && this.previousFieldProps) {
@@ -166,15 +166,11 @@ var FormViewDialog = ViewDialog.extend({
             fields_view_def = this.loadFieldView(this.dataset, this.options.view_id, 'form');
         }
 
-        fields_view_def.then(function (fields_view) {
+        fields_view_def.then(function (viewInfo) {
             if (self.recordID) {
-                self.previousFieldProps = self.model.setFieldProps(self.recordID, {
-                    fieldNames: Object.keys(fields_view.fields),
-                    fields: fields_view.fields,
-                    fieldAttrs: fields_view.fieldAttrs
-                });
+                self.previousFieldProps = self.model.setFieldProps(self.recordID, viewInfo);
             }
-            var formview = new FormView(fields_view.arch, fields_view.fields, {
+            var formview = new FormView(viewInfo, {
                 modelName: self.res_model,
                 context: self.context,
                 ids: self.res_id ? [self.res_id] : [],
@@ -337,7 +333,7 @@ var SelectCreateDialog = ViewDialog.extend({
 
         return $.when(searchDef).then(function (searchResult) {
             // Set the list view
-            var listView = new ListView(fields_views.list.arch, fields_views.list.fields, _.extend({
+            var listView = new ListView(fields_views.list, _.extend({
                 context: searchResult.context,
                 domain: searchResult.domain,
                 groupBy: searchResult.groupBy,

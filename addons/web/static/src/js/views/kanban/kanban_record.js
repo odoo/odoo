@@ -27,7 +27,7 @@ var KanbanRecord = Widget.extend({
         this._super(parent);
 
         this.fields = state.fields;
-        this.fieldAttrs = state.fieldAttrs;
+        this.fieldsInfo = state.fieldsInfo;
         this.modelName = state.model;
 
         this.options = options;
@@ -83,7 +83,7 @@ var KanbanRecord = Widget.extend({
                 var widget = self.subWidgets[field_name];
                 if (!widget) {
                     // the widget doesn't exist yet, so instanciate it
-                    var Widget = self.fieldAttrs[field_name].Widget;
+                    var Widget = self.fieldsInfo[field_name].Widget;
                     if (Widget) {
                         // some field's attrs might be record dependent (they start with
                         // 't-att-') and should thus be evaluated, which is done by qweb
@@ -93,14 +93,14 @@ var KanbanRecord = Widget.extend({
                         // that dict being shared between records, we don't modify it
                         // in place
                         var attrs = Object.create(null);
-                        _.each(self.fieldAttrs[field_name], function (value, key) {
+                        _.each(self.fieldsInfo[field_name], function (value, key) {
                             if (_.str.startsWith(key, 't-att-')) {
                                 key = key.slice(6);
                                 value = $field.attr(key);
                             }
                             attrs[key] = value;
                         });
-                        self.fieldAttrs[field_name] = attrs;
+                        self.fieldsInfo[field_name] = attrs;
 
                         widget = new Widget(self, field_name, self.state, self.options);
                         self.subWidgets[field_name] = widget;
@@ -276,14 +276,14 @@ var KanbanRecord = Widget.extend({
      */
     _setFieldDisplay: function (widget, fieldName) {
         // attribute display
-        if (this.fieldAttrs[fieldName].display === 'right') {
+        if (this.fieldsInfo[fieldName].display === 'right') {
             widget.$el.addClass('pull-right');
-        } else if (this.fieldAttrs[fieldName].display === 'full') {
+        } else if (this.fieldsInfo[fieldName].display === 'full') {
             widget.$el.addClass('o_text_block');
         }
 
         // attribute bold
-        if (this.fieldAttrs[fieldName].bold) {
+        if (this.fieldsInfo[fieldName].bold) {
             widget.$el.addClass('o_text_bold');
         }
     },

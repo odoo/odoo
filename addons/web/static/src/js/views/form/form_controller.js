@@ -66,7 +66,7 @@ var FormController = BasicController.extend({
         var record = this.model.get(this.handle, {raw: true});
         return this.model.makeDefaultRecord(this.modelName, {
                 context: this.context,
-                fieldAttrs: record.fieldAttrs,
+                fieldsInfo: record.fieldsInfo,
                 fieldNames: record.fieldNames,
                 fields: record.fields,
                 res_ids: record.res_ids,
@@ -408,6 +408,7 @@ var FormController = BasicController.extend({
      */
     _onAddOne2ManyRecord: function (event) {
         var field = event.data.field;
+        var attrs = event.data.attrs;
         new dialogs.FormViewDialog(this, {
             res_model: field.relation,
             shouldSaveLocally: true,
@@ -416,7 +417,7 @@ var FormController = BasicController.extend({
             on_save: event.data.on_save,
             title: _t('Create: ') + field.string,
             initial_view: 'form',
-            fields_view: field.views ? field.views.form : undefined,
+            fields_view: attrs.views ? attrs.views.form : undefined,
             form_view_options: {'not_interactible_on_create': true},
             model: this.model,
             parentID: this.handle,
@@ -520,7 +521,7 @@ var FormController = BasicController.extend({
         var res_id = record.res_id;
         var fieldsViewDef;
         if (event.data.form_view) {
-            fieldsViewDef = $.when(event.data.form_view);
+            fieldsViewDef = $.when({form: event.data.form_view});
         } else {
             fieldsViewDef = this.loadViews(model, new Context(event.data.context), [[null, 'form']], {});
         }

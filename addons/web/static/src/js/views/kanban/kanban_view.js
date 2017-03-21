@@ -20,9 +20,10 @@ var KanbanView = BasicView.extend({
         Controller: KanbanController,
         Renderer: KanbanRenderer,
     },
-    init: function (arch, fields, params) {
+    init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
+        var arch = viewInfo.arch;
         var activeActions = this.controllerParams.activeActions;
         activeActions = _.extend(activeActions, {
             group_edit: arch.attrs.group_edit ? JSON.parse(arch.attrs.group_edit) : true,
