@@ -173,6 +173,32 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     }
                 }
 
+                &.o_snippet_install {
+                    cursor: initial;
+                    .oe_snippet_thumbnail_img {
+                        opacity: 0.5;
+                    }
+                    .o_snippet_btn {
+                        position: absolute;
+                        text-align: center;
+                        height: 100%;
+                        width: 100%;
+                        display: none;
+                        background: rgba(0, 0, 0, 0.35);
+                        .btn.o_install_btn {
+                            margin: 17px auto;
+                            padding: 5px 10px;
+                        }
+                    }
+                    &:hover .o_snippet_btn {
+                        display: block;
+                    }
+                    &:hover .oe_snippet_thumbnail_img {
+                        transform: initial;
+                        opacity: 1;
+                    }
+                }
+
                 &:nth-child(2n+1) {
                     clear: left;
                 }

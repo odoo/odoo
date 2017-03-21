@@ -6,8 +6,11 @@
             <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website_mass_mailing/static/src/img/blocks/newsletter_subscribe_popup.png"/>
         </t>
     </xpath>
-    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
-        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website_mass_mailing/static/src/img/blocks/newsletter_subscribe_form.png"/>
+
+    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']/t[@t-title='Newsletter']" position="replace"/>
+
+    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']/t[@t-snippet][last()]" position="after">
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/blocks/newsletter_subscribe_form.png"/>
     </xpath>
 </template>
 

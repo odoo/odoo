@@ -3,10 +3,12 @@
 
 <template id="subscribe" inherit_id="website.snippets" name="Snippet Subscribe">
 
-    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
+    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']/t[@t-title='Discussion Group']" position="replace"/>
+
+    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']/t[@t-snippet][last()]" position="after">
         <div>
             <div class="oe_snippet_thumbnail">
-                <img class="oe_snippet_thumbnail_img" src="/website_mail_channel/static/src/img/blocks/button_channel_subscribe.png"/>
+                <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/button_channel_subscribe.png"/>
                 <span class="oe_snippet_thumbnail_title">Discussion Group</span>
             </div>
 
