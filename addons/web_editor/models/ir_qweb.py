@@ -50,6 +50,18 @@ class QWeb(models.AbstractModel):
         div = u'<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s">' % (escape(ir_qweb.unicodifier(name)), escape(ir_qweb.unicodifier(thumbnail)))
         return [self._append(ast.Str(div))] + self._compile_node(el, options) + [self._append(ast.Str(u'</div>'))]
 
+    def _compile_directive_install(self, el, options):
+        if self.user_has_groups('base.group_system'):
+            module = self.env['ir.module.module'].search([('name', '=', el.attrib.get('t-install'))])
+            if not module or module.state == 'installed':
+                return []
+            name = el.attrib.get('string') or 'Snippet'
+            thumbnail = el.attrib.pop('t-thumbnail', 'oe-thumbnail')
+            div = u'<div name="%s" data-oe-type="snippet" data-module-id="%s" data-oe-thumbnail="%s"><section/></div>' % (escape(ir_qweb.unicodifier(name)), module.id, escape(ir_qweb.unicodifier(thumbnail)))
+            return [self._append(ast.Str(div))]
+        else:
+            return []
+
     def _compile_directive_tag(self, el, options):
         if el.get('t-placeholder'):
             el.set('t-att-placeholder', el.attrib.pop('t-placeholder'))
@@ -60,6 +72,7 @@ class QWeb(models.AbstractModel):
     def _directives_eval_order(self):
         directives = super(QWeb, self)._directives_eval_order()
         directives.insert(directives.index('call'), 'snippet')
+        directives.insert(directives.index('call'), 'install')
         return directives
 
 

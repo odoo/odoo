@@ -86,6 +86,8 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
 // SNIPPET PANEL
 #oe_snippets {
+    .o-w-preserve-btn();
+
     .o-flex-display();
     .o-flex-flow(column, nowrap);
     .o-position-absolute(0, auto, 0, -@o-we-sidebar-width);
@@ -170,6 +172,19 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     }
                     .oe_snippet_thumbnail_img {
                         opacity: 0.8;
+                    }
+                }
+
+                &.o_snippet_install {
+                    .oe_snippet_thumbnail_img {
+                        opacity: 0.5;
+                    }
+                    .btn.o_install_btn {
+                        display: none;
+                        .o-position-absolute(16px, 4px, auto, 4px);
+                    }
+                    &:hover .btn.o_install_btn {
+                        display: block;
                     }
                 }
 
