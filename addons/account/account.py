@@ -1333,7 +1333,8 @@ class account_move(osv.osv):
                         raise osv.except_osv(_('Error!'), _('Please define a sequence on the journal.'))
 
                 if new_name:
-                    self.write(cr, uid, [move.id], {'name':new_name})
+                    self.write(cr, uid, [move.id], {'name':new_name},
+                               context=dict(context, novalidate=True))
 
         cr.execute('UPDATE account_move '\
                    'SET state=%s '\
@@ -1375,7 +1376,8 @@ class account_move(osv.osv):
         c = context.copy()
         c['novalidate'] = True
         result = super(account_move, self).write(cr, uid, ids, vals, c)
-        self.validate(cr, uid, ids, context=context)
+        if not context.get('novalidate'):
+            self.validate(cr, uid, ids, context=context)
         return result
 
     def create(self, cr, uid, vals, context=None):
@@ -1404,9 +1406,15 @@ class account_move(osv.osv):
             c['journal_id'] = vals['journal_id']
             if 'date' in vals: c['date'] = vals['date']
             result = super(account_move, self).create(cr, uid, vals, c)
-            tmp = self.validate(cr, uid, [result], context)
             journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context)
-            if journal.entry_posted and tmp:
+            if not journal.entry_posted:
+                # We need to perform the validation in any case, but we do it
+                # explicitly only here because `button_validate`
+                # unconditionally calls `post`, which in turn calls `validate`
+                # and that would be redundant and highly inefficient.
+                if not context.get('novalidate'):
+                    self.validate(cr, uid, [result], context)
+            else:
                 self.button_validate(cr,uid, [result], context)
         else:
             result = super(account_move, self).create(cr, uid, vals, context)

@@ -935,7 +935,10 @@ class account_invoice(models.Model):
             ctx['invoice'] = inv
             ctx_nolang = ctx.copy()
             ctx_nolang.pop('lang', None)
-            move = account_move.with_context(ctx_nolang).create(move_vals)
+            move = account_move.with_context(
+                ctx_nolang,
+                novalidate=True,
+            ).create(move_vals)
 
             # make the invoice point to that move
             vals = {
