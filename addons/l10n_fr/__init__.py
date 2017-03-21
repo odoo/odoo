@@ -17,4 +17,4 @@ def _deactivate_account_cancel_views(cr, registry):
         ir_views = env['ir.ui.view'].browse([v.res_id for v in views_xml_id])
         ir_views.write({'active': False})
 
-    env['account.journal'].search('company_id', '=', env.ref('base.fr').id).write({'update_posted': False})
+    env['account.journal'].search('company_id.country_id', '=', env.ref('base.fr').id).write({'update_posted': False})
