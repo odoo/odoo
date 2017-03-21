@@ -9,7 +9,7 @@ from odoo import api, fields, models, _
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.misc import formatLang
 
-from odoo.exceptions import UserError, RedirectWarning, ValidationError
+from odoo.exceptions import UserError, RedirectWarning, ValidationError, Warning
 
 import odoo.addons.decimal_precision as dp
 import logging
@@ -1273,6 +1273,12 @@ class AccountInvoiceLine(models.Model):
                 self.price_unit = fix_price(self.product_id.standard_price, taxes, fp_taxes)
         else:
             self.price_unit = fix_price(self.product_id.lst_price, taxes, fp_taxes)
+
+    @api.onchange('price_subtotal')
+    def _onchange_price_subtotal(self):
+        for line in self:
+            if line.price_subtotal < 0.0:
+                raise Warning(_('You cannot validate an invoice with a negative total amount. You should create a refund instead.'))
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
