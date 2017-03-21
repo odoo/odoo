@@ -7,6 +7,10 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.tools import pickle
 
+import logging
+_logger = logging.getLogger(__name__)
+
+
 EXCLUDED_FIELDS = set(('code',
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
     'report_sxw_content_data', 'report_rml_content_data', 'search_view', ))
@@ -224,7 +228,7 @@ class IrValues(models.Model):
             field = self.env[model]._fields[field_name]
             field.convert_to_cache(value, self.browse())
         except KeyError:
-            raise ValidationError(_("Invalid field %s.%s") % (model, field_name))
+            _logger.warning("Invalid field %s.%s", model, field_name)
         except Exception:
             raise ValidationError(_("Invalid value for %s.%s: %s") % (model, field_name, value))
 
