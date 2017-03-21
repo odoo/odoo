@@ -1181,6 +1181,31 @@ var LabelSelection = AbstractField.extend({
 var FieldBooleanButton = AbstractField.extend({
     className: 'o_stat_info',
     supportedFieldTypes: ['boolean'],
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * A boolean field is always set since false is a valid value.
+     *
+     * @override
+     */
+    isSet: function () {
+        return true;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * This widget is supposed to be used inside a stat button and, as such, is
+     * rendered the same way in edit and readonly mode.
+     *
+     * @override
+     * @private
+     */
     _render: function () {
         this.$el.empty();
         var text, hover;
@@ -1212,9 +1237,6 @@ var FieldBooleanButton = AbstractField.extend({
         var $val = $('<span>').addClass('o_stat_text o_not_hover ' + val_color).text(text);
         var $hover = $('<span>').addClass('o_stat_text o_hover ' + hover_color).text(hover);
         this.$el.append($val).append($hover);
-    },
-    isSet: function () {
-        return true;
     },
 });
 
