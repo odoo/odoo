@@ -319,7 +319,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create in grouped mode', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var kanban = createView({
             View: KanbanView,
@@ -333,19 +333,27 @@ QUnit.module('Views', {
             groupBy: ['bar'],
         });
 
+        // click to add an element and cancel the quick creation
         kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
 
         var $quickCreate = kanban.$('.o_kanban_quick_create');
         assert.strictEqual($quickCreate.length, 1, "should have a quick create element");
 
+        $quickCreate.find('input').trigger($.Event('keydown', {keyCode: $.ui.keyCode.ESCAPE}));
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 0,
+            "should have destroyed the quick create element");
+
+        // click to really add an element
+        kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
+        $quickCreate = kanban.$('.o_kanban_quick_create');
         $quickCreate.find('input').val('new partner');
         $quickCreate.find('button.o_kanban_add').click();
 
         assert.strictEqual(this.data.partner.records.length, 5,
             "should have created a partner");
-
         assert.strictEqual(_.last(this.data.partner.records).name, "new partner",
             "should have correct name");
+
         kanban.destroy();
     });
 
