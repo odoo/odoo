@@ -53,6 +53,9 @@ class PosConfig(models.Model):
     def _get_group_pos_user(self):
         return self.env.ref('point_of_sale.group_pos_user')
 
+    def _compute_default_customer_html(self):
+        return self.env['ir.qweb'].render('point_of_sale.customer_facing_display_html')
+
     name = fields.Char(string='Point of Sale Name', index=True, required=True, help="An internal identification of the point of sale")
     journal_ids = fields.Many2many(
         'account.journal', 'pos_config_journal_rel',
@@ -77,6 +80,7 @@ class PosConfig(models.Model):
     iface_payment_terminal = fields.Boolean(string='Payment Terminal', help="Enables Payment Terminal integration")
     iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration")
     iface_vkeyboard = fields.Boolean(string='Virtual KeyBoard', help="Enables an integrated Virtual Keyboard")
+    iface_customer_facing_display = fields.Boolean(string='Customer Facing Display', help="Enables a remotely connected customer facing display")
     iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help="Bypass browser printing and prints via the hardware proxy")
     iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner")
     iface_invoicing = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale', default=True)
@@ -128,6 +132,7 @@ class PosConfig(models.Model):
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
     default_cashbox_lines_ids = fields.One2many('account.cashbox.line', 'default_pos_id', string='Default Balance')
+    customer_facing_display_html = fields.Html(string='Customer facing display content', translate=True, default=_compute_default_customer_html)
 
     @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id')
     def _compute_currency(self):

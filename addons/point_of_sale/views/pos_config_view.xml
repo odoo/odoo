@@ -51,7 +51,15 @@
                         <field name="iface_electronic_scale" />
                         <field name="iface_cashdrawer" />
                         <field name="iface_print_via_proxy" string="Receipt Printer"/>
+                        <field name="iface_customer_facing_display" />
                     </group>
+                    <group attrs="{'invisible' : [('iface_customer_facing_display', '=', False)]}" colspan="4">
+                        <field name="customer_facing_display_html"
+                               widget="html_frame"
+                               nolabel="1"
+                               options="{'editor_url': '/point_of_sale/field/customer_facing_display_template'}"/>
+                    </group>
+                    
                     <group name="receipt" string="Receipt">
                         <group>
                             <field name="iface_print_auto"/>
@@ -62,6 +70,7 @@
                         <field name="receipt_header" string="Header" placeholder="A custom receipt header message"/>
                         <field name="receipt_footer" string="Footer" placeholder="A custom receipt footer message"/>
                     </group>
+
                     <group string="Cash Control">
                         <field name="cash_control"/>
                         <field name="default_cashbox_lines_ids" attrs="{'invisible': [('cash_control', '=', False)]}">
@@ -139,7 +148,7 @@
             </p>
         </field>
     </record>
-
+ 
     <!-- Barcode Nomenclatures -->
     <menuitem id="menu_pos_barcode_nomenclature_all"
         parent="point_of_sale.pos_config_menu_configuration"
