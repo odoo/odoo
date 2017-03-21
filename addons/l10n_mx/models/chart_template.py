@@ -66,7 +66,7 @@ class AccountChartTemplate(models.Model):
             acc_template_ref, company, journals_dict=journals_dict)
         if not self == self.env.ref('l10n_mx.mx_coa'):
             return res
-        account = self.env.ref('l10n_mx.cuenta118_01')
+        account = self.env.ref('l10n_mx.1_cuenta118_01')
         res.append({
             'type': 'general',
             'name': _('Effectively Paid'),
