@@ -31,7 +31,7 @@ class FleetVehicle(models.Model):
             #     car.total_depreciated_cost = car.co2_fee + car.model_id.default_recurring_cost_amount_depreciated
 
     def _get_co2_fee(self, co2):
-        return max((((co2 * 9.0) - 600.0) * 1.1641) / 12.0, 0.0)
+        return max((((co2 * 9.0) - 600.0) * 1.2488) / 12.0, 0.0)
 
     @api.depends('co2')
     def _compute_co2_fee(self):
