@@ -597,11 +597,12 @@ QUnit.module('Views', {
         model.destroy();
     });
 
-    QUnit.test('groups stay open when reloading', function (assert) {
-        assert.expect(5);
+    QUnit.test('internal state of groups remains when reloading', function (assert) {
+        assert.expect(7);
 
         this.params.fieldNames = ['foo'];
         this.params.domain = [];
+        this.params.limit = 80;
         this.params.groupedBy = ['product_id'];
         this.params.res_id = undefined;
 
@@ -618,12 +619,21 @@ QUnit.module('Views', {
 
             record = model.get(resultID);
             assert.ok(record.data[0].isOpen, "first group should be open");
-            assert.strictEqual(record.data[0].data.length, 1, "first group should have one record");
+            assert.strictEqual(record.data[0].data.length, 1,
+                "first group should have one record");
+            assert.strictEqual(record.data[0].limit, 80,
+                "limit should be 80 by default");
+
+            // change the limit and offset of the first group
+            model.localData[record.data[0].id].limit = 10;
 
             model.reload(resultID);
             record = model.get(resultID);
             assert.ok(record.data[0].isOpen, "first group should still be open");
-            assert.strictEqual(record.data[0].data.length, 1, "first group should still have one record");
+            assert.strictEqual(record.data[0].data.length, 1,
+                "first group should still have one record");
+            assert.strictEqual(record.data[0].limit, 10,
+                "new limit should have been kept");
         });
         model.destroy();
     });
