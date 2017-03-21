@@ -803,10 +803,28 @@ var FieldPhone = EmailWidget.extend({
 
 var UrlWidget = InputField.extend({
     supportedFieldTypes: ['char'],
+
+    /**
+     * Urls are links in readonly mode.
+     *
+     * @override
+     */
     init: function () {
         this._super.apply(this, arguments);
         this.tagName = this.mode === 'readonly' ? 'a' : 'input';
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * In readonly, the widget needs to be a link with proper href and proper
+     * support for the design, which is achieved by the added classes.
+     *
+     * @override
+     * @private
+     */
     _renderReadonly: function () {
         this.$el.text(this.value)
             .addClass('o_form_uri o_text_overflow')
