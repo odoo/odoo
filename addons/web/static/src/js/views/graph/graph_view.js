@@ -27,13 +27,13 @@ var GraphView = AbstractView.extend({
     /**
      * @override
      */
-    init: function (arch, fields) {
+    init: function (viewInfo) {
         this._super.apply(this, arguments);
 
         var initialMeasure = '__count__';
         var initialGroupBys = [];
-        fields.__count__ = {string: _t("Count"), type: "integer"};
-        arch.children.forEach(function (field) {
+        viewInfo.fields = _.defaults({__count__: {string: _t("Count"), type: "integer"}}, viewInfo.fields);
+        viewInfo.arch.children.forEach(function (field) {
             var name = field.attrs.name;
             if (field.attrs.interval) {
                 name += ':' + field.attrs.interval;
@@ -46,7 +46,7 @@ var GraphView = AbstractView.extend({
         });
 
         var measures = {__count__: {string: _t("Count"), type: "integer"}};
-        _.each(fields, function (field, name) {
+        _.each(viewInfo.fields, function (field, name) {
             if (name !== 'id' && field.store === true) {
                 if (field.type === 'integer' || field.type === 'float' || field.type === 'monetary') {
                     measures[name] = field;
@@ -55,12 +55,12 @@ var GraphView = AbstractView.extend({
         });
 
         this.controllerParams.measures = measures;
-        this.rendererParams.stacked = arch.attrs.stacked !== "False";
+        this.rendererParams.stacked = viewInfo.arch.attrs.stacked !== "False";
 
-        this.loadParams.initialMode = arch.attrs.type || 'bar';
+        this.loadParams.initialMode = viewInfo.arch.attrs.type || 'bar';
         this.loadParams.initialMeasure = initialMeasure;
         this.loadParams.initialGroupBys = initialGroupBys;
-        this.loadParams.fields = fields;
+        this.loadParams.fields = viewInfo.fields;
     },
 });
 

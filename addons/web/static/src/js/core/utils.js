@@ -429,6 +429,33 @@ var utils = {
         });
         return str;
     },
+    /**
+     * Visit a tree of objects, where each children are in an attribute 'children'.
+     * For each children, we call the callback function given in arguments.
+     *
+     * @param {Object} tree an object describing a tree structure
+     * @param {function} f a callback
+     */
+    traverse: function (tree, f) {
+        if (f(tree)) {
+            _.each(tree.children, function (c) { utils.traverse(c, f); });
+        }
+    },
+    /**
+     * Visit a tree of objects and freeze all
+     *
+     * @param {Object} obj
+     */
+    deepFreeze: function (obj) {
+      var propNames = Object.getOwnPropertyNames(obj);
+      propNames.forEach(function(name) {
+        var prop = obj[name];
+        if (typeof prop == 'object' && prop !== null)
+          utils.deepFreeze(prop);
+      });
+      return Object.freeze(obj);
+    },
+
 };
 
 return utils;

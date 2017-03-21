@@ -621,10 +621,10 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 rpcCount++;
                 return this._super(route, args);
-            }
+            },
         });
         assert.strictEqual(rpcCount, 2, "should have done 2 rpcs: 1 searchread and 1 read for m2m");
-        assert.ok(list.$('td:contains(Value 1, Value 2, Value 3)').length,
+        assert.ok(list.$('td:contains(3 records)').length,
             "should have a td with correct formatted value");
         list.destroy();
     });

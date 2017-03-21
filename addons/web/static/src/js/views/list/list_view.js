@@ -27,15 +27,15 @@ var ListView = BasicView.extend({
     /**
      * @override
      *
-     * @param {Object} arch
-     * @param {Object} fields
+     * @param {Object} viewInfo
      * @param {Object} params
      * @param {boolean} params.sidebar
      * @param {boolean} [params.hasSelectors=true]
      */
-    init: function (arch, fields, params) {
+    init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
+        var arch = viewInfo.arch;
         this.controllerParams.editable = arch.attrs.editable;
         this.controllerParams.hasSidebar = params.sidebar;
         this.controllerParams.noContentHelp = params.action && params.action.help;

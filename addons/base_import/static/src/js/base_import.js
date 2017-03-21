@@ -50,7 +50,7 @@ function jsonp(form, attributes, callback) {
 
 // Mixins that enable the 'Import' feature
 var ImportViewMixin = {
-    init: function (arch, fields, params) {
+    init: function (viewInfo, params) {
         var importEnabled = 'import_enabled' in params ? params.import_enabled : true;
         // if true, the 'Import' button will be visible
         this.controllerParams.importEnabled = importEnabled;

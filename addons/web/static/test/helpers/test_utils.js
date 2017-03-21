@@ -15,6 +15,8 @@ var core = require('web.core');
 var session = require('web.session');
 var MockServer = require('web.MockServer');
 var Widget = require('web.Widget');
+var DataManager = require('web.DataManager');
+
 
 /**
  * intercepts an event bubbling up the widget hierarchy. The event intercepted
@@ -131,7 +133,13 @@ function createAsyncView(params) {
 
     _.extend(viewOptions, params.viewOptions);
 
-    var view = new params.View(fields_view.arch, fields_view.fields, viewOptions);
+    var viewInfo = DataManager.prototype._processFieldsView({
+        type: fields_view.arch.tag,
+        arch: fields_view.arch,
+        fields: fields_view.fields,
+    });
+
+    var view = new params.View(viewInfo, viewOptions);
 
     $('#qunit-fixture').on('DOMNodeInserted.removeSRC', function () {
         removeSrcAttribute($(this), widget);
@@ -298,7 +306,16 @@ function addMockEnvironment(widget, params) {
             arch = arch && (_.isObject(arch) ? arch : mockServer.fieldsViewGet(arch, model).arch);
             res[view_type] = { arch: arch, fields: params.data[model].fields };
         });
-        event.data.on_success(res);
+
+        var views = _.mapObject(res, function (view, viewType) {
+            return DataManager.prototype._processFieldsView({
+                type: viewType,
+                arch: view.arch,
+                fields: view.fields,
+            });
+        });
+
+        event.data.on_success(views);
     });
 
     intercept(widget, "get_session", function (event) {
@@ -323,14 +340,14 @@ function addMockEnvironment(widget, params) {
  * @param {Class} params.Model the model class to use
  * @param {string[]} [params.fieldNames] the fields given to the model
  * @param {Object[]} [params.fields] map of field names to field description
- * @param {Object[]} [params.fieldAttrs] map of field names to field attributes
+ * @param {Object[]} [params.fieldsInfo] map of field names to field attributes
  * @returns {Model}
  */
 function createModel(params) {
     var widget = new Widget();
 
     var model = new params.Model(widget, {
-        fieldAttrs: params.fieldAttrs || {},
+        fieldsInfo: params.fieldsInfo,
         fieldNames: params.fieldNames,
         fields: params.fields,
     });

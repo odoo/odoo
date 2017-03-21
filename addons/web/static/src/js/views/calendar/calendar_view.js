@@ -26,8 +26,10 @@ var CalendarView = AbstractView.extend({
         Controller: CalendarController,
         Renderer: CalendarRenderer,
     },
-    init: function (arch, fields, params) {
+    init: function (viewInfo, params) {
         this._super.apply(this, arguments);
+        var arch = viewInfo.arch;
+        var fields = viewInfo.fields;
         var attrs = arch.attrs;
 
         if (!attrs.date_start) {
@@ -121,6 +123,7 @@ var CalendarView = AbstractView.extend({
         this.loadParams.fieldNames = _.uniq(fieldNames);
         this.loadParams.mapping = mapping;
         this.loadParams.fields = fields;
+        this.loadParams.fieldsInfo = viewInfo.fieldsInfo;
         this.loadParams.editable = !this.controllerParams.read_only_mode && !fields[mapping.date_start].readonly;
         this.loadParams.eventLimit = eventLimit;
         this.loadParams.field_color = attrs.color;

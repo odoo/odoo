@@ -28,7 +28,7 @@ var KanbanModel = BasicModel.extend({
             modelName: group.model,
             fields: group.fields,
             fieldNames: group.fieldNames,
-            fieldAttrs: group.fieldAttrs,
+            fieldsInfo: group.fieldsInfo,
         });
         group.data.unshift(new_record);
         group.count++;

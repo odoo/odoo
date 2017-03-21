@@ -20,6 +20,8 @@ var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
 
+var _t = core._t;
+
 //------------------------------------------------------------------------------
 // Formatting
 //------------------------------------------------------------------------------
@@ -191,10 +193,13 @@ function formatMany2one(value) {
  * @returns {string}
  */
 function formatMany2Many(value) {
-    var names = _.map(value.data, function (p) {
-        return p.data.display_name;
-    });
-    return names.join(', ');
+    if (value.data.length === 0) {
+        return value.data.length + _t('0 records');
+    } else if (value.data.length === 1) {
+        return value.data.length + _t('1 record');
+    } else {
+        return value.data.length + _t(' records');
+    }
 }
 
 function formatMonetary(value, field, options) {

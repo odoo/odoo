@@ -31,9 +31,13 @@ var PivotView = AbstractView.extend({
      * @override
      * @param {Object} params
      */
-    init: function (arch, fields, params) {
+    init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
+        var arch = viewInfo.arch;
+        var fields = _.extend({
+            __count: {string: _t("Count"), type: "integer"}
+        }, viewInfo.fields);
         var activeMeasures = [];
         var colGroupBys = [];
         var rowGroupBys = [];
@@ -82,7 +86,6 @@ var PivotView = AbstractView.extend({
         if ((!activeMeasures.length) || arch.attrs.display_quantity) {
             activeMeasures.push('__count');
         }
-        fields.__count = {string: _t("Count"), type: "integer"};
 
         this.loadParams.measures = activeMeasures;
         this.loadParams.colGroupBys = colGroupBys;

@@ -1,7 +1,10 @@
 odoo.define('web.DataManager', function (require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
+var fieldRegistry = require('web.field_registry');
+var pyeval = require('web.pyeval');
 var session = require('web.session');
 var utils = require('web.utils');
 
@@ -112,7 +115,13 @@ return core.Class.extend({
         }
 
         return this._cache.views[key].then(function (views) {
-            return $.extend(true, {}, views);
+            return _.mapObject(views, function (view, viewType) {
+                return _.extend(view, self._processFieldsView({
+                    type: viewType,
+                    arch: view.arch,
+                    fields: view.fields,
+                }));
+            });
         });
     },
 
@@ -223,6 +232,149 @@ return core.Class.extend({
      */
     _invalidate: function (cache, key) {
         delete cache[key];
+    },
+
+    ///////////////////////////////////////////////////////////////
+
+    /**
+     * Process a field node, in particular, put a flag on the field to give
+     * special directives to the BasicModel.
+     *
+     * @param {string} viewType
+     * @param {Object} field - the field properties
+     * @param {Object} attrs - the field attributes (from the xml)
+     * @returns {Object} attrs
+     */
+    _processField: function (viewType, field, attrs) {
+        var self = this;
+        attrs.Widget = this._getFieldWidgetClass(viewType, field, attrs);
+
+        if (!_.isObject(attrs.options)) { // parent arch could have already been processed (TODO this should not happen)
+            attrs.options = attrs.options ? pyeval.py_eval(attrs.options) : {};
+        }
+
+        if (attrs.on_change && !field.onChange) {
+            field.onChange = "1";
+        }
+
+        if (field.views) {
+            // process the inner fields_view as well to find the fields they use.
+            // register those fields' description directly on the view.
+            // for those inner views, the list of all fields isn't necessary, so
+            // basically the field_names will be the keys of the fields obj.
+            // don't use _ to iterate on fields in case there is a 'length' field,
+            // as _ doesn't behave correctly when there is a length key in the object
+            attrs.views = {};
+            _.each(field.views, function (innerFieldsView, viewType) {
+                innerFieldsView.type = viewType;
+                attrs.views[viewType] = self._processFieldsView(_.extend({}, innerFieldsView));
+            });
+            delete field.views;
+        }
+
+        if (field.type === 'one2many' || field.type === 'many2many') {
+            if (attrs.Widget.prototype.useSubview) {
+                if (!attrs.views) {
+                    attrs.views = {};
+                }
+                var mode = attrs.mode;
+                if (!mode) {
+                    if (attrs.views.tree && attrs.views.kanban) {
+                        mode = 'tree';
+                    } else if (!attrs.views.tree && attrs.views.kanban) {
+                        mode = 'kanban';
+                    } else {
+                        mode = 'tree,kanban';
+                    }
+                } else {
+                    mode = 'tree,kanban';
+                }
+                if (mode.indexOf(',') !== -1) {
+                    mode = config.device.size_class !== config.device.SIZES.XS ? 'tree' : 'kanban';
+                }
+                if (mode === 'tree') {
+                    mode = 'list';
+                    if (!attrs.views.list && attrs.views.tree) {
+                        attrs.views.list = attrs.views.tree;
+                    }
+                }
+                attrs.mode = mode;
+            }
+            if (attrs.Widget.prototype.fetchSubFields) {
+                attrs.relatedFields = {
+                    display_name: {type: 'char'},
+                    //id: {type: 'integer'},
+                };
+                attrs.fieldsInfo = {display_name: {}, id: {}};
+                if (attrs.color || 'color') {
+                    attrs.relatedFields[attrs.color || 'color'] = {type: 'int'};
+                    attrs.fieldsInfo.color = {};
+                }
+            }
+        }
+        return attrs;
+    },
+    /**
+     * Visit all nodes in the arch field and process each fields
+     *
+     * @param {string} viewType
+     * @param {Object} arch
+     * @param {Object} fields
+     * @returns {Object} fieldsInfo
+     */
+    _processFields: function (viewType, arch, fields) {
+        var self = this;
+        var fieldsInfo = Object.create(null);
+        utils.traverse(arch, function (node) {
+            if (typeof node === 'string') {
+                return false;
+            }
+            if (node.tag === 'field') {
+                fieldsInfo[node.attrs.name] = self._processField(viewType,
+                    fields[node.attrs.name], node.attrs ? _.clone(node.attrs) : {});
+                return false;
+            }
+            return node.tag !== 'arch';
+        });
+        return fieldsInfo;
+    },
+    /**
+     * Visit all nodes in the arch field and process each fields and inner views
+     *
+     * @param {Object} viewInfo
+     * @param {Object} viewInfo.arch
+     * @param {Object} viewInfo.fields
+     * @returns {Object} viewInfo
+     */
+    _processFieldsView: function (viewInfo) {
+        viewInfo.fieldsInfo = this._processFields(viewInfo.type, viewInfo.arch, viewInfo.fields);
+        // by default display fetch display_name and id
+        if (!viewInfo.fields.display_name) {
+            viewInfo.fields.display_name = {type: 'char'};
+            viewInfo.fieldsInfo.display_name = {};
+        }
+        utils.deepFreeze(viewInfo.fields);
+        return viewInfo;
+    },
+    /**
+     * Returns the AbstractField specialization that should be used for the
+     * given field informations. If there is no mentioned specific widget to
+     * use, determine one according the field type.
+     *
+     * @param {string} viewType
+     * @param {Object} field
+     * @param {Object} attrs
+     * @returns {function|null} AbstractField specialization Class
+     */
+    _getFieldWidgetClass: function (viewType, field, attrs) {
+        var Widget;
+        if (attrs.widget) {
+            Widget = fieldRegistry.getAny([viewType + "." + attrs.widget, attrs.widget]);
+            if (!Widget) {
+                console.warn("Missing widget: ", attrs.widget, " for field", attrs.name, "of type", field.type);
+            }
+        }
+        return Widget || fieldRegistry.getAny([viewType + "." + field.type, field.type, "abstract"]);
     },
 });
 

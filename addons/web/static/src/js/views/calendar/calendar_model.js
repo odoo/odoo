@@ -151,6 +151,7 @@ return AbstractModel.extend({
         this.modelName = params.modelName;
         this.fields = params.fields;
         this.fieldNames = params.fieldNames;
+        this.fieldsInfo = params.fieldsInfo;
         this.mapping = params.mapping;
         this.mode = params.mode;       // one of month, week or day
         this.scales = params.scales;   // one of month, week or day
