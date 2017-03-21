@@ -977,7 +977,9 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     $row = self.$current.children(
                         '[data-id=' + record.get('id') + ']');
                 }
-                $row.replaceWith(self.render_record(record));
+                if ($row.length) {
+                    $row.replaceWith(self.render_record(record));
+                }
             },
             'add': function (ev, records, record, index) {
                 var $new_row = $(self.render_record(record));
