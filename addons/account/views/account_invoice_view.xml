@@ -610,7 +610,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
-            <field name="domain">[('type','in',('out_invoice', 'out_refund'))]</field>
+            <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
@@ -645,13 +645,55 @@
 
         <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables" sequence="1"/>
 
+        <record id="action_invoice_out_refund" model="ir.actions.act_window">
+            <field name="name">Customer Refunds</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','out_refund')]</field>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a customer refund.
+              </p><p>
+                Odoo's electronic invoicing allows to ease and fasten the
+                collection of customer payments. Your customer receives the
+                invoice by email and he can pay online and/or import it
+                in his own system.
+              </p><p>
+                The discussions with your customer are automatically displayed at
+                the bottom of each invoice.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_invoice_out_refund_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="invoice_tree"/>
+            <field name="act_window_id" ref="action_invoice_out_refund"/>
+        </record>
+
+        <record id="action_invoice_out_refund_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_form"/>
+            <field name="act_window_id" ref="action_invoice_out_refund"/>
+        </record>
+
+        <menuitem action="action_invoice_out_refund"
+                  id="menu_action_invoice_out_refund"
+                  parent="menu_finance_receivables"
+                  sequence="1"/>
+
         <record id="action_invoice_tree2" model="ir.actions.act_window">
             <field name="name">Vendor Bills</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
-            <field name="domain">[('type','in',('in_invoice', 'in_refund'))]</field>
+            <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
@@ -679,6 +721,44 @@
         </record>
 
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables" sequence="1"/>
+
+
+        <record id="action_invoice_in_refund" model="ir.actions.act_window">
+            <field name="name">Vendor Refunds</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','in_refund')]</field>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to record a new vendor refund.
+              </p><p>
+                You can control the invoice from your vendor according to
+                what you purchased or received.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_invoice_in_refund_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="invoice_supplier_tree"/>
+            <field name="act_window_id" ref="action_invoice_in_refund"/>
+        </record>
+
+        <record id="action_invoice_in_refund_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_supplier_form"/>
+            <field name="act_window_id" ref="action_invoice_in_refund"/>
+        </record>
+
+        <menuitem action="action_invoice_in_refund"
+                  id="menu_action_invoice_in_refund"
+                  parent="menu_finance_payables"
+                  sequence="1"/>
 
         <act_window
            id="act_account_journal_2_account_invoice_opened"
