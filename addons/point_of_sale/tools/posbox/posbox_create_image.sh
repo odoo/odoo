@@ -36,20 +36,25 @@ fi
 cp -a *raspbian*.img posbox.img
 
 CLONE_DIR="${OVERWRITE_FILES_BEFORE_INIT_DIR}/home/pi/odoo"
+
 rm -rf "${CLONE_DIR}"
-mkdir "${CLONE_DIR}"
-git clone -b 8.0 --no-checkout --depth 1 https://github.com/odoo/odoo.git "${CLONE_DIR}"
-cd "${CLONE_DIR}"
-git config core.sparsecheckout true
-echo "addons/web
+
+if [ ! -d $CLONE_DIR ]; then
+    echo "Clone Github repo"
+    mkdir -p "${CLONE_DIR}"
+    git clone -b 8.0 --no-local --no-checkout --depth 1 https://github.com/odoo/odoo.git "${CLONE_DIR}"
+    cd "${CLONE_DIR}"
+    git config core.sparsecheckout true
+    echo "addons/web
 addons/web_kanban
 addons/hw_*
 addons/point_of_sale/tools/posbox/configuration
 openerp/
 odoo.py" | tee --append .git/info/sparse-checkout > /dev/null
-git read-tree -mu HEAD
-cd "${__dir}"
+    git read-tree -mu HEAD
+fi
 
+cd "${__dir}"
 USR_BIN="${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr/bin/"
 mkdir -p "${USR_BIN}"
 cd "/tmp"
@@ -60,9 +65,11 @@ cd "${__dir}"
 mv /tmp/ngrok "${USR_BIN}"
 
 # zero pad the image to be around 3.5 GiB, by default the image is only ~1.3 GiB
+echo "Enlarging the image..."
 dd if=/dev/zero bs=1M count=2048 >> posbox.img
 
 # resize partition table
+echo "Fdisking"
 START_OF_ROOT_PARTITION=$(fdisk -l posbox.img | tail -n 1 | awk '{print $2}')
 (echo 'p';                          # print
  echo 'd';                          # delete
@@ -75,7 +82,7 @@ START_OF_ROOT_PARTITION=$(fdisk -l posbox.img | tail -n 1 | awk '{print $2}')
  echo 'p';                          # print
  echo 'w') | fdisk posbox.img       # write and quit
 
-LOOP_MAPPER_PATH=$(kpartx -av posbox.img | tail -n 1 | cut -d ' ' -f 3)
+LOOP_MAPPER_PATH=$(kpartx -avs posbox.img | tail -n 1 | cut -d ' ' -f 3)
 LOOP_MAPPER_PATH="/dev/mapper/${LOOP_MAPPER_PATH}"
 sleep 5
 
