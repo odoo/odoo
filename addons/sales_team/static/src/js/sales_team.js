@@ -4,7 +4,15 @@ odoo.define('sales_team.update_kanban', function (require) {
 var KanbanRecord = require('web.KanbanRecord');
 
 KanbanRecord.include({
-    on_card_clicked: function () {
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _openRecord: function () {
         if (this.modelName === 'crm.team') {
             this.$('.oe_kanban_crm_salesteams_list a').first().click();
         } else {

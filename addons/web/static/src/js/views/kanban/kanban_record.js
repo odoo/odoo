@@ -1,86 +1,78 @@
 odoo.define('web.KanbanRecord', function (require) {
 "use strict";
 
+/**
+ * This file defines the KanbanRecord widget, which corresponds to a card in
+ * a Kanban view.
+ */
+
 var core = require('web.core');
 var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
-var framework = require('web.framework');
-var session = require('web.session');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 
-var QWeb = core.qweb;
 var _t = core._t;
+var QWeb = core.qweb;
 
 var KanbanRecord = Widget.extend({
-    template: 'KanbanView.record',
     events: {
-        'click .oe_kanban_action': 'on_kanban_action_clicked',
-        'click .o_kanban_manage_toggle_button': 'toggle_manage_pane',
+        'click .oe_kanban_action': '_onKanbanActionClicked',
+        'click .o_kanban_manage_toggle_button': '_onManageTogglerClicked',
     },
-    custom_events: {
-        kanban_update_record: 'update_record',
-    },
-
+    /**
+     * @override
+     */
     init: function (parent, state, options) {
         this._super(parent);
 
         this.fields = state.fields;
         this.fieldAttrs = state.fieldAttrs;
-        this.recordData = state.data;
         this.modelName = state.model;
+
         this.options = options;
         this.editable = options.editable;
         this.deletable = options.deletable;
         this.draggable = options.draggable;
         this.read_only_mode = options.read_only_mode;
-        this.group_info = options.group_info;
         this.qweb = options.qweb;
-        this.sub_widgets = {};
+        this.subWidgets = {};
 
-        this.init_content(state);
+        this._setState(state);
     },
-
-    renderElement: function () {
-        this._super();
-        this.setup_color();
-        this.setup_color_picker();
-        this.$el.addClass('o_kanban_record');
-        this.$el.data('record', this);
-        if (this.$el.hasClass('oe_kanban_global_click') || this.$el.hasClass('oe_kanban_global_click_edit')) {
-            this.$el.on('click', this.proxy('on_global_click'));
-        }
-    },
-
     start: function () {
-        this.add_widgets();
-        this.render_m2m_tags();
-        this.attach_tooltip();
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments).then(this._render.bind(this));
     },
 
-    init_content: function (state) {
-        this.state = state;
-        this.id = state.res_id;
-        this.db_id = state.id;
-        this.values = _.clone(state.data);
-        this.record = this.transform_record(state.data);
-        var qweb_context = {
-            record: this.record,
-            widget: this,
-            read_only_mode: this.read_only_mode,
-            user_context: session.user_context,
-        };
-        for (var p in this) {
-            if (_.str.startsWith(p, 'kanban_')) {
-                qweb_context[p] = _.bind(this[p], this);
-            }
-        }
-        this.qweb_context = qweb_context;
-        this.content = this.qweb.render('kanban-box', qweb_context);
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Re-renders the record with a new state
+     *
+     * @param {Object} state
+     */
+    update: function (state) {
+        // detach the widgets because the record will empty its $el, which will
+        // remove all event handlers on its descendants, and we want to keep
+        // those handlers alive as we will re-use these widgets
+        _.invoke(_.pluck(this.subWidgets, '$el'), 'detach');
+        this._setState(state);
+        this._render();
     },
 
-    add_widgets: function () {
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Processes each 'field' tag and replaces it by the specified widget, if
+     * any, or directly by the formatted value
+     *
+     * @private
+     */
+    _processFields: function () {
         var self = this;
         this.$("field").each(function () {
             var $field = $(this);
@@ -88,10 +80,10 @@ var KanbanRecord = Widget.extend({
             var field_widget = $field.attr("widget");
             if (field_widget) {
                 // a widget is specified for that field
-                var widget = self.sub_widgets[field_name];
+                var widget = self.subWidgets[field_name];
                 if (!widget) {
                     // the widget doesn't exist yet, so instanciate it
-                    var Widget = self.state.fieldAttrs[field_name].Widget;
+                    var Widget = self.fieldAttrs[field_name].Widget;
                     if (Widget) {
                         // some field's attrs might be record dependent (they start with
                         // 't-att-') and should thus be evaluated, which is done by qweb
@@ -101,18 +93,18 @@ var KanbanRecord = Widget.extend({
                         // that dict being shared between records, we don't modify it
                         // in place
                         var attrs = Object.create(null);
-                        _.each(self.state.fieldAttrs[field_name], function (value, key) {
+                        _.each(self.fieldAttrs[field_name], function (value, key) {
                             if (_.str.startsWith(key, 't-att-')) {
                                 key = key.slice(6);
                                 value = $field.attr(key);
                             }
                             attrs[key] = value;
                         });
-                        self.state.fieldAttrs[field_name] = attrs;
+                        self.fieldAttrs[field_name] = attrs;
 
                         widget = new Widget(self, field_name, self.state, self.options);
-                        self.sub_widgets[field_name] = widget;
-                        self._set_field_display(widget, field_name);
+                        self.subWidgets[field_name] = widget;
+                        self._setFieldDisplay(widget, field_name);
                         widget.replace($field);
                     } else if (core.debug) {
                         // the widget is not implemented
@@ -129,92 +121,18 @@ var KanbanRecord = Widget.extend({
                 // no widget specified for that field, so simply use a formatter
                 // note: we could have used the widget corresponding to the field's type, but
                 // it is much more efficient to use a formatter
-                var field = self.state.fields[field_name];
-                var recordData = self.state.data;
-                var value = recordData[field_name];
-                var options = { data: recordData };
+                var field = self.fields[field_name];
+                var value = self.recordData[field_name];
+                var options = { data: self.recordData };
                 var formatted_value = field_utils.format[field.type](value, field, options);
                 $field.replaceWith(formatted_value);
             }
         });
     },
-
-    _set_field_display: function (widget, field_name) {
-        // attribute display
-        if (this.fieldAttrs[field_name].display === 'right') {
-            widget.$el.addClass('pull-right');
-        } else if (this.fieldAttrs[field_name].display === 'full') {
-            widget.$el.addClass('o_text_block');
-        }
-
-        // attribute bold
-        if (this.fieldAttrs[field_name].bold) {
-            widget.$el.addClass('o_text_bold');
-        }
-    },
-
-    render_m2m_tags: function () {
-        var self = this;
-        _.each(this.recordData, function (values, field_name) {
-            if (self.fields[field_name].type !== 'many2many') { return; }
-            var rel_ids = self.record[field_name].raw_value;
-            var $m2m_tags = self.$('.o_form_field_many2manytags[name=' + field_name + ']');
-            _.each(rel_ids, function (id) {
-                var m2m = _.findWhere(values.data, {res_id: id}).data;
-                if (typeof m2m.color !== 'undefined' && m2m.color !== 10) { // 10th color is invisible
-                    $('<span>')
-                        .addClass('o_tag o_tag_color_' + m2m.color)
-                        .attr('title', _.str.escapeHTML(m2m.name))
-                        .appendTo($m2m_tags);
-                }
-            });
-        });
-        // We use boostrap tooltips for better and faster display
-        this.$('span.o_tag').tooltip({delay: {'show': 50}});
-    },
-
-    transform_record: function (record) {
-        var self = this;
-        var new_record = {};
-        _.each(this.state.fieldNames, function (name) {
-            var value = record[name];
-            var r = _.clone(self.fields[name] || {});
-
-            if ((r.type === 'date' || r.type === 'datetime') && value) {
-                r.raw_value = value.toDate();
-            } else if (r.type === 'one2many' || r.type === 'many2many') {
-                r.raw_value = value.count ? value.res_ids : false;
-            } else if (r.type === 'many2one' ) {
-                r.raw_value = value.res_id || false;
-            } else {
-                r.raw_value = value;
-            }
-
-            if (r.type) {
-                var formatter = field_utils.format[r.type];
-                r.value = formatter(value, self.fields[name], record, self.state);
-            } else {
-                r.value = value;
-            }
-
-            new_record[name] = r;
-        });
-        return new_record;
-    },
-
-    update: function (record) {
-        // detach the widgets because the record will empty its $el, which will
-        // remove all event handlers on its descendants, and we want to keep
-        // those handlers alive as we will re-use these widgets
-        _.invoke(_.pluck(this.sub_widgets, '$el'), 'detach');
-        this.init_content(record);
-        this.renderElement();
-        this.add_widgets();
-        this.render_m2m_tags();
-        this.attach_tooltip();
-    },
-
-    attach_tooltip: function () {
+    /**
+     * @private
+     */
+    _attachTooltip: function () {
         var self = this;
         this.$('[tooltip]').each(function () {
             var $el = $(this);
@@ -227,30 +145,33 @@ var KanbanRecord = Widget.extend({
             }
         });
     },
-
-    kanban_image: function (model, field, id, cache, options) {
-        options = options || {};
-        var url;
-        if (this.record[field] && this.record[field].value && !utils.is_bin_size(this.record[field].value)) {
-            url = 'data:image/png;base64,' + this.record[field].value;
-        } else if (this.record[field] && ! this.record[field].value) {
-            url = "/web/static/src/img/placeholder.png";
-        } else {
-            if (_.isArray(id)) { id = id[0]; }
-            if (!id) { id = undefined; }
-            if (options.preview_image)
-                field = options.preview_image;
-            var unique = this.record.__last_update && this.record.__last_update.value.replace(/[^0-9]/g, '');
-            url = session.url('/web/image', {model: model, field: field, id: id, unique: unique});
-            if (cache !== undefined) {
-                // Set the cache duration in seconds.
-                url += '&cache=' + parseInt(cache, 10);
-            }
-        }
-        return url;
+    /**
+     * @private
+     * @param {string} d a stringified domain
+     * @returns {boolean} the domain evaluted with the current values
+     */
+    _computeDomain: function (d) {
+        return new Domain(d).compute(this.recordData);
     },
-
-    kanban_getcolor: function (variable) {
+    /**
+     * Generates the color classname from a given variable
+     *
+     * @private
+     * @param {number || string} variable
+     * @return {string} the classname
+     */
+    _getColorClassname: function (variable) {
+        var color = this._getColorID(variable);
+        return 'oe_kanban_color_' + color;
+    },
+    /**
+     * Computes a color id between 0 and 10 from a given value
+     *
+     * @private
+     * @param {number || string} variable
+     * @returns {integer} the color id
+     */
+    _getColorID: function (variable) {
         if (typeof(variable) === 'number') {
             return Math.round(variable) % 10;
         }
@@ -263,23 +184,234 @@ var KanbanRecord = Widget.extend({
         }
         return 0;
     },
+    /**
+     * @private
+     * @param {string} model the name of the model
+     * @param {string} field the name of the field
+     * @param {integer} id the id of the resource
+     * @param {integer} cache the cache duration, in seconds
+     * @param {Object} options
+     * @returns {string} the url of the image
+     */
+    _getImageURL: function (model, field, id, cache, options) {
+        options = options || {};
+        var url;
+        if (this.record[field] && this.record[field].value && !utils.is_bin_size(this.record[field].value)) {
+            url = 'data:image/png;base64,' + this.record[field].value;
+        } else if (this.record[field] && ! this.record[field].value) {
+            url = "/web/static/src/img/placeholder.png";
+        } else {
+            if (_.isArray(id)) { id = id[0]; }
+            if (!id) { id = undefined; }
+            if (options.preview_image)
+                field = options.preview_image;
+            var unique = this.record.__last_update && this.record.__last_update.value.replace(/[^0-9]/g, '');
+            var session = this.getSession();
+            url = session.url('/web/image', {model: model, field: field, id: id, unique: unique});
+            if (cache !== undefined) {
+                // Set the cache duration in seconds.
+                url += '&cache=' + parseInt(cache, 10);
+            }
+        }
+        return url;
+    },
+    /**
+     * Triggers up an event to open the record
+     *
+     * @private
+     */
+    _openRecord: function () {
+        var editMode = this.$el.hasClass('oe_kanban_global_click_edit');
+        this.trigger_up('open_record', {
+            id: this.db_id,
+            mode: editMode ? 'edit' : 'readonly',
+        });
+    },
+    /**
+     * Renders the record
+     */
+    _render: function () {
+        this.replaceElement(this.qweb.render('kanban-box', this.qweb_context));
+        this.$el.addClass('o_kanban_record');
+        this.$el.data('record', this);
+        if (this.$el.hasClass('oe_kanban_global_click') ||
+            this.$el.hasClass('oe_kanban_global_click_edit')) {
+            this.$el.on('click', this._onGlobalClick.bind(this));
+        }
+        this._processFields();
+        this._setupColor();
+        this._setupColorPicker();
+        this._renderM2MTags();
+        this._attachTooltip();
+    },
+    /**
+     * @private
+     */
+    _renderM2MTags: function () {
+        var self = this;
+        _.each(this.recordData, function (values, field_name) {
+            if (self.fields[field_name].type !== 'many2many') { return; }
+            var rel_ids = self.record[field_name].raw_value;
+            var $m2m_tags = self.$('.o_form_field_many2manytags[name=' + field_name + ']');
+            _.each(rel_ids, function (id) {
+                var m2m = _.findWhere(values.data, {res_id: id}).data;
+                if (typeof m2m.color !== 'undefined' && m2m.color !== 10) { // 10th color is invisible
+                    $('<span>')
+                        .addClass('o_tag o_tag_color_' + m2m.color)
+                        .attr('title', _.str.escapeHTML(m2m.display_name))
+                        .appendTo($m2m_tags);
+                }
+            });
+        });
+        // We use boostrap tooltips for better and faster display
+        this.$('span.o_tag').tooltip({delay: {'show': 50}});
+    },
+    /**
+     * Sets particular classnames on a field widget's $el according to the
+     * field's attrs (display or bold attributes)
+     *
+     * @private
+     * @param {Widget} widget a field widget
+     * @param {string} fieldName
+     */
+    _setFieldDisplay: function (widget, fieldName) {
+        // attribute display
+        if (this.fieldAttrs[fieldName].display === 'right') {
+            widget.$el.addClass('pull-right');
+        } else if (this.fieldAttrs[fieldName].display === 'full') {
+            widget.$el.addClass('o_text_block');
+        }
 
-    kanban_color: function (variable) {
-        var color = this.kanban_getcolor(variable);
-        return 'oe_kanban_color_' + color;
+        // attribute bold
+        if (this.fieldAttrs[fieldName].bold) {
+            widget.$el.addClass('o_text_bold');
+        }
+    },
+    /**
+     * Sets internal values of the kanban record according to the given state
+     *
+     * @private
+     * @param {Object} recordState
+     */
+    _setState: function (recordState) {
+        this.state = recordState;
+        this.id = recordState.res_id;
+        this.db_id = recordState.id;
+        this.recordData = recordState.data;
+        this.record = this._transformRecord(recordState.data);
+        this.qweb_context = {
+            kanban_image: this._getImageURL.bind(this),
+            kanban_color: this._getColorClassname.bind(this),
+            kanban_getcolor: this._getColorID.bind(this),
+            kanban_compute_domain: this._computeDomain.bind(this),
+            read_only_mode: this.read_only_mode,
+            record: this.record,
+            user_context: this.getSession().user_context,
+            widget: this,
+        };
+    },
+    /**
+     * If an attribute `color` is set on the kanban record, adds the
+     * corresponding color classname.
+     *
+     * @private
+     */
+    _setupColor: function () {
+        var color_field = this.$el.attr('color');
+        if (color_field && color_field in this.fields) {
+            var colorClass = this._getColorClassname(this.recordData[color_field]);
+            this.$el.addClass(colorClass);
+        }
+    },
+    /**
+     * Renders the color picker in the kanban record, and binds the event handler
+     *
+     * @private
+     */
+    _setupColorPicker: function () {
+        var $colorpicker = this.$('ul.oe_kanban_colorpicker');
+        if (!$colorpicker.length) {
+            return;
+        }
+        $colorpicker.html(QWeb.render('KanbanColorPicker'));
+        $colorpicker.on('click', 'a', this._onColorChanged.bind(this));
+    },
+    /**
+     * Builds an object containing the formatted record data used in the
+     * template
+     *
+     * @private
+     * @param {Object} recordData
+     * @returns {Object} transformed record data
+     */
+    _transformRecord: function (recordData) {
+        var self = this;
+        var new_record = {};
+        _.each(this.state.fieldNames, function (name) {
+            var value = recordData[name];
+            var r = _.clone(self.fields[name] || {});
+
+            if ((r.type === 'date' || r.type === 'datetime') && value) {
+                r.raw_value = value.toDate();
+            } else if (r.type === 'one2many' || r.type === 'many2many') {
+                r.raw_value = value.count ? value.res_ids : false;
+            } else if (r.type === 'many2one' ) {
+                r.raw_value = value && value.res_id || false;
+            } else {
+                r.raw_value = value;
+            }
+
+            if (r.type) {
+                var formatter = field_utils.format[r.type];
+                r.value = formatter(value, self.fields[name], recordData, self.state);
+            } else {
+                r.value = value;
+            }
+
+            new_record[name] = r;
+        });
+        return new_record;
+    },
+    /**
+     * Notifies the controller that the record has changed
+     *
+     * @private
+     * @param {Object} data the new values
+     */
+    _updateRecord: function (data) {
+        this.trigger_up('kanban_record_update', data);
     },
 
-    on_global_click: function (ev) {
-        if ($(ev.target).parents('.o_dropdown_kanban').length) {
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onColorChanged: function (event) {
+        event.preventDefault();
+        var data = {};
+        var color_field = $(event.delegateTarget).data('field') || 'color';
+        data[color_field] = $(event.currentTarget).data('color');
+        this.trigger_up('kanban_record_update', data);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onGlobalClick: function (event) {
+        if ($(event.target).parents('.o_dropdown_kanban').length) {
             return;
         }
         var trigger = true;
-        var elem = ev.target;
+        var elem = event.target;
         var ischild = true;
         var children = [];
         while (elem) {
             var events = $._data(elem, 'events');
-            if (elem === ev.currentTarget) {
+            if (elem === event.currentTarget) {
                 ischild = false;
             }
             var test_event = events && events.click && (events.click.length > 1 || events.click[0].namespace !== "tooltip");
@@ -306,35 +438,17 @@ var KanbanRecord = Widget.extend({
             elem = elem.parentElement;
         }
         if (trigger) {
-            this.on_card_clicked(ev);
+            this._openRecord();
         }
     },
-
-    /* actions when user click on the block with a specific class
-     *  open on normal view : oe_kanban_global_click
-     *  open on form/edit view : oe_kanban_global_click_edit
+    /**
+     * @private
+     * @param {MouseEvent} event
      */
-    on_card_clicked: function () {
-        if (this.$el.hasClass('oe_kanban_global_click_edit') && this.$el.data('routing')) {
-            framework.redirect(this.$el.data('routing') + "/" + this.id);
-        } else if (this.$el.hasClass('oe_kanban_global_click_edit')) {
-            this.trigger_up('edit_record', {id: this.db_id});
-        } else {
-            this.trigger_up('open_record', {id: this.db_id});
-        }
-    },
-
-    toggle_manage_pane: function (event){
+    _onKanbanActionClicked: function (event) {
         event.preventDefault();
-        this.$('.o_kanban_card_content').toggleClass('o_visible o_invisible');
-        this.$('.o_kanban_card_manage_pane').toggleClass('o_visible o_invisible');
-        this.$('.o_kanban_manage_button_section').toggleClass(this.kanban_color(this.values['color'] || 0));
-    },
 
-    on_kanban_action_clicked: function (ev) {
-        ev.preventDefault();
-
-        var $action = $(ev.currentTarget);
+        var $action = $(event.currentTarget);
         var type = $action.data('type') || 'button';
 
         switch (type) {
@@ -358,44 +472,19 @@ var KanbanRecord = Widget.extend({
                 this.do_warn("Kanban: no action for type : " + type);
         }
     },
-
-    kanban_compute_domain: function (d) {
-        return new Domain(d).compute(this.values);
-    },
-
-    update_record: function (event) {
-        this.trigger_up('kanban_record_update', event.data);
-    },
-
-    /*
-     * If an attribute `color` is set on the kanban record,
-     * this will add the corresponding color class.
+    /**
+     * Toggles the configuration panel of the record
+     *
+     * @private
+     * @param {MouseEvent} event
      */
-    setup_color: function () {
-        var color_field = this.$el.attr('color');
-        if (color_field && color_field in this.fields) {
-            this.$el.addClass(this.kanban_color(this.values[color_field]));
-        }
+    _onManageTogglerClicked: function (event) {
+        event.preventDefault();
+        this.$('.o_kanban_card_content').toggleClass('o_visible o_invisible');
+        this.$('.o_kanban_card_manage_pane').toggleClass('o_visible o_invisible');
+        var colorClass = this._getColorClassname(this.recordData.color || 0);
+        this.$('.o_kanban_manage_button_section').toggleClass(colorClass);
     },
-
-    setup_color_picker: function () {
-        var self = this;
-        var $colorpicker = this.$('ul.oe_kanban_colorpicker');
-        if (!$colorpicker.length) {
-            return;
-        }
-        $colorpicker.html(QWeb.render('KanbanColorPicker', {
-            widget: this
-        }));
-        $colorpicker.on('click', 'a', function (ev) {
-            ev.preventDefault();
-            var color_field = $colorpicker.data('field') || 'color';
-            var data = {};
-            data[color_field] = $(this).data('color');
-            self.trigger_up('kanban_record_update', data);
-        });
-    },
-
 });
 
 return KanbanRecord;
