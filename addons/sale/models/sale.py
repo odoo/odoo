@@ -829,19 +829,19 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def invoice_line_create(self, invoice_id, qty):
+        """ Create an invoice line. The quantity to invoice can be positive (invoice) or negative (refund).
+            :param invoice_id: integer
+            :param qty: float quantity to invoice
+            :returns recordset of account.invoice.line created
         """
-        Create an invoice line. The quantity to invoice can be positive (invoice) or negative
-        (refund).
-
-        :param invoice_id: integer
-        :param qty: float quantity to invoice
-        """
+        invoice_lines = self.env['account.invoice.line']
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
             if not float_is_zero(qty, precision_digits=precision):
                 vals = line._prepare_invoice_line(qty=qty)
                 vals.update({'invoice_id': invoice_id, 'sale_line_ids': [(6, 0, [line.id])]})
-                self.env['account.invoice.line'].create(vals)
+                invoice_lines |= self.env['account.invoice.line'].create(vals)
+        return invoice_lines
 
     @api.multi
     def _get_display_price(self, product):

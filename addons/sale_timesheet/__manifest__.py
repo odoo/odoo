@@ -17,11 +17,13 @@ have real delivered quantities in sales orders.
     'depends': ['sale', 'hr_timesheet'],
     'data': [
         'data/sale_timesheet_data.xml',
+        'views/account_invoice_views.xml',
         'views/sale_order_views.xml',
         'views/product_views.xml',
         'views/hr_views.xml',
         'views/project_task_views.xml',
         'views/procurement_views.xml',
+        'views/hr_timesheet_views.xml',
     ],
     'demo': [
         'data/sale_service_demo.xml',
