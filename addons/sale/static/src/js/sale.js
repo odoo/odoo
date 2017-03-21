@@ -7,10 +7,17 @@ var _t = core._t;
 
 KanbanRecord.include({
     events: _.defaults({
-        'click .sales_team_target_definition': 'on_sales_team_target_click',
+        'click .sales_team_target_definition': '_onSalesTeamTargetClick',
     }, KanbanRecord.prototype.events),
 
-    on_sales_team_target_click: function(ev) {
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @param {MouseEvent} ev
+     */
+    _onSalesTeamTargetClick: function (ev) {
         ev.preventDefault();
 
         this.$target_input = $('<input>');

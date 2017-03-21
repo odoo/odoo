@@ -64,9 +64,7 @@ var KanbanColumn = Widget.extend({
         this.offset = 0;
         this.remaining = this.size - this.data_records.length;
 
-        this.record_options = _.extend(_.clone(recordOptions), {
-            group_info: this.values,
-        });
+        this.record_options = _.clone(recordOptions);
 
         if (data.options && data.options.group_by_tooltip) {
             var self = this;

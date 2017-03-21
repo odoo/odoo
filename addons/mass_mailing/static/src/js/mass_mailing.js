@@ -5,7 +5,15 @@ var KanbanRecord = require('web.KanbanRecord');
 var KanbanColumn = require('web.KanbanColumn');
 
 KanbanRecord.include({
-    on_card_clicked: function (event) {
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _openRecord: function () {
         if (this.modelName === 'mail.mass_mailing.campaign') {
             this.$('.oe_mailings').click();
         } else {
