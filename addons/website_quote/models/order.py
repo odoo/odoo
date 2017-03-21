@@ -177,7 +177,7 @@ class sale_order(osv.osv):
             if 'tax_id' in data:
                 data['tax_id'] = [(6, 0, data['tax_id'])]
             data.update({
-                'name': line.name,
+                'name': self.pool["product.product"].read(cr, uid, [line.product_id.id], ['name'], context=context)[0]['name'],
                 'price_unit': line.price_unit,
                 'discount': line.discount,
                 'product_uom_qty': line.product_uom_qty,
