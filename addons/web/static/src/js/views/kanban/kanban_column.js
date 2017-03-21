@@ -251,7 +251,7 @@ var KanbanColumn = Widget.extend({
      * @private
      */
     _onCancelQuickCreate: function () {
-        this.cancelQuickCreate();
+        this._cancelQuickCreate();
     },
     /**
      * @private
