@@ -84,9 +84,9 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         this.title = this.action.name;
         var actionGroupBy = self.action.context.group_by;
         if (!actionGroupBy) {
-            actionGroupBy = []
+            actionGroupBy = [];
         } else if (typeof actionGroupBy === 'string') {
-            actionGroupBy = [actionGroupBy]
+            actionGroupBy = [actionGroupBy];
         }
         _.each(views, function (view) {
             var view_type = view[1] || view.view_type;
@@ -236,18 +236,6 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         }
 
         var old_view = this.active_view;
-        view_options = _.extend({}, view.options, view_options, this.env);
-
-        if (view_options.groupBy && !view_options.groupBy.length) {
-            var actionContext = view_options ? view_options.action.context : {};
-            var actionGroupBy = actionContext.group_by;
-            if (!actionGroupBy) {
-                actionGroupBy = []
-            } else if (typeof actionGroupBy === 'string') {
-                actionGroupBy = [actionGroupBy]
-            }
-            view_options.groupBy = actionGroupBy;
-        }
 
         // Ensure that the fields_view has been loaded
         var views_def;
@@ -267,6 +255,17 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             self.active_view = view;
 
             if (!view.loaded) {
+                view_options = _.extend({}, view.options, view_options, self.env);
+                if (view_options.groupBy && !view_options.groupBy.length) {
+                    var actionContext = view_options ? view_options.action.context : {};
+                    var actionGroupBy = actionContext.group_by;
+                    if (!actionGroupBy) {
+                        actionGroupBy = [];
+                    } else if (typeof actionGroupBy === 'string') {
+                        actionGroupBy = [actionGroupBy];
+                    }
+                    view_options.groupBy = actionGroupBy;
+                }
                 view.loaded = $.Deferred();
                 self.create_view(view, view_options).then(function(controller) {
                     view.controller = controller;
@@ -279,6 +278,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 });
             } else {
                 view.loaded = view.loaded.then(function() {
+                    view_options = _.extend({}, view_options, self.env);
                     return view.controller.reload(view_options);
                 });
             }
