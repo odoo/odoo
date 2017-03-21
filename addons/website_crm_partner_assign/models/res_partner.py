@@ -53,9 +53,9 @@ class ResPartner(models.Model):
     implemented_count = fields.Integer(compute='_compute_implemented_partner_count', store=True)
 
     @api.one
-    @api.depends('implemented_partner_ids')
+    @api.depends('implemented_partner_ids', 'implemented_partner_ids.website_published', 'implemented_partner_ids.active')
     def _compute_implemented_partner_count(self):
-        self.implemented_count = len(self.implemented_partner_ids.filtered(lambda x: x.website_published))
+        self.implemented_count = len(self.implemented_partner_ids.filtered('website_published'))
 
     @api.onchange('grade_id')
     def _onchange_grade_id(self):
