@@ -127,6 +127,45 @@
             <field name="domain">[('orderpoint_id','=',active_id)]</field>
         </record>
 
+        <record id="view_stock_warehouse_orderpoint_kanban" model="ir.ui.view">
+            <field name="name">stock.warehouse.orderpoint.kanban</field>
+            <field name="model">stock.warehouse.orderpoint</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="product_min_qty"/>
+                    <field name="product_max_qty"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-xs-6">
+                                        <strong><t t-esc="record.name.value"/></strong>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right badge">
+                                            <strong>Min qty :</strong><t t-esc="record.product_min_qty.value"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <span><t t-esc="record.product_id.value"/></span>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right badge">
+                                            <strong>Max qty :</strong><t t-esc="record.product_max_qty.value"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_warehouse_orderpoint_tree" model="ir.ui.view">
             <field name="name">stock.warehouse.orderpoint.tree</field>
             <field name="model">stock.warehouse.orderpoint</field>
@@ -212,6 +251,7 @@
             <field name="res_model">stock.warehouse.orderpoint</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_warehouse_orderpoint_tree"/>
             <field name="search_view_id" ref="warehouse_orderpoint_search" />
             <field name="help" type="html">
