@@ -11,7 +11,7 @@ Odoo Form Editor
 
 Allows you to build web forms on the website using the website builder.
         """,
-    'depends': ['website_form'],
+    'depends': ['website_enterprise', 'website_form'],
     'data': [
         'data/mail_mail_data.xml',
         'views/website_form_editor_templates.xml',
