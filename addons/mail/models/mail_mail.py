@@ -208,8 +208,9 @@ class MailMail(models.Model):
         """
         IrMailServer = self.env['ir.mail_server']
 
-        for mail in self:
+        for mail_id in self.ids:
             try:
+                mail = self.browse(mail_id)
                 # TDE note: remove me when model_id field is present on mail.message - done here to avoid doing it multiple times in the sub method
                 if mail.model:
                     model = self.env['ir.model'].sudo().search([('model', '=', mail.model)])[0]
