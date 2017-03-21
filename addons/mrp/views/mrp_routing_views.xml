@@ -113,6 +113,32 @@
                 </tree>
             </field>
         </record>
+
+        <record id="mrp_routing_kanban_view" model="ir.ui.view">
+            <field name="name">mrp.routing.kanban</field>
+            <field name="model">mrp.routing</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-7">
+                                        <strong><span><t t-esc="record.name.value"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-5 pull-right text-right">
+                                        <span class="badge"><field name="code"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="mrp_routing_search_view" model="ir.ui.view">
             <field name="name">mrp.routing.search</field>
             <field name="model">mrp.routing</field>
@@ -133,6 +159,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.routing</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
             <field name="search_view_id" ref="mrp_routing_search_view"/>
             <field name="help" type="html">
