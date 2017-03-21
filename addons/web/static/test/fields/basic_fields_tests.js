@@ -555,8 +555,8 @@ QUnit.module('basic_fields', {
 
     QUnit.module('UrlWidget');
 
-    QUnit.test('url widget works correctly', function (assert) {
-        assert.expect(1);
+    QUnit.test('url widget in form view', function (assert) {
+        assert.expect(8);
 
         var form = createView({
             View: FormView,
@@ -569,13 +569,79 @@ QUnit.module('basic_fields', {
                         '</group>' +
                     '</sheet>' +
                 '</form>',
-            res_id: 2,
+            res_id: 1,
         });
 
         assert.strictEqual(form.$('a.o_form_uri.o_form_field.o_text_overflow').length, 1,
-                        "should have a anchor with correct classes");
+            "should have a anchor with correct classes");
+        assert.strictEqual(form.$('a.o_form_uri.o_form_field.o_text_overflow').attr('href'), 'yop',
+            "should have proper href link");
+        assert.strictEqual(form.$('a.o_form_uri.o_form_field.o_text_overflow').text(), 'yop',
+            "the value should be displayed properly");
+
+        // switch to edit mode and check the result
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input[type="text"].o_form_input.o_form_field').length, 1,
+            "should have an input for the char field");
+        assert.strictEqual(form.$('input[type="text"].o_form_input.o_form_field').val(), 'yop',
+            "input should contain field value in edit mode");
+
+        // change value in edit mode
+        form.$('input[type="text"].o_form_input.o_form_field').val('limbo').trigger('input');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('a.o_form_uri.o_form_field.o_text_overflow').length, 1,
+            "should still have a anchor with correct classes");
+        assert.strictEqual(form.$('a.o_form_uri.o_form_field.o_text_overflow').attr('href'), 'limbo',
+            "should have proper new href link");
+        assert.strictEqual(form.$('a.o_form_uri.o_form_field.o_text_overflow').text(), 'limbo',
+            'the new value should be displayed');
+
         form.destroy();
     });
+
+    QUnit.test('char field in editable list view', function(assert) {
+        assert.expect(10);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo" widget="url"/></tree>',
+        });
+
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').length, 5,
+            "should have 5 cells");
+        assert.strictEqual(list.$('a.o_form_uri.o_field_widget.o_text_overflow').length, 5,
+            "should have 5 anchors with correct classes");
+        assert.strictEqual(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first().attr('href'), 'yop',
+            "should have proper href link");
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
+            "value should be displayed properly as text");
+
+        // Edit a line and check the result
+        var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
+        $cell.click();
+        assert.ok($cell.hasClass('o_edit_mode'), 'should be set as edit mode');
+        assert.strictEqual($cell.find('input').val(), 'yop',
+            'should have the corect value in internal input');
+        $cell.find('input').val('brolo').trigger('input');;
+
+        // save
+        list.$buttons.find('.o_list_button_save').click();
+        $cell = list.$('tbody td:not(.o_list_record_selector)').first();
+        assert.ok(!$cell.hasClass('o_edit_mode'), 'should not be in edit mode anymore');
+        assert.strictEqual(list.$('a.o_form_uri.o_field_widget.o_text_overflow').length, 5,
+            "should still have 5 anchors with correct classes");
+        assert.strictEqual(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first().attr('href'), 'brolo',
+            "should have proper new href link");
+        assert.strictEqual(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first().text(), 'brolo',
+            "value should be properly updated");
+
+        list.destroy();
+    });
+
 
     QUnit.module('FieldText');
 
