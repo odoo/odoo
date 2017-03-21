@@ -624,9 +624,13 @@
     </t>
 </template>
 
+<!-- External snippets -->
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='website_event']" position="replace"/>
+</template>
 <!-- Snippets -->
 <template id="country_events" name="Country Events" inherit_id="website.snippets">
-    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
+    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
         <div>
             <div class="oe_snippet_thumbnail">
                 <div style="background: white;box-shadow:none;-webkit-box-shadow:none;" class="oe_snippet_thumbnail_img" >
