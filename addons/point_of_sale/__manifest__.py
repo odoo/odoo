@@ -28,7 +28,7 @@ Main Features
 * Allows the user to create an invoice automatically
 * Refund previous sales
     """,
-    'depends': ['stock_account', 'barcodes'],
+    'depends': ['stock_account', 'barcodes', 'web_editor'],
     'data': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
@@ -49,6 +49,7 @@ Main Features
         'views/pos_config_view.xml',
         'views/pos_session_view.xml',
         'views/point_of_sale_sequence.xml',
+        'views/point_of_sale.xml',
         'data/point_of_sale_data.xml',
         'views/pos_order_report_view.xml',
         'views/account_statement_view.xml',
@@ -59,7 +60,6 @@ Main Features
         'views/report_statement.xml',
         'views/report_userlabel.xml',
         'views/report_saledetails.xml',
-        'views/point_of_sale.xml',
         'views/point_of_sale_dashboard.xml',
     ],
     'demo': [
