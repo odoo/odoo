@@ -120,7 +120,7 @@ class HrExpense(models.Model):
         '''
         This function prepares move line of account.move related to an expense
         '''
-        partner_id = self.employee_id.address_home_id.id
+        partner_id = self.employee_id.address_home_id.commercial_partner_id.id
         return {
             'date_maturity': line.get('date_maturity'),
             'partner_id': partner_id,
