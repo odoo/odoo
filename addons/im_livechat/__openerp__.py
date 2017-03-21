@@ -17,13 +17,13 @@ chat operators.
 
         """,
     'data': [
+        "im_livechat_data.xml",
         "security/im_livechat_security.xml",
         "security/ir.model.access.csv",
         "views/im_livechat_view.xml",
         "views/im_livechat.xml"
     ],
     'demo': [
-        "im_livechat_demo.xml",
     ],
     'depends' : ["mail", "im_chat"],
     'installable': True,
