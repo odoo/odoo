@@ -2087,13 +2087,15 @@ var BasicModel = AbstractModel.extend({
                     });
                     list.data.push(newGroup.id);
                     list.count += newGroup.count;
-                    var old_group = _.find(previousGroups, function (g) {
+                    var oldGroup = _.find(previousGroups, function (g) {
                         return g.res_id === newGroup.res_id && g.value === newGroup.value;
                     });
-                    if (old_group) {
-                        newGroup.isOpen = old_group.isOpen;
-                        // copy the oldGroup data to keep 'isOpen' state of sub-groups
-                        newGroup.data = newGroup.isOpen ? old_group.data : [];
+                    if (oldGroup) {
+                        // restore the internal state of the group
+                        _.extend(newGroup, _.pick(oldGroup, 'limit', 'isOpen', 'offset'));
+                        // if open, also restore the oldGroup data to keep internal
+                        // state of sub-groups
+                        newGroup.data = oldGroup.isOpen ? oldGroup.data : [];
                     } else if (!newGroup.openGroupByDefault) {
                         newGroup.isOpen = false;
                     } else {
