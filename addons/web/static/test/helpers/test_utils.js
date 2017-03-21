@@ -302,7 +302,7 @@ function addMockEnvironment(widget, params) {
     });
 
     intercept(widget, "get_session", function (event) {
-        event.data.callback(params.session);
+        event.data.callback(params.session || session);
     });
 
     intercept(widget, "load_filters", function (event) {
