@@ -111,7 +111,7 @@ class Project(models.Model):
     @api.multi
     def action_view_task_rating(self):
         """ return the action to see all the rating about the tasks of the project """
-        action = self.env['ir.actions.act_window'].for_xml_id('rating', 'action_view_rating')
+        action = self.env['ir.actions.act_window'].for_xml_id('rating_project', 'rating_rating_action_view_project_rating')
         action_domain = safe_eval(action['domain']) if action['domain'] else []
         domain = ['&', ('res_id', 'in', self.tasks.ids), ('res_model', '=', 'project.task')]
         if action_domain:
