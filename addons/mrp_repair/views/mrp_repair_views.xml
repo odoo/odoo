@@ -26,6 +26,7 @@
         <field name="arch" type="xml">
             <form string="Repair Order">
                <header>
+                   <button name="action_send_mail" states="draft" string="Send Quotation" type="object"/>
                    <button name="print_repair_order" states="draft" string="Print Quotation" type="object"/>
                    <button name="action_repair_confirm" states="draft" type="object" string="Confirm Repair" class="oe_highlight"/>
                    <button name="action_repair_start" attrs="{'invisible': ['&amp;', ('state','!=','confirmed'), '!', '&amp;', ('state','=','ready'), ('invoice_method','=','b4repair')]}"
