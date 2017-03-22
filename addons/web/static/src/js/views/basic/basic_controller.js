@@ -108,6 +108,17 @@ return AbstractController.extend(FieldManagerMixin, {
         }
     },
     /**
+     * Used by list and kanban views to determine whether or not to display
+     * the no content helper (if there is no data in the state to display)
+     *
+     * @private
+     * @param {Object} state
+     * @returns {boolean}
+     */
+    _hasContent: function (state) {
+        return state.count !== 0;
+    },
+    /**
      * Hook method, called when record(s) has been deleted.
      *
      * @see _deleteRecord

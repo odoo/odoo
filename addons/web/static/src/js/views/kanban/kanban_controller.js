@@ -104,12 +104,17 @@ var KanbanController = BasicController.extend({
         this.renderer.updateRecord(this.model.get(id));
     },
     /**
-     * @todo this is dead code right now. resurrect this?
+     * The nocontent helper should be displayed in kanban:
+     *   - ungrouped: if there is no records
+     *   - grouped: if there is no groups and no column quick create
      *
-     * @returns {boolean}
+     * @override
+     * @private
      */
-    _hasContent: function () {
-        return this._super.apply(this, arguments) || this.create_column_enabled;
+    _hasContent: function (state) {
+        return this._super.apply(this, arguments) ||
+               this.create_column_enabled ||
+               (state.groupedBy.length && state.data.length);
     },
     /**
      * This method calls the server to ask for a resequence.  Note that this
@@ -144,7 +149,7 @@ var KanbanController = BasicController.extend({
      * @returns {Deferred}
      */
     _update: function (state) {
-        var hasNoContent = state.count === 0 && !this.create_column_enabled;
+        var hasNoContent = !this._hasContent(state);
         this.$el.toggleClass('o_kanban_nocontent', hasNoContent);
         this._toggleNoContentHelper(hasNoContent);
         return this._super.apply(this, arguments);
