@@ -97,12 +97,13 @@ var BaseRPCBuilder = Class.extend({
         if (this._context) {
             kwargs.context = this._context;
         }
-        return _.extend({}, this._params, {
+        var params = {
             method: this._method,
             model: this._model,
             args: this._args || (this._method ? [] : undefined),
             kwargs: this._method ? kwargs : undefined,
-        });
+        };
+        return _.defaults(params, this._params);
     },
     /**
      * @private
