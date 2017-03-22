@@ -8,9 +8,9 @@ odoo.define('web.KanbanController', function (require) {
  */
 
 var BasicController = require('web.BasicController');
-var core = require('web.core');
 var Context = require('web.Context');
-var form_common = require('web.view_dialogs');
+var core = require('web.core');
+var view_dialogs = require('web.view_dialogs');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -297,38 +297,37 @@ var KanbanController = BasicController.extend({
     _onQuickCreateRecord: function (event) {
         var self = this;
         var column = event.target;
-        var data = this.model.get(column.db_id);
+        var name = event.data.value;
+        var state = this.model.get(this.handle, {raw: true});
+        var columnState = this.model.get(column.db_id, {raw: true});
+        var context = columnState.getContext();
+        context['default_' + state.groupedBy[0]] = columnState.res_id;
+
+        this._rpc(state.model, "name_create")
+            .args([name])
+            .withContext(context)
+            .exec()
+            .then(add_record)
+            .fail(function (error, event) {
+                event.preventDefault();
+                new view_dialogs.FormViewDialog(self, {
+                    res_model: state.model,
+                    context: _.extend({default_name: name}, context),
+                    title: _t("Create"),
+                    disable_multiple_selection: true,
+                    on_saved: function(record) {
+                        add_record([record.res_id]);
+                    },
+                }).open();
+            });
+
         function add_record(records) {
             return self.model
-                .addRecordToGroup(data.id, records[0])
+                .addRecordToGroup(columnState.id, records[0])
                 .then(function (db_id) {
                     column.addRecord(self.model.get(db_id), {position: 'before'});
                 });
         }
-        data.context['default_' + data.groupedBy[0]] = column.id;
-
-        this._rpc(data.model, "name_create")
-            .args([event.data.value])
-            .withContext(data.context)
-            .exec()
-            .then(
-                add_record,
-                function (event) {
-                    event.preventDefault();
-                    var popup = new form_common.SelectCreatePopup(this);
-                    popup.select_element(
-                        data.model,
-                        {
-                            title: _t("Create: "),
-                            initial_view: "form",
-                            disable_multiple_selection: true,
-                        },
-                        [],
-                        { default_name: event.data.value }
-                    );
-                    popup.on("elements_selected", null, add_record);
-                }
-            );
     },
     /**
      * @param {OdooEvent} event

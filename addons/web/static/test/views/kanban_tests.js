@@ -357,6 +357,69 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create fail in grouped', function (assert) {
+        assert.expect(7);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                    '<field name="product_id"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            archs: {
+                'partner,false,form': '<form string="Partner">' +
+                        '<field name="product_id"/>' +
+                        '<field name="foo"/>' +
+                    '</form>',
+            },
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'name_create') {
+                    return $.Deferred().reject({
+                        code: 200,
+                        data: {},
+                        message: 'Odoo server error',
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        kanban.renderButtons();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 2,
+            "there should be 2 records in first column");
+
+        kanban.$buttons.find('.o-kanban-button-new').click(); // Click on 'Create'
+        assert.ok(kanban.$('.o_kanban_group:first() > div:nth(1)').hasClass('o_kanban_quick_create'),
+            "clicking on create should open the quick_create in the first column");
+
+        kanban.$('.o_kanban_quick_create input')
+            .val('test')
+            .trigger($.Event('keypress', {keyCode: $.ui.keyCode.ENTER}));
+
+        assert.strictEqual($('.modal .o_form_view.o_form_editable').length, 1,
+            "a form view dialog should have been opened (in edit)");
+        assert.strictEqual($('.modal .o_form_field_many2one input').val(), 'hello',
+            "the correct product_id should already be set");
+
+        // specify a name and save
+        $('.modal .o_form_input[name=foo]').val('test').trigger('input');
+        $('.modal-footer .btn-primary').click();
+
+        assert.strictEqual($('.modal').length, 0, "the modal should be closed");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 3,
+            "there should be 3 records in first column");
+        var $firstRecord = kanban.$('.o_kanban_group:first .o_kanban_record:first');
+        assert.strictEqual($firstRecord.text(), 'test',
+            "the first record of the first column should be the new one");
+
+        kanban.destroy();
+    });
+
     QUnit.test('many2manytags are correctly fetched and displayed', function (assert) {
         assert.expect(3);
 
