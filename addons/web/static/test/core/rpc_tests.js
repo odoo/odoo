@@ -208,6 +208,38 @@ QUnit.module('core', {}, function () {
             .exec();
     });
 
+    QUnit.test('read_group with kwargs', function (assert) {
+        assert.expect(2);
+        var query = createQuery({
+            model: 'partner',
+            method: 'read_group',
+            mockRPC: function (route, args) {
+                assert.deepEqual(args, {
+                    args: [],
+                    kwargs: {
+                        context: {abc: 'def'},
+                        domain: ['a', '=', 1],
+                        fields: ['name'],
+                        groupby: ['product_id'],
+                        lazy: true,
+                        orderby: false,
+                    },
+                    method: 'read_group',
+                    model: 'partner',
+                }, "should have correct args");
+                assert.equal(route, '/web/dataset/call_kw/partner/read_group',
+                    "should call correct route");
+            },
+        });
+        query
+            .withDomain(['a', '=', 1])
+            .withFields(['name'])
+            .groupBy(['product_id'])
+            .kwargs({context: {abc: 'def'}})
+            .lazy(true)
+            .exec();
+    });
+
     QUnit.test('search_read with no domain, nor fields', function (assert) {
         assert.expect(2);
         createQuery({

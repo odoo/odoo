@@ -264,7 +264,7 @@ var ReadGroupRPCBuilder = SearchRPCBuilder.extend({
      * @returns {Object}
      */
     _getParams: function () {
-        var kwargs = _.extend({}, this._kwargs, {
+        var kwargs = _.defaults({}, this._kwargs, {
             context: this._context || {},
             domain: this._domain || [],
             fields: this._fields,
