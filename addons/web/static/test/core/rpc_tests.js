@@ -50,11 +50,11 @@ QUnit.module('core', {}, function () {
         var query = createQuery({
             route: '/my/route',
             mockRPC: function (route, params) {
-                assert.deepEqual(params, {hey: 'there'},
+                assert.deepEqual(params, {hey: 'there', model: 'test'},
                     "should transfer the proper parameters");
             },
         });
-        query.params({hey: 'there'}).exec();
+        query.params({hey: 'there', model: 'test'}).exec();
     });
 
     QUnit.test('basic rpc, with no context', function (assert) {
