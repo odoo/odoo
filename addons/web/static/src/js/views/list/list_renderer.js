@@ -51,18 +51,17 @@ var ListRenderer = BasicRenderer.extend({
         this._super.apply(this, arguments);
         var self = this;
         this.hasHandle = false;
+        this._processModifiers();
         this.columns = _.reject(this.arch.children, function (c) {
             if (c.attrs.invisible === '1') {
                 return true;
             }
-            var modifiers = JSON.parse(c.attrs.modifiers || '{}');
-            if (modifiers.tree_invisible) {
+            if (c.modifiers.tree_invisible) {
                 return true;
             }
             if (c.attrs.widget === 'handle') {
                 self.hasHandle = true;
             }
-            c.modifiers = modifiers;
             return false;
         });
         this.rowDecorations = _.chain(this.arch.attrs)
@@ -619,6 +618,17 @@ var ListRenderer = BasicRenderer.extend({
             $checked_rows.find('.o_list_record_selector input').prop('checked', true);
         }
         return this._super();
+    },
+    /**
+     * Process the modifiers by setting their parsed version on the
+     * corresponding nodes.
+     *
+     * @private
+     */
+    _processModifiers: function () {
+        _.each(this.arch.children, function (c) {
+            c.modifiers = JSON.parse(c.attrs.modifiers || '{}');
+        });
     },
     /**
      * Whenever we change the state of the selected rows, we need to call this
