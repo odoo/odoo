@@ -646,7 +646,7 @@
         <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables" sequence="1"/>
 
         <record id="action_invoice_out_refund" model="ir.actions.act_window">
-            <field name="name">Customer Refunds</field>
+            <field name="name">Customer Credit Notes</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
@@ -655,7 +655,7 @@
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a customer refund.
+                Click to create a customer credit note.
               </p><p>
                 Odoo's electronic invoicing allows to ease and fasten the
                 collection of customer payments. Your customer receives the
@@ -724,7 +724,7 @@
 
 
         <record id="action_invoice_in_refund" model="ir.actions.act_window">
-            <field name="name">Vendor Refunds</field>
+            <field name="name">Vendor Credit Notes</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
@@ -733,7 +733,7 @@
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to record a new vendor refund.
+                Click to record a new vendor credit note.
               </p><p>
                 You can control the invoice from your vendor according to
                 what you purchased or received.
