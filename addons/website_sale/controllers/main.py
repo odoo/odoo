@@ -937,10 +937,12 @@ class WebsiteSale(http.Controller):
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             values = {
                 'order': order,
-                #  check post msg set or not in payment method
-                #  always return default value (<p><br></p>) of html type field
-                #  if html type field is empty
-                'post_msg': True if (order.payment_acquirer_id.post_msg != '<p><br></p>') else False,
+                # check post msg set or not in payment method
+                # first time return False
+                # when we go to the post_msg field(html)
+                # and put on cursor then record save it
+                # always return value(<p><br></p>), if field is empty
+                'post_msg': True if (order.payment_acquirer_id.post_msg not in ['<p><br></p>', False]) else False,
             }
             return request.render("website_sale.confirmation", values)
         else:
