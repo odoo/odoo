@@ -603,20 +603,18 @@ odoo.define('website_form_editor.tour', function(require) {
             content: "Check mail.mail records have been created",
             trigger: "body",
             run: function () {
-                var mailDef = rpc
-                    .query({model: 'mail.mail', method: 'search_read'})
-                    .args([
-                        // TODO: add other fields in domain !
-                        [
+                var mailDef = rpc.query({
+                        model: 'mail.mail',
+                        method: 'search_read',
+                        domain: [
                             ['email_to', '=', 'test@test.test'],
                             ['body_html', 'like', 'A useless message'],
                             ['body_html', 'like', 'Service : Development Service'],
                             ['body_html', 'like', 'State : Belgium'],
                             ['body_html', 'like', 'Products : Xperia,Wiko Stairway']
                         ],
-                        []
-                    ])
-                    .exec({type: "ajax"});
+                        fields: [],
+                    });
                 var success = function(model, data) {
                     if(data.length) {
                         $('body').append('<div id="website_form_editor_success_test_tour_'+model+'"></div>');

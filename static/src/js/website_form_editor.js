@@ -61,10 +61,12 @@ odoo.define('website_form_editor', function (require) {
         fetch_model_fields: function() {
             var self = this;
             this.fields_deferred = new $.Deferred();
-            rpc.query({model: "ir.model", method: "get_authorized_fields"})
-                .args([this.$target.closest('form').attr('data-model_name')])
-                .withContext(base.get_context())
-                .exec({type: "ajax"})
+            rpc.query({
+                    model: "ir.model",
+                    method: "get_authorized_fields",
+                    args: [this.$target.closest('form').attr('data-model_name')],
+                    context: base.get_context(),
+                })
                 .then(function(fields) {
                     // The get_fields function doesn't return the name
                     // in the field dict since it uses it has the key
@@ -84,20 +86,22 @@ odoo.define('website_form_editor', function (require) {
             if (type !== 'click') return;
 
             var self = this;
-            rpc.query({model: "ir.model", method: "search_read"})
-                .args([
-                    [['website_form_access', '=', true]],
-                    ['id', 'model', 'name', 'website_form_label']
-                ])
-                .withContext(base.get_context())
-                .exec({type: "ajax"})
+            rpc.query({
+                    model: "ir.model",
+                    method: "search_read",
+                    args: [
+                        [['website_form_access', '=', true]],
+                        ['id', 'model', 'name', 'website_form_label']
+                    ],
+                    context: base.get_context(),
+                })
                 .then(function(models) {
                     // Models selection input
                     var model_selection = qweb.render("website_form_editor.field_many2one", {
                         field: {
                             name: 'model_selection',
                             string: 'Action',
-                            records: _.map(models.records, function(m){
+                            records: _.map(models, function(m){
                                 return {
                                     id: m.model,
                                     display_name: m.website_form_label || m.name,
@@ -342,9 +346,11 @@ odoo.define('website_form_editor', function (require) {
                 if (fields.length) {
                     // ideally we'd only do this if saving the form
                     // succeeds... but no idea how to do that
-                    rpc.query({model: 'ir.model.fields', method: 'formbuilder_whitelist'})
-                        .args([model, _.uniq(fields)])
-                        .exec({type: "ajax"});
+                    rpc.query({
+                        model: 'ir.model.fields',
+                        method: 'formbuilder_whitelist',
+                        args: [model, _.uniq(fields)],
+                    });
                 }
             }
 
