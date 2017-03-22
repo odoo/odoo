@@ -2298,6 +2298,13 @@
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
     </record>
 
+    <record id="pcg_445204" model="account.account.template">
+      <field name="name">TVA due imports</field>
+      <field name="code">445204</field>
+      <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+    </record>
+
     <record id="pcg_44551" model="account.account.template">
       <field name="name">TVA à décaisser</field>
       <field name="code">44551</field>
@@ -2339,6 +2346,13 @@
     <record id="pcg_445662" model="account.account.template">
       <field name="name">TVA déductible intracommunautaire</field>
       <field name="code">445662</field>
+      <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+    </record>
+
+    <record id="pcg_445663" model="account.account.template">
+      <field name="name">TVA déductible imports</field>
+      <field name="code">445663</field>
       <field name="user_type_id" ref="account.data_account_type_current_assets"/>
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
     </record>
