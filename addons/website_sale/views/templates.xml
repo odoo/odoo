@@ -1646,9 +1646,11 @@
         <t t-if="order.payment_acquirer_id.auto_confirm == 'none'">
             <div class="panel panel-info">
                 <div class="panel-heading" t-raw="order.payment_acquirer_id.pending_msg" />
-                <div class="panel-body" t-if="order.payment_acquirer_id.post_msg">
-                    <t t-raw="order.payment_acquirer_id.post_msg" />
-                </div>
+                <t t-if="post_msg">
+                    <div class="panel-body">
+                        <t t-raw="order.payment_acquirer_id.post_msg" />
+                    </div>
+                </t>
             </div>
         </t>
         <t t-if="order.payment_acquirer_id.auto_confirm != 'none'">

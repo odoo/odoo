@@ -935,7 +935,14 @@ class WebsiteSale(http.Controller):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
-            return request.render("website_sale.confirmation", {'order': order})
+            values = {
+                'order': order,
+                #  check post msg set or not in payment method
+                #  always return default value (<p><br></p>) of html type field
+                #  if html type field is empty
+                'post_msg': True if (order.payment_acquirer_id.post_msg != '<p><br></p>') else False,
+            }
+            return request.render("website_sale.confirmation", values)
         else:
             return request.redirect('/shop')
 
