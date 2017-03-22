@@ -93,5 +93,5 @@ class BankStatement(models.Model):
 
     @api.multi
     def button_draft(self):
-        if not self.state = 'confirm'
+        if not self.state == 'confirm':
             self.state = 'open'
