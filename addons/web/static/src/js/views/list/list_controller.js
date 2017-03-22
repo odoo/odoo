@@ -200,7 +200,7 @@ var ListController = BasicController.extend({
      * @returns {Deferred}
      */
     _update: function (state) {
-        this._toggleNoContentHelper(state.count === 0);
+        this._toggleNoContentHelper(!this._hasContent(state));
         this._toggleSidebar();
         return this._super.apply(this, arguments);
     },

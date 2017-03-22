@@ -796,6 +796,49 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('no nocontent helper for grouped kanban with empty groups', function (assert) {
+        assert.expect(2);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    // override read_group to return empty groups, as this is
+                    // the case for several models (e.g. project.task grouped
+                    // by stage_id)
+                    return this._super.apply(this, arguments).then(function (result) {
+                        _.each(result, function (group) {
+                            group[args.kwargs.groupby[0] + '_count'] = 0;
+                        });
+                        return result;
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                action: {
+                    help: "No content helper",
+                },
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2,
+            "there should be two columns");
+        assert.strictEqual(kanban.$('.o_kanban_record').length, 0,
+            "there should be no records");
+
+        kanban.destroy();
+    });
+
     QUnit.test('buttons with modifiers', function (assert) {
         assert.expect(2);
 
