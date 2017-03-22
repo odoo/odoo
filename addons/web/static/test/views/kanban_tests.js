@@ -265,7 +265,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create in grouped on m2o', function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         var kanban = createView({
             View: KanbanView,
@@ -281,6 +281,8 @@ QUnit.module('Views', {
         });
         kanban.renderButtons();
 
+        assert.ok(kanban.$('.o_kanban_view').hasClass('ui-sortable'),
+            "columns are sortable when grouped by a m2o field");
         assert.ok(kanban.$buttons.find('.o-kanban-button-new').hasClass('btn-primary'),
             "'create' button should be btn-primary for grouped kanban with at least one column");
         assert.ok(kanban.$('.o_kanban_view > div:last').hasClass('o_column_quick_create'),
@@ -296,7 +298,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create in grouped on char', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var kanban = createView({
             View: KanbanView,
@@ -310,6 +312,8 @@ QUnit.module('Views', {
             groupBy: ['foo'],
         });
 
+        assert.ok(!kanban.$('.o_kanban_view').hasClass('ui-sortable'),
+            "columns aren't sortable when not grouped by a m2o field");
         assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have " + 3 + " columns");
         assert.strictEqual(kanban.$('.o_kanban_group:first() .o_column_title').text(), "yop",
             "'yop' column should be the first column");

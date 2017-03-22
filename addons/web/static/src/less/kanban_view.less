@@ -389,7 +389,6 @@
             margin: 0 @o-kanban-record-margin;
             height: 50px;
             line-height: 2.2;
-            cursor: move;
             .o-flex-display();
             .o_column_unfold {
                 display: none;
@@ -473,7 +472,9 @@
             }
         }
     }
-
+    &.ui-sortable .o_kanban_header {
+        cursor: move;
+    }
     .o_column_quick_create {
         background-color: darken(@odoo-webclient-background-color, 10%);
         cursor: pointer;
