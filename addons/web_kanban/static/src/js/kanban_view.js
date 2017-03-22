@@ -177,8 +177,8 @@ var KanbanView = View.extend({
         var self = this;
         var group_by_field = options.group_by_field;
         var fields_keys = _.uniq(this.fields_keys.concat(group_by_field));
-
-        return new Model(this.model, options.search_context, options.search_domain)
+        var context = $.extend({}, options.search_context, {'from_kanban':true});
+        return new Model(this.model, context, options.search_domain)
         .query(fields_keys)
         .group_by([group_by_field])
         .then(function (groups) {

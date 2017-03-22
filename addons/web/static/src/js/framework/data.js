@@ -45,7 +45,7 @@ var Query = Class.extend({
         this._fields = fields;
         this._filter = [];
         this._context = {};
-        this._lazy = true;
+        this._lazy = false;
         this._limit = false;
         this._offset = 0;
         this._order_by = [];
@@ -164,7 +164,7 @@ var Query = Class.extend({
             domain: this._model.domain(this._filter),
             context: ctx,
             offset: this._offset,
-            lazy: this._lazy,
+            lazy: ctx.from_kanban || this._lazy,
             limit: this._limit,
             orderby: serialize_sort(this._order_by) || false
         }).then(function (results) {
