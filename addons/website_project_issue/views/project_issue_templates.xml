@@ -18,7 +18,7 @@
                             <span class='badge'><t t-esc="issue_count"/></span>
                         </t>
                         <t t-if="not issue_count">
-                            There are currently no issues.
+                            There are currently no issues for your account.
                         </t>
                     </small>
                 </a>
@@ -33,9 +33,7 @@
                 <t t-call="website_portal.portal_searchbar"/>
             </h3>
             <t t-if="not issues">
-                <div class="alert alert-warning mt8" role="alert">
-                    There are no issues.
-                </div>
+                <p>There are currently no issues for your account.</p>
             </t>
             <div t-if="issues" class="panel panel-default">
                 <div class="table-responsive"><table class="table table-hover status_table">

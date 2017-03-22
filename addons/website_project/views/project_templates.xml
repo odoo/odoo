@@ -20,7 +20,7 @@
                             <span class='badge'><t t-esc="project_count"/></span>
                         </t>
                         <t t-if="not project_count">
-                            There are currently no projects.
+                            There are currently no projects for your account.
                         </t>
                     </small>
                 </a>
@@ -32,7 +32,7 @@
                             <span class='badge'><t t-esc="task_count"/></span>
                         </t>
                         <t t-if="not task_count">
-                            There are currently no quotes.
+                            There are currently no quotes for your account.
                         </t>
                     </small>
                 </a>
@@ -42,16 +42,14 @@
 
     <template id="my_projects" name="My Projects">
         <t t-call="website_portal.portal_layout">
-            <div class="row">
+            <div>
                 <h3 class="page-header">
                     Your Projects
                     <t t-call="website_portal.portal_searchbar"/>
                 </h3>
             </div>
             <t t-if="not projects">
-                <div class="alert alert-warning mt8" role="alert">
-                    There are no projects.
-                </div>
+                <p>There are currently no projects for your account.</p>
             </t>
             <div t-if="projects" class="panel panel-default">
                 <div class="table-responsive"><table class="table table-hover status_table">
@@ -161,9 +159,7 @@
                 <t t-call="website_portal.portal_searchbar"/>
             </h3>
             <t t-if="not tasks">
-                <div class="alert alert-warning mt8" role="alert">
-                    There are no tasks.
-                </div>
+                <p>There are currently no tasks for your account.</p>
             </t>
             <div t-if="tasks" class="panel panel-default">
                 <div class="table-responsive"><table class="table table-hover status_table">
