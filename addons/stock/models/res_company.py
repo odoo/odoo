@@ -31,6 +31,6 @@ class Company(models.Model):
     @api.model
     def create(self, vals):
         company = super(Company, self).create(vals)
-        self.env['stock.warehouse'].create({'name': company.name, 'code': company.name[:5], 'company_id': company.id})
-        company.create_transit_location()
+        self.env['stock.warehouse'].sudo().create({'name': company.name, 'code': company.name[:5], 'company_id': company.id})
+        company.sudo().create_transit_location()
         return company
