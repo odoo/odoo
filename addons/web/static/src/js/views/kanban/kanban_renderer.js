@@ -247,30 +247,33 @@ var KanbanRenderer = BasicRenderer.extend({
             }
         });
 
-        // Enable column sorting
-        this.$el.sortable({
-            axis: 'x',
-            items: '> .o_kanban_group',
-            handle: '.o_kanban_header',
-            cursor: 'move',
-            revert: 150,
-            delay: 100,
-            tolerance: 'pointer',
-            forcePlaceholderSize: true,
-            stop: function () {
-                var ids = [];
-                self.$('.o_kanban_group').each(function (index, u) {
-                    ids.push($(u).data('id'));
-                });
-                self.trigger_up('resequence_columns', {ids: ids});
-            },
-        });
+        if (groupedByM2O) {
+            // Enable column sorting
+            this.$el.sortable({
+                axis: 'x',
+                items: '> .o_kanban_group',
+                handle: '.o_kanban_header',
+                cursor: 'move',
+                revert: 150,
+                delay: 100,
+                tolerance: 'pointer',
+                forcePlaceholderSize: true,
+                stop: function () {
+                    var ids = [];
+                    self.$('.o_kanban_group').each(function (index, u) {
+                        ids.push($(u).data('id'));
+                    });
+                    self.trigger_up('resequence_columns', {ids: ids});
+                },
+            });
 
-        // Column quick create
-        if (this.columnOptions.group_creatable && groupedByM2O) {
-            var quickCreate = new ColumnQuickCreate(this);
-            quickCreate.appendTo(fragment);
+            // Enable column quickcreate
+            if (this.columnOptions.group_creatable) {
+                var quickCreate = new ColumnQuickCreate(this);
+                quickCreate.appendTo(fragment);
+            }
         }
+
     },
     /**
      * Renders an ungrouped kanban view in a fragment.
