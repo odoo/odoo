@@ -896,7 +896,10 @@ class BaseModel(object):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
 
-        if ids and self._context.get('defer_parent_store_computation'):
+        # bypass forced parent_store_compute to do it manually later
+        # by setting `manually` in `defer_parent_store_computation` key
+        defer_parent_compute = self._context.get('defer_parent_store_computation')
+        if ids and defer_parent_compute and defer_parent_compute != 'manually':
             self._parent_store_compute()
 
         return {'ids': ids, 'messages': messages}
