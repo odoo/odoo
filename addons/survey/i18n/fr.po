@@ -50,6 +50,14 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
+"\n"
+"                \n"
+"<p>Bonjour,</p>\n"
+"<p>Nous réalisons un sondage, et votre réponse serait appréciée.</p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">Veuillez cliquer ici pour commencer le sondage</a></p>\n"
+"<p>Merci de votre participation!</p>\n"
+"                \n"
+"            "
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_tree
@@ -325,6 +333,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"Les pièces jointes sont liées à un document par model / res_id et au message"
+" via ce champ."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
@@ -491,6 +501,8 @@ msgid ""
 "Deadline to which the invitation to respond for this survey is valid. If the"
 " field is empty,        the invitation is still valid."
 msgstr ""
+"Date limite d'expiration pour l'invitation à répondre à ce sondage. Si ce "
+"champ est vide, l'invitation n'expire pas."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date_deadline
@@ -659,7 +671,7 @@ msgstr ""
 #: code:addons/survey/models/survey.py:474
 #, python-format
 msgid "If other, please specify:"
-msgstr ""
+msgstr "Si autre, précisez:"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -675,7 +687,7 @@ msgstr "En cours"
 #: code:addons/survey/wizard/survey_email_compose_message.py:66
 #, python-format
 msgid "Incorrect Email Address: %s"
-msgstr ""
+msgstr "Adresse de courriel incorrecte: %s"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_email
@@ -690,7 +702,7 @@ msgstr "Invitations envoyées"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
 msgid "Is closed"
-msgstr ""
+msgstr "Est fermé"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
@@ -1080,7 +1092,7 @@ msgstr "Question"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 msgid "Question 2"
-msgstr ""
+msgstr "Question 2"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_question
@@ -1105,7 +1117,7 @@ msgstr "Questions"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
 msgid "Quizz Mode"
-msgstr ""
+msgstr "Mode quiz"
 
 #. module: survey
 #: selection:survey.question,display_mode:0
@@ -1210,7 +1222,7 @@ msgstr "Envoyer"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
 msgid "Send Invitation Again"
-msgstr ""
+msgstr "Renvoyer l'invitation"
 
 #. module: survey
 #: selection:survey.mail.compose.message,public:0
@@ -1525,6 +1537,9 @@ msgid ""
 "This list of emails of recipients will not be converted in contacts.        "
 "Emails must be separated by commas, semicolons or newline."
 msgstr ""
+"La liste de courriels des destinataires ne sera pas convertie en contacts. "
+"Les adresses courriel doivent être séparées par des virgules, des points-"
+"virgule ou des sauts à la ligne."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_thank_you_message
@@ -1598,6 +1613,8 @@ msgstr "Utiliser un modèle"
 msgid ""
 "Use this field to add         additional explanations about your question"
 msgstr ""
+"Utilisez ce champ afin d'ajouter des explications additionnelles à propos de"
+" votre question"
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_user
@@ -1659,7 +1676,7 @@ msgstr "Valider l'entrée"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Validation Error message"
-msgstr ""
+msgstr "Message d'erreur de validation"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
@@ -1709,6 +1726,10 @@ msgid ""
 "want with the public web link (in this case, the \"Login Required\" setting "
 "must be disabled)."
 msgstr ""
+"Vous pouvez partager votre sondage via le lien web public et/ou envoyer des "
+"invitations privées. Une réponses est admise par invitation privée, et les "
+"liens publics ne sont pas limités (dans ce cas, le paramètre "
+"\"Identification requise\" doit être désactivé). "
 
 #. module: survey
 #: code:addons/survey/models/survey.py:319
