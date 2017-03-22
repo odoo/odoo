@@ -225,6 +225,26 @@ class Repair(models.Model):
         return self.write({'state': 'cancel'})
 
     @api.multi
+    def action_send_mail(self):
+        self.ensure_one()
+        template_id = self.env.ref('mrp_repair.mail_template_mrp_repair_quotation').id
+        ctx = {
+            'default_model': 'mrp.repair',
+            'default_res_id': self.id,
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment'
+        }
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'target': 'new',
+            'context': ctx,
+        }
+
+    @api.multi
     def print_repair_order(self):
         return self.env['report'].get_action(self, 'mrp_repair.report_mrprepairorder')
 
@@ -480,8 +500,7 @@ class RepairLine(models.Model):
             self.location_id = False
             self.location_dest_id = False
         elif self.type == 'add':
-            if self.repair_id.partner_id and self.product_id:
-                self.tax_id = self.repair_id.partner_id.property_account_position_id.map_tax(self.product_id.taxes_id, self.product_id, self.repair_id.partner_id).ids
+            self.onchange_product_id()
             args = self.repair_id.company_id and [('company_id', '=', self.repair_id.company_id.id)] or []
             warehouse = self.env['stock.warehouse'].search(args, limit=1)
             self.location_id = warehouse.lot_stock_id
