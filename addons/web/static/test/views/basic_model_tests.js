@@ -606,7 +606,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('internal state of groups remains when reloading', function (assert) {
-        assert.expect(7);
+        assert.expect(9);
 
         this.params.fieldNames = ['foo'];
         this.params.domain = [];
@@ -614,9 +614,24 @@ QUnit.module('Views', {
         this.params.groupedBy = ['product_id'];
         this.params.res_id = undefined;
 
+        var filterEnabled = false;
         var model = createModel({
             Model: BasicModel,
             data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group' && filterEnabled) {
+                    // as this is not yet supported by the MockServer, simulates
+                    // a read_group that returns empty groups
+                    // this is the case for several models (e.g. project.task
+                    // grouped by stage_id)
+                    return this._super.apply(this, arguments).then(function (result) {
+                        // artificially filter out records of first group
+                        result[0].product_id_count = 0;
+                        return result;
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         model.load(this.params).then(function (resultID) {
@@ -642,6 +657,16 @@ QUnit.module('Views', {
                 "first group should still have one record");
             assert.strictEqual(record.data[0].limit, 10,
                 "new limit should have been kept");
+
+            // filter some records out: the open group should stay open but now
+            // be empty
+            filterEnabled = true;
+            model.reload(resultID);
+            record = model.get(resultID);
+            assert.strictEqual(record.data[0].count, 0,
+                "first group's count should be 0");
+            assert.strictEqual(record.data[0].data.length, 0,
+                "first group's data should be empty'");
         });
         model.destroy();
     });

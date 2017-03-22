@@ -2113,9 +2113,11 @@ var BasicModel = AbstractModel.extend({
                     if (oldGroup) {
                         // restore the internal state of the group
                         _.extend(newGroup, _.pick(oldGroup, 'limit', 'isOpen', 'offset'));
-                        // if open, also restore the oldGroup data to keep internal
-                        // state of sub-groups
-                        newGroup.data = oldGroup.isOpen ? oldGroup.data : [];
+                        // if the group is open and contains subgroups, also
+                        // restore its data to keep internal state of sub-groups
+                        if (newGroup.isOpen && newGroup.groupedBy.length) {
+                            newGroup.data = oldGroup.data;
+                        }
                     } else if (!newGroup.openGroupByDefault) {
                         newGroup.isOpen = false;
                     } else {
