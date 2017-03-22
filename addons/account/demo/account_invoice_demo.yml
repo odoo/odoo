@@ -2,7 +2,6 @@
    Set the context for customer invoices because the 'type' field is readonly in invoice form views, so it value won't be considered by the yaml import
 -
   !record {model: account.invoice, id: demo_invoice_1}:
-    company_id: base.main_company
     partner_id: base.res_partner_12
     user_id: base.user_demo
     reference_type: none
@@ -21,7 +20,6 @@
     self.action_invoice_open()
 -
   !record {model: account.invoice, id: demo_invoice_2}:
-    company_id: base.main_company
     partner_id: base.res_partner_2
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
@@ -37,7 +35,6 @@
     self.action_invoice_open()
 -
   !record {model: account.invoice, id: demo_invoice_3}:
-    company_id: base.main_company
     partner_id: base.res_partner_2
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
@@ -55,7 +52,6 @@
    Create an invoice that will generate a followup
 -
   !record {model: account.invoice, id: demo_invoice_followup}:
-    company_id: base.main_company
     partner_id: base.res_partner_2
     user_id: base.user_demo
     reference_type: none
@@ -79,7 +75,6 @@
     type: 'in_invoice'
 -
   !record {model: account.invoice, id: demo_invoice_0}:
-    company_id: base.main_company
     partner_id: base.res_partner_12
     user_id: base.user_demo
     reference_type: none
@@ -97,7 +92,6 @@
         uom_id: product.product_uom_unit
 -
   !record {model: account.invoice, id: demo_invoice_january_wages}:
-    company_id: base.main_company
     partner_id: base.res_partner_12
     type: 'in_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-01'
@@ -108,16 +102,16 @@
           'name': "CEO wages",
           'price_unit': 10000,
       }
-      account = self.env['account.account'].search([('tag_ids', 'in', [ref('account.demo_ceo_wages_account')])], limit=1)
+      default_company = self.env['res.company']._company_default_get('account.account')
+      account = self.env['account.account'].search([('tag_ids', 'in', [ref('account.demo_ceo_wages_account')]), ('company_id', '=', default_company.id)], limit=1)
       if not account:
-          account = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_expenses'))], limit=1)
+          account = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_expenses')), ('company_id', '=', default_company.id)], limit=1)
       if account:
           line_vals['account_id'] = account.id
           self._update('account.invoice.line', 'account', line_vals, 'ceo_wages_line')
           self.env['account.invoice'].browse(ref('demo_invoice_january_wages')).action_invoice_open()
 -
   !record {model: account.invoice, id: demo_invoice_equipment_purchase}:
-    company_id: base.main_company
     partner_id: base.res_partner_1
     type: 'in_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-15'
@@ -128,22 +122,27 @@
           'name': "Coffee Machine with huge 'employee\'s performances boosting perk'",
           'price_unit': 4999.99,
       }
-      account_id = self.env['account.account'].search([('tag_ids', 'in', [ref('account.demo_coffee_machine_account')])], limit=1).id
+      account_default_company = self.env['res.company']._company_default_get('account.account')
+      account_id = self.env['account.account'].search([('tag_ids', 'in', [ref('account.demo_coffee_machine_account')]), ('company_id', '=', account_default_company.id)], limit=1).id
       if not account_id:
-          account_id = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_expenses'))], limit=1).id
+          account_id = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_expenses')), ('company_id', '=', account_default_company.id)], limit=1).id
       if account_id:
           line_vals['account_id'] = account_id
-          tax_id = self.env['account.tax'].search([('type_tax_use', '=', 'purchase'), ('amount', '>', 0)], limit=1).id
+          tax_default_company = self.env['res.company']._company_default_get('account.tax')
+          tax_id = self.env['account.tax'].search([('type_tax_use', '=', 'purchase'), ('amount', '>', 0), ('company_id', '=', tax_default_company.id)], limit=1).id
           if tax_id:
             line_vals['invoice_line_tax_ids'] = [(6, 0, [tax_id])]
           self._update('account.invoice.line', 'account', line_vals, 'coffee_machine_line')
           self.env['account.invoice'].browse(ref('demo_invoice_equipment_purchase'))._onchange_invoice_line_ids()
           self.env['account.invoice'].browse(ref('demo_invoice_equipment_purchase')).action_invoice_open()
+
 -
   !python {model: account.bank.statement.line, id: False} : |
+      default_company = self.env['res.company']._company_default_get('account.account')
       account = self.env['account.account'].search([
           ('user_type_id', '=', ref('account.data_account_type_revenue')),
-          ('tag_ids', 'in', [ref('account.account_tag_financing')])], limit=1)
+          ('tag_ids', 'in', [ref('account.account_tag_financing')]),
+          ('company_id', '=', default_company.id)], limit=1)
       line = self.env.ref('account.demo_bank_statement_line_5')
       if not line.journal_entry_ids and account:
           line.write({'account_id': account.id})
@@ -152,20 +151,22 @@
   !python {model: ir.model.data, id: False} : |
       from datetime import datetime
       from dateutil.relativedelta import relativedelta
+      default_company = self.env['res.company']._company_default_get('account.journal')
       vals = {
-          'company_id': ref('base.main_company'),
-          'journal_id': self.env['account.journal'].search([('type', '=', 'general')], limit=1).id,
+          'journal_id': self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', default_company.id)], limit=1).id,
           'date': datetime.now().replace(day=1,month=1) - relativedelta(days=1),
           'ref': 'Company Creation',
       }
       self._update('account.move', 'account', vals, 'demo_opening_move')
 -
   !python {model: ir.model.data, id: False} : |
-      bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
+      journal_default_company = self.env['res.company']._company_default_get('account.journal')
+      bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', journal_default_company.id)], limit=1)
       if bank_journal:
           bank_account_id = bank_journal.default_debit_account_id.id
-      fixed_asset_account_id = self.env['account.account'].search([('user_type_id', 'in', (ref('account.data_account_type_fixed_assets'),ref('account.data_account_type_current_assets')))], limit=1).id
-      equity_account_id = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_equity')), ('tag_ids', 'in', [ref('account.demo_capital_account')])], limit=1).id
+      account_default_company = self.env['res.company']._company_default_get('account.account')
+      fixed_asset_account_id = self.env['account.account'].search([('user_type_id', 'in', (ref('account.data_account_type_fixed_assets'),ref('account.data_account_type_current_assets'))), ('company_id', '=', account_default_company.id)], limit=1).id
+      equity_account_id = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_equity')), ('tag_ids', 'in', [ref('account.demo_capital_account')]), ('company_id', '=', account_default_company.id)], limit=1).id
       if bank_account_id and fixed_asset_account_id and equity_account_id:
           self.with_context({'check_move_validity': False})._update('account.move.line', 'account', {
               'move_id': ref('account.demo_opening_move'),
