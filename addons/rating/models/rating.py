@@ -8,6 +8,10 @@ from odoo import api, fields, models, tools, _
 from odoo.modules.module import get_resource_path
 from odoo.tools import pycompat
 
+RATING_LIMIT_SATISFIED = 7
+RATING_LIMIT_OK = 3
+RATING_LIMIT_MIN = 1
+
 
 class Rating(models.Model):
 
@@ -32,7 +36,11 @@ class Rating(models.Model):
     res_name = fields.Char(string='Resource name', compute='_compute_res_name', store=True, help="The name of the rated resource.")
     res_model_id = fields.Many2one('ir.model', 'Related Document Model', index=True, ondelete='cascade', help='Model of the followed resource')
     res_model = fields.Char(string='Document Model', related='res_model_id.model', store=True, index=True, readonly=True)
-    res_id = fields.Integer(string='Document ID', required=True, help="Identifier of the rated object", index=True)
+    res_id = fields.Integer(string='Document', required=True, help="Identifier of the rated object", index=True)
+    parent_res_name = fields.Char('Parent Document Name', compute='_compute_parent_res_name', store=True)
+    parent_res_model_id = fields.Many2one('ir.model', 'Parent Related Document Model', index=True)
+    parent_res_model = fields.Char('Parent Document Model', store=True, related='parent_res_model_id.model', index=True)
+    parent_res_id = fields.Integer('Parent Document', index=True)
     rated_partner_id = fields.Many2one('res.partner', string="Rated person", help="Owner of the rated resource")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
     rating = fields.Float(string="Rating", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 10=Happy")
@@ -42,6 +50,15 @@ class Rating(models.Model):
     message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
     access_token = fields.Char('Security Token', default=new_access_token, help="Access token to set the rating of the value")
     consumed = fields.Boolean(string="Filled Rating", help="Enabled if the rating has been filled.")
+
+    @api.depends('parent_res_model', 'parent_res_id')
+    def _compute_parent_res_name(self):
+        for rating in self:
+            name = False
+            if rating.parent_res_model and rating.parent_res_id:
+                name = self.env[rating.parent_res_model].sudo().browse(rating.parent_res_id).name_get()
+                name = name and name[0][1] or ('%s/%s') % (rating.parent_res_model, rating.parent_res_id)
+            rating.parent_res_name = name
 
     @api.multi
     @api.depends('rating')
@@ -59,6 +76,32 @@ class Rating(models.Model):
         text = {10: _('Satisfied'), 5: _('Not satisfied'), 1: _('Highly dissatisfied')}
         for rating in self:
             rating.rating_text = text[rating.rating] or _('No rating yet')
+
+    @api.model
+    def create(self, values):
+        if values.get('res_model_id') and values.get('res_id'):
+            values.update(self._find_parent_data(values))
+        return super(Rating, self).create(values)
+
+    @api.multi
+    def write(self, values):
+        if values.get('res_model_id') and values.get('res_id'):
+            values.update(self._find_parent_data(values))
+        return super(Rating, self).write(values)
+
+    def _find_parent_data(self, values):
+        """ Determine the parent res_model/res_id, based on the values to create or write """
+        current_model_name = self.env['ir.model'].sudo().browse(values['res_model_id']).model
+        current_record = self.env[current_model_name].browse(values['res_id'])
+        data = {
+            'parent_res_model_id': False,
+            'parent_res_id': False,
+        }
+        if hasattr(current_record, 'rating_get_parent_model_name'):
+            parent_res_model = current_record.rating_get_parent_model_name(values)
+            data['parent_res_model_id'] = self.env['ir.model']._get(parent_res_model).id
+            data['parent_res_id'] = current_record.rating_get_parent_id()
+        return data
 
     @api.multi
     def reset(self):
@@ -122,6 +165,14 @@ class RatingMixin(models.AbstractModel):
         result = super(RatingMixin, self).unlink()
         self.env['rating.rating'].sudo().search([('res_model', '=', self._name), ('res_id', 'in', record_ids)]).unlink()
         return result
+
+    def rating_get_parent_model_name(self, vals):
+        """ Return the parent model name """
+        return None
+
+    def rating_get_parent_id(self):
+        """ Return the parent record id """
+        return None
 
     def rating_get_partner_id(self):
         if hasattr(self, 'partner_id') and self.partner_id:
@@ -236,9 +287,9 @@ class RatingMixin(models.AbstractModel):
         data = self.rating_get_repartition(domain=domain)
         res = dict.fromkeys(['great', 'okay', 'bad'], 0)
         for key in data:
-            if key >= 7:
+            if key >= RATING_LIMIT_SATISFIED:
                 res['great'] += data[key]
-            elif key > 3:
+            elif key > RATING_LIMIT_OK:
                 res['okay'] += data[key]
             else:
                 res['bad'] += data[key]

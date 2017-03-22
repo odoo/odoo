@@ -153,7 +153,7 @@
             <field name="name">Customer Ratings</field>
             <field name="res_model">rating.rating</field>
             <field name="view_mode">kanban,tree,pivot,graph,form</field>
-            <field name="domain">[('res_model','in',['project.task', 'project.issue']), ('consumed', '=', True)]</field>
+            <field name="domain">[('parent_res_model','=','project.project'), ('consumed', '=', True)]</field>
             <field name="help" type="html">
                 <p>
                     Customer ratings on tasks/issues. If you have no rating, change your project Settings to activate it.
