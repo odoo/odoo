@@ -25,7 +25,7 @@ class WebsiteRatingProject(http.Controller):
             raise NotFound()
         values = {
             'project': project,
-            'partner_task_rating': request.env['project.rating']._get_partner_rating("project_task", "project.task", project_id),
-            'partner_issue_rating': request.env['project.rating']._get_partner_rating("project_issue", "project.issue", project_id),
+            'partner_task_rating': request.env['project.rating']._get_partner_rating("project_task", "project.task", project_id, limit=50),
+            'partner_issue_rating': request.env['project.rating']._get_partner_rating("project_issue", "project.issue", project_id, limit=50),
         }
         return request.render('website_rating_project_issue.project_rating_page', values)

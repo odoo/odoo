@@ -30,10 +30,10 @@ class Project(models.Model):
 class ProjectTask(models.AbstractModel):
     _name = 'project.rating'
 
-    def _get_partner_rating(self, table, model, project_id):
+    def _get_partner_rating(self, table, model, project_id, limit=None):
         self.env.cr.execute("""
             SELECT
-                RATING.partner_id,
+                RATING.rated_partner_id,
                 array_agg(rating) as rating,
                 array_agg(RATING.id) as rating_ids,
                 CASE
@@ -47,22 +47,22 @@ class ProjectTask(models.AbstractModel):
             LEFT JOIN
                 %s as TASK ON RATING.res_id = TASK.id
             WHERE
-                RATING.res_model = '%s' AND RATING.partner_id IS NOT NULL AND RATING.create_date >= current_date - interval '90' day AND TASK.project_id = %s AND RATING.rating IN (1,5,10)
+                RATING.res_model = '%s' AND RATING.rated_partner_id IS NOT NULL AND RATING.create_date >= current_date - interval '90' day AND TASK.project_id = %s AND RATING.rating IN (1,5,10)
             GROUP BY
-                RATING.partner_id, days, RATING.write_date
+                RATING.rated_partner_id, days, RATING.write_date
             ORDER BY RATING.write_date desc
         """ % (table, model, project_id))
 
         all_record = self.env.cr.dictfetchall()
         rating_ids = []
-        partner_ids = map(lambda x: x['partner_id'], all_record)
+        partner_ids = map(lambda x: x['rated_partner_id'], all_record)
         partner_ratings = [{
-            'partner_id': self.env['res.partner'].sudo().browse(partner_id),
+            'rated_partner_id': self.env['res.partner'].sudo().browse(rated_partner_id),
             'week': {'happy': 0, 'avg': 0, 'unhappy': 0, 'total': 0},
             '15 days': {'happy': 0, 'avg': 0, 'unhappy': 0, 'total': 0},
             '1 month': {'happy': 0, 'avg': 0, 'unhappy': 0, 'total': 0},
             '3 month': {'happy': 0, 'avg': 0, 'unhappy': 0, 'total': 0},
-        } for partner_id in set(partner_ids)]
+        } for rated_partner_id in set(partner_ids)]
 
         def increment_rating(partner, days, rating):
             if rating == 10:
@@ -74,7 +74,7 @@ class ProjectTask(models.AbstractModel):
             partner[days]['total'] += 1
 
         for record in all_record:
-            partner = filter(lambda x: x['partner_id'].id == record['partner_id'], partner_ratings)[0]
+            partner = filter(lambda x: x['rated_partner_id'].id == record['rated_partner_id'], partner_ratings)[0]
             if record['days'] == 'week':
                 for rating in record['rating']:
                     increment_rating(partner, '15 days', rating)
@@ -90,7 +90,7 @@ class ProjectTask(models.AbstractModel):
 
         for record in all_record:
             rating_ids += record['rating_ids']
-            partner = filter(lambda x: x['partner_id'].id == record['partner_id'], partner_ratings)[0]
+            partner = filter(lambda x: x['rated_partner_id'].id == record['rated_partner_id'], partner_ratings)[0]
             for rating in record['rating']:
                 increment_rating(partner, record['days'], rating)
 
@@ -112,8 +112,15 @@ class ProjectTask(models.AbstractModel):
             statistic[day][percentage] = total and "%.1f" % ((statistic[day][rating] * 100 / float(total))) or 0.0
 
         partner_ratings = sorted(partner_ratings, key=lambda k: k['15 days']['total'], reverse=True)[:5]
+        for rating in partner_ratings:
+            ratring = rating['15 days']
+            total = ratring['happy'] * 100 + ratring['avg'] * 50
+            rating['15 days']['%'] = total and total/ratring['total'] or 0
+
         return {
             'partner_rating': partner_ratings,
             'statistic': statistic,
-            'ratings': self.env['rating.rating'].sudo().browse(rating_ids)
+            # we could not pass limit in query because we need all rating up to
+            # last three months so limit apply here
+            'ratings': self.env['rating.rating'].sudo().browse(rating_ids)[:limit]
         }
