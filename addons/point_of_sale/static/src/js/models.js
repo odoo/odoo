@@ -1174,8 +1174,8 @@ exports.Orderline = Backbone.Model.extend({
             return;
         }
         this.product = options.product;
-        this.set_product_lot(this.product)
         this.price   = options.product.price;
+        this.set_product_lot(this.product);
         this.set_quantity(1);
         this.discount = 0;
         this.discountStr = '0';
@@ -1189,7 +1189,7 @@ exports.Orderline = Backbone.Model.extend({
             console.error('ERROR: attempting to recover product ID', json.product_id,
                 'not available in the point of sale. Correct the product or clean the browser cache.');
         }
-        this.set_product_lot(this.product)
+        this.set_product_lot(this.product);
         this.price = json.price_unit;
         this.set_discount(json.discount);
         this.set_quantity(json.qty);
