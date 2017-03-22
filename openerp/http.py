@@ -1364,7 +1364,7 @@ class Root(object):
                 if territory:
                     lang = '%s_%s' % (code, territory)
                 else:
-                    lang = babel.code.LOCALE_ALIASES[code]
+                    lang = babel.core.LOCALE_ALIASES[code]
             except (ValueError, KeyError):
                 lang = 'en_US'
             httprequest.session.context["lang"] = lang
