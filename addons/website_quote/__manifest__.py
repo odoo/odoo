@@ -13,7 +13,7 @@ Odoo Sale Quote Roller
         """,
     'depends': ['website', 'sale_management', 'mail', 'payment', 'website_portal_sale', 'website_mail'],
     'data': [
-        'data/website_quotation_data.xml',
+        'data/website_quote_data.xml',
         'report/sale_order_reports.xml',
         'report/sale_order_templates.xml',
         'report/website_quote_templates.xml',
@@ -24,7 +24,7 @@ Odoo Sale Quote Roller
         'security/ir.model.access.csv',
     ],
     'demo': [
-        'data/website_quotation_demo.xml'
+        'data/website_quote_demo.xml'
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
