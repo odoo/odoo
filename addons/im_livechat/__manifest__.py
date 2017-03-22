@@ -21,6 +21,7 @@ Help your customers with this chat, and analyse their feedback.
     'data': [
         "security/im_livechat_channel_security.xml",
         "security/ir.model.access.csv",
+        "views/rating_views.xml",
         "views/mail_channel_views.xml",
         "views/im_livechat_channel_views.xml",
         "views/im_livechat_channel_templates.xml",
