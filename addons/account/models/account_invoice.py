@@ -58,6 +58,12 @@ class AccountInvoice(models.Model):
         self.amount_total_signed = self.amount_total * sign
         self.amount_untaxed_signed = amount_untaxed_signed * sign
 
+    @api.onchange('amount_total')
+    def _onchange_amount_total(self):
+        for inv in self:
+            if inv.amount_total < 0:
+                raise Warning(_('You cannot validate an invoice with a negative total amount. You should create a refund instead.'))
+
     @api.model
     def _default_journal(self):
         if self._context.get('default_journal_id', False):
@@ -1273,12 +1279,6 @@ class AccountInvoiceLine(models.Model):
                 self.price_unit = fix_price(self.product_id.standard_price, taxes, fp_taxes)
         else:
             self.price_unit = fix_price(self.product_id.lst_price, taxes, fp_taxes)
-
-    @api.onchange('price_subtotal')
-    def _onchange_price_subtotal(self):
-        for line in self:
-            if line.price_subtotal < 0.0:
-                raise Warning(_('You cannot validate an invoice with a negative total amount. You should create a refund instead.'))
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
