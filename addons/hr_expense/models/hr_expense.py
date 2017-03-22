@@ -172,6 +172,7 @@ class HrExpense(models.Model):
         '''
         main function that is called when trying to create the accounting entries related to an expense
         '''
+        lines = []
         for expense in self:
             journal = expense.sheet_id.bank_journal_id if expense.payment_mode == 'company_account' else expense.sheet_id.journal_id
             #create the move that will contain the accounting entries
@@ -229,11 +230,11 @@ class HrExpense(models.Model):
                     'amount_currency': diff_currency_p and total_currency or False,
                     'currency_id': diff_currency_p and expense.currency_id.id or False,
                     'payment_id': payment_id,
-                    })
-
+            })
             #convert eml into an osv-valid format
-            lines = map(lambda x: (0, 0, expense._prepare_move_line(x)), move_lines)
-            move.with_context(dont_create_taxes=True).write({'line_ids': lines})
+            lines.append(map(lambda x: (0, 0, expense._prepare_move_line(x)), move_lines))
+            for line in lines:
+                move.with_context(dont_create_taxes=True).write({'line_ids': line})
             expense.sheet_id.write({'account_move_id': move.id})
             move.post()
             if expense.payment_mode == 'company_account':
