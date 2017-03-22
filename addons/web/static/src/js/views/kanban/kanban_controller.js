@@ -339,8 +339,8 @@ var KanbanController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onResequenceColumn: function (event) {
-        var grouped_by = this.model.get(this.handle).groupedBy[0];
-        var model = this.fields_view.fields[grouped_by].relation;
+        var state = this.model.get(this.handle, {raw: true});
+        var model = state.fields[state.groupedBy[0]].relation;
         this.model.resequence(model, event.data.ids, this.handle);
     },
     /**
