@@ -525,8 +525,11 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             qty = 0.0
             for inv_line in line.invoice_lines:
-                if inv_line.invoice_id.state not in ['cancel'] and inv_line.invoice_id.type == 'in_invoice':
-                    qty += inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
+                if inv_line.invoice_id.state not in ['cancel']:
+                    if inv_line.invoice_id.type == 'in_invoice':
+                        qty += inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
+                    elif inv_line.invoice_id.type == 'in_refund':
+                        qty -= inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
     @api.depends('order_id.state', 'move_ids.state')
