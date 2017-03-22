@@ -501,7 +501,7 @@ class Partner(models.Model):
                     companies = set(user.company_id for user in partner.user_ids)
                     if len(companies) > 1 or company not in companies:
                         raise UserError(_("You can not change the company as the partner/user has multiple user linked with different companies."))
-        tools.image_resize_images(vals)
+        tools.image_resize_images(vals, sizes={'image': (1024, None)})
 
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
@@ -525,7 +525,7 @@ class Partner(models.Model):
         # cannot be easily performed if default images are in the way
         if not vals.get('image'):
             vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
-        tools.image_resize_images(vals)
+        tools.image_resize_images(vals, sizes={'image': (1024, None)})
         partner = super(Partner, self).create(vals)
         partner._fields_sync(vals)
         partner._handle_first_contact_creation()
