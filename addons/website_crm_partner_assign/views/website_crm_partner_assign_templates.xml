@@ -89,8 +89,8 @@
                         </t>
                         <div class="media">
                             <a class="pull-left" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
-                               t-field="partner.image"
-                               t-options='{"widget": "image", "class": "media-object", "max_width": 128}'
+                               t-field="partner.image_medium"
+                               t-options='{"widget": "image", "class": "media-object"}'
                             ></a>
                             <div class="media-body o_partner_body" style="min-height: 64px;">
                                 <a class="media-heading" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
