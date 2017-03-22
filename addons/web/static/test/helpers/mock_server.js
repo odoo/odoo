@@ -91,7 +91,12 @@ var MockServer = Class.extend({
         try {
             def = this._performRpc(route, args);
         } catch (error) {
-            def = $.Deferred().reject(error);
+            if (logLevel === 1) {
+                console.warn('Mock: ' + route, error.message);
+            } else if (logLevel === 2) {
+                console.warn('%c[rpc] error response:', 'color: blue; font-weight: bold;', error.message);
+            }
+            return $.Deferred().reject(error.message, $.Event());
         }
         return def.then(function (result) {
             var resultString = JSON.stringify(result || false);
@@ -101,14 +106,6 @@ var MockServer = Class.extend({
                 console.log('%c[rpc] response:', 'color: blue; font-weight: bold;', JSON.parse(resultString));
             }
             return JSON.parse(resultString);
-        }, function (error) {
-            var errorString = JSON.stringify(error || false);
-            if (logLevel === 1) {
-                console.warn('Mock: ' + route, JSON.parse(errorString));
-            } else if (logLevel === 2) {
-                console.warn('%c[rpc] error response:', 'color: blue; font-weight: bold;', JSON.parse(errorString));
-            }
-            return JSON.parse(errorString);
         });
     },
 
@@ -230,6 +227,10 @@ var MockServer = Class.extend({
      * @returns {Object[]} a list of records
      */
     _getRecords: function (model, domain) {
+        if (!_.isArray(domain)) {
+            throw new Error("MockServer._getRecords: given domain has to be an array.");
+        }
+
         var self = this;
         var records = this.data[model].records;
 

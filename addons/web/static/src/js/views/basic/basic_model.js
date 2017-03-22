@@ -1551,7 +1551,7 @@ var BasicModel = AbstractModel.extend({
         var def = $.Deferred();
 
         this._rpc(domainModel, "search_count")
-            .args([domainValue])
+            .args([Domain.prototype.stringToArray(domainValue)])
             .withContext(context)
             .exec()
             .then(_.identity, function (error, e) {
