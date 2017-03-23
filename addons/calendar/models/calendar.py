@@ -926,7 +926,7 @@ class Meeting(models.Model):
         result = {}
         for meeting in self:
             alreay_meeting_partners = meeting.attendee_ids.mapped('partner_id')
-            meeting_attendees = self.env['calendar.attendee']
+            meeting_attendees = self.env[self.attendee_ids._name]
             meeting_partners = self.env['res.partner']
             for partner in meeting.partner_ids.filtered(lambda partner: partner not in alreay_meeting_partners):
                 values = {
@@ -939,7 +939,7 @@ class Meeting(models.Model):
                 if partner == self.env.user.partner_id:
                     values['state'] = 'accepted'
 
-                attendee = self.env['calendar.attendee'].create(values)
+                attendee = self.env[self.attendee_ids._name].create(values)
 
                 meeting_attendees |= attendee
                 meeting_partners |= partner
@@ -958,9 +958,9 @@ class Meeting(models.Model):
             old_attendees = meeting.attendee_ids
             partners_to_remove = all_partner_attendees + meeting_partners - all_partners
 
-            attendees_to_remove = self.env["calendar.attendee"]
+            attendees_to_remove = self.env[self.attendee_ids._name]
             if partners_to_remove:
-                attendees_to_remove = self.env["calendar.attendee"].search([('partner_id', 'in', partners_to_remove.ids), ('event_id', '=', meeting.id)])
+                attendees_to_remove = self.env[self.attendee_ids._name].search([('partner_id', 'in', partners_to_remove.ids), ('event_id', '=', meeting.id)])
                 attendees_to_remove.unlink()
 
             result[meeting.id] = {
@@ -1610,8 +1610,8 @@ class Meeting(models.Model):
         events = self.search([('id', 'in', self.ids), ('alarm_ids', '!=', False)])
         partner_ids = events.mapped('partner_ids').ids
 
-        records_to_exclude = self.env['calendar.event']
-        records_to_unlink = self.env['calendar.event']
+        records_to_exclude = self.env[self._name]
+        records_to_unlink = self.env[self._name]
 
         for meeting in self:
             if can_be_deleted and not is_calendar_id(meeting.id):  # if  ID REAL
