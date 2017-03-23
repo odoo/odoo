@@ -185,6 +185,69 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('resequence columns and records', function (assert) {
+        var done = assert.async();
+        assert.expect(8);
+
+        this.data.partner.records.push({id: 3, foo: 'aaa', product_id: 37});
+
+        var nbReseq = 0;
+        var model = createModel({
+            Model: KanbanModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    nbReseq++;
+                    if (nbReseq === 1) { // resequencing columns
+                        assert.deepEqual(args.ids, [41, 37],
+                            "ids should be correct");
+                        assert.strictEqual(args.model, 'product_id',
+                            "model should be correct");
+                    } else if (nbReseq === 2) { // resequencing records
+                        assert.deepEqual(args.ids, [3, 1],
+                            "ids should be correct");
+                        assert.strictEqual(args.model, 'partner',
+                            "model should be correct");
+                    }
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        var params = _.extend(this.params, {
+            groupedBy: ['product_id'],
+            fieldNames: ['foo'],
+        });
+
+        model.load(params)
+            .then(function (stateID) {
+                var state = model.get(stateID);
+                assert.strictEqual(state.data[0].res_id, 37,
+                    "first group should be res_id 37");
+
+                // resequence columns
+                return model.resequence('product_id', [41, 37], stateID);
+            })
+            .then(function (stateID) {
+                var state = model.get(stateID);
+                assert.strictEqual(state.data[0].res_id, 41,
+                    "first group should be res_id 41 after resequencing");
+                assert.strictEqual(state.data[1].data[0].res_id, 1,
+                    "first record should be res_id 1");
+
+                // resequence records
+                return model.resequence('partner', [3, 1], state.data[1].id);
+            })
+            .then(function (groupID) {
+                var group = model.get(groupID);
+                assert.strictEqual(group.data[0].res_id, 3,
+                    "first record should be res_id 3 after resequencing");
+
+                model.destroy();
+                done();
+            });
+
+    });
 });
 
 });

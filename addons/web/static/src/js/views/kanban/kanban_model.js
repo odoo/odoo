@@ -153,19 +153,16 @@ var KanbanModel = BasicModel.extend({
             return $.when(parentID); // there is nothing to sort
         }
         var self = this;
-        var data = self.localData[parentID];
-        var def;
-        if (data.fields.sequence) {
-            def = this._rpc('/web/dataset/resequence')
-                .params({model: modelName, ids: resIDs})
-                .exec();
-        }
-        return $.when(def).then(function () {
-            data.data = _.sortBy(data.data, function (d) {
-                return _.indexOf(resIDs, d.res_id);
+        var data = this.localData[parentID];
+        return this._rpc('/web/dataset/resequence')
+            .params({model: modelName, ids: resIDs})
+            .exec()
+            .then(function () {
+                data.data = _.sortBy(data.data, function (d) {
+                    return _.indexOf(resIDs, self.localData[d].res_id);
+                });
+                return parentID;
             });
-            return parentID;
-        });
     },
 
     //--------------------------------------------------------------------------
