@@ -52,6 +52,42 @@
         ids = self.search(cr, uid, [('id', 'child_of',[ref('categ_1')])])
         assert len(ids) == 1, ids
 -
+    Test hierarchical search in M2M with parent ID (list of ids)
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'parent_of',[ref('categ_1')])])
+        assert len(ids) == 3, ids
+-
+    Test hierarchical search in M2M with parent ID (single id)
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'parent_of',ref('categ_1'))])
+        assert len(ids) == 3, ids
+-
+    Test hierarchical search in M2M with parent IDs
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'parent_of',[ref('categ_root'), ref('categ_0')])])
+        assert len(ids) == 2, ids
+-
+    Test hierarchical search in M2M with parent IDs
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'parent_of',[ref('categ_0')])])
+        assert len(ids) == 2, ids
+-
+    Test hierarchical search in M2M with parent IDs
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'parent_of',[ref('categ_1')])])
+        assert len(ids) == 3, ids
+-
+    Test hierarchical search in M2M with parent IDs
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'parent_of',[ref('categ_root')])])
+        assert len(ids) == 1, ids
+-
     Testing that some domain expressions work
 -
     !python {model: res.partner }: |
@@ -447,6 +483,23 @@
         res_3 = self.search(cr, uid, [('id', 'child_of', [company.name])])
         res_3.sort()
         res_4 = self.search(cr, uid, [('id', 'child_of', company.name)])
+        res_4.sort()
+        assert res_1 == expected
+        assert res_2 == expected
+        assert res_3 == expected
+        assert res_4 == expected
+
+        # parent_of x returns x and its parents (direct or not).
+        company = self.browse(cr, uid, ref('ymltest_company4'))
+        expected = [ref('ymltest_company4'), ref('ymltest_company3')]
+        expected.sort()
+        res_1 = self.search(cr, uid, [('id', 'parent_of', [ref('ymltest_company4')])])
+        res_1.sort()
+        res_2 = self.search(cr, uid, [('id', 'parent_of', ref('ymltest_company4'))])
+        res_2.sort()
+        res_3 = self.search(cr, uid, [('id', 'parent_of', [company.name])])
+        res_3.sort()
+        res_4 = self.search(cr, uid, [('id', 'parent_of', company.name)])
         res_4.sort()
         assert res_1 == expected
         assert res_2 == expected
