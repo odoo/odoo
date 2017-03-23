@@ -995,6 +995,47 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('resequence columns in grouped by m2o', function (assert) {
+        assert.expect(4);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route) {
+                if (route === '/web/dataset/resequence') {
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.ok(kanban.$('.o_kanban_view').hasClass('ui-sortable'),
+            "columns should be sortable");
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2,
+            "should have two columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:first').data('id'), 3,
+            "first column should be id 3 before resequencing");
+
+        // there is a 100ms delay on the d&d feature (jquery sortable) for
+        // kanban columns, making it hard to test. So we rather bypass the d&d
+        // for this test, and directly call the event handler
+        kanban._onResequenceColumn({data: {ids: [5, 3]}});
+        kanban.update({}, {reload: false}); // re-render without reloading
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first').data('id'), 5,
+            "first column should be id 5 before resequencing");
+
+        kanban.destroy();
+    });
+
 });
 
 });
