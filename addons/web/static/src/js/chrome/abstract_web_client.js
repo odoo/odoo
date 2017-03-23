@@ -14,6 +14,7 @@ odoo.define('web.AbstractWebClient', function (require) {
 var ActionManager = require('web.ActionManager');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
+var config = require('web.config');
 var crash_manager = require('web.crash_manager');
 var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
@@ -91,6 +92,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     start: function () {
         var self = this;
 
+        this.$el.toggleClass('o_touch_device', config.device.touch);
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
 

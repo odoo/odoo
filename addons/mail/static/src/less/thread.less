@@ -71,22 +71,20 @@
         }
         .o_thread_icons {
             cursor: pointer;
-            .fa-star {
-                opacity: @mail-thread-icon-opacity;
-                color: gold;
-            }
-            :not(.fa-star) {
+            > .o_thread_icon {
                 opacity: 0;
-            }
-            &.touch_screen > * {
-                opacity: @mail-thread-icon-opacity;
+                &.fa-star {
+                    opacity: @mail-thread-icon-opacity;
+                    color: gold;
+                }
             }
         }
+
         &:hover, &.o_thread_selected_message {
             .o_thread_message_side_date {
                 opacity: @mail-thread-side-date-opacity;
             }
-            .o_thread_icons * {
+            .o_thread_icons > * {
                 opacity: @mail-thread-icon-opacity;
                 &:hover {
                     opacity: 1;
@@ -206,5 +204,13 @@
 
     .o_thread_message .o_thread_message_core .o_mail_read_more {
         display: block;
+    }
+}
+
+.o_web_client.o_touch_device {
+    .o_thread_icons {
+        > .o_thread_icon {
+            opacity: @mail-thread-icon-opacity;
+        }
     }
 }
