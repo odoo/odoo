@@ -1,42 +1,106 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# First author: Jose Ernesto Mendez <tecnologia@obsdr.com> (Open Business Solutions SRL.)
-# Copyright (c) 2012 -TODAY Open Business Solutions, SRL. (http://obsdr.com). All rights reserved.
-# This is a fork to upgrade to odoo 8.0
-# by Marcos Organizador de Negocios - Eneldo Serrata - www.marcos.org.do
+# Author: Gustavo Valverde <gvalverde@iterativo.do> iterativo | Consultores
+# Contributors: Edser Solis - iterativo
+
+# Odoo 8.0 author: Eneldo Serrata <eneldo@marcos.do>
+# (Marcos Organizador de Negocios SRL..)
+# Odoo 7.0 author: Jose Ernesto Mendez <tecnologia@obsdr.com>
+# (Open Business Solutions SRL.)
+
+# Copyright (c) 2016 - Present | iterativo, SRL. - http://iterativo.do
+# All rights reserved.
 
 {
     'name': 'Dominican Republic - Accounting',
-    'version': '1.0',
+    'version': '2.0',
     'category': 'Localization',
     'description': """
-This is the base module to manage the accounting chart for Dominican Republic.
-==============================================================================
 
-* Chart of Accounts.
-* The Tax Code Chart for Domincan Republic
-* The main taxes used in Domincan Republic
-* Fiscal position for local """,
-    'author': 'Eneldo Serrata - Marcos Organizador de Negocios, SRL.',
-    'website': 'http://marcos.do',
-    'depends': ['account', 'base_iban'],
+Localization Module for Dominican Republic
+===========================================
+
+Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para
+**Internacionalización** con **NIIF** y alineado a las normas y regulaciones
+de la Dirección General de Impuestos Internos (**DGII**).
+
+**Este módulo consiste de:**
+
+- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)
+- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados
+        - ITBIS para compras y ventas
+        - Retenciones de ITBIS
+        - Retenciones de ISR
+        - Grupos de Impuestos y Retenciones:
+                - Telecomunicaiones
+                - Proveedores de Materiales de Construcción
+                - Personas Físicas Proveedoras de Servicios
+        - Otros impuestos
+- Secuencias Preconfiguradas para manejo de todos los NCF
+        - Facturas con Valor Fiscal (para Ventas)
+        - Facturas para Consumidores Finales
+        - Notas de Débito y Crédito
+        - Registro de Proveedores Informales
+        - Registro de Ingreso Único
+        - Registro de Gastos Menores
+        - Gubernamentales
+- Posiciones Fiscales para automatización de impuestos y retenciones
+        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)
+        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al Exterior)
+        - Entre otros
+
+**Nota:**
+Esta localización, aunque posee las secuencias para NCF, las mismas no pueden
+ser utilizadas sin la instalación de módulos de terceros o desarrollo
+adicional.
+
+Estructura de Codificación del Catálogo de Cuentas:
+===================================================
+
+**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.
+**1** - Activo        **4** - Cuentas de Ingresos y Ganancias
+**2** - Pasivo        **5** - Costos, Gastos y Pérdidas
+**3** - Capital       **6** - Cuentas Liquidadoras de Resultados
+
+**Dos dígitos** representan los rubros de agrupación:
+11- Activo Corriente
+21- Pasivo Corriente
+31- Capital Contable
+
+**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer orden
+1101- Efectivo y Equivalentes de Efectivo
+2101- Cuentas y Documentos por pagar
+3101- Capital Social
+
+**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden
+110101 - Caja
+210101 - Proveedores locales
+
+**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas
+en Odoo):
+1101- Efectivo y Equivalentes
+110101- Caja
+11010101 Caja General
+    """,
+    'author': 'Gustavo Valverde - iterativo | Consultores de Odoo',
+    'website': 'http://iterativo.do',
+    'depends': ['account',
+                'base_iban'
+                ],
     'data': [
-        # basic accounting data
-        'data/account_chart_template.xml',
+        # Basic accounting data
+        'data/l10n_do_chart_data.xml',
         'data/account.account.template.csv',
         'data/set_account_on_chart_template.xml',
         'data/account_account_tag.xml',
-        'data/account.tax.template.csv',
-        'data/l10n_do_base_data.xml',
+        'data/account.tax.template.xml',
+        # Country States
+        'data/l10n_do_state_data.xml',
         # Adds fiscal position
-        'data/account.fiscal.position.template.csv',
-        'data/account.fiscal.position.tax.template.csv',
+        'data/fiscal_position_template.xml',
         # configuration wizard, views, reports...
         'data/account_chart_template.yml',
-    ],
-    'test': [],
-    'demo': [],
+        ],
     'installable': True,
     'auto_install': False,
 }
