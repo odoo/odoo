@@ -163,7 +163,7 @@ class MrpWorkorder(models.Model):
                 ('bom_id', '=', workorder.production_id.bom_id.id),
                 ('routing_id', '=', workorder.operation_id.routing_id.id)]
             messages = ProductionMessage.search(domain).mapped('message')
-            workorder.production_messages = "<br/>".join(messages)
+            workorder.production_messages = "<br/>".join(messages) or False
 
     @api.multi
     def _compute_scrap_move_count(self):
