@@ -338,6 +338,17 @@ class CompanyDependent(models.Model):
 
     foo = fields.Char(company_dependent=True)
 
+class CompanyDependentAttribute(models.Model):
+    _name = 'test_new_api.company.attr'
+
+    company = fields.Many2one('test_new_api.company')
+    quantity = fields.Integer()
+    bar = fields.Char(compute='_compute_bar', store=True)
+
+    @api.depends('quantity', 'company.foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = (record.company.foo or '') * record.quantity
 
 class Sparse(models.Model):
     _name = 'test_new_api.sparse'
