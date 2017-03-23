@@ -7,7 +7,7 @@
     'category': 'Human Resources',
     'description': """
         Track equipment and manage maintenance requests.""",
-    'depends': ['mail'],
+    'depends': ['mail', 'calendar'],
     'summary': 'Equipments, Assets, Internal Hardware, Allocation Tracking',
     'data': [
         'security/maintenance.xml',
@@ -15,7 +15,6 @@
         'data/maintenance_data.xml',
         'views/maintenance_views.xml',
         'views/maintenance_templates.xml',
-        'data/maintenance_cron.xml',
     ],
     'demo': ['data/maintenance_demo.xml'],
     'installable': True,
