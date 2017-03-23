@@ -4,7 +4,6 @@ odoo.define('mail.activity', function (require) {
 var core = require('web.core');
 var form_common = require('web.form_common');
 var Model = require("web.Model");
-var Widget = require('web.Widget');
 var ChatManager = require('mail.chat_manager');
 var QWeb = core.qweb;
 var time = require('web.time');
@@ -18,7 +17,6 @@ var _t = core._t;
  */
 var set_delay_label = function(activities){
     var today = moment().startOf('day');
-    var today_str = today.format('YYYY-MM-DD');
     _.each(activities, function(activity){
         var to_display = '';
         var deadline = moment(activity.date_deadline + ' 00:00:00');
@@ -73,8 +71,6 @@ var Activity = form_common.AbstractField.extend({
     },
 
     start: function () {
-        var self = this;
-
         // Hide the chatter in 'create' mode
         this.view.on("change:actual_mode", this, this.check_visibility);
 
@@ -169,7 +165,7 @@ var Activity = form_common.AbstractField.extend({
                 default_res_model: this.model,
             }, {'mark_done': true}, this.context),
             res_id: activity_id,
-        }
+        };
         this.do_action(action, {
             on_close: function () {
                 self.fetch_and_render_value();
@@ -185,7 +181,7 @@ var Activity = form_common.AbstractField.extend({
         var activity_id = this.$(event.currentTarget).data('activity-id');
         this.Activity
             .call("unlink", [[activity_id]])
-            .then(function (res) {
+            .then(function () {
                 self.fetch_and_render_value();
             });
     },
