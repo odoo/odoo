@@ -20,6 +20,7 @@ class ChannelPartner(models.Model):
     _rec_name = 'partner_id'
 
     partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade')
+    partner_email = fields.Char('Email', related='partner_id.email')
     channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
@@ -34,14 +35,20 @@ class Channel(models.Model):
     _name = 'mail.channel'
     _mail_flat_thread = False
     _mail_post_access = 'read'
-    _inherit = ['mail.thread']
-    _inherits = {'mail.alias': 'alias_id'}
+    _inherit = ['mail.thread', 'mail.alias.mixin']
 
     MAX_BOUNCE_LIMIT = 10
 
     def _get_default_image(self):
         image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+
+    @api.model
+    def default_get(self, fields):
+        res = super(Channel, self).default_get(fields)
+        if not res.get('alias_contact') and (not fields or 'alias_contact' in fields):
+            res['alias_contact'] = 'everyone' if res.get('public', 'private') == 'public' else 'followers'
+        return res
 
     name = fields.Char('Name', required=True, translate=True)
     channel_type = fields.Selection([
@@ -81,9 +88,6 @@ class Channel(models.Model):
         help="Small-sized photo of the group. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
-    alias_id = fields.Many2one(
-        'mail.alias', 'Alias', ondelete="restrict", required=True,
-        help="The email address associated with this group. New emails received will automatically create new topics.")
     is_subscribed = fields.Boolean(
         'Is Subscribed', compute='_compute_is_subscribed')
 
@@ -101,6 +105,13 @@ class Channel(models.Model):
         membership_ids = memberships.mapped('channel_id')
         for record in self:
             record.is_member = record in membership_ids
+
+    @api.onchange('public')
+    def _onchange_public(self):
+        if self.public == 'public':
+            self.alias_contact = 'everyone'
+        else:
+            self.alias_contact = 'followers'
 
     @api.model
     def create(self, vals):
@@ -143,6 +154,9 @@ class Channel(models.Model):
         if vals.get('group_ids'):
             self._subscribe_users()
         return result
+
+    def get_alias_model_name(self, vals):
+        return vals.get('alias_model', 'mail.channel')
 
     def _subscribe_users(self):
         for mail_channel in self:
@@ -231,6 +245,16 @@ class Channel(models.Model):
         self.filtered(lambda channel: channel.channel_type == 'chat').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
         message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
         return message
+
+    def _alias_check_contact(self, message, message_dict, alias):
+        if alias.alias_contact == 'followers' and self.ids:
+            author = self.env['res.partner'].browse(message_dict.get('author_id', False))
+            if not author or author not in self.channel_partner_ids:
+                return {
+                    'error_mesage': _('restricted to channel members'),
+                }
+            return True
+        return super(Channel, self)._alias_check_contact(message, message_dict, alias)
 
     @api.model_cr
     def init(self):
