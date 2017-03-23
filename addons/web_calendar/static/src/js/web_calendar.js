@@ -14,6 +14,7 @@ var utils = require('web.utils');
 var View = require('web.View');
 var widgets = require('web_calendar.widgets');
 var local_storage = require('web.local_storage');
+var config = require('web.config');
 
 var CompoundDomain = data.CompoundDomain;
 
@@ -252,6 +253,7 @@ var CalendarView = View.extend({
      */
     render_buttons: function($node) {
         var self = this;
+        this.is_mobile = config.is_mobile;
         this.$buttons = $(QWeb.render("CalendarView.buttons", {'widget': this}));
         this.$buttons.on('click', 'button.o_calendar_button_new', function () {
             self.dataset.index = null;
@@ -269,7 +271,14 @@ var CalendarView = View.extend({
         bindCalendarButton('.o_calendar_button_month', 'changeView', 'month');
 
         this.$buttons.find('.o_calendar_button_' + this.mode).addClass('active');
-        
+
+        if(this.is_mobile) {
+            $(this.$buttons).on("click",'.dropdown-menu li a',function(ev){
+                this.$button = $(ev.currentTarget).text();
+                $('.o_calendar_period_selector').html(this.$button+' <span class="caret"></span>');
+            });
+        }
+
         if ($node) {
             this.$buttons.appendTo($node);
         } else {
