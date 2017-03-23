@@ -99,7 +99,7 @@
         <field name="code">SALARY</field>
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = contract.wage * 1 + contract.car_atn + contract.get_value('mobile') + contract.get_value('internet')</field>
+        <field name="amount_python_compute">result = contract.wage * 1 + contract.car_atn + contract.get_value('mobile') + contract.get_value('mobile_plus') + contract.get_value('internet')</field>
         <field name="sequence">20</field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
@@ -603,41 +603,26 @@ result = -contract.car_atn
             <field name="advantage_type">value</field>
             <field name="default_value">7.45</field>
         </record>
-        <record id="hr_contract_advantage_template_meal_voucher_employee_deduction" model="hr.contract.advantage.template">
-            <field name="name">Check Value Meal - worker participation</field>
-            <field name="code">meal_voucher_employee_deduction</field>
-            <field name="country_id" ref="base.be"/>
-            <field name="advantage_type">value</field>
-            <field name="default_value">1.09</field>
-        </record>
-        <record id="hr_contract_advantage_template_insurance_employee_deduction" model="hr.contract.advantage.template">
-            <field name="name">Insurance Group - worker participation</field>
-            <field name="code">insurance_employee_deduction</field>
-            <field name="country_id" ref="base.be"/>
-        </record>
         <record id="hr_contract_advantage_template_internet" model="hr.contract.advantage.template">
             <field name="name">Internet</field>
             <field name="code">internet</field>
-            <field name="advantage_type">selection</field>
+            <field name="advantage_type">value</field>
+            <field name="default_value">38.0</field>
             <field name="country_id" ref="base.be"/>
-        </record>
-        <record id="hr_contract_advantage_value_internet_1" model="hr.contract.advantage.value">
-            <field name="advantage_template_id" eval="ref('l10n_be_hr_payroll.hr_contract_advantage_template_internet')"/>
-            <field name="value">38.0</field>
         </record>
         <record id="hr_contract_advantage_template_mobile" model="hr.contract.advantage.template">
             <field name="name">Mobile</field>
             <field name="code">mobile</field>
-            <field name="advantage_type">selection</field>
+            <field name="advantage_type">value</field>
+            <field name="default_value">30.0</field>
             <field name="country_id" ref="base.be"/>
         </record>
-        <record id="hr_contract_advantage_value_mobile_1" model="hr.contract.advantage.value">
-            <field name="advantage_template_id" eval="ref('l10n_be_hr_payroll.hr_contract_advantage_template_mobile')"/>
-            <field name="value">30.0</field>
-        </record>
-        <record id="hr_contract_advantage_value_mobile_2" model="hr.contract.advantage.value">
-            <field name="advantage_template_id" eval="ref('l10n_be_hr_payroll.hr_contract_advantage_template_mobile')"/>
-            <field name="value">80.0</field>
+        <record id="hr_contract_advantage_template_mobile_plus" model="hr.contract.advantage.template">
+            <field name="name">Mobile +</field>
+            <field name="code">mobile_plus</field>
+            <field name="advantage_type">value</field>
+            <field name="default_value">50.0</field>
+            <field name="country_id" ref="base.be"/>
         </record>
         <record id="hr_contract_advantage_template_additional_net_amount" model="hr.contract.advantage.template">
             <field name="name">Net supplements</field>
@@ -652,16 +637,9 @@ result = -contract.car_atn
         <record id="hr_contract_advantage_template_commission_on_target" model="hr.contract.advantage.template">
             <field name="name">Commission on target</field>
             <field name="code">commission_on_target</field>
+            <field name="advantage_type">value</field>
+            <field name="default_value">500.0</field>
             <field name="country_id" ref="base.be"/>
-            <field name="advantage_type">selection</field>
-        </record>
-        <record id="hr_contract_advantage_template_value_commission_1" model="hr.contract.advantage.value">
-            <field name="advantage_template_id" eval="ref('l10n_be_hr_payroll.hr_contract_advantage_template_commission_on_target')"/>
-            <field name="value">0.0</field>
-        </record>
-        <record id="hr_contract_advantage_template_value_commission_2" model="hr.contract.advantage.value">
-            <field name="advantage_template_id" eval="ref('l10n_be_hr_payroll.hr_contract_advantage_template_commission_on_target')"/>
-            <field name="value">500.00</field>
         </record>
         <record id="hr_contract_advantage_template_fuel_card" model="hr.contract.advantage.template">
             <field name="name">Fuel card</field>

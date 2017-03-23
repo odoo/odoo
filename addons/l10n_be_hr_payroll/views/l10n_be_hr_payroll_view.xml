@@ -6,22 +6,6 @@
         <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='company_id']" position="after">
-                <label string="Extra-Legal Advantage"/>
-                <div>
-                    <field name="has_internet" nolabel="1"/>
-                    <label for="has_internet"/>
-                    <field name="has_mobile" nolabel="1"/>
-                    <label for="has_mobile"/>
-                    <field name="international_communication" nolabel="1" attrs="{'invisible': [('has_mobile', '=', False)]}"/>
-                    <label for="international_communication" attrs="{'invisible': [('has_mobile', '=', False)]}"/> 
-                </div>
-                <label string="Bonus"/>
-                <div>
-                    <field name="has_commission_on_target" nolabel="1"/>
-                    <label for="has_commission_on_target"/>
-                    <field name="has_warrants" nolabel="1" attrs="{'invisible': [('has_commission_on_target', '=', False)]}"/>
-                    <label for="has_warrants" attrs="{'invisible': [('has_commission_on_target', '=', False)]}"/>
-                </div>
                 <field name="transport_mode" widget="radio"/>
                 <label for="car_id" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}"/>
                 <div attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}">
@@ -36,7 +20,7 @@
                         <field name="new_car_model_id" class="oe_inline"/>
                     </div>
                 </div>
-                <field name="car_atn" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}"/>
+                <field name="car_atn" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}" invisible="1"/>
                 <field name="company_car_total_depreciated_cost" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}"/>
                 <label string="Public Transport" attrs="{'invisible': [('transport_mode', '!=', 'public_transport')]}"/>
                 <div attrs="{'invisible': [('transport_mode', '!=', 'public_transport')]}">
@@ -68,7 +52,6 @@
                     <field name="yearly_cost_before_charges"/>
                     <field name="social_security_contributions"/>
                     <field name="ucm_insurance"/>
-                    <field name="structural_reductions"/>
                     <field name="meal_voucher_paid_by_employer"/>
                     <field name="final_yearly_costs"/>
                     <field name="monthly_yearly_costs"/>

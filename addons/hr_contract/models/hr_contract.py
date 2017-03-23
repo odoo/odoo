@@ -91,6 +91,20 @@ class Contract(models.Model):
             raise ValidationError(_('Contract start date must be less than contract end date.'))
 
     @api.model
+    def create(self, vals):
+        if vals.get('state', False) == 'open':
+            if self.env['hr.contract'].search_count([('employee_id', '=', self.employee_id.id), ('state', '=', 'open')]):
+                raise ValidationError(_("An employee can't have more than one open contract!"))
+        return super(Contract, self).create(vals)
+
+    def write(self, vals):
+        if vals.get('state', False) == 'open':
+            for contract in self:
+                if self.env['hr.contract'].search_count([('employee_id', '=', contract.employee_id.id), ('state', '=', 'open')]):
+                    raise ValidationError(_("An employee can't have more than one open contract!"))
+        return super(Contract, self).write(vals)
+
+    @api.model
     def update_to_pending(self):
         soon_expired_contracts = self.search([
             ('state', '=', 'open'),

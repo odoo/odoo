@@ -90,20 +90,24 @@ class HrContract(models.Model):
     company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
     resource_calendar_id = fields.Many2one(required=True)
 
-    @api.onchange('company_id', 'company_id.country_id')
+    @api.onchange('company_id')
     def _onchange_company_id(self):
         # import pdb; pdb.set_trace()
         # TODO: Should be a default_get on the advantage lines + an onchange on the company to remove/add the new advantages
         if self.company_id.country_id:
             advantages_to_create = self.env['hr.contract.advantage.template'].search([('country_id', '=', self.company_id.country_id.id)])
+            # import pdb; pdb.set_trace()
             command = [
                 (0, 0, {
                     'name': advantage.name,
                     'code': advantage.code,
+                    'active': True,
                     'lower_bound': advantage.lower_bound,
                     'upper_bound': advantage.upper_bound,
                     'country_id': advantage.country_id.id,
                     'value': advantage.advantage_type in ['value', 'range'] and advantage.default_value or 0.0,
+                    'default_value': advantage.default_value,
+                    'advantage_type': advantage.advantage_type,
                 }) for advantage in advantages_to_create
             ]
             # import pdb; pdb.set_trace()
@@ -130,6 +134,10 @@ class HrContract(models.Model):
         else:
             return 0.0
 
+    def is_active_advantage(self, code):
+        self.ensure_one()
+        return self.advantage_ids.filtered(lambda x: x.code == code).active
+
     @api.multi
     def get_attribute(self, code, attribute):
         # import pdb; pdb.set_trace()
@@ -140,6 +148,16 @@ class HrContract(models.Model):
         advantage = self.advantage_ids.filtered(lambda x: x.code == code)
         if advantage:
             advantage.value = value
+
+    @api.multi
+    def set_attribute(self, code, attribute, value):
+        for contract in self:
+            advantage = contract.advantage_ids.filtered(lambda x: x.code == code)
+            if advantage:
+                setattr(advantage, attribute, value)
+                if attribute == 'active':
+                    advantage._onchange_active()
+
 
 class HrContractAdvandageTemplate(models.Model):
     _name = 'hr.contract.advantage.template'
@@ -165,6 +183,32 @@ class HrContractAdvantage(models.Model):
 
     contract_id = fields.Many2one('hr.contract', 'Related Contract')
     value = fields.Float('Amount of the advantage', digits=dp.get_precision('Payroll'))
+    active = fields.Boolean('Active', default=True)
+
+    _sql_constraints = [
+        ('code_uniq', 'unique (contract_id, code)', "The codes must be different on the same contract."),
+    ]
+
+    @api.onchange('active')
+    def _onchange_active(self):
+        # import pdb; pdb.set_trace()
+        if self.active:
+            self.value = self.env['hr.contract.advantage.template'].search([('code', '=', self.code)], limit=1).default_value
+        else:
+            self.value = 0.0
+
+    # def write(self, vals):
+    #     if 'active' in vals:
+    #         for advantage in self:
+    #             self._onchange_active()
+
+    @api.onchange('value')
+    def _onchange_value(self):
+        if self.advantage_type == 'range':
+            if self.value <= self.lower_bound:
+                self.value = self.lower_bound
+            elif self.value >= self.upper_bound:
+                self.value = self.upper_bound
 
 class HrContractAdvantageValue(models.Model):
     _name = 'hr.contract.advantage.value'

@@ -22,7 +22,6 @@ Belgian Payroll Rules.
     * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...
     """,
 
-    'demo': ['data/l10n_be_hr_payroll_demo.xml'],
     'website': 'https://www.odoo.com/page/accounting',
     'data': [
         'views/l10n_be_hr_payroll_view.xml',

@@ -12,11 +12,6 @@ class HrContract(models.Model):
     # See if can be done in hr.contract
     employee_id = fields.Many2one(required=False)
 
-    has_internet = fields.Boolean('Internet', help="Enable this option if the employee has its internet reimbursed by the company")
-    has_mobile = fields.Boolean('Mobile', help="Enable this option if the employee has its mobile contract reimbursed by the company")
-    has_commission_on_target = fields.Boolean('Commissions on Target')
-    has_warrants = fields.Boolean('Warrants', help="If the employees get their commissions as warrants")
-    international_communication = fields.Boolean('International Communication')
     transport_mode = fields.Selection([
         ('company_car', 'Company car'),
         ('public_transport', 'Public Transport'),
@@ -40,8 +35,7 @@ class HrContract(models.Model):
     # Employer costs fields
     final_yearly_costs = fields.Float(compute='_compute_final_yearly_costs', string='Final Yearly Costs', groups="hr.group_hr_manager")
     monthly_yearly_costs = fields.Float(compute='_compute_monthly_yearly_costs', string='Monthly Yearly Costs', readonly=True)
-    ucm_insurance = fields.Float(compute='_compute_ucm_insurance', string="UCM + Insurance + etc")
-    structural_reductions = fields.Float(compute='_compute_structural_reductions', string='Structural Reductions')
+    ucm_insurance = fields.Float(compute='_compute_ucm_insurance', string="Social Secretary Costs")
     social_security_contributions = fields.Float(compute='_compute_social_security_contributions', string="Social Security Contributions")
     yearly_cost_before_charges = fields.Float(compute='_compute_yearly_cost_before_charges', string="Yearly Costs Before Charges")
     meal_voucher_paid_by_employer = fields.Float(compute='_compute_meal_voucher_paid_by_employer', string="Meal Voucher Paid by Employer")
@@ -71,6 +65,7 @@ class HrContract(models.Model):
                 contract.get_value('representation_fees') +
                 contract.get_value('internet') +
                 contract.get_value('mobile') +
+                contract.get_value('mobile_plus') +
                 contract.get_value('commission_on_target') +
                 contract.company_car_total_depreciated_cost
             )
@@ -81,7 +76,6 @@ class HrContract(models.Model):
             contract.final_yearly_costs = (
                 contract.yearly_cost_before_charges +
                 contract.ucm_insurance +
-                contract.structural_reductions +
                 contract.social_security_contributions +
                 contract.double_holidays +
                 (220.0 * contract.meal_voucher_paid_by_employer)
@@ -90,20 +84,14 @@ class HrContract(models.Model):
     @api.depends('advantage_ids', 'advantage_ids.value')
     def _compute_meal_voucher_paid_by_employer(self):
         for contract in self:
-            contract.meal_voucher_paid_by_employer = contract.get_value('meal_voucher_amount') - contract.get_value('meal_voucher_employee_deduction')
+            contract.meal_voucher_paid_by_employer = contract.get_value('meal_voucher_amount') * (1 - 0.1463)
 
-    @api.depends('wage', 'has_commission_on_target')
+    @api.depends('wage', 'advantage_ids.value')
     def _compute_social_security_contributions(self):
         for contract in self:
             total_wage = contract.wage * 13.0
             total_commissions = contract.get_value('commission_on_target') * 12.0
             contract.social_security_contributions = (total_wage + total_commissions) * 0.3507
-
-    @api.depends('wage')
-    def _compute_structural_reductions(self):
-        # TODO: cde has to check the amount
-        for contract in self:
-            contract.structural_reductions = 0.0
 
     @api.depends('wage')
     def _compute_ucm_insurance(self):
@@ -129,20 +117,12 @@ class HrContract(models.Model):
             contract.double_holidays = contract.wage * 0.92
             contract.thirteen_month = contract.wage
 
-    @api.onchange('has_internet')
-    def _onchange_has_internet(self):
-        self.set_value('internet', self._get_internet_amount(self.has_internet))
-
     def _get_internet_amount(self, has_internet):
-        values = self.get_attribute('internet', 'advantage_values')
+        default_value = self.get_attribute('internet', 'default_value')
         if has_internet:
-            return values[0].value
+            return default_value
         else:
             return 0.0
-
-    @api.onchange('has_mobile', 'international_communication')
-    def _onchange_mobile(self):
-        self.set_value('mobile', self._get_mobile_amount(self.has_mobile, self.international_communication))
 
     def _get_mobile_amount(self, has_mobile, international_communication):
         values = self.get_attribute('mobile', 'advantage_values')
@@ -152,14 +132,6 @@ class HrContract(models.Model):
             return values[0].value
         else:
             return 0.0
-
-    @api.onchange('has_commission_on_target')
-    def _onchange_has_commission_on_target(self):
-        values = self.get_attribute('commission_on_target', 'advantage_values')
-        if self.has_commission_on_target:
-            self.set_value('commission_on_target', values[1].value)
-        else:
-            self.set_value('commission_on_target', values[0].value)
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
@@ -179,9 +151,8 @@ class HrContract(models.Model):
             - 12.0 * contract.get_value('representation_fees') \
             - 12.0 * contract.get_value('fuel_card') \
             - 12.0 * contract.get_value('internet') \
-            - 12.0 * contract.get_value('mobile') \
+            - 12.0 * (contract.get_value('mobile') + contract.get_value('mobile_plus')) \
             - 12.0 * contract.company_car_total_depreciated_cost \
-            - contract.structural_reductions \
             - (12.0 * 0.3507 + 12.0) * contract.get_value('commission_on_target') \
             - 220.0 * contract.meal_voucher_paid_by_employer
         gross = remaining_for_gross / (12.0 * 0.05 + 13.0 + 13.0 * 0.3507 + 0.92)

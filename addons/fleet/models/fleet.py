@@ -185,6 +185,10 @@ class FleetVehicle(models.Model):
     contract_renewal_total = fields.Text(compute='_compute_contract_reminder', string='Total of contracts due or overdue minus one', multi='contract_info')
     car_value = fields.Float(help='Value of the bought vehicle')
 
+    _sql_constraints = [
+        ('driver_id_unique', 'UNIQUE(driver_id)', 'Only one car can be assigned to the same employee!')
+    ]
+
     @api.depends('model_id', 'license_plate')
     def _compute_vehicle_name(self):
         for record in self:
