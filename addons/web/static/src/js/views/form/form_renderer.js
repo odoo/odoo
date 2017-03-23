@@ -473,7 +473,7 @@ return BasicRenderer.extend({
             $child.addClass('o_group_col_6');
             $child.appendTo($result);
         });
-
+        this._handleAttributes($result, node);
         return $result;
     },
     _renderTagHeader: function (node) {
