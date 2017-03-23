@@ -1,175 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-
+<odoo>
+    <data noupdate="1">
         <!--
-        Resource: res.country.state
-        Update states using ISO 3166-2:DO codes
-        -->
+    Resource: res.country.state
+    Update states. This one is not using ISO 3166-2:DO codes,
+    as those codes are not used or known in Dominican Republic.
+    The new codes are more friendly and easier to identify by
+    the users.
+    -->
         <record id="state_DO_01" model="res.country.state">
-            <field name="code">01</field>
+            <field name="code">DN</field>
             <field name="name">Distrito Nacional</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_02" model="res.country.state">
-            <field name="code">02</field>
+            <field name="code">AZU</field>
             <field name="name">Azua</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_03" model="res.country.state">
-            <field name="code">03</field>
+            <field name="code">BAH</field>
             <field name="name">Bahoruco</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_4" model="res.country.state">
-            <field name="code">04</field>
+            <field name="code">BAR</field>
             <field name="name">Barahona</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_05" model="res.country.state">
-            <field name="code">05</field>
-            <field name="name">Dajabon</field>
+            <field name="code">DAJ</field>
+            <field name="name">Dajabón</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_06" model="res.country.state">
-            <field name="code">06</field>
+            <field name="code">DUA</field>
             <field name="name">Duarte</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_07" model="res.country.state">
-            <field name="code">07</field>
-            <field name="name">Elias Piña</field>
+            <field name="code">ELP</field>
+            <field name="name">Elías Piña</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_08" model="res.country.state">
-            <field name="code">08</field>
-            <field name="name">El Seybo</field>
+            <field name="code">ELS</field>
+            <field name="name">El Seibo</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_09" model="res.country.state">
-            <field name="code">09</field>
+            <field name="code">ESP</field>
             <field name="name">Espaillat</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_10" model="res.country.state">
-            <field name="code">10</field>
+            <field name="code">IND</field>
             <field name="name">Independencia</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_11" model="res.country.state">
-            <field name="code">11</field>
+            <field name="code">LA</field>
             <field name="name">La Altagracia</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_12" model="res.country.state">
-            <field name="code">12</field>
+            <field name="code">LR</field>
             <field name="name">La Romana</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_13" model="res.country.state">
-            <field name="code">13</field>
+            <field name="code">LV</field>
             <field name="name">La Vega</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_14" model="res.country.state">
-            <field name="code">14</field>
-            <field name="name">Maria Trinidad Sanchez</field>
+            <field name="code">MTS</field>
+            <field name="name">María Trinidad Sánchez</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_15" model="res.country.state">
-            <field name="code">15</field>
+            <field name="code">MC</field>
             <field name="name">Monte Cristi</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_16" model="res.country.state">
-            <field name="code">16</field>
+            <field name="code">PED</field>
             <field name="name">Pedernales</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_17" model="res.country.state">
-            <field name="code">17</field>
+            <field name="code">PER</field>
             <field name="name">Peravia</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_18" model="res.country.state">
-            <field name="code">18</field>
+            <field name="code">PP</field>
             <field name="name">Puerto Plata</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_19" model="res.country.state">
-            <field name="code">19</field>
+            <field name="code">HEM</field>
             <field name="name">Hermanas Mirabal</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_20" model="res.country.state">
-            <field name="code">20</field>
-            <field name="name">Samana</field>
+            <field name="code">SAM</field>
+            <field name="name">Samaná</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_21" model="res.country.state">
-            <field name="code">21</field>
-            <field name="name">San Cristobal</field>
+            <field name="code">SC</field>
+            <field name="name">San Cristóbal</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_22" model="res.country.state">
-            <field name="code">22</field>
-            <field name="name">San Juan de la Maguana</field>
+            <field name="code">SJ</field>
+            <field name="name">San Juan</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_23" model="res.country.state">
-            <field name="code">23</field>
-            <field name="name">San Pedro de Macoris</field>
+            <field name="code">SPM</field>
+            <field name="name">San Pedro de Macorís</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_24" model="res.country.state">
-            <field name="code">24</field>
-            <field name="name">Sanchez Ramirez</field>
+            <field name="code">SRA</field>
+            <field name="name">Sánchez Ramírez</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_25" model="res.country.state">
-            <field name="code">25</field>
+            <field name="code">STGO</field>
             <field name="name">Santiago</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_26" model="res.country.state">
-            <field name="code">26</field>
-            <field name="name">Santiago Rodriguez</field>
+            <field name="code">SRO</field>
+            <field name="name">Santiago Rodríguez</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_27" model="res.country.state">
-            <field name="code">27</field>
+            <field name="code">VAL</field>
             <field name="name">Valverde</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_28" model="res.country.state">
-            <field name="code">28</field>
+            <field name="code">MON</field>
             <field name="name">Monseñor Nouel</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_29" model="res.country.state">
-            <field name="code">28</field>
+            <field name="code">MP</field>
             <field name="name">Monte Plata</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_30" model="res.country.state">
-            <field name="code">30</field>
+            <field name="code">HAM</field>
             <field name="name">Hato Mayor</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_31" model="res.country.state">
-            <field name="code">31</field>
-            <field name="name">San Jose de Ocoa</field>
+            <field name="code">SJO</field>
+            <field name="name">San José de Ocoa</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <record id="state_DO_32" model="res.country.state">
-            <field name="code">32</field>
+            <field name="code">SD</field>
             <field name="name">Santo Domingo</field>
             <field name="country_id" ref="base.do"/>
         </record>
         <!--
-        Resource: res.partner.title
-        Update partner titles
-        -->
+    Resource: res.partner.title
+    Update partner titles
+    -->
         <record id="base.res_partner_title_dra" model="res.partner.title">
             <field name="name">Doctora</field>
             <field name="shortcut">Dra.</field>
@@ -194,6 +196,5 @@
             <field name="name">Ingeniero/a</field>
             <field name="shortcut">Ing.</field>
         </record>
-
     </data>
-</openerp>
+</odoo>
