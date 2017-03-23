@@ -139,6 +139,8 @@ odoo.define('website_form_editor', function (require) {
                         }
                     );
 
+                    self.$modal.find("label.control-label[for='success_page']").css('font-weight', 'normal');
+                    self.bind_data();
                     self.toggle_email_to();
 
                     self.$modal.find("[name='model_selection']").on('change', function() {
@@ -244,6 +246,25 @@ odoo.define('website_form_editor', function (require) {
         //         })
         //     });
         // },
+
+        bind_data: function () {
+            // Display the list of website pages in thank you page input
+            var $thanksPageInput = this.$modal.find("input[name='success_page']");
+            $thanksPageInput.autocomplete({
+                source: function (request, response) {
+                    return rpc.query({
+                        model: 'website',
+                        method: 'search_pages',
+                        args: [null, request.term, 15],
+                    }).then(function (exists) {
+                        var rs = _.map(exists, function (r) {
+                            return r.loc;
+                        });
+                        response(rs);
+                    });
+                }
+            });
+        },
 
         toggle_email_to: function() {
             // Display or remove the magic email_to field for model mail.mail
