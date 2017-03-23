@@ -286,8 +286,6 @@ return core.Class.extend({
                     } else {
                         mode = 'tree,kanban';
                     }
-                } else {
-                    mode = 'tree,kanban';
                 }
                 if (mode.indexOf(',') !== -1) {
                     mode = config.device.size_class !== config.device.SIZES.XS ? 'tree' : 'kanban';
