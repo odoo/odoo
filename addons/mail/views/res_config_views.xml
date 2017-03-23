@@ -7,8 +7,22 @@
             <field name="inherit_id" ref="base_setup.base_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <div id="emails" position='replace'>
-                    <h2>Emails</h2>
+                    <h2>Discuss</h2>
                     <div class="row mt16 o_settings_container" id="emails">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label string="Activities"/>
+                                <div class="text-muted">
+                                    Configure your activity types
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <button name="%(mail.mail_activity_type_action)d" string="Activity Types" type="action" class="oe_link" icon="fa-arrow-right"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-xs-12 col-md-6 o_setting_box" title="Using your own email server is required to send/receive emails in Community and Enterprise versions. Online users already benefit from a ready-to-use email server (@mycompany.odoo.com).">
                             <div class="o_setting_left_pane">
                                 <field name="default_external_email_server"/>
