@@ -336,6 +336,33 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('invisible attrs on group', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="bar"/>' +
+                        '<group attrs=\'{"invisible": [["bar", "!=", true]]}\'>' +
+                            '<group>' +
+                                '<field name="foo"/>' +
+                            '</group>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1
+        });
+
+        assert.strictEqual(form.$('div.o_group:visible').length, 1, "should display the group");
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_boolean input').click();
+        assert.strictEqual(form.$('div.o_group:hidden').length, 1, "should not display the group");
+        form.destroy();
+    });
+
     QUnit.test('rendering stat buttons', function (assert) {
         assert.expect(3);
 
