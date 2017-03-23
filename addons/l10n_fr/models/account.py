@@ -16,7 +16,7 @@ class AccountMove(models.Model):
         forbidden_fields = set(self.fields_get_keys()) - allowed_fields
         if (self.company_id.country_id == self.env.ref('base.fr') and
             self.state == "posted" and
-            len(set(vals.keys()) & forbidden_fields) > 0):
+                len(set(vals.keys()) & forbidden_fields) > 0):
 
             raise UserError(ERR_MSG % (self._name, str(forbidden_fields)))
         return super(AccountMove, self).write(vals)
@@ -24,7 +24,7 @@ class AccountMove(models.Model):
     @api.multi
     def unlink(self):
         if (self.company_id.country_id == self.env.ref('base.fr') and
-            self.state == "posted"):
+                self.state == "posted"):
             raise UserError(ERR_MSG % (self._name, self._name))
         return super(AccountMove, self).unlink()
 
@@ -42,20 +42,20 @@ class AccountMoveLine(models.Model):
     @api.multi
     def write(self, vals):
         allowed_fields = set(['ref',
-                             'narration',
-                             'blocked',
-                             'date_maturity',
-                             'analytic_line_ids',
-                             'analytic_account_id',
-                             'analytic_tag_ids',
-                             'user_type_id',
-                             'tax_exigible',
-                             'move_id'])
+                              'narration',
+                              'blocked',
+                              'date_maturity',
+                              'analytic_line_ids',
+                              'analytic_account_id',
+                              'analytic_tag_ids',
+                              'user_type_id',
+                              'tax_exigible',
+                              'move_id'])
 
         forbidden_fields = set(self.fields_get_keys()) - allowed_fields
         if (self.company_id.country_id == self.env.ref('base.fr') and
             self.move_id.state == "posted" and
-            len(set(vals.keys()) & forbidden_fields) > 0):
+                len(set(vals.keys()) & forbidden_fields) > 0):
 
             raise UserError(ERR_MSG % self._name, str(forbidden_fields))
         return super(AccountMoveLine, self).write(vals)
@@ -63,7 +63,7 @@ class AccountMoveLine(models.Model):
     @api.multi
     def unlink(self):
         if (self.company_id.country_id == self.env.ref('base.fr') and
-            self.move_id.state == "posted"):
+                self.move_id.state == "posted"):
             raise UserError(ERR_MSG % (self._name, self._name))
         return super(AccountMoveLine, self).unlink()
 
