@@ -944,27 +944,23 @@ class MailThread(models.AbstractModel):
         if not author_id and update_author:
             author_ids = self.env['mail.thread']._find_partner_from_emails([email_from], res_model=model, res_id=thread_id)
             if author_ids:
-                author_id = author_ids[0]
-                message_dict['author_id'] = author_id
+                message_dict['author_id'] = author_ids[0]
 
         # Alias: check alias_contact settings
-        if alias and alias.alias_contact == 'followers' and (thread_id or alias.alias_parent_thread_id):
+        if alias:
             if thread_id:
                 obj = record_set[0]
-            else:
+            elif alias.alias_parent_thread_id:
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
-            accepted_partner_ids = list(
-                set(partner.id for partner in obj.message_partner_ids) |
-                set(partner.id for channel in obj.message_channel_ids for partner in channel.channel_partner_ids)
-            )
-            if not author_id or author_id not in accepted_partner_ids:
-                self._routing_warn(_('alias %s restricted to internal followers') % alias.alias_name, _('skipping'), message_id, route, False)
-                self._routing_create_bounce_email(email_from, _generic_bounce_body_html, message)
+            elif model and hasattr(record_set, '_alias_check_contact'):
+                obj = self.env[model]
+            else:
+                obj = self.env['mail.alias.mixin']
+            check_result = obj._alias_check_contact(message, message_dict, alias)
+            if check_result is not True:
+                self._routing_warn(_('alias %s: %s') % (alias.alias_name, check_result.get('error_message', _('unknown error'))), _('skipping'), message_id, route, False)
+                self._routing_create_bounce_email(email_from, check_result.get('error_template', _generic_bounce_body_html), message)
                 return False
-        elif alias and alias.alias_contact == 'partners' and not author_id:
-            self._routing_warn(_('alias %s does not accept unknown author') % alias.alias_name, _('skipping'), message_id, route, False)
-            self._routing_create_bounce_email(email_from, _generic_bounce_body_html, message)
-            return False
 
         if not model and not thread_id and not alias and not allow_private:
             return False

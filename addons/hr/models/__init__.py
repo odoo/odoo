@@ -4,6 +4,5 @@
 import hr
 import hr_config_settings
 import mail_alias
-import mail_thread
 import res_partner
 import res_users

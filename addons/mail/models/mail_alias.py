@@ -262,3 +262,21 @@ class AliasMixin(models.AbstractModel):
             record.with_context({'mail_notrack': True}).alias_id = alias
             _logger.info('Mail alias created for %s %s (id %s)',
                          record._name, record.display_name, record.id)
+
+    def _alias_check_contact(self, message, message_dict, alias):
+        author = self.env['res.partner'].browse(message_dict.get('author_id', False))
+        if alias.alias_contact == 'followers' and self.ids:
+            if not hasattr(self, "message_partner_ids") or not hasattr(self, "message_channel_ids"):
+                return {
+                    'error_mesage': _('incorrectly configured alias'),
+                }
+            accepted_partner_ids = self.message_partner_ids | self.message_channel_ids.mapped('channel_partner_ids')
+            if not author or author not in accepted_partner_ids:
+                return {
+                    'error_mesage': _('restricted to followers'),
+                }
+        elif alias.alias_contact == 'partners' and not author:
+            return {
+                'error_message': _('restricted to known authors')
+            }
+        return True
