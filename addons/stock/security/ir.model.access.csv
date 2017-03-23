@@ -8,13 +8,16 @@ access_stock_location_manager,stock.location.manager,model_stock_location,stock.
 access_stock_location_user,stock.location.user,model_stock_location,base.group_user,1,0,0,0
 access_stock_picking_user,stock.picking user,model_stock_picking,stock.group_stock_user,1,1,1,1
 access_stock_picking_manager,stock.picking manager,model_stock_picking,stock.group_stock_manager,1,1,1,1
+access_stock_picking_portal,stock.picking,stock.model_stock_picking,base.group_portal,1,0,0,0
 access_stock_picking_type_all,stock.picking.type all users,model_stock_picking_type,base.group_user,1,0,0,0
 access_stock_picking_type_user,stock.picking.type user,model_stock_picking_type,stock.group_stock_user,1,0,0,0
 access_stock_picking_type_manager,stock.picking.type manager,model_stock_picking_type,stock.group_stock_manager,1,1,1,1
+access_stock_picking_type_portal,stock.picking.type portal,stock.model_stock_picking_type,base.group_portal,1,0,0,0
 access_stock_production_lot_manager,stock.production.lot manager,model_stock_production_lot,stock.group_stock_manager,1,0,0,0
 access_stock_production_lot_user,stock.production.lot user,model_stock_production_lot,stock.group_stock_user,1,1,1,1
 access_stock_move_manager,stock.move manager,model_stock_move,stock.group_stock_manager,1,1,1,1
 access_stock_move_user,stock.move user,model_stock_move,stock.group_stock_user,1,1,1,0
+access_stock_move_portal,stock.move,stock.model_stock_move,base.group_portal,1,0,0,0
 access_stock_inventory_user,stock.inventory user,model_stock_inventory,stock.group_stock_user,1,1,1,0
 access_stock_inventory_manager,stock.inventory manager,model_stock_inventory,stock.group_stock_manager,1,1,1,1
 access_stock_inventory_line_user,stock.inventory.line user,model_stock_inventory_line,stock.group_stock_user,1,1,1,0
@@ -35,6 +38,7 @@ access_product_group_res_partner_stock_manager,res_partner group_stock_manager,b
 access_product_pricelist_item_stock_manager,product.pricelist.item stock_manager,product.model_product_pricelist_item,stock.group_stock_manager,1,1,1,1
 access_stock_warehouse_orderpoint,stock.warehouse.orderpoint,model_stock_warehouse_orderpoint,stock.group_stock_user,1,0,0,0
 access_stock_warehouse_orderpoint_system,stock.warehouse.orderpoint system,model_stock_warehouse_orderpoint,stock.group_stock_manager,1,1,1,1
+access_stock_warehouse_orderpoint_portal,stock.warehouse.orderpoint,stock.model_stock_warehouse_orderpoint,base.group_portal,1,0,0,0
 access_stock_quant_manager,stock.quant manager,model_stock_quant,stock.group_stock_manager,1,0,0,0
 access_stock_quant_user,stock.quant user,model_stock_quant,stock.group_stock_user,1,0,0,0
 access_stock_quant_all,stock.quant all users,model_stock_quant,base.group_user,1,0,0,0
@@ -64,6 +68,7 @@ access_stock_move_operation_link_all,stock.move.operation.link all users,model_s
 access_stock_pack_operation_lot_manager,stock.pack.operation.lot manager,model_stock_pack_operation_lot,stock.group_stock_manager,1,1,1,1
 access_stock_pack_operation_lot_user,stock.pack.operation.lot user,model_stock_pack_operation_lot,stock.group_stock_user,1,1,1,1
 access_stock_pack_operation_lot_all,stock.pack.operation.lot all users,model_stock_pack_operation_lot,base.group_user,1,1,1,1
+access_stock_pack_operation_portal,stock.pack.operation portal,stock.model_stock_pack_operation,base.group_portal,1,0,0,0
 access_product_price_history_stock_user,prices.history stock user,product.model_product_price_history,stock.group_stock_user,1,0,0,0
 access_product_price_history_stock_manager,prices.history stock manager,product.model_product_price_history,stock.group_stock_manager,1,1,1,1
 access_barcode_nomenclature_stock_user,barcode.nomenclature.stock.user,barcodes.model_barcode_nomenclature,stock.group_stock_user,1,0,0,0
@@ -73,3 +78,4 @@ access_barcode_rule_stock_manager,barcode.rule.stock.manager,barcodes.model_barc
 access_stock_forecast_user,report.stock.forecast.user,model_report_stock_forecast,stock.group_stock_user,1,0,0,0
 access_stock_forecast_manager,report.stock.forecast.manager,model_report_stock_forecast,stock.group_stock_manager,1,1,1,1
 access_stock_scrap_user,stock.scrap.user,model_stock_scrap,stock.group_stock_user,1,0,0,0
+access_procurement_order,procurement.order,stock.model_procurement_order,base.group_portal,1,0,0,0

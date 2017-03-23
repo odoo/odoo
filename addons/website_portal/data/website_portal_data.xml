@@ -2,14 +2,9 @@
 <odoo>
     <data noupdate="1">
 
-        <!-- The portal group add flag is_portal -->
-        <record id="base.group_portal" model="res.groups">
-            <field name="is_portal" eval="True"/>
-        </record>
-
         <record id="mail_template_data_portal_welcome" model="mail.template">
             <field name="name">Portal: new user</field>
-            <field name="model_id" ref="portal.model_portal_wizard_user"/>
+            <field name="model_id" ref="website_portal.model_portal_wizard_user"/>
             <field name="email_to">${object.partner_id.email}</field>
             <field name="subject">Your Odoo account at ${user.company_id.name}</field>
             <field name="lang">${object.partner_id.lang}</field>
@@ -28,10 +23,10 @@
 <ul>
     <li>Username: ${object.user_id.login or ''}</li>
     <li>Portal: <a href="${'portal_url' in ctx and ctx['portal_url'] or ''}">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>
-	<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>
+    <li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>
 </ul>
 <p>
-	You can set or change your password via the following url:
+    You can set or change your password via the following url:
 </p>
 <ul>
     <li><a href="${object.user_id.signup_url}">${object.user_id.signup_url}</a></li>

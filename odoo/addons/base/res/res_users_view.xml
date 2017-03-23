@@ -42,6 +42,9 @@
             <field name="arch" type="xml">
                 <search string="Groups">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('category_id','ilike',self)]" string="Group"/>
+                    <filter name="portal" string="Portal Groups" domain="[('is_portal','=',True)]"/>
+                    <filter name="no_portal" string="Non-Portal Groups" domain="[('is_portal','=',False)]"/>
+                    <separator orientation="vertical"/>
                     <field name="share"/>
                     <filter name="no_share" string="Internal Groups" domain="[('share','=',False)]"/>
                 </search>
@@ -56,6 +59,7 @@
                     <group col="4">
                         <field name="category_id"/>
                         <field name="name"/>
+                        <field name="is_portal"/>
                         <field name="share"/>
                     </group>
                     <notebook>
