@@ -92,6 +92,30 @@ class base_action_rule_test(common.TransactionCase):
         self.assertTrue(lead.customer)
         self.assertEqual(lead.user_id, self.user_demo)
 
+    def test_11_recomputed_field(self):
+        """
+        Check that a rule is executed whenever a field is recomputed and the
+        context contains the target field
+        """
+        partner = self.env.ref('base.res_partner_1')
+        lead = self.create_lead(state='draft', partner_id=partner.id)
+        self.assertFalse(lead.deadline, 'There should not be a deadline defined')
+        # change priority and user; this triggers deadline recomputation, and
+        # the server action should set the boolean field to True
+        lead.write({'priority': True, 'user_id': self.user_admin.id})
+        self.assertTrue(lead.deadline, 'Deadline should be defined')
+        self.assertTrue(lead.is_assigned_to_admin, 'Lead should be assigned to admin')
+
+    def test_12_recursive(self):
+        """ Check that a rule is executed recursively by a secondary change. """
+        lead = self.create_lead(state='open')
+        self.assertEqual(lead.state, 'open')
+        self.assertEqual(lead.user_id, self.user_admin)
+        # change partner; this should trigger the rule that modifies the state
+        partner = self.env.ref('base.res_partner_1')
+        lead.write({'partner_id': partner.id})
+        self.assertEqual(lead.state, 'draft')
+
     def test_20_direct_line(self):
         """
         Check that a rule is executed after creating a line record.
