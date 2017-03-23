@@ -18,7 +18,16 @@ var _t = core._t;
 var _lt = core._lt;
 var QWeb = core.qweb;
 
+function is_virtual_id(id) {
+    return typeof id === "string" && id.indexOf('-') >= 0;
+}
+
 CalendarView.include({
+    events: _.extend({}, CalendarView.prototype.events, {
+        'click #this_event': 'delete_one',
+        'click #future_events': 'delete_future',
+        'click #all_events': 'delete_all',
+    }),
     extraSideBar: function() {
         var result = this._super();
         if (this.useContacts) {
@@ -34,7 +43,40 @@ CalendarView.include({
             filters = [].concat(filter_me, _.difference(filters, [filter_me, filter_all]), filter_all);
         }
         return filters;
-    }
+    },
+    remove_event: function(id) {
+        var self = this;
+        if(is_virtual_id(id)){
+          this.$('#modalDelete').modal('show');
+          this.$('.event_id').attr("value", id);
+        }
+        else{
+          return $.when(this._super(id)).then(function(result){
+                self.$calendar.fullCalendar('refetchEvents');
+            });
+        }
+    },
+    delete_one: function(e) {
+        var self = this;
+        var id = this.$('.event_id').attr("value");
+        return new Model("calendar.event").call("action_detach_recurring_event", [[id]]).then(function(result) {
+            self.remove_event(result.res_id);
+        });
+    },
+    delete_future: function(e) {
+        var self = this;
+        var id = this.$('.event_id').attr("value");
+        return new Model("calendar.event").call("action_future_recurring_event", [[id]]).then(function(result) {
+            self.remove_event(result.res_id);
+        });
+    },
+    delete_all: function(e) {
+        var self = this;
+        var id = this.$('.event_id').attr("value");
+        return new Model("calendar.event").call("action_all_recurring_event", [[id]]).then(function(result) {
+            self.remove_event(result.res_id);
+        });
+    },
 });
 
 var FieldMany2One = core.form_widget_registry.get('many2one');

@@ -5,6 +5,51 @@
             <span t-attf-class="o_calendar_invitation #{el['status']}"/>
         </t>
     </t>
+    
+    <t t-extend="CalendarView">
+      <t t-jquery=".o_calendar_view" t-operation="after">
+        <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalDeleteTitle" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h5 class="modal-title" id="modalDeleteTitle">This event is linked to a recurrence</h5>
+              </div>
+              <div class="modal-body">
+                <div class="event_id" value="0"/>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <button type="button" class="btn btn-primary btn-block" id="this_event" data-dismiss="modal">Delete only this event</button>
+                    </div>
+                    <div class="col-sm-8">
+                      <p>The other events of the series will remain identical.</p>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top:10px">
+                    <div class="col-sm-4">
+                      <button type="button" class="btn btn-primary btn-block" id="future_events" data-dismiss="modal">Delete futur events</button>
+                    </div>
+                    <div class="col-sm-8">
+                      <p>This event and all subsequent events will be deleted.</p>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top:10px">
+                    <div class="col-sm-4">
+                      <button type="button" class="btn btn-primary btn-block" id="all_events" data-dismiss="modal">Delete all events</button>
+                    </div>
+                    <div class="col-sm-8">
+                      <p>All events in the series will be deleted.</p>
+                    </div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </t>
+    </t>
 
     <t t-name="CalendarNotification" t-extend="Notification">
         <t t-jquery=".o_notification_title > t" t-operation="replace">

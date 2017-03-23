@@ -4,10 +4,10 @@
 from odoo.tests import common
 
 
-class TestRecurrentEvent(common.TransactionCase):
+class TestRecurrentEventUpdate(common.TransactionCase):
 
     def setUp(self):
-        super(TestRecurrentEvent, self).setUp()
+        super(TestRecurrentEventUpdate, self).setUp()
 
         self.CalendarEvent = self.env['calendar.event']
 
@@ -52,6 +52,20 @@ class TestRecurrentEvent(common.TransactionCase):
         # The new recurring event should have virtual events equals to total events - past events.
         self.assertEqual(future_count, 10, 'Wrong number of future events !')
 
+        future_events = self.CalendarEvent.with_context({'virtual_id': False}).search([('id', '=', future_events.get('res_id'))])
+        future_events.unlink()
+        future_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '>=', '2011-03-13'), ('stop', '<=', '2012-05-13'), ('duration', '=', 2.0)
+        ])
+        # We should have delete all the events with 2 hours duration.
+        self.assertEqual(future_count, 0, 'Wrong number of future events ! The unlink should have delete them')
+
+        # check if unlink does not broke past event.
+        previous_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '>=', '2011-03-13'), ('stop', '<=', '2012-05-13'), ('duration', '=', 1.0)
+        ])
+        self.assertEqual(previous_count, 2, 'Wrong number of past events ! There should not have create or delete past event after the unkink !')
+
     def test_recurrent_meeting_all_update(self):
         # In order to test recurrent meetings in Odoo, I create meetings with different recurrency using different test cases.
         # I create a recurrent meeting with daily recurrency and fixed amount of time.
@@ -93,6 +107,19 @@ class TestRecurrentEvent(common.TransactionCase):
         # The count of recurring events modified should be the same than all events. We updated them to 2 hours duration.
         self.assertEqual(future_count, 12, 'Wrong number of future events !')
 
+        all_events = self.CalendarEvent.with_context({'virtual_id': False}).search([('id', '=', all_events.get('res_id'))])
+        all_events.unlink()
+        all_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '>=', '2011-03-13'), ('stop', '<=', '2012-05-13'), ('duration', '=', 2.0)
+        ])
+        # We should have delete all the events with 2 hours duration.
+        self.assertEqual(all_count, 0, 'Wrong number of future events ! The unlink should have delete them')
+
+        previous_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '>=', '2011-03-13'), ('stop', '<=', '2012-05-13'), ('duration', '=', 1.0)
+        ])
+        self.assertEqual(previous_count, 0, 'Wrong number of past events ! There should not have new past event after the unkink !')
+
     def test_recurrent_meeting_one_update(self):
         # In order to test recurrent meetings in Odoo, I create meetings with different recurrency using different test cases.
         # I create a recurrent meeting with daily recurrency and fixed amount of time.
@@ -133,3 +160,17 @@ class TestRecurrentEvent(common.TransactionCase):
         self.assertEqual(all_count, 12, 'Wrong number of global events !')
         # The count of event with a duration of two hours should be one (the one we edited)
         self.assertEqual(future_count, 1, 'Wrong number of future events !')
+
+        unique_events = self.CalendarEvent.with_context({'virtual_id': False}).search([('id', '=', unique_events.get('res_id'))])
+        unique_events.unlink()
+        future_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '>=', '2011-03-13'), ('stop', '<=', '2012-05-13'), ('duration', '=', 2.0)
+        ])
+        # We should have delete all the events with 2 hours duration.
+        self.assertEqual(future_count, 0, 'Wrong number of future events ! The unlink should have delete them')
+
+        # Should have unlink only one event.
+        previous_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '>=', '2011-03-13'), ('stop', '<=', '2012-05-13'), ('duration', '=', 1.0)
+        ])
+        self.assertEqual(previous_count, 11, 'Wrong number of past events ! There should not have new past event after the unkink !')
