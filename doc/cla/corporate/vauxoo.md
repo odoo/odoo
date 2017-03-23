@@ -31,3 +31,4 @@ Alan Guzman aguzman@vauxoo.com https://github.com/alan-guzman
 Leonardo Astros leonardo@vauxoo.com https://github.com/Codemaker83
 Jose Angel Fentanez Delfin joseangel@vauxoo.com https://github.com/Angelfentanez
 Osval Reyes osval@vauxoo.com https://github.com/osvalr
+Luis González lgonzalez@vauxoo.com https://github.com/luisg123v
