@@ -532,16 +532,17 @@ class WebsiteSale(http.Controller):
     @http.route(['/shop/address'], type='http', methods=['GET', 'POST'], auth="public", website=True)
     def address(self, **kw):
         Partner = request.env['res.partner'].with_context(show_address=1).sudo()
-        order = request.website.sale_get_order(force_create=1)
+        order = request.website.sale_get_order()
+
+        redirection = self.checkout_redirection(order)
+        if redirection:
+            return redirection
+
         mode = (False, False)
         def_country_id = order.partner_id.country_id
         values, errors = {}, {}
 
         partner_id = int(kw.get('partner_id', -1))
-
-        redirection = self.checkout_redirection(order)
-        if redirection:
-            return redirection
 
         # IF PUBLIC ORDER
         if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
