@@ -42,6 +42,12 @@ var ListController = BasicController.extend({
         this.noLeaf = params.noLeaf;
         this.selectedRecords = []; // there is no selected record by default
     },
+    destroy: function () {
+        if (this.$buttons) {
+            this.$buttons.find('*').off();
+        }
+        this._super();
+    },
 
     //--------------------------------------------------------------------------
     // Public

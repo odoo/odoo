@@ -33,6 +33,15 @@ var FormController = BasicController.extend({
         this.toolbar = params.toolbar;
         this.mode = params.mode;
     },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (this.$buttons) {
+            this.$buttons.find('*').off();
+        }
+        this._super();
+    },
 
     //--------------------------------------------------------------------------
     // Public
