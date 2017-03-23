@@ -67,69 +67,6 @@ var KanbanRecord = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Processes each 'field' tag and replaces it by the specified widget, if
-     * any, or directly by the formatted value
-     *
-     * @private
-     */
-    _processFields: function () {
-        var self = this;
-        this.$("field").each(function () {
-            var $field = $(this);
-            var field_name = $field.attr("name");
-            var field_widget = $field.attr("widget");
-            if (field_widget) {
-                // a widget is specified for that field
-                var widget = self.subWidgets[field_name];
-                if (!widget) {
-                    // the widget doesn't exist yet, so instanciate it
-                    var Widget = self.fieldsInfo[field_name].Widget;
-                    if (Widget) {
-                        // some field's attrs might be record dependent (they start with
-                        // 't-att-') and should thus be evaluated, which is done by qweb
-                        // we here replace those attrs in the dict of attrs of the state
-                        // by their evaluted value, to make it transparent from the
-                        // field's widgets point of view
-                        // that dict being shared between records, we don't modify it
-                        // in place
-                        var attrs = Object.create(null);
-                        _.each(self.fieldsInfo[field_name], function (value, key) {
-                            if (_.str.startsWith(key, 't-att-')) {
-                                key = key.slice(6);
-                                value = $field.attr(key);
-                            }
-                            attrs[key] = value;
-                        });
-                        self.fieldsInfo[field_name] = attrs;
-
-                        widget = new Widget(self, field_name, self.state, self.options);
-                        self.subWidgets[field_name] = widget;
-                        self._setFieldDisplay(widget, field_name);
-                        widget.replace($field);
-                    } else if (core.debug) {
-                        // the widget is not implemented
-                        $field.replaceWith($('<span>', {
-                            text: _.str.sprintf(_t('[No widget %s]'), field_widget),
-                        }));
-                    }
-                } else {
-                    // a widget already exists for that field, so reset it with the new state
-                    widget.reset(self.state);
-                    $field.replaceWith(widget.$el);
-                }
-            } else {
-                // no widget specified for that field, so simply use a formatter
-                // note: we could have used the widget corresponding to the field's type, but
-                // it is much more efficient to use a formatter
-                var field = self.fields[field_name];
-                var value = self.recordData[field_name];
-                var options = { data: self.recordData };
-                var formatted_value = field_utils.format[field.type](value, field, options);
-                $field.replaceWith(formatted_value);
-            }
-        });
-    },
-    /**
      * @private
      */
     _attachTooltip: function () {
@@ -228,6 +165,98 @@ var KanbanRecord = Widget.extend({
         });
     },
     /**
+     * Processes each 'field' tag and replaces it by the specified widget, if
+     * any, or directly by the formatted value
+     *
+     * @private
+     */
+    _processFields: function () {
+        var self = this;
+        this.$("field").each(function () {
+            var $field = $(this);
+            var field_name = $field.attr("name");
+            var field_widget = $field.attr("widget");
+            if (field_widget) {
+                // a widget is specified for that field
+                var widget = self.subWidgets[field_name];
+                if (!widget) {
+                    // the widget doesn't exist yet, so instanciate it
+                    var Widget = self.fieldsInfo[field_name].Widget;
+                    if (Widget) {
+                        widget = self._processWidget($field, field_name, Widget);
+                        self.subWidgets[field_name] = widget;
+                    } else if (core.debug) {
+                        // the widget is not implemented
+                        $field.replaceWith($('<span>', {
+                            text: _.str.sprintf(_t('[No widget %s]'), field_widget),
+                        }));
+                    }
+                } else {
+                    // a widget already exists for that field, so reset it with the new state
+                    widget.reset(self.state);
+                    $field.replaceWith(widget.$el);
+                }
+            } else {
+                self._processField($field, field_name);
+            }
+        });
+    },
+    /**
+     * Replace a field by its formatted value.
+     *
+     * @private
+     * @param {JQuery} $field
+     * @param {String} field_name
+     * @returns {Jquery} the modified node
+     */
+    _processField: function ($field, field_name) {
+        // no widget specified for that field, so simply use a formatter
+        // note: we could have used the widget corresponding to the field's type, but
+        // it is much more efficient to use a formatter
+        var field = this.fields[field_name];
+        var value = this.recordData[field_name];
+        var options = { data: this.recordData };
+        var formatted_value = field_utils.format[field.type](value, field, options);
+        var $result = $('<span>', {
+            text: formatted_value,
+        });
+        $field.replaceWith($result);
+        this._setFieldDisplay($result, field_name);
+        return $result;
+    },
+    /**
+     * Replace a field by its corresponding widget.
+     *
+     * @private
+     * @param {JQuery} $field
+     * @param {String} field_name
+     * @param {Class} Widget
+     * @returns {Widget} the widget instance
+     */
+    _processWidget: function ($field, field_name, Widget) {
+        // some field's attrs might be record dependent (they start with
+        // 't-att-') and should thus be evaluated, which is done by qweb
+        // we here replace those attrs in the dict of attrs of the state
+        // by their evaluted value, to make it transparent from the
+        // field's widgets point of view
+        // that dict being shared between records, we don't modify it
+        // in place
+        var attrs = Object.create(null);
+        _.each(this.fieldsInfo[field_name], function (value, key) {
+            if (_.str.startsWith(key, 't-att-')) {
+                key = key.slice(6);
+                value = $field.attr(key);
+            }
+            attrs[key] = value;
+        });
+        this.fieldsInfo[field_name] = attrs;
+
+        var widget = new Widget(this, field_name, this.state, this.options);
+        widget.replace($field);
+        this._setFieldDisplay(widget.$el, field_name);
+        return widget;
+    },
+    /**
      * Renders the record
      */
     _render: function () {
@@ -267,24 +296,24 @@ var KanbanRecord = Widget.extend({
         this.$('span.o_tag').tooltip({delay: {'show': 50}});
     },
     /**
-     * Sets particular classnames on a field widget's $el according to the
+     * Sets particular classnames on a field $el according to the
      * field's attrs (display or bold attributes)
      *
      * @private
-     * @param {Widget} widget a field widget
+     * @param {JQuery} $el
      * @param {string} fieldName
      */
-    _setFieldDisplay: function (widget, fieldName) {
+    _setFieldDisplay: function ($el, fieldName) {
         // attribute display
         if (this.fieldsInfo[fieldName].display === 'right') {
-            widget.$el.addClass('pull-right');
+            $el.addClass('pull-right');
         } else if (this.fieldsInfo[fieldName].display === 'full') {
-            widget.$el.addClass('o_text_block');
+            $el.addClass('o_text_block');
         }
 
         // attribute bold
         if (this.fieldsInfo[fieldName].bold) {
-            widget.$el.addClass('o_text_bold');
+            $el.addClass('o_text_bold');
         }
     },
     /**
