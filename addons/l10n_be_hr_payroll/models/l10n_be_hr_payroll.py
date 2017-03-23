@@ -17,13 +17,7 @@ class HrContract(models.Model):
         ('public_transport', 'Public Transport'),
         ('others', 'Others'),
     ], string="Transport", default='company_car')
-    car_id = fields.Many2one('fleet.vehicle', string='Car',
-        domain=lambda self: self._get_available_cars_domain(),
-        default=lambda self: self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1))
-    car_atn = fields.Float(compute='_compute_car_atn_and_costs', string='ATN Company Car')
-    available_cars_amount = fields.Integer(compute='_compute_available_cars_amount', string='Number of available cars')
-    new_car = fields.Boolean('Request a new car')
-    new_car_model_id = fields.Many2one('fleet.vehicle.model', string="Model", domain=lambda self: self._get_possible_model_domain())
+    car_atn = fields.Float(string='ATN Company Car')
     public_transport_employee_amount = fields.Float('Paid by the employee (Monthly)')
     public_transport_reimbursed_amount = fields.Float(compute='_compute_public_transport_reimbursed_amount', string='Reimbursed amount')
     others_employee_amount = fields.Float('Reimbursed by the employer (Monthly)')
@@ -31,6 +25,7 @@ class HrContract(models.Model):
     thirteen_month = fields.Float(compute='_compute_holidays_advantages', string='13th Month')
     double_holidays = fields.Float(compute='_compute_holidays_advantages', string='Double holidays')
     group_insurance = fields.Float('Group Insurance')
+    warrant_value_employee = fields.Float(compute='_compute_warrants_cost', string="Warrant value for the employee")
 
     # Employer costs fields
     final_yearly_costs = fields.Float(compute='_compute_final_yearly_costs', string='Final Yearly Costs', groups="hr.group_hr_manager")
@@ -39,26 +34,18 @@ class HrContract(models.Model):
     social_security_contributions = fields.Float(compute='_compute_social_security_contributions', string="Social Security Contributions")
     yearly_cost_before_charges = fields.Float(compute='_compute_yearly_cost_before_charges', string="Yearly Costs Before Charges")
     meal_voucher_paid_by_employer = fields.Float(compute='_compute_meal_voucher_paid_by_employer', string="Meal Voucher Paid by Employer")
-    company_car_total_depreciated_cost = fields.Float(compute='_compute_car_atn_and_costs')
+    company_car_total_depreciated_cost = fields.Float()
+    warrants_cost = fields.Float(compute='_compute_warrants_cost')
 
-    @api.depends('car_id', 'new_car', 'new_car_model_id')
-    def _compute_car_atn_and_costs(self):
-        for contract in self:
-            if contract.car_id:
-                contract.car_atn = contract.car_id.atn
-                contract.company_car_total_depreciated_cost = contract.car_id.total_depreciated_cost
-            elif contract.new_car and contract.new_car_model_id:
-                contract.car_atn = contract.new_car_model_id.default_atn
-                contract.company_car_total_depreciated_cost = contract.new_car_model_id.default_total_depreciated_cost
-
-    @api.depends('name')
-    def _compute_available_cars_amount(self):
-        for contract in self:
-            contract.available_cars_amount = self.env['fleet.vehicle'].search_count([('driver_id', '=', False)])
+    @api.depends('advantage_ids', 'advantage_ids.value')
+    def _compute_warrants_cost(self):
+        self.warrants_cost = self.get_value('commission_on_target') * 1.326 / 1.05 * 12.0
+        self.warrant_value_employee = self.warrants_cost * 0.54
 
     @api.depends('wage', 'advantage_ids', 'company_car_total_depreciated_cost')
     def _compute_yearly_cost_before_charges(self):
         for contract in self:
+            # import pdb; pdb.set_trace()
             contract.yearly_cost_before_charges = 12.0 * (
                 contract.wage * (1.0 + 1.0 / 12.0) +
                 contract.get_value('fuel_card') +
@@ -66,7 +53,6 @@ class HrContract(models.Model):
                 contract.get_value('internet') +
                 contract.get_value('mobile') +
                 contract.get_value('mobile_plus') +
-                contract.get_value('commission_on_target') +
                 contract.company_car_total_depreciated_cost
             )
 
@@ -78,6 +64,7 @@ class HrContract(models.Model):
                 contract.ucm_insurance +
                 contract.social_security_contributions +
                 contract.double_holidays +
+                contract.warrants_cost +
                 (220.0 * contract.meal_voucher_paid_by_employer)
             )
 
@@ -90,8 +77,7 @@ class HrContract(models.Model):
     def _compute_social_security_contributions(self):
         for contract in self:
             total_wage = contract.wage * 13.0
-            total_commissions = contract.get_value('commission_on_target') * 12.0
-            contract.social_security_contributions = (total_wage + total_commissions) * 0.3507
+            contract.social_security_contributions = (total_wage) * 0.3507
 
     @api.depends('wage')
     def _compute_ucm_insurance(self):
@@ -133,18 +119,6 @@ class HrContract(models.Model):
         else:
             return 0.0
 
-    @api.onchange('employee_id')
-    def _onchange_employee_id(self):
-        super(HrContract, self)._onchange_employee_id()
-        self.car_id = self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1)
-        return {'domain': {'car_id': self._get_available_cars_domain()}}
-
-    def _get_available_cars_domain(self):
-        return ['|', ('driver_id', '=', False), ('driver_id', '=', self.employee_id.address_home_id.id)]
-
-    def _get_possible_model_domain(self):
-        return [('can_be_requested', '=', True)]
-
     def _get_gross_from_employer_costs(self, yearly_cost):
         contract = self
         remaining_for_gross = yearly_cost \
@@ -153,7 +127,7 @@ class HrContract(models.Model):
             - 12.0 * contract.get_value('internet') \
             - 12.0 * (contract.get_value('mobile') + contract.get_value('mobile_plus')) \
             - 12.0 * contract.company_car_total_depreciated_cost \
-            - (12.0 * 0.3507 + 12.0) * contract.get_value('commission_on_target') \
+            - (1.326 / 1.05 * 12.0) * contract.get_value('commission_on_target') \
             - 220.0 * contract.meal_voucher_paid_by_employer
         gross = remaining_for_gross / (12.0 * 0.05 + 13.0 + 13.0 * 0.3507 + 0.92)
         return gross

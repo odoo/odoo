@@ -185,9 +185,9 @@ class HrContractAdvantage(models.Model):
     value = fields.Float('Amount of the advantage', digits=dp.get_precision('Payroll'))
     active = fields.Boolean('Active', default=True)
 
-    _sql_constraints = [
-        ('code_uniq', 'unique (contract_id, code)', "The codes must be different on the same contract."),
-    ]
+    # _sql_constraints = [
+    #     ('code_uniq', 'unique (contract_id, code)', "The codes must be different on the same contract."),
+    # ]
 
     @api.onchange('active')
     def _onchange_active(self):
@@ -404,7 +404,7 @@ class HrPayslip(models.Model):
         clause_2 = ['&', ('date_start', '<=', date_to), ('date_start', '>=', date_from)]
         #OR if it starts before the date_from and finish after the date_end (or never finish)
         clause_3 = ['&', ('date_start', '<=', date_from), '|', ('date_end', '=', False), ('date_end', '>=', date_to)]
-        clause_final = [('employee_id', '=', employee.id), '|', '|'] + clause_1 + clause_2 + clause_3
+        clause_final = [('employee_id', '=', employee.id), ('state', '=', 'open'), '|', '|'] + clause_1 + clause_2 + clause_3
         return self.env['hr.contract'].search(clause_final).ids
 
     @api.multi

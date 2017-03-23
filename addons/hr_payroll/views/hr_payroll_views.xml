@@ -21,8 +21,8 @@
                 <xpath expr="//group[@name='main_info']" position="after">
                     <group>
                         <group name="advantages">
-                            <field name="advantage_ids" nolabel="1">
-                                <tree editable="bottom">
+                            <field name="advantage_ids" nolabel="1" options="{'no_create': True}">
+                                <tree editable="bottom" delete="0">
                                     <field name="name"/>
                                     <field name="active"/>
                                     <field name="value"/>

@@ -7,21 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name="transport_mode" widget="radio"/>
-                <label for="car_id" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}"/>
-                <div attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}">
-                    <field name="car_id" nolabel="1" attrs="{'invisible': [('new_car', '=', True)]}"/>
-                    <field name="available_cars_amount" invisible="1"/>
-                    <div>
-                        <field name="new_car" attrs="{'invisible': [('available_cars_amount', '&gt;', 3)]}" nolabel="1"/>
-                        <label for="new_car"/>
-                    </div>
-                    <div attrs="{'invisible': [('new_car', '=', False)]}" class="oe_inline">
-                        <label for="new_car_model_id" class="oe_inline"/>
-                        <field name="new_car_model_id" class="oe_inline"/>
-                    </div>
-                </div>
                 <field name="car_atn" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}" invisible="1"/>
-                <field name="company_car_total_depreciated_cost" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}"/>
                 <label string="Public Transport" attrs="{'invisible': [('transport_mode', '!=', 'public_transport')]}"/>
                 <div attrs="{'invisible': [('transport_mode', '!=', 'public_transport')]}">
                     <div>
@@ -51,6 +37,8 @@
                 <group string="Employee Costs" groups="hr.group_hr_manager">
                     <field name="yearly_cost_before_charges"/>
                     <field name="social_security_contributions"/>
+                    <field name="warrants_cost"/>
+                    <field name="warrant_value_employee"/>
                     <field name="ucm_insurance"/>
                     <field name="meal_voucher_paid_by_employer"/>
                     <field name="final_yearly_costs"/>

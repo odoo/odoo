@@ -6,7 +6,7 @@
     'category': 'Localization',
     # TODO: Move fleet part into a bridge module
     # TODO: Remove dependency to resource from resource.timesheet_group1
-    'depends': ['hr_payroll', 'fleet', 'resource'],
+    'depends': ['hr_payroll'],
     'description': """
 Belgian Payroll Rules.
 ======================
@@ -25,7 +25,6 @@ Belgian Payroll Rules.
     'website': 'https://www.odoo.com/page/accounting',
     'data': [
         'views/l10n_be_hr_payroll_view.xml',
-        'views/fleet_views.xml',
         'data/l10n_be_hr_payroll_data.xml',
         'data/hr.salary.rule.csv',
     ],
