@@ -16,7 +16,7 @@ from openerp.exceptions import UserError
 class project_task_type(osv.osv):
     _name = 'project.task.type'
     _description = 'Task Stage'
-    _order = 'sequence'
+    _order = 'sequence, id'
     _columns = {
         'name': fields.char('Stage Name', required=True, translate=True),
         'description': fields.text('Description', translate=True),
@@ -49,7 +49,6 @@ class project_task_type(osv.osv):
         'sequence': 1,
         'project_ids': _get_default_project_ids,
     }
-    _order = 'sequence'
 
 
 class project(osv.osv):
