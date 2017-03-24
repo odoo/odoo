@@ -39,8 +39,9 @@ class HrContract(models.Model):
 
     @api.depends('advantage_ids', 'advantage_ids.value')
     def _compute_warrants_cost(self):
-        self.warrants_cost = self.get_value('commission_on_target') * 1.326 / 1.05 * 12.0
-        self.warrant_value_employee = self.warrants_cost * 0.54
+        for contract in self:
+            contract.warrants_cost = contract.get_value('commission_on_target') * 1.326 / 1.05 * 12.0
+            contract.warrant_value_employee = contract.warrants_cost * 0.54
 
     @api.depends('wage', 'advantage_ids', 'company_car_total_depreciated_cost')
     def _compute_yearly_cost_before_charges(self):
