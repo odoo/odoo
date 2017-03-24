@@ -121,6 +121,14 @@
                                     <field name="state"/>
                                 </tree>
                             </field>
+                            <group string="Exclusions"/>
+                            <p class="oe_grey" attrs="{'invisible': [('exclusion_ids','not in',[None,False])]}"> -This module does not exclude any other module.</p>
+                            <field name="exclusion_ids">
+                                <tree string="Exclusions">
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
                         </page>
                         <page string="Installed Features" attrs="{'invisible':[('state','!=','installed')]}">
                             <group string="Created Menus"/>
