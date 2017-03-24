@@ -2,23 +2,23 @@ odoo.define('web.FormView', function (require) {
 "use strict";
 
 var BasicView = require('web.BasicView');
-var FormRenderer = require('web.FormRenderer');
-var FormController = require('web.FormController');
 var Context = require('web.Context');
 var core = require('web.core');
+var FormController = require('web.FormController');
+var FormRenderer = require('web.FormRenderer');
 
 var _lt = core._lt;
 
 var FormView = BasicView.extend({
+    config: _.extend({}, BasicView.prototype.config, {
+        Renderer: FormRenderer,
+        Controller: FormController,
+    }),
     display_name: _lt('Form'),
     icon: 'fa-edit',
     multi_record: false,
     searchable: false,
 
-    config: _.extend({}, BasicView.prototype.config, {
-        Renderer: FormRenderer,
-        Controller: FormController,
-    }),
     /**
      * @override
      */
@@ -42,6 +42,11 @@ var FormView = BasicView.extend({
         this.rendererParams.mode = mode;
         this.model = params.model;
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
      * @override
      */
