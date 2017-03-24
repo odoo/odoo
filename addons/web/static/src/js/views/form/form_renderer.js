@@ -150,6 +150,7 @@ return BasicRenderer.extend({
     /**
      * Adds the adequate classnames to a field widget's $el.
      *
+     * @private
      * @param {Object} widget a field widget
      * @param {Object} field description of the field
      */
@@ -162,6 +163,11 @@ return BasicRenderer.extend({
             widget.$el.addClass('o_form_field_empty');
         }
     },
+    /**
+     * @private
+     * @param {jQueryElement} $el
+     * @param {Object} node
+     */
     _addOnClickAction: function ($el, node) {
         var self = this;
         $el.click(function () {
@@ -172,6 +178,9 @@ return BasicRenderer.extend({
             });
         });
     },
+    /**
+     * @private
+     */
     _evaluateModifiers: function () {
         var self = this;
         _.each(this.nodeModifiers, function (d) {
@@ -184,6 +193,11 @@ return BasicRenderer.extend({
             }
         });
     },
+    /**
+     * @private
+     * @param {string} name
+     * @returns {string}
+     */
     _getIDForLabel: function (name) {
         var idForLabel = this.idsForLabels[name];
         if (!idForLabel) {
@@ -192,6 +206,12 @@ return BasicRenderer.extend({
         }
         return idForLabel;
     },
+    /**
+     * @private
+     * @param {jQueryElement} $el
+     * @param {Object} node
+     * @param {function} onEvalCallback
+     */
     _handleAttributes: function ($el, node, onEvalCallback) {
         // register the modifiers with their corresponding $el so that they can
         // be re-evaluated at each field changed
@@ -204,6 +224,11 @@ return BasicRenderer.extend({
             $el.addClass(node.attrs.class);
         }
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderButtonBox: function (node) {
         var $result = $('<' + node.tag + '>', { 'class': 'o_not_full' });
         // Avoid to show buttons if we are in create mode (edit mode without res_id)
@@ -256,6 +281,11 @@ return BasicRenderer.extend({
         this._handleAttributes($result, node);
         return $result;
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {FieldWidget}
+     */
     _renderFieldWidget: function (node) {
         var name = node.attrs.name;
         var field = this.state.fields[name];
@@ -281,6 +311,11 @@ return BasicRenderer.extend({
 
         return widget;
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderGenericTag: function (node) {
         var $result = $('<' + node.tag + '>');
         _.each(node.attrs, function (attr, name) {
@@ -292,6 +327,11 @@ return BasicRenderer.extend({
         $result.append(_.map(node.children, this._renderNode.bind(this)));
         return $result;
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderHeaderButton: function (node) {
         var $button = $('<button>')
                         .text(node.attrs.string)
@@ -300,6 +340,11 @@ return BasicRenderer.extend({
         this._handleAttributes($button, node);
         return $button;
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderInnerField: function (node) {
         var field = this.state.fields[node.attrs.name];
         var fieldDescr = node.attrs.string || field.string;
@@ -326,6 +371,11 @@ return BasicRenderer.extend({
                     .append($('<td colspan="1">').css(style).append(widget.$el));
         }
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderInnerGroup: function (node) {
         var $result = $('<table class="o_group o_inner_group"/>');
         this._handleAttributes($result, node);
@@ -360,6 +410,13 @@ return BasicRenderer.extend({
         }
         return $result;
     },
+    /**
+     * @private
+     * @param {jQueryElement} $result
+     * @param {string} label
+     * @param {Object} linkedNode
+     * @returns {jQueryElement}
+     */
     _renderInnerGroupLabel: function ($result, label, linkedNode) {
         var $first = $('<td class="o_td_label">')
                     .append(this._renderNode(label));
@@ -367,6 +424,12 @@ return BasicRenderer.extend({
         var $tr = $('<tr>').append($first).append($second);
         return $result.append($tr);
     },
+    /**
+     * @private
+     * @param {jQueryElement} $result
+     * @param {Object[]} nodes
+     * @returns {jQueryElement}
+     */
     _renderInnerGroupRow: function ($result, nodes) {
         var $tr = $('<tr>');
         for (var i = 0; i < nodes.length; i++) {
@@ -385,6 +448,7 @@ return BasicRenderer.extend({
      * if they are asynchronous, they register their deferred in this.defs, and
      * the _renderView method will properly wait.
      *
+     * @private
      * @param {Object} node
      * @returns {jQueryElement | string}
      */
@@ -401,6 +465,11 @@ return BasicRenderer.extend({
         }
         return this._renderGenericTag(node);
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderStatButton: function (node) {
         var $button = $('<button>').addClass('btn btn-sm oe_stat_button');
         if (node.attrs.icon) {
@@ -414,6 +483,12 @@ return BasicRenderer.extend({
         this._handleAttributes($button, node);
         return $button;
     },
+    /**
+     * @private
+     * @param {Object} page
+     * @param {string} page_id
+     * @returns {jQueryElement}
+     */
     _renderTabHeader: function (page, page_id) {
         var $a = $('<a>', {
             'data-toggle': 'tab',
@@ -424,11 +499,22 @@ return BasicRenderer.extend({
         });
         return $('<li>').append($a);
     },
+    /**
+     * @private
+     * @param {Object} page
+     * @param {string} page_id
+     * @returns {jQueryElement}
+     */
     _renderTabPage: function (page, page_id) {
         var $result = $('<div class="tab-pane" id="' + page_id + '">');
         $result.append(_.map(page.children, this._renderNode.bind(this)));
         return $result;
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderTagButton: function (node) {
         var widget = {
             node: node,
@@ -442,9 +528,19 @@ return BasicRenderer.extend({
         this._handleAttributes($button, node);
         return $button;
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderTagField: function (node) {
         return this._renderFieldWidget(node).$el;
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderTagForm: function (node) {
         var $result = $('<div/>');
         if (node.attrs.class) {
@@ -453,6 +549,11 @@ return BasicRenderer.extend({
         $result.append(_.map(node.children, this._renderNode.bind(this)));
         return $result;
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderTagGroup: function (node) {
         var self = this;
         var isOuterGroup = _.some(node.children, function (child) {
@@ -476,6 +577,11 @@ return BasicRenderer.extend({
         this._handleAttributes($result, node);
         return $result;
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderTagHeader: function (node) {
         var self = this;
         var $statusbar = $('<div>', {class: 'o_form_statusbar'});
@@ -491,6 +597,11 @@ return BasicRenderer.extend({
         });
         return $statusbar;
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderTagLabel: function (node) {
         var text;
         if ('string' in node.attrs) { // allow empty string
@@ -507,6 +618,11 @@ return BasicRenderer.extend({
         this._handleAttributes($result, node);
         return $result;
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderTagNotebook: function (node) {
         var self = this;
         var $headers = $('<ul class="nav nav-tabs">');
@@ -537,9 +653,19 @@ return BasicRenderer.extend({
                 .append($headers)
                 .append($pages);
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderTagSeparator: function (node) {
         return $('<div/>').addClass('o_horizontal_separator').text(node.attrs.string);
     },
+    /**
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
     _renderTagSheet: function (node) {
         this.has_sheet = true;
         var $result = $('<div>').addClass('o_form_sheet_bg');
@@ -553,6 +679,7 @@ return BasicRenderer.extend({
      * the root of the arch, then, when every deferred (from the field widgets)
      * are done, it will resolves itself.
      *
+     * @private
      * @override method from BasicRenderer
      * @returns {Deferred}
      */
