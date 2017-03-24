@@ -983,7 +983,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_buy_route(self):
-        buy_route = self.env.ref('purchase.route_warehouse0_buy')
+        buy_route = self.env.ref('purchase.route_warehouse0_buy', raise_if_not_found=False)
         if buy_route:
             return buy_route.ids
         return []
