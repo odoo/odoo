@@ -241,6 +241,7 @@ class Holidays(models.Model):
                 ('date_to', '>=', holiday.date_from),
                 ('employee_id', '=', holiday.employee_id.id),
                 ('id', '!=', holiday.id),
+                ('type', '=', holiday.type),
                 ('state', 'not in', ['cancel', 'refuse']),
             ]
             nholidays = self.search_count(domain)
