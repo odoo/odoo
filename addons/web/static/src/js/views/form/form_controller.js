@@ -56,6 +56,32 @@ var FormController = BasicController.extend({
     autofocus: function () {
     },
     /**
+     * Determines if we can discard the current change.  If the model is not
+     * dirty, that is not a problem.  However, if it is dirty, we have to ask
+     * the user for confirmation.
+     *
+     * @override
+     * @returns {Deferred} If the deferred is resolved, we assume the changes
+     *   can be discarded.  If it is rejected, then we cannot discard.
+     */
+    canBeDiscarded: function () {
+        if (!this.isDirty) {
+            return $.when();
+        }
+        var message = _t("The record has been modified, your changes will be discarded. Are you sure you want to leave this page ?");
+        var def = $.Deferred();
+        var options = {
+            title: _t("Warning"),
+            confirm_callback: function () {
+                this.on('closed', null, def.resolve.bind(def));
+            },
+            cancel_callback: def.reject.bind(def)
+        };
+        var dialog = Dialog.confirm(this, message, options);
+        dialog.$modal.on('hidden.bs.modal', def.reject.bind(def));
+        return def;
+    },
+    /**
      * @returns {boolean}
      */
     checkInvalidFields: function () {
@@ -146,7 +172,7 @@ var FormController = BasicController.extend({
      */
     renderPager: function ($node, options) {
         options = _.extend({}, options, {
-            validate: this._canBeDiscarded.bind(this),
+            validate: this.canBeDiscarded.bind(this),
         });
         this._super($node, options);
     },
@@ -264,31 +290,6 @@ var FormController = BasicController.extend({
             on_fail: this.reload.bind(this),
             on_success: def.resolve.bind(def),
         });
-        return def;
-    },
-    /**
-     * Determines if we can discard the current change.  If the model is not
-     * dirty, that is not a problem.  However, if it is dirty, we have to ask
-     * the user for confirmation.
-     *
-     * @returns {Deferred} If the deferred is resolved, we assume the changes
-     *   can be discarded.  If it has been rejected, then we cannot discard.
-     */
-    _canBeDiscarded: function () {
-        if (!this.isDirty) {
-            return $.when();
-        }
-        var message = _t("The record has been modified, your changes will be discarded. Are you sure you want to leave this page ?");
-        var def = $.Deferred();
-        var options = {
-            title: _t("Warning"),
-            confirm_callback: function () {
-                this.on('closed', null, def.resolve.bind(def));
-            },
-            cancel_callback: def.reject.bind(def)
-        };
-        var dialog = Dialog.confirm(this, message, options);
-        dialog.$modal.on('hidden.bs.modal', def.reject.bind(def));
         return def;
     },
     /**
@@ -446,7 +447,7 @@ var FormController = BasicController.extend({
      */
     _onDiscardChange: function () {
         var self = this;
-        this._canBeDiscarded().then(function () {
+        this.canBeDiscarded().then(function () {
             self.model.discardChanges(self.handle);
             if (!self.model.isNew(self.handle)) {
                 self._toReadOnlyMode();
