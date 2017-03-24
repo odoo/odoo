@@ -247,6 +247,8 @@ class Module(models.Model):
     sequence = fields.Integer('Sequence', default=100)
     dependencies_id = fields.One2many('ir.module.module.dependency', 'module_id',
                                        string='Dependencies', readonly=True)
+    exclusion_ids = fields.One2many('ir.module.module.exclusion', 'module_id',
+                                    string='Exclusions', readonly=True)
     auto_install = fields.Boolean('Automatic Installation',
                                    help='An auto-installable module is automatically installed by the '
                                         'system when all its dependencies are satisfied. '
@@ -371,6 +373,14 @@ class Module(models.Model):
 
         # the modules that are installed/to install/to upgrade
         install_mods = self.search([('state', 'in', list(install_states))])
+
+        # check individual exclusions
+        install_names = {module.name for module in install_mods}
+        for module in install_mods:
+            for exclusion in module.exclusion_ids:
+                if exclusion.name in install_names:
+                    msg = _('Modules "%s" and "%s" are incompatible.')
+                    raise UserError(msg % (module.shortdesc, exclusion.exclusion_id.shortdesc))
 
         # check category exclusions
         def closure(module):
@@ -626,6 +636,7 @@ class Module(models.Model):
                 res[1] += 1
 
             mod._update_dependencies(terp.get('depends', []))
+            mod._update_exclusions(terp.get('excludes', []))
             mod._update_category(terp.get('category', 'Uncategorized'))
 
         return res
@@ -740,6 +751,15 @@ class Module(models.Model):
             self._cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (self.id, dep))
         self.invalidate_cache(['dependencies_id'], self.ids)
 
+    def _update_exclusions(self, excludes=None):
+        existing = set(excl.name for excl in self.exclusion_ids)
+        needed = set(excludes or [])
+        for name in (needed - existing):
+            self._cr.execute('INSERT INTO ir_module_module_exclusion (module_id, name) VALUES (%s, %s)', (self.id, name))
+        for name in (existing - needed):
+            self._cr.execute('DELETE FROM ir_module_module_exclusion WHERE module_id=%s AND name=%s', (self.id, name))
+        self.invalidate_cache(['exclusion_ids'], self.ids)
+
     def _update_category(self, category='Uncategorized'):
         current_category = self.category_id
         current_category_path = []
@@ -810,3 +830,35 @@ class ModuleDependency(models.Model):
     @api.depends('depend_id.state')
     def _compute_state(self):
         self.state = self.depend_id.state or 'unknown'
+
+
+class ModuleExclusion(models.Model):
+    _name = "ir.module.module.exclusion"
+    _description = "Module exclusion"
+
+    # the exclusion name
+    name = fields.Char(index=True)
+
+    # the module that excludes it
+    module_id = fields.Many2one('ir.module.module', 'Module', ondelete='cascade')
+
+    # the module corresponding to the exclusion, and its status
+    exclusion_id = fields.Many2one('ir.module.module', 'Exclusion Module', compute='_compute_exclusion')
+    state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
+
+    @api.multi
+    @api.depends('name')
+    def _compute_exclusion(self):
+        # retrieve all modules corresponding to the exclusion names
+        names = list(set(excl.name for excl in self))
+        mods = self.env['ir.module.module'].search([('name', 'in', names)])
+
+        # index modules by name, and assign dependencies
+        name_mod = {mod.name: mod for mod in mods}
+        for excl in self:
+            excl.exclusion_id = name_mod.get(excl.name)
+
+    @api.one
+    @api.depends('exclusion_id.state')
+    def _compute_state(self):
+        self.state = self.exclusion_id.state or 'unknown'
