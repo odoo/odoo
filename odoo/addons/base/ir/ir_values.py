@@ -302,7 +302,7 @@ class IrValues(models.Model):
                              v.company_id = (SELECT company_id FROM res_users WHERE id = %%s)
                             )
                     %s
-                    ORDER BY v.user_id, u.company_id"""
+                    ORDER BY v.user_id, v.company_id, v.id"""
         params = ('default', model, self._uid, self._uid)
         if condition:
             query = query % 'AND v.key2 = %s'

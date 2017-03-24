@@ -95,3 +95,33 @@ class TestIrValues(TransactionCase):
         self.assertEqual(actions[0][1], 'Nice Report', 'Bound action does not match definition')
         self.assertTrue(isinstance(actions[0][2], dict) and actions[0][2]['id'] == report_id,
                         'Bound action does not match definition')
+
+    def test_orders(self):
+        ir_values = self.env['ir.values']
+
+        # create a global rule for all
+        ir_values.set_default(
+            'res.partner', 'ref', 'value_global',
+            for_all_users=True, company_id=False, condition=False)
+        self.assertEqual(
+            ir_values.get_defaults_dict('res.partner')['ref'],
+            'value_global',
+            "Can't retrieve the created default value for all.")
+
+        # set a default value for current company (behavior of 'set default' from debug mode)
+        ir_values.set_default(
+            'res.partner', 'ref', 'value_company',
+            for_all_users=True, company_id=True, condition=False)
+        self.assertEqual(
+            ir_values.get_defaults_dict('res.partner')['ref'],
+            'value_company',
+            "Can't retrieve the created default value for company.")
+
+        # set a default value for current user (behavior of 'set default' from debug mode)
+        ir_values.set_default(
+            'res.partner', 'ref', 'value_user',
+            for_all_users=False, company_id=True, condition=False)
+        self.assertEqual(
+            ir_values.get_defaults_dict('res.partner')['ref'],
+            'value_user',
+            "Can't retrieve the created default value for user.")
