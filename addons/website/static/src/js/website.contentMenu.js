@@ -235,7 +235,7 @@ var EditMenuDialog = widget.Dialog.extend({
     },
     add_menu: function () {
         var self = this;
-        var dialog = new MenuEntryDialog(this, {}, undefined, {});
+        var dialog = new MenuEntryDialog(this, {menu_link_options: true}, undefined, {});
         dialog.on('save', this, function (link) {
             var new_menu = {
                 id: _.uniqueId('new-'),
@@ -318,12 +318,21 @@ var MenuEntryDialog = widget.LinkDialog.extend({
         data.text = data.name || '';
         data.isNewWindow = data.new_window;
         this.data = data;
+        this.menu_link_options = options.menu_link_options;
         return this._super.apply(this, arguments);
     },
     start: function () {
+        var self = this;
         this.$(".o_link_dialog_preview").remove();
         this.$(".window-new, .link-style").closest(".form-group").remove();
         this.$("label[for='o_link_dialog_label_input']").text(_t("Menu Label"));
+        if (this.menu_link_options) { // add menu link option only when adding new menu
+            this.$('#o_link_dialog_label_input').closest('.form-group').after(qweb.render('website.contentMenu.dialog.edit.link_menu_options'));
+            this.$('input[name=link_menu_options]').on('change', function() {
+                self.$('#o_link_dialog_url_input').closest('.form-group').toggle();
+            });
+        }
+
         return this._super.apply(this, arguments);
     },
     save: function () {
@@ -331,6 +340,10 @@ var MenuEntryDialog = widget.LinkDialog.extend({
         if (!$e.val() || !$e[0].checkValidity()) {
             $e.closest('.form-group').addClass('has-error');
             $e.focus();
+            return;
+        }
+        if (this.$('input[name=link_menu_options]:checked').val() === 'new_page') {
+            window.location = '/website/add/' + encodeURIComponent($e.val()) + '?add_menu=1';
             return;
         }
         return this._super.apply(this, arguments);
