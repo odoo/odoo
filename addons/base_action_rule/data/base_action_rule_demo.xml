@@ -43,10 +43,44 @@
             <field name="filter_domain">[('customer', '=', True)]</field>
         </record>
 
+        <record id="test_action" model="ir.actions.server">
+            <field name="name">Test Server Action</field>
+            <field name="model_id" ref="base_action_rule.model_base_action_rule_lead_test"/>
+            <field name="code">
+record = model.browse(context['active_id'])
+if 'partner_id' in context['old_values'][record.id]:
+    record.write({'state': 'draft'})
+            </field>
+        </record>
+
+        <record id="test_rule_recursive" model="base.action.rule">
+            <field name="name">Test recursive rule</field>
+            <field name="kind">on_write</field>
+            <field name="model_id" ref="base_action_rule.model_base_action_rule_lead_test"/>
+            <field name="server_action_ids" eval="[(4, ref('base_action_rule.test_action'))]"/>
+        </record>
+
         <record id="test_rule_on_line" model="base.action.rule">
             <field name="name">Test rule on secondary record</field>
             <field name="kind">on_create</field>
             <field name="model_id" ref="base_action_rule.model_base_action_rule_line_test"/>
             <field name="act_user_id" ref="base.user_demo"/>
+        </record>
+
+        <record id="test_action_context" model="ir.actions.server">
+            <field name="name">Test Server Action Context</field>
+            <field name="model_id" ref="base_action_rule.model_base_action_rule_lead_test"/>
+            <field name="code">
+record = model.browse(context['active_id'])
+if 'user_id' in context['old_values'][record.id]:
+    record.write({'is_assigned_to_admin': (record.user_id.id == 1)})
+            </field>
+        </record>
+
+        <record id="test_rule_on_write_check_context" model="base.action.rule">
+            <field name="name">Test rule on write check context</field>
+            <field name="kind">on_write</field>
+            <field name="model_id" ref="base_action_rule.model_base_action_rule_lead_test"/>
+            <field name="server_action_ids" eval="[(6, 0, [ref('base_action_rule.test_action_context')])]"/>
         </record>
 </odoo>

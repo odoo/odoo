@@ -307,12 +307,7 @@ class TestOnChange(common.TransactionCase):
 
         # When one2many domain contains non-computed field, things are ok
         self.assertEqual(result['value']['important_messages'],
-                         [(5,)] + [(1, msg.id, {
-                                    'name': msg.name,
-                                    'body': msg.body,
-                                    'author': (msg.author.id, msg.author.display_name),
-                                    'size': msg.size
-                                    }) for msg in discussion.important_messages])
+                         [(5,)] + [(4, msg.id) for msg in discussion.important_messages])
 
         # But here with commit 5676d81, we get value of: [(2, email.id)]
         self.assertEqual(
