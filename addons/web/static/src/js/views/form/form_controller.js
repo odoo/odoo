@@ -242,6 +242,7 @@ var FormController = BasicController.extend({
                         if (!stayInEdit) {
                             self._toReadOnlyMode();
                         }
+                        self.isDirty = false;
                     });
             }
         }
@@ -313,6 +314,7 @@ var FormController = BasicController.extend({
      * @param {string} id
      */
     _confirmSave: function (id) {
+        this.isDirty = false;
         if (id === this.handle) {
             this.reload();
         } else {
@@ -461,6 +463,7 @@ var FormController = BasicController.extend({
         var self = this;
         this.canBeDiscarded().then(function () {
             self.model.discardChanges(self.handle);
+            self.isDirty = false;
             if (!self.model.isNew(self.handle)) {
                 self._toReadOnlyMode();
             } else {

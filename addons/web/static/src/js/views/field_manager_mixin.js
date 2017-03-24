@@ -9,10 +9,6 @@ odoo.define('web.FieldManagerMixin', function (require) {
  */
 
 var BasicModel = require('web.BasicModel');
-var Dialog = require('web.Dialog');
-var core = require('web.core');
-
-var qweb = core.qweb;
 
 var FieldManagerMixin = {
     custom_events: {

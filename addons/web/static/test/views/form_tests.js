@@ -1370,8 +1370,8 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(form.pager.$el.find('.o_pager_value').text(), "1", 'pager value should be 1');
-        assert.strictEqual(form.pager.$el.find('.o_pager_limit').text(), "2", 'pager limit should be 2');
+        assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should be 1');
+        assert.strictEqual(form.pager.$('.o_pager_limit').text(), "2", 'pager limit should be 2');
 
         // switch to edit mode
         form.$buttons.find('.o_form_button_edit').click();
@@ -1382,20 +1382,81 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('.o_form_input').val(), 'new value', 'input should contain new value');
 
         // click on the pager to switch to the next record and cancel the confirm request
-        form.pager.$el.find('.o_pager_next').click(); // click on next
+        form.pager.$('.o_pager_next').click(); // click on next
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
         $('.modal .modal-footer .btn-default').click(); // click on cancel
         assert.strictEqual(form.$('.o_form_input').val(), 'new value', 'input should still contain new value');
-        assert.strictEqual(form.pager.$el.find('.o_pager_value').text(), "1", 'pager value should still be 1');
+        assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should still be 1');
 
         // click on the pager to switch to the next record and confirm
-        form.pager.$el.find('.o_pager_next').click(); // click on next
+        form.pager.$('.o_pager_next').click(); // click on next
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
         $('.modal .modal-footer .btn-primary').click(); // click on confirm
         assert.strictEqual(form.$('.o_form_input').val(), 'blip', 'input should contain blip');
-        assert.strictEqual(form.pager.$el.find('.o_pager_value').text(), "2", 'pager value should be 2');
+        assert.strictEqual(form.pager.$('.o_pager_value').text(), "2", 'pager value should be 2');
 
         assert.strictEqual(nbWrite, 0, 'no write RPC should have been done');
+        form.destroy();
+    });
+
+    QUnit.test('handling dirty state: switching to another record', function (assert) {
+        assert.expect(12);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"></field>' +
+                    '<field name="priority" widget="priority"></field>' +
+                '</form>',
+            viewOptions: {
+                ids: [1, 2],
+                index: 0,
+            },
+            res_id: 1,
+        });
+        assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should be 1');
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_form_input').val(), 'yop', 'input should contain yop');
+
+        // edit the foo field
+        form.$('.o_form_input').val('new value').trigger('input');
+        assert.strictEqual(form.$('.o_form_input').val(), 'new value', 'input should contain new value');
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        // click on the pager to switch to the next record and cancel the confirm request
+        form.pager.$('.o_pager_next').click(); // click on next
+        assert.strictEqual($('.modal').length, 0, 'no confirm modal should be displayed');
+        assert.strictEqual(form.pager.$('.o_pager_value').text(), "2", 'pager value should be 2');
+
+        assert.strictEqual(form.$('.o_priority .fa-star-o').length, 2,
+            'priority widget should have been rendered with correct value');
+
+        // edit the value in readonly
+        form.$('.o_priority .fa-star-o:first').click(); // click on the first star
+        assert.strictEqual(form.$('.o_priority .fa-star').length, 1,
+            'priority widget should have been updated');
+
+        form.pager.$('.o_pager_next').click(); // click on next
+        assert.strictEqual($('.modal').length, 0, 'no confirm modal should be displayed');
+        assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should be 1');
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_form_input').val(), 'new value', 'input should contain yop');
+
+        // edit the foo field
+        form.$('.o_form_input').val('wrong value').trigger('input');
+
+        form.$buttons.find('.o_form_button_cancel').click();
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        $('.modal .modal-footer .btn-primary').click(); // click on confirm
+        form.pager.$('.o_pager_next').click(); // click on next
+        assert.strictEqual(form.pager.$('.o_pager_value').text(), "2", 'pager value should be 2');
         form.destroy();
     });
 
@@ -1432,7 +1493,7 @@ QUnit.module('Views', {
             "second tab should be active");
 
         // click on the pager to switch to the next record
-        form.pager.$el.find('.o_pager_next').click();
+        form.pager.$('.o_pager_next').click();
 
         assert.notOk(form.$('.o_notebook li:eq(0)').hasClass('active'),
             "first tab should not be active");
@@ -1499,10 +1560,10 @@ QUnit.module('Views', {
         });
 
         assert.strictEqual(form.mode, 'readonly', 'form view should be in readonly mode');
-        assert.strictEqual(form.pager.$el.find('.o_pager_value').text(), "1", 'pager value should be 1');
-        form.pager.$el.find('.o_pager_next').click(); // click on next
+        assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should be 1');
+        form.pager.$('.o_pager_next').click(); // click on next
 
-        assert.strictEqual(form.pager.$el.find('.o_pager_value').text(), "2", 'pager value should be 2');
+        assert.strictEqual(form.pager.$('.o_pager_value').text(), "2", 'pager value should be 2');
         assert.strictEqual(form.mode, 'readonly', 'form view should be in readonly mode');
 
         assert.strictEqual(pushStateCount, 2, "should have triggered 2 push_state");
