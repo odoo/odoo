@@ -315,6 +315,8 @@ class account_journal(models.Model):
         [action] = self.env.ref('account.%s' % action_name).read()
         action['context'] = ctx
         action['domain'] = self._context.get('use_domain', [])
+        action['views'] = False
+        action['view_id'] = False
         return action
 
     @api.multi
