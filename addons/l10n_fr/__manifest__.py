@@ -38,7 +38,5 @@ configuration of their taxes and fiscal positions manually.
         'data/account_fiscal_position_template_data.xml',
         'data/account_reconcile_model_template.xml',
         'data/account_chart_template_data.yml',
-        'views/no_cancel.xml',
     ],
-    'post_init_hook': '_deactivate_account_cancel_views',
 }
