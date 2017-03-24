@@ -2,6 +2,37 @@
 /// This file regroups the style of website UI components (edition modals, forms, ...).
 ///
 
+.o-w-close-icon(@size:12px, @color:#000, @color-hover:#000, @thickness: 1px, @opacity: 0.7, @opacity-hover: 1) {
+    color: transparent;
+    position: relative;
+    display: inline-block;
+    opacity: @opacity;
+    .square(@size);
+
+    &:hover, &:focus {
+        outline: none;
+        opacity: @opacity-hover;
+
+        &::after, &::before {
+            background: @color-hover;
+        }
+    }
+
+    &:after, &:before {
+        content: '';
+        margin-top: -1px;
+        background: @color;
+        .size(100%, @thickness);
+        .o-position-absolute(50%, @left:0);
+        .o-transform(rotate(45deg));
+    }
+
+    &:after {
+        .o-transform(rotate(-45deg));
+    }
+}
+
+
 // MODALS
 body .modal {
     &.o_website_modal {
@@ -12,6 +43,11 @@ body .modal {
         .o-w-preserve-btn();
         .o-w-preserve-wells();
         .o-w-preserve-modals();
+
+        button.close {
+            .o-w-close-icon(12px);
+            margin-right: -2px;
+        }
 
         .modal-content {
             .modal-header .o_subtitle {
