@@ -267,6 +267,7 @@ var FormController = BasicController.extend({
      * When the user clicks on a form button, this function determines what
      * should happen.
      *
+     * @private
      * @param {Object} attrs the attrs of the button clicked
      * @param {Object} [record] the current state of the view
      * @returns {Deferred}
@@ -294,6 +295,7 @@ var FormController = BasicController.extend({
     },
     /**
      * @override method from FieldManagerMixin
+     * @private
      * @param {string} id it is ignored, because we already know it.
      * @param {string[]} fields
      * @param {OdooEvent} event the event that triggered the change
@@ -306,6 +308,7 @@ var FormController = BasicController.extend({
      * When a save operation has been confirmed from the model, this method is
      * called.
      *
+     * @private
      * @override method from field manager mixin
      * @param {string} id
      */
@@ -328,6 +331,7 @@ var FormController = BasicController.extend({
      * Helper function to display a warning that some field have an invalid
      * value.  This is used when a save operation cannot be completed.
      *
+     * @private
      * @param {string[]} invalidFields list of field names
      */
     _notifyInvalidFields: function (invalidFields) {
@@ -346,6 +350,7 @@ var FormController = BasicController.extend({
      * client to add it in the url, for example.
      *
      * @override method from AbstractController
+     * @private
      * @param {Object} [state]
      */
     _pushState: function (state) {
@@ -358,6 +363,7 @@ var FormController = BasicController.extend({
      * Change the view mode to 'edit'
      *
      * @see _toReadOnlyMode
+     * @private
      */
     _toEditMode: function () {
         this.$el.addClass('o_form_editable');
@@ -367,6 +373,7 @@ var FormController = BasicController.extend({
      * Change the view mode to 'readonly'
      *
      * @see _toEditMode
+     * @private
      */
     _toReadOnlyMode: function () {
         this.$el.removeClass('o_form_editable');
@@ -376,6 +383,7 @@ var FormController = BasicController.extend({
      * Updates the controller's title according to the new state
      *
      * @override
+     * @private
      * @param {Object} state
      * @returns {Deferred}
      */
@@ -387,7 +395,7 @@ var FormController = BasicController.extend({
         return this._super.apply(this, arguments);
     },
     /**
-     * @todo move this in _update
+     * @private
      */
     _updateButtons: function () {
         if (this.$buttons) {
@@ -400,7 +408,7 @@ var FormController = BasicController.extend({
     },
     /**
      * Show or hide the sidebar according to the actual_mode
-     * @todo move this in _update
+     * @private
      */
     _updateSidebar: function () {
         if (this.sidebar) {
@@ -435,6 +443,8 @@ var FormController = BasicController.extend({
     },
     /**
      * Bounce the 'Edit' button.
+     *
+     * @private
      */
     _onBounceEdit: function () {
         if (this.$buttons) {
@@ -444,6 +454,8 @@ var FormController = BasicController.extend({
     /**
      * If the user clicks on 'Discard', we have to check if the changes can be
      * discarded, then actually do it.
+     *
+     * @private
      */
     _onDiscardChange: function () {
         var self = this;
@@ -458,6 +470,8 @@ var FormController = BasicController.extend({
     },
     /**
      * Called when the user clicks on 'Duplicate Record' in the sidebar
+     *
+     * @private
      */
     _onDuplicateRecord: function () {
         var self = this;
@@ -475,6 +489,7 @@ var FormController = BasicController.extend({
      * come from widgets that are editable even in readonly (e.g. Priority).
      *
      * @override
+     * @private
      * @param {OdooEvent} event
      */
     _onFieldChanged: function (event) {
@@ -484,6 +499,7 @@ var FormController = BasicController.extend({
         this._super.apply(this, arguments);
     },
     /**
+     * @private
      * @param {OdooEvent} event
      */
     _onButtonClicked: function (event) {
@@ -522,6 +538,7 @@ var FormController = BasicController.extend({
     /**
      * Open a record in a form view dialog
      *
+     * @private
      * @param {OdooEvent} event
      */
     _onOpenRecord: function (event) {
@@ -556,6 +573,7 @@ var FormController = BasicController.extend({
      * This method is called when someone tries to sort a column, most likely
      * in a x2many list view
      *
+     * @private
      * @param {OdooEvent} event
      */
     _onToggleColumnOrder: function (event) {
