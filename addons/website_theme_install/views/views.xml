@@ -56,6 +56,7 @@
     <record id="theme_install_todo_action" model="ir.actions.server">
         <field name="name">Config: Choose Your Theme</field>
         <field name="model_id" ref="model_ir_module_module"/>
+        <field name="state">code</field>
         <field name="code">
 model.update_list()
 action = {
