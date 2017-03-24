@@ -81,6 +81,7 @@ class ModuleCategory(models.Model):
     description = fields.Text(string='Description', translate=True)
     sequence = fields.Integer(string='Sequence')
     visible = fields.Boolean(string='Visible', default=True)
+    exclusive = fields.Boolean(string='Exclusive')
     xml_id = fields.Char(string='External ID', compute='_compute_xml_id')
 
     def _compute_xml_id(self):
@@ -368,35 +369,30 @@ class Module(models.Model):
             # Determine which auto-installable modules must be installed.
             modules = self.search(auto_domain).filtered(must_install)
 
-        # retrieve the installed (or to be installed) theme modules
-        theme_category = self.env.ref('base.module_category_theme')
-        theme_modules = self.search([
-            ('state', 'in', list(install_states)),
-            ('category_id', 'child_of', [theme_category.id]),
-        ])
+        # the modules that are installed/to install/to upgrade
+        install_mods = self.search([('state', 'in', list(install_states))])
 
-        # determine all theme modules that mods depends on, including mods
-        def theme_deps(mods):
-            deps = mods.mapped('dependencies_id.depend_id')
-            while deps:
-                mods |= deps
-                deps = deps.mapped('dependencies_id.depend_id')
-            return mods & theme_modules
+        # check category exclusions
+        def closure(module):
+            todo = result = module
+            while todo:
+                result |= todo
+                todo = todo.mapped('dependencies_id.depend_id')
+            return result
 
-        if any(module.state == 'to install' for module in theme_modules):
-            # check: the installation is valid if all installed theme modules
-            # correspond to one theme module and all its theme dependencies
-            if not any(theme_deps(module) == theme_modules for module in theme_modules):
-                state_labels = dict(self.fields_get(['state'])['state']['selection'])
-                themes_list = [
-                    "- %s (%s)" % (module.shortdesc, state_labels[module.state])
-                    for module in theme_modules
-                ]
-                raise UserError(_(
-                    "You are trying to install incompatible themes:\n%s\n\n" \
-                    "Please uninstall your current theme before installing another one.\n"
-                    "Warning: switching themes may significantly alter the look of your current website pages!"
-                ) % ("\n".join(themes_list)))
+        for category in install_mods.mapped('category_id').filtered('exclusive'):
+            # the installation is valid if all installed modules in category
+            # correspond to one module and all its dependencies in category
+            category_mods = install_mods.filtered(lambda mod: mod.category_id == category)
+            if not any(closure(module) & category_mods == category_mods
+                       for module in category_mods):
+                msg = _('You are trying to install incompatible modules in category "%s":')
+                labels = dict(self.fields_get(['state'])['state']['selection'])
+                raise UserError("\n".join([msg % category.name] + [
+                    "- %s (%s)" % (module.shortdesc, labels[module.state])
+                    for module in category_mods
+                ]))
+
         return dict(ACTION_DICT, name=_('Install'))
 
     @api.multi
