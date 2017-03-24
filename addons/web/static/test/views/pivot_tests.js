@@ -426,4 +426,30 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('can be grouped with the update function', function (assert) {
+        assert.expect(4);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+        });
+
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 1,
+            "should have only 1 cell");
+        assert.strictEqual(pivot.$('tbody tr').length, 1,
+            "should have 1 rows");
+
+        pivot.update({groupBy: ['product_id']});
+
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 3,
+            "should have 3 cells");
+        assert.strictEqual(pivot.$('tbody tr').length, 3,
+            "should have 3 rows");
+        pivot.destroy();
+    });
+
 });});
