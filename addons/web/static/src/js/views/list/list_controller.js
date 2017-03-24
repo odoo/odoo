@@ -42,12 +42,6 @@ var ListController = BasicController.extend({
         this.noLeaf = params.noLeaf;
         this.selectedRecords = []; // there is no selected record by default
     },
-    destroy: function () {
-        if (this.$buttons) {
-            this.$buttons.find('*').off();
-        }
-        this._super();
-    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -104,12 +98,9 @@ var ListController = BasicController.extend({
     renderButtons: function ($node) {
         if (!this.noLeaf && this.hasButtons) {
             this.$buttons = $(qweb.render('ListView.buttons', {widget: this}));
-            this.$buttons.find('.o_list_button_add')
-                         .click(this._onCreateRecord.bind(this));
-            this.$buttons.find('.o_list_button_save')
-                         .click(this._onSave.bind(this));
-            this.$buttons.find('.o_list_button_discard')
-                         .click(this._onDiscard.bind(this));
+            this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
+            this.$buttons.on('click', '.o_list_button_save', this._onSave.bind(this));
+            this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
             this.$buttons.appendTo($node);
         }
     },

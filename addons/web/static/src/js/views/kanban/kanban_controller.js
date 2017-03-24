@@ -43,11 +43,6 @@ var KanbanController = BasicController.extend({
         // true iff grouped by an m2o field and group_create action enabled
         this.create_column_enabled = false;
     },
-    destroy: function () {
-        if (this.$buttons) {
-            this.$buttons.off();
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Public
