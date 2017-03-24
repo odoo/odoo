@@ -96,9 +96,7 @@ return core.Class.extend({
             }).then(function (result) {
                 // Postprocess fields_views and insert them into the fields_views cache
                 result.fields_views = _.mapObject(result.fields_views, self._postprocess_fvg.bind(self));
-                _.each(result.fields_views, function (fields_view) {
-                    _.defaults(fields_view.fields, result.fields);
-                });
+                self.processViews(result.fields_views, result.fields);
                 _.each(views_descr, function (view_descr) {
                     var toolbar = options.toolbar && view_descr[1] !== 'search';
                     var fv_key = self._gen_key(model, view_descr[0], view_descr[1], toolbar, context);
@@ -114,15 +112,7 @@ return core.Class.extend({
             }, this._invalidate.bind(this, this._cache.views, key));
         }
 
-        return this._cache.views[key].then(function (views) {
-            return _.mapObject(views, function (view, viewType) {
-                return _.extend(view, self._processFieldsView({
-                    type: viewType,
-                    arch: view.arch,
-                    fields: view.fields,
-                }));
-            });
-        });
+        return this._cache.views[key];
     },
 
     /**
@@ -189,6 +179,37 @@ return core.Class.extend({
     },
 
     /**
+     * Processes fields and fields_views. For each field, writes its name inside
+     * the field description to make it self-contained. For each fields_view,
+     * completes its fields with the missing ones.
+     *
+     * @param {Object} fieldsViews object of fields_views (keys are view types)
+     * @param {Object} fields all the fields of the model
+     */
+    processViews: function (fieldsViews, fields) {
+        var fieldName, fieldsView, viewType;
+        // write the field name inside the description for all fields
+        for (fieldName in fields) {
+            fields[fieldName].name = fieldName;
+        }
+        for (viewType in fieldsViews) {
+            fieldsView = fieldsViews[viewType];
+            // write the field name inside the description for fields in view
+            for (fieldName in fieldsView.fields) {
+                fieldsView.fields[fieldName].name = fieldName;
+            }
+            // complete fields (in view) with missing ones
+            _.defaults(fieldsView.fields, fields);
+            // process the fields_view
+            _.extend(fieldsView, this._processFieldsView({
+                type: viewType,
+                arch: fieldsView.arch,
+                fields: fieldsView.fields,
+            }));
+        }
+    },
+
+    /**
      * Private function that postprocesses fields_view (mainly parses the arch attribute)
      */
     _postprocess_fvg: function (fields_view) {
@@ -205,7 +226,7 @@ return core.Class.extend({
             id_field.type = 'id';
         }
 
-        // Process inner views (one2manys)
+        // Process inner views (x2manys)
         _.each(fields_view.fields, function(field) {
             _.each(field.views || {}, function(view) {
                 self._postprocess_fvg(view);
