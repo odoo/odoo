@@ -64,6 +64,22 @@ var AbstractController = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Determines if we can discard the current state.  For example, when the
+     * user open the 'home' screen, the view manager will call this method on
+     * the active view to make sure it is ok to open the home screen (and
+     * potentially loose all current state).
+     *
+     * Note that it returns a deferred, because the view could choose to ask the
+     * user if he agrees to discard.
+     *
+     * @override
+     * @returns {Deferred} If the deferred is resolved, we assume the changes
+     *   can be discarded.  If it is rejected, then we cannot discard.
+     */
+    canBeDiscarded: function () {
+        return $.when();
+    },
+    /**
      * Returns any special keys that may be useful when reloading the view to
      * get the same effect.  This is necessary for saving the current view in
      * the favorites.  For example, a graph view might want to add a key to

@@ -171,10 +171,15 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             var options = _.extend({}, view_to_load.options);
             defs.push(self.switch_mode(view_to_load.type, options));
 
-            return $.when.apply($, defs).then(function() {
-                if (self.flags.on_load) {
-                    self.flags.on_load(self);
-                }
+            return $.when.apply($, defs);
+        }).then(function() {
+            if (self.flags.on_load) {
+                self.flags.on_load(self);
+            }
+            core.bus.on('clear_uncommitted_changes', self, function(chain_callbacks) {
+                chain_callbacks(function() {
+                    return self.active_view.controller.canBeDiscarded();
+                });
             });
         });
     },
