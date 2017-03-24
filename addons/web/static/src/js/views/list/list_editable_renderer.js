@@ -492,10 +492,13 @@ ListRenderer.include({
     /**
      * When the user clicks on a cell, we simply select it.
      *
+     * @private
      * @param {MouseEvent} event
      */
     _onCellClick: function (event) {
-        if (this.mode === 'readonly' || !this.editable) {
+        // The special_click property explicitely allow events to bubble all
+        // the way up to bootstrap's level rather than being stopped earlier.
+        if (this.mode === 'readonly' || !this.editable || $(event.target).prop('special_click')) {
             return;
         }
         var $td = $(event.currentTarget);
@@ -503,7 +506,18 @@ ListRenderer.include({
         var colIndex = $td.data('index');
         if (colIndex !== undefined && rowIndex !== undefined) {
             this._selectCell(rowIndex, colIndex);
-            event.stopPropagation();
+        }
+    },
+    /**
+     * If the list view editable, just let the event bubble. We don't want to
+     * open the record in this case anyway.
+     *
+     * @override
+     * @private
+     */
+    _onRowClicked: function () {
+        if (this.mode === 'readonly' || !this.editable) {
+            this._super.apply(this, arguments);
         }
     },
     /**

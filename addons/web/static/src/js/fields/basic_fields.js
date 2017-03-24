@@ -1167,9 +1167,21 @@ var StateSelectionWidget = AbstractField.extend({
         'click a': function (e) {
             e.preventDefault();
         },
-        'click li': 'set_selection'
+        'click li': '_setSelection'
     },
-    prepare_dropdown_values: function () {
+    readonly: true,
+    supportedFieldTypes: ['selection'],
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Prepares the state values to be rendered using the FormSelection.Items template.
+     *
+     * @private
+     */
+    _prepareDropdownValues: function () {
         var self = this;
         var _data = [];
         var current_stage_id = self.recordData.stage_id && self.recordData.stage_id[0];
@@ -1197,26 +1209,44 @@ var StateSelectionWidget = AbstractField.extend({
         });
         return _data;
     },
+
+    /**
+     * This widget uses the FormSelection template but needs to customize it a bit.
+     *
+     * @private
+     * @override
+     */
     _render: function () {
         var self = this;
-        var states = this.prepare_dropdown_values();
+        var states = this._prepareDropdownValues();
         // Adapt "FormSelection"
-        var current_state = _.find(states, function (state) {
-            return state.name === self.value;
-        });
+        // Like priority, default on the first possible value if no value is given.
+        var currentState = _.findWhere(states, {name: self.value}) || states[0];
         this.$('.o_status')
             .removeClass('o_status_red o_status_green')
-            .addClass(current_state.state_class);
+            .addClass(currentState.state_class)
+            .prop('special_click', true);
 
         // Render "FormSelection.Items" and move it into "FormSelection"
         var $items = $(qweb.render('FormSelection.items', {
-            states: _.without(states, current_state)
+            states: _.without(states, currentState)
         }));
         var $dropdown = this.$('.dropdown-menu');
         $dropdown.children().remove(); // remove old items
         $items.appendTo($dropdown);
     },
-    set_selection: function (ev) {
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Intercepts the click on the FormSelection.Item to set the widget value.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _setSelection: function (ev) {
         var li = $(ev.target).closest('li');
         if (li.length) {
             var value = String(li.data('value'));
