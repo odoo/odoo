@@ -198,6 +198,10 @@ var PivotModel = AbstractModel.extend({
             sortedColumn: this.data.sorted_column,
         };
     },
+    /**
+     * @param {string} id
+     * @returns {object}
+     */
     getHeader: function (id) {
         return this.data.headers[id];
     },
@@ -246,11 +250,20 @@ var PivotModel = AbstractModel.extend({
         } else {
             this.data.domain = this.initialDomain;
         }
+        if ('groupBy' in params) {
+            this.data.groupedBy = params.groupBy;
+        }
 
         return this._loadData(params).then(function () {
-            self._updateTree(old_row_root, self.data.main_row.root);
-            var new_groupby_length = self._getHeaderDepth(self.data.main_row.root) - 1;
-            self.data.main_row.groupbys = old_row_root.groupbys.slice(0, new_groupby_length);
+            var new_groupby_length;
+            if (!('groupBy' in params)) {
+                // we only update the row groupbys according to the old groupbys
+                // if we don't have the key 'groupBy' in params.  In that case,
+                // we want to have the full open state for the groupbys.
+                self._updateTree(old_row_root, self.data.main_row.root);
+                new_groupby_length = self._getHeaderDepth(self.data.main_row.root) - 1;
+                self.data.main_row.groupbys = old_row_root.groupbys.slice(0, new_groupby_length);
+            }
 
             self._updateTree(old_col_root, self.data.main_col.root);
             new_groupby_length = self._getHeaderDepth(self.data.main_col.root) - 1;
@@ -694,8 +707,9 @@ var PivotModel = AbstractModel.extend({
                     break;
                 }
             }
-            if (tree) this._updateTree(tree, new_tree.children[i]);
-            else {
+            if (tree) {
+                this._updateTree(tree, new_tree.children[i]);
+            } else {
                 new_tree.children[i].expanded = false;
                 new_tree.children[i].children = [];
             }
