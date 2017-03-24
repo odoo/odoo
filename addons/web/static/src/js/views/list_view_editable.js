@@ -828,6 +828,10 @@ ListView.List.include(/** @lends instance.web.ListView.List# */{
         if (!this.view.editable() || !this.view.is_action_enabled('edit')) {
             return this._super.apply(this, arguments);
         }
+        if (this.__is_starting_edition) {
+            return;
+        }
+        this.__is_starting_edition = true;
 
         var self = this;
         var args = arguments;
@@ -839,6 +843,8 @@ ListView.List.include(/** @lends instance.web.ListView.List# */{
             focus_field: $(event.target).not(".o_readonly").data('field'),
         }).fail(function() {
             return _super.apply(self, args); // The record can't be edited so open it in a modal (use-case: readonly mode)
+        }).always(function () {
+            self.__is_starting_edition = false;
         });
     },
     /**
