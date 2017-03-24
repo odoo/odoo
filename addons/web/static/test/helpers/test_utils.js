@@ -15,7 +15,6 @@ var core = require('web.core');
 var session = require('web.session');
 var MockServer = require('web.MockServer');
 var Widget = require('web.Widget');
-var DataManager = require('web.DataManager');
 
 
 /**
@@ -120,7 +119,7 @@ function createAsyncView(params) {
         $target.addClass('debug');
     }
     var mockServer = addMockEnvironment(widget, params);
-    var fields_view = mockServer.fieldsViewGet(params.arch, params.model);
+    var viewInfo = mockServer.fieldsViewGet(params.arch, params.model);
 
     var viewOptions = {
         modelName: params.model || 'foo',
@@ -133,12 +132,6 @@ function createAsyncView(params) {
 
     _.extend(viewOptions, params.viewOptions);
 
-    var viewInfo = DataManager.prototype._processFieldsView({
-        type: fields_view.arch.tag,
-        arch: fields_view.arch,
-        fields: fields_view.fields,
-    });
-
     var view = new params.View(viewInfo, viewOptions);
 
     $('#qunit-fixture').on('DOMNodeInserted.removeSRC', function () {
@@ -147,7 +140,7 @@ function createAsyncView(params) {
 
     if (params.with_modifiers) {
         _.each(params.with_modifiers, function (modifier, name) {
-            fields_view.fields[name].__attrs.modifiers = JSON.stringify(modifier);
+            viewInfo.fields[name].__attrs.modifiers = JSON.stringify(modifier);
         });
     }
 
@@ -245,11 +238,12 @@ function addMockEnvironment(widget, params) {
         logLevel: params.logLevel,
         currentDate: params.currentDate,
     });
+    var widgetDestroy;
 
     if ('session' in params) {
         var initialSession = _.extend({}, session);
         _.extend(session, params.session);
-        var widgetDestroy = widget.destroy;
+        widgetDestroy = widget.destroy;
         widget.destroy = function () {
             for (var key in session) {
                 delete session[key];
@@ -262,7 +256,7 @@ function addMockEnvironment(widget, params) {
     if ('config' in params) {
         var initialConfig = _.extend({}, config);
         _.extend(config, params.config);
-        var widgetDestroy = widget.destroy;
+        widgetDestroy = widget.destroy;
         widget.destroy = function () {
             for (var key in config) {
                 delete config[key];
@@ -296,23 +290,17 @@ function addMockEnvironment(widget, params) {
         if (params.logLevel === 2) {
             console.log('[mock] load_views', event.data);
         }
-        var res = {};
+        var views = {};
         var model = event.data.modelName;
         _.each(event.data.views, function (view_descr) {
             var view_id = view_descr[0] || false;
             var view_type = view_descr[1];
             var key = [model, view_id, view_type].join(',');
             var arch = params.archs[key];
-            arch = arch && (_.isObject(arch) ? arch : mockServer.fieldsViewGet(arch, model).arch);
-            res[view_type] = { arch: arch, fields: params.data[model].fields };
-        });
-
-        var views = _.mapObject(res, function (view, viewType) {
-            return DataManager.prototype._processFieldsView({
-                type: viewType,
-                arch: view.arch,
-                fields: view.fields,
-            });
+            if (!arch) {
+                throw new Error('No arch found for key ' + key);
+            }
+            views[view_type] = mockServer.fieldsViewGet(arch, model);
         });
 
         event.data.on_success(views);
