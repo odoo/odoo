@@ -33,15 +33,6 @@ var FormController = BasicController.extend({
         this.toolbar = params.toolbar;
         this.mode = params.mode;
     },
-    /**
-     * @override
-     */
-    destroy: function () {
-        if (this.$buttons) {
-            this.$buttons.find('*').off();
-        }
-        this._super();
-    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -150,14 +141,10 @@ var FormController = BasicController.extend({
             this.$buttons.append($footer.detach().contents());
         } else {
             this.$buttons.append(qweb.render("FormView.buttons", {widget: this}));
-            this.$buttons.find('.o_form_button_edit')
-                         .click(this._toEditMode.bind(this));
-            this.$buttons.find('.o_form_button_save')
-                         .click(this.saveRecord.bind(this));
-            this.$buttons.find('.o_form_button_cancel')
-                         .click(this._onDiscardChange.bind(this));
-            this.$buttons.find('.o_form_button_create')
-                         .click(this.createRecord.bind(this));
+            this.$buttons.on('click', '.o_form_button_edit', this._toEditMode.bind(this));
+            this.$buttons.on('click', '.o_form_button_save', this.saveRecord.bind(this));
+            this.$buttons.on('click', '.o_form_button_cancel', this._onDiscardChange.bind(this));
+            this.$buttons.on('click', '.o_form_button_create', this.createRecord.bind(this));
 
             this._updateButtons();
         }

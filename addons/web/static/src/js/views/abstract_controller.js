@@ -52,6 +52,9 @@ var AbstractController = Widget.extend({
             this.renderer.appendTo(this.$el)
         ).then(this._update.bind(this, this.initialState));
     },
+    /**
+     * @override
+     */
     destroy: function () {
         if (this.$buttons) {
             this.$buttons.off();
