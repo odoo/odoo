@@ -2,6 +2,7 @@ odoo.define('web.MockServer', function (require) {
 "use strict";
 
 var Class = require('web.Class');
+var data_manager = require('web.data_manager');
 var Domain = require('web.Domain');
 var pyeval = require('web.pyeval');
 var utils = require('web.utils');
@@ -53,19 +54,20 @@ var MockServer = Class.extend({
 
     /**
      * helper: read a string describing an arch, and returns a simulated
-     * 'field_view_get' call to the server. Note that there is a twist: the
-     * fields in the 'main' view are supposed to contains all fields, not only
-     * the ones from the view.  This is currently done by the data_manager.
+     * 'field_view_get' call to the server. Calls processViews() of data_manager
+     * to mimick the real behavior of a call to loadViews().
      *
      * @param {string|Object} arch a string OR a parsed xml document
      * @param {string} model a model name (that should be in this.data)
      * @returns {Object} an object with 2 keys: arch and fields
      */
     fieldsViewGet: function (arch, model) {
-        var fields = this.data[model].fields;
-        var fvg = this._fieldsViewGet(arch, model);
-        _.defaults(fvg.fields, fields);
-        return fvg;
+        var fields = $.extend(true, {}, this.data[model].fields);
+        var fvg = this._fieldsViewGet(arch, model, fields);
+        var fields_views = {};
+        fields_views[fvg.type] = fvg;
+        data_manager.processViews(fields_views, fields);
+        return fields_views[fvg.type];
     },
     /**
      * Simulate a complete RPC call. This is the main method for this class.
@@ -151,19 +153,19 @@ var MockServer = Class.extend({
      * @private
      * @param {string|Object} arch a string OR a parsed xml document
      * @param {string} model a model name (that should be in this.data)
-     * @returns {Object} an object with 2 keys: arch and fields
+     * @param {Object} fields
+     * @returns {Object} an object with 2 keys: arch and fields (the fields
+     *   appearing in the views)
      */
-    _fieldsViewGet: function (arch, model) {
+    _fieldsViewGet: function (arch, model, fields) {
         var self = this;
+        var onchanges = this.data[model].onchanges || {};
+        var fieldNodes = {};
 
         if (typeof arch === 'string') {
             var doc = $.parseXML(arch).documentElement;
             arch = utils.xml_to_json(doc, true);
         }
-        var fields = this.data[model].fields;
-        var onchanges = this.data[model].onchanges || {};
-
-        var fieldNodes = {};
 
         this._traverse(arch, function (node) {
             if (typeof node === "string") {
@@ -197,13 +199,15 @@ var MockServer = Class.extend({
             return true;
         });
 
-        var viewFields = $.extend(true, {}, fields);
+        var relModel, relFields;
         _.each(fieldNodes, function (node, name) {
-            var field = viewFields[name];
+            var field = fields[name];
             if (field.type === "one2many" || field.type === "many2many") {
                 field.views = {};
                 _.each(node.children, function (children) {
-                    field.views[children.tag] = self._fieldsViewGet(children, field.relation);
+                    relModel = field.relation;
+                    relFields = $.extend(true, {}, self.data[relModel].fields);
+                    field.views[children.tag] = self._fieldsViewGet(children, relModel, relFields);
                 });
             }
 
@@ -214,7 +218,9 @@ var MockServer = Class.extend({
         });
         return {
             arch: arch,
-            fields: _.pick(viewFields, _.keys(fieldNodes)),
+            fields: _.pick(fields, _.keys(fieldNodes)),
+            model: model,
+            type: arch.tag === 'tree' ? 'list' : arch.tag,
         };
     },
     /**
