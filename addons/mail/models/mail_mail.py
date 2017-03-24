@@ -255,6 +255,10 @@ class MailMail(models.Model):
         for mail_id in self.ids:
             try:
                 mail = self.browse(mail_id)
+                if mail.state != 'outgoing':
+                    if mail.state != 'exception' and mail.auto_delete:
+                        mail.sudo().unlink()
+                    continue
                 # TDE note: remove me when model_id field is present on mail.message - done here to avoid doing it multiple times in the sub method
                 if mail.model:
                     model = self.env['ir.model']._get(mail.model)[0]
