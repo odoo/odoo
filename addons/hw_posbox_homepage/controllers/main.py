@@ -58,7 +58,10 @@ index_template = """
         If you need to grant remote debugging access to a developer, you can do it <a href='/remote_connect'>here</a>.
         </p>
         <p>
-        The PosBox software installed on this posbox is <b>version 15</b>,
+        If you need to display the current customer basket on another device, you can do it <a href='/point_of_sale/display'>here</a>.
+        </p>
+        <p>
+        The PosBox software installed on this posbox is <b>version 16</b>,
         the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>.
         </p>

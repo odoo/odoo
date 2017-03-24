@@ -17,7 +17,7 @@ from openerp.exceptions import UserError
 class project_task_type(osv.osv):
     _name = 'project.task.type'
     _description = 'Task Stage'
-    _order = 'sequence'
+    _order = 'sequence, id'
 
     def _get_mail_template_id_domain(self):
         return [('model', '=', 'project.task')]
