@@ -344,7 +344,7 @@ var PivotController = AbstractController.extend({
         var isAscending = $target.hasClass('o_pivot_measure_row_sorted_asc');
         this.model
             .sortRows(this.handle, col_id, measure, isAscending)
-            .then(this.update_state.bind(this));
+            .then(this.update.bind(this, {}, {reload: false}));
     },
     /**
      * This method is called when someone clicks on an open header.  When that
