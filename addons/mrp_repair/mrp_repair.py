@@ -270,6 +270,7 @@ class mrp_repair(osv.osv):
         for repair in self.browse(cr, uid, ids):
             mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'draft'})
         self.write(cr, uid, ids, {'state': 'draft'})
+        self.delete_workflow(cr, uid, ids)
         return self.create_workflow(cr, uid, ids)
 
     def action_confirm(self, cr, uid, ids, *args):
