@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="OrgChart">
+    <div class="o_org_chart">
+        computing...
+    </div>
+</t>
+
+<t t-name="OrgChartPerson">
+    <div class="clearfix">
+        <img t-attf-src="/web/image/hr.employee/#{employee.id}/image_small/48x48" class="pull-left img-rounded"/>
+        <div style="width:100%%; margin-left:66px;">
+            <a href="#" t-att-data-employee-id="employee.id"><t t-esc="employee.name"/></a><br/>
+            <div class="text-muted">
+                <t t-esc="employee.job"/>
+            </div>
+            <span t-if="employee.count > 1" class="badge">
+                <t t-esc="employee.count"/>
+            </span>
+        </div>
+    </div>
+</t>
+
+<t t-name="OrgChartDetail">
+    <div class="o_org_chart">
+        <div t-if="more_managers">
+            ...
+        </div>
+        <div t-foreach="data.managers" t-as="employee" class="o_manager">
+            <t t-call="OrgChartPerson"/>
+        </div>
+        <div class="o_self">
+            <t t-call="OrgChartPerson">
+                <t t-set="employee" t-value="data.self"/>
+            </t>
+        </div>
+        <div t-foreach="data.children" t-as="employee" class="o_sub">
+            <t t-call="OrgChartPerson"/>
+        </div>
+    </div>
+</t>
+
+
+</templates>
