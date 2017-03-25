@@ -448,7 +448,6 @@ class Report(models.Model):
                 if process.returncode not in [0, 1]:
                     if process.returncode == -11:
                         msg = _('Wkhtmltopdf failed (error code: %s). '
-                                      'Message: %s.'
                                       'Help : this error may come from a limitation of memory '
                                       'or a limitation of max handle files, '
                                       'if you try do make a big file. '
@@ -456,12 +455,12 @@ class Report(models.Model):
                                       'and limit_memory_soft in odoo.conf. '
                                       'And if you use footer and header on big document, '
                                       'you need to increase the "max open files" with this help : '
-                                      'http://stackoverflow.com/questions/16526783/python-subprocess-too-many-open-files') % (str(process.returncode), err)
+                                      'http://stackoverflow.com/questions/16526783/python-subprocess-too-many-open-files') % (str(process.returncode), err[-1000:])
                         _logger.info(msg)
                         raise UserError(msg)
                     else:
                         msg = _('Wkhtmltopdf failed (error code: %s). '
-                                      'Message: %s') % (str(process.returncode), err)
+                                      'Message: %s') % (str(process.returncode), err[-1000:])
                         _logger.info(msg)
                         raise UserError(msg)
 
