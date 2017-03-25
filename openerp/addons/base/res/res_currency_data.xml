@@ -360,7 +360,7 @@
 
         <record id="TRY" model="res.currency">
             <field name="name">TRY</field>
-            <field name="symbol">TL</field>
+            <field name="symbol">₺</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
         </record>
@@ -1619,18 +1619,6 @@
             <field name="currency_id" ref="TMM" />
             <field name="name">2010-01-01</field>
             <field name="rate">0.00313859649123</field>
-        </record>
-
-        <record id="TRL" model="res.currency">
-            <field name="name">TRL</field>
-            <field name="symbol">TL</field>
-            <field name="rounding">0.01</field>
-            <field name="accuracy">4</field>
-        </record>
-        <record forcecreate="0" id="rateTRL" model="res.currency.rate">
-            <field name="currency_id" ref="TRL" />
-            <field name="name">2010-01-01</field>
-            <field name="rate">2.255</field>
         </record>
 
         <record id="TND" model="res.currency">
