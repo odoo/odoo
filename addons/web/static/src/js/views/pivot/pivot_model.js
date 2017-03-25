@@ -284,21 +284,20 @@ var PivotModel = AbstractModel.extend({
      * @returns {Deferred}
      */
     sortRows: function (id, col_id, measure, descending) {
-        var record = this.localData[id];
-
-        _traverseTree(record.data.main_row.root, function (header) { 
+        var cells = this.data.cells;
+        this._traverseTree(this.data.main_row.root, function (header) { 
             header.children.sort(compare);
         });
-        record.sorted_column = {
+        this.data.sorted_column = {
             id: col_id,
             measure: measure,
             order: descending ? 'desc' : 'asc',
         };
         function _getValue (id1, id2) {
-            if ((id1 in record.data.cells) && (id2 in record.data.cells[id1])) {
-                return record.data.cells[id1][id2];
+            if ((id1 in cells) && (id2 in cells[id1])) {
+                return cells[id1][id2];
             }
-            if (id2 in record.data.cells) return record.data.cells[id2][id1];
+            if (id2 in cells) return cells[id2][id1];
         }
 
         function compare (row1, row2) {

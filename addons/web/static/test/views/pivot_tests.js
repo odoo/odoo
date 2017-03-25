@@ -452,4 +452,33 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('can sort data in a column by clicking on header', function (assert) {
+        assert.expect(3);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="foo" type="measure"/>' +
+                        '<field name="product_id" type="row"/>' +
+                '</pivot>',
+        });
+
+        assert.strictEqual($('td.o_pivot_cell_value').text(), "321220",
+            "should have proper values in cells (total, result 1, result 2");
+
+        pivot.$('th.o_pivot_measure_row').click();
+
+        assert.strictEqual($('td.o_pivot_cell_value').text(), "322012",
+            "should have proper values in cells (total, result 2, result 1");
+
+        pivot.$('th.o_pivot_measure_row').click();
+
+        assert.strictEqual($('td.o_pivot_cell_value').text(), "321220",
+            "should have proper values in cells (total, result 1, result 2");
+
+        pivot.destroy();
+    });
+
 });});
