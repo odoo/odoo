@@ -790,6 +790,15 @@ action = model.activate_sample_project()
         </record>
         <menuitem action="project_tags_action" id="menu_project_tags_act" parent="menu_project_config" groups="base.group_no_one"/>
 
+        <record id="project_config_mail_activity_type_action" model="ir.actions.act_window">
+            <field name="name">Activity Types</field>
+            <field name="res_model">mail.activity.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|', ('res_model_id','=', False), ('res_model_id','in',['project.task', 'project.issue'])]</field>
+        </record>
+        <menuitem action="project_config_mail_activity_type_action" id="menu_project_config_mail_activity_type" parent="menu_project_config"/>
+
         <!-- Reporting menus -->
         <menuitem id="menu_project_report" name="Reporting"
             groups="project.group_project_manager"
