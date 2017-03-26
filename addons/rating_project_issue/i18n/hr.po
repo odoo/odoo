@@ -1,32 +1,71 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * rating_project_issue
-#
+# 
 # Translators:
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Tina Milas <tina@uvid.hr>, 2017
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Bole <bole@dajmi5.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-10-15 11:51+0000\n"
-"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-
-#. module: rating_project_issue
-#: model:ir.model.fields,field_description:rating_project_issue.field_project_project_percentage_satisfaction_issue
-msgid "% Happy"
-msgstr ""
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: rating_project_issue
 #: model:ir.ui.view,arch_db:rating_project_issue.project_issue_view_rating
-msgid "On issues"
+msgid "% On issues"
+msgstr "% na zadatke"
+
+#. module: rating_project_issue
+#: model:ir.actions.act_window,name:rating_project_issue.rating_rating_action_issue
+msgid "Customer Ratings"
+msgstr "Ocjene kupaca"
+
+#. module: rating_project_issue
+#: model:ir.actions.act_window,help:rating_project_issue.rating_rating_action_issue
+msgid ""
+"Customer ratings on issues. If you have no rating, change your project "
+"Settings to activate it."
 msgstr ""
+"Ocjene kupaca za probleme. Ako nemate ocjene, promijenite postavke projekta "
+"kako biste aktivirali ocjenjivanje."
+
+#. module: rating_project_issue
+#: model:ir.model.fields,field_description:rating_project_issue.field_project_project_percentage_satisfaction_issue
+msgid "Happy % on Issue"
+msgstr "Pozitivno % na problem"
+
+#. module: rating_project_issue
+#: model:mail.message.subtype,name:rating_project_issue.mt_issue_rating
+#: model:mail.message.subtype,name:rating_project_issue.mt_project_issue_rating
+msgid "Issue Rating"
+msgstr "Ocjenjivanje problema"
+
+#. module: rating_project_issue
+#: model:ir.ui.view,arch_db:rating_project_issue.project_issue_view_kanban_inherit_rating
+msgid "Latest Rating: Average"
+msgstr "Zadnje ocjenjivanje: Prosječno"
+
+#. module: rating_project_issue
+#: model:ir.ui.view,arch_db:rating_project_issue.project_issue_view_kanban_inherit_rating
+msgid "Latest Rating: Happy"
+msgstr "Zadnje ocjenjivanje: Pozitivno"
+
+#. module: rating_project_issue
+#: model:ir.ui.view,arch_db:rating_project_issue.project_issue_view_kanban_inherit_rating
+msgid "Latest Rating: Not Happy"
+msgstr "Zadnje ocjenjivanje: Negativno"
 
 #. module: rating_project_issue
 #: model:ir.model,name:rating_project_issue.model_project_project
@@ -34,12 +73,21 @@ msgid "Project"
 msgstr "Projekt"
 
 #. module: rating_project_issue
-#: model:ir.model,name:rating_project_issue.model_rating_rating
+#: model:ir.model,name:rating_project_issue.model_project_issue
+msgid "Project Issue"
+msgstr "Projektni predmeti"
+
+#. module: rating_project_issue
+#: model:ir.ui.view,arch_db:rating_project_issue.project_issue_view_form_inherit_rating
 msgid "Rating"
 msgstr "Ocjena"
 
 #. module: rating_project_issue
-#: model:ir.model,name:rating_project_issue.model_project_issue
-#, fuzzy
-msgid "project issue"
-msgstr "Projektni predmeti"
+#: model:mail.message.subtype,description:rating_project_issue.mt_issue_rating
+msgid "Ratings"
+msgstr "Ocjene"
+
+#. module: rating_project_issue
+#: model:ir.model,name:rating_project_issue.model_project_task_type
+msgid "Task Stage"
+msgstr "Faza zadatka"

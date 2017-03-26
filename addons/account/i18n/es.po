@@ -1477,7 +1477,7 @@ msgstr "Cuenta alternativa"
 #: model:ir.model.fields,help:account.field_account_tax_cash_basis_account
 #: model:ir.model.fields,help:account.field_account_tax_template_cash_basis_account
 msgid "Account use when creating entry for tax cash basis"
-msgstr ""
+msgstr "Uso de la cuenta al crear un asiento de bases imponibles"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -8355,6 +8355,9 @@ msgid ""
 "Select this if the tax should use cash basis,which will create an entry for "
 "this tax on a given account during reconciliation"
 msgstr ""
+"Seleccionar éste si el impuesto se debería usar en el pago en efectivo, el "
+"cual creará, durante la conciliación, un registro contable para este "
+"impuesto en una cuenta ya establecida"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:42
@@ -8996,6 +8999,9 @@ msgid ""
 " is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
+"Campo técnico usado para  hacer un seguimiento de la conciliación de bases "
+"de efectivode impuestos. Se necesitan cuando se cancela el origen: publicará"
+" el asiento inverso para cancelar también esa parte."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_tax_exigible

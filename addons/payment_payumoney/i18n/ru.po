@@ -1,0 +1,76 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_payumoney
+# 
+# Translators:
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_key
+msgid "Merchant Key"
+msgstr "Мерчант Ключ"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_salt
+msgid "Merchant Salt"
+msgstr "Мерчант Салт"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:145
+#, python-format
+msgid "PayUmoney: feedback error"
+msgstr "PayUmoney: Ошибка обратная связь"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:107
+#, python-format
+msgid "PayUmoney: invalid shasign, received %s, computed %s, for data %s"
+msgstr ""
+"PayUmoney: недопустимый shasign, получил %s, вычисленный %s, для данных %s"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:101
+#, python-format
+msgid "PayUmoney: received data for reference %s; multiple orders found"
+msgstr "PayUmoney: получил данные для справки %s; найдено несколько заказов"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:98
+#, python-format
+msgid "PayUmoney: received data for reference %s; no order found"
+msgstr "PayUmoney: получил данные для справки %s; заказы не найдены"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:93
+#, python-format
+msgid ""
+"PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
+"shashign (%s)"
+msgstr ""
+"PayUmoney: получил данные с отсутствующей ссылки (%s) или pay_id (%s) или "
+"shashign (%s)"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Платежи клиентов"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Операция Оплаты"

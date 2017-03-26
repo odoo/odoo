@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_test
-#
+# 
 # Translators:
-# SV <svilij@yahoo.com>, 2016
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Alex Puchkov <ap@alteco.co>, 2017
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
+# Masha Koc <mariya.kos.ua@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-01-20 15:37+0000\n"
-"Last-Translator: SV <svilij@yahoo.com>\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Masha Koc <mariya.kos.ua@gmail.com>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
@@ -49,7 +53,7 @@ msgstr "Тесты бухгалтерского учета на"
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
 msgid "Active"
-msgstr "Активен"
+msgstr "Активно"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
@@ -60,8 +64,8 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of "
-"statement lines"
+"Check on bank statement that the Closing Balance = Starting Balance + sum of"
+" statement lines"
 msgstr ""
 "Проверить по банковской выписке, что Конечный Баланс = Начальный Баланс + "
 "сумма строк выписки"
@@ -79,14 +83,14 @@ msgid ""
 "accounts, are belonging to reconciled invoices"
 msgstr ""
 "Проверьте, что сверенные движения по счету, которые определены как счета "
-"кредиторской и дебиторской задолженности, входят в состав сверенных счет-"
+"кредиторской и дебиторской задолженности, входят в состав сверенных счетов-"
 "фактур"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
-"Payable and Receivable Accounts"
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
+" Payable and Receivable Accounts"
 msgstr ""
 "Проверьте, что сверенный счет на Продажи/Покупки имеет примеренные записи "
 "для Счетов Кредиторской и Дебиторской задолженности"
@@ -109,49 +113,37 @@ msgstr "Код Помощь"
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
-"Code should always set a variable named `result` with the result of your "
-"test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was "
-"succesful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named "
-"`column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your "
-"code:\n"
+"Should you need them, you can also use the following variables into your code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct "
-"indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"Код должен всегда задать переменную с именем `результат` с результатом "
-"теста, это может быть список или словарь. Если результатом является пустой "
-"список, то это означает, что тест прошел успешно. В противном случае он "
-"будет пытаться перевести и напечатать то, что внутри `результат`. \n"
+"Код должен всегда задать переменную с именем `результат` с результатом теста, это может быть список или словарь. Если результатом является пустой список, то это означает, что тест прошел успешно. В противном случае он будет пытаться перевести и напечатать то, что внутри `результат`. \n"
 "\n"
-"Если результат вашего теста-это словарь, вы можете установить переменную "
-"`column_order`, чтобы выбрать в\n"
+"Если результат вашего теста-это словарь, вы можете установить переменную `column_order`, чтобы выбрать в\n"
 "какой порядок вы хотите напечатать \" результат` контента.\n"
 "\n"
-"Если вы нуждаетесь в них, вы также можете использовать следующие переменные "
-"в коде:\n"
+"Если вы нуждаетесь в них, вы также можете использовать следующие переменные в коде:\n"
 "* cr: cursor to the database\n"
 "* uid: ID текущего пользователя\n"
 "\n"
-"Код питона должен быть  корректным с правильными отступами (если "
-"требуется).\n"
+"Код питона должен быть  корректным с правильными отступами (если требуется).\n"
 "\n"
 "Пример: \n"
 "sql = '''SELECT id, name, ref, date\n"
@@ -191,23 +183,23 @@ msgstr "Выражение"
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_id
 msgid "ID"
-msgstr "ID"
+msgstr "Номер"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest___last_update
 msgid "Last Modified on"
-msgstr "Последний раз изменено"
+msgstr "Последнее изменение"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_date
 msgid "Last Updated on"
-msgstr "Последний раз обновлено"
+msgstr "Последнее обновление"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -239,7 +231,7 @@ msgstr "Тест 3: Линии Движения"
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr ""
-"Тест 5.1 : Строки Кредиторской и Дебиторской задолженности сверенных счета-"
+"Тест 5.1 : Строки кредиторской и дебиторской задолженности сверенных счетов-"
 "фактур"
 
 #. module: account_test
@@ -276,7 +268,7 @@ msgid "Tests"
 msgstr "Тесты"
 
 #. module: account_test
-#: code:addons/account_test/report/account_test_report.py:49
+#: code:addons/account_test/report/report_account_test.py:52
 #, python-format
 msgid "The test was passed successfully"
 msgstr "Проверка прошла успешно"

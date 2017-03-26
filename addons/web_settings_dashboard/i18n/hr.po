@@ -1,23 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * web_settings_dashboard
-#
+# 
 # Translators:
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
+# Bole <bole@dajmi5.com>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Jasmina Otročak <jasmina@uvid.hr>, 2017
+# Filip Cuk <filipcuk2@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-17 08:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Filip Cuk <filipcuk2@gmail.com>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: web_settings_dashboard
 #. openerp-web
@@ -32,6 +37,27 @@ msgstr ""
 
 #. module: web_settings_dashboard
 #. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:150
+#, python-format
+msgid "(Community Edition)"
+msgstr "(Comunity verzija)"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:166
+#, python-format
+msgid "Activate the developer mode"
+msgstr "Aktiviraj programersko sučelje"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:168
+#, python-format
+msgid "Activate the developer mode (with assets)"
+msgstr "Aktiviraj način rada razvojnih programera(sa sredstvima)"
+
+#. module: web_settings_dashboard
+#. openerp-web
 #: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:56
 #, python-format
 msgid "Active User"
@@ -42,7 +68,7 @@ msgstr "Aktivan korisnik"
 #: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:57
 #, python-format
 msgid "Active Users"
-msgstr ""
+msgstr "Aktivni korisnici"
 
 #. module: web_settings_dashboard
 #. openerp-web
@@ -66,10 +92,24 @@ msgid "Browse the documentation."
 msgstr "Pregledajte dokumentaciju."
 
 #. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:157
+#, python-format
+msgid "Copyright © 2004-2016"
+msgstr "Copyright © 2004-2016"
+
+#. module: web_settings_dashboard
 #: model:ir.actions.client,name:web_settings_dashboard.web_settings_dashboard_action
 #: model:ir.ui.menu,name:web_settings_dashboard.web_dashboard_menu
 msgid "Dashboard"
 msgstr "Kontrolna ploča"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:170
+#, python-format
+msgid "Deactivate the developer mode"
+msgstr "Dekativiraj način rada developera"
 
 #. module: web_settings_dashboard
 #. openerp-web
@@ -83,18 +123,26 @@ msgstr "Unesite e-mail adresu (jednu po retku)"
 #: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:94
 #, python-format
 msgid "Follow these implementation guides to get the most out of Odoo."
-msgstr "Slijedite vodič za implementaciju kako biste dobili najviše iz Odoo-a."
+msgstr ""
+"Slijedite vodič za implementaciju kako biste dobili najviše iz Odoo-a."
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:151
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:157
 #, python-format
-msgid "Get more features with the Enterprise Edition!"
+msgid "GNU LGPL Licensed"
 msgstr ""
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:133
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:181
+#, python-format
+msgid "Get more features with the Enterprise Edition!"
+msgstr "Dohvati još više ogućnosti sa Enterprize verzijom!"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:134
 #, python-format
 msgid "Help us spread the word: Share Odoo's awesomeness with your friends!"
 msgstr ""
@@ -152,10 +200,24 @@ msgstr "Nema instaliranih aplikacija"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:150
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:149
+#, python-format
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:180
 #, python-format
 msgid "Odoo Enterprise"
-msgstr ""
+msgstr "doo Enterprise"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:157
+#, python-format
+msgid "Odoo S.A."
+msgstr "Odoo S.A."
 
 #. module: web_settings_dashboard
 #. openerp-web
@@ -173,10 +235,10 @@ msgstr "Navedite valjane adrese e-pošte"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:131
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:132
 #, python-format
-msgid "Social Share"
-msgstr "Društvena podjela"
+msgid "Share the Love"
+msgstr "Širite ljubav"
 
 #. module: web_settings_dashboard
 #. openerp-web
@@ -187,10 +249,10 @@ msgstr "Tema trgovine"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:154
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:184
 #, python-format
 msgid "Upgrade Now"
-msgstr ""
+msgstr "Nadogradi sada"
 
 #. module: web_settings_dashboard
 #: model:ir.model,name:web_settings_dashboard.model_res_users
@@ -209,4 +271,4 @@ msgstr "Prvo morate instalirati neke aplikacije."
 #: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:79
 #, python-format
 msgid "more"
-msgstr ""
+msgstr "više"

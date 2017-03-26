@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * crm_project_issue
-#
+# 
 # Translators:
-# Max Belyanin <maxbelyanin@gmail.com>, 2015
-# Viktor Pogrebniak <vp@aifil.ru>, 2016
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-04-17 20:49+0000\n"
-"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Denis Trepalin <zekarious@gmail.com>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: crm_project_issue
 #: model:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
@@ -28,12 +28,12 @@ msgid ""
 "                            <span class=\"o_stat_text\">Issue</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Конвертировать в</span>\n"
-"<span class=\"o_stat_text\">Проблему</span>"
+"<span class=\"o_stat_text\">заявку</span>"
 
 #. module: crm_project_issue
 #: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
 msgid "Cancel"
-msgstr "Отмена"
+msgstr "Отменить"
 
 #. module: crm_project_issue
 #: model:ir.actions.act_window,name:crm_project_issue.convert_lead2projectissue_wizard_action
@@ -60,32 +60,32 @@ msgstr "Создан"
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_display_name
 msgid "Display Name"
-msgstr "Отображаемое имя"
+msgstr "Отображаемое Имя"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_id
 msgid "ID"
-msgstr "ID"
+msgstr "Номер"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard___last_update
 msgid "Last Modified on"
-msgstr "Последний раз изменено"
+msgstr "Последнее изменение"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_date
 msgid "Last Updated on"
-msgstr "Последний раз обновлено"
+msgstr "Последнее обновление"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_lead_id
 msgid "Lead"
-msgstr "Кандидат"
+msgstr "Инициатива"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_project_id
@@ -95,23 +95,4 @@ msgstr "Проект"
 #. module: crm_project_issue
 #: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
 msgid "crm.lead2projectissue.wizard"
-msgstr ""
-
-#~ msgid "Create a new customer"
-#~ msgstr "Создать нового заказчика"
-
-#~ msgid "Customer"
-#~ msgstr "Заказчик"
-
-#~ msgid "Do not link to a customer"
-#~ msgstr "Не связан с заказчиком"
-
-#~ msgid "Handle partner binding or generation in CRM wizards."
-#~ msgstr ""
-#~ "Создайте партнера или воспользуйтесь помощником CRM для его создания."
-
-#~ msgid "Link to an existing customer"
-#~ msgstr "Ссылка на существующего заказчика"
-
-#~ msgid "Related Customer"
-#~ msgstr "Связанный заказчик"
+msgstr "crm.lead2projectissue.wizard"

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_mrp
-#
+# 
 # Translators:
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 08:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sale_mrp
 #: model:ir.model.fields,help:sale_mrp.field_mrp_production_sale_ref
@@ -32,17 +32,17 @@ msgstr "Показывает название заказа продаж"
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Позиция счета"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_procurement_order
+msgid "Procurement"
+msgstr "Поставка"
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_mrp_production
 msgid "Production"
-msgstr ""
-
-#. module: sale_mrp
-#: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line_property_ids
-msgid "Properties"
-msgstr "Свойства"
+msgstr "Производство"
 
 #. module: sale_mrp
 #: model:ir.model.fields,field_description:sale_mrp.field_mrp_production_sale_name
@@ -57,12 +57,4 @@ msgstr "Ссылка продажи"
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Позиция заказа на продажу"
-
-#. module: sale_mrp
-#: model:ir.model,name:sale_mrp.model_stock_move
-msgid "Stock Move"
-msgstr "Движение запасов"
-
-#~ msgid "Manufacturing Order"
-#~ msgstr "Производственный заказ"
+msgstr "Строка заказа на продажу"

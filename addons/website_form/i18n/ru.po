@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_form
-#
+# 
 # Translators:
-# Gennady Marchenko <gennadym@gmail.com>, 2016
-# Viktor Pogrebniak <vp@aifil.ru>, 2016
+# Gennady Marchenko <gennadym@gmail.com>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-04-30 19:08+0000\n"
-"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: website_form
 #. openerp-web
@@ -36,7 +37,7 @@ msgid "'%s' is not a correct datetime"
 msgstr "'%s' некорректные дата и время"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:221
+#: code:addons/website_form/controllers/main.py:225
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr "<p>Присоединенные файлы : </p>"
@@ -56,15 +57,15 @@ msgstr "Произошла ошибка, форма не была отправл
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields_website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr ""
+msgstr "Черный список это поле для веб-форм"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields_website_form_blacklisted
 msgid "Blacklisted in web forms"
-msgstr ""
+msgstr "Черный в веб-формах"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:49
+#: code:addons/website_form/controllers/main.py:53
 #, python-format
 msgid "Custom infos"
 msgstr "Пользовательская информация"
@@ -82,7 +83,7 @@ msgstr "Включить запись метаданных при отправк
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_default_field_id
 msgid "Field for custom form data"
-msgstr ""
+msgstr "Поле для пользовательской формы данных"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
@@ -95,14 +96,16 @@ msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
 msgstr ""
+"Метка формы действия. Напр.: crm.lead будет «Отправить email», project.issue"
+" будет «Создать заявку»"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_label
 msgid "Label for form action"
-msgstr ""
+msgstr "Метка для форм действия"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:50
+#: code:addons/website_form/controllers/main.py:54
 #, python-format
 msgid "Metadata"
 msgstr "Метаданные"
@@ -121,8 +124,11 @@ msgstr "Просьба заполнить форму правильно."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_website_form_default_field_id
-msgid "Specify the field which will contain meta and custom form fields datas."
+msgid ""
+"Specify the field which will contain meta and custom form fields datas."
 msgstr ""
+"Укажите поле, которое будет содержать мета и настраиваемые формы поля "
+"данных."
 
 #. module: website_form
 #. openerp-web
@@ -134,7 +140,7 @@ msgstr "Форма успешно отправлена."
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
 msgid "Website"
-msgstr "Сайт"
+msgstr "Вебсайт"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_website_website_form_enable_metadata

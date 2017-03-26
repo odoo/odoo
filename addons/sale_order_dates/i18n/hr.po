@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_order_dates
-#
+# 
 # Translators:
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
+# Martin Trigaux <mat@odoo.com>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Bole <bole@dajmi5.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-10-19 13:59+0000\n"
-"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
@@ -28,25 +29,18 @@ msgstr "Obećani datum"
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
 msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
-"When this Order gets confirmed, the Delivery Order's expected date will be "
-"computed based on this date and the Company's Security Delay.\n"
-"Leave this field empty if you want the Delivery Order to be processed as "
-"soon as possible. In that case the expected date will be computed using the "
-"default method: based on the Product Lead Times and the Company's Security "
-"Delay."
+"When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
+"Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
 msgstr ""
 "Datum na koji kupac traži isporuku stavaka.\n"
-"Kada se narudžba potvrdi, datum očekivane isporuke će se izračunati na "
-"temelju tog datuma i sigurnosne odgode društva.\n"
-"Ostavite ovo polje prazno ako želite obradu po ovoj narudžbi što je prije "
-"moguće. U tom će slučaju očekivani datum biti izračunat pomoću druge metode: "
-"na temelju puta proizvoda i sigurnosne odgode."
+"Kada se narudžba potvrdi, datum očekivane isporuke će se izračunati na temelju tog datuma i sigurnosne odgode društva.\n"
+"Ostavite ovo polje prazno ako želite obradu po ovoj narudžbi što je prije moguće. U tom će slučaju očekivani datum biti izračunat pomoću druge metode: na temelju puta proizvoda i sigurnosne odgode."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
 msgid ""
-"Date by which the products are sure to be delivered. This is a date that you "
-"can promise to the customer, based on the Product Lead Times."
+"Date by which the products are sure to be delivered. This is a date that you"
+" can promise to the customer, based on the Product Lead Times."
 msgstr ""
 "Datum na koji su proizvodi sigurni za isporuku. To je datum koji možete "
 "obećati kupcu, temeljeno na vremenu puštanja proizvoda."
@@ -67,7 +61,7 @@ msgid "Requested Date"
 msgstr "Traženi datum"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:51
+#: code:addons/sale_order_dates/models/sale_order.py:57
 #, python-format
 msgid "Requested date is too soon!"
 msgstr "Traženi datum je prerano!"
@@ -83,7 +77,7 @@ msgid "Sales Order Line"
 msgstr "Stavka prodajnog naloga"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:52
+#: code:addons/sale_order_dates/models/sale_order.py:58
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "

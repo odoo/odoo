@@ -1,33 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project_issue_sheet
-#
+# 
 # Translators:
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Gennady Marchenko <gennadym@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-22 09:31+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: project_issue_sheet
 #: model:ir.model.fields,field_description:project_issue_sheet.field_project_issue_analytic_account_id
 msgid "Analytic Account"
-msgstr "Счёт аналитики"
+msgstr "Аналитический счёт"
+
+#. module: project_issue_sheet
+#: model:ir.model,name:project_issue_sheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Позиция аналитики"
 
 #. module: project_issue_sheet
 #: model:ir.model.fields,help:project_issue_sheet.field_project_issue_progress
 msgid "Computed as: Time Spent / Total Time."
-msgstr "Вычислено как: Затраченное время / Общее время."
+msgstr "Вычисляется как: затраченное время ÷ общее время."
 
 #. module: project_issue_sheet
 #: model:ir.ui.view,arch_db:project_issue_sheet.project_issue_form_view
@@ -37,12 +44,17 @@ msgstr "Длительность"
 #. module: project_issue_sheet
 #: model:ir.model.fields,field_description:project_issue_sheet.field_account_analytic_line_issue_id
 msgid "Issue"
-msgstr "Проблема"
+msgstr "Вопрос"
 
 #. module: project_issue_sheet
 #: model:ir.model.fields,field_description:project_issue_sheet.field_project_issue_progress
 msgid "Progress (%)"
 msgstr "Выполнение (%)"
+
+#. module: project_issue_sheet
+#: model:ir.model,name:project_issue_sheet.model_project_issue
+msgid "Project Issue"
+msgstr "Вопрос проекта"
 
 #. module: project_issue_sheet
 #: model:ir.ui.view,arch_db:project_issue_sheet.project_issue_form_view
@@ -53,16 +65,4 @@ msgstr "Действия в табеле"
 #: model:ir.model.fields,field_description:project_issue_sheet.field_project_issue_timesheet_ids
 #: model:ir.ui.view,arch_db:project_issue_sheet.project_issue_form_view
 msgid "Timesheets"
-msgstr "Табели учёта"
-
-#. module: project_issue_sheet
-#: model:ir.model,name:project_issue_sheet.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Позиция аналитики"
-
-#. module: project_issue_sheet
-#: model:ir.model,name:project_issue_sheet.model_project_issue
-#, fuzzy
-msgid "project issue"
-msgstr "Проблема проекта"
+msgstr "Табели"

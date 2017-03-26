@@ -1,29 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * utm
-#
+# 
 # Translators:
-# Davor Bojkić <bole@dajmi5.com>, 2015
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
-#, fuzzy
+# Bole <bole@dajmi5.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Marko Carević <marko.carevic@live.com>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Tina Milas <tina@uvid.hr>, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-10-20 17:16+0000\n"
-"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Vladimir Olujić <olujic.vladimir@storm.hr>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  hr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"#-#-#-#-#  hr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium_active
@@ -108,6 +107,11 @@ msgid "Display Name"
 msgstr "Naziv za prikaz"
 
 #. module: utm
+#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
+msgid "Email Campaign - Products"
+msgstr "Email kampanja - artikli"
+
+#. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
 msgstr "E-mail kampanja - usluge"
@@ -155,7 +159,7 @@ msgstr "Vrijeme promjene"
 #. module: utm
 #: model:ir.ui.menu,name:utm.menu_link_tracker_root
 msgid "Link Tracker"
-msgstr ""
+msgstr "Praćenje linkova"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_mailing
@@ -174,10 +178,9 @@ msgstr ""
 #: model:ir.ui.view,arch_db:utm.utm_medium_view_tree
 #: model:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Medium"
-msgstr "Srednji"
+msgstr "Medij"
 
 #. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
 msgstr "Bilten"
@@ -235,9 +238,8 @@ msgstr ""
 #: model:ir.model.fields,help:utm.field_link_tracker_medium_id
 #: model:ir.model.fields,help:utm.field_sale_order_medium_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_medium_id
-#, fuzzy
 msgid "This is the method of delivery.Ex: Postcard, Email, or Banner Ad"
-msgstr "Ovo je način isporuke. Npr. razglednica, e-mail, oglas"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_account_invoice_source_id
@@ -246,12 +248,10 @@ msgstr "Ovo je način isporuke. Npr. razglednica, e-mail, oglas"
 #: model:ir.model.fields,help:utm.field_link_tracker_source_id
 #: model:ir.model.fields,help:utm.field_sale_order_source_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_source_id
-#, fuzzy
 msgid ""
 "This is the source of the link Ex:Search Engine, another domain,or name of "
 "email list"
 msgstr ""
-"To je obavijest linka Ex. pretraživač, druga domena ili ime sa popisa e-pošte"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_twitter
@@ -267,6 +267,3 @@ msgstr ""
 #: model:ir.model,name:utm.model_utm_mixin
 msgid "utm.mixin"
 msgstr "utm.mixin"
-
-#~ msgid "Email Campaign - Products"
-#~ msgstr "Email kampanja - artikli"
