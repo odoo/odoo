@@ -31,7 +31,7 @@ class PosConfig(models.Model):
 
     def _default_sale_journal(self):
         journal = self.env.ref('point_of_sale.pos_sale_journal', raise_if_not_found=False)
-        if journal and journal.company_id == self.env.user.company_id:
+        if journal and journal.sudo().company_id == self.env.user.company_id:
             return journal
         return self._default_invoice_journal()
 
@@ -207,7 +207,7 @@ class PosConfig(models.Model):
 
     @api.model
     def create(self, values):
-        IrSequence = self.env['ir.sequence']
+        IrSequence = self.env['ir.sequence'].sudo()
         val = {
             'name': _('POS Order %s') % values['name'],
             'padding': 4,
