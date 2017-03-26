@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-03-16 15:15+0000\n"
+"PO-Revision-Date: 2017-03-25 13:34+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-8/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -169,7 +169,7 @@ msgstr ""
 #: code:addons/purchase/stock.py:198
 #, python-format
 msgid " Buy"
-msgstr ""
+msgstr " 買"
 
 #. module: purchase
 #: field:product.product,purchase_count:0
@@ -195,7 +195,7 @@ msgstr "採購訂單總數"
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} 訂單 (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase_done
@@ -345,7 +345,7 @@ msgstr "通訊錄"
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
 msgid "Advance bidding process"
-msgstr ""
+msgstr "進階招標程序"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -437,7 +437,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
 msgid "Average Delivery Time"
-msgstr ""
+msgstr "平均交貨時間"
 
 #. module: purchase
 #: field:purchase.report,price_average:0
@@ -531,7 +531,7 @@ msgstr ""
 #: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Can't find any generic Buy route."
-msgstr ""
+msgstr "無法找到任何採購途徑。"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -551,7 +551,7 @@ msgstr "已取消"
 #: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "無法刪除處於 '%s' 狀態的採購訂單行。"
 
 #. module: purchase
 #: field:purchase.report,category_id:0
@@ -697,7 +697,7 @@ msgstr "距離交貨日數"
 #. module: purchase
 #: field:purchase.report,delay:0
 msgid "Days to Validate"
-msgstr ""
+msgstr "審核日期"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
@@ -864,7 +864,7 @@ msgstr "分組方式"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
-msgstr ""
+msgstr "隱藏取消行"
 
 #. module: purchase
 #: help:purchase.order,message_summary:0
@@ -922,7 +922,7 @@ msgstr "進貨"
 #. module: purchase
 #: view:stock.picking:purchase.view_picking_in_search_picking_inherit
 msgid "Incoming Shipments to Invoice"
-msgstr ""
+msgstr "要開票的入庫"
 
 #. module: purchase
 #: field:purchase.order,incoterm_id:0
@@ -1003,7 +1003,7 @@ msgstr "發票"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_form
 msgid "Invoices and Incoming Shipments"
-msgstr ""
+msgstr "開票和入庫"
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -1143,7 +1143,7 @@ msgstr "訊息及聯絡歷史"
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
-msgstr ""
+msgstr "每月購買"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1535,7 +1535,7 @@ msgstr "有未開發票的採購明細之採購單"
 #. module: purchase
 #: field:stock.warehouse,buy_to_resupply:0
 msgid "Purchase to resupply this warehouse"
-msgstr ""
+msgstr "採購補給此倉庫"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
@@ -1611,7 +1611,7 @@ msgstr "已確認詢價單"
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr ""
+msgstr "詢價單已完成"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:327 code:addons/purchase/purchase.py:945
@@ -1632,12 +1632,12 @@ msgstr "詢價單及採購"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Print RFQ"
-msgstr ""
+msgstr "重新列印詢價單"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr ""
+msgstr "重新用 email 發送詢價單"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1760,12 +1760,12 @@ msgstr "所選之衡量單位與同類產品之衡量單位不符。"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send PO by Email"
-msgstr ""
+msgstr "通過 email 發送採購單"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr ""
+msgstr "通過 email 發送詢價單"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1958,7 +1958,7 @@ msgstr "取代預設的價目表，為目前夥伴所使用的價目表。"
 #. module: purchase
 #: help:purchase.order,picking_type_id:0
 msgid "This will determine picking type of incoming shipment"
-msgstr ""
+msgstr "它將定義入庫產品的分揀類型"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -2120,7 +2120,7 @@ msgstr "網站溝通記錄"
 #. module: purchase
 #: help:stock.warehouse,buy_to_resupply:0
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr ""
+msgstr "當已購買產品後能夠運送到此倉庫。"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:538
