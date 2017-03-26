@@ -5,7 +5,7 @@
 # Translators:
 # Ermin Trevisan <trevi@twanda.com>, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
-# darenkster <renkosp@gmail.com>, 2015
+# darenkster <inactive+darenkster@transifex.com>, 2015
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Wolfgang Taferner, 2016
 msgid ""
@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2016-08-09 16:01+0000\n"
+"PO-Revision-Date: 2017-03-24 16:03+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -98,7 +98,7 @@ msgstr "Wählen Sie ein Datum in der Vergangenheit aus, um den Lagerbestand zu d
 msgid ""
 "Choose the accounting date at which you want to value the stock moves "
 "created by the inventory instead of the default one (the inventory end date)"
-msgstr ""
+msgstr "Wählen Sie das Buchungsdatum, an dem Sie die von der Inventur angelegten Bestandsbewegungen erfasst haben anstelle des Standardwertes (das Inventurenddatum)"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
@@ -121,7 +121,7 @@ msgstr "Unternehmen"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Compute from average price"
-msgstr ""
+msgstr "Nerechnet anhand Durchschnittspreis"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -197,7 +197,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Wenn permanente Inventur für ein Produkt eingestellt wurde, erstellt das System automatisch Buchungssätze, die mit den Warenbewegungen korrespondieren zu Bewertungspreisen, die sich über die eingestellte Kostenmethode errechnen. Das Bestandsveränderungskonto der Produktkategorie repräsentiert dabei den momentanen Bestandswert, das Wareneingangs- und Warenausgangskonto beinhaltet die Gegenbuchung für ein- und ausgehende Produkte."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
@@ -214,7 +214,7 @@ msgstr "Wenn permanente Inventur für ein Produkt eingestellt wurde, erstellt da
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "Include landed costs in product costing computation"
-msgstr ""
+msgstr "Inklusive Einstandskosten in der Produktkalkulationsberechnung"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
@@ -313,7 +313,7 @@ msgstr "Es gibt keinen Unterschied zwischen Standardpreise und Neupreis!"
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "No landed costs"
-msgstr ""
+msgstr "Keine Einstandskosten"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_date
@@ -324,18 +324,18 @@ msgstr "Datum"
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
-msgstr ""
+msgstr "Periodisch (manuell)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Periodic inventory valuation (recommended)"
-msgstr ""
+msgstr "Periodische Bestandsbewertung (empfohlen)"
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
-msgstr ""
+msgstr "Laufende (automatisiert)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
@@ -466,7 +466,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
-msgstr ""
+msgstr "Standardpreis: Der Beschaffungspreis wird manuell berechnet (normalerweise einmal jährlich)\nDurchschnittspreis: Der Beschaffungspreis wird bei jeder eingehenden Lieferung neu berechnet.\nEchtzeitpreis: Der Beschaffungspreis ist der Preis für das zuletzt versendete Produkt (wird z.B. oft ebenfalls bei Inventurverlust genutzt)."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -658,7 +658,7 @@ msgstr "Dieser Assistent öffnet die Übersicht für die Lagerbestandshistorie"
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts"
-msgstr ""
+msgstr "Sie haben keinen Lagerjournal, der in Ihrer Produktkategorie definiert ist, überprüfen Sie, ob Sie ein Kontenplan installiert haben"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -673,7 +673,7 @@ msgstr "stock.config.settings"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_history
 msgid "stock.history"
-msgstr ""
+msgstr "Warenbewegungen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method

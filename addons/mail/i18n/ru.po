@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-02-18 05:45+0000\n"
+"PO-Revision-Date: 2017-03-21 21:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -244,7 +244,7 @@ msgstr "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\"
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Добавить</span>\n                                    <span class=\"o_stat_text\">Контекстное действие</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -616,12 +616,12 @@ msgstr "Отменен"
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
 msgid "Canned Response"
-msgstr ""
+msgstr "Готовый ответ"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_shortcode
 msgid "Canned Response / Shortcode"
-msgstr ""
+msgstr "Готовый ответ / Сокращение"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_email_cc
@@ -1223,7 +1223,7 @@ msgstr "Причина сбоя"
 msgid ""
 "Failure reason. This is usually the exception thrown by the email server, "
 "stored to ease the debugging of mailing issues."
-msgstr ""
+msgstr "Причина сбоя. Это, как правило, исключение, созданное сервером электронной почты, которое хранится для облегчения отладки проблем с почтой."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred_partner_ids
@@ -1418,7 +1418,7 @@ msgstr "номер отслеживаемого ресурса"
 #: code:addons/mail/static/src/xml/client_action.xml:108
 #, python-format
 msgid "Idle"
-msgstr ""
+msgstr "Холостой ход"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_message_unread
@@ -1465,7 +1465,7 @@ msgstr "Если поле отказа отмечено галочкой, это
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
-msgstr ""
+msgstr "Если у вас установлен всеохватывающие почтовый домен, перенаправляющий на сервер Odoo, введите здесь имя домена."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:141
@@ -1508,7 +1508,7 @@ msgstr "Неправильное выражение, здесь должен б�
 msgid ""
 "Invalid record set: should be called as model (without records) or on "
 "single-record recordset"
-msgstr ""
+msgstr "Недопустимый набор записей: должен быть вызван как модель (без записи) или на одну запись установка записи"
 
 #. module: mail
 #. openerp-web
@@ -1521,7 +1521,7 @@ msgstr "Приглашение"
 #: code:addons/mail/wizard/invite.py:53
 #, python-format
 msgid "Invitation to follow %s: %s"
-msgstr ""
+msgstr "Приглашение к следованию %s: %s"
 
 #. module: mail
 #. openerp-web
@@ -1551,7 +1551,7 @@ msgstr "Пригласить людей"
 #: code:addons/mail/static/src/js/client_action.js:626
 #, python-format
 msgid "Invite people to #%s"
-msgstr ""
+msgstr "Пригласить людей в #%s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -1584,7 +1584,7 @@ msgstr "Это член"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_pinned
 msgid "Is pinned on the interface"
-msgstr ""
+msgstr "Закреплен на интерфейсе"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
@@ -1744,7 +1744,7 @@ msgstr "Написать внутреннюю заметку, которая н�
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Mail Channel Form"
-msgstr ""
+msgstr "Форма почтового канала"
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:306
@@ -1755,24 +1755,24 @@ msgstr "Ошибка при доставке почты"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
 msgid "Mail Tracking Value"
-msgstr ""
+msgstr "Значение отслеживания почты"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_notification
 msgid "Mail has been created to notify people of an existing mail.message"
-msgstr ""
+msgstr "Почта была создана для уведомления людей существующих mail.message"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_emails_partner_info_form
 msgid "Mailing Opt-Out"
-msgstr ""
+msgstr "Отказаться от рассылки"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:125
 #, python-format
 msgid "Mark all as read"
-msgstr ""
+msgstr "Отметить все как прочитанные"
 
 #. module: mail
 #. openerp-web
@@ -1786,7 +1786,7 @@ msgstr "Отметить все как прочитанные"
 #: code:addons/mail/static/src/xml/thread.xml:105
 #, python-format
 msgid "Mark as Read"
-msgstr ""
+msgstr "Пометить как прочитанное"
 
 #. module: mail
 #. openerp-web
@@ -1861,7 +1861,7 @@ msgstr "Ссылки сообщения, такие как идентифика�
 #: code:addons/mail/static/src/xml/client_action.xml:122
 #, python-format
 msgid "Message sent in \""
-msgstr ""
+msgstr "Сообщение отправленное в \""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_name
@@ -2160,7 +2160,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "Odoo needs your permission to"
-msgstr ""
+msgstr "Odoo, требуется ваше разрешение для"
 
 #. module: mail
 #. openerp-web
@@ -2233,7 +2233,7 @@ msgstr "Открыть документ-предок"
 #: code:addons/mail/static/src/xml/client_action.xml:128
 #, python-format
 msgid "Open channel settings"
-msgstr ""
+msgstr "Открыть настройки канала"
 
 #. module: mail
 #. openerp-web
@@ -2736,7 +2736,7 @@ msgstr "Адрес отправителя (здесь могут использ�
 #: code:addons/mail/static/src/xml/client_action.xml:94
 #, python-format
 msgid "Sends messages by email"
-msgstr ""
+msgstr "Отправляет сообщения по электронной почте"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -3049,7 +3049,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/chatter.xml:30
 #, python-format
 msgid "To: Followers of"
-msgstr ""
+msgstr "Кому: Подписчики"
 
 #. module: mail
 #. openerp-web
@@ -3063,7 +3063,7 @@ msgstr "Сегодня"
 #: code:addons/mail/static/src/xml/client_action.xml:122
 #, python-format
 msgid "Toggle Channels"
-msgstr ""
+msgstr "Переключение каналов"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -3088,7 +3088,7 @@ msgstr "Отслеживание"
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_tree
 msgid "Tracking Value"
-msgstr ""
+msgstr "Значение отслеживания"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_tracking_value
@@ -3164,21 +3164,21 @@ msgstr "Счетчик непрочтённых сообщений"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Unread messages"
-msgstr ""
+msgstr "Непрочитанные сообщения"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:126
 #, python-format
 msgid "Unstar all"
-msgstr ""
+msgstr "Отзвездить все"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:126
 #, python-format
 msgid "Unstar all messages"
-msgstr ""
+msgstr "Отзвездить все сообщения"
 
 #. module: mail
 #. openerp-web
@@ -3192,7 +3192,7 @@ msgstr "Отписаться"
 #: code:addons/mail/static/src/xml/client_action.xml:127
 #, python-format
 msgid "Unsubscribe from channel"
-msgstr ""
+msgstr "Отписаться от канала"
 
 #. module: mail
 #. openerp-web
@@ -3228,7 +3228,7 @@ msgstr "Использовать шаблон"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_sequence
 msgid "Used to order subtypes."
-msgstr ""
+msgstr "Используется для заказа подтипов."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -3319,7 +3319,7 @@ msgstr "Вы можете пометить любое сообщение, как
 msgid ""
 "You cannot create a new user from here.\n"
 " To create new user please go to configuration panel."
-msgstr ""
+msgstr "Вы не можете здесь создать нового пользователя.\n Для создания нового пользователя, пожалуйста, перейдите к панели настройки."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:125
@@ -3398,7 +3398,7 @@ msgstr "документ"
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "enable desktop notifications"
-msgstr ""
+msgstr "включить уведомления на рабочем столе"
 
 #. module: mail
 #. openerp-web
@@ -3444,7 +3444,7 @@ msgstr "mycompany.odoo.com"
 #: code:addons/mail/static/src/js/thread.js:142
 #, python-format
 msgid "now"
-msgstr ""
+msgstr "сейчас"
 
 #. module: mail
 #. openerp-web
@@ -3462,7 +3462,7 @@ msgstr "publisher_warranty.contract"
 #. module: mail
 #: model:mail.channel,name:mail.channel_3
 msgid "rd"
-msgstr ""
+msgstr "rd"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
