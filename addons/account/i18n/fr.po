@@ -58,13 +58,14 @@
 # Henri MARES <henri.mares@aliceadsl.fr>, 2017
 # Paul-Hervé Meyer <paulherve.meyer@mail.novancia.fr>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-14 10:20+0000\n"
 "PO-Revision-Date: 2017-02-14 10:20+0000\n"
-"Last-Translator: Richard Mathot <rim@odoo.com>, 2017\n"
+"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4733,6 +4734,8 @@ msgid ""
 "Get your bank statements from you bank and import them through plaid.com.\n"
 "-This installs the module account_plaid."
 msgstr ""
+"Récupérez vos relevez bancaires depuis votre banque et importez les via plaid.com.\n"
+"- Le module account_plaid sera également installé."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_csv
@@ -4740,6 +4743,8 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .CSV format.\n"
 "-This installs the module account_bank_statement_import_csv."
 msgstr ""
+"Récupérez vos relevez bancaires depuis votre banque et importez-les dans Odoo au format CSV.\n"
+"- Le module account_plaid sera également installé."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
@@ -4747,6 +4752,8 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .OFX format.\n"
 "-This installs the module account_bank_statement_import_ofx."
 msgstr ""
+"Récupérez vos relevez bancaires depuis votre banque et importez-les dans Odoo au format OFX.\n"
+"- Le module account_bank_statement_import_ofx sera également installé."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_qif
@@ -4754,6 +4761,8 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .QIF format.\n"
 "-This installs the module account_bank_statement_import_qif."
 msgstr ""
+"Récupérez vos relevez bancaires depuis votre banque et importez-les dans Odoo au format QIF.\n"
+"- Le module account_bank_statement_import_qifsera également installé."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_yodlee
@@ -4761,6 +4770,8 @@ msgid ""
 "Get your bank statements from your bank and import them through yodlee.com.\n"
 "-This installs the module account_yodlee."
 msgstr ""
+"Récupérez vos relevez bancaires depuis votre banque et importez les via yodlee.com.\n"
+"- Le module account_yodlee sera également installé."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
@@ -5649,6 +5660,10 @@ msgid ""
 "journal entry since it would create a gap in the numbering. You should "
 "create the journal entry again and cancel it thanks to a regular revert."
 msgstr ""
+"La suppression d'une ligne de relevé bancaire qui a déjà créé une entrée de "
+"journal n'est pas autorisée car cela créerait une discontinuité dans la "
+"numérotation. Vous devriez recréer l'entrée de journal et l'annuler via une "
+"annulation classique."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:322
@@ -5658,6 +5673,10 @@ msgid ""
 "since it would create a gap in the numbering. You should create the journal "
 "entry again and cancel it thanks to a regular revert."
 msgstr ""
+"La suppression d'un règlement qui a déjà créé une entrée de journal n'est "
+"pas autorisée car cela créerait une discontinuité dans la numérotation. Vous"
+" devriez recréer l'entrée de journal et l'annuler via une annulation "
+"classique."
 
 #. module: account
 #. openerp-web
@@ -5846,7 +5865,7 @@ msgstr "Ecritures de facturation avec une période sur l'exercice en cours"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr ""
+msgstr "Entrées de journal non lettrées"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -6292,7 +6311,7 @@ msgstr "Devise principale de la société"
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
 #: model:ir.ui.menu,name:account.menu_action_tax_adjustment
 msgid "Make Manual Tax Adjustments"
-msgstr ""
+msgstr "Effectuer des ajustements fiscaux manuels"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6455,22 +6474,22 @@ msgstr "Moins les comptes de cartes de crédit"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Current Liabilities"
-msgstr ""
+msgstr "Moins passif actuel"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Expenses"
-msgstr ""
+msgstr "Moins notes de frais"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Non-Current Liabilities"
-msgstr ""
+msgstr "Moins passif non-courant"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Payable Accounts"
-msgstr ""
+msgstr "Moins comptes fournisseurs"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -6896,6 +6915,8 @@ msgstr ""
 msgid ""
 "Once this module is installed, you have to configure Tax Cash Basis Journal."
 msgstr ""
+"Une fois ce module installé, vous devrez configurer le journal de taxes sur "
+"les paiements."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7007,6 +7028,10 @@ msgid ""
 "would make a gap in the numbering. You should book an entry and make a "
 "regular revert of it in case you want to cancel it."
 msgstr ""
+"Opération interdite. Votre ligne de relevé ayant déjà reçu une référence, "
+"vous ne pouvez pas la rapprocher totalement d'entrées de journal existante, "
+"cela créerait une discontinuité dans la numérotation.  Vous devriez créer "
+"une entrée et annuler celle-ci pour annuler la ligne."
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:66
@@ -9476,6 +9501,8 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
+"Le compte sélectionné pour cette ligne d'écriture requiert une devise "
+"secondaire. Vous devez supprimer la devise secondaire sur le compte."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1325

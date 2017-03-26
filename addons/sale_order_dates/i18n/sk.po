@@ -1,100 +1,70 @@
-# #-#-#-#-#  sk.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_order_dates
-#
-# Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015
-# #-#-#-#-#  sk.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * sale_order_dates
-#
-# Translators:
-#, fuzzy
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2015-09-08 08:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  sk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"#-#-#-#-#  sk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
 msgid "Commitment Date"
-msgstr "Dátum záväzku"
+msgstr ""
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
 msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
-"When this Order gets confirmed, the Delivery Order's expected date will be "
-"computed based on this date and the Company's Security Delay.\n"
-"Leave this field empty if you want the Delivery Order to be processed as "
-"soon as possible. In that case the expected date will be computed using the "
-"default method: based on the Product Lead Times and the Company's Security "
-"Delay."
+"When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
+"Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
 msgstr ""
-"Dátum do ktorého zákazník požiadal aby boli položky dodané.\n"
-"\n"
-"Keď sa táto objednávka potvrdí, predpokladaný dátum dodaciej objednávky bude "
-"vytvorený na základe tohoto dátumu a bezpečnostného oneskorenia "
-"spoločnosti.\n"
-"\n"
-"Nechajte toto pole prázdneak chcete aby dodacia objednávka bola spracovaná "
-"čo najskôr. V tom prípade bude predpokladaný termín vypočítaný predvolenou "
-"metódou: založený na dodacích lehotách produktu a bezpečnostného oneskorenia "
-"spoločnosti."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
 msgid ""
-"Date by which the products are sure to be delivered. This is a date that you "
-"can promise to the customer, based on the Product Lead Times."
+"Date by which the products are sure to be delivered. This is a date that you"
+" can promise to the customer, based on the Product Lead Times."
 msgstr ""
-"Dátum kedy by produkty určite mali byť doručené. Toto je dátum ktorý môžete "
-"sľúbiť zákaznikovi, založený na dodacích lehotách produktu."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
 msgid "Date on which the first Delivery Order was created."
-msgstr "Dátum vytvorenia prvého dodávkového príkazu."
+msgstr ""
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
 msgid "Effective Date"
-msgstr "Dátum účinnosti"
+msgstr ""
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
-msgstr "Požadovaný dátum"
+msgstr ""
 
 #. module: sale_order_dates
 #: code:addons/sale_order_dates/models/sale_order.py:56
 #, python-format
 msgid "Requested date is too soon!"
-msgstr "Požadovaný dátum je príliš skoro!"
+msgstr ""
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
 msgid "Sales Order"
-msgstr "Objednávka predaja"
+msgstr ""
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Položky objednávky"
+msgstr ""
 
 #. module: sale_order_dates
 #: code:addons/sale_order_dates/models/sale_order.py:57
@@ -103,5 +73,3 @@ msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
 msgstr ""
-"Dátum požadovaný zákazníkom je skorší ako záväzný dátum. Môžete nesplniť "
-"poźiadavky zákaznika."
