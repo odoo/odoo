@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2017-01-16 18:45+0000\n"
+"PO-Revision-Date: 2017-03-24 20:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -152,22 +152,22 @@ msgstr "Комиссионное вознаграждение"
 #. module: payment
 #: help:payment.transaction,fees:0
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "Сумма сборов; установленные в системе, потому что зависит от приобретателя"
 
 #. module: payment
 #: help:payment.transaction,state_message:0
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
+msgstr "Поле используется для хранения сообщений ошибки и/или проверки информации"
 
 #. module: payment
 #: field:payment.acquirer,fees_dom_fixed:0
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "Фиксированные внутренние сборы"
 
 #. module: payment
 #: field:payment.acquirer,fees_int_fixed:0
 msgid "Fixed international fees"
-msgstr ""
+msgstr "Фиксированные международные сборы"
 
 #. module: payment
 #: field:payment.transaction,message_follower_ids:0
@@ -182,7 +182,7 @@ msgstr "Форма"
 #. module: payment
 #: field:payment.acquirer,view_template_id:0
 msgid "Form Button Template"
-msgstr ""
+msgstr "Шаблон формы кнопки"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_search
@@ -234,7 +234,7 @@ msgstr "Последний раз обновлено"
 #. module: payment
 #: help:payment.acquirer,website_published:0
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "Сделать этот платежный эквайер доступным (Счета клиентов и т. д.)"
 
 #. module: payment
 #: field:account.config.settings,module_payment_adyen:0
@@ -269,12 +269,12 @@ msgstr "Сообщение"
 #. module: payment
 #: help:payment.acquirer,post_msg:0
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "Сообщение, отображаемое после выполнения платежа."
 
 #. module: payment
 #: help:payment.acquirer,pre_msg:0
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "Сообщение отображается, чтобы объяснить и помочь в процессе оплаты."
 
 #. module: payment
 #: field:payment.transaction,message_ids:0
@@ -377,7 +377,7 @@ msgstr "Провайдер"
 #. module: payment
 #: help:payment.transaction,acquirer_reference:0
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "Ссылка TX, как хранящиеся в базе приобретателя"
 
 #. module: payment
 #: help:payment.transaction,partner_reference:0
@@ -397,7 +397,7 @@ msgstr "Отправить сообщение группе"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
-msgstr ""
+msgstr "Сервер к серверу"
 
 #. module: payment
 #: help:payment.acquirer,validation:0
@@ -427,7 +427,7 @@ msgstr "Спасибо сообщение"
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "The payment transaction reference must be unique!"
-msgstr ""
+msgstr "Ссылка на платежную транзакцию должна быть уникальной!"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
@@ -454,17 +454,17 @@ msgstr "Дата утверждения"
 #. module: payment
 #: field:payment.acquirer,fees_dom_var:0
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "Переменные внутренние сборы (в процентах)"
 
 #. module: payment
 #: field:payment.acquirer,fees_int_var:0
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "Переменные международные сборы (в процентах)"
 
 #. module: payment
 #: field:payment.acquirer,website_published:0
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "Видимый в Портале / Вебсайте"
 
 #. module: payment
 #: field:payment.transaction,website_message_ids:0
@@ -484,51 +484,51 @@ msgstr "Индекс"
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr ""
+msgstr "приобретатель: payment.acquirer browse record"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr ""
+msgstr "сумма: сумма сделки, поплавок"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr ""
+msgstr "контекст: текущий контекст словарь"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr ""
+msgstr "валюта: обзор запись транзакции валюты"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr ""
+msgstr "партнер: просмотр записи партнера покупателя, не обязательно устанавливать"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr ""
+msgstr "partner_values: конкретные значения о покупателя, например исходя из формы доставки"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr ""
+msgstr "ссылки: ссылочный номер транзакции"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr ""
+msgstr "tx_url: транзакционный URL для отправки формы"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr ""
+msgstr "tx_values: значения транзакций"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr ""
+msgstr "пользователь: обзор записи текущего пользователя"
