@@ -217,15 +217,7 @@
             </field>
         </record>
 
-        <record id="action_website_view" model="ir.actions.act_window">
-            <field name="name">Website Domain</field>
-            <field name="res_model">website</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
         <menuitem name="Website" id="website_menu" sequence="10" parent="base.marketing_menu"/>
-        <menuitem action="action_website_view" id="menu_website_view" parent="website_menu"/>
         <menuitem action="action_version" id="menu_action_version" parent="website_menu" groups="base.group_no_one"/>
         <menuitem action="action_experiment" id="menu_action_experiment" parent="website_menu"/>
 
