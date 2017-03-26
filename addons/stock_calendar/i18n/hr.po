@@ -1,27 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_calendar
-#
+# 
 # Translators:
+# Tina Milas <tina@uvid.hr>, 2017
+# Bole <bole@dajmi5.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2015-10-13 13:04+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Karolina Tonković <karolina.tonkovic@storm.hr>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: stock_calendar
 #: model:ir.ui.view,arch_db:stock_calendar.view_procurement_form_stock_inherit
 msgid "Calculate dates according to Orderpoint"
-msgstr ""
+msgstr "Računanje datuma prema pravilima nabavke"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_calendar_id
@@ -31,15 +34,18 @@ msgstr "Kalendar"
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_stock_warehouse_orderpoint_calendar_id
 msgid ""
-"In the calendar you can define the days that the goods will be delivered.  "
+"In the calendar you can define the days that the goods will be delivered. "
 "That way the scheduler will only take into account the goods needed until "
-"the second delivery and put the procurement date as the first delivery.  "
+"the second delivery and put the procurement date as the first delivery."
 msgstr ""
+"U kalendaru možete definirati dane kada će roba biti dostavljena. Na taj će "
+"način planer uzeti u obzir samo dobra koja su potrebna do sljedeće dostave i"
+" postaviti datum nabavke kao prvu dostavu. "
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_last_execution_date
 msgid "Last Execution Date"
-msgstr ""
+msgstr "Zadnji datum izvršenja"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar_leaves
@@ -54,22 +60,17 @@ msgstr "Pravilo minimalne zalihe"
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_procurement_order_next_delivery_date
 msgid "Next Delivery Date"
-msgstr ""
+msgstr "Sljedeći datum dostave"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_procurement_order_next_purchase_date
 msgid "Next Purchase Date"
-msgstr ""
-
-#. module: stock_calendar
-#: model:ir.model.fields,field_description:stock_calendar.field_resource_calendar_next_day
-msgid "Next day it should trigger"
-msgstr ""
+msgstr "Sljedeći datum nabave"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_procurement_order
 msgid "Procurement"
-msgstr "Procurement"
+msgstr "Nabava"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_resource_calendar_attendance_group_id
@@ -80,7 +81,7 @@ msgstr "Grupa nabave"
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_purchase_calendar_id
 msgid "Purchase Calendar"
-msgstr ""
+msgstr "Kalendar nabave"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar
@@ -90,14 +91,14 @@ msgstr "Kalendar resursa"
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_procurement_order_next_delivery_date
 msgid ""
-"The date of the next delivery for this procurement group, when this group is "
-"on the purchase calendar of the orderpoint"
+"The date of the next delivery for this procurement group, when this group is"
+" on the purchase calendar of the orderpoint"
 msgstr ""
 
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_procurement_order_next_purchase_date
 msgid "The date the next purchase order should be sent to the vendor"
-msgstr ""
+msgstr "Datum kada bi sljedeći nalog za nabavu trebao biti poslan prodavaču"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar_attendance

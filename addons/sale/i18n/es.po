@@ -26,13 +26,15 @@
 # Miguel Orueta <mo@landoo.es>, 2016
 # Cristian Salamea <ovnicraft@gmail.com>, 2017
 # Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2017
+# Oriana Maita <maitaoriana@gmail.com>, 2017
+# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2017\n"
+"POT-Creation-Date: 2017-03-24 15:43+0000\n"
+"PO-Revision-Date: 2017-03-24 15:43+0000\n"
+"Last-Translator: Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,6 +162,8 @@ msgstr ""
 msgid ""
 "<html>\n"
 "                <head></head>\n"
+"                % set record = ctx.get('record')\n"
+"                % set company = record and record.company_id or user.company_id\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -175,7 +179,7 @@ msgid ""
 "                                  </span>\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
 "                              </td>\n"
 "                            </tr>\n"
 "                          </table>\n"
@@ -201,16 +205,16 @@ msgid ""
 "                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                ${user.company_id.name}<br/>\n"
-"                                ${user.company_id.phone or ''}\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                % if user.company_id.email:\n"
-"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
 "                                % endif\n"
-"                                % if user.company_id.website:\n"
-"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                                        ${user.company_id.website}\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
 "                                    </a>\n"
 "                                % endif\n"
 "                              </td>\n"
@@ -564,11 +568,6 @@ msgid "Create a Quotation, the first step of a new sale."
 msgstr "Crea un Presupuesto, el primer paso de una nueva venta."
 
 #. module: sale
-#: selection:product.template,track_service:0
-msgid "Create a task and track hours"
-msgstr "Crear una tarea y da seguimiento a las horas"
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
 msgstr "Crear y ver facturas"
@@ -630,6 +629,7 @@ msgid "Customer Reference"
 msgstr "Referencia cliente"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_taxes_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Customer Taxes"
 msgstr "Impuestos cliente"
@@ -833,6 +833,11 @@ msgid "Email composition wizard"
 msgstr "Asistente de redacción de correo electrónico."
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_expense_id
+msgid "Expense Account"
+msgstr "Cuenta de gasto"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
 msgid "Expiration Date"
 msgstr "Fecha de caducidad"
@@ -911,6 +916,7 @@ msgstr ""
 " facturarla o entregarla."
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_income_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "Cuenta de ingresos"
@@ -1263,7 +1269,8 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:102
+#: code:addons/sale/models/sale.py:102 code:addons/sale/models/sale.py:253
+#: code:addons/sale/models/sale.py:254
 #, python-format
 msgid "New"
 msgstr "Nuevo"
@@ -1290,17 +1297,11 @@ msgid "No longer edit orders once confirmed"
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
 msgstr ""
 
 #. module: sale
@@ -1845,7 +1846,7 @@ msgstr "Análisis de ventas"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Channel"
-msgstr ""
+msgstr "Canal de Ventas"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -2365,6 +2366,24 @@ msgid "This Year"
 msgstr "Este año"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_expense_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+"Esta cuenta será usada para facturas en vez de la cuenta por defecto para "
+"valorar los gastos del producto vigente"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_income_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+"Esta cuenta se utilizará en facturas, en lugar de la cuenta por defecto, "
+"para valorar los ingresos de este producto."
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_config_settings_view_form_inherit_sale
 msgid "This adds the choice of a currency on pricelists."
 msgstr ""
@@ -2429,11 +2448,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.sale_config_settings_view_form_inherit_sale
 msgid "Timesheets"
 msgstr "Partes de horas"
-
-#. module: sale
-#: selection:product.template,track_service:0
-msgid "Timesheets on project"
-msgstr "Hojas de trabajo del proyecto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -2573,6 +2587,11 @@ msgid "VAT:"
 msgstr "CIF/NIF:"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_supplier_taxes_id
+msgid "Vendor Taxes"
+msgstr "Impuestos de proveedor"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
 msgstr "Volumen"
@@ -2669,17 +2688,11 @@ msgstr ""
 "Encontrará aquí todos los pedidos que están listos para ser facturados."
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 
 #. module: sale
@@ -2698,7 +2711,7 @@ msgstr "días"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_ebay
 msgid "eBay"
-msgstr ""
+msgstr "eBay"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_settings

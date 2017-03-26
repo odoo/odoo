@@ -1,52 +1,58 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_voucher
-#
+# 
 # Translators:
-# Davor Bojkić <bole@dajmi5.com>, 2015
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
+# Martin Trigaux <mat@odoo.com>, 2017
+# Bole <bole@dajmi5.com>, 2017
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Filip Cuk <filipcuk2@gmail.com>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
+# Tina Milas <tina@uvid.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2015-11-21 19:15+0000\n"
-"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"Voucher.\n"
-" * The 'Pro-forma' status is used when the voucher does not have a voucher "
-"number.\n"
-" * The 'Posted' status is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account.\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
+" * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
+" * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
 "* 'Nacrt' status se koristi kad korisnik unosi novi i nepotvrđeni vaucher.\n"
 "* 'Pro-forma' se koristi kada vaucher još nema svoj broj.\n"
-"* 'Knjiženo' je status u kojem su kreirane stavke, vaucher ima svoj broj, i "
-"stavke su proknjižene.\n"
+"* 'Knjiženo' je status u kojem su kreirane stavke, vaucher ima svoj broj, i stavke su proknjižene.\n"
 "' Otkazano' je status otkazanog dokumenta."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_id
 msgid "Account"
-msgstr "Konto"
+msgstr "Račun"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 msgid "Account Date"
 msgstr "Datum konta"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+msgid "Accounting Date"
+msgstr "Računovodstveni datum"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
@@ -61,7 +67,7 @@ msgstr "Iznos"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
 msgid "Analytic Account"
-msgstr "Konto analitike"
+msgstr "Analitički konto"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -70,7 +76,9 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "Jeste li sigurni da želite otkazati ovu potvrdu?"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr "Datum računa"
 
@@ -100,7 +108,7 @@ msgid "Cancelled"
 msgstr "Otkazano"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:147
+#: code:addons/account_voucher/models/account_voucher.py:159
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Otvorene ili plaćene vaučere nije moguće pobrisati."
@@ -125,7 +133,7 @@ msgstr "Tvrtka"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
 msgid "Company related to this journal"
-msgstr ""
+msgstr "Organizacija za koju se vodi ovaj dnevnik"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
@@ -153,9 +161,7 @@ msgid "Customer"
 msgstr "Kupac"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "Datum"
 
@@ -191,7 +197,7 @@ msgid "Due Date"
 msgstr "Datum dospijeća"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
 msgid "Effective date for accounting entries"
 msgstr "Efektivni datum za knjigovodstvene stavke"
 
@@ -309,16 +315,16 @@ msgid "Payment Reference"
 msgstr "Referenca plaćanja"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:183
+#: code:addons/account_voucher/models/account_voucher.py:195
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Molimo aktivirajte sekvencu odabrnog dnevnika!"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:186
+#: code:addons/account_voucher/models/account_voucher.py:198
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr "Molimo definirajte sekvencu na dnevniku."
+msgstr "Molimo definirajte brojevni krug na dnevniku."
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -338,7 +344,7 @@ msgstr "Potvrđeni vaučeri"
 #. module: account_voucher
 #: selection:account.voucher,state:0
 msgid "Pro-forma"
-msgstr "Predračun"
+msgstr "Pro forma"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
@@ -435,13 +441,13 @@ msgstr "Porez"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
-msgid "Tax amount"
+msgid "Tax Amount"
 msgstr "Iznos poreza"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
-msgid "Tax correction"
-msgstr "Ispravak poreza"
+msgid "Tax Correction"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
@@ -477,12 +483,12 @@ msgstr "Ukupni iznos"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
 msgid "Type"
-msgstr "Tip"
+msgstr "Vrsta"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
 msgid "Unit Price"
-msgstr "Jed. cijena"
+msgstr "Jedinična cijena"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -503,7 +509,7 @@ msgid "Vendor Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:31
+#: code:addons/account_voucher/models/account_voucher.py:97
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -554,64 +560,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/models/account_voucher.py:376
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Prvo morate odabrati partnera!"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna dodatna radnja"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnjeg zapisa"
-
-#~ msgid "Followers"
-#~ msgstr "Pratitelji"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratitelji (Kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratitelji (Partneri)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratitelj"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Messages"
-#~ msgstr "Poruke"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Poruke i povijest"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Broj poruka koje zahtijevaju aktivnost"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Open Invoicing Menu"
-#~ msgstr "Otvori menu računa"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nepročitane poruke"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website poruke"
-
-#~ msgid "Website communication history"
-#~ msgstr "Povijest komunikacije Web stranice"

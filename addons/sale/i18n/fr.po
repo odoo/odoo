@@ -23,18 +23,18 @@
 # Fabri Yohann <psn@fabri.pw>, 2016
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2016
 # Simon CARRIER <carrier.sim@gmail.com>, 2016
-# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2017
 # Frédéric LIETART <stuff@tifred.fr>, 2017
 # zoe <yann.hoareau@migs.re>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
+# Fabrice Henrion <fhe@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Richard Mathot <rim@odoo.com>, 2017\n"
+"POT-Creation-Date: 2017-03-24 15:43+0000\n"
+"PO-Revision-Date: 2017-03-24 15:43+0000\n"
+"Last-Translator: Fabrice Henrion <fhe@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,6 +118,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_brouillon' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -158,6 +160,8 @@ msgstr ""
 msgid ""
 "<html>\n"
 "                <head></head>\n"
+"                % set record = ctx.get('record')\n"
+"                % set company = record and record.company_id or user.company_id\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -173,7 +177,7 @@ msgid ""
 "                                  </span>\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
 "                              </td>\n"
 "                            </tr>\n"
 "                          </table>\n"
@@ -199,16 +203,16 @@ msgid ""
 "                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                ${user.company_id.name}<br/>\n"
-"                                ${user.company_id.phone or ''}\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                % if user.company_id.email:\n"
-"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
 "                                % endif\n"
-"                                % if user.company_id.website:\n"
-"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                                        ${user.company_id.website}\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
 "                                    </a>\n"
 "                                % endif\n"
 "                              </td>\n"
@@ -246,7 +250,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Date Ordered:</strong>"
-msgstr ""
+msgstr "<strong>Date de commande:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -261,7 +265,7 @@ msgstr "<strong>Conditions de paiement:</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Quotation Date:</strong>"
-msgstr ""
+msgstr "<strong>Date du devis :</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -555,11 +559,6 @@ msgid "Create a Quotation, the first step of a new sale."
 msgstr "Créer un devis, la première étape d'une nouvelle vente."
 
 #. module: sale
-#: selection:product.template,track_service:0
-msgid "Create a task and track hours"
-msgstr "Créer une tâche et pister les heures "
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
 msgstr "Créer et afficher des factures"
@@ -621,6 +620,7 @@ msgid "Customer Reference"
 msgstr "Référence client"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_taxes_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Customer Taxes"
 msgstr "Taxes à la vente"
@@ -824,6 +824,11 @@ msgid "Email composition wizard"
 msgstr "Assistant de composition de courriel"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_expense_id
+msgid "Expense Account"
+msgstr "Compte de dépenses"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
 msgid "Expiration Date"
 msgstr "Date d'échéance"
@@ -900,6 +905,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_income_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "Compte de revenus"
@@ -1245,7 +1251,8 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:102
+#: code:addons/sale/models/sale.py:102 code:addons/sale/models/sale.py:253
+#: code:addons/sale/models/sale.py:254
 #, python-format
 msgid "New"
 msgstr "Nouveau"
@@ -1272,17 +1279,11 @@ msgid "No longer edit orders once confirmed"
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
 msgstr ""
 
 #. module: sale
@@ -1687,7 +1688,7 @@ msgstr "Devis / Commande"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Date"
-msgstr ""
+msgstr "Date du devis"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
@@ -2331,6 +2332,24 @@ msgid "This Year"
 msgstr "Cette année"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_expense_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+"Ce compte sera utilisé au lieu de celui par défaut pour les factures pour "
+"comptabiliser les achats pour le produit en cours."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_income_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+"Ce compte sera utilisé au lieu de celui par défaut pour les factures pour "
+"comptabiliser les ventes pour le produit en cours."
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_config_settings_view_form_inherit_sale
 msgid "This adds the choice of a currency on pricelists."
 msgstr ""
@@ -2396,11 +2415,6 @@ msgid "Timesheets"
 msgstr "Feuilles de temps"
 
 #. module: sale
-#: selection:product.template,track_service:0
-msgid "Timesheets on project"
-msgstr "Feuilles de Temps sur les projets"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -2443,12 +2457,12 @@ msgstr "Service de suivi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_delivery_ups
 msgid "UPS"
-msgstr ""
+msgstr "UPS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_delivery_usps
 msgid "USPS"
-msgstr ""
+msgstr "USPS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
@@ -2534,6 +2548,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "VAT:"
 msgstr "TVA :"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_supplier_taxes_id
+msgid "Vendor Taxes"
+msgstr "Taxes fournisseur"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
@@ -2625,17 +2644,11 @@ msgid "You will find here all orders that are ready to be invoiced."
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 
 #. module: sale
@@ -2654,7 +2667,7 @@ msgstr "jours"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_ebay
 msgid "eBay"
-msgstr ""
+msgstr "eBay"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_settings
@@ -2664,4 +2677,4 @@ msgstr "sale.config.settings"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_layout_category
 msgid "sale.layout_category"
-msgstr ""
+msgstr "sale.layout_category"
