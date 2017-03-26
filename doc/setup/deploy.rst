@@ -34,7 +34,7 @@ accessible Odoo needs a rule to know which one it should use.
 That is one of the purposes of :option:`--db-filter <odoo-bin --db-filter>`:
 it specifies how the database should be selected based on the hostname (domain)
 that is being requested. The value is a `regular expression`_, possibly
-including the dynamically injected hostname (`%h`) or the first subdomain (`%d`)
+including the dynamically injected hostname (%h) or the first subdomain (%d)
 through which the system is being accessed.
 
 For servers hosting multiple databases in production, especially if ``website``
