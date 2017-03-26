@@ -9,7 +9,7 @@ def _check_incompatibility(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     wanted_states = ['installed', 'to upgrade', 'to install']
 
-    l10n_fr = env['ir.module.module'].search([('name', '=', 'l10n_fr')])
-    if l10n_fr and l10n_fr.state in wanted_states:
-        from odoo.addons.l10n_fr import _deactivate_account_cancel_views
+    l10n_fr_certification = env['ir.module.module'].search([('name', '=', 'l10n_fr_certification')])
+    if l10n_fr_certification and l10n_fr_certification.state in wanted_states:
+        from odoo.addons.l10n_fr_certification import _deactivate_account_cancel_views
         _deactivate_account_cancel_views(cr, registry)
