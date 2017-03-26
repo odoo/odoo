@@ -7,13 +7,14 @@
 # Morten Schou <ms@msteknik.dk>, 2016
 # jonas jensen <j.jensen@tcomp.dk>, 2016
 # Jesper Carstensen <jc@danodoo.dk>, 2016
+# Visti Kristensen <visti@vkdata.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Jesper Carstensen <jc@danodoo.dk>, 2016\n"
+"Last-Translator: Visti Kristensen <visti@vkdata.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +72,7 @@ msgstr "Standardværdi"
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_document_fields_value
 msgid "Default value is considered for field when new document is generated."
-msgstr ""
+msgstr "Standard værdien vil blive anvendt når et nyt dokument genereres."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_note
@@ -150,6 +151,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
 msgstr ""
+"Hvis det aktive felt er sat til False, vil du kunne skjule abonnementet uden"
+" at slette det."
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
@@ -160,7 +163,7 @@ msgstr "Interne noter"
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
 msgid "Internal Qty"
-msgstr ""
+msgstr "Internt antal"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_type
@@ -211,7 +214,7 @@ msgstr "Noter"
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
 msgid "Number of Documents"
-msgstr ""
+msgstr "Antal dokumenter"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_model
@@ -231,6 +234,8 @@ msgid ""
 "Please provide another source document.\n"
 "This one does not exist!"
 msgstr ""
+"Angiv et andet kilde dokument.\n"
+"Dette eksisterer ikke længere!"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
@@ -241,13 +246,13 @@ msgstr "Behandl"
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
 #: model:ir.ui.menu,name:subscription.menu_action_subscription_form
 msgid "Recurring Documents"
-msgstr ""
+msgstr "Gentagne dokumenter"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Recurring Types"
-msgstr ""
+msgstr "Gentagelses typer"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
@@ -297,7 +302,7 @@ msgstr "Abonnement"
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Subscription Data"
-msgstr ""
+msgstr "Abonnements data"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
@@ -354,4 +359,4 @@ msgstr "Uger"
 #: code:addons/subscription/models/subscription.py:115
 #, python-format
 msgid "You cannot delete an active subscription!"
-msgstr ""
+msgstr "Du kan ikke slette et aktivt abonnement!"

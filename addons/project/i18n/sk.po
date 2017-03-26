@@ -1,22 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project
-#
-# Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015-2016
-# Martin Trigaux, 2015
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-03-19 10:04+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: project
@@ -24,159 +20,104 @@ msgstr ""
 msgid ""
 "\n"
 "            <div style=\"margin: 10px auto;\">\n"
-"            % set last_created_project = user.env['project.project']."
-"search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
-"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;"
-"\">\n"
+"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
 "                <tbody>\n"
 "                    <tr>\n"
 "                        <td style=\"padding:2px;width:30%;\">\n"
 "                            <img src=\"web/static/src/img/logo.png\"/>\n"
 "                        </td>\n"
-"                        <td style=\"vertical-align: top; padding: 8px 10px;"
-"text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;"
-"margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-"
-"size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</"
-"a>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </tbody>\n"
 "            </table>\n"
-"            <table style=\"width:100%;text-align:justify;margin:0 auto;"
-"border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
 "                <tbody>\n"
 "                    <tr>\n"
 "                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                            <p dir=\"ltr\" style=\"font-size:15px;margin-"
-"top:0pt;margin-bottom:0pt;\">\n"
-"                                <span>Your Odoo Project application is up "
-"and running</span></p><br>\n"
-"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-"
-"bottom:8pt;\">\n"
-"                                <span style=\"font-size:13px;font-weight:"
-"bold;\">What’s next?</span></p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;"
-"font-size:13px;list-style-type:disc;\">\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Your Odoo Project application is up and running</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">What’s next?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
 "                                % if last_created_project:\n"
 "                                    <li dir=\"ltr\">\n"
-"                                        <p dir=\"ltr\" style=\"margin-"
-"top:0pt;margin-bottom:0pt;\">\n"
-"                                            <span>Try creating a task by "
-"sending an email to </span>\n"
-"                                            <a href=\"mailto:"
-"${last_created_project.alias_id.name_get()[0][1] if last_created_project."
-"alias_id.alias_domain else user.company_id.email}\">\n"
-"                                                <span style=\"font-weight:"
-"bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()"
-"[0][1] if last_created_project.alias_id.alias_domain else user.company_id."
-"email}</span>\n"
+"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>Try creating a task by sending an email to </span>\n"
+"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
 "                                            </a>\n"
 "                                        </p>\n"
 "                                    </li>\n"
 "                                % endif\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:8pt;\">\n"
-"                                        <span><a href=\"/"
-"web#view_type=list&model=res.users&action=base.action_res_users\">\n"
-"                                            <span style=\"font-weight:bold; "
-"text-decoration:underline;\">Invite new users</span></a></span>\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Invite new users</span></a></span>\n"
 "                                        <span>to collaborate</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                            </ul> <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
-"top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Discover "
-"the </span>\n"
-"                                <span><a href=\"/"
-"web#view_type=kanban&model=project.project&action=project."
-"open_view_project_all\">\n"
-"                                    <span style=\"font-weight:bold; text-"
-"decoration:underline;\">project planner</span></a></span>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Discover the </span>\n"
+"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">project planner</span></a></span>\n"
 "                                <span> to activate extra features</span>\n"
-"                                <span style=\"color:#875A7B;margin:0;font-"
-"weight:bold\">(${user.env['web.planner']."
-"get_planner_progress('planner_project')}% done)</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
 "                            </p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;"
-"font-size:13px;list-style-type:disc;\">\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:0pt;\">\n"
-"                                        <span>Track hours with timesheets,</"
-"span>\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Track hours with timesheets,</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:0pt;\">\n"
-"                                        <span>Plan tasks and resources with "
-"forecasts,</span>\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Plan tasks and resources with forecasts,</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:0pt;\">\n"
-"                                        <span>Get smart reporting and "
-"accurate dashboards,</span>\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Get smart reporting and accurate dashboards,</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:0pt;\">\n"
-"                                        <span>Bill time on tasks or issues,</"
-"span>\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Bill time on tasks or issues,</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:8pt;\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
 "                                        <span>And much more...</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                            </ul>\n"
 "                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;line-"
-"height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Need Help?"
-"</span>\n"
-"                                <span style=\"font-style:italic;\">You’re "
-"not alone</span>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Need Help?</span>\n"
+"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
-"top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you "
-"along the way. Contact us at \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style="
-"\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any "
-"question. You can also discover \n"
-"                                how to get the best out of Odoo Project with "
-"our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/"
-"user/9.0/project.html\">\n"
-"                                <span style=\"text-decoration:underline;"
-"\">User Documentation</span></a>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us at \n"
+"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
+"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
+"                                how to get the best out of Odoo Project with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation"
-"\">\n"
-"                                <span style=\"text-decoration:underline;"
-"\">API Documentation</span></a>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
 "                            </p>\n"
 "                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
-"top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </tbody>\n"
 "            </table>\n"
-"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-"
-"bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, "
-"check </span><a href=\"https://twitter.com/odoo/favorites\"><span style="
-"\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
 msgstr ""
@@ -209,7 +150,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
 msgid "# Tasks"
-msgstr "# úloh"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
@@ -219,14 +160,14 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
 msgid "# of Tasks"
-msgstr "# úloh"
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:240
 #: code:addons/project/models/project.py:410
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (kópia)"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -234,26 +175,22 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks and issues. Do "
 "you want to proceed?"
 msgstr ""
-"(Od)archivovanie prejektu automaicky (od)archivuje jeho úlohy a problémy. "
-"Chcete pokračovať?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "- The Odoo Team"
-msgstr "- Odoo Team"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "1. Learn about Tasks, Issues and Timesheets."
-msgstr "1. Prečítajte si o úlohách, problémoch a časových rozvrhoch."
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "2. Now, take some time to list <strong>the Projects you'll need:</strong>"
 msgstr ""
-"2. Teraz si vyhradťe nejaký čas na spísanie <strong>projektov ktoré budete "
-"potrebovať:</strong>"
 
 #. module: project
 #. openerp-web
@@ -282,7 +219,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:97
 #, python-format
-msgid "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
+msgid ""
+"<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
 
 #. module: project
@@ -295,67 +233,56 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<i class=\"fa fa-user\"/> Person Responsible"
-msgstr "<i class=\"fa fa-user\"/> Zodpovedná osoba"
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:122
 #, python-format
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                        Documents are attached to the tasks and issues of "
-"your project.</p><p>\n"
-"                        Send messages or log internal notes with attachments "
-"to link\n"
+"                        Documents are attached to the tasks and issues of your project.</p><p>\n"
+"                        Send messages or log internal notes with attachments to link\n"
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Dokumenty sú priložené k úloham a problémom vášho projektu.</p><p>\n"
-"Pošlite správy alebo spisujte interné záznamy s prílohami pre prepojenie\n"
-"dokumentov s vašimi projektami.\n"
-"</p>"
 
 #. module: project
 #: code:addons/project/models/project.py:150
 #, python-format
-msgid ""
-"<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
+msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
 msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "<span attrs=\"{'invisible':[('use_tasks', '=', False)]}\">as </span>"
-msgstr "<span attrs=\"{'invisible':[('use_tasks', '=', False)]}\">ako </span>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Nainštalovať teraz"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat"
-msgstr "<span class=\"fa fa-comment-o\"/> Živý chat webstránky"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
-msgstr "<span class=\"fa fa-comment-o\"/> Live Chat webovej stránky na"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-envelope-o\"/> Email Our Project Expert"
 msgstr ""
-"<span class=\"fa fa-envelope-o\"/> Napíšte email nášmu Projektovému expertovi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"<span class=\"fa fa-thumbs-o-down\"/> The <strong> Wrong Way</strong> to use "
-"projects:"
+"<span class=\"fa fa-thumbs-o-down\"/> The <strong> Wrong Way</strong> to use"
+" projects:"
 msgstr ""
-"<span class=\"fa fa-thumbs-o-down\"/>  <strong> Nesprávny spôsob</strong> "
-"používania týchto projektov:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -363,149 +290,94 @@ msgid ""
 "<span class=\"fa fa-thumbs-o-up\"/> The <strong>Right Way</strong> to use "
 "projects:"
 msgstr ""
-"<span class=\"fa fa-thumbs-o-up\"/>  <strong>Správny spôsob</strong> "
-"používania týchto projektov:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Documents</span>"
-msgstr "<span class=\"o_label\">Dokumenty</span>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-laptop\"/>\n"
-"                                            <strong> Screen Customization</"
-"strong>\n"
+"                                            <strong> Screen Customization</strong>\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-laptop\"/>\n"
-"<strong> Prispôsobenie obrazovky</strong>\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-mobile\"/>\n"
-"                                            <strong> From your Mobile phone</"
-"strong>\n"
+"                                            <strong> From your Mobile phone</strong>\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-mobile\"/>\n"
-"<strong> Z vášho mobilného telefónu</strong>\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                            <span class=\"fa fa-pencil-"
-"square-o\"/>\n"
-"                                            <strong> Create Custom Reports</"
-"strong>\n"
+"                                            <span class=\"fa fa-pencil-square-o\"/>\n"
+"                                            <strong> Create Custom Reports</strong>\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-pencil-square-o\"/>\n"
-"<strong> Vytvorte prispôsobené výkazy</strong>\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                            <span class=\"fa fa-puzzle-piece"
-"\"/>\n"
-"                                            <strong> Via Chrome extension</"
-"strong>\n"
+"                                            <span class=\"fa fa-puzzle-piece\"/>\n"
+"                                            <strong> Via Chrome extension</strong>\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-puzzle-piece\"/>\n"
-"<strong> Cez Chrome rozšírenie</strong>\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-sitemap\"/>\n"
-"                                            <strong> Workflow Customization</"
-"strong>\n"
+"                                            <strong> Workflow Customization</strong>\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-sitemap\"/>\n"
-"<strong> Prispôsobenie pracovného postupu</strong>\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-tasks\"/>\n"
-"                                            <strong> Directly in Odoo</"
-"strong>\n"
+"                                            <strong> Directly in Odoo</strong>\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-tasks\"/>\n"
-"<strong> Priamo v Odoo</strong>\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                            <span class=\"fa fa-thumb-tack\"/"
-">\n"
-"                                            <strong> Exercise 1</strong><br/"
-">\n"
-"                                            <span class=\"small\">Check "
-"Workload</span>\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> Exercise 1</strong><br/>\n"
+"                                            <span class=\"small\">Check Workload</span>\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-thumb-tack\"/>\n"
-"<strong> Cvičenie 1</strong><br/>\n"
-"<span class=\"small\">Kontrola pracovnej záťaže</span>\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                            <span class=\"fa fa-thumb-tack\"/"
-">\n"
-"                                            <strong> Exercise 2</strong><br/"
-">\n"
-"                                            <span class=\"small\">Delay to "
-"close an Issue</span>\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> Exercise 2</strong><br/>\n"
+"                                            <span class=\"small\">Delay to close an Issue</span>\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-thumb-tack\"/>\n"
-"<strong> Cvičenie 2</strong><br/>\n"
-"<span class=\"small\">Oneskorenie na uzavretie problému</span>\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa fa-check-square-o\"/"
-">\n"
+"                                        <span class=\"fa fa-check-square-o\"/>\n"
 "                                        <strong> Tasks</strong>\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-check-square-o\"/>\n"
-"<strong> Úlohy</strong>\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -515,177 +387,98 @@ msgid ""
 "                                        <strong> Timesheets</strong>\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-clock-o\"/>\n"
-"<strong> Časové rozpisy</strong>\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa fa-exclamation-"
-"circle\"/>\n"
+"                                        <span class=\"fa fa-exclamation-circle\"/>\n"
 "                                        <strong> Issues</strong>\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-exclamation-circle\"/>\n"
-"<strong> Problémy</strong>\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid ""
-"<span>(*) This configuration is related to the company you're logged into.</"
-"span>"
+"<span>(*) This configuration is related to the company you're logged "
+"into.</span>"
 msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span><strong>Contact us to customize your application:</strong><br/>\n"
-"                                    We have special options for unlimited "
-"number of customizations !\n"
+"                                    We have special options for unlimited number of customizations !\n"
 "                                    </span>"
 msgstr ""
-"<span><strong>Kontaktujte nás pre prispôsobenie vašej aplikácie:</strong><br/"
-">\n"
-"Máme špeciálne možnosti pre neobmedzený počet vlastných nastavení !\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"<span><strong>We are here to help you:</strong> if you don't succeed in "
-"achieving your favorite KPIs, contact us and we can help you create your "
-"custom reports.\n"
+"<span><strong>We are here to help you:</strong> if you don't succeed in achieving your favorite KPIs, contact us and we can help you create your custom reports.\n"
 "                                    </span>"
 msgstr ""
-"<span><strong>Sme tu, aby sme vám pomohli:</strong> ak nesupejete v "
-"dosiahnutí svojej obľúbenej KPI, kontaktujte nás a my vám pomôžeme vytvoriť "
-"svoje vlastné výkazy.\n"
-"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong> Adjourn (5 min)</strong>\n"
-"                                Conclude the meeting with upbeat statements "
-"and positive input on project accomplishments. Always reinforce teamwork and "
-"encourage all member to watch out for each other to ensure the project is "
-"successful."
+"                                Conclude the meeting with upbeat statements and positive input on project accomplishments. Always reinforce teamwork and encourage all member to watch out for each other to ensure the project is successful."
 msgstr ""
-"<strong> Odročiť (5 min)</strong>\n"
-"Uzavrite stretnutie s pozitívnymi vyhláseniami a pozitívnou reakciou na "
-"úspechy projektu. Vždy posilnite tímovú prácu a povzbudťe všetkých členmov "
-"aby sa podporovali navzájom, pre zaistenie úspešnosti projektu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong> Critical items (10 min)</strong>\n"
-"                                Upon completing the project status review "
-"session, summarize the critical items."
+"                                Upon completing the project status review session, summarize the critical items."
 msgstr ""
-"<strong> Kritické položky (10 min)</strong>\n"
-"Po ukončení  prehľadu statusu projektu, zosumarizujte kritické položky."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong> New business issues (5 min)</strong>\n"
-"                                You may have learned something during the "
-"week that affects the project.  Share the news early in the meeting to help "
-"team members consider the  issue as you walk through the project status "
-"session. Not every  issue warrants spending time here, so keep discussions "
-"to a minimum."
+"                                You may have learned something during the week that affects the project.  Share the news early in the meeting to help team members consider the  issue as you walk through the project status session. Not every  issue warrants spending time here, so keep discussions to a minimum."
 msgstr ""
-"<strong> Nové obchodné záležitosti (5 min)</strong>\n"
-"Možno ste sa dozvedeli počas týždňa niečo, čo má vplyv na projekt. Podeľte "
-"sa o novinku na začiatku konferencie aby ste umožnili členom tímu zvážiť "
-"problém, ako budete prechádzať stavom projektu počas zasadnutia. Nie každá "
-"záležitosť oprávňuje trávenie času tu, tak udržujte diskusiu na minimum."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong> Prepare an agenda (and keep to it)</strong>"
-msgstr "<strong> Pripravte si agendu (a držte sa jej)</strong>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong> Project plan status review (20 min) </strong>\n"
-"                                Walk through your project plan and allow "
-"each team member to provide a brief status of assignments due this week and "
-"tasks planned for the next two  weeks. You want to know whether tasks are on "
-"track and if any will miss  their projected deadline. You also want to allow "
-"the team member to share  any special considerations that might affect other "
-"tasks or members of  the project. Carefully manage this part because some "
-"team members will  want to pontificate and spend more time than is really "
-"needed. Remember, you’re the project manager."
+"                                Walk through your project plan and allow each team member to provide a brief status of assignments due this week and tasks planned for the next two  weeks. You want to know whether tasks are on track and if any will miss  their projected deadline. You also want to allow the team member to share  any special considerations that might affect other tasks or members of  the project. Carefully manage this part because some team members will  want to pontificate and spend more time than is really needed. Remember, you’re the project manager."
 msgstr ""
-"<strong> Prehľad stavu projektového plánu (20 min) </strong>\n"
-"Prejdite plánom projektu a umožnite každému členovi tímu poskytnúť stručný "
-"stav úloh na tento týždeň a úloh plánovaných v najbližších dvoch týždňoch. "
-"Chcete vedieť, či úlohy sú na správnej ceste, a či niektoré nedodržia "
-"plánovaný termín. Taktiež chcete od členov tímu zdieľanie akýchkoľvek "
-"zvláštnych ohľadov, ktoré by mohli ovplyvniť ďalšie úlohy alebo členov "
-"projektu. Starostlivo riadťe túto časť, pretože niektorí členovia tímu bude "
-"chcieť kázať a tráviť viac času, než je v skutočnosti potrebné. Pamätajte "
-"si, že vy ste projektový manažér."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong> Q&amp;A and discussion time (10 min)</strong>\n"
-"                                Always give your team time to ask questions "
-"on issues that were not discussed. This gives you another opportunity to "
-"reinforce key points that you've picked up during the week or discovered "
-"during the meeting."
+"                                Always give your team time to ask questions on issues that were not discussed. This gives you another opportunity to reinforce key points that you've picked up during the week or discovered during the meeting."
 msgstr ""
-"<strong> Q&amp;A a čas na diskusiu (10 min)</strong>\n"
-"Vždy dajte čas svojmu tímu klásť otázky k problémom, ktoré neboli "
-"prerokované. To vám dáva ďalšiu príležitosť na posilnenie kľúčových bodov, "
-"ktoré ste si vybrali počas týždňa alebo objavených počas zasadnutia."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong> Roll call (5 min)</strong>\n"
-"                                Let everyone know who is in attendance "
-"before starting. This is important  for remote team members who have dialled "
-"in and will save you time later."
+"                                Let everyone know who is in attendance before starting. This is important  for remote team members who have dialled in and will save you time later."
 msgstr ""
-"<strong> Čítanie prezencie (5 min)</strong>\n"
-"Dajte všetkým vedieť, kto je prítomný pred začatím. To je dôležité pre "
-"vzdialených členov tímu, ktorí sa pripojili vytočením a ušetrí vám čas "
-"neskôr."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong> Summary and follow-up items (5 min)</strong>\n"
-"                                Always wrap up with a project status summary "
-"and a list of action items  dentified in the meeting to help move the "
-"project along."
+"                                Always wrap up with a project status summary and a list of action items  dentified in the meeting to help move the project along."
 msgstr ""
-"<strong> Zhrnutie a položky na naviazanie (5 min)</strong>\n"
-"Vždy končite so zhrnutím stavu projektu a zoznam akčných položiek "
-"identifikovaných na zasadnutí pre posunutie projektu ďalej."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"<strong>A great feature in Odoo is the integration of a Collaborative "
-"Notepad called Etherpad.</strong><br/>\n"
-"                            It replaces the standard Description area in "
-"Tasks and Issues and is extremely useful for several cases."
+"<strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>\n"
+"                            It replaces the standard Description area in Tasks and Issues and is extremely useful for several cases."
 msgstr ""
-"<strong>Skvelá funkcia v Odoo je integrácia spolupracujúcim zápisníkom s "
-"názvom Etherpad.</strong><br/>\n"
-"Nahrádza štandardnú Opis oblasť v Úlohác a problémoch a je veľmi užitočný "
-"pre niekoľko prípadov."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -693,25 +486,18 @@ msgid ""
 "<strong>A problem or request from a customer</strong> that needs to be "
 "identified, solved and followed up asap."
 msgstr ""
-"<strong>Problém alebo žiadosť zákazníka</strong> ktoré majú byť "
-"identifikované, vyriešené a čo najskôr má byť na ne nadviazané."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>About Employees:</strong>"
-msgstr "<strong>O zamestnancoch:</strong>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Add a Deadline</strong><br/>\n"
-"                                    The deadline will help you determine if "
-"a task or issue is progressing as expected  and to anticipate its next "
-"update."
+"                                    The deadline will help you determine if a task or issue is progressing as expected  and to anticipate its next update."
 msgstr ""
-"<strong>Pridať uzávierku</strong><br/>\n"
-"Uzávierka vám pomôže určiť, či úloha alebo problém pokračuje, ako sa "
-"očakávalo, a predvídať jeho ďalšiu aktualizáciu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -719,63 +505,42 @@ msgid ""
 "<strong>An internal activity</strong> that should be done within a defined "
 "period of time."
 msgstr ""
-"<strong>Interná aktivita</strong> ktorá by mala byť uskutočnená v rámci "
-"definovaného časového obdobia."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Analyze reports</strong> (every a year)"
-msgstr "<strong>Analyzujte výkazy</strong> (každý rok)"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Approve your Timesheets</strong> (every week)"
-msgstr "<strong>Schváľte svoje časové rozvrhy</strong> (každý týždeň)"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Ask participants to prepare</strong><br/>\n"
-"                                To run an effective meeting, prepare "
-"participants beforehand. Inform them of how they are expected to contribute."
+"                                To run an effective meeting, prepare participants beforehand. Inform them of how they are expected to contribute."
 msgstr ""
-"<strong>Požiadajte účastníkov, aby sa pripravili</strong><br/>\n"
-"Ak chcete viesť efektívne stretnutia, pripravte účastníkov vopred. "
-"Informujte ich o tom, ako sa očakáva, že prispejú."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Be careful about the messages you send</strong><br/>\n"
-"                                    Sending a message through Odoo will "
-"automatically send an email containing your message to all the followers "
-"including internal employees, external users or customers."
+"                                    Sending a message through Odoo will automatically send an email containing your message to all the followers including internal employees, external users or customers."
 msgstr ""
-"<strong>Budťe opatrný aké posielate správy</strong><br/>\n"
-"Odoslanie správy prostredníctvom Odoo automaticky odošle e-mail obsahujúci "
-"vašu správu všetkým odoberateľom, vrátane interných zamestnancov, externých "
-"užívateľov či zákazníkov."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Billing</strong>"
-msgstr "<strong>Účtovanie</strong>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Choose the right day</strong><br/>\n"
-"                                    Avoid Monday mornings as your regular "
-"meeting day; choosing to meet later in the week gives participants time to "
-"get ready for the meeting and to work toward specific objectives in the days "
-"that follow."
+"                                    Avoid Monday mornings as your regular meeting day; choosing to meet later in the week gives participants time to get ready for the meeting and to work toward specific objectives in the days that follow."
 msgstr ""
-"<strong>Vyberte správny deň</strong><br/>\n"
-"Vyhnite sa pondelku ráno ako vásmu zasadaciemu času; stretávanie neskôr v "
-"týždni\n"
-"dáva účastnikom čas pripraviť sa na stretnutie, a pracovať  na špecifických "
-"cieľoch \n"
-"v nasledujúcich dňoch."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -783,50 +548,35 @@ msgid ""
 "<strong>Click on 'Reporting' on the main menu</strong> and generate "
 "statistics relevent to each profiles:"
 msgstr ""
-"<strong>Kliknite na 'Výkazy' v hlavnom menu</strong> a generujte štatistiky "
-"týkajúce sa jednotlivých profilov:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Contact us now:</strong><br/>"
-msgstr "<strong>Kontaktujte nás:</strong><br/>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Create tasks and issues by email</strong><br/>\n"
-"                                In Odoo, every project has an email alias. "
-"If you send an email to this alias, it will automatically create a task or "
-"issue in the first stage of the project, with all the email recipients as "
-"its default followers."
+"                                In Odoo, every project has an email alias. If you send an email to this alias, it will automatically create a task or issue in the first stage of the project, with all the email recipients as its default followers."
 msgstr ""
-"<strong>Vytvárajte úlohy a záležitosti emailom</strong><br/>\n"
-"V Odoo, každý projekt má e-mailový alias. Ak odošlete e-mail na tento alias, "
-"automaticky to vytvorí úlohu alebo záležitosť v prvej fáze projektu, so "
-"všetkými príjemcami e-mailu ako predvolenými odberateľmi."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Define a Naming Convention</strong><br/>\n"
-"                                    Add keywords in the 'Task title' field, "
-"for example [Customer name] or [Website]. This will help you navigate and "
-"search through the dozens of tasks in your project."
+"                                    Add keywords in the 'Task title' field, for example [Customer name] or [Website]. This will help you navigate and search through the dozens of tasks in your project."
 msgstr ""
-"<strong>Definujte pomenovanie konvencie</strong><br/>\n"
-"Pridajte kľúčové slová do poľa 'Názov úlohy', napríklad [Meno zákazníka] "
-"alebo [Webstránka]. Toto vám pomôže  navigovať a vyhľadávať v tuctoch úloh "
-"vo vašom projekte."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Enter your activities</strong> (every day)"
-msgstr "<strong>Zadajte svoje aktivity</strong> (každý deň)"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Example: </strong>"
-msgstr "<strong>Príklad: </strong>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -834,8 +584,6 @@ msgid ""
 "<strong>Exercise:</strong> Try to create a graph with the monthly evolution "
 "of the 'Average delay to close'  of Issues."
 msgstr ""
-"<strong>Cvičenie:</strong> Pokúste sa vytvoriť graf s mesačnou evolúciou "
-"'Priemerné zdržanie k zavretiu' pre Problémy."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -843,59 +591,49 @@ msgid ""
 "<strong>Exercise:</strong> Try to get a view of the workload for this week "
 "for all your employees (planned hours)."
 msgstr ""
-"<strong>Cvičenie:</strong> Pokúste sa získať prehľad o pracovnej záťaži "
-"všetkých vašich zamestnancov (plánované hodiny)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Follow every meeting with a recap email</strong>\n"
-"                                    As soon as the meeting is over, publish "
-"meeting minutes and distribute them along with the updated project schedule, "
-"issues/action item matrix, and  any other appropriate documents. Try to use "
-"the same template throughout meetings and improve it continuously."
+"                                    As soon as the meeting is over, publish meeting minutes and distribute them along with the updated project schedule, issues/action item matrix, and  any other appropriate documents. Try to use the same template throughout meetings and improve it continuously."
 msgstr ""
-"<strong>Pošlite email so zhrnutím po každom stretnutí</strong>\n"
-"Akonáhle schôdzka skončí,  rozošlite záznamy z nej a distribuujte ich "
-"spoločne s aktualizovaným harmonogramom projektu, problémami / základnou "
-"matricou akcií a v akýchkoľvek ďalších príslušných dokumentoch. Skúste "
-"použiť rovnakú šablónu na každom stretnutí a neustále ju zlepšujte."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid ""
+"<strong>Follow only what you need</strong><br/>\n"
+"                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks or issues of a project."
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For issues:</strong>"
-msgstr "<strong>Pre problémy:</strong>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For tasks:</strong>"
-msgstr "<strong>Pre úlohy:</strong>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Getting reports</strong> on what your employees are working on"
-msgstr "<strong>Získavanie výkazov</strong> na čom pracujú vaši zamestnanci"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Getting statistics</strong> on how much time a task takes to be "
 "completed"
-msgstr "<strong>Získavanie štatistík</strong> o trvaní ukončenia jednej úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Have Clear Responsibilities</strong><br/>\n"
-"                                    The person assigned to a task is "
-"responsible for its progress and their avatar is displayed in Kanban view "
-"for quick reference. Of course, the responsibility for a task can change "
-"depending on its stage."
+"                                    The person assigned to a task is responsible for its progress and their avatar is displayed in Kanban view for quick reference. Of course, the responsibility for a task can change depending on its stage."
 msgstr ""
-"<strong>Majte jasné zodpovednosti</strong><br/>\n"
-"Osoba priradená k úlohe, je zodpovedná za jej pokrok a jeho avatar sa "
-"zobrazí v Kanban zobrazení pre rýchlu orientáciu. Samozrejme, že "
-"zodpovednosť za úlohu sa môže meniť v závislosti na jej priebehu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -904,13 +642,9 @@ msgid ""
 "are just marked  as 'Ready for next stage (using the status icon) by the "
 "person responsible for the current stage. Then, the person responsible for "
 "the next stage  takes the task and moves it to the next stage. This is the "
-"best way to work if you have diluted responsibilities for your Kanban stages."
+"best way to work if you have diluted responsibilities for your Kanban "
+"stages."
 msgstr ""
-"<strong>V režime 'Ťahanie'</strong>,úlohy pripravené postúpiť do ďalšej fázy "
-"sú označené \"Pripravené pre ďalšiu fázu (pomocou ikony stavu) osobou "
-"zodpovednou za súčasnú fázu. Potom, osoba zodpovedná za ďalšiu fázu ju splní "
-"a presunie ju do ďalšej fázy. Toto je najlepší spôsob, ako pracovať, ak máte "
-"oslabené zodpovednosti pre vaše Kanban fázy."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -920,119 +654,82 @@ msgid ""
 "stage. This is a simple way to work but only functions well if you work "
 "alone."
 msgstr ""
-"<strong>V režime 'Tlačenie'</strong>, úlohy su pretlačené (akonáhle uspokoja "
-"všetky požiadavky) osobou zodpovednou za súčasnú fázu. Toto je jednoduchy "
-"spôsob práce, ale funguje dobre iba keď pracujete sám."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Invoice your customers</strong> (every month)"
-msgstr "<strong>Faktúrujte svojich zákazníkov</strong> (každý mesiac)"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Invoicing your customers</strong> on Time &amp; Material projects"
 msgstr ""
-"<strong>Faktúrovanie vašich zákazníkov</strong> včas &amp; Materiálove "
-"projekty"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Need help to structure your projects?</strong><br/>"
-msgstr "<strong>Potrebujete pomoc štruktúrovať vaše projekty?</strong><br/>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Need help with Timesheets management? Contact us now:</strong><br/>"
 msgstr ""
-"<strong>Potrbujete pomoc so spravovaním časových výkazov? Kontaktujte nás:</"
-"strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Need help with defining your Projects? Contact us now.</strong><br/>"
 msgstr ""
-"<strong>Potrebujete pomoc s definovaním vašich projektov?? Kontaktujte nás.</"
-"strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Notes</strong>"
-msgstr "<strong>Poznámky</strong>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Prepare yourself as well</strong><br/>\n"
-"                                As project manager, you also need to be "
-"fully prepared. There should be no surprises during the meeting. Surprises "
-"can undermine your ability to manage the project and cause team members to "
-"lose confidence in you."
+"                                As project manager, you also need to be fully prepared. There should be no surprises during the meeting. Surprises can undermine your ability to manage the project and cause team members to lose confidence in you."
 msgstr ""
-"<strong>Tiež sa pripravte</strong><br/>\n"
-"Ako projektový manažér musíte byť tiež plne pripravený. Počas stretnutia by "
-"nemali byť žiadne prekvapenia. Prekvapenia môžu podkopnúť vašu schopnosť "
-"viesť projekt a spôsobiť členom vášho tímu stratu dôvery vo vás."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr "<strong>Odporúčané akcie:</strong>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Rely on the chatter</strong><br/>\n"
-"                                    Below every Task and Issue (or more "
-"generally, below every Document in Odoo) is an area called Chatter."
+"                                    Below every Task and Issue (or more generally, below every Document in Odoo) is an area called Chatter."
 msgstr ""
-"<strong>Spoľahnite sa na chatter</strong><br/>\n"
-"Pod každou úlohou a problémom (alebo všeobecnejšie, pod každým dokument v "
-"Odoo) je oblasť s názvom Chatter."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Set Priorities</strong><br/>\n"
-"                                    The <i class=\"fa fa-star\"/> is used to "
-"indicate priority: in Kanban views, high priority Tasks or Issues will be "
-"displayed on top. This is particulary useful if you use a Scrum methodology "
-"to indicate the tasks for the week. Similarly to Status, you can change the "
-"meaning of the Star indicator from the Project Stages tab."
+"                                    The <i class=\"fa fa-star\"/> is used to indicate priority: in Kanban views, high priority Tasks or Issues will be displayed on top. This is particulary useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab."
 msgstr ""
-"<strong>Nastavte priority</strong><br/>\n"
-"<i class=\"fa fa-star\"/> sa používa na určovanie priority: v Kanban "
-"zobrazeniach, ǔlohy albo Problémy s vysokou prioritou budú zobrazené na "
-"vrchu. Toto je obzvlášť nápomocné ak používate Scrum metodológiu pre "
-"určovanie úloh na týždeň. Podobne ako pri Stave, môžete zmeniť význam "
-"indikátora hviezdy zo záložky Fázy projektu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Stages and Requirements</strong> for next stage:"
-msgstr "<strong>Fázy a Požiadavky</strong> pre ďalšiu fázu:"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Start with an answer.</strong><br/>\n"
-"                                The worst question to ask is, \"What did you "
-"do this week?\" It invariably  generates unnecessary, time-consuming "
-"dialogue from team members. Plus, you should already know what everyone on "
-"the team did during the week."
+"                                The worst question to ask is, \"What did you do this week?\" It invariably  generates unnecessary, time-consuming dialogue from team members. Plus, you should already know what everyone on the team did during the week."
 msgstr ""
-"<strong>Začnite s odpoveďou.</strong><br/>\n"
-"Najhoršia otázka je: \"Čo si robil tento týždeň?\" To vždy vytvára zbytočné, "
-"časovo náročné dialógy s členmi tímu. Plus, mali by ste vedieť, čo všetci v "
-"tíme robili v priebehu týždňa."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>There are two ways of managing your Kanban stages:</strong>"
-msgstr "<strong>Existujú dva spôsoby spravovania vašich Kanban fáz:</strong>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1040,8 +737,6 @@ msgid ""
 "<strong>To increase the efficiency of your Projects</strong>, you should "
 "have a look at some of our other apps:"
 msgstr ""
-"<strong>Pre zvýšenie efektivity vašich pojektov</strong>by ste sa mali "
-"pozrieť na naše dalšie aplikácie:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1049,87 +744,51 @@ msgid ""
 "<strong>To use Collaborative Notepads</strong>, simply activate the "
 "corresponding option in your"
 msgstr ""
-"<strong>Pre používanie kolaboratívnych zápisníkov</strong>, jednoduche "
-"aktivujte zodpovedajúcu možnosť vo vašom"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Use Status Indicator</strong><br/>\n"
-"                                    The Status indicator helps you manage "
-"Tasks and Issues by giving them one of 3 different colour: Grey, Green or "
-"Red. The meaning of these Statuses can be freely configured, for example:"
+"                                    The Status indicator helps you manage Tasks and Issues by giving them one of 3 different colour: Grey, Green or Red. The meaning of these Statuses can be freely configured, for example:"
 msgstr ""
-"<strong>Použite indikátor stavu</strong><br/>\n"
-"Indikátor stavu vám pomáha spravovať úlohy a problémy pridelením jednej z 3 "
-"rôznych\n"
-"farieb: šedá, zelená a červená. Význam týchto stavov môže byť voľne "
-"konfigurovaný, napríklad:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Use Tags</strong><br/>\n"
-"                                    Tags  are complementary to your project "
-"stages: they can work as a second  level categorization which is very useful "
-"if you have a lot of Tasks or Issues to manage. Also, it becomes very easy "
-"to find Tasks or Issues by typing  the Tag into the main Search bar."
+"                                    Tags  are complementary to your project stages: they can work as a second  level categorization which is very useful if you have a lot of Tasks or Issues to manage. Also, it becomes very easy to find Tasks or Issues by typing  the Tag into the main Search bar."
 msgstr ""
-"<strong>Požívajte menovky</strong><br/>\n"
-"Menovky sú komplementárne k vašim fázam projektu: môžu pracovať ako druhý "
-"stupeň kategorizácie, ktorý je veľmi užitočný, ak máte veľa úloh alebo "
-"problémov na spravovanie. Taktiež bude veľmi ľahké nájsť úlohy alebo "
-"problémy zadaním menovky do prehľadávača na hlavnom paneli."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>What Activities</strong> would you like to manage?"
-msgstr "<strong>Aké aktivity</strong> by ste chceli spravovať?"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>What do you expect</strong> from using Odoo Project?"
-msgstr "<strong>Čo očakávate</strong> od používania Odoo Projekt?"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>You have different users writing Tasks descriptions</strong><br/>\n"
-"                            It can quickly become messy if everyone uses his "
-"own layout. Etherpad will allow you to create a basic template with a few "
-"titles and bullet points, making it much easier for everyone."
+"                            It can quickly become messy if everyone uses his own layout. Etherpad will allow you to create a basic template with a few titles and bullet points, making it much easier for everyone."
 msgstr ""
-"<strong>Máte rôznych používateľov píšucich popisy Úloh </strong><br/>\n"
-"To sa môže rýchlo stať nepríjemné, ak každý používa svoje vlastné "
-"rozloženie. Etherpad vám umožní vytvoriť základné šablóny s niekoľkými "
-"titulmi a odrážkami bodov, takže to všetkým uľahčuje."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>You have to manage versions and track changes</strong><br/>\n"
-"                            Etherpad auto-saves the document at regular "
-"short intervals and users can permanently save specific versions at any "
-"time. Plus, a \"time slider\" feature also allows anyone to explore the "
-"history of the pad."
+"                            Etherpad auto-saves the document at regular short intervals and users can permanently save specific versions at any time. Plus, a \"time slider\" feature also allows anyone to explore the history of the pad."
 msgstr ""
-"<strong>Musíte spravovať verzie a sledovať zmeny</strong><br/>\n"
-"Etherpad auto-uloží dokument v pravidelných krátkych intervaloch a "
-"užívatelia môžu trvale uložiť určité verzie kedykoľvek. Plus, funkcia "
-"\"posúvač času\" tiež umožňuje komukoľvek preskúmať históriu notesu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>You organize distant meetings</strong><br/>\n"
-"                            Etherpad allows users to simultaneously edit a "
-"text document, see all of the edits in real-time and with the ability to "
-"display each author's text in their own color."
+"                            Etherpad allows users to simultaneously edit a text document, see all of the edits in real-time and with the ability to display each author's text in their own color."
 msgstr ""
-"<strong>Organizujete stretnutia na ďiaľku</strong><br/>\n"
-"Etherpad umožňuje používateľom súčasne upravovať dokument, vidieť vśetky "
-"úpravy v reálnom čase a s možnosťou zobraziť text každého autora jeho "
-"vlastnou farbou."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_defaults
@@ -1137,38 +796,21 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Slovník jazyka Python ktorý bude vyhodnotený na  poskytnutie predvolených "
-"hodnôt pri vytváraní nových záznamov pre tento alias."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "A customer sends a complaint to support@yourcompany.com: an Issue is "
-"automatically created into a 'Support level 1' project based on the original "
-"email from the customer."
+"automatically created into a 'Support level 1' project based on the original"
+" email from the customer."
 msgstr ""
-"Zákazník pošle sťažnosť na podpora@vasaspolocnost.com: autmaticky sa vytvorí "
-"Problém do 'Podpora úroveň 1' projektu, založený na pôvodnom emaily od "
-"zákazníka."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"A project usually involves many stakeholders, be it the project's sponsor, "
-"resources, customers or external contractors. But the most important person "
-"in a project is usually the Project Manager.<br/>\n"
-"                    In Odoo, the Project Managers have the responsibility of "
-"managing the Kanban view: they ensure smooth progression of the projects, "
-"minimal downtime between stages and optimal work distribution between "
-"resources."
+"A project usually involves many stakeholders, be it the project's sponsor, resources, customers or external contractors. But the most important person in a project is usually the Project Manager.<br/>\n"
+"                    In Odoo, the Project Managers have the responsibility of managing the Kanban view: they ensure smooth progression of the projects, minimal downtime between stages and optimal work distribution between resources."
 msgstr ""
-"Projekt zvyčajne zahŕňa mnoho zúčastnených strán, či už je to sponzor "
-"projektu, zdroje, zákazníci či externý dodávatelia. Ale najdôležitejšou "
-"osobou v projekte je obvykle Projektový manažér.<br/>\n"
-"V Odoo, projektoví manažéri majú zodpovednosť za sprvovanie Kanban "
-"zobrazeni: zaisťujú\n"
-"hladký priebeh projektov, minimálne zdržania medzi fázami a optimálnu\n"
-"distribúciu práce medzi zdroje."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_kanban_state
@@ -1176,31 +818,25 @@ msgid ""
 "A task's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
-" * Ready for next stage indicates the task is ready to be pulled to the next "
-"stage"
+" * Ready for next stage indicates the task is ready to be pulled to the next stage"
 msgstr ""
-"Kanban stav úlohy určuje šéciálne situácie ktoré ho ovplyvňujú:\n"
-"* Normálna je prednastavená situácia\n"
-"* Zablokované označuje že niečo bráni progresu tejto úlohy\n"
-"* Pripravený pre ďalšiu fázu indikuje, že úloha pripravená na ťah do ďalšej "
-"fázy"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Accept Emails From"
-msgstr "Akceptovanie emailov od"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Account Preferences"
-msgstr "Preferencie účtu"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:38
 #, python-format
 msgid "Action has a clear description"
-msgstr "Akcia má jasný popis"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1208,8 +844,6 @@ msgid ""
 "Activate 'Allow invoicing based on timesheets' from the <i>Human Resources "
 "Settings</i>."
 msgstr ""
-"Aktivujte 'Povoliť faktúrovanie založené na časových výkazoch' v "
-"<i>Nastavenia ľudských zdrojov</i>."
 
 #. module: project
 #: model:ir.actions.server,name:project.activate_sample_project
@@ -1220,12 +854,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_active
 #: model:ir.model.fields,field_description:project.field_project_task_active
 msgid "Active"
-msgstr "Aktívny"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
-msgstr "Pridajte popis..."
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1246,51 +880,50 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:55
 #, python-format
 msgid "Added in current sprint"
-msgstr "Pridané v súčasnom priebehu"
+msgstr ""
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
 msgid "Advanced"
-msgstr "Pokročilé"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_id
 msgid "Alias"
-msgstr "Alias"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_contact
 msgid "Alias Contact Security"
-msgstr "Alias kontakt bezpečnosti"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model
 msgid "Alias Model"
-msgstr "Alias model"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_name
 msgid "Alias Name"
-msgstr "Alias názov"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_domain
 msgid "Alias domain"
-msgstr "Alias doména"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model_id
 msgid "Aliased Model"
-msgstr "Aliasovaný model"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Also, lead by example. When your team members see how prepared you are it "
-"will  reinforce the need for each of them to be prepared for status meetings."
+"will  reinforce the need for each of them to be prepared for status "
+"meetings."
 msgstr ""
-"Taktiež, vedťe príkladom. Keď členovia vášho tímu uvidia ako ste pripravený, "
-"posilní to potrebu aby sa každý z nich pripravoval na stretnutia."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1298,8 +931,6 @@ msgid ""
 "Alternatively, Timesheets can be added directly from Tasks by activating "
 "<strong>'Log work activities on tasks'</strong> in the"
 msgstr ""
-"Eventuálne, časové rozvrhy môžu byť pridané priamo z úloh aktivovaním "
-"<strong>'Hlásenie pracovnej činnosti na úlohách'</strong> v"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1307,82 +938,75 @@ msgid ""
 "An internal message will not send any email notification, but your message "
 "will still be displayed to every user that has access to the page."
 msgstr ""
-"Interná správa nebude posielať žiadne emailové notifikácie, ale vaša správa "
-"bude stále zobrazená každému používateľovi, ktorý má prístup na stránku."
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
 #: model:ir.model.fields,field_description:project.field_project_project_name
 msgid "Analytic Account"
-msgstr "Analytický účet"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_line_ids
 msgid "Analytic Lines"
-msgstr "Analytické riadky"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"Another good way to limit the number of notifications you receive is to only "
-"follow your Project's 'Task Assigned' events.  Then you'll be notified when "
-"a Task or Issue is created, and can  manually decide if you want to be "
+"Another good way to limit the number of notifications you receive is to only"
+" follow your Project's 'Task Assigned' events.  Then you'll be notified when"
+" a Task or Issue is created, and can  manually decide if you want to be "
 "notified for its other events too."
 msgstr ""
-"Ďalším dobrým spôsobom, ako obmedziť počet notifikácií ktoré dostanete, je "
-"len odoberať udalosti \"Pridelené úlohy\" vášho projektu. Budete upozornený "
-"pri vytvorení úlohy alebo problému, a môžete manuálne rozhodnúť, či chcete "
-"byť upozornený tiež na svojich ďalších akciách."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Apply"
-msgstr "Použiť"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
-msgstr "Archivovaný"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
 msgid "Assignation Date"
-msgstr "Dátum pridelenia"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Assignation Month"
-msgstr "Mesiac pridelenia"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr "Pridelené úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_user_id
 msgid "Assigned To"
-msgstr "Pridelené (komu)"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_id
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
-msgstr "Pridelené (komu)"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_assign
 msgid "Assigning Date"
-msgstr "Dátum pridelenia"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid ""
 "At each stage employees can block or make task/issue ready for next stage.\n"
-"                                You can define here labels that will be "
-"displayed for the state instead\n"
+"                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
 
@@ -1394,27 +1018,23 @@ msgid ""
 "                            entries are correctly encoded. This can be done\n"
 "                            from the"
 msgstr ""
-"Na konci týždňa, každý zamestnanec by mal skontrolovať\n"
-"svoje vstupy pre ten týždeň a ustiť sa že\n"
-"vstupy sú správne zakódované. Toto môže byť spravené\n"
-"z"
 
 #. module: project
 #: code:addons/project/models/project.py:115
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
 #, python-format
 msgid "Attachments"
-msgstr "Prílohy"
+msgstr ""
 
 #. module: project
 #: selection:project.config.settings,generate_project_alias:0
 msgid "Automatically generate an email alias at the project creation"
-msgstr "Automaticky vytvoriť email alias pri vytvorení projektu"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Available on the Apple Store"
-msgstr "Dostupné v Apple Store"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1422,8 +1042,6 @@ msgid ""
 "Back at the office, the manager splits the customer's requests into several "
 "tasks and delegates them to several employees."
 msgstr ""
-"Späť v kancelárii, manažér rozdelí požiadavky od zákazníka do niekoľkých "
-"úloh a pridelí je ich niekoľkým zamestnancom."
 
 #. module: project
 #. openerp-web
@@ -1432,22 +1050,22 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:63
 #, python-format
 msgid "Backlog"
-msgstr "Nevybavené"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_balance
 msgid "Balance"
-msgstr "Bilancia"
+msgstr ""
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_1
 msgid "Basic"
-msgstr "Základ"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Basic Management"
-msgstr "Základný menežment"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1455,30 +1073,20 @@ msgid ""
 "Be aware of the team’s productivity and time: try to keep meetings to one "
 "hour or less."
 msgstr ""
-"Buďte si vedomí produktivitou a časom tímu: pokúste sa udržať stretnutia do "
-"jednej hodiny alebo menej."
 
 #. module: project
 #: selection:project.task,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Blocked"
-msgstr "Blokované"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"But because change is never easy, we've created this Planner to guide you."
-"<br/>\n"
-"                        For example, you'll understand why you shouldn’t use "
-"Odoo to plan but instead to\n"
-"                        collaborate, or why organizing your projects by role "
-"is wrong."
+"But because change is never easy, we've created this Planner to guide you.<br/>\n"
+"                        For example, you'll understand why you shouldn’t use Odoo to plan but instead to\n"
+"                        collaborate, or why organizing your projects by role is wrong."
 msgstr ""
-"Ale pretože zmena nie je nikdy jednoduchá, vytvorili sme tento Plánovač aby "
-"vás viedol.<br/>\n"
-"Napríklad, porozumiete prečo by ste nemali používať Odoo na plánovanie ale "
-"na\n"
-"kolaborovanie, alebo prečo organizovanie vašich projektov podľa role je zlé."
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_10
@@ -1496,17 +1104,17 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_7
 #: model:project.task.type,legend_done:project.project_stage_1
 msgid "Buzz or set as done"
-msgstr "Buzz alebo nastaviť ako dokončené"
+msgstr ""
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
-msgstr "Podľa zodpovedného"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Cancel"
-msgstr "Zrušiť"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1516,19 +1124,18 @@ msgstr "Zrušiť"
 #: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
-msgstr "Zrušené"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Change their Stages in the Project Stages tab"
-msgstr "Zmeniť ich fázu v záložke Fáz projektu"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_use_tasks
 #: model:ir.model.fields,help:project.field_project_project_use_tasks
 msgid "Check this box to manage internal activities through this project"
 msgstr ""
-"Zaškrtnite, ak chcete riadiť vnútorné činnosti prostredníctvom tohto projektu"
 
 #. module: project
 #. openerp-web
@@ -1549,7 +1156,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:54
 #, python-format
 msgid "Clear description and purpose"
-msgstr "Jasný popis a cieľ"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1576,12 +1183,12 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
 msgid "Click to add a new tag."
-msgstr "Kliknite pre zadanie novej menovky."
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
 msgid "Click to add a stage in the task pipeline."
-msgstr "Kliknite pre pridanie fázy v postupnosti úloh."
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -1591,24 +1198,24 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,module_pad:0
 msgid "Collaborative rich text on task description"
-msgstr "Spolupracovne bohatý text na popise úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_color
 #: model:ir.model.fields,field_description:project.field_project_tags_color
 #: model:ir.model.fields,field_description:project.field_project_task_color
 msgid "Color Index"
-msgstr "Farebný index"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Communication campaign"
-msgstr "Komunikačná kampaň"
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
 msgid "Companies"
-msgstr "Spoločnosti"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_company_id
@@ -1618,19 +1225,19 @@ msgstr "Spoločnosti"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Company"
-msgstr "Spoločnost"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_company_uom_id
 #: model:ir.model.fields,field_description:project.field_project_project_company_uom_id
 msgid "Company UOM"
-msgstr "Merná jednotka spoločnosti"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Configuration"
-msgstr "Nastavenie"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1642,7 +1249,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.action_config_settings
 msgid "Configure Project"
-msgstr "Konfigurovať projekt"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1650,42 +1257,40 @@ msgid ""
 "Congratulations on choosing Odoo Project to help running your company more "
 "efficiently!"
 msgstr ""
-"Blahoželáme vám k výberu Odoo Projektu pre efektívnejšie vedenie svojej "
-"firmy!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Congratulations, you're done !"
-msgstr "Gratulácie, ste hotový!"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Consulting mission"
-msgstr "Konzultačné poslanie"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_partner_id
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Contact"
-msgstr "Kontakt"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_analytic_account_id
 msgid "Contract/Analytic"
-msgstr "Kontrakt / Analytický"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Control projects quality and satisfaction"
-msgstr "Kontrolujte projektovú kvalitu a spokojnosť"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:33
 #, python-format
 msgid "Copywriting / Design"
-msgstr "Copywriting / Dizajn"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1695,7 +1300,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create a Gantt chart with your projects tasks and deadlines"
-msgstr "Vytvorenie Ganttovho diagramu s vašimi úlohami projektov a termínami"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
@@ -1705,7 +1310,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project."
-msgstr "Vytvoriť nový projekt."
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1713,18 +1318,16 @@ msgid ""
 "Create a task by sending an email to a project alias with one of your "
 "colleagues in copy"
 msgstr ""
-"Vytvorte úlohu zaslaním emailu na alias projektu s jedným z vašich kolegov "
-"na kópii"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create at least 3 tasks"
-msgstr "Vytvorte aspoň 3 úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create bills automatically based on Time &amp; Material."
-msgstr "Vytvoriť účtenku automaticky v závislosti na Čase &amp; Materiále."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_create_date
@@ -1734,7 +1337,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create the Projects"
-msgstr "Vytvoriť Projekty"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_create_uid
@@ -1743,7 +1346,7 @@ msgstr "Vytvoriť Projekty"
 #: model:ir.model.fields,field_description:project.field_project_task_create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_create_date
@@ -1751,45 +1354,39 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:project.field_project_tags_create_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"Creating Tasks and/or Issues is the next step in managing your Projects.<br/"
-">\n"
-"                        In Odoo, it is pretty straightforward, but here are "
-"some explanations you may find useful."
+"Creating Tasks and/or Issues is the next step in managing your Projects.<br/>\n"
+"                        In Odoo, it is pretty straightforward, but here are some explanations you may find useful."
 msgstr ""
-"Vytváranie úloh a / alebo problémov je ďalší krok v spravovaní vašich "
-"projektov.<br/>\n"
-"V Odoo je to celkom priamočiare, ale tu sú niektoré vysvetlenia ktoré sa vám "
-"môžu hodiť."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Creation Date"
-msgstr "Dátum vytvorenia"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_credit
 msgid "Credit"
-msgstr "Kredit"
+msgstr ""
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_cumulative_flow
 msgid "Cumulative Flow"
-msgstr "Kumulatívny tok"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_currency_id
 msgid "Currency"
-msgstr "Mena"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Current Timesheet"
-msgstr "Aktuálny časový rozvrh"
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:643
@@ -1798,139 +1395,130 @@ msgstr "Aktuálny časový rozvrh"
 #: model:ir.ui.view,arch_db:project.edit_project
 #, python-format
 msgid "Customer"
-msgstr "Zákazník"
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:643
 #, python-format
 msgid "Customer Email"
-msgstr "Email zákazníka"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer Service"
-msgstr "Zákaznícky servis"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:73
 #, python-format
 msgid "Customer feedback has been requested"
-msgstr "Spätná väzba od zákazníka bola vyžiadaná"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:91
 #, python-format
 msgid "Customer has cancelled repair"
-msgstr "Zákazník zrušil opravu"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer has reported new issue"
-msgstr "Zákazník nahlásil nový problém"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:70
 #, python-format
 msgid "Customer service has found new issue"
-msgstr "Zákaznícky servis našiel nový problém"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer support tickets"
-msgstr "Tikety zákazníckej podpory"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customization"
-msgstr "Prispôsobenie"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
 msgid "Dashboard"
-msgstr "Nástenka"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_deadline
 msgid "Deadline"
-msgstr "Uzávierka"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_debit
 msgid "Debit"
-msgstr "Debet"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_defaults
 msgid "Default Values"
-msgstr "Predvolené hodnoty"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
 msgid ""
 "Define the steps that will be used in the project from the\n"
-"                creation of the task, up to the closing of the task or "
-"issue.\n"
+"                creation of the task, up to the closing of the task or issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
-"Definujte kroky ktoré budú vykonané v projekte od\n"
-"vytvorenia úlohy, až po zatvorenie úlohy alebo problému.\n"
-"Použijete tieto fázy pre sledovanie pokroku v\n"
-"riešení úlohy alebo problému."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Delete"
-msgstr "Zmazať"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Depending on what you need and how you want to operate, there are several "
-"ways to work with Odoo. First, decide if you want to think in terms of tasks "
-"or issues. Then, activate the Timesheets app if you need it."
+"ways to work with Odoo. First, decide if you want to think in terms of tasks"
+" or issues. Then, activate the Timesheets app if you need it."
 msgstr ""
-"V závislosti od toho čo potrebujete a ako chcete operovať, existuje niekoľko "
-"spôsobov ako pracovať s Odoo. Po prvé, rozhodnite či chcete premýšlať v "
-"duchu úloh alebo problémov. Potom aktivujte aplikáciu časových rozvrhov ak "
-"ju budete potrebovať."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Deploy"
-msgstr "Rozmiestniť"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:19
 #, python-format
 msgid "Deployment"
-msgstr "Nasadenie"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_description
 #: model:ir.model.fields,field_description:project.field_project_task_type_description
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Description"
-msgstr "Popis"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:17
 #, python-format
 msgid "Development"
-msgstr "Vývoj"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Development Process"
-msgstr "Proces vývoja"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1938,7 +1526,7 @@ msgstr "Proces vývoja"
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #, python-format
 msgid "Discard"
-msgstr "Vyradiť"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -1948,43 +1536,43 @@ msgstr "Vyradiť"
 #: model:ir.model.fields,field_description:project.field_project_task_type_display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
 msgid "Displayed Image"
-msgstr "Zobrazený obrázok"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:34
 #, python-format
 msgid "Distribute"
-msgstr "Distribuovať"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:42
 #, python-format
 msgid "Distribution is completed"
-msgstr "Distribúcia je ukončená"
+msgstr ""
 
 #. module: project
 #: selection:project.config.settings,generate_project_alias:0
 msgid "Do not create an email alias automatically"
-msgstr "Nevytvárať alias email automaticky"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:50
 #, python-format
 msgid "Documentation"
-msgstr "Dokumentácia"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Documents"
-msgstr "Dokumenty"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1992,8 +1580,6 @@ msgid ""
 "Don't create a Project for different locations (this could isolate teams "
 "that work at different locations)."
 msgstr ""
-"Nevytvárajte projekt pre rôzne miesta (to by mohlo izolovať tímy, ktoré "
-"pracujú na rôznych miestach)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2001,18 +1587,16 @@ msgid ""
 "Don't create a Project for each of your customers - this will be too "
 "complicated to manage properly."
 msgstr ""
-"Nevytvárajte projekt pre každého zo svojich zákazníkov - to bude príliš "
-"komplikované na riadne spravovanie."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Don't hesitate to"
-msgstr "Neváhajte"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Don't hesitate to select only the events you are interested in!"
-msgstr "Neváhajte a vyberte len tie udalosti, ktoré vás zaujímajú!"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2023,14 +1607,14 @@ msgstr "Neváhajte a vyberte len tie udalosti, ktoré vás zaujímajú!"
 #: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
-msgstr "Dokončiť"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "During a meeting, a customer asks a manager for a few modifications to a "
 "project."
-msgstr "Počas stretnutia, zákazník žiada menežéra o niekoľko úprav projektu."
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2038,46 +1622,48 @@ msgid ""
 "Each employee will have his own task, while the manager will be able to "
 "follow the global progress in the Kanban view of the project."
 msgstr ""
-"Každý zamestnanec bude mať svoju vlastnú úlohu, zatiaľ čo manažér bude môcť "
-"sledovať globálny pokrok v Kanban zobrazení projektu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit Task"
-msgstr "Upraviť úlohu"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Email Alias"
-msgstr "Alias Email"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
+msgid "Email Template"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Emails"
-msgstr "Email"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "End"
-msgstr "Koniec"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_end
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_end
 msgid "Ending Date"
-msgstr "Dátum ukončenia"
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:418
 #, python-format
 msgid "Error ! Task starting date must be lower than its ending date."
-msgstr "Chyba! Dátum začatia úlohy musí byť nižší, než je jeho koncový dátum."
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.project:0
 msgid "Error! project start-date must be lower than project end-date."
 msgstr ""
-"Chyba! Dátum začiatku projektu musí byť nižší ako dátum konca projektu."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_planned_hours
@@ -2085,50 +1671,37 @@ msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
 msgstr ""
-"Odhadovaný čas na vykonanie úlohy, väčšinou nastavený projektovým menežérom "
-"keď je úloha v stave návrhu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"Even if there is no specific field in Odoo, it's important to define a "
-"person responsible for each stage of your Project.<br/>\n"
-"                        This person will have the responsibility for "
-"validating each stage and ensuring that the requirements to move to the next "
-"stage are met."
+"Even if there is no specific field in Odoo, it's important to define a person responsible for each stage of your Project.<br/>\n"
+"                        This person will have the responsibility for validating each stage and ensuring that the requirements to move to the next stage are met."
 msgstr ""
-"Aj keď neexistuje žiadne konkrétne pole v Odoo, je dôležité definovať osobu "
-"zodpovednú za každú fázu váśho projektu.<br/>\n"
-"Táto osoba bude mať zodpovednosť za overovanie každej etapy, a zabezpečí, "
-"aby boli splnené požiadavky pre presun na ďalšiu fázu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Every business is different.<br/>\n"
-"                    Odoo allows you to customize every application and it's "
-"usually a good idea to customize screens to fit your project needs."
+"                    Odoo allows you to customize every application and it's usually a good idea to customize screens to fit your project needs."
 msgstr ""
-"Každý podnik je iný.<br/>\n"
-"Odoo umožňuje prispôsobiť každú aplikáciu, a zvyčajne je dobrý nápad "
-"prispôsobiť obrazovky aby vyhovovala potrebám vášho projektu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Examples"
-msgstr "Príklady"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:74
 #, python-format
 msgid "Expert advice has been requested"
-msgstr "Odborná rada bola vyžiadaná"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date
 msgid "Expiration Date"
-msgstr "Dátum expirácie"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_legend_priority
@@ -2136,37 +1709,35 @@ msgid ""
 "Explanation text to help users using the star and priority mechanism on "
 "stages or issues that are in this stage."
 msgstr ""
-"Vysvetllovací text, ktorý pomôžu užívateľom pomocou hviezdy a prioritného "
-"mechanizmu na fázach alebo problémoch, ktoré sú v tejto fáze."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr "Rozšírené filtre"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Extra Info"
-msgstr "Ďalšie informácie"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Extra useful for when you're with a customer or in a meeting."
-msgstr "Extra užitočné, keď ste so zákazníkom alebo v stretnutí."
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:88
 #, python-format
 msgid "Feedback from customer requested"
-msgstr "Spätná väzba od zákazníka vyžiadaná"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:26
 #, python-format
 msgid "Finally task is deployed"
-msgstr "Nakoniec je úloha nasadená"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
@@ -2179,18 +1750,16 @@ msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
 msgstr ""
-"Odoberajte tento projekt pre automatické sledovanie udalostí spojených s "
-"úlohami a problémami tohto projektu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Followed by Me"
-msgstr "Odoberané mňou"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "For employees, the"
-msgstr "Pre zamestnancov"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2198,8 +1767,6 @@ msgid ""
 "For example, risk and issue owners should come prepared to share the status "
 "of their item and, ideally, a path to resolution."
 msgstr ""
-"Napríklad, vlastníci risku a problémov by mali prísť pripravený zdielať stav "
-"ich položky a ideálne, cestu k vyriešeniu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2207,68 +1774,63 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
-"Pre Odoo Team,<br/>\n"
-"Fabien Pinckaers, Zakladateľ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"For the same reason, don't create a Project based on weeks or time (example: "
-"Scrum)."
+"For the same reason, don't create a Project based on weeks or time (example:"
+" Scrum)."
 msgstr ""
-"Z rovnakého dôvodu, nevytvárajte projekt založený na týždňoch alebo čase "
-"(príklad: Scrum)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Forecasts"
-msgstr "Odhady"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
 msgid "Forecasts, planning and Gantt charts"
-msgstr "Odhady, plánovanie a Gantt tabuľky"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
-msgstr "Pracuje sa na tom"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Generate a timesheet report to attach to your customer invoices"
 msgstr ""
-"Vytvorte výkaz časového rozvrhu a pripojte ho svojim zákazníkom k faktúram"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get full synchronization with Odoo"
-msgstr "Získajte plnú synchronizáciu s Odoo"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get it on Google Play"
-msgstr "Získajte to na Google Play"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get more apps"
-msgstr "Získať viac aplikácií"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_label_tasks
 msgid "Gives label to tasks on project's kanban view."
-msgstr "Dáva štítok úlohám na kanban zobrazení projektu."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_sequence
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu projektov."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_sequence
 msgid "Gives the sequence order when displaying a list of tasks."
-msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu úloh."
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2276,61 +1838,57 @@ msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu úloh."
 #, python-format
 msgid ""
 "Good job! Your completed the Project Management tour. You can continue with "
-"the <b>implementation guide</b> to help you setup Project Management in your "
-"company."
+"the <b>implementation guide</b> to help you setup Project Management in your"
+" company."
 msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Good luck!"
-msgstr "Veľa štastia!"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Green: the Task is ready for next stage (the job for this stage is complete)"
 msgstr ""
-"Zelená: úloha je pripravená pre ďalšiu fázu (úloha pre túto fázu je "
-"kompletná)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Grey: the Task is in progress (someone is working on it)"
-msgstr "Šedá: ǔloha prebieha (niekto na nej pracuje)"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Group By"
-msgstr "Zoskupiť podľa"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Here are some of the <strong>available customizations</strong>"
-msgstr "Tu sú niektoré z <strong>dostupných prispôsobení</strong>"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Here, you can create new tasks"
-msgstr "Tu môžete vytvárať nové úlohy"
+msgstr ""
 
 #. module: project
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "High"
-msgstr "Vysoká"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_privacy_visibility
 msgid ""
 "Holds visibility of the tasks or issues that belong to the current project:\n"
-"- On invitation only: Employees may only see the followed project, tasks or "
-"issues\n"
+"- On invitation only: Employees may only see the followed project, tasks or issues\n"
 "- Visible by all employees: Employees may see all project, tasks or issues\n"
 "- Visible by following customers: employees see everything;\n"
-"   if website is activated, portal users may see project, tasks or issues "
-"followed by\n"
+"   if website is activated, portal users may see project, tasks or issues followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
 
@@ -2338,7 +1896,7 @@ msgstr ""
 #: code:addons/project/models/project.py:567
 #, python-format
 msgid "I take it"
-msgstr "Beriem to"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_id
@@ -2348,47 +1906,45 @@ msgstr "Beriem to"
 #: model:ir.model.fields,field_description:project.field_project_task_type_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task "
-"creation alias)"
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
 msgstr ""
-"ID nadradeného záznamu obsahujúceho alias (príklad: projekt držiaci alias "
-"vytvorenia úlohy)"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:103
 #, python-format
 msgid "Idea has been transformed into concrete actions"
-msgstr "Myšlienka bola premenená na konkrétne akcie"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:102
 #, python-format
 msgid "Idea is fully explained"
-msgstr "Myšlienka je plne vysvetlená"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Ideally, a person should only be responsible for one project."
-msgstr "V ideálnom prípade by mal človek byť zodpovedný iba za jeden projekt."
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:95
 #, python-format
 msgid "Ideas"
-msgstr "Nápady"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Identify problems and blocking points more easily"
-msgstr "Identifikujte problémy a body blokovania jednoduchšie"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_mail_template_id
@@ -2403,17 +1959,13 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
-"Ak je aktívne pole nastavené na falošne, umožní vám schovať projekt bez jeho "
-"odtránenia."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"If you don't want to receive email notifications, you can uncheck the option "
-"in your"
+"If you don't want to receive email notifications, you can uncheck the option"
+" in your"
 msgstr ""
-"Ak nechcete dostávať emailové notifikácie, môžete zrušiť zaškrtnutie voľby "
-"vo vašom"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2421,8 +1973,6 @@ msgid ""
 "If you want to limit access for certain users or customers, simply use the "
 "Privacy / Visibility settings in the Project Settings."
 msgstr ""
-"Ak chcete obmedziť prístup určitým používateľom alebo zákazníkom, stačí "
-"použiť nastavenia Súkromie / Viditeľnosť v nastavení projektu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2431,31 +1981,28 @@ msgid ""
 "extract a Timesheet of the tasks and issues to invoice directly to the "
 "customer. To do that:"
 msgstr ""
-"Ak pracujete na Čas &amp; Materiál projekte, pravdepodobne budete chciet "
-"vyňať časový rozvrh úloh a problémov pre faktúrovanie zákazníkovi. Za týmto "
-"účelom:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Implement"
-msgstr "Implementovať"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve"
-msgstr "Zlepšiť"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve collaboration with customers"
-msgstr "Zlepšite spoluprácu so zákazníkmi"
+msgstr ""
 
 #. module: project
 #: selection:project.task,kanban_state:0
 #: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
-msgstr "spracováva sa"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2464,24 +2011,24 @@ msgstr "spracováva sa"
 #: code:addons/project/static/src/js/web_planner_project.js:80
 #, python-format
 msgid "In progress"
-msgstr "Prebieha"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:79
 #, python-format
 msgid "Incoming"
-msgstr "Prichádzajúci"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Incoming Emails create"
-msgstr "Prichádzajúce emaily vytvárajú"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_planned_hours
 msgid "Initially Planned Hours"
-msgstr "Pôvodne plánované hodiny"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_id
@@ -2490,9 +2037,6 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
-"Interný email spojený s tymto projektom. Prichádzajúce emaily sú automaticky "
-"synchronizované s úlohami (alebo voliteľne s problémami, ak je nainštalovaný "
-"sledovač problémov). "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2500,99 +2044,70 @@ msgid ""
 "Internal notes are messages that will appear in the Chatter but will not be "
 "notified in Odoo's Inbox."
 msgstr ""
-"Interné poznámky sú správy ktoré sa objavia v Chatteri, ale notifikácie "
-"nebudú v schránke Odoo."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issue Tracking app."
-msgstr "Aplikácia sledovania problému"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
-msgstr "Verzia"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:72
 #, python-format
 msgid "Issue is being worked on"
-msgstr "Na probléme sa pracuje"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:75
 #, python-format
 msgid "Issue is resolved"
-msgstr "Problém je vyriešený"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issues"
-msgstr "Problémy"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issues analysis"
-msgstr "Analýza problému"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"It is better to start with a \"project answer\", such as: \"We are two weeks "
-"late\", \"We are at planned budget\" or \"We are 50% complete with the "
-"process model\". Also if you can, start the meeting on a positive note, such "
-"as milestones that have been met or are ahead of schedule. This will make "
+"It is better to start with a \"project answer\", such as: \"We are two weeks"
+" late\", \"We are at planned budget\" or \"We are 50% complete with the "
+"process model\". Also if you can, start the meeting on a positive note, such"
+" as milestones that have been met or are ahead of schedule. This will make "
 "participants feel motivated to engage in the conversation."
 msgstr ""
-"Je lepšie začať s \"projektovou odpoveďou\", ako napríklad: \"Máme dva "
-"týždne oneskorenie\", \" Dosiahli sme plánovaný rozpočet\", alebo \"Sme na "
-"50% hotový s procesným modelom\". Pokiaľ je to možné, začínajte rokovania v "
-"pozitívnom duchu, ako sú míľniky, ktoré boli splnené, alebo sú pred "
-"plánovaným termínom. Vďaka tomu sa účastníci budú cítiť motivovaní k "
-"zapojeniu sa do konverzácie."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"It is time to think about how you will transform your activities into real "
-"projects in Odoo.<br/>\n"
-"                        For that, the most important part is defining the "
-"stages of your projects. Stages are the different steps a task or an issue "
-"can go through, from its creation to its ending. They will appear in what we "
-"call the 'Kanban' view of your projects."
+"It is time to think about how you will transform your activities into real projects in Odoo.<br/>\n"
+"                        For that, the most important part is defining the stages of your projects. Stages are the different steps a task or an issue can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects."
 msgstr ""
-"Je čas premýšľať o tom, ako budete transformovať svoje aktivity do reálnych "
-"projektov v Odoo.<br/>\n"
-"Preto je najdôležitejšou súčasťou definovanie fáz vašich projektov. Fázy sú "
-"rôzne kroky, ktorymi môžu prejsť úlohy alebo problémy , od ich vytvorenia do "
-"konca. Zobrazia sa v tom, čo nazývame \"Kanban\" zobrazenie vašich projektov."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"It's essential to be clear about why you want to use Odoo Project and what "
-"your goals are.\n"
-"                        Indeed, there are many ways to manage a project, to "
-"find the best one for you, you need to know exactly what you want to "
-"achieve. And later on, we will hopefully transform your objectives into real "
-"improvements for your company."
+"It's essential to be clear about why you want to use Odoo Project and what your goals are.\n"
+"                        Indeed, there are many ways to manage a project, to find the best one for you, you need to know exactly what you want to achieve. And later on, we will hopefully transform your objectives into real improvements for your company."
 msgstr ""
-"Je dôležité mať jasno v tom, prečo chcete použiť Odoo Projekt a aké sú vaše "
-"ciele.\n"
-"Vskutku, existuje mnoho spôsobov, ako riadiť projekt, pre nájdenie "
-"najlepšieho pre vás, musíte presne vedieť, čo chcete dosiahnuť. A neskôr "
-"budeme snáď transformovať vaše ciele do skutočného zlepšenia pre vašu "
-"spoločnosť."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "It's for logging every change, event or message related to the Document."
 msgstr ""
-"Je to pre prihlásenie každej zmeny, udalosti alebo správy súvisiacich s "
-"dokumentom."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2601,58 +2116,55 @@ msgid ""
 "a year. Here are some KPIs you should take a look at. Ask yourself 'How can "
 "they be improved?'"
 msgstr ""
-"Je zvyčajne dobrý nápad dať si čas na analýzu vašich úloh a problémov raz za "
-"rok. Tu sú niektoré KPI na ktoré by ste sa mali pozrieť. Spýtajte sa sami "
-"seba \"Ako sa môžu zlepšiť?\""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_blocked
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr "Kanban blokovaný vysvetlenie"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_normal
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr "Kanban prebiehajúci vysvetlenie"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Kanban Stage"
-msgstr "Kanban fáza"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Kanban Stages"
-msgstr "Kanban fázy"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_kanban_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_state
 msgid "Kanban State"
-msgstr "Kanban stav"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_done
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Kanban Valid Explanation"
-msgstr "Kanban platný vysvetlenie"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Keep track of messages and conversations"
-msgstr "Majte prehľad o správach a rozhovoroch"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Know what my employees are working on"
-msgstr "Vedieť na čom pracujú moji zamestnanci"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Last Message"
-msgstr "Posledná správa"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings___last_update
@@ -2662,13 +2174,13 @@ msgstr "Posledná správa"
 #: model:ir.model.fields,field_description:project.field_project_task_type___last_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user___last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_last_stage_update
 msgid "Last Stage Update"
-msgstr "Posledná aktualizácia fázy"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_uid
@@ -2677,7 +2189,7 @@ msgstr "Posledná aktualizácia fázy"
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upravoval"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_date
@@ -2685,7 +2197,7 @@ msgstr "Naposledy upravoval"
 #: model:ir.model.fields,field_description:project.field_project_tags_write_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_date
 msgid "Last Updated on"
-msgstr "Naposledy upravované"
+msgstr ""
 
 #. module: project
 #: model:web.planner,tooltip_planner:project.planner_project
@@ -2693,8 +2205,6 @@ msgid ""
 "Learn how to better organize your company using Projects, Tasks, Issues and "
 "Timesheets."
 msgstr ""
-"Naučte sa, ako lepšie organizovať svoju firmu pomocou projektov, úloh, "
-"problémov a časových rozvrhov."
 
 #. module: project
 #. openerp-web
@@ -2706,40 +2216,33 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_pad
 msgid ""
-"Lets the company customize which Pad installation should be used to link to "
-"new pads (for example: http://ietherpad.com/).\n"
+"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
-"Umožňuje spoločnosť prispôsobiť, ktorá inštalácia Notes by mala byť použitá "
-"na prepojenie na nové notesy (napr: http://ietherpad.com/)\n"
-"- Toto nainštaluje modulový notes."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
 msgid ""
-"Link this project to an analytic account if you need financial management on "
-"projects. It enables you to connect projects with budgets, planning, cost "
+"Link this project to an analytic account if you need financial management on"
+" projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
 msgstr ""
-"Prepojte tento projekt s analytickým účtom ak budete potrebovať finančné "
-"riadenie na projekty. To vám umožní prepojiť projekty s rozpočtami, "
-"plánovaním, analýzou nákladov a výnosov, časovými rozvrhmi na projektoch, atď"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "List, plan and track things to do"
-msgstr "Spíšte, plánujte a sledujte veci na urobenie"
+msgstr ""
 
 #. module: project
 #: selection:report.project.task.user,priority:0
 msgid "Low"
-msgstr "Nízka"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:res.groups,name:project.group_project_manager
 msgid "Manager"
-msgstr "Manažér"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2747,16 +2250,12 @@ msgid ""
 "Managing a group of people, a team or a department (example: R&amp;D team, "
 "HR Department, etc.)"
 msgstr ""
-"Riadenie skupiny ľudí, tím alebo oddelenie, a team or a department (príklad: "
-"R&amp;D tím, HR oddelnie, atď.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Managing long projects that span over many months and/or need Timesheets."
 msgstr ""
-"Riadenie dlhých projektov ktoré sa rozprestierajú mnohými mesiacmi a / alebo "
-"časovými rozvrhmi."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2767,16 +2266,11 @@ msgid ""
 "stages and tasks you want to be informed about. Fortunately, Odoo Project "
 "has many levels of notifications and messages you can choose from."
 msgstr ""
-"Spravovanie notifikácií je zásadné: stačí málo a riskujete že chýbajú "
-"dôležité informácie, príliš veľa a budete zahltení zbytočnými informáciami. "
-"Trik je nájsť správnu rovnováhu medzi projektami, fázami a úlohami o ktorých "
-"chcete byť informovaný. Našťastie Odoo Projekt má mnoho úrovní notifikácií a "
-"správ z ktorých si môžete vybrať."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Marketing Department"
-msgstr "Marektingové oddelenie"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
@@ -2786,7 +2280,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr "Viac <i class=\"fa fa-caret-down\"/>"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -2796,7 +2290,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
-msgstr "Efektívnejšia komunikácia medzi zamestnancami"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2806,12 +2300,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Tasks"
-msgstr "Moje úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
-msgstr "Meno"
+msgstr ""
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2829,7 +2323,7 @@ msgstr "Meno"
 #: model:project.task,legend_blocked:project.project_task_7
 #: model:project.task.type,legend_blocked:project.project_stage_1
 msgid "Need functional or technical help"
-msgstr "Potrebujete funkčné a technickú pomoc"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2839,31 +2333,31 @@ msgstr "Potrebujete funkčné a technickú pomoc"
 #: model:project.task.type,name:project.project_stage_data_0
 #, python-format
 msgid "New"
-msgstr "Nové"
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:571
 #, python-format
 msgid "New Task"
-msgstr "Nová úloha"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:86
 #, python-format
 msgid "New repair added"
-msgstr "Nová oprava pridaná"
+msgstr ""
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
 msgid "No customer rating"
-msgstr "Žiadne hodnotenie zákazníkov"
+msgstr ""
 
 #. module: project
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
-msgstr "Normálna"
+msgstr ""
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_1
@@ -2874,17 +2368,17 @@ msgstr "Normálna"
 #: model:project.task,legend_blocked:project.project_task_9
 #: model:project.task.type,legend_blocked:project.project_stage_0
 msgid "Not validated"
-msgstr "Neoverené"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
 msgid "Notes"
-msgstr "Poznámky"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Notifications"
-msgstr "Notifikácie"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2896,48 +2390,39 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
 msgid "Number of Days to Open the task"
-msgstr "Počet dní do otvorenia úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_closing_days
 msgid "Number of Days to close the task"
-msgstr "Počet dní do zatvorenia úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
 msgid "Number of documents attached"
-msgstr "Počet priloženych dokumentov"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"Odoo Project is a super fast and easy way to make your activities and tasks "
-"visible to\n"
-"                        everyone in your company. Follow how things "
-"progress, see when things are stuck, know\n"
+"Odoo Project is a super fast and easy way to make your activities and tasks visible to\n"
+"                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
 "                        who's in charge, all in one place."
 msgstr ""
-"Odoo Projekt je super rýchly a jednoduchý spôsob, aby vaše aktivity a úlohy "
-"boli viditeľné\n"
-"všetkými vo vašej firme. Sledujte, ako veci postupujú, uvidíte keď sa veci "
-"zaseknú, budete vedieť\n"
-"kto je zodpovedný, všetko na jednom mieste."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_generate_project_alias
 msgid ""
 "Odoo will generate an email alias at the project creation from project name."
 msgstr ""
-"Odoo vygeneruje emailový alias pri vytvorení projektu, z názvu projektu."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "Odoo's project management allows you to manage the pipeline of your tasks "
-"efficiently. You can track progress, discuss on tasks, attach documents, etc."
+"efficiently. You can track progress, discuss on tasks, attach documents, "
+"etc."
 msgstr ""
-"Projekový menežment Odoo vám umožní efektívne spravovať postupnosť vašich "
-"úloh. Môžte sledovať progres, diskutovať o úlohách, pripájat dokumenty, atď."
 
 #. module: project
 #: code:addons/project/models/project.py:203
@@ -2952,8 +2437,6 @@ msgid ""
 "Once a Timesheet is confirmed by an employee, it needs to be Approved by a "
 "manager in the"
 msgstr ""
-"Akonáhle je časový rozvrh potvrdený zamestnancom, musí byť schválený "
-"manažérom v"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_force_thread_id
@@ -2962,9 +2445,6 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Voliteľné ID vlákna (záznam), na ktoré budú pripojené všetky prichádzajúce "
-"správy, aj keď na to neodpovedali. Ak je nastavené, úplne to zakáže "
-"vytváranie nových záznamov."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -2977,13 +2457,11 @@ msgid ""
 "Or, if you are using Issues, by activating 'Activate timesheets on issues', "
 "also in the"
 msgstr ""
-"Alebo, ak používate Problémy, aktivovaním 'Aktivovať časové rozvrhy pre "
-"Problémy', tiež v"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Organize meetings"
-msgstr "Organizujte stretnutia"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
@@ -2991,21 +2469,17 @@ msgid ""
 "Organize your activities (plan tasks, track issues, invoice timesheets) for "
 "internal, personal or customer projects."
 msgstr ""
-"Organizujte svoje aktivity (plánujte úlohy, sledujte problémy, faktúrujte "
-"časové rozvrhy) pre interné, osobné alebo zákaznícke projekty."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Organize your company, from personal tasks to collaborative meeting minutes."
 msgstr ""
-"Organizujte svoju spoločnosť, od osobných úloh po zápisy z pracovného "
-"stretnutia."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr "Prekročené úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_blocked
@@ -3014,8 +2488,6 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Prepísať predvolenú hodnotu zobrazenú pre zablokovaný stav pre Kanban výber, "
-"keď úloha alebo problém je v tejto fáze."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_done
@@ -3024,8 +2496,6 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Prepísať predvolenú hodnotu zobrazenú pre stav hotovo pre výber Kanban, keď "
-"úloha alebo problém je v tejto fáze."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_normal
@@ -3034,54 +2504,49 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Prepísať predvolenú hodnotu zobrazenú pre stav normálny pre Kanban výber, "
-"keď úloha alebo problém je v tejto fáze."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
 msgid "Owner"
-msgstr "Vlastník"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
 msgid "Pads"
-msgstr "Notesy"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
 msgid "Parent Model"
-msgstr "Nadradený model"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID nadradeného vlákna záznamu"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not "
-"necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Nadradený model drží alias. Model drží referenciu aliasu nie je nevyhnutne "
-"model ktorý zadal alias_model_id (príklad: projekt (parent_model) a úlohy "
-"(model))"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
 msgid "Partner"
-msgstr "Partner"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Plan your activities for the day"
-msgstr "Naplánujte si svoje aktivity na deň"
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_web_planner
 msgid "Planner"
-msgstr "Plánovač"
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:723
@@ -3090,24 +2555,31 @@ msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
 "to delete."
 msgstr ""
-"Prosím, odstráňte existujúce úlohy v rámci projektu prepojené na účty, ktoré "
-"chcete odstrániť."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Prepare"
-msgstr "Pripraviť"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_priority
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_priority
 msgid "Priority"
-msgstr "Priorita"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Priority Management Explanation"
-msgstr "Spravovanie priorít vysvetlenie"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
@@ -3117,7 +2589,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Product or software version"
-msgstr "Produktová alebo softvérová verzia"
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
@@ -3130,12 +2602,12 @@ msgstr "Produktová alebo softvérová verzia"
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
-msgstr "Projekt"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_generate_project_alias
 msgid "Project Alias"
-msgstr "Alias projektu"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
@@ -3146,7 +2618,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Project Management"
-msgstr "Projektový manažment"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_user_id
@@ -3155,7 +2627,7 @@ msgstr "Projektový manažment"
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr "Projektový manažér"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3163,23 +2635,23 @@ msgstr "Projektový manažér"
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Name"
-msgstr "Názov projektu"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Project Settings"
-msgstr "Nastavenia projektu"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Project Settings."
-msgstr "Nastavenia projektu."
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_task_graph
 #: model:ir.ui.view,arch_db:project.view_project_task_pivot
 msgid "Project Tasks"
-msgstr "Úlohy projektu"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_project_time_mode_id
@@ -3189,12 +2661,12 @@ msgstr ""
 #. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
-msgstr "Úloha projektu"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr "Úlohy projektov"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -3206,7 +2678,7 @@ msgstr "Úlohy projektov"
 #: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
-msgstr "Projekty"
+msgstr ""
 
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
@@ -3223,41 +2695,41 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:40
 #, python-format
 msgid "Ready for layout / copywriting"
-msgstr "Pripravené pre rozvrhnutie / copywriting"
+msgstr ""
 
 #. module: project
 #: selection:project.task,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
-msgstr "Pripravené pre ďalšiu fázu"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:58
 #, python-format
 msgid "Ready for release"
-msgstr "Pripravené pre vypustenie"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:56
 #, python-format
 msgid "Ready for testing"
-msgstr "Pripravené pre testovanie"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:41
 #, python-format
 msgid "Ready to be displayed, published or sent"
-msgstr "Pripravené na zobrazenie, publikovanie alebo poslanie"
+msgstr ""
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_16
 #: model:project.task,legend_done:project.project_task_19
 #: model:project.task.type,legend_done:project.project_stage_3
 msgid "Ready to reopen"
-msgstr "Pripravené na znovuotvorenie"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -3265,7 +2737,7 @@ msgstr "Pripravené na znovuotvorenie"
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
-msgstr "Dôvod na zrušenie bol zdokumentovaný"
+msgstr ""
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -3275,60 +2747,60 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "ID vlákna záznamu"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Red: the Task is blocked (there's a problem)"
-msgstr "Červená: úloha je zablokovaná (je tam problém)"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_code
 msgid "Reference"
-msgstr "Odkaz"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:51
 #, python-format
 msgid "Release"
-msgstr "Vypustenie"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_remaining_hours
 msgid "Remaining Hours"
-msgstr "Zostávajúce hodiny"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:48
 #, python-format
 msgid "Remove Cover Image"
-msgstr "Odstrániť obrázok obálky"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Repair Workshop"
-msgstr "Opraviť workshop"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:87
 #, python-format
 msgid "Repair has started"
-msgstr "Oprava začala"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:90
 #, python-format
 msgid "Repair is completed"
-msgstr "Oprava bola ukončená"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr "Výkazy"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -3340,50 +2812,49 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:89
 #, python-format
 msgid "Request for parts has been sent"
-msgstr "Žiadosť o diely bola poslaná"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Responsibilities"
-msgstr "Zodpovednosti"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Responsibility"
-msgstr "Zodpovednosť"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Runs outside Odoo, always available"
-msgstr "Beží mimo Odoo, vždy k dispozícii"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Scrum Methodology"
-msgstr "Scrum metodológia"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "Search"
-msgstr "Hľadanie"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
-msgstr "Vyhľadať projekt"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:46
 #, python-format
 msgid "Select"
-msgstr "Vybrať"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Send an alert when a task is stuck in red for more than a few days"
 msgstr ""
-"Poslať upozornenie keď úloha uviazla v červenej na viac ako niekoľko dní"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3391,49 +2862,47 @@ msgid ""
 "Send an automatic confirmation to all issue emails sent to your customer "
 "support"
 msgstr ""
-"Poslať automatické potvrdenie všetkým problémovým emailom odoslaných do "
-"vášej zákazníckej podpory"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_sequence
 #: model:ir.model.fields,field_description:project.field_project_task_sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type_sequence
 msgid "Sequence"
-msgstr "Postupnosť"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Service Level Agreement (SLA)"
-msgstr "Stanovenie vykonania služby (SLA)"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr "Nastaviť obrázok obálky"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:45
 #, python-format
 msgid "Set a Cover Image"
-msgstr "Nastaviť obrázok obálky"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_general_settings
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Settings"
-msgstr "Konfigurácia"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Severity"
-msgstr "Závažnosť"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Share files and manage versions"
-msgstr "Zdieľať súbory a spravovať verzie"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
@@ -3446,41 +2915,39 @@ msgid ""
 "So if you're looking for the history of a Task, or the latest message on an "
 "Issue, simply go to the corresponding Document and you'll find it!"
 msgstr ""
-"Takže ak hľadáte históriu úlohy, alebo poslednú správu ohľadom problému, "
-"jednoducho chodťe do zodpovedajúceho dokumentu a nájdete ju!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Software development"
-msgstr "Vývoj softvéru"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:15
 #, python-format
 msgid "Specification"
-msgstr "Špecifikácia"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:23
 #, python-format
 msgid "Specification is validated"
-msgstr "Špecifikácia je potvrdená"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:22
 #, python-format
 msgid "Specification of task is written"
-msgstr "Špecifikácia úlohy je napísaná"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:48
 #, python-format
 msgid "Sprint"
-msgstr "Sprint"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_id
@@ -3488,53 +2955,53 @@ msgstr "Sprint"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Stage"
-msgstr "Etapa"
+msgstr ""
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "Fáza zmenená"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr "Popis fázy a tipy nástroja"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_name
 msgid "Stage Name"
-msgstr "Názov etapy"
+msgstr ""
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Fáza zmenená"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Stages"
-msgstr "Etapy"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Start / Stop a timer in one click"
-msgstr "Štart / Stop časovača jedným kliknutím"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date_start
 msgid "Start Date"
-msgstr "Počiatočný dátum"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
-msgstr "Dátum začatia"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists !"
-msgstr "Názov visačky už existuje !"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -3543,12 +3010,12 @@ msgstr "Názov visačky už existuje !"
 #: model:ir.ui.menu,name:project.menu_project_tags_act
 #: model:ir.ui.view,arch_db:project.project_tags_form_view
 msgid "Tags"
-msgstr "Popisky"
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Tags of project's tasks, issues..."
-msgstr "Menovky projektových úloh, problémov..."
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -3556,63 +3023,63 @@ msgstr "Menovky projektových úloh, problémov..."
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Task"
-msgstr "Úloha"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_tasks
 msgid "Task Activities"
-msgstr "Aktivity úlohy"
+msgstr ""
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr "Úloha blokovaná"
+msgstr ""
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Opened"
-msgstr "Úloha otvorená"
+msgstr ""
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr "Dátovod úlohy"
+msgstr ""
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr "Úloha pripravená"
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
 #: model:ir.ui.view,arch_db:project.task_type_edit
 #: model:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr "Fáza úlohy"
+msgstr ""
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr "Fáza úlohy zmenená"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_name
 msgid "Task Title"
-msgstr "Titul úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr "Titul úlohy..."
+msgstr ""
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr "Úloha blokovaná"
+msgstr ""
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
@@ -3624,31 +3091,31 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:24
 #, python-format
 msgid "Task is Developed"
-msgstr "Úloha je vyvinutá"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:104
 #, python-format
 msgid "Task is completed"
-msgstr "Úloha je kompletná"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
 msgid "Task is tested"
-msgstr "Úloha je otestovaná"
+msgstr ""
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 msgid "Task opened"
-msgstr "Úloha otvorená"
+msgstr ""
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 msgid "Task ready for Next Stage"
-msgstr "Úloha je pripravená pre ďalšiu fázu"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -3666,12 +3133,12 @@ msgstr "Úloha je pripravená pre ďalšiu fázu"
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:ir.ui.view,arch_db:project.view_task_tree2
 msgid "Tasks"
-msgstr "Úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks &amp; Issues"
-msgstr "Úlohy &amp; Problémy"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -3681,49 +3148,49 @@ msgstr "Úlohy &amp; Problémy"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr "Analýza úloh"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_type_ids
 #: model:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
-msgstr "Fázy úloh"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks analysis"
-msgstr "Analýza úloh"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks are the main mechanism in Odoo and are activated by default."
-msgstr "Úlohy sú hlavným mechanizmom v Odoo a sú aktivované v predvoľbe."
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
 msgid "Tasks by user and project"
-msgstr "Úlohy podľa používateľa a projektu"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:49
 #, python-format
 msgid "Test"
-msgstr "Test"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:57
 #, python-format
 msgid "Test is OK, need to document"
-msgstr "Test je OK, treba dokumentovať"
+msgstr ""
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:18
 #, python-format
 msgid "Testing"
-msgstr "Testovanie"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3731,16 +3198,10 @@ msgid ""
 "The Odoo Project app can be used to manage many activities, from the "
 "development of a new product to the daily operations of a customer support. "
 "With some creativity, it can even be used to manage your marketing "
-"communications or personal projects. But just because it can be done doesn't "
-"mean it's always a good idea: let's start by helping you understand what can "
-"be a good project."
+"communications or personal projects. But just because it can be done doesn't"
+" mean it's always a good idea: let's start by helping you understand what "
+"can be a good project."
 msgstr ""
-"Aplikácia Odoo Projekt je používaná na spravovani mnohých aktivít, od vývoja "
-"nového výrobku po každodenné činnosti zákazníckej podpory. S trochou "
-"tvorivosti, to môže dokonca byť použité pre spravovanie vašej marketingovej "
-"komunikácie alebo osobných projektov. Ale len preto, že to možno urobiť, "
-"neznamená, že je to vždy dobrý nápad: začnime tým, že vám pomžeme pochopiť, "
-"čo môže byť dobrý projekt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model
@@ -3748,19 +3209,14 @@ msgid ""
 "The kind of document created when an email is received on this project's "
 "email alias"
 msgstr ""
-"Druh dokumentu vytvoreného keď je prijatý email na emailový alias tohto "
-"projektu"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
-"email that does not reply to an existing record will cause the creation of a "
-"new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Model (Odoo druh dokumentu), ktorému odpovedá toto alias. Každý "
-"prichádzajúci email ktorý neodpovie na existujúci záznam spôsobí vytvorenie "
-"nového záznamu tohto modelu (napr úlohy projektu)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
@@ -3768,8 +3224,6 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Meno emailového alias, napr. \"práce\", ak chcete zachytiť emaily pre "
-"<prace@priklad.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id
@@ -3779,16 +3233,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Majiteľ záznamov vytvorených pri prijímaní emailov na tento alias. Ak toto "
-"pole nie je nastavené, systém sa pokúsi nájsť správneho vlastníka na základe "
-"adresy odosielateľa (Od), alebo bude používať účet správcu ak nie je "
-"užívateľ systému nájdený pre danú adresu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "The same features as the Chrome extension, but on your mobile phone!"
 msgstr ""
-"Rovnaké vlastnosti ako rozšírenie Chrome, ale na vašom mobilnom telefóne!"
 
 #. module: project
 #. openerp-web
@@ -3798,13 +3247,11 @@ msgid ""
 "There is no available image to be set as cover. Send a message on the task "
 "with an attached image."
 msgstr ""
-"Nie je dostupný obrázok pre nastavenie obálky. Pošlite email na úlohu s "
-"priloženým obrázkom."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
 msgid "This allows customers to give rating on provided services"
-msgstr "Toto umožňuje zákazníkom hodnotiť poskytnuté služby"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3813,9 +3260,6 @@ msgid ""
 "from customers will be transformed into an issue that you'll be able to "
 "track easily!"
 msgstr ""
-"Toto je obzvlášť užitočné pre spravovanie pomoci a podpory: všetky "
-"prichádzajúce emaily od zákazníkov bude premenená na problém, ktorý budete "
-"môcť ľahko sledovať!"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -3825,10 +3269,6 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
-"Tento výkaz vám umožňuje analyzovať výkon vašich projektov a používateľov. "
-"Môžete\n"
-"analyzovať kvantitu úloh, hodín strávených v porovnaní s plánovanými "
-"hodinami, priemerný počet dní na otvorenie alebo zavretie úlohy, atď."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_fold
@@ -3836,20 +3276,13 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Táto fáza je zložená v kanban zobrazení keď v tejto fáze nie sú žiadne "
-"záznamy na zobrazenie."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"This whole process might take you a few hours, but don't worry, you can take "
-"a break and\n"
-"                        return to it at any time: your progress is "
-"automatically saved."
+"This whole process might take you a few hours, but don't worry, you can take a break and\n"
+"                        return to it at any time: your progress is automatically saved."
 msgstr ""
-"Celý tento projekt vám môže zabrať niekoľko hodín, ale nebojte sa, môžte si "
-"dať pauzu a\n"
-"kedykoľvek sa môžte k nemu vrátiť: vás progres je automaticky ukladaný."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3857,56 +3290,56 @@ msgid ""
 "This will add an Invoice Tasks menu in the Project module, that can be used "
 "to select the Timesheet to invoice."
 msgstr ""
-"Toto pridá menu Faktúrovať úlohy v Projekt module, ktorým môžte vybrať "
-"Časový rozvrh na faktúrovanie."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
+#: model:ir.model.fields,help:project.field_project_config_settings_project_time_mode_id
+#: model:ir.model.fields,help:project.field_project_project_company_uom_id
+#: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+msgstr ""
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
-msgstr "Časový odhad na úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Time Scheduling"
-msgstr "Plánovanie času"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
-msgstr "Merná jednotka pre časový rozvrh"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Timesheets are often essential for running a company.<br/>\n"
-"                    They are also prone to human error, repetitive, "
-"annoying, and sometimes stressful to employees.<br/>\n"
-"                    Fortunately, Odoo has several solutions to make them as "
-"efficient and painless as possible!<br/>"
+"                    They are also prone to human error, repetitive, annoying, and sometimes stressful to employees.<br/>\n"
+"                    Fortunately, Odoo has several solutions to make them as efficient and painless as possible!<br/>"
 msgstr ""
-"Časové rozvrhy sú často nevyhnutné pre riadenie firmy.<br/>\n"
-"Sú tiež náchylné k zlyhaniu ľudského faktoru, opakujúce sa, otravné a "
-"niekedy stresujúce pre zamestnancov.<br/>\n"
-"Fortunately, Odoo has several solutions to make them as efficient and "
-"painless as possible!<br/>\n"
-"Našťastie, Odoo má niekoľko riešení - aby boli čo najúčinnejšie a "
-"bezbolestné, ako je to len bude možné!<br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets can be used for several purposes:"
-msgstr "Časové rozvrhy môžu byť využité na niekoľko účelov:"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets to Approve"
-msgstr "Časové rozvrhy na schválenie"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_resource_calendar_id
 msgid "Timetable working hours to adjust the gantt diagram report"
-msgstr "Rozvrh pracovného času pre upravenie gantt diagramu"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -3914,7 +3347,7 @@ msgstr "Rozvrh pracovného času pre upravenie gantt diagramu"
 #: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
-msgstr "Zostáva"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3922,18 +3355,16 @@ msgid ""
 "To configure these Kanban Statuses, go to the 'Project Stages' tab of a "
 "Project."
 msgstr ""
-"Pre konfiguráciu Kanban statusov, choďte do 'Fázy projektu' záložky daného "
-"projektu.."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "To use Issues, install the"
-msgstr "Pre používanie Problémov, nainštalujte"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "To use Timesheets, go to your"
-msgstr "Pre používanie Časových rozvrhov, choďte do "
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_remaining_hours
@@ -3941,8 +3372,6 @@ msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
 msgstr ""
-"Celkový ostávajúci čas, môže byť pravidelne prehodnocovaný človekom "
-"priradeným na úlohu."
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -3953,29 +3382,29 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
-msgstr "Nepriradené"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unread Messages"
-msgstr "Neprečítané správy"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_use_tasks
 #: model:ir.model.fields,field_description:project.field_project_project_use_tasks
 msgid "Use Tasks"
-msgstr "Použiť úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_label_tasks
 msgid "Use Tasks as"
-msgstr "Použiť úlohy ako"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Use Timesheets"
-msgstr "Použiť časové rozvrhy"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3983,8 +3412,6 @@ msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
 msgstr ""
-"Použite samostatné stretnutia na riešenie veľkých problémov, alebo problémov "
-"ktoé nie sú dôležité pre celý tím."
 
 #. module: project
 #. openerp-web
@@ -4005,58 +3432,43 @@ msgstr ""
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
 msgid "Use the priority for tasks related to gold customers"
-msgstr "Použite priority pre úlohy súvisiacie so zlatými zákazníkmi."
+msgstr ""
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
 msgid "User"
-msgstr "Používateľ"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_email
 msgid "User Email"
-msgstr "Email používateľa"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"Usually, a project's team members are managed through weekly (or monthly) "
-"status meetings.<br/>\n"
-"                        Sometimes, these meetings can last hours and expose "
-"participants to an overly detailed review of the project.<br/>\n"
-"                        Your team members will probably try to avoid those "
-"kind of meetings, or have to rush afterwards to meet their deadlines...<br/"
-"><br/>\n"
-"                        So how can you, as project manager, structure a "
-"weekly status meeting where team members are engaged, informed and willing "
-"to contribute to the project's next steps? Here are some tips."
+"Usually, a project's team members are managed through weekly (or monthly) status meetings.<br/>\n"
+"                        Sometimes, these meetings can last hours and expose participants to an overly detailed review of the project.<br/>\n"
+"                        Your team members will probably try to avoid those kind of meetings, or have to rush afterwards to meet their deadlines...<br/><br/>\n"
+"                        So how can you, as project manager, structure a weekly status meeting where team members are engaged, informed and willing to contribute to the project's next steps? Here are some tips."
 msgstr ""
-"Zvyčajne, členovia projektového tímu sú riadený prostredníctvom týždenných "
-"(alebo mesačných) statusových stretnutiach.<br/>\n"
-"Niekedy môžu tieto stretnutia trvať hodiny a vystaviť účastníkov príliš "
-"podrobnému prehľadu projektu.<br/>\n"
-"Členovia vášho tímu sa možno budú snažiť vyhýbať tomuto druhu stretnutí, "
-"alebo sa potom ponáhľať dodržať ich uzávierky...<br/><br/>\n"
-"Tak ako môžete vy, projektový manažér, usporiadavať týždenné statusové "
-"stretnutia, kde sú členovia tímu zapojení, informovaný a ochotný prispieť k "
-"ďalším krokom projektu? Tu je niekoľko tipov."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:16
 #, python-format
 msgid "Validation"
-msgstr "Validácia"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics (time spent, efficiency, etc.)"
-msgstr "Zobraziť štatistiky (strávený čas, výkonnosť, atď.)"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics for the week"
-msgstr "Zobraziť štatistiky za týždeň"
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:204
@@ -4078,7 +3490,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:81
 #, python-format
 msgid "Wait. Customer"
-msgstr "Čak. zákazníka"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -4086,7 +3498,7 @@ msgstr "Čak. zákazníka"
 #: code:addons/project/static/src/js/web_planner_project.js:82
 #, python-format
 msgid "Wait. Expert"
-msgstr "Čak. experta"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -4100,13 +3512,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can add fields related to your business on any screen, for example:"
 msgstr ""
-"Môžme pridať polia súvisiace s vašou firmou na akejkoľvek obrazovke, "
-"napríklad: "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can automate steps in your workflow, for example:"
-msgstr "Môžme automatizovať kroky vo vašom pracovnom procese, napríklad: "
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4114,16 +3524,13 @@ msgid ""
 "We can implement custom reports based on your Word or GoogleDocs templates, "
 "for example:"
 msgstr ""
-"Môžme implementovať prispôsobené výkazy založné na vašich Word alebo Google "
-"Dokumenty šablónach, napríklad: "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"We hope this process helped you implement our project management application."
+"We hope this process helped you implement our project management "
+"application."
 msgstr ""
-"Dúfame, že tento proces vám pomohol implementovať našu aplikáciu pre "
-"projektový manažment."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4131,48 +3538,43 @@ msgid ""
 "We've developed a super simple and efficient Chrome extension to enter your "
 "timesheets:<br/><br/>"
 msgstr ""
-"Vyvinuli sme super jednoduché a efektívne Chrome rozšírenie pre zadanie "
-"vašich časových rozvrhov:<br/><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
-msgstr "Vitajte"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "What is the average number of working hours necessary to close an issue?"
 msgstr ""
-"Aký je priemerný počet pracovných hodín potrebných na uzavretie problému?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the average time before an issue is assigned / closed?"
-msgstr "Aká je priemerná doba, než je problém priradený / zatvorený?"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "What is the difference between initial time estimation and final time spent?"
 msgstr ""
-"Aký je rozdiel medzi pôvodným časovým odhadom a konečným stráveným časom?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the number of missed deadlines?"
-msgstr "Aký je počet zmeškaných uzávierok?"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is their average number of tasks or issues worked on / closed?"
 msgstr ""
-"Aký je ich priemerný počet ich otvorených / zatvoených úloh alebo problémov ?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is their average number of working hours over the year?"
-msgstr "Aký je ich priemerný počet pracovných hodín v priebehu roka?"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_is_favorite
@@ -4184,17 +3586,17 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:39
 #, python-format
 msgid "Work has started"
-msgstr "Práca začala"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_resource_calendar_id
 msgid "Working Time"
-msgstr "Pracovný čas"
+msgstr ""
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
 msgid "Workload"
-msgstr "Pracovná záťaž"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
@@ -4204,11 +3606,9 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid ""
-"You can also add a description to help your coworkers understand the meaning "
-"and purpose of the stage."
+"You can also add a description to help your coworkers understand the meaning"
+" and purpose of the stage."
 msgstr ""
-"Taktiež môžte pridať popis ktorý pomôže vašim spolupracovníkom pochopiť "
-"zmysel a účel fázy."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -4216,14 +3616,12 @@ msgid ""
 "You can also give a tooltip about the use of the stars available in the "
 "kanban and form views."
 msgstr ""
-"Taktiež môžte dať nápovedu nástroja o používaní hviezdičiek dostupných v "
-"kanban a formulárových zobrazeniach."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-msgid "You can even include any report in your dashboard for permanent access!"
+msgid ""
+"You can even include any report in your dashboard for permanent access!"
 msgstr ""
-"Dokonca môžete zaradiť akýkoľvek výkaz na vašu nástenku pre trvalý prístup!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4231,44 +3629,44 @@ msgid ""
 "You can learn more about Timesheets in the 'Use Timesheets' section of this "
 "planner."
 msgstr ""
-"Viac sa o Časových rozvrhoch dozviete v sekcii 'Použite Časové rozvrhy' "
-"tohto plánovača."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid ""
-"You can now manage your tasks in order to get things done efficiently. Track "
-"progress, discuss, attach documents, etc."
-msgstr "Teraz môžte spravovať vaše úlohy aby sa veci urobili efektívne."
+"You can now manage your tasks in order to get things done efficiently. Track"
+" progress, discuss, attach documents, etc."
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
-"You can reply directly to a message from you email software; the message and "
-"its attachments will be added to the Chatter."
+"You can reply directly to a message from you email software; the message and"
+" its attachments will be added to the Chatter."
 msgstr ""
-"Môžte odpovedať priamo na správu z vásho emailového softvéru; správa a jej "
-"prílohy budú pridané na Chatter."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "You can save your reports to easily reuse it later"
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:70
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
-"project's tasks and then delete the project or simply deactivate the project."
+"project's tasks and then delete the project or simply deactivate the "
+"project."
 msgstr ""
-"Nemôžte zmazať projekt obsahujúci úlohy. Buď môžete zmazať všetky projektové "
-"úlohy a potom zmazať projekt, alebo projekt jednoducho deaktivovať."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Activities"
-msgstr "Vaše aktivity"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Objectives"
-msgstr "Vaše cieľe"
+msgstr ""
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
@@ -4278,12 +3676,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects"
-msgstr "Vaše projekty"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects:"
-msgstr "Vaše projekty:"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -4293,7 +3691,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "and activate:"
-msgstr "a aktivovať:"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -4303,43 +3701,43 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "etc.."
-msgstr "atď.."
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "for Issues: 'Activate timesheets on issues'"
-msgstr "pre Problémy: 'Aktivovať časové rozvrhy na problémoch'"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "for Tasks: 'Log work activities on tasks'"
-msgstr "pre Úlohy: 'Zapísať pacovné aktivity na úlohách'"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "oe_kanban_text_red"
-msgstr "oe_kanban_text_red "
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_config_settings
 msgid "project.config.settings"
-msgstr "project.config.settings "
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "send us an email"
-msgstr "pošlite nám email"
+msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:466
 #, python-format
 msgid "tasks"
-msgstr "úlohy"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "to describe<br/> your experience or to suggest improvements !"
-msgstr "na popísanie<br/> vašej skúsenosti alebo navrhnutie vylepšení !"
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -4349,7 +3747,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "using the above recommendations"
-msgstr "pomocou vyššie uvedených odporúčaní"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4357,25 +3755,23 @@ msgid ""
 "view of the HR module is the main tool to check, modify and confirm "
 "Timesheets."
 msgstr ""
-"zobrazenie HR modulu je hlavný nástroj na kontrolu, úpravu a potvrdenie "
-"časových rozvrhov"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "view of the Human Resources module."
-msgstr "zobrazenie modulu Ľudské zdroje."
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "view."
-msgstr "zobraziť."
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "with Timesheet"
-msgstr "s časovým rozvrhom"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
-msgstr "ste uviedli v predchádzajúcom kroku"
+msgstr ""

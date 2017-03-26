@@ -4,10 +4,11 @@
 # 
 # Translators:
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # William Surya Permana <zarambie_game@yahoo.com>, 2016
 # Deddy Ddr <deddy.ddr@gmail.com>, 2016
+# Bonny Useful <bonny.useful@gmail.com>, 2016
 # Edy Kend <edy@azmall.co.id>, 2016
 # Febrasari Almania <febrasari.almania@gmail.com>, 2016
 msgid ""
@@ -40,15 +41,14 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"<p Selamat, Anda telah menerima lencana <strong> $ {} object.badge_id.name </strong>!\n"
-"            % Jika object.sender_id\n"
-"                Lencana ini diberikan oleh <strong> $ {} object.sender_id.name </strong>.\n"
-"            % berakhir jika\n"
-"        </p>\n"
-"\n"
-"        % Jika object.comment\n"
-"            <p> <em> $ {} object.comment </em> </p>\n"
-"        % berakhir jika        "
+"<p>Selamat, kamu telah menerima lencana <strong>${object.badge_id.name}</strong>!\n"
+"% if object.sender_id\n"
+"Lencana ini diberikan oleh <strong>${object.sender_id.name}</strong>.\n"
+"% endif\n"
+"</p>\n"
+"% if object.comment\n"
+"<p><em>${object.comment}</em></p>\n"
+"% endif"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder

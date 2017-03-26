@@ -21,13 +21,14 @@
 # Niki Waibel <niki.waibel@gmail.com>, 2016
 # key six <mobile.umts@gmail.com>, 2016
 # Thomas Neu <t.neu@runbox.com>, 2016
+# Bülent Tiknas <btiknas@googlemail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Thomas Neu <t.neu@runbox.com>, 2016\n"
+"Last-Translator: Bülent Tiknas <btiknas@googlemail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -366,7 +367,7 @@ msgstr "Herstellungskosten"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
 msgid "Cost method"
-msgstr ""
+msgstr "Kostenmethode"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_standard_price
@@ -1509,6 +1510,9 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Standardpreis: Der Beschaffungspreis wird manuell berechnet (normalerweise einmal jährlich)\n"
+"Durchschnittspreis: Der Beschaffungspreis wird bei jeder eingehenden Lieferung neu berechnet.\n"
+"Echtzeitpreis: Der Beschaffungspreis ist der Preis für das zuletzt versendete Produkt (wird z.B. oft ebenfalls bei Inventurverlust genutzt)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
@@ -1539,7 +1543,7 @@ msgstr "Warenversand Konto"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
 msgid "Stock move ids"
-msgstr ""
+msgstr "Lagerbuchungs Id"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
@@ -1824,7 +1828,7 @@ msgstr "Zähler der ungelesenen Nachrichten"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Bewertung"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable

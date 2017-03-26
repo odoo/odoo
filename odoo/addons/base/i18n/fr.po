@@ -34,6 +34,7 @@
 # Guewen Baconnier <guewen.baconnier@camptocamp.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2016
 # Clo <clo@odoo.com>, 2016
 # Sébastien Versailles <sve@openerp.com>, 2016
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
@@ -266,6 +267,8 @@ msgid ""
 "\n"
 "        Bridge between HR and Maintenance."
 msgstr ""
+"\n"
+"Connecteur entre les modules RH et Maintenance"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_data_drinks
@@ -274,6 +277,8 @@ msgid ""
 "        Common drinks data for points of sale\n"
 "    "
 msgstr ""
+"\n"
+"Données sur les boissons courantes pour les points de vente"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
@@ -342,6 +347,8 @@ msgid ""
 "\n"
 "        Track equipment and manage maintenance requests."
 msgstr ""
+"\n"
+"Suivi du matériel et gestion des demandes de maintenance."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_survey
@@ -352,6 +359,10 @@ msgid ""
 "        to allow you to define interviews for different jobs.\n"
 "    "
 msgstr ""
+"\n"
+"Utilisez des formulaire pour les entretiens lors des recrutements.\n"
+"Ce module est intégré au module de sondage\n"
+"afin de vous permettre de définir des entretiens pour différents postes."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -412,6 +423,8 @@ msgid ""
 "    Module linking the attendance module to the timesheet app.\n"
 "    "
 msgstr ""
+"\n"
+"Module faisant le lien entre le module de présences et l'application de feuilles de temps"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_payumoney
@@ -884,6 +897,15 @@ msgid ""
 "    - Regional State listings\n"
 "    "
 msgstr ""
+"\n"
+"Module de base pour la localisation Éthiopienne\n"
+"==========================================\n"
+"\n"
+"Ceci est la dernière localisation éthiopienne d'Odoo, elle comprend :\n"
+"- Le plan comptable\n"
+"- La structure de la TVA\n"
+"- La structure de l'impôt à la source\n"
+"- Les listes de l'État régional"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
@@ -925,6 +947,37 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't \n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
+"\n"
+"Module de base pour la localisation Brésilienne\n"
+"=====================================\n"
+"\n"
+"Ce module fournit :\n"
+"* a charte de compte générique brésilienne ;\n"
+"* les taxes brésiliennes telles que :\n"
+"    * IPI,\n"
+"    * ICMS,\n"
+"    *  PIS,\n"
+"    * COFINS,\n"
+"    * ISS,\n"
+"    * IR,\n"
+"    * IRPJ,\n"
+"    * CSLL.\n"
+"\n"
+"Le champs tax_discount a aussi été ajouté dans les objets account.tax.template et account.tax\n"
+"pour permettre le calcul correct de certaines TVA brésiliennes telle que l'ICMS. L'assistant de création\n"
+"de la charte de compte a été étendu afin de prendre en compte correctement ces nouvelles données.\n"
+"\n"
+"Il est important de noter cependant que plusieurs fonctionnalités sont manquant dans ce module\n"
+"pour permettre d'utiliser OpenERP correctement au Brésil. Ces fonctionnalités (tel que la facturation \n"
+"fiscale électronique, qui est  déjà opérationnelle) sont apportées par plus de 15 modules du projet\n"
+"Launchpad de localisation brésilienne https://launchpad.net/openerp.pt-br-localiz et leurs dépendances \n"
+"dans la branche extra-addons. Ces modules visent à ne pas briser la remarquable modularité d'OpenERP; \n"
+"c'est pour cela qu'ils sont petits mais nombreux. Une des raisons de maintenir ces modules à part est que\n"
+"les responsables de la localisation ont besoin des droits de commit afin de rester agile et pouvoir terminer\n"
+"cette localisation; en effet, des compagnies financent les requis légaux restants (comme les livres fiscaux, \n"
+"la comptabilité SPED, la fiscalité SPED et le PAF ECF encore manquants en date de Septembre 2011).\n"
+"Ces modules sont strictement distribués sous licence AGPL v3 et aujourd'hui ne permettent pas des droits\n"
+"payants pour une utilisation en ligne de \"modules privés\".\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -1044,6 +1097,25 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed, \n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"Plan Comptable pour le Venezuela.\n"
+"=============================== \n"
+"Le Venezuela n'a pas de Plan Comptable légal, mais celui proposé par défaut dans Odoo devrait être conforme aux meilleures pratiques acceptées au Venezuela. \n"
+"Ce module a été testé comme base pour plus de 1000 entreprises, parce qu'il est fondé sur l'observation des logiciels les plus courants du marché Vénézuélien. \n"
+"Ceci permettra à coup sûr aux comptables de se sentir à l'aise dès leur premier contact avec Odoo. \n"
+"Ce module ne prétend pas être la localisation complète pour le Venezuela, \n"
+"mais il aide à démarrer très rapidement avec Odoo dans ce pays. \n"
+"\n"
+"Ce module donne :\n"
+"----------------------------\n"
+"\n"
+"- Les taxes de base du Venezuela. \n"
+"- Les données de base pour lancer les tests de localisation de la communauté. \n"
+"- L'initialisation d'une société si le besoin est une simple comptabilité PoV. \n"
+"\n"
+"Nous recommandons d'installer la comptabilité anglo-saxonne pour valoriser les stocks avec la facturation sortante selon la pratique vénézuélienne. \n"
+"\n"
+"Installer ce module et sélectionner \"Plan comptable personnalisé\" propose un plan comptable de base, mais vous aurez besoin de définir manuellement des paramètres par défaut pour les taxes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -1113,6 +1185,8 @@ msgid ""
 "Configure the price accuracy you need for different kinds of usage: accounting, sales, purchases.\n"
 "=================================================================================================\n"
 msgstr ""
+"\n"
+"Configure la précision des prix dont vous avez besoin pour les différents types d'utilisations : comptabilité, ventes, achats. ========================================================================================================================================= \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey
@@ -1153,6 +1227,16 @@ msgid ""
 "      above. Specify the interval information and partner to be invoiced.\n"
 "    "
 msgstr ""
+"\n"
+"Création de documents récurrents.\n"
+"============================\n"
+"\n"
+"Ce module permet de créer de nouveaux documents et ajouter des abonnements à ces documents.\n"
+"\n"
+"Par exemple, avoir une facture générée automatiquement de façon périodique :\n"
+"-------------------------------------------------------------------------------------------------------- * définir un type de document basé sur l'objet Facture ;\n"
+"* définir un abonnement dont la source est le document défini\n"
+"précédemment et spécifier l'intervalle d'information et le partenaire à facturer."
 
 #. module: base
 #: model:ir.module.module,description:base.module_link_tracker
@@ -1269,6 +1353,17 @@ msgid ""
 "very handy when used in combination with the module 'share'.\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Personnalisez l'accès à votre base de données Odoo pour les utilisateurs externes en créant des portails.\n"
+"============================================================================================================\n"
+"Un portail définit un menu utilisateur et des droits d'accès spécifiques pour ses membres.\n"
+"Ce menu peut être vu par les membres du portail, les utilisateurs publics et tout autre utilisateur qui a l'accès aux fonctionnalités techniques (l'administrateur par exemple).\n"
+"En outre, chaque membre du portail est liée à un partenaire spécifique.\n"
+"\n"
+"Ce module associe également des groupes d'utilisateurs aux utilisateurs du portail (l'ajout d'un groupe au portail l'ajoute automatiquement aux utilisateurs du portail, etc.).\n"
+"Cette fonctionnalité est très pratique lorsqu'elle est utilisé en combinaison avec module 'share'.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -1339,6 +1434,9 @@ msgid ""
 "===============================================\n"
 "    "
 msgstr ""
+"\n"
+"Affiche les feuilles de temps dans les tâches du portail web\n"
+"======================================================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_twitter
@@ -1561,6 +1659,15 @@ msgid ""
 "Belgian cash register. It allows the communication on with a certified Fiscal\n"
 "Data Module but will not modify the behaviour of the Point of Sale.\n"
 msgstr ""
+"\n"
+"Pilote de périphérique pour module de données fiscales\n"
+"==================================================\n"
+"\n"
+"Ce module permet à un client point de vente de communiquer avec un module de gestion de données fiscales Belge.\n"
+"\n"
+"Ce module ne transforme **pas** un module point de vente Odoo en caisse certifiée\n"
+"pour la Belgique. Il permet la communication avec un module certifié\n"
+"mais ne modifie pas le comportement du point de vente.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -1617,6 +1724,17 @@ msgid ""
 "\n"
 "Both goals and badges are flexibles and can be adapted to a large range of modules and actions. When installed, this module creates easy goals to help new users to discover Odoo and configure their user profile.\n"
 msgstr ""
+"\n"
+"Processus d'Émulation\n"
+"=====================\n"
+"Le module d'émulation donne la possibilité d'évaluer et de motiver les utilisateurs d'Odoo.\n"
+"\n"
+"Les utilisateurs peuvent être évalués au travers d'objectifs chiffrés ou non à atteindre.\n"
+"Les **objectifs** sont assignés au moyen de **défis** afin d'évaluer et de comparer les membres d'une équipe entre eux et dans le temps.\n"
+"\n"
+"Pour les succès non chiffrés, des **médailles** sont remises aux utilisateurs. D'un simple « merci » à une reconnaissance exceptionnelle, une médaille est un moyen simple d'exprimer de la gratitude envers un utilisateur pour son travail.\n"
+"\n"
+"Les objectifs et les médailles sont flexibles et peuvent être adaptés à une large gamme de modules et d'action. Lorsqu'il est installé, ce module crée des objectifs simples afin d'aider les nouveaux utilisateurs à découvrir Odoo et à configurer leur profil utilisateur.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -1782,6 +1900,15 @@ msgid ""
 "Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
 "  "
 msgstr ""
+"\n"
+"Comptabilité indienne: Plan comptable\n"
+"==================================\n"
+"\n"
+"Plan comptable indien et localisation.\n"
+"\n"
+"Odoo permet de gérer la comptabilité indienne en fournissant deux formats de plans comptables c'est à dire le Plan comptable Indien Standard et le Plan comptable Indien Annexe VI.\n"
+"\n"
+"Note: L'annexe VI a été révisée par le MCA et est applicable pour tous les bilans effectués après le 31 mars 2011. Ce format a fait disparaître deux anciennes options de format de bilan, maintenant seul le format vertical a été autorisé et est supporté par OpenERP."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll
@@ -1830,6 +1957,12 @@ msgid ""
 "This module allows you to integrate google documents to any of your Odoo record quickly and easily using OAuth 2.0 for Installed Applications,\n"
 "You can configure your google Authorization Code from Settings > Configuration > General Settings by clicking on \"Generate Google Authorization Code\"\n"
 msgstr ""
+"\n"
+"Intégration de document google aux enregistrements Odoo.\n"
+"======================================================\n"
+"\n"
+"Ce module vous permet d'intégrer rapidement et facilement des documents Google dans n'importe quel enregistrement Odoo au travail de « OAuth 2.0 for Installed Applications »,\n"
+"vous pouvez configurer votre code d'autorisation Google depuis Configuration > Paramètres généraux en cliquant sur « Générer un code d'autorisation Google ».\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -2011,6 +2144,14 @@ msgid ""
 "It is integrated with the mail gateway to automatically fetch email sent to <jobs@yourcompany.com> in the list of applications. It's also integrated with the document management system to store and search in the CV base and find the candidate that you are looking for. Similarly, it may integrated with the survey module to allow you to define interviews for different jobs.\t\t\n"
 "You can define the different phases of interviews and easily rate the applicant from the kanban view.\n"
 msgstr ""
+"\n"
+"Gestion des postes et du processus de recrutement\n"
+"=============================================\n"
+"\n"
+"Cette application vous permet de garder une trace des postes, disponibilités, candidatures, entretiens…\n"
+"\n"
+"Il est intégré à la passerelle mail afin de récupérer automatiquement les emails envoyés à <jobs@yourcompany.com> pour les faire figurer dans la liste des candidatures. Il est également intégré à la GED afin de permettre une recherche dans les CV pour trouver le candidat dont vous avez besoin. De même, il peut être intégré au module de sondage afin de définir des entretiens pour différents postes.\n"
+"Vous pouvez définir les phases des entretiens et classer un candidat depuis la vue Kanban.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays
@@ -2031,6 +2172,21 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a leave request is accepted by setting up a type of meeting in Leave Type.\n"
 msgstr ""
+"\n"
+"Gestion des allocations et demandes de congés\n"
+"===========================================\n"
+"\n"
+"Cette application contrôle la programmation des congés. Elle permet aux employés de faire des demandes de congés. Ensuite, les responsables peuvent examiner les demandes, les approuver ou les rejeter. On contrôle ainsi le planning de l'ensemble des congés de l'entreprise ou d'un département.\n"
+"\n"
+"Plusieurs types d'absences sont configurables (maladie, congés payés, congés sans soldes…). Ces absences sont affectées rapidement à un employé ou à un département. Un employé peut aussi demander plus de jours de congé. Cela augmentera le total des jours disponibles pour ce type de congé (si la demande est acceptée).\n"
+"\n"
+"Vous pouvez suivre les absences de différentes façons grâce aux rapports suivants : \n"
+"\n"
+"* Résumé des absences\n"
+"* Absences par département\n"
+"* Analyse des absences\n"
+"\n"
+"La synchronisation avec un agenda interne (réunions du module CRM) est possible : lorsqu'une demande de congés est acceptée, une réunion de type Absence est automatiquement générée.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock
@@ -2062,6 +2218,32 @@ msgid ""
 "* Moves Analysis\n"
 "    "
 msgstr ""
+"\n"
+"Gestion de stock multi-dépôts et multi-emplacements structurés\n"
+"=========================================================\n"
+"\n"
+"\n"
+"La gestion d'entrepôt et d'inventaire est basée sur une structure hiérarchique d'emplacements, depuis les entrepôts jusqu'aux emplacements de stockage.\n"
+"Le système d'inventaire à double entrée vous permet de gérer des inventaires client, fournisseur mais également de fabrication.\n"
+"\n"
+"Odoo est à même de gérer les lots et les numéros de série, assurant ainsi la traçabilité requise par la majorité des industries.\n"
+"\n"
+"Fonctions clés\n"
+"----------------------\n"
+"* Historique et planification des mouvements\n"
+"* Règles de stock minimum\n"
+"* Prise en charge des codes barre\n"
+"* Détection rapide des erreurs au moyen d'un système à double entrée\n"
+"* Traçabilité (numéros de série, regroupements, etc.)\n"
+"\n"
+"Les rapports et tableau de bord pour la gestion d'inventaire incluent :\n"
+"----------------------------------------------\n"
+"* Les produits entrants (graphe) ;\n"
+"* Les produits sortants (graphe) ;\n"
+"* Les approvisionnements exceptionnels ;\n"
+"* L'analyse d'inventaire ;\n"
+"* Les derniers inventaires réalisés ;\n"
+"* L'analyse des mouvements."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -2100,6 +2282,38 @@ msgid ""
 "* Monthly Turnover (Graph)\n"
 "    "
 msgstr ""
+"\n"
+"Gestion des devis et commandes de vente\n"
+"=======================================\n"
+"\n"
+"Cette application vous permet de gérer vos objectifs de vente de façon efficace en gardant une trace de toutes les commandes et de leur historique.\n"
+"\n"
+"Il gère l'intégralité du processus de vente :\n"
+"\n"
+"* **Devis** → **Commande** → **Facture**\n"
+"\n"
+"Préférences (uniquement lorsque la gestion de dépôt est installée)\n"
+"------------------------------------------------------\n"
+"\n"
+"Si vous avez également installé la gestion d'entrepôt, vous avez accès aux paramètres suivants :\n"
+"\n"
+"* Expéditions : choisissez entre partiel et total ;\n"
+"* Facturation : définissez le mode de paiement des factures ;\n"
+"* Incoterms : Modalités commerciales internationnales.\n"
+"\n"
+"Vous avez le choix entre plusieurs modes de facturation :\n"
+"\n"
+"* **À la demande** : les factures sont créées manuellement depuis les commandes lorsque c'est nécessaire ;\n"
+"* **À la livraison** : les factures sont générées au moment du picking (expédition) ;\n"
+"* **Avant livraison** : une facture brouillon est générée et doit être réglée avant l'expédition.\n"
+"\n"
+"Avec ce module, vous pourrez personnaliser le gabarit d'impression de commande et de facture vente au moyen\n"
+"de catégories, sous-totaux et sauts de page\n"
+"\n"
+"Le tableau de bord pour les agents commerciaux inclue\n"
+"----------------------------------\n"
+"* « Mes devis » ;\n"
+"* Le chiffre d'affaire mensuel."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_stock
@@ -2167,6 +2381,29 @@ msgid ""
 "* Work Order Analysis\n"
 "    "
 msgstr ""
+"\n"
+"Gestion de production d'Odoo\n"
+"======================================\n"
+"\n"
+"Le module de gestion de production comprend la planification, l'ordonnancement, les stocks, la fabrication et l'assemblage de produits à partir de matières premières et de composants. Il gère la consommation et la production de produits selon leur nomenclature, les opérations nécessaires en machines, outils et ressources humaines selon les gammes.\n"
+"\n"
+"Il intègre la planification des biens stockables, des consommables ou des services. Les services sont totalement intégrés avec le reste du logiciel. Exemple : On peut définir un service sous-traité dans une nomenclature afin d'automatiquement acheter sur commande l’assemblage de la production.\n"
+"\n"
+"Fonctionnalités clés\n"
+"---------------------------\n"
+"* Fabrication sur stock ou sur commande\n"
+"* Nomenclatures multi-niveaux, illimitées\n"
+"* Gammes multi-niveaux, illimitées\n"
+"* Gammes et poste de charge intégrés avec la comptabilité analytique.\n"
+"* Calcul périodique du planificateur\n"
+"* Navigation dans la structure complète des nomenclatures, incluant les nomenclatures filles et fantômes\n"
+"\n"
+"Le Tableau de bord et les rapports du module MRP comprennent :\n"
+"------------------------------------------------------------------\n"
+"* les approvisionnements en exception (graphique)\n"
+"* les variation des stocks (graphique)\n"
+"* l'analyse des ordres de production\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
@@ -2222,6 +2459,14 @@ msgid ""
 "that have no counterpart in the general financial accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Module de définition des comptes analytiques.\n"
+"=============================================\n"
+"\n"
+"Dans Odoo, les comptes analytiques sont liés à des comptes financiers mais sont traités\n"
+"indépendamment. Donc, vous pouvez entrer diverses opérations analytiques différentes\n"
+"qui n'ont pas de contrepartie dans les comptes financiers.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_resource
@@ -2275,6 +2520,15 @@ msgid ""
 "    - sets up New Zealand taxes.\n"
 "    "
 msgstr ""
+"\n"
+"Module de comptabilité néo-zélandaise\n"
+"================================\n"
+"\n"
+"Localisation et plan comptable néo-zélandais.\n"
+"\n"
+"et :\n"
+"- active certaines monnaies régionales,\n"
+"- configure les taxes néo-zélandaise."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import
@@ -2300,6 +2554,17 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"\n"
+"Nouvel import de fichier extensible pour Odoo\n"
+"===========================================\n"
+"\n"
+"Ré-implémentation du système de fichiers d'importation d'Odoo :\n"
+"\n"
+"* Exécution côté serveur : Le système précédent effectuait essentiellement les traitements côté client ce qui dupliquait le travail (entre les clients), cela rendait l'importation plus difficile à utiliser sans un client (direct RPC ou une autre forme d'automatisme) et la maîtrise de l'import/export sur le système devenait beaucoup plus difficile puisque répartie sur plus de 3 projets différents.\n"
+"\n"
+"* Plus ouvert : Afin que les utilisateurs et les partenaires puissent construire leur propre interface frontal pour importer d'autres formats de fichiers (des fichiers OpenDocument par exemple) qui peuvent être simples à gérer dans leur flux de travail ou depuis leur sources de production de données.\n"
+"\n"
+"* Dans un module : De sorte que les administrateurs et les utilisateurs d'Odoo, suivant leurs besoins ou envies, évitent qu'une importation en ligne soit disponible pour les utilisateurs.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -2327,6 +2592,9 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Blog Odoo\n"
+"============="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -2339,6 +2607,9 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Formulaire de contact Odoo\n"
+"==========================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_customer
@@ -2347,6 +2618,9 @@ msgid ""
 "Odoo Customer References\n"
 "===========================\n"
 msgstr ""
+"\n"
+"Références clients Odoo\n"
+"======================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale
@@ -2358,6 +2632,9 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"E-Commerce Odoo \n"
+"=================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail_channel
@@ -2368,6 +2645,9 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Groupe de messagerie Odoo : Archives de liste de diffusion\n"
+"========================================================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_quote
@@ -2378,6 +2658,9 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Déroulé des ventes Odoo\n"
+"========================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_calendar
@@ -2387,6 +2670,10 @@ msgid ""
 "==========================\n"
 "\n"
 msgstr ""
+"\n"
+"Vue agenda d'Odoo\n"
+"=========================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_editor
@@ -2410,6 +2697,12 @@ msgid ""
 "This module provides the core of the Odoo Web Client.\n"
 "        "
 msgstr ""
+"\n"
+"Module cœur du client Web Odoo.\n"
+"==============================\n"
+"\n"
+"Ce module fourni le cœur du client Web Odoo.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban
@@ -2419,6 +2712,10 @@ msgid ""
 "========================\n"
 "\n"
 msgstr ""
+"\n"
+"Vue kanban pour le client Web Odoo.\n"
+"================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_tour
@@ -2428,6 +2725,9 @@ msgid ""
 "========================\n"
 "\n"
 msgstr ""
+"\n"
+"Parcours guidés Odoo\n"
+"=====================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website
@@ -2438,6 +2738,9 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Site Web CMS Odoo\n"
+"==================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_google_map
@@ -2448,6 +2751,9 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Google Map pour site Web Odoo\n"
+"==============================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_livechat
@@ -2459,6 +2765,11 @@ msgid ""
 "It also will include the feedback tool for the livechat, and web pages to display your channel and its ratings on the website.\n"
 "        "
 msgstr ""
+"\n"
+"Conversation en ligne du Site Web Odoo\n"
+"========================\n"
+"Pour un site web construit avec le CMS d'Odoo, ce module insère un bouton de \"chat\" sur votre site web et permet à vos visiteurs de discuter avec vos collaborateurs.\n"
+"Il comprend également l'outil de retour client pour la conversation en ligne et des pages Web pour afficher votre canal et ses évaluations sur le site web."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_settings_dashboard
@@ -2559,6 +2870,17 @@ msgid ""
 "* Manage your Events and Registrations\n"
 "* Use emails to automatically confirm and send acknowledgments for any event registration\n"
 msgstr ""
+"\n"
+"Organisation et gestion des événements.\n"
+"=====================================\n"
+"\n"
+"Le module « événements » vous permet de gérer de manière efficace des événements et les tâches qui y sont liées : planning, gestion de réservation,\n"
+"participation, etc.\n"
+"\n"
+"Fonctions clés\n"
+"----------------------\n"
+"* Gérez vos événements et réservations\n"
+"* Utilisez des emails pour la confirmation automatique et l'envoi d'accusés réception lors de l'enregistrement d'un événement\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr
@@ -2602,6 +2924,9 @@ msgid ""
 "========================\n"
 "    "
 msgstr ""
+"\n"
+"Géolocalisation des partenaires\n"
+"========================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe
@@ -2773,6 +3098,23 @@ msgid ""
 "* Maximal difference between timesheet and attendances\n"
 "    "
 msgstr ""
+"\n"
+"Enregistrer et valider facilement les feuilles de temps et les présences\n"
+"========================================================================\n"
+"\n"
+"Cette application fournit un nouvel écran vous permettant de gérer à la fois les présences (entrées/sorties) et l'enregistrement du travail (feuille de temps) par période. Les saisies dans la feuille de temps sont faites par les employés chaque jour. À la fin de la période définie, les employés valident leurs feuilles de temps et le responsable doit approuver les saisies de son équipe. Les périodes sont définis dans le formulaire de la société et vous pouvez les paramétrer sur une base mensuelle ou hebdomadaire.\n"
+"\n"
+"Le processus complet de la validation des feuilles de temps est :\n"
+"-----------------------------------------------------------------\n"
+"* Feuille en brouillon\n"
+"* Confirmation de la feuille à la fin de la période par les employées\n"
+"* Validation par le responsable du projet\n"
+"\n"
+"La validation peut être paramétrée dans la société :\n"
+"----------------------------------------------------\n"
+"* Durée de la période (jour, semaine, mois)\n"
+"* Différence maximale entre la feuille de temps et les présences\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_report
@@ -2816,6 +3158,24 @@ msgid ""
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
 msgstr ""
+"\n"
+"Récupérer les courriels entrant sur des serveurs POP/IMAP.\n"
+"====================================================\n"
+"\n"
+"Entrez les paramètres de vos comptes POP/IMAP, et tous les courriels qui arrivent sur ces comptes seront automatiquement chargés sur votre système Odoo.\n"
+"Tous les serveurs compatibles POP3/IMAP sont supportés, y compris ceux qui nécessitent une connexion chiffrée SSL/TLS.\n"
+"Vous pouvez ainsi créer facilement des flux de travail basés sur des courriels pour de nombreux documents Odoo utilisant les fonctions de courriels, comme :\n"
+"--------------------------------------------------------------------------------------------------------\n"
+"    * pistes / opportunités CRM \n"
+"    * prétentions CRM \n"
+"    * question de projet\n"
+"    * tâches de projet\n"
+"    * recrutements en ressources humaines (candidats)\n"
+"\n"
+"Installez simplement l'application concernée, et vous pourrez attribuer n'importe lequel de ces types de documents (prospects, question de projet) à votre compte de courriel entrant. Les nouveaux courriels généreront automatiquement les nouveaux document du type choisi, il est donc en très rapide de créer une intégration courriel-vers-Oddo. Encore mieux : ces documents fonctionnent directement comme des mini conversations synchronisées par courriel. Vous pouvez y répondre depuis Odoo, et les réponses seront automatiquement recueillies à leur retour, et attachées au même document de \"conversation\".\n"
+"\n"
+"Pour des besoins plus spécifiques, vous pouvez également assigner des actions personnalisées (techniquement : Actions Serveur) à déclencher pour chaque courriel qui arrive.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
@@ -3076,6 +3436,17 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+"L'objectif est de disposer d'un module complet pour gérer les réparations des produits\n"
+"===============================================================================\n"
+"Les points suivants sont  couverts par ce module :\n"
+"----------------------------------------------------------------------------\n"
+"* Ajouter/supprimer des produits en réparation\n"
+"* Impact sur les stocks\n"
+"* Facturation (produits et/ou services)\n"
+"* Concept de garantie\n"
+"* Rapport de devis de réparation\n"
+"* Notes pour le technicien et pour le client final\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_lunch
@@ -3132,6 +3503,18 @@ msgid ""
 "* Planned Revenue by Stage and User (graph)\n"
 "* Opportunities by Stage (graph)\n"
 msgstr ""
+"\n"
+"Module générique Odoo de gestion de la relation client ============================================ ========\n"
+"\n"
+"Cette application permet à un groupe de personnes de gérer intelligemment et efficacement les pistes, opportunités, réunions et activités.\n"
+"\n"
+"Il gère les tâches clés telles que communication, identification, priorisation, affectation, résolution et notification.\n"
+"\n"
+"Odoo assure que tous les cas sont suivis avec succès par les utilisateurs, les clients et les fournisseurs. Ce module peut automatiquement envoyer des rappels, déclencher des méthodes spécifiques et de nombreuses autres actions en selon les propres règles propres à chaque entreprise.\n"
+"\n"
+"La plus grande qualité de ce système est que les utilisateurs n'ont rien à faire de spécial. Le module CRM dispose d'une passerelle de messagerie pour l'interface de synchronisation entre mails et Odoo. De cette façon, les utilisateurs peuvent tout simplement envoyer des courriels au suivi des demandes.\n"
+"\n"
+"Odoo prendra soin de les remercier de leur message, le router automatiquement au personnel approprié et assurer que toute la correspondance future arrivera à la bonne place.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -3140,6 +3523,9 @@ msgid ""
 "The kernel of Odoo, needed for all installation.\n"
 "===================================================\n"
 msgstr ""
+"\n"
+"Le noyau d'Odoo, nécessaire pour toute installation.\n"
+"=======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -3159,6 +3545,9 @@ msgid ""
 "The module adds the possibility to display data from Odoo in Google Spreadsheets in real time.\n"
 "=================================================================================================\n"
 msgstr ""
+"\n"
+"Ce module ajoute la possibilité d'afficher les donnée d'Odoo dans un tableur Google en temps réel.\n"
+"=========================================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_calendar
@@ -3167,6 +3556,9 @@ msgid ""
 "The module adds the possibility to synchronize Google Calendar with Odoo\n"
 "===========================================================================\n"
 msgstr ""
+"\n"
+"Ce module ajoute la possibilité de synchroniser Google Calendar avec Odoo.\n"
+"===========================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -3232,6 +3624,24 @@ msgid ""
 "Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"Module de base de gestion des produits et des listes de prix dans Odoo.\n"
+"================================================== ======================\n"
+"\n"
+"Prise en compte des variantes des produits, différentes méthodes de tarification, informations des vendeurs, fabrication sur stock ou sur ordre, différentes unités de mesures, emballage et propriétés.\n"
+"\n"
+"Support des listes de prix:\n"
+"-------------------\n"
+"* Multiples niveaux de remise (par produit, catégorie, quantité)\n"
+"* Calcul des prix sur différents critères :\n"
+"* Autre liste de prix\n"
+"* Prix coutant\n"
+"* Liste des prix\n"
+"* Prix du vendeur\n"
+"\n"
+"Préférences des listes de prix par produit et / ou partenaires.\n"
+"\n"
+"Impression d'étiquettes avec code à barres."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -3266,6 +3676,34 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Module de gestion du plan comptable pour la Belgique dans Pdpp.\n"
+"================================================== ============================\n"
+"\n"
+"Après l'installation de ce module, l'assistant de configuration de la comptabilité est lancé.\n"
+" * Nous avons les modèles de compte qui peut être utile pour générer des graphiques de comptes.\n"
+" * Sur cet assistant, vous serez invité à saisir le nom de la société, le modèle de tableau à suivre, le nombre de chiffres à générer, le code du compte et le compte bancaire, la monnaie pour créer les journaux.\n"
+"\n"
+"Ainsi, la copie pure du modèle de tableau est générée.\n"
+"\n"
+"Assistants fournis par ce module:\n"
+" --------------------------------\n"
+" * Partenaire TVA intra : enregistrer les partenaires avec leur TVA afférente et les montants facturés. \n"
+"Préparer un format de fichier XML.\n"
+"\n"
+" ** Chemin d'accès: ** \n"
+"Facturation / rapports / Rapports juridiques / Belgique / états Partner TVA Intra\n"
+"\n"
+" * Déclaration périodique de TVA : Préparer un fichier XML pour la déclaration de TVA\n"
+" La principale compagnie de l'utilisateur actuellement connecté.\n"
+"\n"
+"** Chemin d'accès: ** \n"
+"Facturation / rapports / Rapports juridiques / Belgique Déclarations / Déclaration périodique de TVA\n"
+" * Liste annuelle des clients soumis à la TVA : Prépare un fichier XML pour le TVA\n"
+" Déclaration de l'entreprise principale de l'utilisateur actuellement connecté sur la base de l'Année fiscale.\n"
+"\n"
+"** Chemin d'accès: ** \n"
+"Facturation / rapports / Rapports juridiques / États Belgique / liste annuelle des clients soumis à la TVA"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -3298,6 +3736,12 @@ msgid ""
 "Accounting chart and localization for Ecuador.\n"
 "    "
 msgstr ""
+"\n"
+"Module de base pour gérer le plan comptable pour l'Équateur dans Odoo.\n"
+"=========================================================================\n"
+"\n"
+"Module pour la comptabilité équatorienne\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -3435,6 +3879,13 @@ msgid ""
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
 msgstr ""
+"\n"
+"Ceci est la dernière traduction Odoo nécessaire pour la comptabilité Odoo au sein des PME du Royaume-Uni avec :\n"
+"================================================== ===============================================\n"
+"- Un plan comptable compatible CT600\n"
+"- Structure fiscale compatible VAT100\n"
+"- Liste des comtés britaniques InfoLogic\n"
+"- Quelques autres adaptations"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement
@@ -3488,6 +3939,14 @@ msgid ""
 "Romanian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Module Odoo de gestion du plan comptable, de la structure TVA, de la position fiscale et de la correspondance fiscale pour la Roumanie.\n"
+"Il gère aussi le Numéro d'Immatriculation roumain.\n"
+"==================================================================================================\n"
+"\n"
+"\n"
+"Plan comptable roumain et traduction.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -3520,6 +3979,28 @@ msgid ""
 "position.\n"
 "    "
 msgstr ""
+"\n"
+"Module de gestion du plan comptable Canadien dans Odoo.\n"
+"================================================== =========================================\n"
+"\n"
+"Plan comptable Canadien et localisations.\n"
+"\n"
+"Les positions fiscales\n"
+"----------------\n"
+"\n"
+"Lors de l'examen des taxes à appliquer, c'est la province où la livraison est effectuée qui compte.\n"
+"Par conséquent il a été décidé de mettre en œuvre le cas le plus fréquent dans les positions fiscales : la livraison est sous la responsabilité du vendeur et se fait aux conditions du domicile du client.\n"
+"\n"
+"Quelques exemples:\n"
+"\n"
+"1) Pour un client d'une autre province et une livraison à son domicile.\n"
+"Définir la position  fiscale du client selon celle de sa province.\n"
+"\n"
+"2) Pour un client d'une autre province. Lorsque celui-ci envoie un camion à votre domicile pour prendre ses produits. Ne pas utiliser la position fiscale du clien.\n"
+"\n"
+"3) Un fournisseur international ne facture pas les taxes. Les taxes sont facturés à la douane par le courtier en douane. Pour ce vendeur, définir la position budgétaire à 'International'.\n"
+"\n"
+"4) Une vendeur international charge sa vente aux taxes de votre province. Ces taxes sont enregistrées avec votre position."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -3536,6 +4017,16 @@ msgid ""
 "Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 "    "
 msgstr ""
+"\n"
+"Module de gestion du Plan comptable et taxes pour la Pologne dans Odoo.\n"
+"==================================================================================\n"
+"\n"
+"To jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów podatkowych i\n"
+"rejestrów podatkowych. Moduł ustawia też konta do kupna i sprzedaży towarów\n"
+"zakładając, że wszystkie towary są w obrocie hurtowym.\n"
+"\n"
+"Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
+"Wewnętrzny numer wersji OpenGLOBE 1.02"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -3562,6 +4053,19 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"Module de gestion du Plan Comptable Français.\n"
+"===================================\n"
+"\n"
+"Ce module est applicable aux sociétés domiciliées en France métropolitaine. Elle ne concerne pas les sociétés domiciliées dans les DOM-TOM (Guadeloupe, Martinique, Guyane, Réunion, Mayotte).\n"
+"\n"
+"Il gère la TVA de type TTC pour les achats (il est indispensable pour utiliser le module 'hr_expense'). Attention, ces TVA «TTC» ne sont pas gérés par les budgets prévus par ce module (car il est complexe de gérer à la fois les scénarios HT et TTC dans des budgets) .\n"
+"\n"
+"Ce module de traduction ne gère pas correctement le scénario dans lequel un société métropolitaine vend des services à une société domiciliée dans les DOM. \n"
+"Nous pourrions gérer cela dans les budgets, mais il faudrait faire la différence entre la TVA sur les produits et la TVA sur les services. \n"
+"Nous considérons qu'il est trop «lourd» d'avoir ceci par défaut dans l10n_fr; les entreprises qui vendent des services à des entreprises domiciliées dans les DOM doivent mettre à jour manuellement la configuration de leurs taxes et positions fiscales.\n"
+"\n"
+"** Crédits: ** Sistheo, Zeekom, CrysaLEAD, Akretion et Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -3574,6 +4078,13 @@ msgid ""
 "\n"
 "**Credits:** General Solutions.\n"
 msgstr ""
+"\n"
+"Module de prise en charge du plan comptable Vietnamien dans Odoo.\n"
+"=========================================================================\n"
+"\n"
+"Ce module applique aux sociétés placées sous la norme comptable vietnamienne (VAS).\n"
+"\n"
+"**Credits:** General Solutions.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating_project
@@ -3781,6 +4292,9 @@ msgid ""
 "================================================================\n"
 "    "
 msgstr ""
+"\n"
+"Ce module ajoute l'option des phases de préparation dans la gestion de l'entrepôt.\n"
+"================================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -3793,6 +4307,13 @@ msgid ""
 "actions(Check in/Check out) performed by them.\n"
 "       "
 msgstr ""
+"\n"
+"Module de pointage des heures pour les employés.\n"
+"================================================\n"
+"\n"
+"Comptabilise les temps de présence des employés sur la base des\n"
+"pointages (Entrée / Sorties) réalisés.\n"
+"       "
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating_project_issue
@@ -3809,6 +4330,8 @@ msgid ""
 "\n"
 "This module allows a customer to give rating on task which are created from sale order.\n"
 msgstr ""
+"\n"
+"Ce module permet au client de donner son avis sur les tâches relatives à une commande.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating
@@ -3845,6 +4368,21 @@ msgid ""
 "    3. The last one is available from the Analytic Chart of Accounts. It gives\n"
 "       the spreading, for the selected Analytic Accounts of Budgets.\n"
 msgstr ""
+"\n"
+"Module permettant aux comptables de gérer les budgets analytiques et croisés.\n"
+"================================================== ========================\n"
+"\n"
+"  Une fois que les budgets sont définis (dans Facturation / Budgets / Budgets), les gestionnaires de projet peuvent fixer le montant prévu sur chaque compte analytique.\n"
+"\n"
+"Le comptable a la possibilité de voir le total des prévisions de chaque budget afin d'assurer que le total prévu n'est ni supérieur ni inférieur à ce qu'il avait planifié. Chaque budget peut être visualisé sous forme de vue graphique.\n"
+"\n"
+"  Trois rapports sont disponibles:\n"
+"  ----------------------------\n"
+"  1. Le premier est réalisé à partir d'une liste des budgets. Il donne la répartition des comptes analytiques pour ces budgets.\n"
+"\n"
+"  2. Le second est un résumé du précédent, il donne la répartition par comptes analytiques budgétaires sélectionnés\n"
+"\n"
+"3. Le dernier est réalisé à partir du plan comptable analytique. Il donne la répartition, pour les comptes analytiques budgétaires sélectionnés.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_action_rule
@@ -3885,6 +4423,15 @@ msgid ""
 "\n"
 "Notes can be found in the 'Home' menu.\n"
 msgstr ""
+"\n"
+"Ce module permet aux utilisateurs de créer leurs propres notes à l'intérieur d'Odoo\n"
+"\n"
+"================================================== ===============\n"
+"\n"
+"Utiliser des notes pour écrire minutes de réunion, organiser des idées, organiser des listes de tâches personnelles, etc. Chaque utilisateur gère ses propres notes. Les notes ne sont accessibles que pour leurs auteurs, mais ils peuvent les partager des notes avec d'autres utilisateurs de sorte que plusieurs personnes peuvent travailler sur la même note en temps réel. \n"
+"Ce fonctionnement est très efficace pour partager des comptes-rendus de réunions.\n"
+"\n"
+"On trouve les notes dans le menu 'Accueil'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_anonymization
@@ -4010,6 +4557,9 @@ msgid ""
 "This module gives you a quick view of your contacts directory, accessible from your home page.\n"
 "You can track your vendors, customers and other contacts.\n"
 msgstr ""
+"\n"
+"Ce module vous donne un aperçu rapide de votre carnet d'adresses, accessible depuis la page d'accueil.\n"
+"Vous pourrez ainsi suivre vos fournisseurs, clients et autres contacts.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -4045,6 +4595,17 @@ msgid ""
 "up a management by affair.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module met en œuvre un système de feuilles de temps.\n"
+"===============================================\n"
+"\n"
+"Chaque employé peut saisir et suivre le temps qu'il passe sur les différents projets.\n"
+"\n"
+"Différents rapports sur le temps et le suivi des employés sont fournis.\n"
+"\n"
+"Il est complètement intégré au module gestion des coûts (cost_accounting). Il vous\n"
+"permet de mettre en place une gestion par affaire.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada
@@ -4139,6 +4700,11 @@ msgid ""
 "from purchase order.\n"
 "    "
 msgstr ""
+"\n"
+"Module d'installation combinée des modules 'MRP' et 'Achats'\n"
+"================================================== ==================================\n"
+"\n"
+"Il est essentiellement utilisé lorsque l'on veut garder une trace des ordres de production générés par des commandes d'achat."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_mrp
@@ -4229,6 +4795,12 @@ msgid ""
 "Use for update your text memo in real time with the following user that you invite.\n"
 "\n"
 msgstr ""
+"\n"
+"Ce module met à jour les notes  dans Odoo en utilisant un éditeur externe\n"
+"===============================================================\n"
+"\n"
+"Utilisez-le pour mettre à jour vos notes en temps réel, avec les utilisateurs invités.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement_jit
@@ -4267,6 +4839,8 @@ msgid ""
 "\n"
 "This widget allows to display gauges using d3 library.\n"
 msgstr ""
+"\n"
+"Ce widget permet d'afficher les jauges en utilisant la bibliothèque 'd3'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_issue
@@ -9858,12 +10432,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_expense
 msgid "Helps you manage your expenses."
-msgstr ""
+msgstr "Vous aide à gérer vos dépenses."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_holidays
 msgid "Helps you manage your holidays."
-msgstr ""
+msgstr "Vous aide à gérer vos congés."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_warehouse_management
@@ -9895,7 +10469,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_payroll
 msgid "Helps you manage your payrolls."
-msgstr ""
+msgstr "Vous aide à gérer vos fiches de paie."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_project_management
@@ -9918,7 +10492,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_recruitment
 msgid "Helps you manage your recruitments."
-msgstr ""
+msgstr "Vous aide à gérer vos recrutements."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_survey
@@ -9944,7 +10518,7 @@ msgstr "Historique"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_holidays
 msgid "Holidays"
-msgstr ""
+msgstr "Congés"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
@@ -10014,7 +10588,7 @@ msgstr "Comment définir un champ calculé"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey
 msgid "Hr Recruitment Interview Forms"
-msgstr ""
+msgstr "Formulaires d'entretiens de recrutement"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_survey
@@ -10467,7 +11041,7 @@ msgstr "Paie Indienne"
 #. module: base
 #: selection:res.partner,company_type:0
 msgid "Individual"
-msgstr "Individu"
+msgstr "Particulier"
 
 #. module: base
 #: model:res.country,name:base.id
@@ -15601,7 +16175,7 @@ msgstr "L'activité de destination"
 #: code:addons/base/ir/ir_model.py:438
 #, python-format
 msgid "The field '%s' cannot be removed because the field '%s' depends on it."
-msgstr ""
+msgstr "Le champ '%s' ne peut pas être supprimé car le champ '%s' en dépend."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -15654,7 +16228,7 @@ msgstr ""
 #: code:addons/base/module/wizard/base_module_upgrade.py:69
 #, python-format
 msgid "The following modules are not installed or unknown: %s"
-msgstr ""
+msgstr "Les modules suivants ne sont pas installés ou sont inconnus : %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_name
@@ -15701,6 +16275,8 @@ msgid ""
 "The model name can only contain lowercase characters, digits, underscores "
 "and dots."
 msgstr ""
+"Le nom du modèle ne peut contenir que des caractères en minuscules, des "
+"chiffres, des tirets-bas (_) et des points."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:98
@@ -15830,7 +16406,7 @@ msgstr "Le taux de la devise vers la devise de taux égale à 1."
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_res_id
 msgid "The record id this is attached to."
-msgstr ""
+msgstr "Identifiant de l'enregistrement de rattachement"
 
 #. module: base
 #: code:addons/models.py:2952 code:addons/models.py:3168
@@ -15863,7 +16439,7 @@ msgstr "Les modules sélectionnés ont été mis à jour / installés!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state_code
 msgid "The state code."
-msgstr ""
+msgstr "Code État"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:393
@@ -16019,7 +16595,7 @@ msgstr "Format de l'heure"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project_timesheet
 msgid "Timesheet in Website Portal"
-msgstr ""
+msgstr "Feuille de temps dans le portail web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue_sheet
@@ -16040,7 +16616,7 @@ msgstr "Feuilles de temps"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
 msgid "Timesheets / Attendances"
-msgstr ""
+msgstr "Feuilles de temps / Présence"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet_sheet
@@ -16050,7 +16626,7 @@ msgstr "Feuilles de Temps, Activités"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
 msgid "Timesheets/attendances reporting"
-msgstr ""
+msgstr "Reporting sur les feuilles de temps/présence"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_tz
@@ -16074,7 +16650,7 @@ msgstr "Civilité"
 #. module: base
 #: sql_constraint:res.partner.title:0
 msgid "Title name already exists !"
-msgstr ""
+msgstr "Il existe déjà un tiers avec ce nom !"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_date_to
@@ -16116,6 +16692,8 @@ msgstr "À mettre à jour"
 msgid ""
 "To enable it, make sure this directory exists and is writable on the server:"
 msgstr ""
+"Pour l'activer, assurez-vous que le répertoire suivant existe et est "
+"accessible en écriture sur le serveur :"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -16193,7 +16771,7 @@ msgstr "Transition"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_instance_transition_ids
 msgid "Transition ids"
-msgstr ""
+msgstr "Identifiants de transition"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_transition_form
@@ -16271,6 +16849,8 @@ msgid ""
 "Translation is not valid:\n"
 "%s"
 msgstr ""
+"La traduction est invalide :\n"
+"%s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation
@@ -16832,27 +17412,27 @@ msgstr "Correspondance des valeurs"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_binary
 msgid "Value binary"
-msgstr ""
+msgstr "Valeur binaire"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_datetime
 msgid "Value datetime"
-msgstr ""
+msgstr "Valeur date/heure"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_float
 msgid "Value float"
-msgstr ""
+msgstr "Valeur flottante"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_integer
 msgid "Value integer"
-msgstr ""
+msgstr "Valeur entière"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_reference
 msgid "Value reference"
-msgstr ""
+msgstr "Valeur référence"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_text

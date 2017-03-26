@@ -3,21 +3,14 @@
 # * stock_account
 # 
 # Translators:
-# KingOPl Slav <87slava13@gmail.com>, 2016
-# Максим Дронь <dronmax@gmail.com>, 2016
-# Masha Koc <mariya.kos.ua@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Sergey Vilizhanin <sv@grimmette.ru>, 2016
-# Viktor Pogrebniak <vp@aifil.ru>, 2016
-# Max Belyanin <maxbelyanin@gmail.com>, 2016
-# Danil Bochevkin <danil.borchevkin@gmail.com>, 2016
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Danil Bochevkin <danil.borchevkin@gmail.com>, 2016\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,6 +59,9 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"Не удается найти учетную запись входа в акции для продукта %s. Перед "
+"обработкой этой операции необходимо определить ее в категории продукта или в"
+" местоположении."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:246
@@ -75,6 +71,9 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"Невозможно найти учетную запись вывода запасов для продукта %s.. Перед "
+"обработкой этой операции необходимо определить ее в категории продукта или в"
+" местоположении."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -127,6 +126,8 @@ msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
+"Ошибка конфигурации. Чтобы обработать эту операцию, настройте учетную запись"
+" разницы цен на продукте или его категории."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -149,7 +150,7 @@ msgstr "Метод ценообразования"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Счет счётчика"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -458,6 +459,9 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Стандартная цена: Себестоимость вручную обновление в конце определенного периода (обычно один раз в год).\n"
+"                Средняя цена: Себестоимость пересчитывается на каждого входящего груза и используется для оценки продукта.\n"
+"                Реальная цена: Себестоимость отображается это цена последних исходящих продукта (будет использоваться в случае потери инвентаризации например)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -473,7 +477,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Stock Accounting"
-msgstr ""
+msgstr "Складской учет"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -541,6 +545,9 @@ msgid ""
 "probably a configuration error. Check the costing method and the standard "
 "price"
 msgstr ""
+"Найдены оценки сумма для продукта %s равно нулю. Что означает, что, "
+"вероятно, ошибка конфигурации. Проверьте метод учета себестоимости и "
+"Стандартная цена"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
@@ -686,6 +693,8 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Вы не имеете каких-либо запасов учетной записи, определенной на вашей "
+"категории продукта. Необходимо определить перед обработкой этой операции."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price

@@ -34,13 +34,14 @@
 # Dejan Dinic <dejan.dinic@bluewin.ch>, 2016
 # Niki Waibel <niki.waibel@gmail.com>, 2016
 # key six <mobile.umts@gmail.com>, 2016
+# Bülent Tiknas <btiknas@googlemail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-14 10:20+0000\n"
 "PO-Revision-Date: 2017-02-14 10:20+0000\n"
-"Last-Translator: key six <mobile.umts@gmail.com>, 2016\n"
+"Last-Translator: Bülent Tiknas <btiknas@googlemail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,6 +99,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* Der \"Entwurf\"-Status wird verwendet, wenn ein Benutzer eine Rechnung erstellt, aber noch nicht gebucht hat. \n"
+"* Der \"Pro-forma\" Status wird nach dessen Auswahl angezeigt, es wird aber noch keine Rechnungsnummer vergeben. * Die Rechnung ist im \"Offen\" Status, wenn Sie gebucht wurde, dadurch eine Rechnungsnummer bekommen hat, aber noch nicht vom Kunden bezahlt wurde.\n"
+" * Der\"Bezahlt\"-Status wird automatisch vergeben, wenn die offene Rechnung vom Kunden bezahlt wurde.\n"
+" * Eine Anzeige im \"Abgebrochen\"-Status erfolgt immer dann, wenn die Rechnung storniert wurde."
 
 #. module: account
 #. openerp-web
@@ -6019,6 +6024,7 @@ msgstr "Rechtliche Hinweise …"
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
 msgid "Legal mentions that have to be printed on the invoices."
 msgstr ""
+"Gesetzliche Vorgaben, die auf den Rechnungen ausgegeben werden müssen."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:149
@@ -6031,7 +6037,7 @@ msgstr "Abzüglich Zahlung"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Let odoo try to reconcile entries for the user"
-msgstr ""
+msgstr "Lassen Sie odoo versuchen, offene Posten des Benutzers auszugleichen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -6183,7 +6189,7 @@ msgstr "Manuelle Rechnungssteuern"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_manual_reconciliation
 msgid "Manual Payments & Invoices Matching"
-msgstr ""
+msgstr "Manueller Zahlungs- & Rechnungsabgleich"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_manual_reconciliation
