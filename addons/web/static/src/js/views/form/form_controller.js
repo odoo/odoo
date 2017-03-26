@@ -11,7 +11,6 @@ var _t = core._t;
 var qweb = core.qweb;
 
 var FormController = BasicController.extend({
-    // className: "o_form_view",
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         open_one2many_record: '_onOpenOne2ManyRecord',
         bounce_edit: '_onBounceEdit',

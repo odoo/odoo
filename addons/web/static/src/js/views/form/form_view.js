@@ -32,7 +32,7 @@ var FormView = BasicView.extend({
         this.controllerParams.hasSidebar = params.sidebar;
         this.controllerParams.toolbar = false;
         this.controllerParams.footerToButtons = params.footer_to_buttons;
-        if ('action' in params) {
+        if ('action' in params && 'flags' in params.action) {
             this.controllerParams.footerToButtons = params.action.flags.footer_to_buttons;
         }
         var defaultButtons = 'default_buttons' in params ? params.default_buttons : true;

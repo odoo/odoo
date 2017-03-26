@@ -85,7 +85,7 @@ var KanbanModel = BasicModel.extend({
      */
     load: function (params) {
         this.defaultGroupedBy = params.groupBy;
-        params.groupedBy = params.groupedBy.length ? params.groupedBy : this.defaultGroupedBy;
+        params.groupedBy = (params.groupedBy && params.groupedBy.length) ? params.groupedBy : this.defaultGroupedBy;
         return this._super(params);
     },
     /**

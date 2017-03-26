@@ -277,11 +277,13 @@ var AbstractController = Widget.extend({
      * @param {string} [event.data.mode='readonly']
      */
     _onOpenRecord: function (event) {
+        event.stopPropagation();
         var record = this.model.get(event.data.id, {raw: true});
         this.trigger_up('switch_view', {
             view_type: 'form',
             res_id: record.res_id,
             mode: event.data.mode || 'readonly',
+            model: this.modelName,
         });
     },
 

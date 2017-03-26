@@ -38,7 +38,6 @@ var ListView = BasicView.extend({
         var arch = viewInfo.arch;
         this.controllerParams.editable = arch.attrs.editable;
         this.controllerParams.hasSidebar = params.sidebar;
-        this.controllerParams.noContentHelp = params.action && params.action.help;
         this.controllerParams.activeActions.delete = true;
         this.controllerParams.noLeaf = !!this.loadParams.context.group_by_no_leaf;
 
