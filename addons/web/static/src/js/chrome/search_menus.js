@@ -23,7 +23,7 @@ return Widget.extend({
             this.toggle_save_menu();
         },
         'click .o_save_name button': 'save_favorite',
-        'hidden.bs.dropdown': 'close_menus',
+        'hidden.bs.dropdown': '_closeMenus',
         'keyup .o_save_name input': function (ev) {
             if (ev.which === $.ui.keyCode.ENTER) {
                 this.save_favorite();
@@ -74,7 +74,7 @@ return Widget.extend({
             this.$save_name.find('input').first().focus();
         }
     },
-    close_menus: function () {
+    _closeMenus: function () {
         this.toggle_save_menu(false);
     },
     save_favorite: function () {

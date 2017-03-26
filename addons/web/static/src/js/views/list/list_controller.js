@@ -323,6 +323,7 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onToggleColumnOrder: function (event) {
+        event.stopPropagation();
         var data = this.model.get(this.handle);
         if (!data.groupedBy) {
             this.pager.updateState({current_min: 1});

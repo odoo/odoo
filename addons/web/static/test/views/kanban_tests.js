@@ -578,7 +578,8 @@ QUnit.module('Views', {
             assert.deepEqual(event.data, {
                 view_type: 'form',
                 res_id: 1,
-                mode: 'edit'
+                mode: 'edit',
+                model: 'partner',
             });
         });
         kanban.$('a').first().click();

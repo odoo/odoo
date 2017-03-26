@@ -1089,7 +1089,6 @@ QUnit.module('Views', {
         this.data.foo.records.push({id: 6, foo: "blip", int_field: 5, m2o: 2});
 
         var nbRPCs = {readGroup: 0, searchRead: 0};
-        var groupID;
 
         var list = createView({
             View: ListView,
@@ -1114,10 +1113,9 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             intercepts: {
-                open_record: function (event) {
-                    event.stopPropagation();
-                    assert.strictEqual(event.data.id, groupID,
-                        "'open_record' event should have been triggered");
+                switch_view:  function (event) {
+                    assert.strictEqual(event.data.res_id, 4,
+                        "'switch_view' event has been triggered");
                 },
             },
         });
@@ -1173,8 +1171,6 @@ QUnit.module('Views', {
             "first record in open subgroup should be res_id 4 (with int_field -4)");
 
         // open a record (should trigger event 'open_record')
-        var $row = $openSubGroup.find('.o_data_row:first');
-        groupID = $row.data('id');
         $openSubGroup.find('.o_data_row:first').click();
 
         // sort by int_field (ASC) and check that open groups are still open
