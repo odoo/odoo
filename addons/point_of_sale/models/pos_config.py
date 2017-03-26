@@ -207,7 +207,7 @@ class PosConfig(models.Model):
 
     @api.model
     def create(self, values):
-        IrSequence = self.env['ir.sequence']
+        IrSequence = self.env['ir.sequence'].sudo()
         val = {
             'name': _('POS Order %s') % values['name'],
             'padding': 4,
