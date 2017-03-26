@@ -1,21 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * crm
-#
-# Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-14 13:41+0000\n"
-"PO-Revision-Date: 2016-02-21 12:42+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-12-14 13:41+0000\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: crm
@@ -24,156 +21,101 @@ msgid ""
 "\n"
 "\n"
 "            <div style=\"margin: 10px auto;\">\n"
-"            % set last_created_team = user.env['crm.team'].search([], order="
-"\"create_date desc\")[0]\n"
-"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;"
-"\">\n"
+"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
 "                <tbody>\n"
 "                    <tr>\n"
 "                        <td style=\"padding:2px;width:30%;\">\n"
 "                            <img src=\"web/static/src/img/logo.png\"/>\n"
 "                        </td>\n"
-"                        <td style=\"vertical-align: top; padding: 8px 10px;"
-"text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;"
-"margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-"
-"size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</"
-"a>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </tbody>\n"
 "            </table>\n"
-"            <table style=\"width:100%;text-align:justify;margin:0 auto;"
-"border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
 "                <tbody>\n"
 "                    <tr>\n"
 "                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                            <p style=\"color:#875A7B;margin:0\" >Hooray!</"
-"p><br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:15px;margin-"
-"top:0pt;margin-bottom:0pt;\">\n"
-"                                <span>Your Odoo CRM application is up and "
-"running.</span></p><br>\n"
-"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-"
-"bottom:8pt;\">\n"
-"                                <span style=\"font-size:13px;font-weight:"
-"bold; \">What’s next?</span></p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;"
-"font-size:13px;list-style-type:disc;\">\n"
+"                            <p style=\"color:#875A7B;margin:0\" >Hooray!</p><br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Your Odoo CRM application is up and running.</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold; \">What’s next?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:0pt;\">\n"
-"                                        <span>Try creating a lead by sending "
-"an email to </span>\n"
-"                                        <a href=\"mailto:${last_created_team."
-"alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else "
-"user.company_id.email}\">\n"
-"                                            <span style=\"font-weight:bold; "
-"text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] "
-"if last_created_team.alias_id.alias_domain else user.company_id.email}</"
-"span>\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Try creating a lead by sending an email to </span>\n"
+"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
 "                                        </a>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:8pt;\">\n"
-"                                        <span>Track your opportunities in "
-"your sale funnel by simply dragging and dropping the cards from one column "
-"to another</span>\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Track your opportunities in your sale funnel by simply dragging and dropping the cards from one column to another</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                            </ul> <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
-"top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Discover "
-"the </span>\n"
-"                                <span><a href=\"/"
-"web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
-"                                    <span style=\"font-weight:bold; text-"
-"decoration:underline;\">CRM planner</span></a></span>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Discover the </span>\n"
+"                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">CRM planner</span></a></span>\n"
 "                                <span> to activate extra features</span>\n"
-"                                <span style=\"color:#875A7B;margin:0;font-"
-"weight:bold\">(${user.env['web.planner']."
-"get_planner_progress('planner_crm')}% done)</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
 "                            </p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;"
-"font-size:13px;list-style-type:disc;\">\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:0pt;\">\n"
-"                                        <span>Automatically assign your "
-"leads to your salesmen with the lead scoring, </span>\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Automatically assign your leads to your salesmen with the lead scoring, </span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:0pt;\">\n"
-"                                        <span>Keep in touch with your "
-"potential client with efficient email campaigns,</span>\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Keep in touch with your potential client with efficient email campaigns,</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:0pt;\">\n"
-"                                        <span>Gain high quality insight from "
-"surveys,</span>\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Gain high quality insight from surveys,</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:0pt;\">\n"
-"                                        <span>Get smart reporting and "
-"accurate dashboards,</span>\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Get smart reporting and accurate dashboards,</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
-"margin-bottom:8pt;\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
 "                                        <span>And much more...</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                            </ul>\n"
 "                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;line-"
-"height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Need Help?"
-"</span>\n"
-"                                <span style=\"font-style:italic;\">You’re "
-"not alone</span>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Need Help?</span>\n"
+"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
-"top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you "
-"along the way. Contact us at\n"
-"                                <a href=\"mailto:help@odoo.com\"><span style="
-"\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any "
-"question. You can also discover\n"
-"                                how to get the best out of Odoo CRM with our "
-"</span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/"
-"user/9.0/crm.html\">\n"
-"                                <span style=\"text-decoration:underline;"
-"\">User Documentation</span></a>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us at\n"
+"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
+"                                help@odoo.com</span></a> if you have any question. You can also discover\n"
+"                                how to get the best out of Odoo CRM with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/9.0/crm.html\">\n"
+"                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation"
-"\">\n"
-"                                <span style=\"text-decoration:underline;"
-"\">API Documentation</span></a>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
 "                            </p>\n"
 "                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
-"top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </tbody>\n"
 "            </table>\n"
-"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-"
-"bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, "
-"check </span><a href=\"https://twitter.com/odoo/favorites\"><span style="
-"\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
 msgstr ""
@@ -183,11 +125,9 @@ msgstr ""
 msgid ""
 "\n"
 "<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
-"since at least 5 days.</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity since at least 5 days.</p>\n"
 "%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object."
-"description}</i>\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object.description}</i>\n"
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
@@ -197,42 +137,43 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_res_partner_meeting_count
 #: model:ir.model.fields,field_description:crm.field_res_users_meeting_count
 msgid "# Meetings"
-msgstr "Stretnutia"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_nbr_activities
 msgid "# of Activities"
-msgstr "# Aktivít"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "(if leads are activated)"
-msgstr "(ak sú iniciatívy aktivované)"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "(you can change it here)"
-msgstr "(môžete to zmeniť tu)"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ", if accounting or purchase is installed"
-msgstr ", ak je nainštalované účtovnictvo alebo nákup"
+msgstr ""
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:34
 #, python-format
 msgid ""
-"<b>Drag &amp; drop opportunities</b> between columns as you progress in your "
-"sales cycle."
+"<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
+" sales cycle."
 msgstr ""
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:75
 #, python-format
-msgid "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
+msgid ""
+"<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
 
 #. module: crm
@@ -248,7 +189,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
-msgstr "<i class=\"fa fa-question-circle\"> zobraziť príklady</i>"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -256,19 +197,17 @@ msgstr "<i class=\"fa fa-question-circle\"> zobraziť príklady</i>"
 #, python-format
 msgid ""
 "<p><b>Send messages</b> to your prospect and get replies automatically "
-"attached to this opportunity.</p><p class=\"mb0\">Type <i>'@'</i> to mention "
-"people - it's like cc-ing on emails.</p>"
+"attached to this opportunity.</p><p class=\"mb0\">Type <i>'@'</i> to mention"
+" people - it's like cc-ing on emails.</p>"
 msgstr ""
 
 #. module: crm
 #: model:ir.actions.server,body_html:crm.action_email_reminder_lead
 msgid ""
 "<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
-"since at least 5 days.</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity since at least 5 days.</p>\n"
 "%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object."
-"description}</i>\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object.description}</i>\n"
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
@@ -278,43 +217,41 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:45
 #, python-format
 msgid ""
-"<p>You will be able to customize your followup activities. Examples:</"
-"p><ol><li>introductory email</li><li>call 10 days after</li><li>second call "
-"3 days after, ...</li></ol><p class='mb0'><i>Select a standard activity for "
-"now on.</i></p>"
+"<p>You will be able to customize your followup activities. "
+"Examples:</p><ol><li>introductory email</li><li>call 10 days "
+"after</li><li>second call 3 days after, ...</li></ol><p "
+"class='mb0'><i>Select a standard activity for now on.</i></p>"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Events"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Nainštalovať Udalosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Mailing"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Nainštalovať Poštu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Slides"
 msgstr ""
-"<span class=\"fa fa-arrow-circle-o-down\"/> Nainštalovať Obrázky prezentácie"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Surveys"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Nainštalovať Prieskumy"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Website Live Chat"
 msgstr ""
-"<span class=\"fa fa-arrow-circle-o-down\"/> Nainštalovať Live chat webstránky"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install e-Commerce"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Nainštalovať e-Commerce"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -322,8 +259,6 @@ msgid ""
 "<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
 "                        <strong>Tips:</strong>"
 msgstr ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"<strong>Tipy:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -336,15 +271,6 @@ msgid ""
 "                        We recommend to start with standard quotations\n"
 "                        and upgrade later."
 msgstr ""
-"<span class=\"fa fa-lightbulb-o fa-lg\"/>\n"
-"<strong>Poznámka:</strong>\n"
-"Používanie šablón môže zvýšiť kvalitu vašich\n"
-"cenových ponúk a ich úspešnosť. Avšak,\n"
-"vytváranie takých šablón môže byť obrovské úsilie.\n"
-"Odporúčame začať so štandarnými cenovými ponukami\n"
-"a vylepšiť neskôr.\n"
-"\n"
-"."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -354,121 +280,86 @@ msgid ""
 "                        use our API to load data through scripts: read\n"
 "                        the"
 msgstr ""
-"<span class=\"fa fa-lightbulb-o fa-lg\"/>\n"
-"<strong>Tip:</strong> Pre vývojárov, môžete\n"
-"použiť naše API pre načítanie dát prostredníctvom skriptov: prečítať"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"<span class=\"label label-default text-center odoo_purple\">Incoming email</"
-"span>"
-msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Prichádzajúci "
+"<span class=\"label label-default text-center odoo_purple\">Incoming "
 "email</span>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"label label-default text-center odoo_purple\">Lead</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Iniciatíva</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"<span class=\"label label-default text-center odoo_purple\">Opportunity</"
-"span>"
+"<span class=\"label label-default text-center "
+"odoo_purple\">Opportunity</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Príležitosť</"
-"span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Quotation</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Cenová ponuka</"
-"span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', "
-"2)]}\"> Meetings</span>\n"
-"                                    <span class=\"o_stat_text\" attrs="
-"\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Meeting</span>"
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Meeting</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', "
-"2)]}\"> Stretnutia</span>\n"
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', "
-"1)]}\"> Stretnutie</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid ""
 "<span class=\"oe_form_field\" attrs=\"{'invisible': ['|', "
-"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on </span>"
+"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> on "
+"</span>"
 msgstr ""
-"<span class=\"oe_form_field\" attrs=\"{'invisible': ['|', "
-"('next_activity_id', '=', False), ('date_action', '=', False)]}\"> na </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "<span class=\"oe_grey\"> at </span>"
-msgstr "<span class=\"oe_grey\"> pri </span>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-laptop\"/>\n"
-"                                            <strong> Screen Customization</"
-"strong>\n"
+"                                            <strong> Screen Customization</strong>\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-laptop\"/>\n"
-"<strong> Prispôsobenie obrazovky</strong>\n"
-"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                            <span class=\"fa fa-pencil-"
-"square-o\"/>\n"
-"                                            <strong> Create Custom Reports</"
-"strong>\n"
+"                                            <span class=\"fa fa-pencil-square-o\"/>\n"
+"                                            <strong> Create Custom Reports</strong>\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-pencil-square-o\"/>\n"
-"<strong> Vytvorte prispôsobené výkazy</strong>\n"
-"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-sitemap\"/>\n"
-"                                            <strong> Workflow Customization</"
-"strong>\n"
+"                                            <strong> Workflow Customization</strong>\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa fa-sitemap\"/>\n"
-"<strong> Prispôsobenie pracovného postupu</strong>\n"
-"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57408;\"/>\n"
+"                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
 "                                        <strong>Import a file</strong><br/>\n"
-"                                        <span class=\"small\">Recommended if "
-"&gt;50 items</span>\n"
+"                                        <span class=\"small\">Recommended if &gt;50 items</span>\n"
 "                                    </span>"
 msgstr ""
 
@@ -476,63 +367,29 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57408;\"/>\n"
+"                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
 "                                        <strong>Import</strong><br/>\n"
-"                                        <span class=\"small\">&gt; 200 "
-"contacts</span>\n"
+"                                        <span class=\"small\">&gt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa\" data-icon=\"&#57408;\"/>\n"
-"<strong>Importovať</strong><br/>\n"
-"<span class=\"small\">&gt; 200 kontaktov</span>\n"
-"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57408;\"/>\n"
+"                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
 "                                        <strong>Subscriptions</strong><br/>\n"
 "                                        <span class=\"small\"/>\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa\" data-icon=\"&#57408;\"/>\n"
-"<strong>Odbery</strong><br/>\n"
-"<span class=\"small\"/>\n"
-"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57440;\"/>\n"
-"                                        <strong> Create manually</strong><br/"
-">\n"
-"                                        <span class=\"small\">&lt; 200 "
-"contacts</span>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa\" data-icon=\"&#57440;\"/>\n"
-"<strong> Manuálne vytvoriť</strong><br/>\n"
-"<span class=\"small\">&lt; 200 kontaktov</span>\n"
-"</span>"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57440;\"/>\n"
-"                                        <strong> Create manually</strong><br/"
-">\n"
-"                                        <span class=\"small\">Recommended if "
-"&lt;50 items</span>\n"
+"                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
+"                                        <strong> Create manually</strong><br/>\n"
+"                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
 
@@ -540,36 +397,27 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57440;\"/>\n"
+"                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
+"                                        <strong> Create manually</strong><br/>\n"
+"                                        <span class=\"small\">Recommended if &lt;50 items</span>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
 "                                        <strong>One-time sale</strong><br/>\n"
 "                                        <span class=\"small\"/>\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"panel-title\">\n"
-"<span class=\"fa\" data-icon=\"&#57440;\"/>\n"
-"<strong>Jednorázový predaj</strong><br/>\n"
-"<span class=\"small\"/>\n"
-"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <strong> Rules &amp; Formulas</"
-"strong>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"<strong> Pravidlá &amp; Vzorce</strong>\n"
-"</span>"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <strong>Specific Price per Audience</"
-"strong>\n"
+"                                        <strong> Rules &amp; Formulas</strong>\n"
 "                                    </span>"
 msgstr ""
 
@@ -577,93 +425,77 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <strong>Unique Price (default)</"
-"strong>\n"
+"                                        <strong>Specific Price per Audience</strong>\n"
 "                                    </span>"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"<span class=\"panel-title\"><span data-icon=\"&#57366;\"/><strong> Exercise "
-"1</strong></span>\n"
+"<span class=\"panel-title\">\n"
+"                                        <strong>Unique Price (default)</strong>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid ""
+"<span class=\"panel-title\"><span data-icon=\"&#57366;\"/><strong> Exercise 1</strong></span>\n"
 "                                    <span>(Lead Manager)</span>"
 msgstr ""
-"<span class=\"panel-title\"><span data-icon=\"&#57366;\"/><strong> Cvičenie "
-"1</strong></span>\n"
-"<span>(Manažér iniciatívy)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"<span class=\"panel-title\"><span data-icon=\"&#57438;\"/><strong> Exercise "
-"3</strong></span>\n"
+"<span class=\"panel-title\"><span data-icon=\"&#57438;\"/><strong> Exercise 3</strong></span>\n"
 "                                    <span>(Salesperson)</span>"
 msgstr ""
-"<span class=\"panel-title\"><span data-icon=\"&#57438;\"/><strong> Cvičenie "
-"3</strong></span>\n"
-"<span>(Predajca)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"<span class=\"panel-title\"><span data-icon=\"&#57463;\"/><strong> Exercise "
-"2</strong></span>\n"
+"<span class=\"panel-title\"><span data-icon=\"&#57463;\"/><strong> Exercise 2</strong></span>\n"
 "                                    <span>(Sales Manager)</span>"
 msgstr ""
-"<span class=\"panel-title\"><span data-icon=\"&#57463;\"/><strong> Cvičenie "
-"2</strong></span>\n"
-"<span>(Manažér predaja)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span><strong>Contact us to customize your application:</strong><br/>\n"
-"                                    We have special options for unlimited "
-"number of customizations!\n"
+"                                    We have special options for unlimited number of customizations!\n"
 "                                    </span>"
 msgstr ""
-"<span><strong>Kontaktujte nás pre prispôsobenie vašej aplikácie:</strong><br/"
-">\n"
-"Máme špeciálne možnosti pre neobmedzený počet prispôsobení!\n"
-"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"<strong>Click on 'Reporting' in the main menu </strong>and browse statistics:"
+"<strong>Click on 'Reporting' in the main menu </strong>and browse "
+"statistics:"
 msgstr ""
-"<strong>Kliknite na 'Výkazy' v hlavnom menu </strong>a prezerajte štatistiky:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Events</strong>"
-msgstr "<strong>Udalosti</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<strong>Every business is different.</strong> Odoo allows to\n"
 "                        customize every application and it's usually a good\n"
-"                        advice to customize screens to fit your sales "
-"process.\n"
-"                        <strong>Customizations are done by Odoo experts.</"
-"strong>"
+"                        advice to customize screens to fit your sales process.\n"
+"                        <strong>Customizations are done by Odoo experts.</strong>"
 msgstr ""
-"<strong>Každý podnik je iný.</strong> Odoo umožňuje\n"
-"prispôsobovať kaźdú aplikáciu, a väčšinou je dobré\n"
-"odporúčanie prispôsobovať obrazovky na mieru vášmu procesu predaja.\n"
-"<strong>Prispôsobenia sú vykonávané Odoo expertami.</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Example: Negotiation stage</strong>"
-msgstr "<strong>Príklad: Fáza vyjednávania</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Example: Qualified stage</strong>"
-msgstr "<strong>Príklad: Fáza kvalifikovania</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -673,16 +505,11 @@ msgid ""
 "                                        Group Y Axis: Expected Closing Date\n"
 "                                        Filter: Won Opportunities"
 msgstr ""
-"<strong>Cvičenie: </strong>Pokúste sa analyzovať priemerný čas na uzavretie "
-"obchodu.\n"
-"Skupina X os: Dátum vytvorenia\n"
-"Skupina Y os: Dátum očakávaného\n"
-"Filter: Vyhrané príležitosti "
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Exercise: </strong>Try to switch the kanban to graph view"
-msgstr "<strong>Cvičenie: </strong>Skúste prepnúť kanban na zobrazenie grafu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -690,8 +517,6 @@ msgid ""
 "<strong>Exercise:</strong> Try to get the number of leads per salesperson "
 "and by creation date"
 msgstr ""
-"<strong>Cvičenie:</strong> Pokúste sa získať počet iniciatív za predajcu a "
-"podľa dátumu vytvorenia"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -704,39 +529,27 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<strong>Forecast future revenues</strong><br/>\n"
-"                                    You can assess the maturity of a sales "
-"team by its ability to forecasts future revenues\n"
-"                                    for the coming months or quarters. Train "
-"the team to forecast efficiently by having\n"
-"                                    an up-to-date pipeline of "
-"opportunities.\n"
-"                                    After a few month, set the real success "
-"rate according to the stages, to have\n"
-"                                    accurate expected revenues by closing "
-"date."
+"                                    You can assess the maturity of a sales team by its ability to forecasts future revenues\n"
+"                                    for the coming months or quarters. Train the team to forecast efficiently by having\n"
+"                                    an up-to-date pipeline of opportunities.\n"
+"                                    After a few month, set the real success rate according to the stages, to have\n"
+"                                    accurate expected revenues by closing date."
 msgstr ""
-"<strong>Odhad budúcich výnosov</strong><br/>\n"
-"Môžete posúdiť zrelosť predajného tímu jeho schopnosťou predvídať budúce "
-"výnosy\n"
-"v nadchádzajúcich mesiacoch alebo štvrťrokoch. Trénujte tím predpovedať "
-"efektívne tým, že má aktúalne reťazové spracovanie príležitostí.\n"
-"Po niekoľkých mesiacoch, nastavte reálnu úspešnosť podľa etáp, aby boli\n"
-"presné očakávané príjmy pred uzávierkou."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Mass mailing</strong>"
-msgstr "<strong>Hromadná pošta</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Negotiation:</strong>"
-msgstr "<strong>Vyjednávanie:</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>New:</strong>"
-msgstr "<strong>Nové:</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -747,85 +560,64 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<strong>Organize weekly sales meetings</strong><br/>\n"
-"                                    It's a great way to see where you can "
-"improve and keep track of the progress of your sales team. Start the "
-"pipeline review by looking at the big picture; revenues and number of "
-"opportunities by stage, by expected closing date and by salespeople."
+"                                    It's a great way to see where you can improve and keep track of the progress of your sales team. Start the pipeline review by looking at the big picture; revenues and number of opportunities by stage, by expected closing date and by salespeople."
 msgstr ""
-"<strong>Organizujte týždenné predajné stretnuia</strong><br/>\n"
-"Je to skvelý spôsob ako zistiť, kde sa môžete zlepšiť a sledovať progres "
-"vášho predajného tímu. Spustite prehľad reťazového spracovania pohľadom na "
-"väčší obrázok; príjmami a počtom príležitostí na etapy, očakávaným termínom "
-"uzávierky a predajcov."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Propositions:</strong>"
-msgstr "<strong>Návrhy:</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Qualified:</strong>"
-msgstr "<strong>Kvalifikovaný:</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"<strong>Quote template</strong> <span class=\"small\">(packaged services)</"
-"span>"
+"<strong>Quote template</strong> <span class=\"small\">(packaged "
+"services)</span>"
 msgstr ""
-"<strong>Šablóna cenovej ponuky</strong> <span class=\"small\">(balík "
-"služieb)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr "<strong>Odporúčané akcie:</strong>"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
+msgid "<strong>Recommended activities:</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<strong>Review the top 5 opportunities</strong><br/>\n"
-"                                    Once the big picture is clear, focus on "
-"the best opportunities. Start from stages on the right (negotiation, "
-"proposal, etc) and review the biggest opportunities one by one with the team."
+"                                    Once the big picture is clear, focus on the best opportunities. Start from stages on the right (negotiation, proposal, etc) and review the biggest opportunities one by one with the team."
 msgstr ""
-"<strong>Prezrite si 5 vrcholných príležitosti</strong><br/>\n"
-"Akonáhle je veľký obraz jasný, zamerajte sa na najlepšie príležitosti. "
-"Začnite z etáp na správnej strane (rokovania, návrh, atď) a prezrite "
-"najväčšie príležitosti s tímom, jednu po druhej."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Sales Stages</strong>"
-msgstr "<strong>Etapy predaja</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Sales objectives</strong>:"
-msgstr "<strong>Ciele predaja</strong>:"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<strong>Sales tools</strong><br/>\n"
-"                                Efficiently following up the pipeline will "
-"lead to great improvements. But to achieve excellence in your sales "
-"organization, you need  to provide your team with sales tools. For every "
-"stage of the opportunities pipeline, identify the blocking points and "
-"create  documents to train the team."
+"                                Efficiently following up the pipeline will lead to great improvements. But to achieve excellence in your sales organization, you need  to provide your team with sales tools. For every stage of the opportunities pipeline, identify the blocking points and create  documents to train the team."
 msgstr ""
-"<strong>Nástroje predaja</strong><br/>\n"
-"Efektívne následovanie reťazového spracovania povedie k veľkým zlepšeniam. "
-"Ale na dosiahnutie excelentnosti vo vašej predajnej organizácii, budete "
-"musieť poskytnúť svojmu tímu nástroje predaja. Pre každú fázu reťazového "
-"spracovania príležitostí, identifikujte blokujúce body a vytvárajte "
-"dokumenty pre vyškolenie tímu."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Slides</strong>"
-msgstr "<strong>Stránky prezentácie</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -833,18 +625,16 @@ msgid ""
 "<strong>Standard quotation</strong> <span class=\"small\">(products or "
 "services)</span>"
 msgstr ""
-"<strong>Štandardná cenová ponuka</strong> <span class=\"small\">(produkty "
-"alebo služby)</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Subscriptions</strong>"
-msgstr "<strong>Odbery</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Survey</strong>"
-msgstr "<strong>Prieskum</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -852,13 +642,11 @@ msgid ""
 "<strong>The customer</strong> understood his pain points and proposed the "
 "next step in the buying process"
 msgstr ""
-"<strong>Zákazník</strong> pochopil jeho body úrazu a navrhol ďalší krok v "
-"nákupnom procese"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>The prospect</strong> started to discuss your offer"
-msgstr "<strong>Záujemca</strong> začal diskutovať o ponuke"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -866,31 +654,24 @@ msgid ""
 "<strong>To boost your leads acquisition,</strong> you should have a look at "
 "our marketing apps:"
 msgstr ""
-"<strong>Pre zvýšenie akvizícií iniciatív,</strong> mali by ste sa pozrieť na "
-"naše marketingové aplikácie:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<strong>Trainings</strong><br/>\n"
-"                                To build a strong sales training program, "
-"you can use the following\n"
+"                                To build a strong sales training program, you can use the following\n"
 "                                apps of Odoo:"
 msgstr ""
-"<strong>Tréningy</strong><br/>\n"
-"Pre vybudovanie silného predajného tréningového programu, môžete použiť "
-"nasledovné\n"
-"aplikácie z Odoo:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Website Live Chat</strong>"
-msgstr "<strong>Live Chat webstránky</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>You</strong> called the prospect for a follow up on your offer"
-msgstr "<strong>Volali</strong> ste záujemcovi pre naviazanie na vašu ponuku"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -898,18 +679,16 @@ msgid ""
 "<strong>You</strong> understand the customer's needs and pain points, and "
 "you have a fairly good idea of his budget to spend"
 msgstr ""
-"<strong>Rozumiete</strong> zákazníkovým potrebám a bodom úrazu, a máte "
-"celkom dobrú predstavu o jeho rozpočte na minutie"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Your Main KPIs:</strong>"
-msgstr "<strong>Vaše hlavné KPI:</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>e-Commerce</strong>"
-msgstr "<strong>e-Commerce</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_defaults
@@ -917,60 +696,54 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Slovník jazyka Python ktorý bude vyhodnotený na  poskytnutie predvolených "
-"hodnôt pri vytváraní nových záznamov pre tento alias."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "A good pipeline should have between 5 and 7 stages"
-msgstr "Dobrá reťazová náväznosť by mala mať 5 až 7 fáz"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "A product in Odoo is something you sell or buy. It could\n"
-"                    be a goods, consumable or services. Choose how you want "
-"to\n"
+"                    be a goods, consumable or services. Choose how you want to\n"
 "                    create your products:"
 msgstr ""
-"Produkt v odoo je niečo na predaj alebo kúpu. Môže to\n"
-"byť tovar, položky spotreby alebo služby. Vyberte si ako chcete\n"
-"vytvárať vaše produkty:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "A sales manager will mostly use these two reports:"
-msgstr "Manažér predaja bude najviac používať tieto dva výkazy:"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_contact
 msgid "A user associated to the contact"
-msgstr "Užívateľ pripojený ku kontaktu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "API documentation"
-msgstr "API dokumentácia"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Accept Emails From"
-msgstr "Akceptovanie emailov od"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_search
 msgid "Action Search"
-msgstr "Vyhľadávanie akcie"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Activate the 'Online Quotations' option in"
-msgstr "Aktivova možnosť 'Online cenové ponuky' v"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_default
 msgid "Activated by default when subscribing."
-msgstr "Aktivované automaticky pri predplatnom."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_active
@@ -978,7 +751,7 @@ msgstr "Aktivované automaticky pri predplatnom."
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
 msgid "Active"
-msgstr "Aktívny"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_action
@@ -991,7 +764,7 @@ msgstr "Aktívny"
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_tree
 #: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Activities"
-msgstr "Aktivity"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
@@ -1001,59 +774,70 @@ msgstr "Aktivity"
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Activities Analysis"
-msgstr "Analýza aktivít"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_done
 msgid "Activities Done Target"
-msgstr "Cieľ hotových aktivít"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_next_activity_id
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_subtype_id
 msgid "Activity"
-msgstr "Aktivity"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/wizard/crm_activity_log.py:80
+#, python-format
+msgid "Activity Done"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead_kanban_state
+msgid "Activity State"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Add Features"
-msgstr "Pridať funkcie"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Address"
-msgstr "Adresa"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_id
 msgid "Alias"
-msgstr "Alias"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_contact
 msgid "Alias Contact Security"
-msgstr "Alias kontakt bezpečnosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_alias_domain
 msgid "Alias Domain"
-msgstr "Alias doména"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_name
 msgid "Alias Name"
-msgstr "Alias názov"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_domain
 msgid "Alias domain"
-msgstr "Alias doména"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_model_id
 msgid "Aliased Model"
-msgstr "Aliasovaný model"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1062,9 +846,6 @@ msgid ""
 "                        process will allow you to continuously improve your\n"
 "                        sales performance."
 msgstr ""
-"Zrovnanie vašej predajnej organizácie na systematický\n"
-"proces vám umožní neustále zlepšovať vaše\n"
-"predajné výsledky."
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:310
@@ -1073,40 +854,33 @@ msgid ""
 "All contacts must have the same email. Only the Administrator can merge "
 "contacts with different emails."
 msgstr ""
-"Všetky kontakty musia mať rovnaký email. Len administrátor môže zlučovať "
-"kontakty s odlišným emailom."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:864
 #, python-format
 msgid ""
 "All email incoming to %s will automatically\n"
-"                    create new opportunity. Update your business card, phone "
-"book, social media,...\n"
+"                    create new opportunity. Update your business card, phone book, social media,...\n"
 "                    Send an email right now and see it here."
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Analysis"
-msgstr "Analýza"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Analyzing the pipeline by expected closing date will help your team "
-"efficiently forecast its future revenues. The pipeline review will allow you "
-"to identify sales inefficiencies or pick up on the best practices."
+"efficiently forecast its future revenues. The pipeline review will allow you"
+" to identify sales inefficiencies or pick up on the best practices."
 msgstr ""
-"Analyzovanie reťazovej náväznosti podľa očakávaného dátumu zatvorenia pomôže "
-"vášmu tímu efektívne odhadnúť jeho budúce výnosy. Prezretie reťazovej "
-"náväznosti vám pomôže identifikovať neefektívnosti predaja alebo osvojenie "
-"osvedčených postupov."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_deduplicate
 msgid "Apply deduplication"
-msgstr "Aplikovať deduplikáciu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1116,85 +890,87 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Archive"
-msgstr "Archivovať"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Archived"
-msgstr "Archivovaný"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the automatic merge of your contacts ?"
-msgstr "Naozaj chcete spustiť automatické zlúčenie vašich kontaktov?"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
-msgid "Are you sure to execute the list of automatic merges of your contacts ?"
-msgstr "Naozaj chcete spustiť zoznam automatického zlúčenia vašich kontaktov?"
+msgid ""
+"Are you sure to execute the list of automatic merges of your contacts ?"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Assign opportunities to"
-msgstr "Prideliť príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Assign these opportunities to"
-msgstr "Prideliť tieto príležitosti"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
+msgid "Assign this opportunity to"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_opening_date
 msgid "Assignation Date"
-msgstr "Dátum pridelenia"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_open
 msgid "Assigned"
-msgstr "Pridelené"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "At the end of the deployment process, your expectations should be reached.\n"
 "                        <br/>\n"
-"                        If not, our CRM experts are available to help you "
-"achieve your KPIs."
+"                        If not, our CRM experts are available to help you achieve your KPIs."
 msgstr ""
-"Na konci procesu zavádzania by sa mali dosiahnuť vaše očakávania.\n"
-"<br/>\n"
-"Ak nie, CRM experti vám pomôžu dosiahnuť vaše KPI."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Attach a qualification form to every house opportunity"
-msgstr "Pripojte kvalifikačný formulár ku každému domu príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Automatic Merge Wizard"
-msgstr "Sprievodca automatickým zlúčením"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_generate_sales_team_alias
 msgid "Automatically generate an email alias at the sales team creation"
-msgstr "Automaticky vytvoriť email alias pri vytvorení predajného tímu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Avg. of Probability"
-msgstr "Priem. pravdepodobnosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "B2B"
-msgstr "B2B"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "B2C"
-msgstr "B2C"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1204,67 +980,67 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Better structure the sales process"
-msgstr "Lepšie štruktúrovanie predajného procesu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Better visibility on team activities"
-msgstr "Lepšia viditeľnosť tímových aktivít"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Boost your online sales with sleek product pages."
-msgstr "Zvýšte svoje online predaje elegantnými stránkami produktov."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_bounce
 msgid "Bounce"
-msgstr "Odraziť"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
 msgid "CRM"
-msgstr "CRM"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_activity
 msgid "CRM Activity"
-msgstr "CRM aktivita"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_activity_report
 msgid "CRM Activity Analysis"
-msgstr "CRM analýza aktivity"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_opportunity_report
 msgid "CRM Opportunity Analysis"
-msgstr "CRM analýza príležitostí"
+msgstr ""
 
 #. module: crm
 #: model:crm.activity,name:crm.crm_activity_data_call
 #: model:mail.message.subtype,name:crm.crm_activity_data_call_mail_message_subtype
 msgid "Call"
-msgstr "Volať"
+msgstr ""
 
 #. module: crm
 #: model:crm.activity,name:crm.crm_activity_demo_call_demo
 #: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
 msgid "Call for Demo"
-msgstr "Volať pre Demo"
+msgstr ""
 
 #. module: crm
 #: model:crm.activity,description:crm.crm_activity_demo_call_demo
 #: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
 msgid "Call for a demo"
-msgstr "Volať pre demo"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Campaign"
-msgstr "Kampaň"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1274,43 +1050,42 @@ msgstr "Kampaň"
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Cancel"
-msgstr "Zrušiť"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_team_act_tree
 msgid "Cases by Sales Team"
-msgstr "Prípady podľa predajného tímu"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
 msgid "Category of lead"
-msgstr "Kategória iniciatívy"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_on_change
 msgid "Change Probability Automatically"
-msgstr "Zmeniť pravdepodobnosť automaticky"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Change the layout of a quotation"
-msgstr "Zmeniť usporiadanie cenovej ponuky"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "Channel"
-msgstr "Kanál"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_use_opportunities
 msgid "Check this box to manage opportunities in this sales team."
 msgstr ""
-"Zaškrtnite toto políčko pre spravovanie príležitostí v tomto predajnom tíme."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Choose a date..."
-msgstr "Zvoľte dátum..."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_city
@@ -1319,15 +1094,14 @@ msgstr "Zvoľte dátum..."
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "City"
-msgstr "Mesto"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_tag_ids
 msgid ""
-"Classify and analyze your lead/opportunity categories like: Training, Service"
+"Classify and analyze your lead/opportunity categories like: Training, "
+"Service"
 msgstr ""
-"Klasifikujte a analyzujte vaše kategórie iniciatív/príležitosí ako sú: "
-"tréning, služba"
 
 #. module: crm
 #. openerp-web
@@ -1349,37 +1123,42 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:867
 #, python-format
 msgid "Click to add a new opportunity"
-msgstr "Kliknite pre pridanie novej príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_activity_action
 msgid "Click to create a new activity."
-msgstr "Kliknite pre vytvorenie novej aktivity."
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
 msgid "Click to create an opportunity related to this customer."
-msgstr "Kliknite pre vytvorenie príleźitosti týkajucej sa tohoto zákazníka."
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Click to define a new lost reason."
-msgstr "Kliknite pre definovanie nového dôvodu straty."
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid "Click to define a new sales tag."
-msgstr "Kliknite pre definovanie novej menovky predaja."
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_stage_action
+msgid "Click to set a new stage in your opportunity pipeline."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Close"
-msgstr "Zatvoriť"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_closed
 msgid "Close Date"
-msgstr "Dátum uzavretia"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -1399,13 +1178,13 @@ msgstr ""
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:87
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr "Zavreté/mŕtve iniciatívy nemôžu byť konvertované na príležitosti."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_color
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_color
 msgid "Color Index"
-msgstr "Farebný index"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1420,17 +1199,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Company"
-msgstr "Spoločnost"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Company Name"
-msgstr "Meno spoločnosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Competition Matrix comparing prices"
-msgstr "Matrica konkurencie porovnávajúca ceny"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -1442,7 +1221,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Configure the stages of your sales pipeline"
-msgstr "Nakonfigurujte fázy vášho predjnáho reťazového spracovania."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1452,7 +1231,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Congratulations, you're done!"
-msgstr "Gratulácie, ste hotový!"
+msgstr ""
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor7
@@ -1467,62 +1246,62 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Contact Information"
-msgstr "Kontaktné informácie"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
 msgid "Contact Name"
-msgstr "Názov kontaktu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Contact Us"
-msgstr "Kontaktujte nás"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_partner_ids
 msgid "Contacts"
-msgstr "Kontakty"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_name
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_name
 msgid "Conversion Action"
-msgstr "Konverzná akcia"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_conversion
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_conversion
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date"
-msgstr "Dátum konverzie"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date from Lead to Opportunity"
-msgstr "Dátum konverzie od inciatívy po príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Conversion Options"
-msgstr "Možnosti konverzie"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Convert to Opportunities"
-msgstr "Konvertovať na Príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Convert to Opportunity"
-msgstr "Zmeniť na príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_crm_send_mass_convert
 msgid "Convert to opportunities"
-msgstr "Konvertovať na príležitosti"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1038
@@ -1531,12 +1310,12 @@ msgstr "Konvertovať na príležitosti"
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
 #, python-format
 msgid "Convert to opportunity"
-msgstr "Konvertovať na príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr "Počítadlo počtu odrazených emailov pre tento kontakt"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_country_id
@@ -1548,7 +1327,7 @@ msgstr "Počítadlo počtu odrazených emailov pre tento kontakt"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Country"
-msgstr "Krajina"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
@@ -1558,7 +1337,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create Customers"
-msgstr "Vytvoriť zákazníkov"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_create_date
@@ -1568,12 +1347,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 msgid "Create Opportunity"
-msgstr "Vytvoriť príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create Vendors"
-msgstr "Vytvoriť Predajcov"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -1586,7 +1365,7 @@ msgstr ""
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
-msgstr "Vytvoriť nového zákazníka"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.create_opportunity_simplified
@@ -1604,27 +1383,20 @@ msgstr ""
 msgid ""
 "Create sleek and attractive event pages. Sell online and organize on site."
 msgstr ""
-"Vytvorte elegantné a atraktívne stránky udalostí. Predávajte online a "
-"organizujte na stránke."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid ""
 "Create specific tags that fit your company's activities\n"
-"                to better classify and analyse your leads and "
-"opportunities.\n"
+"                to better classify and analyse your leads and opportunities.\n"
 "                Such categories could for instance reflect your product\n"
 "                structure or the different types of sales you do."
 msgstr ""
-"Vytvorte špecifické menovky ktoré sa hodia aktivitám vašej spoločnosti\n"
-"pre lepšie klasifikovanie a analyzovanie vašich iniciatív a príležitostí.\n"
-"Takéto kategórie môžu napríklad reflektovať štruktúru\n"
-"produktu alebo rôznych typov predaja ktoré robíte."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create the three firsts opportunities"
-msgstr "Vytvorte prvé tri príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1634,7 +1406,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create your templates of offers"
-msgstr "Vytvorte vaše šablóny ponúk"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_author_id
@@ -1657,7 +1429,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_create_uid
 #: model:ir.model.fields,field_description:crm.field_crm_stage_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_create_date
@@ -1673,34 +1445,34 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_create_date
 #: model:ir.model.fields,field_description:crm.field_crm_stage_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_create_date
 msgid "Creation Date"
-msgstr "Dátum vytvorenia"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Creation Month"
-msgstr "Mesiac vytvorenia"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_company_currency
 msgid "Currency"
-msgstr "Mena"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Current"
-msgstr "Aktuálne"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_current_line_id
 msgid "Current Line"
-msgstr "Aktuálny riadok"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1073
@@ -1715,75 +1487,85 @@ msgstr "Aktuálny riadok"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Customer"
-msgstr "Zákazník"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1075
 #, python-format
 msgid "Customer Email"
-msgstr "Email zákazníka"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_name
 msgid "Customer Name"
-msgstr "Meno zákazníka"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Customers"
-msgstr "Zákazníci"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "Customizations"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
 msgid "Date"
-msgstr "Dátum"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_day_open
 msgid "Days to Assign"
-msgstr "Dni do pridelenia"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_day_close
 msgid "Days to Close"
-msgstr "Dni do uzatvorenia"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_partner_deduplicate
+msgid "Deduplicate Contacts"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Deduplicate the other Contacts"
-msgstr "Deduplikovať ostatné kontakty"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_default
 msgid "Default"
-msgstr "Predvolený"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_alias_prefix
 msgid "Default Alias Name for Leads"
-msgstr "Názov predvoleného aliasu pre iniciatívy"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_defaults
 msgid "Default Values"
-msgstr "Predvolené hodnoty"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_open
 msgid "Delay to Assign"
-msgstr "Meškanie do priradenia"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_close
 msgid "Delay to Close"
-msgstr "Meškanie do zatvorenia"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Delete"
-msgstr "Zmazať"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -1795,29 +1577,24 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"Depending on how complex your business is, it may take between 6 months and "
-"18 months for a new\n"
-"                                    sales team to efficiently forecasts "
-"future revenues."
+"Depending on how complex your business is, it may take between 6 months and 18 months for a new\n"
+"                                    sales team to efficiently forecasts future revenues."
 msgstr ""
-"V závislosti od komplexnosti vášho obchodu, môže trvať 6 až 18 mesiacov pre "
-"nový\n"
-"predajný tím účinne predpovedať budúce výnosy."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Deployment"
-msgstr "Nasadenie"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Describe the lead..."
-msgstr "Popíšte iniciatívu..."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_description
 msgid "Description"
-msgstr "Popis"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_description
@@ -1825,8 +1602,6 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
-"Popis, ktorý bude pridaný do správy zverejnenej k tomuto podtypu. Ak "
-"neplatné, bude namiesto toho pridaný názov."
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor5
@@ -1837,12 +1612,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Design efficient email campaigns. Send, convert and track performance."
 msgstr ""
-"Navrhnite efektívne emailové kampane. Odošlite, konvertujte a sledujte výkon."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_dst_partner_id
 msgid "Destination Contact"
-msgstr "Cieľový kontakt"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
@@ -1866,51 +1640,49 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Display your brochures, product sheets, showcases etc."
-msgstr "Vystavte vaše brožúry, produktové letáky, vitríny atď."
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Do not link to a customer"
-msgstr "Neprepájať so zákazníkom"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Don't forget to change this address on:"
-msgstr "Nezabudnite zmeniť adresu na:"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Don't hesitate to"
-msgstr "Neváhajte"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Don't use stages to qualify opportunities, use tags instead"
 msgstr ""
-"Nepoužívajte fázy na kvalifikovanie príležitostí, používajte miesto toho ."
-"menovky"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Download the"
-msgstr "Stiahnuť"
+msgstr ""
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_draft_lead
 msgid "Draft Leads"
-msgstr "Koncept iniciatív"
+msgstr ""
 
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
-msgstr "Každý email poslaný na alias vytvára novú príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1923,21 +1695,15 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
 msgid ""
 "Each sales team has an email alias that\n"
-"                                    could be setup on the sales team form. "
-"You\n"
-"                                    can setup a generic email alias to "
-"create\n"
+"                                    could be setup on the sales team form. You\n"
+"                                    can setup a generic email alias to create\n"
 "                                    incoming leads."
 msgstr ""
-"Každý predajný tím má emailový alias ktorý\n"
-"môže byť nastavený vo formulŕi predajného tímu. Môžete\n"
-"nastaviť všeobecný emailový alias pre vytvorenie\n"
-"prichádzajúcich iniciatív."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Edit"
-msgstr "Upraviť"
+msgstr ""
 
 #. module: crm
 #: model:crm.activity,name:crm.crm_activity_data_email
@@ -1947,29 +1713,27 @@ msgstr "Upraviť"
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:mail.message.subtype,name:crm.crm_activity_data_email_mail_message_subtype
 msgid "Email"
-msgstr "Email"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Email Alias"
-msgstr "Alias Emailu"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_email_from
 msgid "Email address of the contact"
-msgstr "Emailová adresa kontaktu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "End"
-msgstr "Koniec"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Engage directly with your website visitors to convert them into leads."
 msgstr ""
-"Zapojte sa priamo s návšetvníkmi vašej webstránky na ich konvertovaní do "
-"iniciatív."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_requirements
@@ -1977,27 +1741,23 @@ msgid ""
 "Enter here the internal requirements for this stage (ex: Offer sent to "
 "customer). It will appear as a tooltip over the stage's name."
 msgstr ""
-"Tu zadajte interné požiadavky tejto fázy (Ponuka poslaná zákazníkovi). Bude "
-"to zobrazené ako nápoveda nástroja nad názvom fázy."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_date_deadline
 msgid "Estimate of the date on which the opportunity will be won."
-msgstr "Odhad dátumu kedy bude vyhratá príležitosť."
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
 msgid "Event"
-msgstr "Udalosť"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"Every salesperson can analyze their own pipe by clicking on the 'switch view "
-"to graph' icon."
+"Every salesperson can analyze their own pipe by clicking on the 'switch view"
+" to graph' icon."
 msgstr ""
-"Každý predajca môže analyzovať svoje vlastné spracovanie kliknutím na ikonu "
-"\"prepnúť zobrazenie na graf\"."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2005,38 +1765,36 @@ msgid ""
 "Every stage should be a step forward in the buyer's decision-making, not a "
 "task to carry out"
 msgstr ""
-"Kaźdá fáza by mala byť krok vpred v rozdhodovaní kupujúceho, nie úloha na "
-"vykonanie."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Examples"
-msgstr "Príklady"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Examples:"
-msgstr "Príklady:"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Excel template"
-msgstr "Excel šablóna"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Exclude Opt Out"
-msgstr "Vylúčiť neúčasť"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Exclude contacts having"
-msgstr "Vylúčiť kontakty majúce"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Existing Tools"
-msgstr "Exitujúce nástroje"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_date_deadline
@@ -2044,7 +1802,7 @@ msgstr "Exitujúce nástroje"
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_deadline
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Expected Closing"
-msgstr "Očakávané zavretie"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -2055,17 +1813,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_planned_revenue
 #: model:ir.model.fields,field_description:crm.field_crm_lead_planned_revenue
 msgid "Expected Revenue"
-msgstr "Očakávaný príjem"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Expected Revenues"
-msgstr "Očakávané príjmy"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Expiration Closing Month"
-msgstr "Vypršanie platnosti záverečného mesiaca"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_legend_priority
@@ -2073,23 +1831,21 @@ msgid ""
 "Explanation text to help users using the star and priority mechanism on "
 "stages or issues that are in this stage."
 msgstr ""
-"Vysvetllovací text, ktorý pomôžu užívateľom pomocou hviezdy a prioritného "
-"mechanizmu na fázach alebo problémoch, ktoré sú v tejto fáze."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Extended Filters"
-msgstr "Rozšírené filtre"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Extra Info"
-msgstr "Ďalšie informácie"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_fax
 msgid "Fax"
-msgstr "Fax"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_relation_field
@@ -2098,9 +1854,6 @@ msgid ""
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
 msgstr ""
-"Pole slúžiace k prepojeniu súvisiaceho modelu k modelu podtypu pri použití "
-"automatického odberu príbuzneho dokumentu. Pole sa používa na výpočet "
-"getattr(related_document.relation_field)."
 
 #. module: crm
 #. openerp-web
@@ -2112,24 +1865,24 @@ msgstr ""
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Finished"
-msgstr "Ukončené"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
-msgstr "Zložené v reťazovom spracovaní"
+msgstr ""
 
 #. module: crm
 #: model:crm.activity,name:crm.crm_activity_demo_followup_quote
 #: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
 msgid "Follow-up Quote"
-msgstr "Cenová ponuka naviazania"
+msgstr ""
 
 #. module: crm
 #: model:crm.activity,description:crm.crm_activity_demo_followup_quote
 #: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
 msgid "Follow-up quote"
-msgstr "Cenová ponuka naviazania"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2137,8 +1890,6 @@ msgid ""
 "For every deal, review the next action, the expected closing, the pain "
 "points, the expected revenues, the buying process, etc."
 msgstr ""
-"Pre každú obchod, preskúmajte ďalšie akcie, očakávané uzavretie, slabé "
-"miesta, očakávané príjmy, procesu nákupu, atď."
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:299
@@ -2147,8 +1898,6 @@ msgid ""
 "For safety reasons, you cannot merge more than 3 contacts together. You can "
 "re-open the wizard several times if needed."
 msgstr ""
-"Z bezpečnostných dôvodov nie je možné zlúčiť viac ako 3 kontakty dohromady. "
-"Môžete znovu otvoriť sprievodcu niekoľkokrát v prípade potreby."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2156,19 +1905,17 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                          Fabien Pinckaers, Founder"
 msgstr ""
-"Za Odoo Tím,<br/>\n"
-"Fabien Pinckaers, zakladateľ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_force_assignation
 msgid "Force assignation"
-msgstr "Silené pridelenie"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:538
 #, python-format
 msgid "From %s : %s"
-msgstr "Od %s : %s"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -2182,23 +1929,21 @@ msgstr ""
 msgid ""
 "Gain high quality insight from surveys, a great way to engage with prospects"
 msgstr ""
-"Získajte kvalitný náhľad z prieskumov, skvelý spôsob ako sa zapojiť so "
-"záujemcami"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Gamification"
-msgstr "Gamifikácia"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
 msgid "Get Lost Reason"
-msgstr "Dôvod stratenia"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_email_cc
 msgid "Global CC"
-msgstr "Globálne CC"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -2212,11 +1957,9 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"Great pipelines have stages <strong>aligned with the buyer's buying process</"
-"strong>, not your selling process:"
+"Great pipelines have stages <strong>aligned with the buyer's buying "
+"process</strong>, not your selling process:"
 msgstr ""
-"Skvelé reťazové spracovania majú fázy <strong>v súlade s procesom nákupu "
-"nakupujúceho</strong>, nie vašim predajným procesom:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2224,42 +1967,42 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Group By"
-msgstr "Zoskupiť podľa"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_number_group
 msgid "Group of Contacts"
-msgstr "Skupina kontaktov"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Grow leads acquisition"
-msgstr "Zvýšte akvizíciu iniciatív"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Grow revenues"
-msgstr "Zvýšte príjmy"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
 msgid "Handle partner binding or generation in CRM wizards."
-msgstr "Spravujte partnerské viazania alebo generácie v CRM sprievodcoch."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Happy Selling!<br/>- The Odoo Team"
-msgstr "Úspešný predaj!!<br/>- Odoo Tím"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Have clear forecasts on sales"
-msgstr "Majte jasné odhady predajov"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Have fun deploying your sales strategy,"
-msgstr "Veľa zábavy pri nasadzovaní vašej predajnej stratégie"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2267,37 +2010,33 @@ msgid ""
 "Here are a few examples of documents you should provide to your sales team "
 "based on the sales stage:"
 msgstr ""
-"Tu je niekoľko príkladov dokumentov, ktoré by ste mali poskyntúť vášmu "
-"predajnému tímu, v závislosti od fázy predaja:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Here are some of the <strong>customizations available</strong>:"
-msgstr "Tu sú niektoré z <strong>dostupných prispôsobení</strong>:"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_action_activities
 msgid ""
-"Here is the list of your next activities. Those are linked to your "
-"opportunities.\n"
-"                   To set a next activity, go on an opportunity and add one. "
-"It will then appear in this list."
+"Here is the list of your next activities. Those are linked to your opportunities.\n"
+"                   To set a next activity, go on an opportunity and add one. It will then appear in this list."
 msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_hidden
 msgid "Hidden"
-msgstr "Skrytý"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_hidden
 msgid "Hide the subtype in the follower options"
-msgstr "Skryť podtyp v možnostiach odberateľa"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "High"
-msgstr "Vysoká"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_id
@@ -2316,21 +2055,19 @@ msgstr "Vysoká"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_id
 #: model:ir.model.fields,field_description:crm.field_crm_stage_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task "
-"creation alias)"
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
 msgstr ""
-"ID nadradeného záznamu obsahujúceho alias (príklad: projekt držiaci alias "
-"vytvorenia úlohy)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_aggr_ids
 msgid "Ids"
-msgstr "ID"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_opt_out
@@ -2339,15 +2076,19 @@ msgid ""
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the leads when performing mass mailing."
 msgstr ""
-"Ak je zaškrtnutá neúčasť, tento kontakt odmietol prijímať emaily pre "
-"hromadnú korešpondenciu a marketingové kampane. Filter \"K dispozícii pre "
-"hromadnú korešpondenciu\" umožňuje užívateľom filtrovať iniciatívy pri "
-"vykonávaní hromadnej korešpondencie."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass_force_assignation
 msgid "If unchecked, this will leave the salesman of duplicated opportunities"
-msgstr "Ak nezaškrtnuté, toto ponechá obchodnika duplikovaných príležitostí"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid ""
+"If you followed the preceding steps, you already setup\n"
+"                        the foundations to a strong process leading to\n"
+"                        continuous improvements of your sales teams."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2355,20 +2096,18 @@ msgid ""
 "If you have less than 200 contacts, we recommend you\n"
 "                                        to create them manually."
 msgstr ""
-"Ak máte menej ako 200 kontaktov, odporúčame vám\n"
-"vytvoriť ich manuálne."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "If you sell subscriptions (whether it's invoiced annually or monthly), "
 "activate the"
-msgstr "Ak predávate odbery (či už fakturované ročne alebo mesačne), aktivujte"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "If you want to do it yourself:"
-msgstr "Ak to chcete spraviť sami:"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -2378,12 +2117,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Import using the top left button in"
-msgstr "Importovať pomocou horného ľavého tlačidla v"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Improve average revenue per salesperson"
-msgstr "Zlepšiť priemerný príjem na predajcu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2393,12 +2132,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 msgid "Include archived"
-msgstr "Zahrnúť archivované"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Incoming Emails"
-msgstr "Prichádzajúce emaily"
+msgstr ""
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor4
@@ -2415,43 +2154,48 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_sale_config_settings_module_crm_voip
 msgid "Integration with Asterisk"
-msgstr "Integrácia s Asterisk"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Internal Notes"
-msgstr "Interné poznámky"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_internal
 msgid "Internal Only"
-msgstr "Iba interné"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Invoice Analysis"
-msgstr "Analýza faktúry"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_is_company
 msgid "Is Company"
-msgstr "Je spoločnosť"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead_function
+msgid "Job Position"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_journal_item
 msgid "Journal Items associated to the contact"
-msgstr "Položky účtovnej knihy spojené s kontaktom"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "KPIs"
-msgstr "KPIs"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action_last
 msgid "Last Action"
-msgstr "Posledná akcia"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard___last_update
@@ -2470,13 +2214,13 @@ msgstr "Posledná akcia"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding___last_update
 #: model:ir.model.fields,field_description:crm.field_crm_stage___last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_last_stage_update
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_last_stage_update
 msgid "Last Stage Update"
-msgstr "Posledná aktualizácia fázy"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_write_uid
@@ -2493,7 +2237,7 @@ msgstr "Posledná aktualizácia fázy"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_write_uid
 #: model:ir.model.fields,field_description:crm.field_crm_stage_write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upravoval"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_write_date
@@ -2509,7 +2253,7 @@ msgstr "Naposledy upravoval"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_write_date
 #: model:ir.model.fields,field_description:crm.field_crm_stage_write_date
 msgid "Last Updated on"
-msgstr "Naposledy upravované"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_calendar_last_notif_ack
@@ -2527,18 +2271,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #, python-format
 msgid "Lead"
-msgstr "Iniciatíva"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Lead / Customer"
-msgstr "Iniciatíva / Zákazník"
+msgstr ""
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Lead Created"
-msgstr "Iniciatíva vytvorená"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_tag_action
@@ -2546,27 +2290,27 @@ msgstr "Iniciatíva vytvorená"
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
 msgid "Lead Tags"
-msgstr "Menovky iniciatív"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Lead To Opportunity Partner"
-msgstr "Partner iniciatívy po príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Lead created"
-msgstr "Iniciatíva vytvorená"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Iniciatíva/Príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Lead/Opportunity Mass Mail"
-msgstr "Iniciatívy/Príležitosti hromadný email"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_lead
@@ -2580,7 +2324,7 @@ msgstr "Iniciatívy/Príležitosti hromadný email"
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Leads"
-msgstr "Iniciatívy"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
@@ -2591,7 +2335,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:59
 #, python-format
 msgid "Leads / Opportunities"
-msgstr "Iniciatívy / Príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -2600,7 +2344,7 @@ msgstr "Iniciatívy / Príležitosti"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot_lead
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Leads Analysis"
-msgstr "Analýza iniciatív"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_lead_salesteam
@@ -2609,69 +2353,63 @@ msgid ""
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
-"Analýza iniciatív vám umožňuje zistiť rôzne informácie týkajúce sa CRM ako "
-"meškanie spracovania alebo počet iniciatív na fázu. Môžete triediť vašu "
-"analýzu iniciatív na rôzne skupiny pre získanie presnej analýzy."
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_salesperson
 msgid "Leads By Salespersons"
-msgstr "Iniciatívy podľa predajcu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
 msgid "Leads Email Alias"
-msgstr "Emailový alias iniciatívy"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Leads Form"
-msgstr "Formulár iniciatívy"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
 msgid "Leads Generation"
-msgstr "Generácia iniciatív"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Leads by Source"
-msgstr "Iniciatívy podľa zdroja"
+msgstr ""
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_usa_lead
 msgid "Leads from USA"
-msgstr "Iniciatívy z USA"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
-msgstr "Iniciatívy ktoré sú pridelené mne"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that did not ask not to be included in mass mailing campaigns"
 msgstr ""
-"Inciatívy ktoré nežiadali nebyť zahrnuté v hromadných emailových kampaniach"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid ""
-"Leads that you selected that have duplicates. If the list is empty, it means "
-"that no duplicates were found"
+"Leads that you selected that have duplicates. If the list is empty, it means"
+" that no duplicates were found"
 msgstr ""
-"Iniciatívy ktoré ste vybrali ktoré majú duplikáty. Ak je zoznam prázdny, "
-"znamená to že žiadne duplikáty neboli nájdené"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Leads with existing duplicates (for information)"
-msgstr "Iniciatívy pre existujúce duplikáty (pre informáciu)"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity_opportunity_ids
 msgid "Leads/Opportunities"
-msgstr "Iniciatívy/Príležitosti"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -2683,30 +2421,28 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Licences"
-msgstr "Licencie"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_line_ids
 msgid "Lines"
-msgstr "Riadky"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Link to an existing customer"
-msgstr "Pripojiť k existujúcemu zákazníkovi"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_partner_id
 msgid "Linked partner (optional). Usually created when converting the lead."
 msgstr ""
-"Súvisiaci partner (voliteľné). Obvykle vytvorené pri konvertovaní na "
-"iniciatívu."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "List of possible pain points by segment/profile"
-msgstr "Zoznam možných problémových bodov segmentu / profilu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
@@ -2714,8 +2450,25 @@ msgid "Log & Schedule Next"
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Log Activity"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
 msgid "Log Only"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
+msgid "Log a note..."
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_activity_log_action
+#: model:ir.model,name:crm.model_crm_activity_log
+#: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
+msgid "Log an Activity"
 msgstr ""
 
 #. module: crm
@@ -2727,7 +2480,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Lost"
-msgstr "Stratená"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_lost_action
@@ -2738,62 +2491,67 @@ msgstr "Stratená"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Lost Reason"
-msgstr "Dôvod straty"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lost_reason_action
 #: model:ir.ui.menu,name:crm.menu_crm_lost_reason
 msgid "Lost Reasons"
-msgstr "Dôvody strát"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
-msgstr "Nízka"
+msgstr ""
 
 #. module: crm
 #: model:crm.activity,name:crm.crm_activity_demo_make_quote
 #: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
 msgid "Make Quote"
-msgstr "Uviesť cenu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
-msgstr "Stratený"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Won"
-msgstr "Získaný"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_mark_as_lost
+msgid "Mark as lost"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Marketing"
-msgstr "Reklama"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
 msgid "Mass Lead To Opportunity Partner"
-msgstr "Hromadná iniciatíva na partnera príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_maximum_group
 msgid "Maximum of Group of Contacts"
-msgstr "Maximum skupiny kontaktov"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_medium_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
-msgstr "Stredné"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:883
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
-msgstr "Stretnutie naplánované na '%s'<br> Predmet: %s <br> Trvanie: %s hodín"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -2809,123 +2567,119 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_res_users_meeting_ids
 #: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Meetings"
-msgstr "Stretnutia"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Merge"
-msgstr "Zlúčiť"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically"
-msgstr "Zlúčiť automaticky"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically all process"
-msgstr "Zlúčiť automaticky všetky procesy"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge Contacts"
-msgstr "Zlúčiť kontakty"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Merge Leads/Opportunities"
-msgstr "Zlúčiť Iniciatívy/Príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_merge
 msgid "Merge Selected Contacts"
-msgstr "Zlúčiť vybrané kontakty"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
 #: model:ir.actions.act_window,name:crm.merge_opportunity_act
 msgid "Merge leads/opportunities"
-msgstr "Zlúčiť iniciatívy/príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
 msgid "Merge opportunities"
-msgstr "Zlúčiť príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge the following contacts"
-msgstr "Zlúčiť následovné kontakty"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge with Manual Check"
-msgstr "Zlúčiť s manuálnou kontrolou"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass_deduplicate
 msgid "Merge with existing leads/opportunities of each partner"
-msgstr "Zlúčiť s existujúcimi iniciatívami/príležitosťami každého partnera"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 msgid "Merge with existing opportunities"
-msgstr "Zlúčiť s existujúcimi príležitosťami"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:486
 #, python-format
 msgid "Merged lead"
-msgstr "Zlúčené iniciatívy"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:520
 #, python-format
 msgid "Merged leads"
-msgstr "Zlúčené iniciatívy"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:520
 #, python-format
 msgid "Merged opportunities"
-msgstr "Zlúčené príležitosti"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:486
 #, python-format
 msgid "Merged opportunity"
-msgstr "Zlúčená príležitosť"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:331
 #, python-format
 msgid "Merged with the following partners:"
-msgstr "Zlúčené s následovnými partnermi:"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_subtype_id
 msgid "Message Subtype"
-msgstr "Podtyp správy"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_name
 msgid "Message Type"
-msgstr "Typ správy"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_name
 msgid ""
 "Message subtype gives a more precise type on the message, especially for "
-"system notifications. For example, it can be a notification related to a new "
-"record (New), or to a stage change in a process (Stage change). Message "
+"system notifications. For example, it can be a notification related to a new"
+" record (New), or to a stage change in a process (Stage change). Message "
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
-"Podtyp správy dáva precíznejší typ správe, obzvlášť pre systémové "
-"notifikácie. Napríklad, môže to byť notifikácia vzťahujúca sa na nový záznam "
-"(Nové) , alebo k zmene fázy v procese (Zmena fázy). Podtypy správ umožňujú "
-"presne vyladiť notifikácie ktoré chce používateľ dostávať na svoju nástenku."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_internal
@@ -2933,41 +2687,37 @@ msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
 msgstr ""
-"Správy s interným podtypom budú viditeľné iba zamestnancami, aka členovia "
-"skupiny base_user"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_min_id
 msgid "MinID"
-msgstr "MinID"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Misc"
-msgstr "Rôzne"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_mobile
 msgid "Mobile"
-msgstr "Mobil"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_res_model
 msgid "Model"
-msgstr "Model"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_res_model
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
 msgstr ""
-"Model pre ktorý platí tento podtyp. Ak je Nepravda, tento podtyp platí pre "
-"všetky modely."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Month"
-msgstr "Mesiac"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
@@ -2977,25 +2727,31 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Motivation letter from the management"
-msgstr "Motivačný list od manažmentu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "My Leads"
-msgstr "Moje iniciatívy"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Opportunities"
-msgstr "Moje Príležitosti"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_your_pipeline
+#: model:ir.ui.menu,name:crm.menu_crm_opportunities
+msgid "My Pipeline"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_name
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_name
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason_name
 msgid "Name"
-msgstr "Meno"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -3010,7 +2766,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/web_planner_crm.js:34
 #, python-format
 msgid "Negotiation"
-msgstr "Vyjednávanie"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -3020,12 +2776,12 @@ msgstr "Vyjednávanie"
 #: model:crm.stage,name:crm.stage_lead1
 #, python-format
 msgid "New"
-msgstr "Nové"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
 msgid "New Opportunity"
-msgstr "Nová príležitosť"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -3037,30 +2793,36 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action_next
 msgid "Next Action"
-msgstr "Ďalšie akcie"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
 #: model:ir.ui.menu,name:crm.crm_lead_menu_activities
 msgid "Next Activities"
-msgstr "Ďalšie aktivity"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_next_activity_id
 #: model:ir.ui.view,arch_db:crm.crm_lead_view_tree_activity
 msgid "Next Activity"
-msgstr "Ďalšia aktivita"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_date_action
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action
 msgid "Next Activity Date"
-msgstr "Dátum ďalšej aktivity"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_title_action
 msgid "Next Activity Summary"
-msgstr "Zhrnutie ďalšej aktivity"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/wizard/crm_activity_log.py:61
+#, python-format
+msgid "Next activity"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
@@ -3076,7 +2838,12 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:1095
 #, python-format
 msgid "No Subject"
-msgstr "Bez predmetu"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
+msgid "No activity"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
@@ -3087,12 +2854,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "No salesperson"
-msgstr "Žiadny predajca"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Normal"
-msgstr "Normálna"
+msgstr ""
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
@@ -3100,54 +2867,57 @@ msgid "Not enough stock"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_activity_log_note
+msgid "Note"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Note: To use those features, you need to install the"
-msgstr "Pozámka: pre využívanie týchto funkcií, musíte nainštalovať"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_description
 msgid "Notes"
-msgstr "Poznámky"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_delay_close
 msgid "Number of Days to close the case"
-msgstr "Počet dní na uzatvorenie udalosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_delay_open
 msgid "Number of Days to open the case"
-msgstr "Počet dní na otvorenie prípadu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Number of Rooms"
-msgstr "Počet miestností"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_days
 msgid "Number of days"
-msgstr "Počet dní"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_days
 msgid ""
-"Number of days before executing the action, allowing you to plan the date of "
-"the action."
+"Number of days before executing the action, allowing you to plan the date of"
+" the action."
 msgstr ""
-"Počet dní pred vykonaním akcie, umožňujúce vám plánovanie dátumu ďalšej "
-"akcie."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Odoo Default"
-msgstr "Odoo predvolené"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_website_sign
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
 msgid "Odoo Sign"
-msgstr "Odoo znak"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -3155,11 +2925,8 @@ msgstr "Odoo znak"
 #: model:ir.actions.act_window,help:crm.crm_lead_opportunities_tree_view
 msgid ""
 "Odoo helps you keep track of your sales pipeline to follow\n"
-"                    up potential sales and better forecast your future "
-"revenues."
+"                    up potential sales and better forecast your future revenues."
 msgstr ""
-"Odoo vam pomáha sledovať reťazovú náväznosť predajov pre naviazanie\n"
-"na potencionálne predaje a lepšie odhady vašich budúcich výnosov."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3167,27 +2934,19 @@ msgid ""
 "Odoo is the world's only software to have a full integration of Marketing "
 "Apps for your sales channel: insight sales, point of sale, ecommerce."
 msgstr ""
-"Odoo je jediný svetový softvér s plne integrovanými marketingovými "
-"aplikáciami pre váš predajný kanál: náhľady predaja, miesta predaja, "
-"ecommerce."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_sale_config_settings_generate_sales_team_alias
 msgid "Odoo will generate an email alias based on the sales team name"
-msgstr "Odoo vygeneruje email alias na základe názvu predajného tímu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"Odoo will help you create polished, professional quotations and contracts in "
-"minutes.\n"
+"Odoo will help you create polished, professional quotations and contracts in minutes.\n"
 "                        Tell us how you sell and we will tell you what\n"
 "                        configuration will best fit your quotation process."
 msgstr ""
-"Odoo vám pomôže vytvoriť upravené, profesionálne ponuky a zmluvy počas "
-"niekoľkých minút.\n"
-"Povedzte nám čo predávate a my vám povieme, aká\n"
-"konfigurácia bude najlepšie zodpovedať váśmu procesu cenových ponúk."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
@@ -3196,8 +2955,6 @@ msgid ""
 "Once qualified, the lead can be converted into a business\n"
 "                    opportunity and/or a new customer in your address book."
 msgstr ""
-"Akonáhle ja kvalifikovaná, iniciatíva môže byť konvertovaná na obchodnú\n"
-"príležitosť a / alebo nového zákazníka vo vašom adresári."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3207,9 +2964,6 @@ msgid ""
 "weekly sales meeting with the team during which you will do a pipeline "
 "review."
 msgstr ""
-"Po nasadení vášho CRM, je čas k rastu vašich príjmov. Začnite vyvtorením "
-"neustáleho zlepšovania prístupu . Odporúčame usporiadať týždenné predajné "
-"stretnutia s tímom, počas ktorého budete robiť prehľad postupnosti."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3220,13 +2974,10 @@ msgstr ""
 #: code:addons/crm/wizard/base_partner_merge.py:323
 #, python-format
 msgid ""
-"Only the destination contact may be linked to existing Journal Items. Please "
-"ask the Administrator if you need to merge several contacts linked to "
+"Only the destination contact may be linked to existing Journal Items. Please"
+" ask the Administrator if you need to merge several contacts linked to "
 "existing Journal Items."
 msgstr ""
-"Iba cieľový kontakt môže byť spojený s existujúcimi položkami účtovnej "
-"knihy. Opýtajte sa správcu či potrebujete zlúčiť viac kontaktov spojených s "
-"existujúcou položky účtovnej knihy."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -3247,13 +2998,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Opportunities"
-msgstr "Príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Opportunities Analysis"
-msgstr "Analýza príležitostí"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_opportunity_salesteam
@@ -3261,33 +3012,29 @@ msgid ""
 "Opportunities Analysis gives you an instant access to your opportunities "
 "with information such as the expected revenue, planned cost, missed "
 "deadlines or the number of interactions per opportunity. This report is "
-"mainly used by the sales manager in order to do the periodic review with the "
-"teams of the sales pipeline."
+"mainly used by the sales manager in order to do the periodic review with the"
+" teams of the sales pipeline."
 msgstr ""
-"Analýza príležitostí vám dáva okamžitý prístup k vašim príležitstiam ako sú "
-"očakávaný výnos, plánované náklady, nedodržané uzávierky alebo počet "
-"interakcií za príležitosť. Tento výkaz je používaný hlavne na periodický "
-"posudok predajnej reťazovej naviazanosti s tímami."
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
 msgid "Opportunities Cohort"
-msgstr "Skupinové príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_opportunities_won_per_team
 msgid "Opportunities Won Per Team"
-msgstr "Príležitosti vyhrané na tím"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Opportunities pipeline"
-msgstr "Reťazová postupnosť príležitostí"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Opportunities that are assigned to me"
-msgstr "Príležitosti ktoré sú pridelené mne"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:816
@@ -3303,18 +3050,18 @@ msgstr "Príležitosti ktoré sú pridelené mne"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Opportunity"
-msgstr "Príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_lost
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
 msgid "Opportunity Lost"
-msgstr "Stretená príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
-msgstr "Fáza príležitosti zmenená"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
@@ -3325,27 +3072,27 @@ msgstr ""
 #: model:mail.message.subtype,name:crm.mt_lead_won
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
 msgid "Opportunity Won"
-msgstr "Vyhraná príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_lost
 msgid "Opportunity lost"
-msgstr "Stratená príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
-msgstr "Vyhraná príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_opt_out
 msgid "Opt-Out"
-msgstr "Nezasielať"
+msgstr ""
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Option"
-msgstr "Voľba"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_force_thread_id
@@ -3354,14 +3101,11 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Voliteľné ID vlákna (záznam), na ktoré budú pripojené všetky prichádzajúce "
-"správy, aj keď na to neodpovedali. Ak je nastavené, úplne to zakáže "
-"vytváranie nových záznamov."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Options"
-msgstr "Možnosti"
+msgstr ""
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor8
@@ -3371,17 +3115,17 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Activities"
-msgstr "Oneskorené aktivity"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_expected
 msgid "Overpassed Deadline"
-msgstr "Prekročená uzávierka"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_user_id
 msgid "Owner"
-msgstr "Vlastník"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -3400,76 +3144,70 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_parent_id
 msgid "Parent"
-msgstr "Rodič"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_parent_id
 msgid "Parent Company"
-msgstr "Rodičovská spoločnosť"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_parent_model_id
 msgid "Parent Model"
-msgstr "Nadradený model"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID nadradeného vlákna záznamu"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not "
-"necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Nadradený model drží alias. Model drží referenciu aliasu nie je nevyhnutne "
-"model ktorý zadal alias_model_id (príklad: projekt (parent_model) a úlohy "
-"(model))"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_parent_id
 msgid ""
-"Parent subtype, used for automatic subscription. This field is not correctly "
-"named. For example on a project, the parent_id of project subtypes refers to "
-"task-related subtypes."
+"Parent subtype, used for automatic subscription. This field is not correctly"
+" named. For example on a project, the parent_id of project subtypes refers "
+"to task-related subtypes."
 msgstr ""
-"Nadradený podtyp, pouźívaný pre automatické odbery. Toto pole nie je správne "
-"pomenované. Napríklad na projekte, parent_id podtypov projektu odkazuje na "
-"podtypy spojené s úlohami."
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_partner_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Partner"
-msgstr "Partner"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_address_email
 msgid "Partner Contact Email"
-msgstr "Kontaktný email partnera"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_address_name
 msgid "Partner Contact Name"
-msgstr "Meno kontaktu partnera "
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_partner_id
 msgid "Partner/Customer"
-msgstr "Partner/Zákazník"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Partners"
-msgstr "Partneri"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_phone
 msgid "Phone"
-msgstr "Telefón"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -3481,14 +3219,14 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Phone scripts"
-msgstr "Telefónnne scénare"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_opportunity_report_menu
 #: model:ir.ui.view,arch_db:crm.crm_planner
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Pipeline"
-msgstr "Reťazové spracovanie"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
@@ -3498,65 +3236,64 @@ msgstr "Reťazové spracovanie"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Pipeline Analysis"
-msgstr "Analýza reťazového spracovania"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action
 msgid ""
 "Pipeline Analysis gives you an instant access to\n"
-"your opportunities with information such as the expected revenue, planned "
-"cost,\n"
-"missed deadlines or the number of interactions per opportunity. This report "
-"is\n"
-"mainly used by the sales manager in order to do the periodic review with "
-"the\n"
+"your opportunities with information such as the expected revenue, planned cost,\n"
+"missed deadlines or the number of interactions per opportunity. This report is\n"
+"mainly used by the sales manager in order to do the periodic review with the\n"
 "teams of the sales pipeline."
 msgstr ""
-"Analýza reťazového spracovania vám dáva okamžitý prístup k\n"
-"vašim príležitostiam s informáciami, ako očakávané príjmy, plánované "
-"náklady,\n"
-"zmeškané uzávierky alebo počet interakcií na príležitosť. Tento výkaz\n"
-"používa predovšetkým manažér predaja, aby mohol robiť pravidelný prehľad s\n"
-"tímami v predajnom reťazovom spracovaní."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_graph
 msgid ""
 "Pipeline Analysis gives you an instant access to\n"
-"your opportunities with information such as the expected revenue, planned "
-"cost,\n"
-"missed deadlines or the number of interactions per opportunity. This report "
-"is\n"
-"mainly used by the sales manager in order to periodically review the "
-"pipeline\n"
+"your opportunities with information such as the expected revenue, planned cost,\n"
+"missed deadlines or the number of interactions per opportunity. This report is\n"
+"mainly used by the sales manager in order to periodically review the pipeline\n"
 "with the the sales teams."
 msgstr ""
-"Analýza reťazového spracovania vám dáva okamžitý prístup k\n"
-"vašim príležitostiam s informáciami, ako očakávané príjmy, plánované "
-"náklady,\n"
-"zmeškané uzávierky alebo počet interakcií na príležitosť. Tento výkaz\n"
-"používa predovšetkým manažér predaja, aby mohol robiť pravidelný prehľad s\n"
-"tímami v predajnom reťazovom spracovaní."
 
 #. module: crm
 #: model:web.planner,tooltip_planner:crm.planner_crm
 msgid "Plan your sales strategy: objectives, leads, KPIs, and much more!"
 msgstr ""
-"Naplánujte si obchodné stratégie: ciele, iniciatívy, KPI, a oveľa viac!"
 
 #. module: crm
 #: model:ir.model,name:crm.model_web_planner
 msgid "Planner"
-msgstr "Plánovač"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:592
 #, python-format
 msgid ""
-"Please select more than one element (lead or opportunity) from the list view."
+"Please select more than one element (lead or opportunity) from the list "
+"view."
 msgstr ""
-"Prosím, vyberte viac ako jeden prvok (iniciatíva alebo príležitosť) zo "
-"zobrazenia zoznamu."
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_team_alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
+msgid "Preceding Activities"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_activity_log_last_activity_id
+msgid "Previous Activity"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3566,24 +3303,24 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_priority
 msgid "Priority"
-msgstr "Priorita"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_legend_priority
 msgid "Priority Management Explanation"
-msgstr "Spravovanie priorít vysvetlenie"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_probability
 #: model:ir.model.fields,field_description:crm.field_crm_lead_probability
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_probability
 msgid "Probability"
-msgstr "Pravdepodobnosť"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_probability
 msgid "Probability (%)"
-msgstr "Pravdepodobnosť (%)"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_expected_revenue
@@ -3603,6 +3340,11 @@ msgid "Product Demonstration"
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "Products"
+msgstr ""
+
+#. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:16
 #: code:addons/crm/static/src/js/web_planner_crm.js:23
@@ -3610,7 +3352,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 #, python-format
 msgid "Proposal"
-msgstr "Návrh"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -3618,12 +3360,12 @@ msgstr "Návrh"
 #: model:crm.stage,name:crm.stage_lead3
 #, python-format
 msgid "Proposition"
-msgstr "Navrhnutie"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Qualification form (you can use the survey app for this)"
-msgstr "Formulár kvalifikácie (môžete použiť aplikáciu prieskum)"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -3633,7 +3375,7 @@ msgstr "Formulár kvalifikácie (môžete použiť aplikáciu prieskum)"
 #: model:crm.stage,name:crm.stage_lead2
 #, python-format
 msgid "Qualified"
-msgstr "Kvalifikovaný"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -3666,7 +3408,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_priority
 msgid "Rating"
-msgstr "Hodnotenie"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3685,65 +3427,88 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
 msgid "Reason for loosing leads"
-msgstr "Dôvod pre stratu iniciatív"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_activity_log_recommended_activity_id
+msgid "Recommended Activities"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_activity_recommended_activity_ids
+msgid "Recommended Next Activities"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "ID vlákna záznamu"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_referred
 msgid "Referred By"
-msgstr "Doporučil"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_action
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_action
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_action
 msgid "Related Customer"
-msgstr "týkajúce sa zákazníka"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_relation_field
 msgid "Relation field"
-msgstr "Pole vzťahu"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_email_reminder_lead
 msgid "Reminder to User"
-msgstr "Pripomienka Používateľovi"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,subject:crm.action_email_reminder_lead
+#: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
+msgid ""
+"Reminder: Lead ${object.name} from ${object.partner_id != False and "
+"object.partner_id.name or object.contact_name}"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Reporting"
-msgstr "Výkazy"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_requirements
 #: model:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Requirements"
-msgstr "Požiadavky"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Revenue by Salesperson"
-msgstr "Príjmy za predajcu"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "Sale Flow"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Forecasts (month+1)"
-msgstr "Odhad predajov (mesiac+1)"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Management module."
-msgstr "Modul spravovania predaja."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Settings"
-msgstr "Nastavenia predajov"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team
@@ -3760,17 +3525,17 @@ msgstr "Nastavenia predajov"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Sales Team"
-msgstr "Obchodný tím"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Tools"
-msgstr "Nástroje predajov"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_user_ids
 msgid "Salesmen"
-msgstr "Predajca"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_user_id
@@ -3782,15 +3547,23 @@ msgstr "Predajca"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Salesperson"
-msgstr "Predajca"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Save filters or add any report to your dashboard with the Favorites menu."
 msgstr ""
-"Uložte filtre alebo pridajte akýkoľvek výkaz na vašu nástenku s ponukou "
-"Obľúbené."
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
+msgid "Schedule Activity"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
+msgid "Schedule Next Activity"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_schedule_action
@@ -3800,39 +3573,32 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Search Leads"
-msgstr "Vyhľadanie iniciatív"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Search Opportunities"
-msgstr "Vyhľadanie príležitostí"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Search duplicates based on duplicated data in"
-msgstr "Hľadať duplikáty na základe duplicitných údajov v"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Select Leads/Opportunities"
-msgstr "Vybrať Iniciatívy/Príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid ""
 "Select the list of fields used to search for\n"
-"                            duplicated records. If you select several "
-"fields,\n"
-"                            Odoo will propose you to merge only those "
-"having\n"
-"                            all these fields in common. (not one of the "
-"fields)."
+"                            duplicated records. If you select several fields,\n"
+"                            Odoo will propose you to merge only those having\n"
+"                            all these fields in common. (not one of the fields)."
 msgstr ""
-"Vyberte zoznam polí použitých na vyhľadávanie\n"
-"duplicitných záznamov. Ak vyberiete niekoľko polí,\n"
-"Odoo vám navrhne zlúčiť iba tie, ktoré majú\n"
-"všetkých tieto polia spoločné. (nie jedno z polí)."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3843,28 +3609,21 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid ""
 "Selected contacts will be merged together.\n"
-"                                All documents linked to one of these "
-"contacts\n"
-"                                will be redirected to the destination "
-"contact.\n"
-"                                You can remove contacts from this list to "
-"avoid merging them."
+"                                All documents linked to one of these contacts\n"
+"                                will be redirected to the destination contact.\n"
+"                                You can remove contacts from this list to avoid merging them."
 msgstr ""
-"Vybrané kontakty budú zlúčené dohromady.\n"
-"Všetky dokumenty súvisiace s jedným z týchto kontaktov\n"
-"budú presmerované na cieľový kontakt.\n"
-"Môžete odstrániť kontakty z tohto zoznamu, aby nedošlo k ich zlúčeniu."
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Selection"
-msgstr "Výber"
+msgstr ""
 
 #. module: crm
 #: model:crm.activity,description:crm.crm_activity_demo_make_quote
 #: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
 msgid "Send a quotation"
-msgstr "Poslať cenovú ponuku"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3872,14 +3631,12 @@ msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
 "20 days"
 msgstr ""
-"Pošlite email všetkým príležitostiam ktoré sú vo fáze \"kvalifikovaný\" ako "
-"20 dní"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_sequence
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
-msgstr "Postupnosť"
+msgstr ""
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor3
@@ -3897,13 +3654,12 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.server,name:crm.action_set_team_sales_department
 msgid "Set team to Sales Department"
-msgstr "Nastavte tím obchodného oddelenia"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Set the sales manager as a follower of every opportunity above $20k"
 msgstr ""
-"Nastavte manažéra predaja ako odberateľa každej príleźitosti nad 20.000"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_on_change
@@ -3911,31 +3667,25 @@ msgid ""
 "Setting this stage will change the probability automatically on the "
 "opportunity."
 msgstr ""
-"Nastavenie tejto fázy automaticky zmení pravdepodobnosť na príležitosti."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Setting up your sales funnel is just the first step. To achieve a\n"
-"                      significant boost, we will help you get the most out "
-"of\n"
+"                      significant boost, we will help you get the most out of\n"
 "                      Odoo CRM to transform how your salespeople work.\n"
 "                      That's the purpose of this guide."
 msgstr ""
-"Nastavenie predajného lieviku je len prvý krok. K dosiahnutiu\n"
-"významného oživenia, pomôžeme vám získať čo najviac z\n"
-"Odoo CRM pre transformovanie práce vašich predajcov.\n"
-"To je cieľom tohto sprievodcu."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
 msgid "Setup your domain alias"
-msgstr "Nastavenie vášho alias domény"
+msgstr ""
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
 msgid "Show Lead Menu"
-msgstr "Zobraziť menu iniciatív"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3943,30 +3693,33 @@ msgid ""
 "Show advanced filters and options by clicking on the magnifying glass icon "
 "next to the search bar."
 msgstr ""
-"Zobraziť pokročilé filtre a možnosti kliknutím na ikonu lupy vedľa "
-"vyhľadávacieho panela."
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid "Show all opportunities for which the next action date is before today"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only lead"
-msgstr "Zobraziť iba iniciatívu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
-msgstr "Zobraziť iba príležitosť"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Skip these contacts"
-msgstr "Preskočiť tieto kontakty"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Slides"
-msgstr "Strany prezentácie"
+msgstr ""
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor2
@@ -3976,7 +3729,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Solution Selling"
-msgstr "Predaj riešení"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -3984,15 +3737,13 @@ msgid ""
 "Some examples of lost reasons: \"We don't have people/skill\", \"Price too "
 "high\""
 msgstr ""
-"Príklady dôvodov strát: \"Nemáme ľudí / kvalifikáciu\", \"Cena je príliš "
-"vysoká\""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_source_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Source"
-msgstr "Výraz"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_team_id
@@ -4010,40 +3761,47 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_stage_form
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Stage"
-msgstr "Etapa"
+msgstr ""
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr "Fáza zmenená"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_stage_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_name
 msgid "Stage Name"
-msgstr "Názov etapy"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lead_stage_search
 msgid "Stage Search"
-msgstr "Vyhľadávanie fázy"
+msgstr ""
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr "Fáza zmenená"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_stage
 msgid "Stage of case"
-msgstr "Etapa udalosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_stage_action
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
 #: model:ir.ui.view,arch_db:crm.crm_stage_tree
 msgid "Stages"
-msgstr "Etapy"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_stage_action
+msgid ""
+"Stages allow salespersons to easily track how a specific opportunity\n"
+"            is positioned in the sales cycle."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_state
@@ -4051,39 +3809,39 @@ msgstr "Etapy"
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "State"
-msgstr "Stav"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_street
 msgid "Street"
-msgstr "Ulica"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Street 2..."
-msgstr "Ulica 2..."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Street..."
-msgstr "Ulica..."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_street2
 msgid "Street2"
-msgstr "Ulica2"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Submit"
-msgstr "Odovzdať"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Subscription Management"
-msgstr "Spravovanie predplatného"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
@@ -4095,50 +3853,51 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Systematic organization is what makes the difference\n"
-"                        between good and great salespeople! Setup a "
-"pipeline\n"
+"                        between good and great salespeople! Setup a pipeline\n"
 "                        that is in line with your sales cycle."
 msgstr ""
-"Systematická organizácie je to, čo robí rozdiel\n"
-"medzi dobrým a skvelým predajcom! Zostavte reťazovú postupnosť\n"
-"ktorá je v súlade s vašim cyklom predaja."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Tag"
-msgstr "Menovka"
+msgstr ""
 
 #. module: crm
 #: sql_constraint:crm.lead.tag:0
 msgid "Tag name already exists !"
-msgstr "Názov visačky už existuje !"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_ids
 msgid "Tags"
-msgstr "Popisky"
+msgstr ""
 
 #. module: crm
 #: model:crm.activity,name:crm.crm_activity_data_meeting
 #: model:mail.message.subtype,name:crm.crm_activity_data_meeting_mail_message_subtype
 msgid "Task"
-msgstr "Úloha"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_stage_team_id
+msgid "Team"
+msgstr ""
 
 #. module: crm
 #: model:ir.filters,name:crm.ir_filters_crm_opportunity_report_next_action
 msgid "Team Activities"
-msgstr "Tímová aktivita"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Templates of emails"
-msgstr "Šablóny emailov"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Templates of quotations (use Odoo Online Proposals for this)"
-msgstr "Šablóny cenových ponúk (na toto použite Odoo online návrhy)"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -4160,8 +3919,6 @@ msgid ""
 "The email address associated with this team. New emails received will "
 "automatically create new leads assigned to the team."
 msgstr ""
-"Emailová adresa spojená s týmto tímom. Nové prijaté emaily automaticky "
-"vytvoria nové iniciatívy pridelené tímu."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_use_leads
@@ -4170,25 +3927,19 @@ msgid ""
 "before converting it into a real business opportunity. Check this box to "
 "manage leads in this sales team."
 msgstr ""
-"Prvý kontakt s potenciálnym zákazníkom je iniciatíva ktorú kvalifikujete "
-"pred konvertovaním na skutočnú obchodnú príležitosť. Zaškrtnite toto políčko "
-"pre spravovanie iniciatív v tomto predajnom tíme."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "The first stage is usually \"New\" and the last one is \"Won\""
-msgstr "Prvá fáza je zvyčajne \"Nové\" a posledná je \"Vyhrané\""
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
-"email that does not reply to an existing record will cause the creation of a "
-"new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Model (Odoo druh dokumentu), ktorému odpovedá toto alias. Každý "
-"prichádzajúci email ktorý neodpovie na existujúci záznam spôsobí vytvorenie "
-"nového záznamu tohto modelu (napr úlohy projektu)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_name
@@ -4196,17 +3947,13 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Meno emailového alias, napr. \"práce\", ak chcete zachytiť emaily pre "
-"<prace@priklad.odoo.com>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_partner_name
 msgid ""
-"The name of the future partner company that will be created while converting "
-"the lead into opportunity"
+"The name of the future partner company that will be created while converting"
+" the lead into opportunity"
 msgstr ""
-"Názov budúceho partnera spoločnosti, ktorá vznikne pri konvertovaní "
-"iniciatívy na príležitosť"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_user_id
@@ -4216,32 +3963,24 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Majiteľ záznamov vytvorených pri prijímaní emailov na tento alias. Ak toto "
-"pole nie je nastavené, systém sa pokúsi nájsť správneho vlastníka na základe "
-"adresy odosielateľa (Od), alebo bude používať účet správcu ak nie je "
-"užívateľ systému nájdený pre danú adresu."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "The point of contact <strong>for all your prospects</strong>"
-msgstr "Kontaktné miesto <strong>pre všetkých vašich záujemcov</strong>"
+msgstr ""
 
 #. module: crm
 #: sql_constraint:crm.lead:0
 msgid "The probability of closing the deal should be between 0% and 100%!"
-msgstr "Pravdepodobnosť uzavretia obchodu by mala byť medzi 0% a 100%!"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "The three main practices to develop a sales force are\n"
-"                        <strong>methodical organization</strong>, "
-"<strong>trainings</strong> and\n"
+"                        <strong>methodical organization</strong>, <strong>trainings</strong> and\n"
 "                        <strong>good sales tools</strong>."
 msgstr ""
-"Tri hlavné praktiky na vyvinutie predajnej sily sú\n"
-"<strong>metodická organizácia</strong>, <strong>tréningy</strong> a\n"
-"<strong>dobré nástroje predaja</strong>."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4249,34 +3988,25 @@ msgid ""
 "The whole process may take a few hours. But it's worth doing\n"
 "                      it."
 msgstr ""
-"Celý proces môže trvať niekoľko hodín. Ale stojí za to robiť\n"
-"to."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "There are several ways for your company to generate leads with Odoo CRM.\n"
-"                        One of them is using your company's generic email "
-"address as a trigger\n"
-"                        to create a new lead in the system. In Odoo, each "
-"one of your sales teams\n"
-"                        is linked to its own email address from which "
-"prospects can reach them.\n"
-"                        For example, if the personal email address of your "
-"Direct team is\n"
-"                        direct@mycompany.example.com, every email sent when "
-"a new prospect\n"
-"                        contacts you will automatically create a new "
-"opportunity into the sales team.\n"
+"                        One of them is using your company's generic email address as a trigger\n"
+"                        to create a new lead in the system. In Odoo, each one of your sales teams\n"
+"                        is linked to its own email address from which prospects can reach them.\n"
+"                        For example, if the personal email address of your Direct team is\n"
+"                        direct@mycompany.example.com, every email sent when a new prospect\n"
+"                        contacts you will automatically create a new opportunity into the sales team.\n"
 "\n"
-"                        That's the easiest way to integrate Odoo with third "
-"party apps."
+"                        That's the easiest way to integrate Odoo with third party apps."
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "There is no more contacts to merge for this request..."
-msgstr "Neexistuje žiadny ďalší kontakty na zlúčenie pre túto požiadavku ..."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_email_cc
@@ -4285,14 +4015,11 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
-"Tieto emailové adresy budú pridané do poľa 'kópia' všetkých odchádzajúcich "
-"emailov pre\n"
-"tento záznam pred ich poslaním. Oddeľte jednotlivé email adresy čiarkou"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "This Week Activities"
-msgstr "Aktivity tohto týždňa"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4300,31 +4027,27 @@ msgid ""
 "This email address has been preconfigured as the default\n"
 "                                    for your sales department.<br/>"
 msgstr ""
-"Táto emailová adresa bola predkonfigurovaná ako predvoľba\n"
-"pre vaše obchodné oddelenie.<br/>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "This is the default configuration, there is nothing to setup."
-msgstr "Toto je predvolené nastavenie, nie je nič na nastavenie."
+msgstr ""
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:40
 #, python-format
 msgid ""
-"This opportunity has <b>no next activity scheduled</b>. <i>Click to set one."
-"</i>"
+"This opportunity has <b>no next activity scheduled</b>. <i>Click to set "
+"one.</i>"
 msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_probability
 msgid ""
-"This percentage depicts the default/average probability of the Case for this "
-"stage to be a success"
+"This percentage depicts the default/average probability of the Case for this"
+" stage to be a success"
 msgstr ""
-"Toto percento znázorňuje predvolenú / priemernú pravdepodobnosť Prípadu "
-"tejto fázy na úspech"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
@@ -4332,31 +4055,36 @@ msgid ""
 "This report analyses the source of your leads\n"
 "(including those converted into opportunities)."
 msgstr ""
-"Tento výkaz analyzuje zdroj vašich iniciatív\n"
-"(vrátane tých prekonvertovaných na príležitosti)."
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_stage_fold
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1010
 #, python-format
 msgid "This target does not exist."
-msgstr "Tento cieľ neexistuje."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Time to Close a Deal"
-msgstr "Čas uzavrieť obchod"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Time to Qualify a Lead"
-msgstr "Čas kvalifikovať iniciatívu"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_title
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Title"
-msgstr "Titul"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4369,7 +4097,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Today Activities"
-msgstr "Dnešné aktivity"
+msgstr ""
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_1
@@ -4379,12 +4107,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_total_revenue
 msgid "Total Revenue"
-msgstr "Celkový príjem"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Tracking"
-msgstr "Sledovanie"
+msgstr ""
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor6
@@ -4396,14 +4124,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead_type
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_type
 msgid "Type"
-msgstr "Typ"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_report_lead_type
 #: model:ir.model.fields,help:crm.field_crm_lead_type
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_type
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "Typ je používaný pre oddeľovanie iniciatív a príležitostí"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4413,13 +4141,13 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Unarchive"
-msgstr "Odarchivovať"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unassigned"
-msgstr "Nepriradené"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4427,66 +4155,55 @@ msgid ""
 "Unless you are starting a new business, you probably have a list of "
 "customers and vendors you'd like to import."
 msgstr ""
-"Pokiaľ nezakladáte nový obchod,  pravdepodobne máte zoznam zákazníkov a "
-"dodávateľov ktorý by ste chceli importovať."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unread Messages"
-msgstr "Neprečítané správy"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_write_date
 msgid "Update Date"
-msgstr "Dátum aktualizácie"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Upsell more to existing customers"
-msgstr "Upsell-ovať viac existujúcim zákazníkom"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Use"
-msgstr "Použiť"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner.mass,action:0
 msgid "Use existing partner or create"
-msgstr "Použiť existujúceho partnera alebo vytvoriť"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
 #: model:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid ""
 "Use leads if you need a qualification step before creating an\n"
-"                    opportunity or a customer. It can be a business card you "
-"received,\n"
-"                    a contact form filled in your website, or a file of "
-"unqualified\n"
+"                    opportunity or a customer. It can be a business card you received,\n"
+"                    a contact form filled in your website, or a file of unqualified\n"
 "                    prospects you import, etc."
 msgstr ""
-"Použite iniciatívy ak potrebujete kvalifikačný krok pred vytvorením\n"
-"príležitosti alebo zákazníka. Môže to byť vizitka ktorú ste obdržali,\n"
-"kontaktný formulár vyplnený na vašej webstránke, alebo súbor "
-"nekvalifikovaných\n"
-"záujemcov ktorý importujete, atď."
 
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid ""
-"Use leads if you need a qualification step before creating an opportunity or "
-"a customer"
+"Use leads if you need a qualification step before creating an opportunity or"
+" a customer"
 msgstr ""
-"Použite iniciatívy ak potrebujete kvalifikačný krok pred vytvorením\n"
-"príležitosti alebo zákazníka"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Use lost reasons to explain why an opportunity is lost."
-msgstr "Použite dôvod straty na vysvetlenie prečo bola príležitosť stratená."
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -4494,9 +4211,6 @@ msgid ""
 "Use opportunities to keep track of your sales pipeline, follow\n"
 "                up potential sales and better forecast your future revenues."
 msgstr ""
-"Použite príležitosti pre sledovanie reťazovú náväznosť predajov pre "
-"naviazanie\n"
-"na potencionálne predaje a lepšie odhady vašich budúcich výnosov."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4507,16 +4221,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Use subscription for recurring billing.\n"
-"                                            Examples of subscription may "
-"include:\n"
-"                                            annual support contract, "
-"monthly\n"
+"                                            Examples of subscription may include:\n"
+"                                            annual support contract, monthly\n"
 "                                            subscription to a service, etc."
 msgstr ""
-"Použite odber pre opakované vyúčtovanie.\n"
-"Príklady odberu môžu zahŕňať: \n"
-"ročná zazmluvnená podpora, mesačný\n"
-"odber služby, atď."
 
 #. module: crm
 #. openerp-web
@@ -4535,7 +4243,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_resource_calendar_id
 msgid "Used to compute open days"
-msgstr "Používa sa na výpočet otvorených dni  "
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_user_login
@@ -4545,47 +4253,47 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_sequence
 msgid "Used to order stages. Lower is better."
-msgstr "Používa sa na fázy objednávania. Menej je lepšie."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_user_id
 msgid "User"
-msgstr "Používateľ"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_user_email
 msgid "User Email"
-msgstr "Email používateľa"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_user_login
 msgid "User Login"
-msgstr "Prihlásenia používateľa"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_users
 msgid "Users"
-msgstr "Používatelia"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_vat
 msgid "VAT"
-msgstr "DPH"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "VIP letter to potential sponsors"
-msgstr "VIP dopis potenciálnym sponzorom"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Very High"
-msgstr "Veľmi vysoké"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
 msgid "VoIP integration"
-msgstr "VoIP integrácia"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
@@ -4598,35 +4306,25 @@ msgid ""
 "We are here to help you. If you get stuck, do not hesitate to\n"
 "                      reach our"
 msgstr ""
-"Sme tu aby sm vám pomohli. Ak sa zaseknete, neváhajte sa\n"
-"obrátiť na"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "We can add fields related to your business on any screen, for example"
 msgstr ""
-"Môžme pridať polia súvisiace s vašou firmou na akejkoľvek obrazovke, "
-"napríklad"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "We can automate steps in your workflow, for example:"
-msgstr "Môžme automatizovať kroky vo vašom pracovnom procese, napríklad: "
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "We can handle the whole import process\n"
-"                                        for you: simply send your Odoo "
-"project\n"
-"                                        manager a CSV file containing all "
-"your\n"
+"                                        for you: simply send your Odoo project\n"
+"                                        manager a CSV file containing all your\n"
 "                                        data."
 msgstr ""
-"Môžeme zvládnuť celý proces importu\n"
-"pre vás: jednoducho pošlite vášmu Odoo projektovému\n"
-"manažérovi CSV súbor ktorý obsahuje všetky vaše\n"
-"dáta."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4634,21 +4332,14 @@ msgid ""
 "We can implement custom reports for you based on your Word templates, for "
 "example:"
 msgstr ""
-"Môžeme realizovať upravené výkazy pre vás, na základe vašich Word šablón, "
-"napríklad:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "We designed Odoo to help you grow your business. Odoo CRM\n"
-"                      is not just a tool, we want it to have a major impact "
-"on your\n"
-"                      sales performance. That's our mission, and we are "
-"serious about it."
+"                      is not just a tool, we want it to have a major impact on your\n"
+"                      sales performance. That's our mission, and we are serious about it."
 msgstr ""
-"Navrhli sme Odoo aby vám pomohlo rozvíjať vaše podnikanie. Odoo CRM\n"
-"nie je len nástroj, chceme, aby malo zásadný vplyv na vaše\n"
-"predajné výsledky. To je naša úloha, a my ju berieme vážne."
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
@@ -4658,17 +4349,17 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "We hope this process helped you bring your sales vision to life."
-msgstr "Dúfame, že tento proces pomôže priniesť vašu predajnú víziu k životu."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Weekly Meetings"
-msgstr "Týždenné stretnutia"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Welcome"
-msgstr "Vitajte"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4676,37 +4367,36 @@ msgid ""
 "What <strong>kind of proposals</strong> do you usually send to your "
 "customers ?"
 msgstr ""
-"Aké <strong>druhy návrhov</strong> zvyčajne posielate svojim zákazníkom ?"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid ""
+"What are the main KPIs you need to track for your the sales activities?"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "What are your sales objectives? What challenges are you\n"
-"                        dealing with? Being clear on your expectations is "
-"the first step\n"
+"                        dealing with? Being clear on your expectations is the first step\n"
 "                        of a successful implementation."
 msgstr ""
-"Aké sú vaše predajné ciele? S akými výzvami sa\n"
-"vysporiadávate? Mať jasné očakávania je prvým krokom\n"
-"úspešnej implementácie."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_team_id
 msgid ""
 "When sending mails, the default email address is taken from the sales team."
 msgstr ""
-"Pri odosielaní mailov, predvolená emailová adresa je prevzatá z predajného "
-"tímu."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Win / Loss Ratio"
-msgstr "Pomer Výhra / Strata"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_wizard_id
 msgid "Wizard"
-msgstr "Sprievodca"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -4723,22 +4413,22 @@ msgstr "Sprievodca"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Won"
-msgstr "Získaná"
+msgstr ""
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_country
 msgid "Won By Country"
-msgstr "Výhra podľa krajiny"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_won
 msgid "Won in Opportunities Target"
-msgstr "Výhra v cieľoch na príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_resource_calendar_id
 msgid "Working Time"
-msgstr "Pracovný čas"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -4758,41 +4448,25 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"You don't need to review lost opportunities at every sales meeting, but it's "
-"good\n"
-"                            practice to do it at least once a month. Ask "
-"your team to set tags on opportunities to\n"
-"                            identify why they were lost and use this "
-"information to generate statistics. Here are\n"
-"                            some examples of tags to create: no budget, "
-"competition, no pain found, etc."
+"You don't need to review lost opportunities at every sales meeting, but it's good\n"
+"                            practice to do it at least once a month. Ask your team to set tags on opportunities to\n"
+"                            identify why they were lost and use this information to generate statistics. Here are\n"
+"                            some examples of tags to create: no budget, competition, no pain found, etc."
 msgstr ""
-"Nemusíte preskúmať stratené príležitosti na každom predajnom stretnutí, ale "
-"je to dobrá\n"
-"praktika aspoň raz za mesiac. Požiadajte svoj tím o nastavenie menovky na "
-"príležitostiach\n"
-"pre zistenie, prečo boli stratené a použite tieto informácie na generovanie "
-"štatistík. Tu sú\n"
-"niektoré príklady menoviek na vytvorenie: bez rozpočtu, konkurencia, bez "
-"nájdenia dovodu, atď."
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:398
 #, python-format
 msgid "You have to specify a filter for your selection"
-msgstr "Musíte špecifikovať filter pre váš výber"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 msgid ""
 "You will be able to plan meetings and log activities from\n"
-"                    opportunities, convert them into quotations, attach "
-"related\n"
+"                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
-"Budete mať možnosť plánovať stretnutia a zaznamenávať činnosti z\n"
-"príležitosti, konvertovať ich na ponuky, pripojiť súvisiace\n"
-"dokumenty, sledovať všetky diskusie, a mnoho ďalšieho."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -4801,34 +4475,30 @@ msgid ""
 "                opportunities, convert them into quotations, attach related\n"
 "                documents, track all discussions, and much more."
 msgstr ""
-"Budete mať možnosť plánovať stretnutia a zaznamenávať činnosti z\n"
-"príležitosti, konvertovať ich na ponuky, pripojiť súvisiace\n"
-"dokumenty, sledovať všetky diskusie, a mnoho ďalšieho."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_opportunities
 #: model:ir.actions.act_window,help:crm.crm_lead_opportunities_tree_view
 msgid ""
 "You will be able to plan meetings and phone calls from\n"
-"                    opportunities, convert them into quotations, attach "
-"related\n"
+"                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Your Expectations"
-msgstr "Vaše očakávania"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Your KPIs"
-msgstr "Vaše KPI"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Your LinkedIn or social media pages"
-msgstr "Vaše LinkedIn alebo stránky sociálnych médií"
+msgstr ""
 
 #. module: crm
 #: model:mail.template,subject:crm.mail_template_data_module_install_crm
@@ -4838,33 +4508,33 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_opportunities_tree_view
 msgid "Your Pipeline"
-msgstr "Vaše reťazové spracovanie"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Your business cards"
-msgstr "Vaše "
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Your document templates"
-msgstr "Vaše dokumentové šablóny"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Your website"
-msgstr "Vaša webstránka"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "ZIP"
-msgstr "PSČ"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_zip
 msgid "Zip"
-msgstr "PSČ"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4874,27 +4544,27 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "app."
-msgstr "aplik."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "as an exercise"
-msgstr "ako civčenie"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_base_partner_merge_automatic_wizard
 msgid "base.partner.merge.automatic.wizard"
-msgstr "base.partner.merge.automatic.wizard"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_base_partner_merge_line
 msgid "base.partner.merge.line"
-msgstr "base.partner.merge.line"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "browse the documentation"
-msgstr "prehliadať dokumentáciu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4911,74 +4581,71 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "e.g. Discuss proposal"
-msgstr "napr. Prediskutovať návrh"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "e.g. Product Pricing"
-msgstr "napr. Ceny produktov"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:871
 #, python-format
 msgid "opportunities"
-msgstr "príležitosti"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "or"
-msgstr "alebo"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr "sale.config.settings"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "send us an email"
-msgstr "pošlite nám email"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "support team"
-msgstr "tím podpory"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "survey"
-msgstr "prieskum"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "the list of customers"
-msgstr "zoznam zákazníkov"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "to create internal challenge for your salesmen"
-msgstr "na vytvorenie internej výzvy pre vašich predajcov"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "to create tests and certifications."
-msgstr "na vytvorenie testov a certifikátov."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "to describe<br/> your experience or to suggest improvements!"
-msgstr "na popísanie<br/> vašej skúsenosti, alebo pre návrh vylepšení!"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"to organize all your documents like: customer presentations, product sheets, "
-"comparisons with competitors, pain points sheets, training materials, etc."
+"to organize all your documents like: customer presentations, product sheets,"
+" comparisons with competitors, pain points sheets, training materials, etc."
 msgstr ""
-"na organizovanie všetkých vašich dokumentov, ako sú: prezentácie zákazníkov, "
-"produktových hárkov, porovnanie s konkurenciou, hárky slabých miest, "
-"školiacich materiálov, atď"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4986,14 +4653,12 @@ msgid ""
 "to setup your own domain\n"
 "                                 name (e.g. sales@yourcompany.com)"
 msgstr ""
-"pre nastavenie vášho vlastného názvu\n"
-"domény (napr. predaj@vasaspolocnost.com)"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:877
 #, python-format
 msgid "unknown"
-msgstr "neznámy"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -5003,4 +4668,4 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
-msgstr "s vašou prácou vyššie"
+msgstr ""

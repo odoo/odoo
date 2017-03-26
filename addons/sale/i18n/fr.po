@@ -33,13 +33,14 @@
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2016
 # Omar Mezga <omar.mezgrane@aldaway.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Richard Mathot <rim@odoo.com>, 2017\n"
+"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,6 +129,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_brouillon' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -788,7 +791,7 @@ msgstr "Afficher les marges sur les devis et les commandes de ventes"
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
 msgid "Do not personalize sales orders and invoice reports"
-msgstr ""
+msgstr "Ne pas personnaliser les rapports de vente"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:84
@@ -1456,7 +1459,7 @@ msgstr "Conditions de règlement"
 #. module: sale
 #: model:res.groups,name:sale.group_sale_layout
 msgid "Personalize sale order and invoice report"
-msgstr ""
+msgstr "Personnaliser les rapports de ventes"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
@@ -1464,6 +1467,8 @@ msgid ""
 "Personalize the sales orders and invoice report with categories, subtotals "
 "and page-breaks"
 msgstr ""
+"Personnaliser les rapports de vente avec des catégories, sous-totaux et "
+"sauts de page"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:276
@@ -2489,4 +2494,4 @@ msgstr "sale.config.settings"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_layout_category
 msgid "sale.layout_category"
-msgstr ""
+msgstr "sale.layout_category"

@@ -3,17 +3,18 @@
 # * account_tax_cash_basis
 # 
 # Translators:
-# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
-# Luis Martínez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
+# Luis Martínez Ontalba <luismaront@gmail.com>, 2016
+# Gelo Joga Landoo <gj@landoo.es>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:55+0000\n"
 "PO-Revision-Date: 2016-09-07 08:55+0000\n"
-"Last-Translator: Luis Martínez Ontalba <tecnisagra.ontalba@gmail.com>, 2016\n"
+"Last-Translator: Gelo Joga Landoo <gj@landoo.es>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgstr "Entrada contable"
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_cash_basis_account
 msgid "Account use when creating entry for tax cash basis"
-msgstr ""
+msgstr "Uso de la cuenta al crear un asiento de bases imponibles"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_res_company
@@ -52,6 +53,9 @@ msgid ""
 "Select this if the tax should use cash basis,which will create an entry for "
 "this tax on a given account during reconciliation"
 msgstr ""
+"Seleccionar éste si el impuesto se debería usar en el pago en efectivo, el "
+"cual creará, durante la conciliación, un registro contable para este "
+"impuesto en una cuenta ya establecida"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_tax
@@ -81,6 +85,9 @@ msgid ""
 " is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
+"Campo técnico usado para  hacer un seguimiento de la conciliación de bases "
+"de efectivode impuestos. Se necesitan cuando se cancela el origen: publicará"
+" el asiento inverso para cancelar también esa parte."
 
 #. module: account_tax_cash_basis
 #: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:80

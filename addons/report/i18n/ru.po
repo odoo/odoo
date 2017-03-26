@@ -3,20 +3,14 @@
 # * report
 # 
 # Translators:
-# KingOPl Slav <87slava13@gmail.com>, 2016
-# Максим Дронь <dronmax@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Denis Trepalin <zekarious@gmail.com>, 2016
-# Max Belyanin <maxbelyanin@gmail.com>, 2016
-# Viktor Pogrebniak <vp@aifil.ru>, 2016
-# Sergey Vilizhanin <sv@grimmette.ru>, 2016
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>, 2016\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -253,7 +247,7 @@ msgstr "Email:"
 #: code:addons/report/models/report_paperformat.py:68
 #, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
-msgstr ""
+msgstr "Ошибка! Нельзя выбрать формат И конкретную страницу ширина/высота."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -387,7 +381,7 @@ msgstr "Размер бумаги"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
 msgid "Paper format *"
-msgstr ""
+msgstr "Бумажный формат *"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
@@ -432,12 +426,12 @@ msgstr "Печать"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
 msgid "Printed Report Name"
-msgstr ""
+msgstr "Название печатного отчета"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
 msgid "QWeb views"
-msgstr ""
+msgstr "QWeb виды"
 
 #. module: report
 #. openerp-web
@@ -498,6 +492,9 @@ msgid ""
 "change the report filename. You can use a python expression with the object "
 "and time variables."
 msgstr ""
+"Это имя файла отчета, который нужно загрузить. Оставьте поле пустым, чтобы "
+"не изменять имя файла отчета. Вы можете использовать выражение python с "
+"переменными объекта и времени."
 
 #. module: report
 #: code:addons/report/models/report.py:273
@@ -527,7 +524,7 @@ msgstr ""
 #: code:addons/report/models/report.py:164
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
-msgstr ""
+msgstr "Невозможно найти Wkhtmltopdf в этой системе. Невозможно создать PDF."
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -579,8 +576,10 @@ msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The \n"
 "report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
+"Ваша установка Wkhtmltopdf кажется сломанной.\n"
+"Отчет будет показан в формате html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_qweb_field_barcode
 msgid "ir.qweb.field.barcode"
-msgstr ""
+msgstr "ir.qweb.field.barcode"

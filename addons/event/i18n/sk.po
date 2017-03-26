@@ -1,54 +1,44 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
-#
-# Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
-"PO-Revision-Date: 2016-02-21 12:42+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-10-10 08:43+0000\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
 msgid ""
 "\n"
-"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
-"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y"
-"%m%dT%H%M%SZ')\n"
-"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m"
-"%dT%H%M%SZ')\n"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td>\n"
 "                    <a href=\"/\">\n"
-"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" "
-"style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
 "                    </a>\n"
 "                </td>\n"
 "                <td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    % if 'website_url' in object.event_id and object."
-"event_id.website_url:\n"
-"                        <a href=\"/event\" style=\"text-decoration:none;"
-"color:#717188;\">More Events</a>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">More Events</a>\n"
 "                    % endif\n"
 "                </td>\n"
 "            </tr>\n"
 "        </tbody>\n"
 "    </table>\n"
-"    <table style=\"width:600px;margin:0px auto;background:white;border:1px "
-"solid #e1e1e1;\">\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
@@ -57,10 +47,8 @@ msgid ""
 "                    </h2>\n"
 "                    <p style=\"font-size:16px;\">\n"
 "                        Please keep in mind that the event\n"
-"                        % if 'website_url' in object.event_id and object."
-"event_id.website_url:\n"
-"                            <a href=\"${object.event_id.website_url}\" style="
-"\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
 "                        % endif\n"
@@ -71,111 +59,64 @@ msgid ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;"
-"\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
-"                            <td style=\"padding:25px 0px;vertical-align:top;"
-"\">\n"
-"                                <img src=\"/web_editor/font_to_img/61505/"
-"rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
 "                            </td>\n"
-"                            <td style=\"padding:30px 10px 25px 10px;"
-"width:50%;vertical-align:top;\">\n"
+"                            <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
 "                                % if object.event_id.address_id.street:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">"
-"${object.event_id.address_id.street},</p>\n"
-"                                    % set location = object.event_id."
-"address_id.street\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street},</p>\n"
+"                                    % set location = object.event_id.address_id.street\n"
 "                                % endif\n"
 "                                % if object.event_id.address_id.street2:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">"
-"${object.event_id.address_id.street2},</p>\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.street2)\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2},</p>\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
 "                                % endif\n"
 "                                % if object.event_id.address_id.city:\n"
 "                                    ${object.event_id.address_id.city},\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.city)\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
 "                                % endif\n"
-"                                % if object.event_id.address_id.state_id."
-"name:\n"
-"                                    ${object.event_id.address_id.state_id."
-"name},\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.state_id.name)\n"
+"                                % if object.event_id.address_id.state_id.name:\n"
+"                                    ${object.event_id.address_id.state_id.name},\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
 "                                % endif\n"
 "                                % if object.event_id.address_id.zip:\n"
 "                                    ${object.event_id.address_id.zip},\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.zip)\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
 "                                % endif\n"
-"                                % if object.event_id.address_id.country_id."
-"name:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">"
-"${object.event_id.address_id.country_id.name}</p>\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.country_id.name)\n"
+"                                % if object.event_id.address_id.country_id.name:\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
 "                                % endif\n"
 "                            </td>\n"
-"                            <td style=\"padding:25px 0px;vertical-align:top;"
-"\">\n"
-"                                <img src=\"/web_editor/font_to_img/61555/"
-"rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
 "                            </td>\n"
-"                            <td style=\"padding:25px 10px 25px 10px;"
-"width:50%;line-height:20px;vertical-align:top;\">\n"
-"                                <div><strong>From</strong> ${object.event_id."
-"date_begin_located}</div>\n"
-"                                <div><strong>To</strong> ${object.event_id."
-"date_end_located}</div>\n"
-"                                <div style=\"font-size:12px;color:#9e9e9e"
-"\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
 "                            </td>\n"
 "                        </tr>\n"
 "                    </table>\n"
 "                    % if object.event_id.organizer_id.email:\n"
-"                        <table style=\"width:100%;border-top:1px solid "
-"#e1e1e1;\">\n"
+"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                            <tr>\n"
 "                                <td style=\"padding:10px 0px 25px 0px;\">\n"
-"                                    <h2 style=\"font-weight:300;margin:10px "
-"0px\">Questions about this event?</h2>\n"
-"                                    <div>Please contact the organizer at <a "
-"href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-"
-"decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></"
-"div>\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Questions about this event?</h2>\n"
+"                                    <div>Please contact the organizer at <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></div>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
 "                    % endif\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;"
-"\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;\">\n"
-"                                <strong>Add this event to your calendar</"
-"strong>\n"
-"                                <a href=\"https://www.google.com/calendar/"
-"render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/"
-"${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid "
-"#875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new"
-"\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style="
-"\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
-"                                <a href=\"https://bay02.calendar.live.com/"
-"calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart="
-"${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px "
-"5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-"
-"radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/"
-"rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> "
-"Outlook</a>\n"
-"                                <a href=\"https://calendar.yahoo.com/?"
-"v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st="
-"${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}"
-"&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M"
-"%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
-"decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/"
-"font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" "
-"height=\"16\"> Yahoo</a>\n"
+"                                <strong>Add this event to your calendar</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
 "                            </td>\n"
 "                        </tr>\n"
 "                    </table>\n"
@@ -183,25 +124,17 @@ msgid ""
 "            </tr>\n"
 "        </tbody>\n"
 "    </table>\n"
-"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;"
-"border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
-"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new"
-"\">\n"
-"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?"
-"autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:"
-"mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;"
-"\" />\n"
+"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
 "        </a>\n"
 "    </div>\n"
 "    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td style=\"padding-top:10px;font-size: 12px;\">\n"
-"                    <div>This email was sent to <a href=\"mailto:${object."
-"email}\" style=\"text-decoration:none;color:#875A7B;\">${object.email}</a></"
-"div>\n"
-"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;"
-"\">Copyright © ${object.company_id.name}</p>\n"
+"                    <div>This email was sent to <a href=\"mailto:${object.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.email}</a></div>\n"
+"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Copyright © ${object.company_id.name}</p>\n"
 "                </td>\n"
 "            </tr>\n"
 "        </tbody>\n"
@@ -214,43 +147,33 @@ msgstr ""
 #: model:mail.template,body_html:event.event_subscription
 msgid ""
 "\n"
-"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
-"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y"
-"%m%dT%H%M%SZ')\n"
-"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m"
-"%dT%H%M%SZ')\n"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td>\n"
 "                    <a href=\"/\">\n"
-"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" "
-"style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
 "                    </a>\n"
 "                </td>\n"
 "                <td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    % if 'website_url' in object.event_id and object."
-"event_id.website_url:\n"
-"                        <a href=\"/event\" style=\"text-decoration:none;"
-"color:#717188;\">More Events</a>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">More Events</a>\n"
 "                    % endif\n"
 "                </td>\n"
 "            </tr>\n"
 "        </tbody>\n"
 "    </table>\n"
-"    <table style=\"width:600px;margin:0px auto;background:white;border:1px "
-"solid #e1e1e1;\">\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
 "                    <h2 style=\"font-weight:300;\">\n"
-"                        Hi ${object.name}, here is your order confirmation "
-"for\n"
-"                        % if 'website_url' in object.event_id and object."
-"event_id.website_url:\n"
-"                            <a href=\"${object.event_id.website_url}\" style="
-"\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        Hi ${object.name}, here is your order confirmation for\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
 "                        % endif\n"
@@ -259,111 +182,64 @@ msgid ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;"
-"\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
-"                            <td style=\"padding:25px 0px;vertical-align:top;"
-"\">\n"
-"                                <img src=\"/web_editor/font_to_img/61505/"
-"rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
 "                            </td>\n"
-"                            <td style=\"padding:30px 10px 25px 10px;"
-"width:50%;vertical-align:top;\">\n"
+"                            <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
 "                                % if object.event_id.address_id.street:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">"
-"${object.event_id.address_id.street},</p>\n"
-"                                    % set location = object.event_id."
-"address_id.street\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street},</p>\n"
+"                                    % set location = object.event_id.address_id.street\n"
 "                                % endif\n"
 "                                % if object.event_id.address_id.street2:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">"
-"${object.event_id.address_id.street2},</p>\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.street2)\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2},</p>\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
 "                                % endif\n"
 "                                % if object.event_id.address_id.city:\n"
 "                                    ${object.event_id.address_id.city},\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.city)\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
 "                                % endif\n"
-"                                % if object.event_id.address_id.state_id."
-"name:\n"
-"                                    ${object.event_id.address_id.state_id."
-"name},\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.state_id.name)\n"
+"                                % if object.event_id.address_id.state_id.name:\n"
+"                                    ${object.event_id.address_id.state_id.name},\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
 "                                % endif\n"
 "                                % if object.event_id.address_id.zip:\n"
 "                                    ${object.event_id.address_id.zip},\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.zip)\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
 "                                % endif\n"
-"                                % if object.event_id.address_id.country_id."
-"name:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">"
-"${object.event_id.address_id.country_id.name}</p>\n"
-"                                    % set location = '%s, %s' % (location, "
-"object.event_id.address_id.country_id.name)\n"
+"                                % if object.event_id.address_id.country_id.name:\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                    % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
 "                                % endif\n"
 "                            </td>\n"
-"                            <td style=\"padding:25px 0px;vertical-align:top;"
-"\">\n"
-"                                <img src=\"/web_editor/font_to_img/61555/"
-"rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
 "                            </td>\n"
-"                            <td style=\"padding:25px 10px 25px 10px;"
-"width:50%;line-height:20px;vertical-align:top;\">\n"
-"                                <div><strong>From</strong> ${object.event_id."
-"date_begin_located}</div>\n"
-"                                <div><strong>To</strong> ${object.event_id."
-"date_end_located}</div>\n"
-"                                <div style=\"font-size:12px;color:#9e9e9e"
-"\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
 "                            </td>\n"
 "                        </tr>\n"
 "                    </table>\n"
 "                    % if object.event_id.organizer_id.email:\n"
-"                        <table style=\"width:100%;border-top:1px solid "
-"#e1e1e1;\">\n"
+"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                            <tr>\n"
 "                                <td style=\"padding:10px 0px 25px 0px;\">\n"
-"                                    <h2 style=\"font-weight:300;margin:10px "
-"0px\">Questions about this event?</h2>\n"
-"                                    <div>Please contact the organizer at <a "
-"href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-"
-"decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></"
-"div>\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Questions about this event?</h2>\n"
+"                                    <div>Please contact the organizer at <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></div>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
 "                    % endif\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;"
-"\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;\">\n"
-"                                <strong>Add this event to your calendar</"
-"strong>\n"
-"                                <a href=\"https://www.google.com/calendar/"
-"render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/"
-"${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid "
-"#875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new"
-"\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style="
-"\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
-"                                <a href=\"https://bay02.calendar.live.com/"
-"calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart="
-"${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px "
-"5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-"
-"radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/"
-"rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> "
-"Outlook</a>\n"
-"                                <a href=\"https://calendar.yahoo.com/?"
-"v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st="
-"${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}"
-"&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M"
-"%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
-"decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/"
-"font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" "
-"height=\"16\"> Yahoo</a>\n"
+"                                <strong>Add this event to your calendar</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
 "                            </td>\n"
 "                        </tr>\n"
 "                    </table>\n"
@@ -371,25 +247,17 @@ msgid ""
 "            </tr>\n"
 "        </tbody>\n"
 "    </table>\n"
-"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;"
-"border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
-"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new"
-"\">\n"
-"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?"
-"autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:"
-"mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;"
-"\" />\n"
+"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
 "        </a>\n"
 "    </div>\n"
 "    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td style=\"padding-top:10px;font-size: 12px;\">\n"
-"                    <div>This email was sent to <a href=\"mailto:${object."
-"email}\" style=\"text-decoration:none;color:#875A7B;\">${object.email}</a></"
-"div>\n"
-"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;"
-"\">Copyright © ${object.company_id.name}</p>\n"
+"                    <div>This email was sent to <a href=\"mailto:${object.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.email}</a></div>\n"
+"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Copyright © ${object.company_id.name}</p>\n"
 "                </td>\n"
 "            </tr>\n"
 "        </tbody>\n"
@@ -412,35 +280,42 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
 msgid " # No of Cancelled Registrations"
-msgstr "# Počet zrušených registrácií"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_confirm_state
 msgid " # No of Confirmed Registrations"
-msgstr "# Počet potvrdených registrácií"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_draft_state
 msgid " # No of Draft Registrations"
-msgstr "# Počet konceptov registrácií"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "(stats)"
-msgstr "(štatistické výkazy)"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "5 Intensive Days"
-msgstr "5 intenzívnych dní"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid ""
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
+" event or change the dates on which it is held.)</em>"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 msgid ""
-"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo "
-"Programming</i></font>"
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
+" Programming</i></font>"
 msgstr ""
 
 #. module: event
@@ -463,8 +338,6 @@ msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
 msgstr ""
-"<i class=\"fa fa-clock-o\"/>\n"
-"<b>Aby</b>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -473,7 +346,6 @@ msgstr ""
 msgid ""
 "<i>You will be able to create dynamic page interacting with the ORM.</i>"
 msgstr ""
-"<i>Budete mať možnosť vytvoriť dynamické stránky interaktívne s ORM.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -483,8 +355,6 @@ msgid ""
 "<i>You will be able to develop a full application with backend and user "
 "interface.</i>"
 msgstr ""
-"<i>Budete mať možnosť vyvinúť plnú aplikáciu s backend a užívateľským "
-"rozhraním.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -493,63 +363,52 @@ msgstr ""
 msgid ""
 "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
 msgstr ""
-"<i>Budete mať možnosť vyvíjať jednoduché dynamické prvky v HTML stránkach.</"
-"i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
-msgstr "<i>aby</i>"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<small>John Doe, CEO</small>"
-msgstr "<small>John Doe, Generálny riaditeľ</small>"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid ""
-"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
-"class=\"oe_read_only\">\n"
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
-"class=\"oe_read_only\">\n"
-"ku\n"
-"</span>"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<span style=\"text-align: -webkit-center; \">This course is dedicated "
-"to developers who need to grasp knowledge of the <strong>business "
-"applications development </strong>process. This course is for new developers "
-"or for IT professionals eager to learn more about technical aspects.</span>"
+"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
+"developers who need to grasp knowledge of the <strong>business applications "
+"development </strong>process. This course is for new developers or for IT "
+"professionals eager to learn more about technical aspects.</span>"
 msgstr ""
-"<span style=\"text-align: -webkit-center; \">Tento kurz je určený pre "
-"vývojárov, ktorí potrebujú uchopiť vedomosti z procesu<strong>vývoja "
-"obchodných aplikácií </strong>. Tento kurz je určený pre nových vývojárov "
-"alebo pre IT profesionálov, ktorí sa túžia dozvedieť viac o technických "
-"aspektoch.</span>"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Conference on Business Apps</strong>"
-msgstr "<strong>Konferencia o obchodných aplikáciach</strong>"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<strong>Having attended this course, participants should be able to:</strong>"
-msgstr "<strong>Po absolvovaní tohto kurzu by mali účastníci vedieť:</strong>"
+"<strong>Having attended this course, participants should be able "
+"to:</strong>"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -557,43 +416,43 @@ msgstr "<strong>Po absolvovaní tohto kurzu by mali účastníci vedieť:</stron
 #: model:event.event,description:event.event_2
 #: model:event.event,description:event.event_3
 msgid "<strong>Objectives:</strong>"
-msgstr "<strong>Ciele:</strong>"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Our prices include:</strong>"
-msgstr "<strong>Naše ceny zahŕňajú:</strong>"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Program:</strong>"
-msgstr "<strong>Program:</strong> "
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Requirements:</strong>"
-msgstr "<strong>Požiadavky:</strong>"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
-msgstr "<strong>Kde nás nájdete:</strong>"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
 msgid "Active"
-msgstr "Aktívny"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Advanced JQuery"
-msgstr "Pokročilé JQuery"
+msgstr ""
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -603,12 +462,12 @@ msgstr ""
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "After the event"
-msgstr "Po udalosti"
+msgstr ""
 
 #. module: event
 #: selection:event.config.settings,module_event_sale:0
 msgid "All events are free"
-msgstr "Všetky udalosti sú zdarma"
+msgstr ""
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
@@ -618,64 +477,64 @@ msgstr ""
 #. module: event
 #: selection:event.config.settings,module_event_sale:0
 msgid "Allow selling tickets"
-msgstr "Povliť predávanie lístkov"
+msgstr ""
 
 #. module: event
 #: selection:event.config.settings,module_website_event_track:0
 msgid "Allow tracks, agenda and dedicated menus/website per event"
-msgstr "Umožniť sledovanie, agendu a dedikované menu/webstránku za udalosť"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
 msgid "Apply"
-msgstr "Použiť"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
-msgstr "Archivovaný"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Arrays"
-msgstr "Rady"
+msgstr ""
 
 #. module: event
 #: selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: selection:report.event.registration,registration_state:0
 msgid "Attended"
-msgstr "Zúčastnil "
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_date_closed
 msgid "Attended Date"
-msgstr "Dátum účasti"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Attended the Event"
-msgstr "Zúčastnil sa udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_registration_id
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
-msgstr "Účastník"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Attendee / Contact"
-msgstr "Účastník / Kontakt"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_name
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 msgid "Attendee Name"
-msgstr "Meno účastníka"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -684,12 +543,12 @@ msgstr "Meno účastníka"
 #: model:ir.ui.menu,name:event.menu_action_registration
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Attendees"
-msgstr "Účastníci"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_auto_confirmation
 msgid "Auto Confirmation"
-msgstr "Automatické potvrdenie"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_available
@@ -699,17 +558,22 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_back
 msgid "Badge Back"
-msgstr "Zadok odznaku"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_front
 msgid "Badge Front"
-msgstr "Predok odznaku"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
+msgid "Badge Inner Left"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
 msgid "Badge Inner Right"
-msgstr "Pravé vnútro odznaku"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
@@ -719,85 +583,85 @@ msgstr ""
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "Before the event"
-msgstr "Pred udalosťou"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Best regards,"
-msgstr "S pozdravom,"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bootstrap CSS"
-msgstr "Bootstrap CSS"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bring your own laptop."
-msgstr "Prineste si vlastný laptop."
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Building a Full Application"
-msgstr "Budovanie plnej aplikácie"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Calling the ORM"
-msgstr "Volanie ORM"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Cancel"
-msgstr "Zrušiť"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Cancel Event"
-msgstr "Zrušenie udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Cancel Registration"
-msgstr "Zrušená registrácia"
+msgstr ""
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
-msgstr "Zrušené"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_type_id
 msgid "Category"
-msgstr "Kategória"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
-msgstr "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States) "
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid "Click to add a new event."
-msgstr "Kliknite pre pridanie novej udalosti."
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:220
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
-msgstr "Dátum ukončenia nemôže byť nastavený pred dátumom začatia."
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_company_id
@@ -805,59 +669,59 @@ msgstr "Dátum ukončenia nemôže byť nastavený pred dátumom začatia."
 #: model:ir.model.fields,field_description:event.field_report_event_registration_company_id
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Company"
-msgstr "Spoločnost"
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:416
 #, python-format
 msgid "Compose Email"
-msgstr "Vytvoriť Email"
+msgstr ""
 
 #. module: event
 #: model:event.type,name:event.event_type_2
 msgid "Conference"
-msgstr "Konferencia"
+msgstr ""
 
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on Business Apps"
-msgstr "Konferencia o obchodných aplikáciach"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
-msgstr "Nastavenie"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
 msgid "Configure Event"
-msgstr "Konfigurácia udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Confirm"
-msgstr "Potvrdiť"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Confirm Anyway"
-msgstr "Rozhodne potvrdiť"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Confirm Event"
-msgstr "Potvrdiť udalosť"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Confirm Registration"
-msgstr "Potvrdiť registráciu"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
 msgid "Confirmation not required"
-msgstr "Potvrdenie nie je vyžadované"
+msgstr ""
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -865,34 +729,41 @@ msgstr "Potvrdenie nie je vyžadované"
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Confirmed"
-msgstr "Potvrdené"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Confirmed attendees"
-msgstr "Potvrdený účastníci"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed events"
-msgstr "Potvrdené udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_partner_id
 msgid "Contact"
-msgstr "Kontakt"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Controllers and Views"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
 msgid "Country"
-msgstr "Krajina"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Course Summary"
-msgstr "Zhrnutie kurzu"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
@@ -903,7 +774,7 @@ msgstr "Zhrnutie kurzu"
 #: model:ir.model.fields,field_description:event.field_event_registration_create_uid
 #: model:ir.model.fields,field_description:event.field_event_type_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_date
@@ -914,77 +785,77 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:event.field_event_registration_create_date
 #: model:ir.model.fields,field_description:event.field_event_type_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_create_date
 msgid "Creation Date"
-msgstr "Dátum vytvorenia"
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:393
 #, python-format
 msgid "Customer"
-msgstr "Zákazník"
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:395
 #, python-format
 msgid "Customer Email"
-msgstr "Email zákazníka"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 1"
-msgstr "Deň 1"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 2"
-msgstr "Deň 2"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 3"
-msgstr "Deň 3"
+msgstr ""
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Day(s)"
-msgstr "Dní"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_max
 msgid "Default Maximum Registration"
-msgstr "Predvolená maximálna registrácia"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_min
 msgid "Default Minimum Registration"
-msgstr "Predvolená minimálna registrácia"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Delete"
-msgstr "Zmazať"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_description
 msgid "Description"
-msgstr "Popis"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Develop a new module for a particular application."
-msgstr "Vyvinúť nový modul pre konkrétnu aplikáciu."
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_display_name
@@ -996,31 +867,31 @@ msgstr "Vyvinúť nový modul pre konkrétnu aplikáciu."
 #: model:ir.model.fields,field_description:event.field_event_type_display_name
 #: model:ir.model.fields,field_description:event.field_report_event_registration_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
 msgid "Display order"
-msgstr "Zobraziť objednávku"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Dive into Strings"
-msgstr "Ponorenie do strún"
+msgstr ""
 
 #. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
 msgid "Done"
-msgstr "Dokončiť"
+msgstr ""
 
 #. module: event
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Draft"
-msgstr "Návrh"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1028,34 +899,31 @@ msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
 msgstr ""
-"Počas tejto konferencie, náš tým poskytne detailný prehľad našich obchodných "
-"aplikácií.\n"
-"Budete poznať všetky výhody ich používania."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
 msgid "Email"
-msgstr "Email"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Email Schedule"
-msgstr "Poštový plánovač"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
 msgid "Email to Send"
-msgstr "Email na poslanie"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
 msgid "End Date"
-msgstr "Dátum ukončenia"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
 msgid "End Date Located"
-msgstr "Určený dátum ukončenia"
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -1065,17 +933,17 @@ msgstr "Určený dátum ukončenia"
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event"
-msgstr "Udalosť"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_event_badge
 msgid "Event Badge"
-msgstr "Odznak udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Beginning Date"
-msgstr "Dátum začatia udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type
@@ -1091,76 +959,76 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
-msgstr "Potvrdenie udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_event_date
 msgid "Event Date"
-msgstr "Dátum udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_event_end_date
 msgid "Event End Date"
-msgstr "Dátum ukončenia akcie"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Event Information"
-msgstr "Informácia udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_logo
 msgid "Event Logo"
-msgstr "Logo udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr "Emailový plánovač udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr "Emailové plánovače udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Month"
-msgstr "Mesiac udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_name
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Event Name"
-msgstr "Názov udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_calendar
 msgid "Event Organization"
-msgstr "Organizácia udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_calendar
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
-msgstr "Registrácia udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_user_id
 msgid "Event Responsible"
-msgstr "Zodpovedná osoba udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_event_begin_date
 msgid "Event Start Date"
-msgstr "Začiatočný dátum udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_event_state
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event State"
-msgstr "Stav udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -1170,7 +1038,7 @@ msgstr "Stav udalosti"
 #: model:ir.ui.view,arch_db:event.view_event_type_tree
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Type"
-msgstr "Typ udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
@@ -1182,7 +1050,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.report_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event on Registration"
-msgstr "Udalosť na registráciu"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1194,62 +1062,62 @@ msgstr "Udalosť na registráciu"
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
-msgstr "Udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_report_event_registration
 msgid "Events Analysis"
-msgstr "Analýza udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr "Poštové plánovače udalostí"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Events in New state"
-msgstr "Udalosti v novom stave"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Events which are in New state"
-msgstr "Udalosti ktoré sú v novom stave"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Events which are in confirm state"
-msgstr "Udalosti ktoré sú v potvrdzovacom stave"
+msgstr ""
 
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Exhibition"
-msgstr "Výstava"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Expected"
-msgstr "Očakávané"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr "Očakávaný návštevníci"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Extended Filters..."
-msgstr "Rozšírené filtre..."
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Finish Event"
-msgstr "Ukončiť udalosť"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
-msgstr "Pre akékoľvek ďalšie informácie, prosím kontaktujte nás na"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_max
@@ -1257,8 +1125,6 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
-"Pre každú udalosť môžete definovať maximálnu registráciu sedadiel(počet "
-"účastníkov), nad tieto čísla nie sú registrácie akceptované."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
@@ -1267,68 +1133,63 @@ msgid ""
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
 msgstr ""
-"Pre každú udalosť môžete definovať minimálnu rezerváciu miest (počet "
-"účastníkov), pokiaľ sa nedosiahne zmienených registrácií, udalosť nemožno "
-"potvrdiť (nechať 0 pre ignorovanie tohoto pravidla)"
 
 #. module: event
 #: model:event.event,name:event.event_1
 msgid "Functional Webinar"
-msgstr "Funkčný webinár"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr "Funkčný tok hlavných aplikácií;"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Functions"
-msgstr "Funkcie"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Group By"
-msgstr "Zoskupiť podľa"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Having attended this conference, participants should be able to:"
-msgstr "Po zúčastnení sa tejto konferencie, účastníci by mali byť schopný:"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Hello World"
-msgstr "Ahoj Svet"
+msgstr ""
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Hour(s)"
-msgstr "Hodina(y)"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "How to Debug"
-msgstr "Ako odstraňovať chyby"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"I did not expect such a great learning experience. I feel like I can develop "
-"anything now."
+"I did not expect such a great learning experience. I feel like I can develop"
+" anything now."
 msgstr ""
-"Neočakával som takú skvelú vzdelávaciu skúsenosť. Teraz mám pocit že môžem "
-"vyvíjať čokoľvek."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_id
@@ -1340,31 +1201,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_id
 #: model:ir.model.fields,field_description:event.field_report_event_registration_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_state
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the "
-"status is set to 'Done'. If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the"
+" status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
-"Ak je udalosť vytvorená, stav je 'Koncept'. Ak je udalosť potvrdená pre "
-"určité dátumy, stav sa zmení na 'Potvrdené'. Keď sa udalosť skončí, stav je "
-"nastavený na 'Hotovo'. Ak je udalosť zrušená, stav je nastavený na 'Zrušené'."
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Immediately"
-msgstr "Okamžite"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Install and administer your own server;"
-msgstr "Inštalovať a spravovať svoj vlastný server;"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_barcode
@@ -1374,70 +1232,70 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_sale
 msgid "Install the event_sale module"
-msgstr "Inštalovať modul event_sale"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_website_event_track
 msgid "Install the module website_event_track"
-msgstr "Inštalovať modul website_event_track"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_website_event_questions
 msgid "Install the website_event_questions module"
-msgstr "Inštalovať modul website_event_questions"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Integrated Help"
-msgstr "Integrovaná pomoc"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_nbr
 msgid "Interval"
-msgstr "Interval"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to JQuery"
-msgstr "Úvod do JQuery"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to Javascript"
-msgstr "Úvod do Javascript"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to QWeb"
-msgstr "Úvod do QWeb"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Introduction, CRM, Sales Management"
-msgstr "Úvod, CRM, Menežment predaja"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
 msgid "It will select this default maximum value when you choose this event"
-msgstr "To vyberie predvolenú maximálnu hodnotu keď zvolíte túto udalosť"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_min
 msgid "It will select this default minimum value when you choose this event"
-msgstr "To vyberie predvolenú minimálnu hodnotu keď zvolíte túto udalosť"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
 msgid "Kanban Color Index"
-msgstr "Kanban farebný index"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings___last_update
@@ -1449,7 +1307,7 @@ msgstr "Kanban farebný index"
 #: model:ir.model.fields,field_description:event.field_event_type___last_update
 #: model:ir.model.fields,field_description:event.field_report_event_registration___last_update
 msgid "Last Modified on"
-msgstr "Posledná modifikácia"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_write_uid
@@ -1460,7 +1318,7 @@ msgstr "Posledná modifikácia"
 #: model:ir.model.fields,field_description:event.field_event_registration_write_uid
 #: model:ir.model.fields,field_description:event.field_event_type_write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upravoval"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_write_date
@@ -1471,64 +1329,64 @@ msgstr "Naposledy upravoval"
 #: model:ir.model.fields,field_description:event.field_event_registration_write_date
 #: model:ir.model.fields,field_description:event.field_event_type_write_date
 msgid "Last Updated on"
-msgstr "Naposledy upravované"
+msgstr ""
 
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Limited"
-msgstr "Obmedzené"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_address_id
 msgid "Location"
-msgstr "Umiestnenie"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Loops"
-msgstr "Slučky"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Luigi Roni, Senior Event Manager"
-msgstr "Luigi Roni, Senior manažér akcie"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
 msgid "Mail Schedule"
-msgstr "Poštový plán"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduler_id
 msgid "Mail Scheduler"
-msgstr "Poštový plánovač"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
-msgstr "Poštové plánovače"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_mail_sent
 msgid "Mail Sent"
-msgstr "Pošta poslaná"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_sent
 msgid "Mail Sent on Event"
-msgstr "Pošta poslaná na udalosť"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
 msgid "Mail registration ids"
-msgstr "Poštové registračné id"
+msgstr ""
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Manager"
-msgstr "Manažér"
+msgstr ""
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
@@ -1538,44 +1396,44 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_seats_max
 msgid "Max Seats"
-msgstr "Max sedadiel"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_availability
 msgid "Maximum Attendees"
-msgstr "Maximum účastníkov"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_max
 msgid "Maximum Attendees Number"
-msgstr "Maximálny poçet účastníkov"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
 msgid "Minimum Attendees"
-msgstr "Minimum účastníkov"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Modules"
-msgstr "Moduly"
+msgstr ""
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Month(s)"
-msgstr "Mesiac(e)"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "My Events"
-msgstr "Moje udalosti"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "New"
-msgstr "Nové"
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:442
@@ -1591,19 +1449,19 @@ msgstr ""
 #. module: event
 #: selection:event.config.settings,module_website_event_track:0
 msgid "No mini website per event"
-msgstr "Žiadna mini webstránka za udalosť"
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:214
 #, python-format
 msgid "No more available seats."
-msgstr "Žiadne ďalšie voľné miesta."
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:314
 #, python-format
 msgid "No more seats available for this event."
-msgstr "Žiadne ďalšie voľné miesta pre túto udalosť."
+msgstr ""
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
@@ -1613,65 +1471,64 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_nbevent
 msgid "Number of Events"
-msgstr "Počet udalostí"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_expected
 msgid "Number of Expected Attendees"
-msgstr "Počet očakávaných účastníkov"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_used
 msgid "Number of Participants"
-msgstr "Počet účastníkov"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_nbregistration
 msgid "Number of Registrations"
-msgstr "Počet registrácií"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Official Website"
-msgstr "Odoo oficiálna webstránka"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Web Client"
-msgstr "Odoo web klient"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
-"    track registrations and participations, automate the confirmation "
-"emails,\n"
+"    track registrations and participations, automate the confirmation emails,\n"
 "    sell tickets, etc."
 msgstr ""
 
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Open Days in Los Angeles"
-msgstr "Dni otvorených dverí v Los Angeles"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
 msgid "Organizer"
-msgstr "Organizátor"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Participant"
-msgstr "Účastník"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_name_registration
 msgid "Participant / Contact Name"
-msgstr "Účastník / Meno kontaktu"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1681,8 +1538,6 @@ msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
 "knowledge of the Python programming is recommended."
 msgstr ""
-"Účastníci by mali mať nejaké znalosti programovania. Odporúča sa základná "
-"znalosť programovania Python."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1692,47 +1547,45 @@ msgid ""
 "Participants preferably have a functional knowledge of our software (see "
 "Functional Training)."
 msgstr ""
-"Účastníci by mohli mať funkčné znalosti nášho softvéru (pozri Funkčné "
-"tréningy)."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Partner"
-msgstr "Partner"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_phone
 msgid "Phone"
-msgstr "Telefón"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr "Miesto predaja (POS), Úvod do úpravy výkazov."
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Project management, Human resources, Contract management."
-msgstr "Projektový menežment, Ľudské zdroje, Spravovanie zmlúv."
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr "Nákup, Predaj &amp; Nákupný menežment, Finančné účtovníctvo."
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Python Objects"
-msgstr "Python objekty"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Read Great Contents"
-msgstr "Prečítajte širší obsah"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
@@ -1740,13 +1593,11 @@ msgid ""
 "Reference of the document that created the registration, for example a sale "
 "order"
 msgstr ""
-"Odkaz na dokument, ktorý vytvoril túto registráciu, napríklad objednávka "
-"predaja."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Register with this event"
-msgstr "Zaregistrujte sa na túto udalosť"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1754,47 +1605,47 @@ msgstr "Zaregistrujte sa na túto udalosť"
 #: model:ir.ui.view,arch_db:event.view_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Registration"
-msgstr "Registrácia"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_registration_badge
 msgid "Registration Badge"
-msgstr "Ragistračný odznak"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_date_open
 msgid "Registration Date"
-msgstr "Dátum registrácie"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Day"
-msgstr "Deň registrácie"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration ID"
-msgstr "ID registrácie"
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr "Poštový plánovač registrácie"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
-msgstr "Registračné pošty"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Month"
-msgstr "Mesiac registrácie"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_registration_state
 msgid "Registration State"
-msgstr "Stav registrácie"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
@@ -1804,17 +1655,17 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Registration contact"
-msgstr "Registračný kontakt"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
-msgstr "Registračná pošta"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Registrations"
-msgstr "Registrácie"
+msgstr ""
 
 #. module: event
 #: model:mail.template,subject:event.event_reminder
@@ -1824,42 +1675,42 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_reply_to
 msgid "Reply To"
-msgstr "Odpovedať "
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_reply_to
 msgid "Reply-To Email"
-msgstr "Odpovedať-na Email"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Report Engine"
-msgstr "Výkazový nástroj"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reports"
-msgstr "Výkazy"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Requirements"
-msgstr "Požiadavky"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_reserved
 msgid "Reserved Seats"
-msgstr "Rezervované sedadlá"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_user_id
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Responsible"
-msgstr "Zodpovedná osoba"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_barcode
@@ -1869,67 +1720,67 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_scheduled_date
 msgid "Scheduled Sent Mail"
-msgstr "Naplánovaná poslaná pošta"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduled_date
 msgid "Scheduled Time"
-msgstr "Naplánovaný čas"
+msgstr ""
 
 #. module: event
 #: model:event.type,name:event.event_type_0
 msgid "Seminar"
-msgstr "Seminár"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Send by Email"
-msgstr "Poslať emailom"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_done
 msgid "Sent"
-msgstr "Poslané"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Set To Draft"
-msgstr "Nastaviť ako Koncept"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Set To Unconfirmed"
-msgstr "Nastaviť na Nepotvrdené"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
-msgstr "Konfigurácia"
+msgstr ""
 
 #. module: event
 #: model:event.type,name:event.event_type_3
 msgid "Show"
-msgstr "Ukázať"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_origin
 msgid "Source Document"
-msgstr "Zdrojový dokument"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin
 msgid "Start Date"
-msgstr "Počiatočný dátum"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin_located
 msgid "Start Date Located"
-msgstr "Počiatočný dátum nájdený"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Start Month"
-msgstr "Mesiac začatia"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_state
@@ -1937,30 +1788,26 @@ msgstr "Mesiac začatia"
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Status"
-msgstr "Stav"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
-msgstr "Odoberať"
+msgstr ""
 
 #. module: event
 #: model:event.event,name:event.event_3
 msgid "Technical Training"
-msgstr "Technický tréning"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_reply_to
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect "
-"to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect"
+" to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
 msgstr ""
-"Emailová adresa organizátora bude prvdepodobne daná sem, s tým efektom, že "
-"bude automaticky v \"Odpovedať na' pošty rozosielanej na udalosti alebo "
-"potvrdení registrácie. Môžete sem tiež dať emailovú adresu vašej poštovej "
-"brány, ak ju používate."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1970,14 +1817,12 @@ msgid ""
 "This course help me build my first application within a month. Definetly "
 "worth its price."
 msgstr ""
-"Tento kurz mi pomohol vybudovať moju prvú aplikáciu v priebehu mesiaca. "
-"Definitivné hodný svojej ceny."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
-msgstr "Toto pole obsahuje koncept emailu ktorý bude automaticky odoslaný"
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:440
@@ -1994,19 +1839,19 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
 msgid "Tickets"
-msgstr "Vstupenky"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_tz
 msgid "Timezone"
-msgstr "Časová zóna"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "To get more information, visit the"
-msgstr "Ak chcete získať viac informácií, navštívte"
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:434
@@ -2023,65 +1868,65 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_track
 msgid "Tracks and Agenda"
-msgstr "Skladby a Agenda"
+msgstr ""
 
 #. module: event
 #: model:event.type,name:event.event_type_4
 msgid "Training"
-msgstr "Tréning"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Training Center Module"
-msgstr "Modul tréningového centra"
+msgstr ""
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Unconfirmed"
-msgstr "Nepotvrdené"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr "Nepotvrdené rezervácie sedadiel"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Underscore"
-msgstr "Podčiarknuť"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Understand the development concepts and architecture;"
-msgstr "Pochopiť koncepty vývoja a architektúry;"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Understand the various modules;"
-msgstr "Pochopiť rôzne moduly;"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
 msgid "Unit"
-msgstr "Jednotka"
+msgstr ""
 
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Unlimited"
-msgstr "Neobmedzené"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
-msgstr "Neprečítané správy"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
@@ -2092,29 +1937,29 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming"
-msgstr "Pripravovaný"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming events from today"
-msgstr "Pripravovaná udalosť z dneška"
+msgstr ""
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
 msgid "User"
-msgstr "Používateľ"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Variables &amp; Operators"
-msgstr "Premenné &amp; Operátori"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
-msgstr "Skladiskový menežment, Výroba (MRP) &amp; Predaje, Import/Export."
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -2122,39 +1967,37 @@ msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
 msgstr ""
-"Varovanie: Táto udalosť nedosiahla svoj minimálny registračný limit. Ste si "
-"istí, že ju chcete potvrdiť?"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Week(s)"
-msgstr "Týždeň(ne)"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "What do people say about this course?"
-msgstr "Čo hovoria ľudia o tomto kurze?"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "What you will learn?"
-msgstr "Čo sa naučíte?"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_type
 msgid "When to Run "
-msgstr "Pri spúštaní"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Workflows"
-msgstr "Pracovné toky"
+msgstr ""
 
 #. module: event
 #: code:addons/event/models/event.py:246
@@ -2163,20 +2006,17 @@ msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
 msgstr ""
-"Už ste nastavili registrácii pre túto udalosť ako \"Zúčastnil\". Prosím "
-"obnovte to ak chcete zrušiť túto udalosť."
 
 #. module: event
 #: code:addons/event/models/event.py:371
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
-"Musíte počkať na počiatočný deň tejto udalosti na vykonanie tejto akcie."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for ${object.event_id.name}"
-msgstr "Váš odznak pre ${object.event_id.name}"
+msgstr ""
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
@@ -2186,43 +2026,43 @@ msgstr ""
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
-msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "drinks and lunch;"
-msgstr "nápoje a obed;"
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_config_settings
 msgid "event.config.settings"
-msgstr "event.config.settings"
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_confirm
 msgid "event.confirm"
-msgstr "event.confirm"
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "event.mail"
-msgstr "event.mail"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "events@openerp.com"
-msgstr "udalosti@openerp.com"
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_report_event_registration
 msgid "report.event.registration"
-msgstr "report.event.registration"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "training material."
-msgstr "tréningový materiál."
+msgstr ""
