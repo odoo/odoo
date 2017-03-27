@@ -345,6 +345,15 @@ class AccountJournal(models.Model):
         if 'bank_acc_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+        # create the relevant refund sequence
+        if vals.get('refund_sequence'):
+            for journal in self.filtered(lambda j: j.type in ('sale', 'purchase') and not j.refund_sequence_id):
+                journal_vals = {
+                    'name': journal.name,
+                    'company_id': journal.company_id.id,
+                    'code': journal.code
+                }
+                journal.refund_sequence_id = self.sudo()._create_sequence(journal_vals, refund=True).id
 
         return result
 
@@ -360,7 +369,7 @@ class AccountJournal(models.Model):
         """ Create new no_gap entry sequence for every new Journal"""
         prefix = self._get_sequence_prefix(vals['code'], refund)
         seq = {
-            'name': vals['name'],
+            'name': refund and vals['name'] + _(': Refund') or vals['name'],
             'implementation': 'no_gap',
             'prefix': prefix,
             'padding': 4,
