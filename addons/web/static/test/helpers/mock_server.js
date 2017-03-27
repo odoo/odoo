@@ -844,11 +844,14 @@ var MockServer = Class.extend({
 
             case 'write':
                 return $.when(this._mockWrite(args.model, args.args));
-
-            default:
-                console.error("Unimplemented route", route, args);
-                return $.when();
         }
+        var model = this.data[args.model];
+        if (model && typeof model[args.method] === 'function') {
+            return this.data[args.model][args.method](args.args, args.kwargs);
+        }
+
+        console.error("Unimplemented route", route, args);
+        return $.when();
     },
     /**
      * helper function: traverse a tree and apply the function f to each of its

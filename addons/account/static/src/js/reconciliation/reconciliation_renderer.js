@@ -539,6 +539,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     },
     /**
      * @private
+     * @param {MouseEvent} event
      */
     _onTogglePartialReconcile: function (e) {
         e.stopPropagation();

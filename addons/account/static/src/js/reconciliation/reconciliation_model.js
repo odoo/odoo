@@ -118,22 +118,7 @@ var StatementModel = BasicModel.extend({
     addProposition: function (handle, mv_line_id) {
         var line = this.getLine(handle);
         var prop = _.clone(_.find(line.mv_lines, {'id': mv_line_id}));
-
-        function checkAccountType (r) {
-            return !isNaN(r.id) && r.account_type !== prop.account_type;
-        }
-        if (_.any(line.reconciliation_proposition, checkAccountType)) {
-            new CrashManager().show_warning({data: {
-                exception_type: _t("Incorrect Operation"),
-                message: _t("You cannot mix items from receivable and payable accounts.")
-            }});
-            return $.when();
-        }
-
-        line.reconciliation_proposition.push(prop);
-        _.each(line.reconciliation_proposition, function (line) {
-            line.partial_reconcile = false;
-        });
+        this._addProposition(line, prop);
         return $.when(this._computeLine(line), this._performMoveLine(handle));
     },
     /**
@@ -303,6 +288,7 @@ var StatementModel = BasicModel.extend({
                 args: [statement_ids],
             })
             .then(function (statement) {
+                self.statement = statement;
                 self.bank_statement_id = statement_ids.length === 1 ? {id: statement_ids[0], display_name: statement.statement_name} : false;
                 self.valuenow = 0;
                 self.valuemax = statement.st_lines_ids.length;
@@ -509,6 +495,30 @@ var StatementModel = BasicModel.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * add a line proposition after checking receivable and payable accounts constraint
+     *
+     * @private
+     * @param {Object} line
+     * @param {Object} prop
+     */
+    _addProposition: function (line, prop) {
+        function checkAccountType (r) {
+            return !isNaN(r.id) && r.account_type !== prop.account_type;
+        }
+        if (_.any(line.reconciliation_proposition, checkAccountType)) {
+            new CrashManager().show_warning({data: {
+                exception_type: _t("Incorrect Operation"),
+                message: _t("You cannot mix items from receivable and payable accounts.")
+            }});
+            return $.when();
+        }
+
+        line.reconciliation_proposition.push(prop);
+        _.each(line.reconciliation_proposition, function (line) {
+            line.partial_reconcile = false;
+        });
+    },
+    /**
      * stop the editable proposition line and remove it if it's invalid then
      * compute the line
      *
@@ -593,7 +603,7 @@ var StatementModel = BasicModel.extend({
                 };
 
                 prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, currencyData);
-                prop.display = self._isDisplay(prop);
+                prop.display = self._isDisplayedProposition(prop);
                 prop.invalid = !self._isValid(prop);
             }
         });
@@ -659,6 +669,7 @@ var StatementModel = BasicModel.extend({
      *
      * @private
      * @param {Object}
+     * @param {Object[]}
      */
     _formatLineProposition: function (line, props) {
         var self = this;
@@ -763,12 +774,16 @@ var StatementModel = BasicModel.extend({
         return prop;
     },
     /**
+     * Defined whether the line is to be displayed or not. Here, we only display
+     * the line if it comes from the server or if an account is defined when it
+     * is created
+     *
      * @private
      * @param {object} prop
      * @returns {Boolean}
      */
-    _isDisplay: function (prop) {
-        return !!prop.account_id;
+    _isDisplayedProposition: function (prop) {
+        return !isNaN(prop.id) || !!prop.account_id;
     },
     /**
      * @private
@@ -1089,7 +1104,7 @@ var ManualModel = StatementModel.extend({
      * @param {object} prop
      * @returns {Boolean}
      */
-    _isDisplay: function (prop) {
+    _isDisplayedProposition: function (prop) {
         return !!prop.journal_id && this._super(prop);
     },
     /**

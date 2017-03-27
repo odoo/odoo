@@ -1,444 +1,493 @@
-odoo.define('account.reconciliationModel_tests', function (require) {
+odoo.define('account.reconciliation_tests.data', function () {
+"use strict";
+
+var data = {
+    'res.partner': {
+        fields: {
+            id: {string: "ID", type: 'integer'},
+            display_name: {string: "Displayed name", type: 'char'},
+            image: {string: "image", type: 'integer'},
+        },
+        records: [
+            {id: 1, display_name: "partner 1", image: 'AAA'},
+            {id: 2, display_name: "partner 2", image: 'BBB'},
+            {id: 3, display_name: "partner 3", image: 'CCC'},
+            {id: 4, display_name: "partner 4", image: 'DDD'},
+            {id: 8, display_name: "Agrolait", image: 'EEE'},
+            {id: 12, display_name: "Camptocamp", image: 'FFF'},
+        ],
+        mark_as_reconciled: function () {
+            return $.when();
+        },
+    },
+    'account.account': {
+        fields: {
+            id: {string: "ID", type: 'integer'},
+            code: {string: "code", type: 'integer'},
+            display_name: {string: "Displayed name", type: 'char'},
+        },
+        records: [
+            {id: 282, code: 100000, display_name: "100000 Fixed Asset Account"},
+            {id: 283, code: 101000, display_name: "101000 Current Assets"},
+            {id: 284, code: 101110, display_name: "101110 Stock Valuation Account"},
+            {id: 285, code: 101120, display_name: "101120 Stock Interim Account (Received)"},
+            {id: 286, code: 101130, display_name: "101130 Stock Interim Account (Delivered)"},
+            {id: 287, code: 101200, display_name: "101200 Account Receivable"},
+            {id: 288, code: 101300, display_name: "101300 Tax Paid"},
+            {id: 308, code: 101401, display_name: "101401 Bank"},
+        ],
+        mark_as_reconciled: function () {
+            return $.when();
+        },
+    },
+    'account.tax': {
+        fields: {
+            id: {string: "ID", type: 'integer'},
+            display_name: {string: "Displayed name", type: 'char'},
+            amount: {string: "amout", type: 'float'},
+            price_include: {string: "Included in Price", type: 'boolean'},
+            account_id: {string: "partner", type: 'many2one', relation: 'account.account'},
+        },
+        records: [
+            {id: 6, display_name: "Tax 20.00%", amount: 20, price_include: false},
+            {id: 7, display_name: "Tax 10.00% include", amount: 10, price_include: true, account_id: 288},
+        ],
+        json_friendly_compute_all: function (args) {
+            var tax = _.find(data['account.tax'].records, {'id': args[0][0]});
+            var amount = args[1];
+            var tax_base = tax.price_include ? amount*100/(100+tax.amount) : amount;
+            return $.when({
+                "base": amount,
+                "taxes": [{
+                    'id': tax.id,
+                    'amount': tax_base*tax.amount/100,
+                    "base": tax_base,
+                    'name': tax.display_name,
+                    "analytic": false,
+                    "refund_account_id": false,
+                    'account_id': tax.account_id
+                }],
+                "total_excluded": amount/100*(100-tax.amount),
+                "total_included": amount,
+            });
+        },
+    },
+    'account.journal': {
+        fields: {
+            id: {string: "ID", type: 'integer'},
+            display_name: {string: "Displayed name", type: 'char'},
+        },
+        records: []
+    },
+    'account.analytic.account': {
+        fields: {
+            id: {string: "ID", type: 'integer'},
+            display_name: {string: "Displayed name", type: 'char'},
+        },
+        records: [
+            {id: 16, display_name: "Administrative"},
+            {id: 7, display_name: "Agrolait - Agrolait"},
+            {id: 8, display_name: "Asustek - ASUSTeK"},
+            {id: 15, display_name: "Camp to Camp - Camptocamp"},
+            {id: 6, display_name: "CampToCamp - Camptocamp"},
+            {id: 17, display_name: "Commercial & Marketing"},
+            {id: 23, display_name: "Data Import/Export Plugin - Delta PC"},
+            {id: 9, display_name: "Delta PC - Delta PC"},
+        ]
+    },
+    'account.bank.statement': {
+        fields: {},
+        reconciliation_widget_preprocess: function () {
+            return $.when(data_preprocess);
+        },
+    },
+    'account.bank.statement.line': {
+        fields: {
+            id: {string: "ID", type: 'integer'},
+            display_name: {string: "Displayed name", type: 'char'},
+            partner_id: {string: "partner", type: 'many2one', relation: 'res.partner'},
+        },
+        records: [
+            {id: 5, display_name: "SAJ/2014/002 and SAJ/2014/003"},
+            {id: 6, display_name: "Bank fees"},
+            {id: 7, display_name: "Prepayment"},
+            {id: 8, display_name: "First 2000 \u20ac of SAJ/2014/001"},
+        ],
+        get_move_lines_for_reconciliation_widget: function (args) {
+            var partner_id = args.splice(1, 1)[0];
+            var excluded_ids = args.splice(1, 1)[0];
+            var key = JSON.stringify(args);
+            if (!mv_lines[key]) {
+                throw new Error("Unknown parameters for get_move_lines_for_reconciliation_widget: '"+ key + "'");
+            }
+            return $.when(_.filter(mv_lines[key], function (line) {
+                return excluded_ids.indexOf(line.id) === -1 && (!partner_id || partner_id === line.partner_id);
+            }));
+        },
+        get_data_for_reconciliation_widget: function (args) {
+            var ids = args[0];
+            return $.when(_.filter(data_widget, function (w) {return _.contains(ids, w.st_line.id);}));
+        },
+        reconciliation_widget_auto_reconcile: function () {
+            return $.when(auto_reconciliation);
+        },
+        process_reconciliations: function (args) {
+            var datas = args[0];
+            for (var i in datas) {
+                var data = datas[i];
+                for (var key in move_lines_for_manual_reconciliation) {
+                    move_lines_for_manual_reconciliation[key] = _.filter(move_lines_for_manual_reconciliation[key], function (mv_line) {
+                        return data.mv_line_ids.indexOf(mv_line.id) === -1;
+                    });
+                }
+            }
+            return $.when();
+        },
+    },
+    'account.move.line': {
+        fields: {},
+        get_data_for_manual_reconciliation_widget: function (args) {
+            var key = JSON.stringify(args);
+            if (!data_for_manual_reconciliation_widget[key]) {
+                throw new Error("Unknown parameters for get_data_for_manual_reconciliation_widget: '"+ key + "'");
+            }
+            return $.when(data_for_manual_reconciliation_widget[key]);
+        },
+        get_move_lines_for_manual_reconciliation: function (args) {
+            var excluded_ids = args.splice(2, 1)[0];
+            var key = JSON.stringify(args);
+            if (!move_lines_for_manual_reconciliation[key]) {
+                throw new Error("Unknown parameters for get_move_lines_for_manual_reconciliation: '"+ key + "'");
+            }
+            return $.when(_.filter(move_lines_for_manual_reconciliation[key], function (line) {
+                return excluded_ids.indexOf(line.id) === -1;
+            }));
+        },
+        // for manual reconciliation
+        process_reconciliations: function (args) {
+            var datas = args[0];
+            for (var i in datas) {
+                var data = datas[i];
+                for (var key in move_lines_for_manual_reconciliation) {
+                    move_lines_for_manual_reconciliation[key] = _.filter(move_lines_for_manual_reconciliation[key], function (mv_line) {
+                        return data.mv_line_ids.indexOf(mv_line.id) === -1;
+                    });
+                }
+            }
+            return $.when();
+        },
+    },
+    'account.reconcile.model': {
+        fields: {
+            id: {string: "ID", type: 'integer'},
+            name: {string: "Button Label", type: 'char'},
+            has_second_line: {string: "Add a second line", type: 'boolean'},
+            account_id: {string: "Account", type: 'many2one', relation:'account.account'},
+            journal_id: {string: "Journal", type: 'many2one', relation:'account.journal'},
+            label: {string: "Journal Item Label", type: 'char'},
+            amount_type: {string: 'amount_type', type: 'selection', selection: [['fixed', 'Fixed'], ['percentage', 'Percentage of balance']], default:'percentage'},
+            amount: {string: "Amount", type: 'float', digits:0, help:"Fixed amount will count as a debit if it is negative, as a credit if it is positive.", default:100.0},
+            tax_id: {string: "Tax", type: 'many2one', relation:'account.tax', domain:[('type_tax_use', '=', 'purchase')]},
+            analytic_account_id: {string: "Analytic Account", type: 'many2one', relation:'account.analytic.account'},
+            second_account_id: {string: "Second Account", type: 'many2one', relation:'account.account', domain:[('deprecated', '=', false)]},
+            second_journal_id: {string: "Second Journal", type: 'many2one', relation:'account.journal',  help:"This field is ignored in a bank statement reconciliation."},
+            second_label: {string: "Second Journal Item Label", type: 'char'},
+            second_amount_type: {string: "Second amount_type", type: 'selection', selection: [['fixed', 'Fixed'], ['percentage', 'Percentage of balance']], default:'percentage'},
+            second_amount: {string: "Second Amount", type: 'float', digits:0, help:"Fixed amount will count as a debit if it is negative, as a credit if it is positive.", default:100.0},
+            second_tax_id: {string: "Second Tax", type: 'many2one', relation:'account.tax', domain:[('type_tax_use', '=', 'purchase')]},
+            second_analytic_account_id: {string: "Second Analytic Account", type: 'many2one', relation:'account.analytic.account'},
+        },
+        records: [
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 4, 'analytic_account_id': false, 'display_name': "Int\u00e9rrets", 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 282, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "fixed", 'name': "Int\u00e9rrets", 'amount': 0.0, 'second_amount': 100.0},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 2, 'analytic_account_id': false, 'display_name': "Perte et Profit", 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 283, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Perte et Profit", 'amount': 100.0, 'second_amount': 100.0},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 5, 'analytic_account_id': false, 'display_name': "Fs bank", 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 284, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Fs bank", 'amount': 100.0, 'second_amount': 100.0},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 8, 'analytic_account_id': false, 'display_name': "Caisse Sand.", 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': "Caisse Sand.", 'second_label': false, 'second_account_id': false, 'account_id': 308, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Caisse Sand.", 'amount': 100.0, 'second_amount': 100.0},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 3, 'analytic_account_id': false, 'display_name': "ATOS", 'second_tax_id': 7, 'has_second_line': true, 'journal_id': false, 'label': "ATOS Banque", 'second_label': "ATOS Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': 6, 'amount_type': "percentage", 'name': "ATOS", 'amount': 97.5, 'second_amount': 2.5},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 10, 'analytic_account_id': false, 'display_name': "Double", 'second_tax_id': false, 'has_second_line': true, 'journal_id': false, 'label': "Double Banque", 'second_label': "Double Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Double", 'amount': 97.5, 'second_amount': 2.5},
+        ]
+    }
+};
+
+var data_preprocess = {
+    notifications: [],
+    num_already_reconciled_lines: 0,
+    st_lines_ids: [5, 6, 7, 8],
+    statement_name: 'BNK/2014/001',
+};
+
+var data_widget = [
+    {
+        'st_line': {
+            'currency_id': 3,
+            'communication_partner_name': false,
+            'open_balance_account_id': 287,
+            'name': "SAJ/2014/002 and SAJ/2014/003",
+            'partner_name': "Agrolait",
+            'partner_id': 8,
+            'has_no_partner': false,
+            'journal_id': 84,
+            'account_name': "Bank",
+            'note': "",
+            'amount': 1175.0,
+            'amount_str': "$ 1,175.00",
+            'amount_currency_str': "",
+            'date': "2017-01-01",
+            'account_code': "101401",
+            'ref': "",
+            'id': 5,
+            'statement_id': 2
+        },
+        'reconciliation_proposition': []
+    },
+    {
+        'st_line': {
+            'currency_id': 3,
+            'communication_partner_name': false,
+            'name': "Bank fees",
+            'partner_name': false,
+            'partner_id': false,
+            'has_no_partner': true,
+            'journal_id': 84,
+            'account_name': "Bank",
+            'note': "",
+            'amount': -32.58,
+            'amount_str': "$ 32.58",
+            'amount_currency_str': "",
+            'date': "2017-01-01",
+            'account_code': "101401",
+            'ref': "",
+            'id': 6,
+            'statement_id': 2
+        },
+        'reconciliation_proposition': []
+    },
+    {
+        'st_line': {
+            'currency_id': 3,
+            'communication_partner_name': false,
+            'open_balance_account_id': 287,
+            'name': "Prepayment",
+            'partner_name': "Camptocamp",
+            'partner_id': 12,
+            'has_no_partner': false,
+            'journal_id': 84,
+            'account_name': "Bank",
+            'note': "",
+            'amount': 650.0,
+            'amount_str': "$ 650.00",
+            'amount_currency_str': "",
+            'date': "2017-01-01",
+            'account_code': "101401",
+            'ref': "",
+            'id': 7,
+            'statement_id': 2
+        },
+        'reconciliation_proposition': [
+            {
+                'account_type': "receivable",
+                'amount_currency_str': "",
+                'currency_id': false,
+                'date_maturity': "2017-02-07",
+                'date': "2017-01-08",
+                'total_amount_str': "$ 650.00",
+                'partner_id': 12,
+                'account_name': "101200 Account Receivable",
+                'name': "INV/2017/0012",
+                'partner_name': "Camptocamp",
+                'total_amount_currency_str': "",
+                'id': 133,
+                'credit': 0.0,
+                'journal_id': [1, "Customer Invoices"],
+                'amount_str': "$ 650.00",
+                'debit': 650.0,
+                'account_id': [287, "101200 Account Receivable"],
+                'account_code': "101200",
+                'ref': "",
+                'already_paid': false
+            },
+        ]
+    },
+    {
+        'st_line': {
+            'currency_id': 3,
+            'communication_partner_name': false,
+            'open_balance_account_id': 285,
+            'name': "First 2000 \u20ac of SAJ/2014/001",
+            'partner_name': "Camptocamp",
+            'partner_id': 12,
+            'has_no_partner': false,
+            'journal_id': 84,
+            'account_name': "Bank",
+            'note': "",
+            'amount': 2000.0,
+            'amount_str': "$ 2,000.00",
+            'amount_currency_str': "",
+            'date': "2017-01-01",
+            'account_code': "101401",
+            'ref': "",
+            'id': 8,
+            'statement_id': 2
+        },
+        'reconciliation_proposition': []
+    },
+];
+
+var mv_lines = {
+    '[]': [],
+    '[5,"",0,6]': [
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 650.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0002", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 109, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 650.00", 'debit': 650.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 525.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0003", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 112, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 525.00", 'debit': 525.0, 'account_code': "101200", 'ref': "", 'already_paid': false}
+    ],
+    '[5,"b",0,6]': [
+        {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 100.00", 'partner_id': 8, 'account_name': "Bank", 'name': "BNK1/2017/0003: CUST.IN/2017/0001", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 394, 'credit': 0.0, 'journal_id': "Bank", 'amount_str': "$ 100.00", 'debit': 100.0, 'account_code': "101401", 'ref': "", 'already_paid': true},
+        {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 525.50", 'partner_id': 8, 'account_name': "Bank", 'name': "BNK1/2017/0004: CUST.IN/2017/0002", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 396, 'credit': 0.0, 'journal_id': "Bank", 'amount_str': "$ 525.50", 'debit': 525.5, 'account_code': "101401", 'ref': "INV/2017/0003", 'already_paid': true},
+    ],
+    '[6,"",0,6]': [
+        {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 376.00", 'partner_id': 7, 'account_name': "Bank", 'name': "BNK1/2017/0002: SUPP.OUT/2017/0002", 'partner_name': "ASUSTeK", 'total_amount_currency_str': "", 'id': 392, 'credit': 376.0, 'journal_id': "Bank", 'amount_str': "$ 376.00", 'debit': 0.0, 'account_code': "101401", 'ref': "BILL/2017/0003", 'already_paid': true},
+        {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 100.00", 'partner_id': 8, 'account_name': "Bank", 'name': "BNK1/2017/0003: CUST.IN/2017/0001", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 394, 'credit': 0.0, 'journal_id': "Bank", 'amount_str': "$ 100.00", 'debit': 100.0, 'account_code': "101401", 'ref': "", 'already_paid': true},
+        {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 525.50", 'partner_id': 8, 'account_name': "Bank", 'name': "BNK1/2017/0004: CUST.IN/2017/0002", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 396, 'credit': 0.0, 'journal_id': "Bank", 'amount_str': "$ 525.50", 'debit': 525.5, 'account_code': "101401", 'ref': "INV/2017/0003", 'already_paid': true},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 650.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0002", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 109, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 650.00", 'debit': 650.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-22", 'date': "2017-01-23", 'total_amount_str': "$ 525.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0004", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 399, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 525.00", 'debit': 525.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 4,610.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 106, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 4,610.00", 'debit': 4610.0, 'account_code': "101200", 'ref': "", 'already_paid': false}
+    ],
+    '[6,"",5,6]': [
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 4,610.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 106, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 4,610.00", 'debit': 4610.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "payable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 10,000.00", 'partner_id': 12, 'account_name': "Account Payable", 'name': "BILL/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 114, 'credit': 10000.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 10,000.00", 'debit': 0.0, 'account_code': "111100", 'ref': "", 'already_paid': false},
+        {'account_type': "payable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-15", 'total_amount_str': "$ 5,749.99", 'partner_id': 7, 'account_name': "Account Payable", 'name': "BILL/2017/0002", 'partner_name': "ASUSTeK", 'total_amount_currency_str': "", 'id': 117, 'credit': 5749.99, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 5,749.99", 'debit': 0.0, 'account_code': "111100", 'ref': "", 'already_paid': false}
+    ],
+    '[7,"",0,6]': [
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 650.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0012", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 133, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 650.00", 'debit': 650.0, 'account_id': [287, "101200 Account Receivable"], 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 4,610.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 106, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 4,610.00", 'debit': 4610.0, 'account_id': [287, "101200 Account Receivable"], 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "payable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 10,000.00", 'partner_id': 12, 'account_name': "Account Payable", 'name': "BILL/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 114, 'credit': 10000.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 10,000.00", 'debit': 0.0, 'account_id': [284, "101110 Stock Valuation Account"], 'account_code': "111100", 'ref': "", 'already_paid': false}
+    ],
+    '[8,"",0,6]': [],
+};
+
+var auto_reconciliation = {
+    'num_already_reconciled_lines': 1,
+    'notifications': [{
+        'message': "1 transaction was automatically reconciled.",
+        'type': "info",
+        'details': {
+            'model': "account.move",
+            'name': "Automatically reconciled items",
+            'ids': [143]
+        }
+    }],
+    'st_lines_ids': [5, 6, 8],
+    'statement_name': false
+};
+
+var data_for_manual_reconciliation_widget = {
+    '[null,null]': {
+        'customers': [
+            {'account_id': 287, 'partner_name': "Agrolait", 'reconciliation_proposition': [], 'currency_id': 3, 'max_date': "2017-02-14 12:30:31.256629", 'last_time_entries_checked': null, 'account_code': "101200", 'partner_id': 8, 'account_name': "101200 Account Receivable"},
+            {'account_id': 7, 'partner_name': "Camptocamp", 'reconciliation_proposition': [], 'currency_id': 3, 'max_date': "2017-02-13 14:24:55.246469", 'last_time_entries_checked': null, 'account_code': "101200", 'partner_id': 12, 'account_name': "101200 Account Receivable"}
+        ],
+        'accounts': [
+            {
+                'account_id': 283, 'account_name': "101000 Current Assets", 'currency_id': 3, 'max_date': "2017-02-16 14:32:04.833986", 'last_time_entries_checked': "2017-02-16", 'account_code': "101000",
+                'reconciliation_proposition': [
+                    {'account_id': 283, 'account_type': "other", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-16", 'date': "2017-02-16", 'total_amount_str': "$ 1,000.00", 'partner_id': 8, 'account_name': "101000 Current Assets", 'name': "BNK1/2017/0006: Customer Payment", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 399, 'credit': 1000.0, 'journal_id': [3, "Bank"], 'amount_str': "$ 1,000.00", 'debit': 0.0, 'account_code': "101000", 'ref': "", 'already_paid': false},
+                    {'account_id': 283, 'account_type': "other", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-03-18", 'date': "2017-02-16", 'total_amount_str': "$ 1,000.00", 'partner_id': 8, 'account_name': "101000 Current Assets", 'name': "INV/2017/0006", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 402, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 1,000.00", 'debit': 1000.0, 'account_code': "101000", 'ref': "", 'already_paid': false}
+                ]
+            }
+        ],
+        'suppliers': [
+            {
+                'account_id': 284, 'partner_name': "Agrolait",
+                'reconciliation_proposition': [
+                    {'account_id': 284, 'account_type': "other", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-16", 'date': "2017-02-16", 'total_amount_str': "$ 1,000.00", 'partner_id': 8, 'account_name': "101000 Current Assets", 'name': "BNK1/999: Customer Payment", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 999, 'credit': 1000.0, 'journal_id': [3, "Bank"], 'amount_str': "$ 1,000.00", 'debit': 0.0, 'account_code': "111100", 'ref': "", 'already_paid': false},
+                    {'account_id': 284, 'account_type': "other", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-03-18", 'date': "2017-02-16", 'total_amount_str': "$ 1,000.00", 'partner_id': 8, 'account_name': "101000 Current Assets", 'name': "INV/998", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 998, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 1,000.00", 'debit': 1000.0, 'account_code': "111100", 'ref': "", 'already_paid': false}
+                ],
+                'currency_id': 3, 'max_date': "2017-02-14 12:36:05.014302", 'last_time_entries_checked': null, 'account_code': "111100", 'partner_id': 8, 'account_name': "Account Payable"
+            }, {
+                'account_id': 284, 'partner_name': "Camptocamp",
+                'reconciliation_proposition': [
+                    {'account_id': 284, 'account_type': "other", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-16", 'date': "2017-02-16", 'total_amount_str': "$ 1,000.00", 'partner_id': 12, 'account_name': "101000 Current Assets", 'name': "BNK1/1999: Customer Payment", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 1999, 'credit': 1000.0, 'journal_id': [3, "Bank"], 'amount_str': "$ 1,000.00", 'debit': 0.0, 'account_code': "111100", 'ref': "", 'already_paid': false},
+                    {'account_id': 284, 'account_type': "other", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-03-18", 'date': "2017-02-16", 'total_amount_str': "$ 1,000.00", 'partner_id': 12, 'account_name': "101000 Current Assets", 'name': "INV/1998", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 1998, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 1,000.00", 'debit': 1000.0, 'account_code': "111100", 'ref': "", 'already_paid': false}
+                ],
+                'currency_id': 3, 'max_date': "2017-02-14 12:36:05.014302", 'last_time_entries_checked': null, 'account_code': "111100", 'partner_id': 12, 'account_name': "Account Payable"
+            }
+        ]
+    },
+    '["partner",null,"receivable"]': [
+        {'account_id': 287, 'partner_name': "Agrolait", 'reconciliation_proposition': [], 'currency_id': 3, 'max_date': "2017-02-14 12:30:31.256629", 'last_time_entries_checked': null, 'account_code': "101200", 'partner_id': 8, 'account_name': "101200 Account Receivable"},
+        {'account_id': 287, 'partner_name': "Camptocamp", 'reconciliation_proposition': [], 'currency_id': 3, 'max_date': "2017-02-13 14:24:55.246469", 'last_time_entries_checked': null, 'account_code': "101200", 'partner_id': 12, 'account_name': "101200 Account Receivable"}
+    ]
+};
+
+var move_lines_for_manual_reconciliation = {
+    '[287,8,"",0,6]': [
+        {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency_str': "10,222.00 €", 'currency_id': 1, 'date_maturity': "2017-02-08", 'date': "2017-02-08", 'total_amount_str': "$ 11,000.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0004: Customer Payment", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 17, 'credit': 11000.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 11,000.00", 'debit': 0.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [7, "101200 Account Receivable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-09", 'date': "2017-02-09", 'total_amount_str': "$ 1,000.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0005: Customer Payment", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 19, 'credit': 1000.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 1,000.00", 'debit': 0.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-09", 'date': "2017-02-09", 'total_amount_str': "$ 180.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "BILL/2017/0003: Customer Payment", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 21, 'credit': 180.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 180.00", 'debit': 0.0, 'account_code': "101200", 'ref': "fddfgfdgfdgsdfg", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-09", 'date': "2017-02-09", 'total_amount_str': "$ 90.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0006: Customer Payment", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 23, 'credit': 90.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 90.00", 'debit': 0.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-03-10", 'date': "2017-02-08", 'total_amount_str': "$ 650.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0012", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 6, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 1000.00", 'debit': 1000.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-03-10", 'date': "2017-02-08", 'total_amount_str': "$ 525.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0003", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 9, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 525.00", 'debit': 525.0, 'account_code': "101200", 'ref': "", 'already_paid': false}
+    ],
+    '[7,12,"",0,6]': [
+        {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-08", 'date': "2017-02-08", 'total_amount_str': "$ 11,000.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0004: Customer Payment", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 17, 'credit': 11000.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 11,000.00", 'debit': 0.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [7, "101200 Account Receivable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-09", 'date': "2017-02-09", 'total_amount_str': "$ 1,000.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0005: Customer Payment", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 19, 'credit': 1000.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 1,000.00", 'debit': 0.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-09", 'date': "2017-02-09", 'total_amount_str': "$ 180.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "BILL/2017/0003: Customer Payment", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 21, 'credit': 180.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 180.00", 'debit': 0.0, 'account_code': "101200", 'ref': "fddfgfdgfdgsdfg", 'already_paid': false},
+    ],
+    '[284,8,"",0,6]': [
+        {'account_type': "receivable", 'account_id': [284, "111100 Account Payable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-08", 'date': "2017-02-08", 'total_amount_str': "$ 11,000.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0004: Customer Payment", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 17, 'credit': 11000.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 11,000.00", 'debit': 0.0, 'account_code': "111100", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [284, "111100 Account Payable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-09", 'date': "2017-02-09", 'total_amount_str': "$ 1,000.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0005: Customer Payment", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 19, 'credit': 1000.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 1,000.00", 'debit': 0.0, 'account_code': "111100", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [284, "111100 Account Payable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-09", 'date': "2017-02-09", 'total_amount_str': "$ 180.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "BILL/2017/0003: Customer Payment", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 21, 'credit': 180.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 180.00", 'debit': 0.0, 'account_code': "111100", 'ref': "fddfgfdgfdgsdfg", 'already_paid': false},
+    ],
+    '[283,null,"",0,6]': [
+        {'account_type': "other", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-16", 'date': "2017-02-16", 'total_amount_str': "$ 1,000.00", 'partner_id': 8, 'account_name': "101000 Current Assets", 'name': "BNK1/2017/0006: Customer Payment", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 399, 'credit': 1000.0, 'journal_id': [3, "Bank"], 'amount_str': "$ 1,000.00", 'debit': 0.0, 'account_code': "101000", 'ref': "", 'already_paid': false},
+        {'account_type': "other", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-03-18", 'date': "2017-02-16", 'total_amount_str': "$ 1,000.00", 'partner_id': 8, 'account_name': "101000 Current Assets", 'name': "INV/2017/0006", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 402, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 1,000.00", 'debit': 1000.0, 'account_code': "101000", 'ref': "", 'already_paid': false}
+    ],
+    '[284,12,"",0,6]': [],
+};
+
+var session = {
+    currencies: {
+        3: {
+            digits: [69, 2],
+            position: "before",
+            symbol: "$"
+        }
+    }
+};
+
+var options = {
+    context: {
+        statement_ids: [4]
+    }
+};
+
+return {
+    params: {
+        data: data,
+        data_preprocess: data_preprocess,
+        data_widget: data_widget,
+        mv_lines: mv_lines,
+        auto_reconciliation: auto_reconciliation,
+        data_for_manual_reconciliation_widget: data_for_manual_reconciliation_widget,
+        move_lines_for_manual_reconciliation: move_lines_for_manual_reconciliation,
+        session: session,
+        options: options,
+    },
+    // this is the main function for this module. Its job is to export (and clone) all data for a test.
+    getParams: function () {
+        return $.extend(true, {}, this.params);
+    }
+};
+});
+
+odoo.define('account.reconciliation_tests', function (require) {
 "use strict";
 
 var ReconciliationClientAction = require('account.ReconciliationClientAction');
+var demoData = require('account.reconciliation_tests.data');
 var testUtils = require('web.test_utils');
 
 QUnit.module('account', {
     beforeEach: function () {
-        this.data = {
-            "res.partner": {
-                fields: {
-                    id: {string: "ID", type: "integer"},
-                    display_name: {string: "Displayed name", type: "char"},
-                    image: {string: "image", type: "integer"},
-                },
-                records: [
-                    {id: 1, display_name: "partner 1", image: 'AAA'},
-                    {id: 2, display_name: "partner 2", image: 'BBB'},
-                    {id: 3, display_name: "partner 3", image: 'CCC'},
-                    {id: 4, display_name: "partner 4", image: 'DDD'},
-                    {id: 8, display_name: "Agrolait", image: 'EEE'},
-                    {id: 12, display_name: "Camptocamp", image: 'FFF'},
-                ]
-            },
-            "account.account": {
-                fields: {
-                    id: {string: "ID", type: "integer"},
-                    code: {string: "code", type: "integer"},
-                    display_name: {string: "Displayed name", type: "char"},
-                },
-                records: [
-                    {id: 282, code: 100000, display_name: "100000 Fixed Asset Account"},
-                    {id: 283, code: 101000, display_name: "101000 Current Assets"},
-                    {id: 284, code: 101110, display_name: "101110 Stock Valuation Account"},
-                    {id: 285, code: 101120, display_name: "101120 Stock Interim Account (Received)"},
-                    {id: 286, code: 101130, display_name: "101130 Stock Interim Account (Delivered)"},
-                    {id: 287, code: 101200, display_name: "101200 Account Receivable"},
-                    {id: 288, code: 101300, display_name: "101300 Tax Paid"},
-                    {id: 308, code: 101401, display_name: "101401 Bank"},
-                ]
-            },
-            "account.tax": {
-                fields: {
-                    id: {string: "ID", type: "integer"},
-                    display_name: {string: "Displayed name", type: "char"},
-                    amount: {string: "amout", type: "float"},
-                    price_include: {string: "Included in Price", type: "boolean"},
-                    account_id: {string: "partner", type: 'many2one', relation: 'account.account'},
-                },
-                records: [
-                    {id: 6, display_name: "Tax 20.00%", amount: 20, price_include: false},
-                    {id: 7, display_name: "Tax 10.00% include", amount: 10, price_include: true, account_id: 288},
-                ]
-            },
-            "account.journal": {
-                fields: {
-                    id: {string: "ID", type: "integer"},
-                    display_name: {string: "Displayed name", type: "char"},
-                },
-                records: []
-            },
-            "account.analytic.account": {
-                fields: {
-                    id: {string: "ID", type: "integer"},
-                    display_name: {string: "Displayed name", type: "char"},
-                },
-                records: [
-                    {id: 16, display_name: "Administrative"},
-                    {id: 7, display_name: "Agrolait - Agrolait"},
-                    {id: 8, display_name: "Asustek - ASUSTeK"},
-                    {id: 15, display_name: "Camp to Camp - Camptocamp"},
-                    {id: 6, display_name: "CampToCamp - Camptocamp"},
-                    {id: 17, display_name: "Commercial & Marketing"},
-                    {id: 23, display_name: "Data Import/Export Plugin - Delta PC"},
-                    {id: 9, display_name: "Delta PC - Delta PC"},
-                ]
-            },
-            "account.bank.statement.line": {
-                fields: {
-                    id: {string: "ID", type: "integer"},
-                    display_name: {string: "Displayed name", type: "char"},
-                    partner_id: {string: "partner", type: 'many2one', relation: 'res.partner'},
-                },
-                records: [
-                    {id: 5, display_name: "SAJ/2014/002 and SAJ/2014/003"},
-                    {id: 6, display_name: "Bank fees"},
-                    {id: 7, display_name: "Prepayment"},
-                    {id: 8, display_name: "First 2000 \u20ac of SAJ/2014/001"},
-                ]
-            },
-            "account.reconcile.model": {
-                fields: {
-                    id: {string: "ID", type: "integer"},
-                    name: {string: "Button Label", type: "char"},
-                    has_second_line: {string: "Add a second line", type: "boolean"},
-                    account_id: {string: "Account", type: "many2one", relation:'account.account'},
-                    journal_id: {string: "Journal", type: "many2one", relation:'account.journal'},
-                    label: {string: "Journal Item Label", type: "char"},
-                    amount_type: {string: "amount_type", type: "selection", selection: [['fixed', 'Fixed'], ['percentage', 'Percentage of balance']], default:'percentage'},
-                    amount: {string: "Amount", type: "float", digits:0, help:"Fixed amount will count as a debit if it is negative, as a credit if it is positive.", default:100.0},
-                    tax_id: {string: "Tax", type: "many2one", relation:'account.tax', domain:[('type_tax_use', '=', 'purchase')]},
-                    analytic_account_id: {string: "Analytic Account", type: "many2one", relation:'account.analytic.account'},
-                    second_account_id: {string: "Second Account", type: "many2one", relation:'account.account', domain:[('deprecated', '=', false)]},
-                    second_journal_id: {string: "Second Journal", type: "many2one", relation:'account.journal',  help:"This field is ignored in a bank statement reconciliation."},
-                    second_label: {string: "Second Journal Item Label", type: "char"},
-                    second_amount_type: {string: "Second amount_type", type: "selection", selection: [['fixed', 'Fixed'], ['percentage', 'Percentage of balance']], default:'percentage'},
-                    second_amount: {string: "Second Amount", type: "float", digits:0, help:"Fixed amount will count as a debit if it is negative, as a credit if it is positive.", default:100.0},
-                    second_tax_id: {string: "Second Tax", type: "many2one", relation:'account.tax', domain:[('type_tax_use', '=', 'purchase')]},
-                    second_analytic_account_id: {string: "Second Analytic Account", type: "many2one", relation:'account.analytic.account'},
-                },
-                records: [
-                    {"second_analytic_account_id": false, "second_amount_type": "percentage", "second_journal_id": false, "id": 4, "analytic_account_id": false, "display_name": "Int\u00e9rrets", "second_tax_id": false, "has_second_line": false, "journal_id": false, "label": false, "second_label": false, "second_account_id": false, "account_id": 282, "company_id": [1, "Demo SPRL"], "tax_id": false, "amount_type": "fixed", "name": "Int\u00e9rrets", "amount": 0.0, "second_amount": 100.0},
-                    {"second_analytic_account_id": false, "second_amount_type": "percentage", "second_journal_id": false, "id": 2, "analytic_account_id": false, "display_name": "Perte et Profit", "second_tax_id": false, "has_second_line": false, "journal_id": false, "label": false, "second_label": false, "second_account_id": false, "account_id": 283, "company_id": [1, "Demo SPRL"], "tax_id": false, "amount_type": "percentage", "name": "Perte et Profit", "amount": 100.0, "second_amount": 100.0},
-                    {"second_analytic_account_id": false, "second_amount_type": "percentage", "second_journal_id": false, "id": 5, "analytic_account_id": false, "display_name": "Fs bank", "second_tax_id": false, "has_second_line": false, "journal_id": false, "label": false, "second_label": false, "second_account_id": false, "account_id": 284, "company_id": [1, "Demo SPRL"], "tax_id": false, "amount_type": "percentage", "name": "Fs bank", "amount": 100.0, "second_amount": 100.0},
-                    {"second_analytic_account_id": false, "second_amount_type": "percentage", "second_journal_id": false, "id": 8, "analytic_account_id": false, "display_name": "Caisse Sand.", "second_tax_id": false, "has_second_line": false, "journal_id": false, "label": "Caisse Sand.", "second_label": false, "second_account_id": false, "account_id": 308, "company_id": [1, "Demo SPRL"], "tax_id": false, "amount_type": "percentage", "name": "Caisse Sand.", "amount": 100.0, "second_amount": 100.0},
-                    {"second_analytic_account_id": false, "second_amount_type": "percentage", "second_journal_id": false, "id": 3, "analytic_account_id": false, "display_name": "ATOS", "second_tax_id": 7, "has_second_line": true, "journal_id": false, "label": "ATOS Banque", "second_label": "ATOS Frais", "second_account_id": 286, "account_id": 285, "company_id": [1, "Demo SPRL"], "tax_id": 6, "amount_type": "percentage", "name": "ATOS", "amount": 97.5, "second_amount": 2.5},
-                    {"second_analytic_account_id": false, "second_amount_type": "percentage", "second_journal_id": false, "id": 10, "analytic_account_id": false, "display_name": "Double", "second_tax_id": false, "has_second_line": true, "journal_id": false, "label": "Double Banque", "second_label": "Double Frais", "second_account_id": 286, "account_id": 285, "company_id": [1, "Demo SPRL"], "tax_id": false, "amount_type": "percentage", "name": "Double", "amount": 97.5, "second_amount": 2.5},
-                ]
-            }
-        };
-        var data_preprocess = {
-            notifications: [],
-            num_already_reconciled_lines: 0,
-            st_lines_ids: [5, 6, 7, 8],
-            statement_name: "BNK/2014/001",
-        };
-        var data_widget = [
-            {
-                "st_line": {
-                    "currency_id": 3,
-                    "communication_partner_name": false,
-                    "open_balance_account_id": 287,
-                    "name": "SAJ/2014/002 and SAJ/2014/003",
-                    "partner_name": "Agrolait",
-                    "partner_id": 8,
-                    "has_no_partner": false,
-                    "journal_id": 84,
-                    "account_name": "Bank",
-                    "note": "",
-                    "amount": 1175.0,
-                    "amount_str": "$ 1,175.00",
-                    "amount_currency_str": "",
-                    "date": "2017-01-01",
-                    "account_code": "101401",
-                    "ref": "",
-                    "id": 5,
-                    "statement_id": 2
-                },
-                "reconciliation_proposition": []
-            },
-            {
-                "st_line": {
-                    "currency_id": 3,
-                    "communication_partner_name": false,
-                    "name": "Bank fees",
-                    "partner_name": false,
-                    "partner_id": false,
-                    "has_no_partner": true,
-                    "journal_id": 84,
-                    "account_name": "Bank",
-                    "note": "",
-                    "amount": -32.58,
-                    "amount_str": "$ 32.58",
-                    "amount_currency_str": "",
-                    "date": "2017-01-01",
-                    "account_code": "101401",
-                    "ref": "",
-                    "id": 6,
-                    "statement_id": 2
-                },
-                "reconciliation_proposition": []
-            },
-            {
-                "st_line": {
-                    "currency_id": 3,
-                    "communication_partner_name": false,
-                    "open_balance_account_id": 287,
-                    "name": "Prepayment",
-                    "partner_name": "Camptocamp",
-                    "partner_id": 12,
-                    "has_no_partner": false,
-                    "journal_id": 84,
-                    "account_name": "Bank",
-                    "note": "",
-                    "amount": 650.0,
-                    "amount_str": "$ 650.00",
-                    "amount_currency_str": "",
-                    "date": "2017-01-01",
-                    "account_code": "101401",
-                    "ref": "",
-                    "id": 7,
-                    "statement_id": 2
-                },
-                "reconciliation_proposition": [
-                    {
-                        "account_type": "receivable",
-                        "amount_currency_str": "",
-                        "currency_id": false,
-                        "date_maturity": "2017-02-07",
-                        "date": "2017-01-08",
-                        "total_amount_str": "$ 650.00",
-                        "partner_id": 12,
-                        "account_name": "101200 Account Receivable",
-                        "name": "INV/2017/0012",
-                        "partner_name": "Camptocamp",
-                        "total_amount_currency_str": "",
-                        "id": 133,
-                        "credit": 0.0,
-                        "journal_id": [1, "Customer Invoices"],
-                        "amount_str": "$ 650.00",
-                        "debit": 650.0,
-                        "account_id": [287, "101200 Account Receivable"],
-                        "account_code": "101200",
-                        "ref": "",
-                        "already_paid": false
-                    },
-                ]
-            },
-            {
-                "st_line": {
-                    "currency_id": 3,
-                    "communication_partner_name": false,
-                    "open_balance_account_id": 285,
-                    "name": "First 2000 \u20ac of SAJ/2014/001",
-                    "partner_name": "Camptocamp",
-                    "partner_id": 12,
-                    "has_no_partner": false,
-                    "journal_id": 84,
-                    "account_name": "Bank",
-                    "note": "",
-                    "amount": 2000.0,
-                    "amount_str": "$ 2,000.00",
-                    "amount_currency_str": "",
-                    "date": "2017-01-01",
-                    "account_code": "101401",
-                    "ref": "",
-                    "id": 8,
-                    "statement_id": 2
-                },
-                "reconciliation_proposition": []
-            },
-        ];
-        var mv_lines = {
-            '[]': [],
-            '[5,"",0,6]': [
-                {"account_type": "receivable", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-07", "date": "2017-01-08", "total_amount_str": "$ 650.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "INV/2017/0002", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 109, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 650.00", "debit": 650.0, "account_code": "101200", "ref": "", "already_paid": false},
-                {"account_type": "receivable", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-07", "date": "2017-01-08", "total_amount_str": "$ 525.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "INV/2017/0003", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 112, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 525.00", "debit": 525.0, "account_code": "101200", "ref": "", "already_paid": false}
-            ],
-            '[5,"b",0,6]': [
-                {"account_type": "liquidity", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-01-23", "date": "2017-01-23", "total_amount_str": "$ 100.00", "partner_id": 8, "account_name": "Bank", "name": "BNK1/2017/0003: CUST.IN/2017/0001", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 394, "credit": 0.0, "journal_id": "Bank", "amount_str": "$ 100.00", "debit": 100.0, "account_code": "101401", "ref": "", "already_paid": true},
-                {"account_type": "liquidity", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-01-23", "date": "2017-01-23", "total_amount_str": "$ 525.50", "partner_id": 8, "account_name": "Bank", "name": "BNK1/2017/0004: CUST.IN/2017/0002", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 396, "credit": 0.0, "journal_id": "Bank", "amount_str": "$ 525.50", "debit": 525.5, "account_code": "101401", "ref": "INV/2017/0003", "already_paid": true},
-            ],
-            '[6,"",0,6]': [
-                {"account_type": "liquidity", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-01-23", "date": "2017-01-23", "total_amount_str": "$ 376.00", "partner_id": 7, "account_name": "Bank", "name": "BNK1/2017/0002: SUPP.OUT/2017/0002", "partner_name": "ASUSTeK", "total_amount_currency_str": "", "id": 392, "credit": 376.0, "journal_id": "Bank", "amount_str": "$ 376.00", "debit": 0.0, "account_code": "101401", "ref": "BILL/2017/0003", "already_paid": true},
-                {"account_type": "liquidity", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-01-23", "date": "2017-01-23", "total_amount_str": "$ 100.00", "partner_id": 8, "account_name": "Bank", "name": "BNK1/2017/0003: CUST.IN/2017/0001", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 394, "credit": 0.0, "journal_id": "Bank", "amount_str": "$ 100.00", "debit": 100.0, "account_code": "101401", "ref": "", "already_paid": true},
-                {"account_type": "liquidity", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-01-23", "date": "2017-01-23", "total_amount_str": "$ 525.50", "partner_id": 8, "account_name": "Bank", "name": "BNK1/2017/0004: CUST.IN/2017/0002", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 396, "credit": 0.0, "journal_id": "Bank", "amount_str": "$ 525.50", "debit": 525.5, "account_code": "101401", "ref": "INV/2017/0003", "already_paid": true},
-                {"account_type": "receivable", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-07", "date": "2017-01-08", "total_amount_str": "$ 650.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "INV/2017/0002", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 109, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 650.00", "debit": 650.0, "account_code": "101200", "ref": "", "already_paid": false},
-                {"account_type": "receivable", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-22", "date": "2017-01-23", "total_amount_str": "$ 525.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "INV/2017/0004", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 399, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 525.00", "debit": 525.0, "account_code": "101200", "ref": "", "already_paid": false},
-                {"account_type": "receivable", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-28", "date": "2017-01-01", "total_amount_str": "$ 4,610.00", "partner_id": 12, "account_name": "101200 Account Receivable", "name": "INV/2017/0001", "partner_name": "Camptocamp", "total_amount_currency_str": "", "id": 106, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 4,610.00", "debit": 4610.0, "account_code": "101200", "ref": "", "already_paid": false}
-            ],
-            '[6,"",5,6]': [
-                {"account_type": "receivable", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-28", "date": "2017-01-01", "total_amount_str": "$ 4,610.00", "partner_id": 12, "account_name": "101200 Account Receivable", "name": "INV/2017/0001", "partner_name": "Camptocamp", "total_amount_currency_str": "", "id": 106, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 4,610.00", "debit": 4610.0, "account_code": "101200", "ref": "", "already_paid": false},
-                {"account_type": "payable", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-28", "date": "2017-01-01", "total_amount_str": "$ 10,000.00", "partner_id": 12, "account_name": "Account Payable", "name": "BILL/2017/0001", "partner_name": "Camptocamp", "total_amount_currency_str": "", "id": 114, "credit": 10000.0, "journal_id": [2, "Vendor Bills"], "amount_str": "$ 10,000.00", "debit": 0.0, "account_code": "111100", "ref": "", "already_paid": false},
-                {"account_type": "payable", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-28", "date": "2017-01-15", "total_amount_str": "$ 5,749.99", "partner_id": 7, "account_name": "Account Payable", "name": "BILL/2017/0002", "partner_name": "ASUSTeK", "total_amount_currency_str": "", "id": 117, "credit": 5749.99, "journal_id": [2, "Vendor Bills"], "amount_str": "$ 5,749.99", "debit": 0.0, "account_code": "111100", "ref": "", "already_paid": false}
-            ],
-            '[7,"",0,6]': [
-                {"account_type": "receivable", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-07", "date": "2017-01-08", "total_amount_str": "$ 650.00", "partner_id": 12, "account_name": "101200 Account Receivable", "name": "INV/2017/0012", "partner_name": "Camptocamp", "total_amount_currency_str": "", "id": 133, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 650.00", "debit": 650.0, "account_id": [287, "101200 Account Receivable"], "account_code": "101200", "ref": "", "already_paid": false},
-                {"account_type": "receivable", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-28", "date": "2017-01-01", "total_amount_str": "$ 4,610.00", "partner_id": 12, "account_name": "101200 Account Receivable", "name": "INV/2017/0001", "partner_name": "Camptocamp", "total_amount_currency_str": "", "id": 106, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 4,610.00", "debit": 4610.0, "account_id": [287, "101200 Account Receivable"], "account_code": "101200", "ref": "", "already_paid": false},
-                {"account_type": "payable", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-28", "date": "2017-01-01", "total_amount_str": "$ 10,000.00", "partner_id": 12, "account_name": "Account Payable", "name": "BILL/2017/0001", "partner_name": "Camptocamp", "total_amount_currency_str": "", "id": 114, "credit": 10000.0, "journal_id": [2, "Vendor Bills"], "amount_str": "$ 10,000.00", "debit": 0.0, "account_id": [284, "101110 Stock Valuation Account"], "account_code": "111100", "ref": "", "already_paid": false}
-            ],
-            '[8,"",0,6]': [],
-        };
-        var auto_reconciliation = {
-            "num_already_reconciled_lines": 1,
-            "notifications": [{
-                "message": "1 transaction was automatically reconciled.",
-                "type": "info",
-                "details": {
-                    "model": "account.move",
-                    "name": "Automatically reconciled items",
-                    "ids": [143]
-                }
-            }],
-            "st_lines_ids": [5, 6, 8],
-            "statement_name": false
-        };
-        var data_for_manual_reconciliation_widget = {
-            '[null,null]': {
-                "customers": [
-                    {"account_id": 287, "partner_name": "Agrolait", "reconciliation_proposition": [], "currency_id": 3, "max_date": "2017-02-14 12:30:31.256629", "last_time_entries_checked": null, "account_code": "101200", "partner_id": 8, "account_name": "101200 Account Receivable"},
-                    {"account_id": 7, "partner_name": "Camptocamp", "reconciliation_proposition": [], "currency_id": 3, "max_date": "2017-02-13 14:24:55.246469", "last_time_entries_checked": null, "account_code": "101200", "partner_id": 12, "account_name": "101200 Account Receivable"}
-                ],
-                "accounts": [
-                    {
-                        "account_id": 283, "account_name": "101000 Current Assets", "currency_id": 3, "max_date": "2017-02-16 14:32:04.833986", "last_time_entries_checked": "2017-02-16", "account_code": "101000",
-                        "reconciliation_proposition": [
-                            {"account_id": 283, "account_type": "other", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-16", "date": "2017-02-16", "total_amount_str": "$ 1,000.00", "partner_id": 8, "account_name": "101000 Current Assets", "name": "BNK1/2017/0006: Customer Payment", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 399, "credit": 1000.0, "journal_id": [3, "Bank"], "amount_str": "$ 1,000.00", "debit": 0.0, "account_code": "101000", "ref": "", "already_paid": false},
-                            {"account_id": 283, "account_type": "other", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-03-18", "date": "2017-02-16", "total_amount_str": "$ 1,000.00", "partner_id": 8, "account_name": "101000 Current Assets", "name": "INV/2017/0006", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 402, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 1,000.00", "debit": 1000.0, "account_code": "101000", "ref": "", "already_paid": false}
-                        ]
-                    }
-                ],
-                "suppliers": [
-                    {
-                        "account_id": 284, "partner_name": "Agrolait",
-                        "reconciliation_proposition": [
-                            {"account_id": 284, "account_type": "other", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-16", "date": "2017-02-16", "total_amount_str": "$ 1,000.00", "partner_id": 8, "account_name": "101000 Current Assets", "name": "BNK1/999: Customer Payment", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 999, "credit": 1000.0, "journal_id": [3, "Bank"], "amount_str": "$ 1,000.00", "debit": 0.0, "account_code": "111100", "ref": "", "already_paid": false},
-                            {"account_id": 284, "account_type": "other", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-03-18", "date": "2017-02-16", "total_amount_str": "$ 1,000.00", "partner_id": 8, "account_name": "101000 Current Assets", "name": "INV/998", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 998, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 1,000.00", "debit": 1000.0, "account_code": "111100", "ref": "", "already_paid": false}
-                        ],
-                        "currency_id": 3, "max_date": "2017-02-14 12:36:05.014302", "last_time_entries_checked": null, "account_code": "111100", "partner_id": 8, "account_name": "Account Payable"
-                    }, {
-                        "account_id": 284, "partner_name": "Camptocamp",
-                        "reconciliation_proposition": [
-                            {"account_id": 284, "account_type": "other", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-16", "date": "2017-02-16", "total_amount_str": "$ 1,000.00", "partner_id": 12, "account_name": "101000 Current Assets", "name": "BNK1/1999: Customer Payment", "partner_name": "Camptocamp", "total_amount_currency_str": "", "id": 1999, "credit": 1000.0, "journal_id": [3, "Bank"], "amount_str": "$ 1,000.00", "debit": 0.0, "account_code": "111100", "ref": "", "already_paid": false},
-                            {"account_id": 284, "account_type": "other", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-03-18", "date": "2017-02-16", "total_amount_str": "$ 1,000.00", "partner_id": 12, "account_name": "101000 Current Assets", "name": "INV/1998", "partner_name": "Camptocamp", "total_amount_currency_str": "", "id": 1998, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 1,000.00", "debit": 1000.0, "account_code": "111100", "ref": "", "already_paid": false}
-                        ],
-                        "currency_id": 3, "max_date": "2017-02-14 12:36:05.014302", "last_time_entries_checked": null, "account_code": "111100", "partner_id": 12, "account_name": "Account Payable"
-                    }
-                ]
-            },
-            '["partner",null,"receivable"]': [
-                {"account_id": 287, "partner_name": "Agrolait", "reconciliation_proposition": [], "currency_id": 3, "max_date": "2017-02-14 12:30:31.256629", "last_time_entries_checked": null, "account_code": "101200", "partner_id": 8, "account_name": "101200 Account Receivable"},
-                {"account_id": 287, "partner_name": "Camptocamp", "reconciliation_proposition": [], "currency_id": 3, "max_date": "2017-02-13 14:24:55.246469", "last_time_entries_checked": null, "account_code": "101200", "partner_id": 12, "account_name": "101200 Account Receivable"}
-            ]
-        };
-        var move_lines_for_manual_reconciliation = {
-            '[287,8,"",0,6]': [
-                {"account_type": "receivable", "account_id": [287, "101200 Account Receivable"], "amount_currency_str": "10,222.00 €", "currency_id": 1, "date_maturity": "2017-02-08", "date": "2017-02-08", "total_amount_str": "$ 11,000.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "INV/2017/0004: Customer Payment", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 17, "credit": 11000.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 11,000.00", "debit": 0.0, "account_code": "101200", "ref": "", "already_paid": false},
-                {"account_type": "receivable", "account_id": [7, "101200 Account Receivable"], "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-09", "date": "2017-02-09", "total_amount_str": "$ 1,000.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "INV/2017/0005: Customer Payment", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 19, "credit": 1000.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 1,000.00", "debit": 0.0, "account_code": "101200", "ref": "", "already_paid": false},
-                {"account_type": "receivable", "account_id": [287, "101200 Account Receivable"], "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-09", "date": "2017-02-09", "total_amount_str": "$ 180.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "BILL/2017/0003: Customer Payment", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 21, "credit": 180.0, "journal_id": [2, "Vendor Bills"], "amount_str": "$ 180.00", "debit": 0.0, "account_code": "101200", "ref": "fddfgfdgfdgsdfg", "already_paid": false},
-                {"account_type": "receivable", "account_id": [287, "101200 Account Receivable"], "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-09", "date": "2017-02-09", "total_amount_str": "$ 90.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "INV/2017/0006: Customer Payment", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 23, "credit": 90.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 90.00", "debit": 0.0, "account_code": "101200", "ref": "", "already_paid": false},
-                {"account_type": "receivable", "account_id": [287, "101200 Account Receivable"], "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-03-10", "date": "2017-02-08", "total_amount_str": "$ 650.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "INV/2017/0012", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 6, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 1000.00", "debit": 1000.0, "account_code": "101200", "ref": "", "already_paid": false},
-                {"account_type": "receivable", "account_id": [287, "101200 Account Receivable"], "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-03-10", "date": "2017-02-08", "total_amount_str": "$ 525.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "INV/2017/0003", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 9, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 525.00", "debit": 525.0, "account_code": "101200", "ref": "", "already_paid": false}
-            ],
-            '[7,12,"",0,6]': [
-                {"account_type": "receivable", "account_id": [287, "101200 Account Receivable"], "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-08", "date": "2017-02-08", "total_amount_str": "$ 11,000.00", "partner_id": 12, "account_name": "101200 Account Receivable", "name": "INV/2017/0004: Customer Payment", "partner_name": "Camptocamp", "total_amount_currency_str": "", "id": 17, "credit": 11000.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 11,000.00", "debit": 0.0, "account_code": "101200", "ref": "", "already_paid": false},
-                {"account_type": "receivable", "account_id": [7, "101200 Account Receivable"], "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-09", "date": "2017-02-09", "total_amount_str": "$ 1,000.00", "partner_id": 12, "account_name": "101200 Account Receivable", "name": "INV/2017/0005: Customer Payment", "partner_name": "Camptocamp", "total_amount_currency_str": "", "id": 19, "credit": 1000.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 1,000.00", "debit": 0.0, "account_code": "101200", "ref": "", "already_paid": false},
-                {"account_type": "receivable", "account_id": [287, "101200 Account Receivable"], "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-09", "date": "2017-02-09", "total_amount_str": "$ 180.00", "partner_id": 12, "account_name": "101200 Account Receivable", "name": "BILL/2017/0003: Customer Payment", "partner_name": "Camptocamp", "total_amount_currency_str": "", "id": 21, "credit": 180.0, "journal_id": [2, "Vendor Bills"], "amount_str": "$ 180.00", "debit": 0.0, "account_code": "101200", "ref": "fddfgfdgfdgsdfg", "already_paid": false},
-            ],
-            '[284,8,"",0,6]': [
-                {"account_type": "receivable", "account_id": [284, "111100 Account Payable"], "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-08", "date": "2017-02-08", "total_amount_str": "$ 11,000.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "INV/2017/0004: Customer Payment", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 17, "credit": 11000.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 11,000.00", "debit": 0.0, "account_code": "111100", "ref": "", "already_paid": false},
-                {"account_type": "receivable", "account_id": [284, "111100 Account Payable"], "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-09", "date": "2017-02-09", "total_amount_str": "$ 1,000.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "INV/2017/0005: Customer Payment", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 19, "credit": 1000.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 1,000.00", "debit": 0.0, "account_code": "111100", "ref": "", "already_paid": false},
-                {"account_type": "receivable", "account_id": [284, "111100 Account Payable"], "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-09", "date": "2017-02-09", "total_amount_str": "$ 180.00", "partner_id": 8, "account_name": "101200 Account Receivable", "name": "BILL/2017/0003: Customer Payment", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 21, "credit": 180.0, "journal_id": [2, "Vendor Bills"], "amount_str": "$ 180.00", "debit": 0.0, "account_code": "111100", "ref": "fddfgfdgfdgsdfg", "already_paid": false},
-            ],
-            '[283,null,"",0,6]': [
-                {"account_type": "other", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-02-16", "date": "2017-02-16", "total_amount_str": "$ 1,000.00", "partner_id": 8, "account_name": "101000 Current Assets", "name": "BNK1/2017/0006: Customer Payment", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 399, "credit": 1000.0, "journal_id": [3, "Bank"], "amount_str": "$ 1,000.00", "debit": 0.0, "account_code": "101000", "ref": "", "already_paid": false},
-                {"account_type": "other", "amount_currency_str": "", "currency_id": false, "date_maturity": "2017-03-18", "date": "2017-02-16", "total_amount_str": "$ 1,000.00", "partner_id": 8, "account_name": "101000 Current Assets", "name": "INV/2017/0006", "partner_name": "Agrolait", "total_amount_currency_str": "", "id": 402, "credit": 0.0, "journal_id": [1, "Customer Invoices"], "amount_str": "$ 1,000.00", "debit": 1000.0, "account_code": "101000", "ref": "", "already_paid": false}
-            ],
-            '[284,12,"",0,6]': [],
-        };
-        this.session = {
-            currencies: {
-                3: {
-                    digits: [69, 2],
-                    position: "before",
-                    symbol: "$"
-                }
-            }
-        };
-        this.mockRPC = function (route, args) {
-            var key;
-            var excluded_ids;
-            var ids;
-            if (args.method === "json_friendly_compute_all" && args.model === "account.tax") {
-                var tax = _.find(this.data["account.tax"].records, {'id': args.args[0][0]});
-                var amount = args.args[1];
-                var tax_base = tax.price_include ? amount*100/(100+tax.amount) : amount;
-                return $.when({
-                    "base": amount,
-                    "taxes": [{
-                        "id": tax.id,
-                        "amount": tax_base*tax.amount/100,
-                        "base": tax_base,
-                        "name": tax.display_name,
-                        "analytic": false,
-                        "refund_account_id": false,
-                        "account_id": tax.account_id
-                    }],
-                    "total_excluded": amount/100*(100-tax.amount),
-                    "total_included": amount,
-                });
-            }
-            if (args.method === "reconciliation_widget_preprocess" && args.model === "account.bank.statement") {
-                return $.when(data_preprocess);
-            }
-            if (args.method === "get_data_for_reconciliation_widget" && args.model === "account.bank.statement.line") {
-                ids = args.args[0];
-                return $.when(_.filter(data_widget, function (w) {return _.contains(ids, w.st_line.id);}));
-            }
-            if (args.method === "get_move_lines_for_reconciliation_widget" && args.model === "account.bank.statement.line") {
-                var partner_id = args.args.splice(1, 1)[0];
-                excluded_ids = args.args.splice(1, 1)[0];
-                key = JSON.stringify(args.args);
-                if (!mv_lines[key]) {
-                    throw new Error("Unknown parameters for get_move_lines_for_reconciliation_widget: '"+ key + "'");
-                }
-                return $.when(_.filter(mv_lines[key], function (line) {
-                    return excluded_ids.indexOf(line.id) === -1 && (!partner_id || partner_id === line.partner_id);
-                }));
-            }
-            if (args.method === "reconciliation_widget_auto_reconcile" && args.model === "account.bank.statement.line") {
-                return $.when(auto_reconciliation);
-            }
-            if (args.method === "get_data_for_manual_reconciliation_widget" && args.model === "account.move.line") {
-                key = JSON.stringify(args.args);
-                if (!data_for_manual_reconciliation_widget[key]) {
-                    throw new Error("Unknown parameters for get_data_for_manual_reconciliation_widget: '"+ key + "'");
-                }
-                return $.when(data_for_manual_reconciliation_widget[key]);
-            }
-            if (args.method === "get_move_lines_for_manual_reconciliation" && args.model === "account.move.line") {
-                excluded_ids = args.args.splice(2, 1)[0];
-                key = JSON.stringify(args.args);
-                if (!move_lines_for_manual_reconciliation[key]) {
-                    throw new Error("Unknown parameters for get_move_lines_for_manual_reconciliation: '"+ key + "'");
-                }
-                return $.when(_.filter(move_lines_for_manual_reconciliation[key], function (line) {
-                    return excluded_ids.indexOf(line.id) === -1;
-                }));
-            }
-            if (args.method === "process_reconciliations" && args.model === "account.move.line") {
-                var datas = args.args[0];
-                for (var i in datas) {
-                    var data = datas[i];
-                    for (var key in move_lines_for_manual_reconciliation) {
-                        move_lines_for_manual_reconciliation[key] = _.filter(move_lines_for_manual_reconciliation[key], function (mv_line) {
-                            return data.mv_line_ids.indexOf(mv_line.id) === -1;
-                        });
-                    }
-                }
-                return $.when();
-            }
-            if (args.method === "mark_as_reconciled") {
-                return $.when();
-            }
-            return this._super(route, args);
-        };
-        this.options = {
-            context: {
-                statement_ids: [4]
-            }
-        };
+        this.params = demoData.getParams();
     }
 }, function () {
     QUnit.module('Reconciliation');
@@ -446,10 +495,9 @@ QUnit.module('account', {
     QUnit.test('Reconciliation basic rendering', function (assert) {
         assert.expect(11);
 
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.options);
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.data,
-            mockRPC: this.mockRPC,
+            'data': this.params.data,
         });
         clientAction.appendTo($('#qunit-fixture'));
 
@@ -481,10 +529,9 @@ QUnit.module('account', {
     QUnit.test('Reconciliation fields', function (assert) {
         assert.expect(6);
 
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.options);
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.data,
-            mockRPC: this.mockRPC,
+            'data': this.params.data,
         });
         clientAction.appendTo($('#qunit-fixture'));
 
@@ -509,10 +556,9 @@ QUnit.module('account', {
     QUnit.test('Reconciliation basic data', function (assert) {
         assert.expect(20);
 
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.options);
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.data,
-            mockRPC: this.mockRPC,
+            'data': this.params.data,
         });
 
         clientAction.appendTo($('#qunit-fixture'));
@@ -566,10 +612,9 @@ QUnit.module('account', {
     QUnit.test('Reconciliation title', function (assert) {
         assert.expect(6);
 
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.options);
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.data,
-            mockRPC: this.mockRPC,
+            'data': this.params.data,
         });
 
         clientAction.appendTo($('#qunit-fixture'));
@@ -591,12 +636,11 @@ QUnit.module('account', {
     QUnit.test('Reconciliation currencies', function (assert) {
         assert.expect(2);
 
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.options);
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.data,
-            mockRPC: this.mockRPC,
-            session: this.session,
+            'data': this.params.data,
+            session: this.params.session,
             translateParameters: {
                 date_format: "%m/%d/%Y",
                 direction:"ltr",
@@ -626,11 +670,10 @@ QUnit.module('account', {
     QUnit.test('Reconciliation create line', function (assert) {
         assert.expect(23);
 
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.options);
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.data,
-            mockRPC: this.mockRPC,
+            'data': this.params.data,
         });
         clientAction.appendTo($('#qunit-fixture'));
 
@@ -708,11 +751,10 @@ QUnit.module('account', {
     QUnit.test('Reconciliation create line with taxes', function (assert) {
         assert.expect(13);
 
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.options);
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.data,
-            mockRPC: this.mockRPC,
+            'data': this.params.data,
         });
         clientAction.appendTo($('#qunit-fixture'));
 
@@ -753,11 +795,10 @@ QUnit.module('account', {
     QUnit.test('Reconciliation create line from reconciliation model', function (assert) {
         assert.expect(6);
 
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.options);
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.data,
-            mockRPC: this.mockRPC,
+            'data': this.params.data,
         });
         clientAction.appendTo($('#qunit-fixture'));
 
@@ -797,11 +838,10 @@ QUnit.module('account', {
     QUnit.test('Reconciliation auto reconciliation', function (assert) {
         assert.expect(6);
 
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.options);
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.data,
-            mockRPC: this.mockRPC,
+            'data': this.params.data,
         });
         clientAction.appendTo($('body'));
 
@@ -818,7 +858,7 @@ QUnit.module('account', {
         });
         clientAction.$('.notification_area a.fa-external-link').trigger('click');
         assert.deepEqual(_.pick(do_action, "res_model", "domain", "type"),
-            {"res_model":"account.move", "domain":[["id","in",[143]]], "type":"ir.actions.act_window"},
+            {"res_model":"account.move", "domain":[['id',"in",[143]]], "type":"ir.actions.act_window"},
             "should try to open the record form view");
         clientAction.$('.notification_area .close').trigger('click');
         assert.notOk(clientAction.$('.notification_area .notification').length, "should close the notification");
@@ -830,17 +870,16 @@ QUnit.module('account', {
     QUnit.test('Reconciliation manual open record', function (assert) {
         assert.expect(2);
 
-        var clientAction = new ReconciliationClientAction.ManualAction(null, this.options);
+        var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
 
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.data,
-            mockRPC: this.mockRPC,
+            'data': this.params.data,
         });
         clientAction.appendTo($('#qunit-fixture'));
 
         testUtils.intercept(clientAction, 'call_service', function (event) {
             if (event.data.args[0].indexOf('get_formview_action') !== -1) {
-                assert.equal(event.data.args[1].model, "account.account", "should open the account.account from view ");
+                assert.equal(event.data.args[1].model, 'account.account', "should open the account.account from view ");
                 event.data.callback($.when());
             }
         });
@@ -848,7 +887,7 @@ QUnit.module('account', {
 
         testUtils.intercept(clientAction, 'call_service', function (event) {
             if (event.data.args[0].indexOf('get_formview_action') !== -1) {
-                assert.equal(event.data.args[1].model, "res.partner", "should open the res.partner from view ");
+                assert.equal(event.data.args[1].model, 'res.partner', "should open the res.partner from view ");
                 event.data.callback($.when());
             }
         });
@@ -861,12 +900,11 @@ QUnit.module('account', {
     QUnit.test('Reconciliation manual', function (assert) {
         assert.expect(9);
 
-        var clientAction = new ReconciliationClientAction.ManualAction(null, this.options);
+        var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
 
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.data,
-            mockRPC: this.mockRPC,
-            session: this.session,
+            'data': this.params.data,
+            session: this.params.session,
         });
         clientAction.appendTo($('#qunit-fixture'));
 
@@ -899,12 +937,11 @@ QUnit.module('account', {
     QUnit.test('Reconciliation manual validate all', function (assert) {
         assert.expect(6);
 
-        var clientAction = new ReconciliationClientAction.ManualAction(null, this.options);
+        var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
 
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.data,
-            mockRPC: this.mockRPC,
-            session: this.session,
+            'data': this.params.data,
+            session: this.params.session,
         });
 
         clientAction.prependTo($('#qunit-fixture'));
