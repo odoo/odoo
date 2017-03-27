@@ -58,7 +58,7 @@ QUnit.module('Views', {
     QUnit.module('GraphView');
 
     QUnit.test('simple graph rendering', function (assert) {
-        assert.expect(2);
+        assert.expect(4);
 
         var graph = createView({
             View: GraphView,
@@ -74,7 +74,17 @@ QUnit.module('Views', {
             assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 1,
                         "should contain a div with a svg element");
 
-            assert.strictEqual(graph.renderer.state.mode, "bar", "should be in bar chart mode by default");
+            assert.strictEqual(graph.renderer.state.mode, "bar",
+                "should be in bar chart mode by default");
+
+            // here, we would like to test the svg in the dom.  However, it is
+            // not so easy, because there is an animation which means that we
+            // don't really have a nice way to find the proper rect elements.
+            // So, instead we will do some white box testing.
+            assert.strictEqual(graph.model.chart.data[0].value, 3,
+                "should have first datapoint with value 3");
+            assert.strictEqual(graph.model.chart.data[1].value, 4,
+                "should have first datapoint with value 4");
             graph.destroy();
             done();
         });

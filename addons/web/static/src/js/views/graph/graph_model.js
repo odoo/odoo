@@ -164,7 +164,7 @@ return AbstractModel.extend({
                 return self._sanitizeValue(data_pt[field], field);
             });
             this.chart.data.push({
-                value: is_count ? data_pt.__count : data_pt[this.chart.measure],
+                value: is_count ? data_pt.__count || data_pt[this.chart.groupedBy[0]+'_count'] : data_pt[this.chart.measure],
                 labels: labels
             });
         }
