@@ -2202,6 +2202,163 @@ QUnit.module('basic_fields', {
     });
 
 
+    QUnit.module('StatInfo');
+
+    QUnit.test('statinfo widget in form view', function (assert) {
+        assert.expect(9);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<div class="oe_button_box" name="button_box">' +
+                            '<button class="oe_stat_button" name="items"  type="object" icon="fa-gear">' +
+                                '<field name="int_field" widget="statinfo"/>' +
+                            '</button>' +
+                        '</div>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info').length, 1,
+            "should have one stat button");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_value').text(),
+            '10', "should have 10 as value");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_text').text(),
+            'int_field', "should have 'int_field' as text");
+
+        // switch to edit mode and check the result
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info').length, 1,
+            "should still have one stat button");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_value').text(),
+            '10', "should still have 10 as value");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_text').text(),
+            'int_field', "should have 'int_field' as text");
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info').length, 1,
+            "should have one stat button");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_value').text(),
+            '10', "should have 10 as value");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_text').text(),
+            'int_field', "should have 'int_field' as text");
+
+        form.destroy();
+    });
+
+    QUnit.test('statinfo widget in form view with specific label_field', function (assert) {
+        assert.expect(9);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<div class="oe_button_box" name="button_box">' +
+                            '<button class="oe_stat_button" name="items"  type="object" icon="fa-gear">' +
+                                '<field string="Useful stat button" name="int_field" widget="statinfo" ' +
+                                        'options="{\'label_field\': \'foo\'}"/>' +
+                            '</button>' +
+                        '</div>' +
+                        '<group>' +
+                            '<field name="foo" invisible="1"/>' +
+                            '<field name="bar"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info').length, 1,
+            "should have one stat button");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_value').text(),
+            '10', "should have 10 as value");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_text').text(),
+            'yop', "should have 'yop' as text, since it is the value of field foo");
+
+        // switch to edit mode and check the result
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info').length, 1,
+            "should still have one stat button");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_value').text(),
+            '10', "should still have 10 as value");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_text').text(),
+            'yop', "should have 'yop' as text, since it is the value of field foo");
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info').length, 1,
+            "should have one stat button");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_value').text(),
+            '10', "should have 10 as value");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_text').text(),
+            'yop', "should have 'yop' as text, since it is the value of field foo");
+
+        form.destroy();
+    });
+
+    QUnit.test('statinfo widget in form view with no label', function (assert) {
+        assert.expect(9);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<div class="oe_button_box" name="button_box">' +
+                            '<button class="oe_stat_button" name="items"  type="object" icon="fa-gear">' +
+                                '<field string="Useful stat button" name="int_field" widget="statinfo" ' +
+                                        'options="{\'nolabel\': \'true\'}"/>' +
+                            '</button>' +
+                        '</div>' +
+                        '<group>' +
+                            '<field name="foo" invisible="1"/>' +
+                            '<field name="bar"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info').length, 1,
+            "should have one stat button");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_value').text(),
+            '10', "should have 10 as value");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_text').text(),
+            '', "should not have any label");
+
+        // switch to edit mode and check the result
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info').length, 1,
+            "should still have one stat button");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_value').text(),
+            '10', "should still have 10 as value");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_text').text(),
+            '', "should not have any label");
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info').length, 1,
+            "should have one stat button");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_value').text(),
+            '10', "should have 10 as value");
+        assert.strictEqual(form.$('.oe_stat_button .o_form_field.o_stat_info .o_stat_text').text(),
+            '', "should not have any label");
+
+        form.destroy();
+    });
+
+
     QUnit.module('FieldDomain');
 
     QUnit.test('basic domain field usage is ok', function (assert) {
