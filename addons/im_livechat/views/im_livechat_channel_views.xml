@@ -31,6 +31,7 @@
                     <field name="are_you_inside"/>
                     <field name="user_ids"/>
                     <field name="nbr_channel"/>
+                    <field name="rating_percentage_satisfaction"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -46,6 +47,16 @@
                                             <br/>
                                             <i class="fa fa-comments"></i>
                                             <t t-esc="record.nbr_channel.raw_value"/> Sessions
+                                            <div>
+                                                <t t-if="record.rating_percentage_satisfaction.raw_value &gt; 0">
+                                                    <a type="action" name="%(rating_rating_action_view_livechat_rating)d">
+                                                        <i class="fa fa-smile-o text-success" t-if="record.rating_percentage_satisfaction.raw_value &gt;= 70" title="Rating: Great"/>
+                                                        <i class="fa fa-meh-o text-warning" t-if="record.rating_percentage_satisfaction.raw_value &gt; 30 and record.rating_percentage_satisfaction.raw_value &lt; 70" title="Rating: Okay"/>
+                                                        <i class="fa fa-frown-o text-danger" t-if="record.rating_percentage_satisfaction.raw_value &lt;= 30" title="Rating: Bad"/>
+                                                       <t t-esc="record.rating_percentage_satisfaction.raw_value"/>%
+                                                   </a>
+                                                </t>
+                                            </div>
                                         </p>
                                     </div>
                                     <div class="o_kanban_button">
@@ -237,6 +248,12 @@
             action="mail_channel_action"
             groups="im_livechat_group_user"
             sequence="1"/>
+
+        <menuitem id="rating_rating_menu_livechat"
+            name="Customer Ratings"
+            action="rating_rating_action_livechat_report"
+            parent="menu_reporting_livechat"
+            sequence="40"/>
 
         <menuitem
             id="livechat_config"
