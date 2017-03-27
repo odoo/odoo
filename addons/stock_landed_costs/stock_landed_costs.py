@@ -101,6 +101,7 @@ class stock_landed_cost(osv.osv):
         if context is None:
             context = {}
         ctx = context.copy()
+        ctx['recompute'] = False
         ctx['check_move_validity'] = False
         base_line = {
             'name': line.name,
@@ -120,7 +121,7 @@ class stock_landed_cost(osv.osv):
             credit_line['debit'] = -diff
         aml_obj.create(cr, uid, debit_line, context=ctx)
         aml_obj.create(cr, uid, credit_line, context=ctx)
-        
+
         #Create account move lines for quants already out of stock
         if qty_out > 0:
             debit_line = dict(base_line,
@@ -161,8 +162,6 @@ class stock_landed_cost(osv.osv):
                     credit_line['debit'] = -diff
                 aml_obj.create(cr, uid, debit_line, context=ctx)
                 aml_obj.create(cr, uid, credit_line, context=ctx)
-
-        self.pool.get('account.move').assert_balanced(cr, uid, [move_id], context=context)
         return True
 
     def _create_account_move(self, cr, uid, cost, context=None):
@@ -251,6 +250,8 @@ class stock_landed_cost(osv.osv):
                     if quant.location_id.usage != 'internal':
                         qty_out += quant.qty
                 self._create_accounting_entries(cr, uid, line, move_id, qty_out, context=context)
+            self.recompute(cr, uid, context=context)
+            self.pool.get('account.move').assert_balanced(cr, uid, [move_id], context=context)
             self.write(cr, uid, cost.id, {'state': 'done', 'account_move_id': move_id}, context=context)
             self.pool.get('account.move').post(cr, uid, [move_id], context=context)
         return True
