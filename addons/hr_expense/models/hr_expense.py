@@ -511,14 +511,14 @@ class HrExpenseSheet(models.Model):
         if any(not sheet.journal_id for sheet in self):
             raise UserError(_("Expenses must have an expense journal specified to generate accounting entries."))
 
-        res = self.mapped('expense_line_ids')\
-            .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.user.company_id.currency_id).rounding))\
-            .action_move_create()
+        expense_line_ids = self.mapped('expense_line_ids')\
+            .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.user.company_id.currency_id).rounding))
+        res = expense_line_ids.action_move_create()
 
         if not self.accounting_date:
             self.accounting_date = self.account_move_id.date
 
-        if self.payment_mode=='own_account':
+        if self.payment_mode == 'own_account' and expense_line_ids:
             self.write({'state': 'post'})
         else:
             self.write({'state': 'done'})
