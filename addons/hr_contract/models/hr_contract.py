@@ -13,11 +13,12 @@ class Employee(models.Model):
     _inherit = "hr.employee"
 
     manager = fields.Boolean(string='Is a Manager')
-    medic_exam = fields.Date(string='Medical Examination Date')
-    place_of_birth = fields.Char('Place of Birth')
-    children = fields.Integer(string='Number of Children')
-    vehicle = fields.Char(string='Company Vehicle')
-    vehicle_distance = fields.Integer(string='Home-Work Dist.', help="In kilometers")
+    medic_exam = fields.Date(string='Medical Examination Date', groups="hr.group_hr_user")
+    place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user")
+    children = fields.Integer(string='Number of Children', groups="hr.group_hr_user")
+    vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
+    vehicle_distance = fields.Integer(
+        string='Home-Work Dist.', help="In kilometers", groups="hr.group_hr_user")
     contract_ids = fields.One2many('hr.contract', 'employee_id', string='Contracts')
     contract_id = fields.Many2one('hr.contract', compute='_compute_contract_id', string='Current Contract', help='Latest contract of the employee')
     contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contracts')
