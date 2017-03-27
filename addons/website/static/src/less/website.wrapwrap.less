@@ -179,9 +179,15 @@ hr {
 // HEADER NAV BAR
 .navbar.navbar-static-top {
     margin-bottom: 0;
-    ul.nav > li.divider {
-        .o-w-fill-navbar();
-        border-right: 1px solid @navbar-default-link-disabled-color;
+    ul.nav > li {
+        &.divider {
+            .o-w-fill-navbar();
+            border-right: 1px solid @navbar-default-link-disabled-color;
+        }
+
+        &.active + .divider {
+            visibility: hidden;
+        }
     }
 }
 ul.nav-stacked > li > a {
