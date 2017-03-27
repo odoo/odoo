@@ -54,7 +54,7 @@
                         </div>
                         <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" options="{'no_create_edit': True}" groups="hr.group_hr_user"/>
                         <notebook>
-                            <page name="public" string="Public Information">
+                            <page name="public" string="Work Information">
                                 <group>
                                     <group string="Contact Information">
                                         <field name="address_id"
@@ -75,7 +75,7 @@
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
                             </page>
-                            <page name="personal_information" string="Personal Information" groups="hr.group_hr_user">
+                            <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
                                 <group>
                                     <group string="Citizenship &amp; Other Information">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
