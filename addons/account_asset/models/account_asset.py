@@ -285,8 +285,7 @@ class AccountAssetAsset(models.Model):
             dummy, tracking_value_ids = asset._message_track(tracked_fields, dict.fromkeys(fields))
             asset.message_post(subject=_('Asset created'), tracking_value_ids=tracking_value_ids)
 
-    @api.multi
-    def set_to_close(self):
+    def _get_disposal_moves(self):
         move_ids = []
         for asset in self:
             unposted_depreciation_line_ids = asset.depreciation_line_ids.filtered(lambda x: not x.move_check)
@@ -318,6 +317,12 @@ class AccountAssetAsset(models.Model):
                 if changes:
                     asset.message_post(subject=_('Asset sold or disposed. Accounting entry awaiting for validation.'), tracking_value_ids=tracking_value_ids)
                 move_ids += asset.depreciation_line_ids[-1].create_move(post_move=False)
+
+        return move_ids
+
+    @api.multi
+    def set_to_close(self):
+        move_ids = self._get_disposal_moves()
         if move_ids:
             name = _('Disposal Move')
             view_mode = 'form'
