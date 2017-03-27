@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.org_chart</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <div id="o_employee_main" position="after">
+                <div id="o_employee_right">
+                    <h4 class="o_org_chart_title mb16 mt0">Organization Chart</h4>
+                    <field name="child_ids" widget="hr_org_chart"/>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>
