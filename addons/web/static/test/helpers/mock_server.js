@@ -130,7 +130,13 @@ var MockServer = Class.extend({
                 continue;
             }
             if (!(fieldName in record)) {
-                record[fieldName] = model.fields[fieldName].default || false;
+                if ('default' in model.fields[fieldName]) {
+                    record[fieldName] = model.fields[fieldName].default;
+                } else if (_.contains(['one2many', 'many2many'], model.fields[fieldName].type)) {
+                    record[fieldName] = [];
+                } else {
+                    record[fieldName] = false;
+                }
             }
         }
     },
