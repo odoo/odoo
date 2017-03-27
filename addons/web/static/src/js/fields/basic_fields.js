@@ -1390,27 +1390,55 @@ var StatInfo = AbstractField.extend({
 var FieldPercentPie = AbstractField.extend({
     template: 'FieldPercentPie',
     supportedFieldTypes: ['integer'],
+
+    /**
+     * Register some useful references for later use throughout the widget.
+     *
+     * @override
+     */
     start: function () {
-        this.$left_mask = this.$('.o_mask').first();
-        this.$right_mask = this.$('.o_mask').last();
-        this.$pie_value = this.$('.o_pie_value');
+        this.$leftMask = this.$('.o_mask').first();
+        this.$rightMask = this.$('.o_mask').last();
+        this.$pieValue = this.$('.o_pie_value');
         return this._super();
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * PercentPie widgets are always set since they basically only display info.
+     *
+     * @override
+     */
+    isSet: function () {
+        return true;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * This widget template needs javascript to apply the transformation
+     * associated with the rotation of the pie chart.
+     *
+     * @override
+     * @private
+     */
     _render: function () {
         var value = this.value || 0;
         var degValue = 360*value/100;
 
-        this.$right_mask.toggleClass('o_full', degValue >= 180);
+        this.$rightMask.toggleClass('o_full', degValue >= 180);
 
         var leftDeg = 'rotate(' + ((degValue < 180)? 180 : degValue) + 'deg)';
         var rightDeg = 'rotate(' + ((degValue < 180)? degValue : 0) + 'deg)';
-        this.$left_mask.css({transform: leftDeg, msTransform: leftDeg, mozTransform: leftDeg, webkitTransform: leftDeg});
-        this.$right_mask.css({transform: rightDeg, msTransform: rightDeg, mozTransform: rightDeg, webkitTransform: rightDeg});
+        this.$leftMask.css({transform: leftDeg, msTransform: leftDeg, mozTransform: leftDeg, webkitTransform: leftDeg});
+        this.$rightMask.css({transform: rightDeg, msTransform: rightDeg, mozTransform: rightDeg, webkitTransform: rightDeg});
 
-        this.$pie_value.html(Math.round(value) + '%');
-    },
-    isSet: function () {
-        return true;
+        this.$pieValue.html(Math.round(value) + '%');
     },
 });
 
