@@ -143,17 +143,6 @@ function formatFloatTime(value) {
 }
 
 /**
- * Returns a string representing an ID.  If the value is false, then we
- * return an empty string.
- *
- * @param {integer|false} value
- * @returns {string}
- */
-function formatID(value) {
-    return value ? value.toString() : '';
-}
-
-/**
  * Returns a string representing an integer.  If the value is false, then we
  * return an empty string.
  *
@@ -390,7 +379,6 @@ return {
         float: formatFloat,
         float_time: formatFloatTime,
         html: _.identity, // todo
-        id: formatID,
         integer: formatInteger,
         many2many: formatMany2Many,
         many2one: formatMany2one,
@@ -409,7 +397,6 @@ return {
         float: parseFloat,
         float_time: parseFloatTime,
         html: _.identity, // todo
-        id: _.identity,
         integer: parseInteger,
         many2many: _.identity, // todo
         many2one: parseMany2one,

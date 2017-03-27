@@ -40,7 +40,6 @@ registry
     .add('label_selection', basic_fields.LabelSelection)
     .add('state_selection', basic_fields.StateSelectionWidget)
     .add('boolean_button', basic_fields.FieldBooleanButton)
-    .add('id', basic_fields.FieldID)
     .add('statinfo', basic_fields.StatInfo)
     .add('percentpie', basic_fields.FieldPercentPie)
     .add('float_time', basic_fields.FieldFloatTime)

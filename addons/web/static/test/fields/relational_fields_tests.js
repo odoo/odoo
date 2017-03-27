@@ -2173,6 +2173,83 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many field with virtual ids', function (assert) {
+        assert.expect(11);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<notebook>' +
+                                '<page>' +
+                                    '<field name="p" mode="kanban">' +
+                                        '<kanban>' +
+                                            '<templates>' +
+                                                '<t t-name="kanban-box">' +
+                                                    '<div class="oe_kanban_details">' +
+                                                        '<div class="o_test_id">' +
+                                                            '<field name="id"/>' +
+                                                        '</div>' +
+                                                        '<div class="o_test_foo">' +
+                                                            '<field name="foo"/>' +
+                                                        '</div>' +
+                                                    '</div>' +
+                                                '</t>' +
+                                            '</templates>' +
+                                        '</kanban>' +
+                                    '</field>' +
+                                '</page>' +
+                            '</notebook>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form string="Associated partners">' +
+                                        '<field name="foo"/>' +
+                                      '</form>',
+            },
+            res_id: 4,
+        });
+
+        assert.strictEqual(form.$('.o_form_field .o_kanban_view').length, 1,
+            "should have one inner kanban view for the one2many field");
+        assert.strictEqual(form.$('.o_form_field .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)').length, 0,
+            "should not have kanban records yet");
+
+        // // switch to edit mode and create a new kanban record
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field .o-kanban-button-new').click();
+
+        // save & close the modal
+        assert.strictEqual($('.modal-content input.o_form_field').val(), 'My little Foo Value',
+            "should already have the default value for field foo");
+        $('.modal-content .btn-primary').first().click();
+
+        assert.strictEqual(form.$('.o_form_field .o_kanban_view').length, 1,
+            "should have one inner kanban view for the one2many field");
+        assert.strictEqual(form.$('.o_form_field .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)').length, 1,
+            "should now have one kanban record");
+        assert.strictEqual(form.$('.o_form_field .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_id').text(),
+            '', "should not have a value for the id field");
+        assert.strictEqual(form.$('.o_form_field .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_foo').text(),
+            'My little Foo Value', "should have a value for the foo field");
+
+        // save the view to force a create of the new record in the one2many
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_form_field .o_kanban_view').length, 1,
+            "should have one inner kanban view for the one2many field");
+        assert.strictEqual(form.$('.o_form_field .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)').length, 1,
+            "should now have one kanban record");
+        assert.notEqual(form.$('.o_form_field .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_id').text(),
+            '', "should now have a value for the id field");
+        assert.strictEqual(form.$('.o_form_field .o_kanban_view .o_kanban_record:not(.o_kanban_ghost) .o_test_foo').text(),
+            'My little Foo Value', "should still have a value for the foo field");
+
+        form.destroy();
+    });
 
     QUnit.module('FieldMany2Many');
 

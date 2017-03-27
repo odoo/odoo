@@ -219,13 +219,6 @@ return core.Class.extend({
         var doc = $.parseXML(fields_view.arch).documentElement;
         fields_view.arch = utils.xml_to_json(doc, (doc.nodeName.toLowerCase() !== 'kanban'));
 
-        // Special case for id's
-        if ('id' in fields_view.fields) {
-            var id_field = fields_view.fields.id;
-            id_field.original_type = id_field.type;
-            id_field.type = 'id';
-        }
-
         // Process inner views (x2manys)
         _.each(fields_view.fields, function(field) {
             _.each(field.views || {}, function(view) {
