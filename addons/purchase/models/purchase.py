@@ -587,8 +587,8 @@ class PurchaseOrderLine(models.Model):
     invoice_lines = fields.One2many('account.invoice.line', 'purchase_line_id', string="Bill Lines", readonly=True, copy=False)
 
     # Replace by invoiced Qty
-    qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty", store=True)
-    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty", store=True)
+    qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty", digits=dp.get_precision('Product Unit of Measure'), store=True)
+    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty", digits=dp.get_precision('Product Unit of Measure'), store=True)
 
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', string='Partner', readonly=True, store=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
