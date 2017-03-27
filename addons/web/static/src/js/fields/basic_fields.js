@@ -1240,14 +1240,6 @@ var FieldBooleanButton = AbstractField.extend({
     },
 });
 
-var FieldID = InputField.extend({
-    supportedFieldTypes: ['id'],
-    init: function () {
-        this._super.apply(this, arguments);
-        this.mode = 'readonly';
-    },
-});
-
 var StatInfo = AbstractField.extend({
     supportedFieldTypes: ['integer', 'float'],
     _render: function () {
@@ -1902,7 +1894,6 @@ return {
     FieldFloat: FieldFloat,
     FieldFloatTime: FieldFloatTime,
     FieldHtml: FieldHtml,
-    FieldID: FieldID,
     FieldInteger: FieldInteger,
     FieldMonetary: FieldMonetary,
     FieldPercentPie: FieldPercentPie,
