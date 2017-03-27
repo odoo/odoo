@@ -518,7 +518,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     },
     do_load_state: function(state) {
         var stateChanged = false;
-        if ('id' in state && state.id !== this.env.currentId) {
+        if ('id' in state && state.id !== '' && state.id !== this.env.currentId) {
             this.env.currentId = state.id;
             stateChanged = true;
         }
