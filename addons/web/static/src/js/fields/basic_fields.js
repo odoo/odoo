@@ -1345,6 +1345,32 @@ var FieldBooleanButton = AbstractField.extend({
 
 var StatInfo = AbstractField.extend({
     supportedFieldTypes: ['integer', 'float'],
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * StatInfo widgets are always set since they basically only display info.
+     *
+     * @override
+     */
+    isSet: function () {
+        return true;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Renders the field value using the StatInfo template. The text part of the
+     * widget is either the string attribute of this node in the view or the
+     * label of the field itself if no string attribute is given.
+     *
+     * @override
+     * @private
+     */
     _render: function () {
         var options = {
             value: this.value || 0,
@@ -1358,9 +1384,6 @@ var StatInfo = AbstractField.extend({
         }
         this.$el.html(qweb.render("StatInfo", options));
         this.$el.addClass('o_stat_info');
-    },
-    isSet: function () {
-        return true;
     },
 });
 
