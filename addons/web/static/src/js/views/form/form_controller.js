@@ -6,7 +6,6 @@ var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Sidebar = require('web.Sidebar');
-var Context = require('web.Context');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -14,7 +13,7 @@ var qweb = core.qweb;
 var FormController = BasicController.extend({
     // className: "o_form_view",
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
-        add_one2many_record: '_onAddOne2ManyRecord',
+        open_one2many_record: '_onOpenOne2ManyRecord',
         bounce_edit: '_onBounceEdit',
         button_clicked: '_onButtonClicked',
         open_record: '_onOpenRecord',
@@ -376,7 +375,7 @@ var FormController = BasicController.extend({
      * @param {Object} state
      * @returns {Deferred}
      */
-    _update: function (state) {
+    _update: function () {
         var title = this.getTitle();
         this.set('title', title);
         this._updateButtons();
@@ -410,27 +409,6 @@ var FormController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onAddOne2ManyRecord: function (event) {
-        var field = event.data.field;
-        var attrs = event.data.attrs;
-        new dialogs.FormViewDialog(this, {
-            res_model: field.relation,
-            shouldSaveLocally: true,
-            domain: event.data.domain,
-            context: event.data.context,
-            on_save: event.data.on_save,
-            title: _t('Create: ') + field.string,
-            initial_view: 'form',
-            fields_view: attrs.views ? attrs.views.form : undefined,
-            form_view_options: {'not_interactible_on_create': true},
-            model: this.model,
-            parentID: this.handle,
-        }).open();
-    },
-    /**
      * Bounce the 'Edit' button.
      *
      * @private
@@ -438,6 +416,43 @@ var FormController = BasicController.extend({
     _onBounceEdit: function () {
         if (this.$buttons) {
             this.$buttons.find('.o_form_button_edit').openerpBounce();
+        }
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onButtonClicked: function (event) {
+        // stop the event's propagation as a form controller might have other
+        // form controllers in its descendants (e.g. in a FormViewDialog)
+        event.stopPropagation();
+        var self = this;
+        var def;
+
+        var attrs = event.data.attrs;
+        if (attrs.confirm) {
+            var d = $.Deferred();
+            Dialog.confirm(this, attrs.confirm, { confirm_callback: function () {
+                self._callButtonAction(attrs, event.data.record);
+            }}).on("closed", null, function () {
+                d.resolve();
+            });
+            def = d.promise();
+        } else if (attrs.special) {
+            def = this._callButtonAction(attrs, event.data.record);
+        } else {
+            def = this.saveRecord().then(function () {
+                return self._callButtonAction(attrs, event.data.record);
+            });
+        }
+        def.then(function () {
+            self.reload();
+        });
+
+        if (event.data.show_wow) {
+            def.then(function () {
+                self.show_wow();
+            });
         }
     },
     /**
@@ -489,75 +504,74 @@ var FormController = BasicController.extend({
         this._super.apply(this, arguments);
     },
     /**
+     * Opens a one2many record (potentially new) in a dialog. This handler is
+     * o2m specific as in this case, the changes done on the related record
+     * shouldn't be saved in DB when the user clicks on 'Save' in the dialog,
+     * but later on when he clicks on 'Save' in the main form view. For this to
+     * work correctly, the main model and the local id of the opened record must
+     * be given to the dialog, which will update the list of fields of the
+     * record with the one of the form view, and this list of fields will be
+     * reset when the related record is saved (or when the dialog is closed).
+     *
      * @private
      * @param {OdooEvent} event
      */
-    _onButtonClicked: function (event) {
-        // stop the event's propagation as a form controller might have other
-        // form controllers in its descendants (e.g. in a FormViewDialog)
-        event.stopPropagation();
+    _onOpenOne2ManyRecord: function (event) {
         var self = this;
-        var def;
-
-        var attrs = event.data.attrs;
-        if (attrs.confirm) {
-            var d = $.Deferred();
-            Dialog.confirm(this, attrs.confirm, { confirm_callback: function () {
-                self._callButtonAction(attrs, event.data.record);
-            }}).on("closed", null, function () {
-                d.resolve();
-            });
-            def = d.promise();
-        } else if (attrs.special) {
-            def = this._callButtonAction(attrs, event.data.record);
-        } else {
-            def = this.saveRecord().then(function () {
-                return self._callButtonAction(attrs, event.data.record);
-            });
+        var data = event.data;
+        var record;
+        if (data.id) {
+            record = this.model.get(data.id, {raw: true});
         }
-        def.then(function () {
-            self.reload();
+        // reset the list of fields when the user clicks on 'Save' in the modal
+        var on_saved = function (record) {
+            self.model.setFieldProps(record.id, data.viewInfo);
+            data.on_saved(record);
+        };
+
+        var dialog = new dialogs.FormViewDialog(this, {
+            context: data.context,
+            domain: data.domain,
+            fields_view: data.fields_view,
+            model: this.model,
+            on_saved: on_saved,
+            parentID: this.handle,
+            readonly: data.readonly,
+            recordID: record && record.id,
+            res_id: record && record.res_id,
+            res_model: data.field.relation,
+            shouldSaveLocally: true,
+            title: (record ? _t("Open:") : _t("Create")) + data.field.string,
+        }).open();
+
+        // reset the list of fields when the user closes the modal (this is
+        // necessary if he didn't save, but this is not sufficient if he saved
+        // because in this case, a (re-)rendering of the related record is
+        // done in the kanban/list o2m field before the dialog is closed)
+        dialog.on('closed', this, function () {
+            if (record) {
+                this.model.setFieldProps(record.id, data.viewInfo);
+            }
         });
-
-        if (event.data.show_wow) {
-            def.then(function () {
-                self.show_wow();
-            });
-        }
     },
     /**
-     * Open a record in a form view dialog
+     * Open an existing record in a form view dialog
      *
      * @private
      * @param {OdooEvent} event
      */
     _onOpenRecord: function (event) {
         var self = this;
-        var record = this.model.get(event.data.id);
-        var model = record.model;
-        var res_id = record.res_id;
-        var fieldsViewDef;
-        if (event.data.form_view) {
-            fieldsViewDef = $.when({form: event.data.form_view});
-        } else {
-            fieldsViewDef = this.loadViews(model, new Context(event.data.context), [[null, 'form']], {});
-        }
-        fieldsViewDef.then(function (views) {
-            new dialogs.FormViewDialog(self, {
-                res_model: model,
-                res_id: res_id,
-                fields_view: views.form,
-                context: record.getContext(),
-                readonly: event.data.readonly,
-                title: _t("Open: ") + event.data.string,
-                on_save: event.data.on_save,
-                on_saved: event.data.on_saved,
-                model: self.model,
-                parentID: self.handle,
-                recordID: record.id,
-                shouldSaveLocally: event.data.shouldSaveLocally,
-            }).open();
-        });
+        var record = this.model.get(event.data.id, {raw: true});
+        new dialogs.FormViewDialog(self, {
+            context: event.data.context,
+            fields_view: event.data.fields_view,
+            on_saved: event.data.on_saved,
+            readonly: event.data.readonly,
+            res_id: record.res_id,
+            res_model: record.model,
+            title: _t("Open: ") + event.data.string,
+        }).open();
     },
     /**
      * This method is called when someone tries to sort a column, most likely

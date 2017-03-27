@@ -704,19 +704,13 @@ var FieldX2Many = AbstractField.extend({
         }
     },
     /**
-     * Intercepts the 'open_record' event to edit its data and lets it bubble up
-     * to the form view.
+     * Called when the user clicks on a relational record.
      *
+     * @abstract
      * @private
      */
-    _onOpenRecord: function (event) {
-        _.extend(event.data, {
-            context: this.record.getContext({fieldName: this.name}),
-            domain: this.record.getDomain({fieldName: this.name}),
-            form_view: this.attrs.views && this.attrs.views.form,
-            readonly: this.mode === 'readonly',
-            string: this.string,
-        });
+    _onOpenRecord: function () {
+        // to implement
     },
     /**
      * Adds field name information to the event, so that the view upstream is
@@ -780,6 +774,19 @@ var FieldOne2Many = FieldX2Many.extend({
             this._super.apply(this, arguments);
         }
     },
+    /**
+     * @private
+     * @param {Object} params
+     */
+    _openFormDialog: function (params) {
+        this.trigger_up('open_one2many_record', _.extend(params, {
+            domain: this.record.getDomain({fieldName: this.name}),
+            context: this.record.getContext({fieldName: this.name}),
+            field: this.field,
+            fields_view: this.attrs.views && this.attrs.views.form,
+            viewInfo: this.view,
+        }));
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -804,17 +811,11 @@ var FieldOne2Many = FieldX2Many.extend({
                 position: this.editable,
             });
         } else {
-            this.trigger_up('add_one2many_record', {
-                domain: this.record.getDomain({fieldName: this.name}),
-                context: this.record.getContext({fieldName: this.name}),
-                field: this.field,
-                attrs: this.attrs,
-                on_save: function (record) {
-                    this._setValue({
-                        operation: 'ADD',
-                        id: record.id
-                    });
-                }.bind(this),
+            var self = this;
+            this._openFormDialog({
+                on_saved: function (record) {
+                    self._setValue({ operation: 'ADD', id: record.id });
+                },
             });
         }
     },
@@ -825,19 +826,18 @@ var FieldOne2Many = FieldX2Many.extend({
      * this change is saved in DB when the user clicks on 'Save' in the main
      * form view.
      *
-     * @override
      * @private
-     * @param {OdooEvent}
+     * @param {OdooEvent} event
      */
     _onOpenRecord: function (event) {
-        var self = this;
-        _.extend(event.data, {
-            shouldSaveLocally: true,
-            on_saved: function () {
-                self._setValue({ operation: 'NOOP' });
-            },
+        // we don't want interference with the components upstream.
+        event.stopPropagation();
+
+        this._openFormDialog({
+            id: event.data.id,
+            on_saved: this._setValue.bind(this, { operation: 'NOOP' }),
+            readonly: this.mode === 'readonly',
         });
-        this._super.apply(this, arguments);
     },
 });
 
@@ -864,7 +864,6 @@ var FieldMany2Many = FieldX2Many.extend({
      *
      * @override
      * @private
-     * @param {OdooEvent}
      */
     _onAddRecord: function () {
         var self = this;
@@ -893,17 +892,21 @@ var FieldMany2Many = FieldX2Many.extend({
         }).open();
     },
     /**
-     * Overrides the handler to reload the field when the subrecord is saved.
+     * Intercepts the 'open_record' event to edit its data and lets it bubble up
+     * to the form view.
      *
-     * @override
      * @private
-     * @param {OdooEvent}
+     * @param {OdooEvent} event
      */
     _onOpenRecord: function (event) {
         _.extend(event.data, {
+            context: this.record.getContext({fieldName: this.name}),
+            domain: this.record.getDomain({fieldName: this.name}),
+            fields_view: this.attrs.views && this.attrs.views.form,
             on_saved: this.trigger_up.bind(this, 'reload', {db_id: event.data.id}),
+            readonly: this.mode === 'readonly',
+            string: this.string,
         });
-        this._super.apply(this, arguments);
     },
 });
 

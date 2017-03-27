@@ -924,7 +924,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many kanban: edition', function (assert) {
-        assert.expect(13);
+        assert.expect(14);
 
         this.data.partner.records[0].p = [2];
         var form = createView({
@@ -934,12 +934,15 @@ QUnit.module('relational_fields', {
             arch: '<form string="Partners">' +
                     '<field name="p">' +
                         '<kanban>' +
+                            // color will be in the kanban but not in the form
+                            '<field name="color"/>' +
                             '<field name="display_name"/>' +
                             '<templates>' +
                                 '<t t-name="kanban-box">' +
                                     '<div class="oe_kanban_global_click">' +
                                         '<a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right delete_icon"/>' +
                                         '<span><t t-esc="record.display_name.value"/></span>' +
+                                        '<span><t t-esc="record.color.value"/></span>' +
                                     '</div>' +
                                 '</t>' +
                             '</templates>' +
@@ -961,8 +964,10 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 1,
             'should contain 1 record');
-        assert.strictEqual(form.$('.o_kanban_record span').text(), 'second record',
+        assert.strictEqual(form.$('.o_kanban_record span:first').text(), 'second record',
             'display_name of subrecord should be the one in DB');
+        assert.strictEqual(form.$('.o_kanban_record span:nth(1)').text(), 'Red',
+            'color of subrecord should be the one in DB');
         assert.ok(form.$('.o_kanban_view .delete_icon').length,
             'delete icon should be visible in edit');
         assert.ok(form.$('.o_form_field_one2many .o-kanban-button-new').length,
@@ -973,7 +978,7 @@ QUnit.module('relational_fields', {
 
         $('.modal .o_form_view .o_form_input').val('new name').trigger('input');
         $('.modal .modal-footer .btn-primary').click(); // save
-        assert.strictEqual(form.$('.o_kanban_record span').text(), 'new name',
+        assert.strictEqual(form.$('.o_kanban_record span:first').text(), 'new name',
             'value of subrecord should have been updated');
 
         // create a new subrecord
@@ -1002,7 +1007,7 @@ QUnit.module('relational_fields', {
         form.$('.o_kanban_view .delete_icon:first()').click();
         assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 1,
             'should contain 1 records');
-        assert.strictEqual(form.$('.o_kanban_record span').text(), 'new subrecord 3',
+        assert.strictEqual(form.$('.o_kanban_record span:first').text(), 'new subrecord 3',
             'the remaining subrecord should be "new subrecord 3"');
         form.destroy();
     });
