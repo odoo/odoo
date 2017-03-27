@@ -18,3 +18,10 @@ class Rating(models.Model):
             self.res_name = ('%s / %s') % (current_object.livechat_channel_id.name, current_object.id)
         else:
             super(Rating, self)._compute_res_name()
+
+    def action_open_rated_object(self):
+        action = super(Rating, self).action_open_rated_object()
+        if self.res_model == 'mail.channel':
+            view_id = self.env.ref('im_livechat.mail_channel_view_form').id
+            action['views'] = [[view_id, 'form']]
+        return action
