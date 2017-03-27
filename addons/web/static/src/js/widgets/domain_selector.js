@@ -383,7 +383,7 @@ var DomainLeaf = DomainNode.extend({
                 this.displayValue = this.value;
                 try {
                     var f = this.fieldSelector.selectedField;
-                    if (f && !f.relation) { // TODO in this case, the value should be m2o input, etc...
+                    if (f && !f.relation && !_.isArray(this.value)) {
                         this.displayValue = field_utils.format[f.type](this.value, f);
                     }
                 } catch (err) {/**/}
@@ -399,7 +399,7 @@ var DomainLeaf = DomainNode.extend({
                     this.valueWidget = new (this.fieldSelector.selectedField.type === "datetime" ? datepicker.DateTimeWidget : datepicker.DateWidget)(this);
                     wDefs.push(this.valueWidget.appendTo("<div/>").then((function () {
                         this.valueWidget.$el.addClass("o_domain_leaf_value_input");
-                        this.valueWidget.set_value(this.value);
+                        this.valueWidget.set_value(moment(this.value));
                         this.valueWidget.on("datetime_changed", this, function () {
                             this.onValueChange(this.valueWidget.get_value());
                         });
@@ -489,11 +489,15 @@ var DomainLeaf = DomainNode.extend({
             }
         } else if (_.contains(["date", "datetime"], this.fieldSelector.selectedField.type)) {
             if (couldNotParse || _.isBoolean(this.value)) {
-                this.value = field_utils.parse[field.type](field_utils.format[field.type](Date.now(), field), field);
+                this.value = field_utils.parse[field.type](field_utils.format[field.type](moment())).toJSON(); // toJSON to get date with server format
+            } else {
+                this.value = this.value.toJSON(); // toJSON to get date with server format
             }
         } else {
             if (_.isBoolean(this.value)) { // Never display "true" or "false" strings from boolean value
                 this.value = "";
+            } else if (_.isObject(this.value) && !_.isArray(this.value)) { // Can be object if parsed to x2x representation
+                this.value = this.value.id || "";
             }
         }
 
