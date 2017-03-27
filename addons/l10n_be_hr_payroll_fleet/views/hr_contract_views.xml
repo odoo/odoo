@@ -21,7 +21,7 @@
                 </div>
             </xpath>
             <xpath expr="//field[@name='car_atn']" position="after">
-                <field name="company_car_total_depreciated_cost" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}"/>
+                <field name="company_car_total_depreciated_cost" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}" groups="base.group_no_one"/>
             </xpath>
             
         </field>

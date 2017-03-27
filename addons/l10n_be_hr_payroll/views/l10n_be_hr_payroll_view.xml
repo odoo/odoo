@@ -28,19 +28,19 @@
                 </div>
             </xpath>
             <xpath expr="//group[@name='advantages']" position="after">
-                <group string="Yearly Advantages">
+                <group string="Yearly Advantages" groups="base.group_no_one">
                     <field name="eco_checks"/>
                     <field name="thirteen_month"/>
                     <field name="double_holidays"/>
                     <field name="group_insurance"/>
                 </group>
                 <group string="Employee Costs" groups="hr.group_hr_manager">
-                    <field name="yearly_cost_before_charges"/>
-                    <field name="social_security_contributions"/>
-                    <field name="warrants_cost"/>
-                    <field name="warrant_value_employee"/>
-                    <field name="ucm_insurance"/>
-                    <field name="meal_voucher_paid_by_employer"/>
+                    <field name="yearly_cost_before_charges" groups="base.group_no_one"/>
+                    <field name="social_security_contributions" groups="base.group_no_one"/>
+                    <field name="warrants_cost" groups="base.group_no_one"/>
+                    <field name="warrant_value_employee" groups="base.group_no_one"/>
+                    <field name="ucm_insurance" groups="base.group_no_one"/>
+                    <field name="meal_voucher_paid_by_employer" groups="base.group_no_one"/>
                     <field name="final_yearly_costs"/>
                     <field name="monthly_yearly_costs"/>
                 </group>
