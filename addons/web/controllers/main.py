@@ -440,7 +440,9 @@ class Home(http.Controller):
         request.uid = request.session.uid
         context = request.env['ir.http'].webclient_rendering_context()
 
-        return request.render('web.webclient_bootstrap', qcontext=context)
+        response = request.render('web.webclient_bootstrap', qcontext=context)
+        response.headers['X-Frame-Options'] = 'DENY'
+        return response
 
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
@@ -473,7 +475,9 @@ class Home(http.Controller):
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
             values['error'] = _("Wrong login/password")
-        return request.render('web.login', values)
+        response = request.render('web.login', values)
+        response.headers['X-Frame-Options'] = 'DENY'
+        return response
 
 
 class WebClient(http.Controller):
