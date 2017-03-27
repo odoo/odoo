@@ -68,12 +68,18 @@ class SaleOrder(models.Model):
         })
         product = self.env['product.product'].with_context(product_context).browse(product_id)
 
+        pu = product.price
+        if order.pricelist_id and order.partner_id:
+            order_line = order._cart_find_product_line(product.id)
+            if order_line:
+                pu = self.env['account.tax']._fix_tax_included_price(order_line._get_display_price(product), product.taxes_id, order_line.tax_id)
+
         return {
             'product_id': product_id,
             'product_uom_qty': qty,
             'order_id': order_id,
             'product_uom': product.uom_id.id,
-            'price_unit': product.price,
+            'price_unit': pu,
         }
 
     @api.multi
@@ -144,10 +150,12 @@ class SaleOrder(models.Model):
             # update line
             values = self._website_product_id_change(self.id, product_id, qty=quantity)
 
-
-
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
-                values['price_unit'] = order_line._get_display_price(order_line.product_id)
+                values['price_unit'] = self.env['account.tax']._fix_tax_included_price(
+                    order_line._get_display_price(order_line.product_id),
+                    order_line.product_id.taxes_id,
+                    order_line.tax_id
+                )
 
             order_line.write(values)
 
