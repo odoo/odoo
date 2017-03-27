@@ -30,9 +30,9 @@ class AccountAssetCategory(models.Model):
     method_number = fields.Integer(string='Number of Depreciations', default=5, help="The number of depreciations needed to depreciate your asset")
     method_period = fields.Integer(string='Period Length', default=1, help="State here the time between 2 depreciations, in months", required=True)
     method_progress_factor = fields.Float('Degressive Factor', default=0.3)
-    method_time = fields.Selection([('number', 'Number of Depreciations'), ('end', 'Ending Date')], string='Time Method', required=True, default='number',
-        help="Choose the method to use to compute the dates and number of depreciation lines.\n"
-           "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+    method_time = fields.Selection([('number', 'Number of Entries'), ('end', 'Ending Date')], string='Time Method', required=True, default='number',
+        help="Choose the method to use to compute the dates and number of entries.\n"
+           "  * Number of Entries: Fix the number of entries and the time between 2 depreciations.\n"
            "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond.")
     method_end = fields.Date('Ending date')
     prorata = fields.Boolean(string='Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first of January')
@@ -92,9 +92,9 @@ class AccountAssetAsset(models.Model):
     method_end = fields.Date(string='Ending Date', readonly=True, states={'draft': [('readonly', False)]})
     method_progress_factor = fields.Float(string='Degressive Factor', readonly=True, default=0.3, states={'draft': [('readonly', False)]})
     value_residual = fields.Float(compute='_amount_residual', method=True, digits=0, string='Residual Value')
-    method_time = fields.Selection([('number', 'Number of Depreciations'), ('end', 'Ending Date')], string='Time Method', required=True, readonly=True, default='number', states={'draft': [('readonly', False)]},
-        help="Choose the method to use to compute the dates and number of depreciation lines.\n"
-             "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+    method_time = fields.Selection([('number', 'Number of Entries'), ('end', 'Ending Date')], string='Time Method', required=True, readonly=True, default='number', states={'draft': [('readonly', False)]},
+        help="Choose the method to use to compute the dates and number of entries.\n"
+             "  * Number of Entries: Fix the number of entries and the time between 2 depreciations.\n"
              "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond.")
     prorata = fields.Boolean(string='Prorata Temporis', readonly=True, states={'draft': [('readonly', False)]},
         help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first January / Start date of fiscal year')
