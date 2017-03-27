@@ -13,6 +13,7 @@ QUnit.module('DomainSelector', {
                 fields: {
                     foo: {string: "Foo", type: "char", searchable: true},
                     bar: {string: "Bar", type: "boolean", searchable: true},
+                    nice_datetime: {string: "Datetime", type: "datetime", searchable: true},
                     product_id: {string: "Product", type: "many2one", relation: "product", searchable: true},
                 },
                 records: [{
@@ -147,6 +148,23 @@ QUnit.module('DomainSelector', {
             "the domain input should contain a domain with 'bar' and 'foo'"
         );
         domainSelector.destroy();
+    });
+
+    QUnit.test("building a domain with a datetime", function (assert) {
+        assert.expect(1);
+
+        var $target = $("#qunit-fixture");
+
+        // Create the domain selector and its mock environment
+        var domainSelector = new DomainSelector(null, "partner", [["nice_datetime", "=", "2017-03-27 15:42:00"]], {
+            readonly: false,
+        });
+        testUtils.addMockEnvironment(domainSelector, {data: this.data});
+        domainSelector.appendTo($target);
+
+        // Check that there is a datepicker to choose the date
+        assert.strictEqual(domainSelector.$(".o_datepicker:visible").length, 1,
+            "there should be a datepicker");
     });
 });
 });
