@@ -12,10 +12,10 @@
             <field name="model">hr.contract</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='wage']" position="before">
+                <xpath expr="//field[@name='type_id']" position="after">
                     <field name="struct_id" required="1"/>
                 </xpath>
-                <xpath expr="//field[@name='wage']" position="after">
+                <xpath expr="//field[@name='type_id']" position="before">
                     <field name="company_id"/>
                 </xpath>
                 <xpath expr="//group[@name='main_info']" position="after">

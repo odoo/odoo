@@ -21,10 +21,8 @@ class HrContract(models.Model):
     public_transport_employee_amount = fields.Float('Paid by the employee (Monthly)')
     public_transport_reimbursed_amount = fields.Float(compute='_compute_public_transport_reimbursed_amount', string='Reimbursed amount')
     others_employee_amount = fields.Float('Reimbursed by the employer (Monthly)')
-    eco_checks = fields.Float('Eco-checks', default=250)
     thirteen_month = fields.Float(compute='_compute_holidays_advantages', string='13th Month')
     double_holidays = fields.Float(compute='_compute_holidays_advantages', string='Double holidays')
-    group_insurance = fields.Float('Group Insurance')
     warrant_value_employee = fields.Float(compute='_compute_warrants_cost', string="Warrant value for the employee")
 
     # Employer costs fields

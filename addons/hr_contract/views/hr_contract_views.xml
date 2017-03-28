@@ -91,20 +91,24 @@
                     <group>
                         <group>
                             <field name="employee_id"/>
+                            <field name="department_id"/>
                             <field name="job_id"/>
                         </group>
                         <group>
-                            <field name="department_id"/>
                             <field name="type_id"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Information" name="information">
+                        <page string="Salary Information" name="information">
                             <group name="main_info">
                                 <group name="salary_and_advantages" string="Salary and Advantages">
                                     <field name="wage"/>
-                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2"/>
+                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2" invisible="1"/>
                                 </group>
+                            </group>
+                        </page>
+                        <page string="Other Information" name="other">
+                            <group>
                                 <group name="duration_group" string="Duration">
                                     <label for="trial_date_start" string="Trial Period Duration"/>
                                     <div>
@@ -118,10 +122,13 @@
                                     <field name="resource_calendar_id"/>
                                 </group>
                             </group>
-                            <separator string="Notes"/>
-                            <field name="notes"/>
+                            <group>
+                                <group string="Notes">
+                                    <field name="notes" nolabel="1"/>
+                                </group>
+                            </group>
                         </page>
-                        <page string="Work Permit">
+                        <page string="Work Permit" groups="base.group_no_one">
                             <group col="4">
                                 <field name="visa_no"/>
                                 <field name="permit_no"/>
