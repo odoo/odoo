@@ -61,6 +61,41 @@
                 </tree>
             </field>
         </record>
+        <record id="view_res_company_kanban" model="ir.ui.view">
+            <field name="name">res.company.kanban</field>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="phone"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="text-center">
+                                    <i class="fa fa-building" aria-hidden="true"></i> <strong><field name="name"/></strong>
+                                </div>
+                                <hr class="mt4 mb4"/>
+                                <div class="row">
+                                    <div t-if="record.email.value" class="col-xs-6 text-center">
+                                        <strong>Email:</strong>
+                                    </div>
+                                    <div t-if="record.phone.value" class="col-xs-6 text-center">
+                                        <strong>Phone</strong>
+                                    </div>
+                                    <div t-if="record.phone.value" class="col-xs-6 text-center">
+                                        <field name="email"/>
+                                    </div>
+                                    <div t-if="record.phone.value" class="col-xs-6 text-center">
+                                        <field name="phone"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         <record id="company_normal_action_tree" model="ir.actions.act_window">
             <field name="name">Companies</field>
             <field name="type">ir.actions.act_window</field>
@@ -74,6 +109,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.company</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="help">Create and manage the companies that will be managed by Odoo from here. Shops or subsidiaries can be created and maintained from here.</field>
         </record>
         <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_users"/>
