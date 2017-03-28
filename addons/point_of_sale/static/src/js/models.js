@@ -821,7 +821,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.trigger('change',this);
         },
         get_unit_price: function(){
-            return round_di(this.price || 0, this.pos.dp['Product Price'])
+            var digits = this.pos.dp['Product Price'];
+            // round and truncate to mimic _sybmbol_set behavior
+            return parseFloat(round_di(this.price || 0, digits).toFixed(digits));
         },
         get_base_price:    function(){
             var rounding = this.pos.currency.rounding;
