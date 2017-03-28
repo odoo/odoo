@@ -44,7 +44,7 @@
                             <group>
                                 <group name="group_general">
                                     <field name="type"/>
-                                    <field name="categ_id" string="Internal Category"/>
+                                    <field name="categ_id" string="Category"/>
                                 </group>
                                 <group name="group_standard_price">
                                     <field name="list_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -440,7 +440,7 @@
             </field>
         </record>
         <record id="product_category_action_form" model="ir.actions.act_window">
-            <field name="name">Product Categories</field>
+            <field name="name">Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.category</field>
             <field name="view_type">form</field>

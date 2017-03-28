@@ -60,7 +60,7 @@
             <group name="email_template_and_project" position="before">
                 <group name="pos" string="Point of Sale">
                     <field name="available_in_pos"/>
-                    <field name="pos_categ_id" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
+                    <field name="pos_categ_id" attrs="{'invisible': [('available_in_pos', '=', False)]}" string="PoS Category"/>
                     <field name="to_weight" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
                 </group>
             </group>
@@ -81,26 +81,14 @@
         action="product_product_action"
         groups="product.group_product_variant"
         sequence="10"/>
+    <menuitem id="menu_product_pos_category"
+        action="point_of_sale.product_pos_category_action"
+        parent="point_of_sale.pos_config_menu_catalog"
+        sequence="15"/>
     <menuitem id="pos_config_menu_action_product_pricelist"
         parent="point_of_sale.pos_config_menu_catalog"
         action="product.product_pricelist_action2"
         groups="product.group_sale_pricelist"
         sequence="20"/>
 
-    <!-- Config > Products sub menus -->
-    <menuitem id="pos_config_menu_action_product_attribute"
-        parent="point_of_sale.pos_config_menu_configuration_product"
-        action="product.attribute_action"
-        groups="product.group_product_variant"
-        sequence="10"/>
-    <menuitem id="pos_config_menu_action_product_attribute_val"
-        parent="point_of_sale.pos_config_menu_configuration_product"
-        action="product.variants_action"
-        groups="product.group_product_variant"
-        sequence="20"/>
-    <menuitem id="pos_config_menu_action_product_category"
-        name="Internal Categories"
-        parent="point_of_sale.pos_config_menu_configuration_product"
-        action="product_category_action"
-        sequence="40"/>
 </odoo>
