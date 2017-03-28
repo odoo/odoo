@@ -1369,6 +1369,9 @@ class Root(object):
         if not "lang" in httprequest.session.context:
             lang = httprequest.accept_languages.best or "en_US"
             lang = babel.core.LOCALE_ALIASES.get(lang, lang).replace('-', '_')
+            lang, sep, region = lang.partition('_')
+            if sep:
+                lang = lang+'_'+region.upper()
             httprequest.session.context["lang"] = lang
 
     def get_request(self, httprequest):
