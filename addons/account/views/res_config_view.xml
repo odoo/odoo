@@ -21,7 +21,6 @@
                     <sheet>
                         <field name="company_id" invisible="1"/>
                         <field name="has_chart_of_accounts" invisible="1"/>
-                        <span attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}">
                             <h2>Fiscal Localization</h2>
                             <div class="row mt16 o_settings_container">
                                 <div class="col-xs-12 col-md-6 o_setting_box">
@@ -33,13 +32,15 @@
                                             Taxes, fiscal positions, chart of accounts &amp; legal statements for your country
                                         </div>
                                         <div class="content-group">
-                                            <div class="row mt16">
-                                                <label string="Package" class="col-md-3 o_light_label"/>
-                                                <field name="chart_template_id" widget="selection"/>
-                                            </div>
-                                            <div>
-                                                <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link" attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}"/>
-                                            </div>
+                                            <span attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}">
+                                                <div class="row mt16">
+                                                    <label string="Package" class="col-md-3 o_light_label"/>
+                                                    <field name="chart_template_id" widget="selection"/>
+                                                </div>
+                                                <div>
+                                                    <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link" attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}"/>
+                                                </div>
+                                            </span>
                                             <div class="row mt16" groups="base.group_no_one">
                                                 <label string="# of digits" class="col-md-3 o_light_label"/>
                                                 <field name="code_digits"/>
@@ -48,7 +49,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </span>
                         <h2>Taxes</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-xs-12 col-md-6 o_setting_box" title="These taxes are set in any new product created.">

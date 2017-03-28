@@ -643,7 +643,7 @@ instead of a single view its ``arch`` field is composed of any number of
     ``inside``
         appends ``xpath``'s body at the end of the matched element
     ``replace``
-        replaces the matched element with the ``xpath``'s body, replacing any `$0` node occurrence
+        replaces the matched element with the ``xpath``'s body, replacing any ``$0`` node occurrence
         in the new body with the original element
     ``before``
         inserts the ``xpath``'s body as a sibling before the matched element

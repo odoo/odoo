@@ -65,7 +65,9 @@ class AuthSignupHome(Home):
             except Exception, e:
                 qcontext['error'] = e.message or e.name
 
-        return request.render('auth_signup.reset_password', qcontext)
+        response = request.render('auth_signup.reset_password', qcontext)
+        response.headers['X-Frame-Options'] = 'DENY'
+        return response
 
     def get_auth_signup_config(self):
         """retrieve the module config (which features are enabled) for the login page"""

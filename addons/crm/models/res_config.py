@@ -11,7 +11,8 @@ class CRMSettings(models.TransientModel):
         help="Odoo will generate an email alias based on the sales channel name")
     alias_prefix = fields.Char('Default Alias Name for Leads')
     alias_domain = fields.Char('Alias Domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
-    default_generate_lead_from_alias = fields.Boolean()
+    # TDE TODO: as it is not linked to ir.values anymore, it should be renamed, but not in stable
+    default_generate_lead_from_alias = fields.Boolean('Manual Assignation of Emails')
     group_use_lead = fields.Boolean(string="Leads", implied_group='crm.group_use_lead')
     module_crm_voip = fields.Boolean("Asterisk (VoIP)")
 
@@ -39,6 +40,26 @@ class CRMSettings(models.TransientModel):
         if self.env['res.users'].has_group('base.group_erp_manager'):
             IrValues = IrValues.sudo()
         IrValues.set_default('sale.config.settings', 'generate_sales_team_alias', self.generate_sales_team_alias)
+
+    @api.model
+    def get_default_default_generate_lead_from_alias(self, fields):
+        return {
+            'default_generate_lead_from_alias': self.env['ir.config_parameter'].sudo().get_param('sale_config_settings.default_generate_lead_from_alias')
+        }
+
+    @api.multi
+    def set_default_default_generate_lead_from_alias(self):
+        self.env['ir.config_parameter'].sudo().set_param('sale_config_settings.default_generate_lead_from_alias', self.default_generate_lead_from_alias)
+
+    @api.onchange('group_use_lead')
+    def _onchange_group_use_lead(self):
+        """ Reset alias / leads configuration if leads are not used """
+        if not self.group_use_lead:
+            self.default_generate_lead_from_alias = False
+
+    @api.onchange('default_generate_lead_from_alias')
+    def _onchange_default_generate_lead_from_alias(self):
+        self.alias_prefix = 'info' if self.default_generate_lead_from_alias else False
 
     @api.model
     def get_default_alias_prefix(self, fields):

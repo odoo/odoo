@@ -78,11 +78,16 @@ class IrModel(models.Model):
     _description = "Models"
     _order = 'model'
 
+    def _default_field_id(self):
+        if self.env.context.get('install_mode'):
+            return []                   # no default field when importing
+        return [(0, 0, {'name': 'x_name', 'field_description': 'Name', 'ttype': 'char'})]
+
     name = fields.Char(string='Model Description', translate=True, required=True)
     model = fields.Char(default='x_', required=True, index=True)
     info = fields.Text(string='Information')
     field_id = fields.One2many('ir.model.fields', 'model_id', string='Fields', required=True, copy=True,
-        default=lambda self: [(0, 0, {'name': 'x_name', 'field_description': 'Name', 'ttype': 'char'})])
+                               default=_default_field_id)
     inherited_model_ids = fields.Many2many('ir.model', compute='_inherited_models', string="Inherited models",
                                            help="The list of models that extends the current model.")
     state = fields.Selection([('manual', 'Custom Object'), ('base', 'Base Object')], string='Type', default='manual', readonly=True)

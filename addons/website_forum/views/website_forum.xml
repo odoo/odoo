@@ -566,9 +566,11 @@
         <ul>
             <li>Set a clear, explicit and concise question title
                 (check
-                <a href="#" data-placement="top" data-trigger="focus" data-toggle="popover" data-content="Inventory Date Problem, Task remaining hours, Can you help solve solve my tax computation problem in Canada?" title="Click to get bad question samples">bad examples</a>
+                <t t-set="message_content_01">Inventory Date Problem, Task remaining hours, Can you help solve solve my tax computation problem in Canada?</t>
+                <a href="#" data-placement="top" data-trigger="focus" data-toggle="popover" t-att-data-content="message_content_01" title="Click to get bad question samples">bad examples</a>
                 and
-                <a href="#" data-placement="bottom" data-trigger="focus" data-toggle="popover" data-content="How to create a physical inventory at an anterior date?, How is the 'remaining hours' field computed on tasks?, How to configure TPS and TVQ's canadian taxes?" title="Click to get good question titles">good examples</a>
+                <t t-set="message_content_02">How to create a physical inventory at an anterior date?, How is the 'remaining hours' field computed on tasks?, How to configure TPS and TVQ's canadian taxes?</t>
+                <a href="#" data-placement="bottom" data-trigger="focus" data-toggle="popover" t-att-data-content="message_content_02" title="Click to get good question titles">good examples</a>
                 ),
             </li>
             <li>Avoid unnecessary introductions (Hi,... Please... Thanks...),</li>

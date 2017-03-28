@@ -440,7 +440,9 @@ class Home(http.Controller):
         request.uid = request.session.uid
         try:
             context = request.env['ir.http'].webclient_rendering_context()
-            return request.render('web.webclient_bootstrap', qcontext=context)
+            response = request.render('web.webclient_bootstrap', qcontext=context)
+            response.headers['X-Frame-Options'] = 'DENY'
+            return response
         except AccessError:
             return werkzeug.utils.redirect('/web/login?error=access')
 
@@ -479,7 +481,10 @@ class Home(http.Controller):
             if 'error' in request.params and request.params.get('error') == 'access':
                 values['error'] = _('Only employee can access this database. Please contact the administrator.')
 
-        return request.render('web.login', values)
+        response = request.render('web.login', values)
+        response.headers['X-Frame-Options'] = 'DENY'
+        return response
+
 
 
 class WebClient(http.Controller):
