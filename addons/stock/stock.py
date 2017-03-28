@@ -2300,6 +2300,7 @@ class stock_move(osv.osv):
         main_domain = {}
         todo_moves = []
         operations = set()
+        ancestors_list = {}
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting', 'assigned'):
                 continue
@@ -2319,6 +2320,7 @@ class stock_move(osv.osv):
 
                 #if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
                 ancestors = self.find_move_ancestors(cr, uid, move, context=context)
+                ancestors_list[move.id] = True if ancestors else False
                 if move.state == 'waiting' and not ancestors:
                     #if the waiting move hasn't yet any ancestor (PO/MO not confirmed yet), don't find any quant available in stock
                     main_domain[move.id] += [('id', '=', False)]
@@ -2343,6 +2345,10 @@ class stock_move(osv.osv):
                     if qty:
                         quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, qty, domain=domain, prefered_domain_list=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                         quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
+
+        # Sort moves to reserve first the ones with ancestors, in case the same product is listed in
+        # different stock moves.
+        todo_moves.sort(key=lambda x: -1 if ancestors_list.get(x.id) else 0)
         for move in todo_moves:
             #then if the move isn't totally assigned, try to find quants without any specific domain
             if move.state != 'assigned':
