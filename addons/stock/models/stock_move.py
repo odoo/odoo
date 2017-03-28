@@ -375,7 +375,7 @@ class StockMove(models.Model):
                     rules = Push.search(domain + [('route_id', 'in', move.picking_id.picking_type_id.warehouse_id.route_ids.ids)], order='route_sequence, sequence', limit=1)
             if not rules:
                 # if no specialized push rule has been found yet, we try to find a general one (without route)
-                rules = Push.search(domain + [('route_id', '=', False)], order='sequence')
+                rules = Push.search(domain + [('route_id', '=', False)], order='sequence', limit=1)
             # Make sure it is not returning the return
             if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_dest_id.id):
                 rules._apply(move)
