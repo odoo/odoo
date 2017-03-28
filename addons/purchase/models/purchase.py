@@ -47,7 +47,7 @@ class PurchaseOrder(models.Model):
             if min_date:
                 order.date_planned = min_date
 
-    @api.depends('state', 'order_line.qty_invoiced', 'order_line.product_qty')
+    @api.depends('state', 'order_line.qty_invoiced', 'order_line.qty_received', 'order_line.product_qty')
     def _get_invoiced(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for order in self:
@@ -55,9 +55,9 @@ class PurchaseOrder(models.Model):
                 order.invoice_status = 'no'
                 continue
 
-            if any(float_compare(line.qty_invoiced, line.product_qty, precision_digits=precision) == -1 for line in order.order_line):
+            if any(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) == -1 for line in order.order_line):
                 order.invoice_status = 'to invoice'
-            elif all(float_compare(line.qty_invoiced, line.product_qty, precision_digits=precision) >= 0 for line in order.order_line):
+            elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0 for line in order.order_line):
                 order.invoice_status = 'invoiced'
             else:
                 order.invoice_status = 'no'
