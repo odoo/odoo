@@ -564,6 +564,7 @@ var getCssSelectors = function (filter) {
                             if (!data) {
                                 data = [match[1], rules[r].cssText.replace(/(^.*\{\s*)|(\s*\}\s*$)/g, ''), clean, [clean]];
                             } else {
+                                data[0] += (", " + match[1]);
                                 data[3].push(clean);
                             }
                         }

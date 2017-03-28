@@ -22,6 +22,7 @@ class TestPurchaseOrder(AccountingTestCase):
         self.product_id_1 = self.env.ref('product.product_product_8')
         self.product_id_2 = self.env.ref('product.product_product_11')
 
+        (self.product_id_1 | self.product_id_2).write({'purchase_method': 'purchase'})
         # Ensure product_id_2 doesn't have res_partner_1 as supplier
         if self.partner_id in self.product_id_2.seller_ids.mapped('name'):
             id_to_remove = self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id).ids[0] if self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id) else False
