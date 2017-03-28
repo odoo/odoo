@@ -212,6 +212,7 @@ var AbstractController = Widget.extend({
      * something has changed.  The main use for this is to update the url, for
      * example with a new id.
      *
+     * @private
      * @param {Object} [state] information that will be pushed to the outside
      *   world
      */
@@ -226,6 +227,7 @@ var AbstractController = Widget.extend({
      * message when no content is available.  It is suggested to override
      * _update to call this method.
      *
+     * @private
      * @param {boolean} hasNoContent
      */
     _toggleNoContentHelper: function (hasNoContent) {
@@ -251,6 +253,7 @@ var AbstractController = Widget.extend({
      * some buttons in the control panel, such as the current graph type for a
      * graph view.
      *
+     * @private
      * @param {Object} state the state given by the model
      * @returns {Deferred}
      */
@@ -271,6 +274,7 @@ var AbstractController = Widget.extend({
      * to get the res_id.  It should receive the res_id in the event data
      * @todo move this to basic controller? or view manager
      *
+     * @private
      * @param {OdooEvent} event
      * @param {number} event.data.id The local model ID for the record to be
      *   opened
@@ -292,228 +296,4 @@ var AbstractController = Widget.extend({
 return AbstractController;
 
 });
-
-    // do_show: function () {
-    //     this._super.apply(this, arguments);
-    //     core.bus.trigger('view_shown', this);
-    // },
-    // do_push_state: function (state) {
-    //     if (this.getParent() && this.getParent().do_push_state) {
-    //         this.getParent().do_push_state(state);
-    //     }
-    // },
-    // do_load_state: function (state, warm) {
-    // },
-    /**
-     * Switches to a specific view type
-     */
-    // do_switch_view: function () {
-    //     this.trigger.apply(this, ['switch_mode'].concat(_.toArray(arguments)));
-    // },
-    // hasNoContent: function (state) {
-    //     return !state.count  && this.no_content_help;
-    // },
-    // displayNoContentHelp: function () {
-    //     var $msg = $('<div>')
-    //         .addClass('oe_view_nocontent')
-    //         .html(this.no_content_help);
-    //     this.$el.append($msg);
-    //     return;
-    // },
-    // open_record: function (id, options) {
-    //     // TODO: move this to view manager at some point
-    //     var state = this.model.get(this.db_id);
-    //     var record = this.model.get(id);
-    //     var res_ids;
-    //     if (state.groupedBy.length) {
-    //         res_ids = _.pluck(_.flatten(_.pluck(state.data, 'data')), 'res_id');
-    //     } else {
-    //         res_ids = _.pluck(state.data, 'res_id');
-    //     }
-    //     options = _.extend({}, options, {
-    //         dataset: {
-    //             res_ids: res_ids,
-    //             current_id: record.res_id,
-    //         },
-    //     });
-    //     this.trigger_up('switch_view', {
-    //         view_type: 'form',
-    //         options: options,
-    //     });
-    // },
-    // open_dialog: function (event) {
-    //     var data = event.data;
-    //     data.flags = _.defaults(data.flags || {}, {
-    //         mode: 'edit',
-    //         footer_to_buttons: true,
-    //         action_buttons: false,
-    //         headless: true
-    //     });
-    //     this.do_action({
-    //         type: 'ir.actions.act_window',
-    //         res_model: data.model || this.model,
-    //         res_id: data.id,
-    //         view_id: data.view_id,
-    //         view_mode: data.type || 'form',
-    //         view_type: data.type || 'form',
-    //         views: [[false, data.type || 'form']],
-    //         target: 'new',
-    //         context: data.context,
-    //         flags: data.flags,
-    //     }, {
-    //         on_load: function (action) {
-    //             action.viewManager.$('.o_form_statusbar').remove();
-    //             data.on_load && data.on_load(action.viewManager);
-    //         },
-    //     });
-    // },
-    // _onDeletedRecords: function () {
-    //     this.update_state(this.db_id);
-    // },
-    // update_state: function (db_id) {
-    //     this.db_id = db_id;
-    //     var state = this.model.get(db_id);
-    //     if (state.type === 'record') {
-    //         this.set({ title : state.data.id ? state.data.display_name : _t("New") });
-    //     }
-    //     if (this.pager && this.config.hasPager) {
-    //         this.update_pager();
-    //     }
-    //     if (this.$buttons) {
-    //         this.update_buttons();
-    //     }
-    //     this.$('.oe_view_nocontent').remove();
-    //     if (this.hasNoContent(state)) {
-    //         if (this.renderer) {
-    //             this.renderer.do_hide();
-    //         }
-    //         this.displayNoContentHelp();
-    //         return;
-    //     }
-    //     if (this.renderer) {
-    //         this.update_renderer();
-    //         this.renderer.do_show();
-    //     }
-    //     var params = state.res_id ? {id: state.res_id} : {};
-    //     this.do_push_state(params);
-    //     core.bus.trigger('view_shown');
-    // },
-    // reload: function (event) {
-    //     var db_id = event && event.data && event.data.db_id;
-    //     if (db_id) {
-    //         // reload the relational field given its db_id
-    //         this.model.reload(db_id).then(this._confirmSave.bind(this, db_id));
-    //     } else {
-    //         // no db_id given, so reload the main record
-    //         return this.model.reload(this.db_id).then(this.update_state.bind(this));
-    //     }
-    // },
-    // update_renderer: function () {
-    //     var state = this.model.get(this.db_id);
-    //     return this.renderer.update(state);
-    // },
-    // renderPager: function ($node, options) {
-    //     var data = this.model.get(this.db_id, {raw: true});
-    //     this.pager = new Pager(this, data.count, data.offset + 1, this.page_size, options);
-
-    //     this.pager.on('pager_changed', this, function (new_state) {
-    //         var self = this;
-    //         var data = this.model.get(this.db_id);
-    //         this.pager.disable();
-    //         var limit_changed = (this.page_size !== new_state.limit);
-    //         this.page_size = new_state.limit;
-    //         this.model
-    //             .setLimit(data.id, new_state.limit)
-    //             .setOffset(data.id, new_state.current_min - 1)
-    //             .reload(data.id)
-    //             .then(function (state) {
-    //                 self.update_state(state);
-    //                 // Reset the scroll position to the top on page changed only
-    //                 if (!limit_changed) {
-    //                     self.trigger_up('scrollTo', {offset: 0});
-    //                 }
-    //             })
-    //             .then(this.pager.enable.bind(this.pager));
-    //     });
-    //     this.pager.appendTo($node = $node || this.options.$pager);
-    //     this.update_pager();  // to force proper visibility
-    // },
-    // update_buttons: function () {
-    // },
-    // update_pager: function () {
-    //     var data = this.model.get(this.db_id);
-    //     this.pager.updateState({
-    //         current_min: data.offset + 1,
-    //         size: data.count,
-    //     });
-    //     var is_pager_visible = (data.type === 'record') || (!!data.count && (data.groupedBy && !data.groupedBy.length));
-    //     this.pager.do_toggle(is_pager_visible);
-    // },
-    // do_search: function (domain, context, group_by) {
-    //     var load = this.db_id ? this._reload_data : this._load_data;
-    //     return load.call(this, domain, context, group_by).then(this.update_state.bind(this));
-    // },
-    // _load_data: function (domain, context, group_by) {
-    //     return this.model
-    //         .load({
-    //             type: 'record',
-    //             model: this.modelName,
-    //             domain: domain,
-    //             groupedBy: group_by,
-    //             context: context,
-    //         });
-    // },
-    // _reload_data: function (domain, context, group_by) {
-    //     return this.model
-    //         .setDomain(this.db_id, domain)
-    //         .setContext(this.db_id, context)
-    //         .setGroupBy(this.db_id, group_by)
-    //         .reload(this.db_id);
-    // },
-    // sidebar_eval_context: function () {
-    //     return $.when({});
-    // },
-    // /**
-    //  * Return whether the user can perform a given action (e.g. 'create', 'edit') in this view.
-    //  * An action is disabled by setting the corresponding attribute in the view's main element,
-    //  * like: <form string="" create="false" edit="false" delete="false">
-    //  */
-    // is_action_enabled: function (action) {
-    //     var attrs = this.fields_view.arch.attrs;
-    //     return (action in attrs) ? JSON.parse(attrs[action]) : true;
-    // },
-    // config: {
-    //     openGroupByDefault: false,
-    //     page_size: 40,
-    //     hasPager: true,  // TODO: change this into false
-    //     js_libs: [], // the list of lazy-loaded js dependencies
-    //     css_libs: [], // the list of lazy-loaded css dependencies
-    // },
-    // defaults: {
-    //     action: {},
-    // },
-    // used by views that need a searchview.
-    // searchable: true,
-    // used by views that need a searchview but don't want it to be displayed.
-    // searchview_hidden: false,
-
-    // events: {
-    //     'click a[type=action]': function (ev) {
-    //         ev.preventDefault();
-    //         var action_data = $(ev.target).attr('name');
-    //         this.do_action(action_data);
-    //     }
-    // },
-
-    // custom_events: _.extend({}, FieldManagerMixin.custom_events, {
-    //     open_record: function (event) {
-    //         this.open_record(event.data.id);
-    //     },
-    //     reload: 'reload',
-    //     open_dialog: 'open_dialog',
-    //     close_dialog: function () {
-    //         this.do_action({type: 'ir.actions.act_window_close'});
-    //     },
-    //     // TODO: add open_action, ...
-    // }),
 

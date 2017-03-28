@@ -445,9 +445,3 @@ return AbstractRenderer.extend({
 });
 
 });
-
-    // dead code ?
-    //
-    // calendarMiniChanged: function (datum, obj) {
-    //     this.$calendar.fullCalendar('gotoDate', +obj.currentYear , +obj.currentMonth, +obj.currentDay);
-    // },

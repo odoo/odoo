@@ -133,14 +133,6 @@ var CalendarView = AbstractView.extend({
         this.loadParams.scale_zoom = attrs.scale_zoom;
         this.loadParams.initialDate = params.initialDate || new Date();
 
-        // is_action_enabled: function (action) {
-        //     if (action === 'create' && !this.options.creatable) {
-        //         return false;
-        //     }
-        //     return this._super(action);
-        // },
-
-
     },
 });
 
