@@ -820,6 +820,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_display_price(self, product):
+        # TO DO: move me in master/saas-16 on sale.order
         if self.order_id.pricelist_id.discount_policy == 'without_discount':
             from_currency = self.order_id.company_id.currency_id
             return from_currency.compute(product.lst_price, self.order_id.pricelist_id.currency_id)

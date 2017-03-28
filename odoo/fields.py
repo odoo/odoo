@@ -2136,7 +2136,7 @@ class One2many(_RelationalMulti):
     _description_relation_field = property(attrgetter('inverse_name'))
 
     def convert_to_onchange(self, value, record, fnames=()):
-        fnames = set(fnames or value.fields_view_get()['fields'])
+        fnames = set(fnames or ())
         fnames.discard(self.inverse_name)
         return super(One2many, self).convert_to_onchange(value, record, fnames)
 

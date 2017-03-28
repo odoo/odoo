@@ -4,7 +4,7 @@
 import datetime
 
 from odoo import models, fields, api, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 
 
 class Category(models.Model):
@@ -82,6 +82,20 @@ class Discussion(models.Model):
         """Ensure computed O2M domains work as expected."""
         return [("important", "=", True)]
 
+    @api.onchange('name')
+    def _onchange_name(self):
+        # test onchange modifying one2many field values
+        if self.env.context.get('generate_dummy_message') and self.name == '{generate_dummy_message}':
+            # update body of existings messages and emails
+            for message in self.messages:
+                message.body = 'not last dummy message'
+            for message in self.important_messages:
+                message.body = 'not last dummy message'
+            # add new dummy message
+            message_vals = self.messages._add_missing_default_values({'body': 'dummy message', 'important': True})
+            self.messages |= self.messages.new(message_vals)
+            self.important_messages |= self.messages.new(message_vals)
+
     @api.onchange('moderator')
     def _onchange_moderator(self):
         self.participants |= self.moderator
@@ -154,7 +168,7 @@ class Message(models.Model):
     @api.one
     @api.depends('author', 'author.partner_id')
     def _compute_author_partner(self):
-        self.author_partner = author.partner_id
+        self.author_partner = self.author.partner_id
 
     @api.model
     def _search_author_partner(self, operator, value):
@@ -324,6 +338,17 @@ class CompanyDependent(models.Model):
 
     foo = fields.Char(company_dependent=True)
 
+class CompanyDependentAttribute(models.Model):
+    _name = 'test_new_api.company.attr'
+
+    company = fields.Many2one('test_new_api.company')
+    quantity = fields.Integer()
+    bar = fields.Char(compute='_compute_bar', store=True)
+
+    @api.depends('quantity', 'company.foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = (record.company.foo or '') * record.quantity
 
 class Sparse(models.Model):
     _name = 'test_new_api.sparse'

@@ -126,6 +126,9 @@ class MrpProduction(models.Model):
         ('none', 'None')], string='Availability',
         compute='_compute_availability', store=True)
 
+    unreserve_visible = fields.Boolean(
+        'Inventory Unreserve Visible', compute='_compute_unreserve_visible',
+        help='Technical field to check when we can unreserve')
     post_visible = fields.Boolean(
         'Inventory Post Visible', compute='_compute_post_visible',
         help='Technical field to check when we can post')
@@ -192,6 +195,14 @@ class MrpProduction(models.Model):
                 partial_list = [x.partially_available and x.state in ('waiting', 'confirmed', 'assigned') for x in order.move_raw_ids]
                 assigned_list = [x.state in ('assigned', 'done', 'cancel') for x in order.move_raw_ids]
                 order.availability = (all(assigned_list) and 'assigned') or (any(partial_list) and 'partially_available') or 'waiting'
+
+    @api.depends('state', 'move_raw_ids.reserved_quant_ids')
+    def _compute_unreserve_visible(self):
+        for order in self:
+            if order.state in ['done', 'cancel'] or not order.move_raw_ids.mapped('reserved_quant_ids'):
+                order.unreserve_visible = False
+            else:
+                order.unreserve_visible = True
 
     @api.multi
     @api.depends('move_raw_ids.quantity_done', 'move_finished_ids.quantity_done')
