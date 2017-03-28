@@ -775,85 +775,83 @@ var fontIconsDialog = Widget.extend({
 });
 
 
-function createVideoNode(url, options) {
+function _createVideoNode(url, options) {
     options = options || {};
 
     // video url patterns(youtube, instagram, vimeo, dailymotion, youku)
     var ytRegExp = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
     var ytMatch = url.match(ytRegExp);
 
-    var igRegExp = /\/\/instagram.com\/p\/(.[a-zA-Z0-9]*)/;
-    var igMatch = url.match(igRegExp);
+    var insRegExp = /(.*)instagram.com\/p\/(.[a-zA-Z0-9]*)/;
+    var insMatch = url.match(insRegExp);
 
-    var vRegExp = /\/\/vine.co\/v\/(.[a-zA-Z0-9]*)/;
-    var vMatch = url.match(vRegExp);
+    var vinRegExp = /\/\/vine.co\/v\/(.[a-zA-Z0-9]*)/;
+    var vinMatch = url.match(vinRegExp);
 
     var vimRegExp = /\/\/(player.)?vimeo.com\/([a-z]*\/)*([0-9]{6,11})[?]?.*/;
     var vimMatch = url.match(vimRegExp);
 
-    var dmRegExp = /.+dailymotion.com\/(video|hub)\/([^_]+)[^#]*(#video=([^_&]+))?/;
+    var dmRegExp = /.+dailymotion.com\/(video|hub|embed)\/([^_]+)[^#]*(#video=([^_&]+))?/;
     var dmMatch = url.match(dmRegExp);
 
-    var youkuRegExp = /\/\/v\.youku\.com\/v_show\/id_(\w+)\.html/;
-    var youkuMatch = url.match(youkuRegExp);
+    var ykuRegExp = /(.*).youku\.com\/(v_show\/id_|embed\/)(.+)/;
+    var ykuMatch = url.match(ykuRegExp);
 
-    var $video = $('<iframe>');
+    var $video = $('<iframe>').width(1280).height(720).attr('frameborder', 0).addClass('o_video_dialog_iframe');
+    var $alert = $('<div/>').addClass('alert o_video_dialog_iframe');
+    var video_type = 'yt';
+
+    if(!/^(http:\/\/|https:\/\/|\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test(url)){
+        $alert.addClass('alert-danger').text(_t('The provided url it\'s not valid' ));
+        return {$content: $alert, success: false};
+    }
+
+    var autoplay = options.autoplay ? "?autoplay=1" : "?autoplay=0";
+
     if (ytMatch && ytMatch[1].length === 11) {
-        var youtubeId = ytMatch[1];
-        $video = $('<iframe>', {
-            src: '//www.youtube.com/embed/' + youtubeId,
-            width: '640',
-            height: '360'
-        });
-    } else if (igMatch && igMatch[0].length) {
-        $video = $('<iframe>', {
-            src: igMatch[0] + '/embed/',
-            width: '612',
-            height: '710',
-            scrolling: 'no',
-            allowtransparency: 'true'
-        });
-    } else if (vMatch && vMatch[0].length) {
-        $video = $('<iframe>', {
-            src: vMatch[0] + '/embed/simple',
-            width: '600',
-            height: '600',
-            class: 'vine-embed'
-        });
+        $video.attr('src', '//www.youtube.com/embed/' + ytMatch[1] + autoplay);
+    } else if (insMatch && insMatch[2].length) {
+        $video.attr('src', '//www.instagram.com/p/' + insMatch[2] + '/embed/');
+        video_type = 'ins';
+    } else if (vinMatch && vinMatch[0].length) {
+        $video.attr('src', vinMatch[0] + '/embed/simple');
+        video_type = 'vin';
     } else if (vimMatch && vimMatch[3].length) {
-        $video = $('<iframe>', {
-            src: '//player.vimeo.com/video/' + vimMatch[3],
-            width: '640',
-            height: '360'
-        });
+        $video.attr('src', '//player.vimeo.com/video/' + vimMatch[3] + autoplay);
+        video_type = 'vim';
     } else if (dmMatch && dmMatch[2].length) {
-        $video = $('<iframe>', {
-            src: '//www.dailymotion.com/embed/video/' + dmMatch[2],
-            width: '640',
-            height: '360'
-        });
-    } else if (youkuMatch && youkuMatch[1].length) {
-        $video = $('<iframe>', {
-            height: '498',
-            width: '510',
-            src: '//player.youku.com/embed/' + youkuMatch[1]
-        });
+        var just_id = dmMatch[2].replace('video/','');
+        $video.attr('src', '//www.dailymotion.com/embed/video/' + just_id + autoplay);
+        video_type = 'dm';
+    } else if (ykuMatch && ykuMatch[3].length) {
+        var yku_id = ~ykuMatch[3].indexOf( ".html?")? ykuMatch[3].substring(0, ykuMatch[3].indexOf( ".html?")) : ykuMatch[3];
+        $video.attr('src', '//player.youku.com/embed/' + yku_id);
+        video_type = 'yku';
     } else {
-        // this is not a known video link. Now what, Cat? Now what?
-        $video = $('<iframe>', {
-            width: '640',
-            height: '360',
-            src: url
-        });
+        $alert.addClass('alert-warning').text(_t('The url provided doesn\'t contain any compatible video' ));
+        return {$content: $alert, success: false};
     }
 
-    if (options.autoplay) {
-        $video.attr("src", $video.attr("src") + "?autoplay=1");
+    if (options.loop && (ytMatch || vimMatch)) {
+        $video.attr("src", $video.attr("src") + "&loop=1");
+    }
+    if (options.hide_controls && (ytMatch || dmMatch)) {
+        $video.attr("src", $video.attr("src") + "&controls=0");
+    }
+    if (options.hide_fullscreen && ytMatch) {
+        $video.attr("src", $video.attr("src") + "&fs=0");
+    }
+    if (options.hide_yt_logo && ytMatch) {
+        $video.attr("src", $video.attr("src") + "&modestbranding=1");
+    }
+    if (options.hide_dm_logo && dmMatch) {
+        $video.attr("src", $video.attr("src") + "&ui-logo=0");
+    }
+    if (options.hide_dm_share && dmMatch) {
+        $video.attr("src", $video.attr("src") + "&sharing-enable=0");
     }
 
-    $video.attr('frameborder', 0);
-
-    return $video;
+    return {$content: $video, success: true, type: video_type};
 }
 
 /**
@@ -863,13 +861,9 @@ function createVideoNode(url, options) {
 var VideoDialog = Widget.extend({
     template: 'web_editor.dialog.video',
     events : _.extend({}, Dialog.prototype.events, {
-        'click input#urlvideo ~ button': 'get_video',
-        'click input#embedvideo ~ button': 'get_embed_video',
-        'change input#autoplay': 'get_video',
-        'change input#urlvideo': 'change_input',
-        'keyup input#urlvideo': 'change_input',
-        'change input#embedvideo': 'change_input',
-        'keyup input#embedvideo': 'change_input',
+        'change .o_video_dialog_options input': '_getVideo',
+        'change textarea#o_video_text': '_userWriting',
+        'keyup textarea#o_video_text': '_userWriting',
         'keydown.dismiss.bs.modal': function () {},
     }),
     init: function (parent, media) {
@@ -879,57 +873,110 @@ var VideoDialog = Widget.extend({
     },
     start: function () {
         this.$preview = this.$('.preview-container').detach();
-        this.$iframe = this.$("iframe");
+        this.$content = this.$(".o_video_dialog_iframe");
         var $media = $(this.media);
+
         if ($media.hasClass("media_iframe_video")) {
             var src = $media.data('src');
-            this.$("input#urlvideo").val(src);
-            this.$("input#autoplay").prop("checked", (src || "").indexOf("autoplay") >= 0);
-            this.get_video();
+            this.$("textarea#o_video_text").val(src);
+
+            this.$("input#o_video_autoplay").prop("checked", (src || "").indexOf("autoplay=1") >= 0);
+            this.$("input#o_video_hide_controls").prop("checked", (src || "").indexOf("controls=0") >= 0);
+            this.$("input#o_video_loop").prop("checked", (src || "").indexOf("loop=1") >= 0);
+            this.$("input#o_video_hide_fullscreen").prop("checked", (src || "").indexOf("fs=0") >= 0);
+            this.$("input#o_video_hide_yt_logo").prop("checked", (src || "").indexOf("modestbranding=1") >= 0);
+            this.$("input#o_video_hide_dm_logo").prop("checked", (src || "").indexOf("ui-logo=0") >= 0);
+            this.$("input#o_video_hide_dm_share").prop("checked", (src || "").indexOf("sharing-enable=0") >= 0);
+
+            this._getData(event);
         }
         return this._super.apply(this, arguments);
     },
-    change_input: function (e) {
-        var $input = $(e.target);
-        var $button = $input.parent().find("button");
-        if ($input.val() === "") {
-            $button.addClass("btn-default").removeClass("btn-primary");
-        } else {
-            $button.removeClass("btn-default").addClass("btn-primary");
-        }
+    _reset_feedback: function (e) {
+        this.$content.empty();
+        this.$('#o_video_form_group').removeClass('has-error has-success');
+        this.$('.o_video_dialog_options li').addClass('hidden');
     },
-    get_embed_video: function (event) {
-        event.preventDefault();
-        var embedvideo = this.$("input#embedvideo").val().match(/src=["']?([^"']+)["' ]?/);
-        if (embedvideo) {
-            this.$("input#urlvideo").val(embedvideo[1]);
-            this.get_video(event);
+    _userWriting : function () {
+        var self = this;
+        this._reset_feedback();
+        _.throttle(self._getData(),1000);
+    },
+    _getData: function (e) {
+        if (e) e.preventDefault();
+        var $textarea = this.$("textarea#o_video_text");
+
+        // If textare is empty, reset viaul feedback and return
+        if (!$.trim($textarea.val())) {
+            this._reset_feedback();
+            return;
         }
+
+        // Detect if we have an enbeed code rather than an URL
+        var embedvideo = $textarea.val().match(/(src|href)=["']?([^"']+)?/);
+
+        if (embedvideo && embedvideo[2].length > 0 && embedvideo[2].indexOf("instagram")){
+            // Instagram enbeed code is different
+            embedvideo[1] = embedvideo[2];
+        }
+
+        this.$('#o_video_data').val( embedvideo? embedvideo[1] : $textarea.val().trim());
+        this._getVideo(e);
         return false;
     },
-    get_video: function (event) {
-        if (event) event.preventDefault();
-        var $video = createVideoNode(this.$("input#urlvideo").val(), {autoplay: this.$("input#autoplay").is(":checked")});
-        this.$iframe.replaceWith($video);
-        this.$iframe = $video;
+    _getVideo: function (e) {
+        if (e) e.preventDefault();
+
+        var query = _createVideoNode(this.$('#o_video_data').val(), {
+            autoplay:        this.$("input#o_video_autoplay").is(":checked"),
+            hide_controls:   this.$("input#o_video_hide_controls").is(":checked"),
+            loop:            this.$("input#o_video_loop").is(":checked"),
+            hide_fullscreen: this.$("input#o_video_hide_fullscreen").is(":checked"),
+            hide_yt_logo:    this.$("input#o_video_hide_yt_logo").is(":checked"),
+            hide_dm_logo:    this.$("input#o_video_hide_dm_logo").is(":checked"),
+            hide_dm_share:   this.$("input#o_video_hide_dm_share").is(":checked"),
+        });
+
+        var $opt_box = this.$('.o_video_dialog_options');
+
+        this._reset_feedback();
+
+        this.$el
+            // Show/Hide preview elements
+            .find('.o_video_dialog_preview_text, .media_iframe_video_size').add($opt_box).toggleClass('hidden', !query.success).end()
+            // Toggle validation classes
+            .find('#o_video_form_group').toggleClass('has-error',!query.success).toggleClass('has-success', query.success);
+
+        // Individually show/hide options base on the video provider
+        $opt_box.find('li.o_'+ query.type+'_option').removeClass('hidden');
+
+        // Hide the entire options' box if no options are available
+        $opt_box.toggleClass('hidden', ($opt_box.find('li:not(.hidden)').length === 0) );
+
+        if (query.type == 'yt') {
+            // Youtube only: If 'hide controls' is checked, hide 'fullscreen' and 'youtube logo' options too
+            this.$("input#o_video_hide_fullscreen, input#o_video_hide_yt_logo").closest('li').toggleClass('hidden', this.$("input#o_video_hide_controls").is(":checked"));
+        }
+
+        this.$content.replaceWith(query.$content);
+        this.$content = query.$content;
         return false;
     },
     save: function () {
-        var video_id = this.$("#video_id").val();
-        if (!video_id) {
-            this.$("button.btn-primary").click();
-            video_id = this.$("#video_id").val();
-        }
-        var $iframe = $(
-            '<div class="media_iframe_video" data-src="'+this.$iframe.attr("src")+'">'+
-                '<div class="css_editable_mode_display">&nbsp;</div>'+
-                '<div class="media_iframe_video_size" contentEditable="false">&nbsp;</div>'+
-                '<iframe src="'+this.$iframe.attr("src")+'" frameborder="0" allowfullscreen="allowfullscreen" contentEditable="false"></iframe>'+
-            '</div>');
-        $(this.media).replaceWith($iframe);
-        this.media = $iframe[0];
+        this._getData(event);
 
-        return this.media;
+        if ( this.$('.o_video_dialog_iframe').is('iframe')) {
+            var $content = $(
+                '<div class="media_iframe_video" data-src="'+this.$content.attr("src")+'">'+
+                    '<div class="css_editable_mode_display">&nbsp;</div>'+
+                    '<div class="media_iframe_video_size" contentEditable="false">&nbsp;</div>'+
+                    '<iframe src="'+this.$content.attr("src")+'" frameborder="0" contentEditable="false"></iframe>'+
+                '</div>');
+
+            $(this.media).replaceWith($content);
+            this.media = $content[0];
+            return this.media;
+        }
     },
     clear: function () {
         if (this.media.dataset.src) {

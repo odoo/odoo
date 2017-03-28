@@ -241,14 +241,6 @@ body .modal {
             .well {
                 border-color: @gray-lighter;
                 border-top-width: 0;
-
-                label {
-                    margin: auto 10px;
-                }
-
-                .btn-group {
-                    margin-right: 10px;
-                }
             }
 
             .o_existing_attachment_cell {
@@ -303,6 +295,125 @@ body .modal {
                         cursor: auto;
                         background-color: @o-we-color-paper;
                         box-shadow: 0px 0px 0px 1px @o-we-color-success;
+                    }
+                }
+            }
+
+            #editor-media-image, #editor-media-document {
+                .well {
+                    label {
+                        margin: auto 10px;
+                    }
+
+                    .btn-group {
+                        margin-right: 10px;
+                    }
+                }
+            }
+
+            // VIDEO TAB
+            #editor-media-video {
+                .well {
+                    padding: 0;
+                    .o-flex-display();
+                    .o-flex-flow(row, wrap);
+                    .o-justify-content(center);
+                }
+
+                #o_video_form_group {
+                    position: relative;
+                    width: 100%;
+
+                    textarea {
+                        width: 100%;
+                        padding-bottom: 25px;
+                        resize: none;
+                        overflow-y: scroll;
+                    }
+
+                    .o_validate_feedback {
+                        .o-position-absolute(auto, 10px, 10px);
+                        .fa {
+                            display: none;
+                        }
+                    }
+
+                    &.has-error {
+                        .o_validate_feedback .fa-exclamation-triangle {
+                            display: block;
+                        }
+                    }
+
+                    &.has-success {
+                        .o_validate_feedback .fa-check {
+                            display: block;
+                        }
+                    }
+                }
+
+                .o_video_dialog_form {
+                    .o-flex(1,1,100%);
+                    padding: 19px;
+
+                    @media screen and (min-width: @screen-md-min) {
+                        .o-flex(0,1,50%);
+                    }
+                    @media screen and (min-width: @screen-lg-min) {
+                        .o-flex(0,1,40%);
+                    }
+                }
+
+                #video-preview {
+                    position: relative;
+                    .o-flex-display();
+                    .o-flex-flow(column, wrap);
+                    .o-justify-content(center);
+                    .o-flex(1,1,100%);
+                    .o-we-preview-box(0 19px);
+                    margin: -1px;
+                    border: none;
+                    .o-transition(width, 1s);
+
+                    .media_iframe_video {
+                        width: 100%;
+                        min-width: 90%;
+                    }
+
+
+                    @media screen and (min-width: @screen-md-min) {
+                        .o-flex(1,1,auto);
+                        padding: 40px 19px;
+
+                        > div.small {
+                            .o-position-absolute(0);
+                        }
+
+                        .media_iframe_video {
+                            min-width: 150px;
+                        }
+                    }
+
+                    @media screen and (min-width: @screen-lg-min) {
+                        .o-flex(1,1,60%);
+                        .media_iframe_video {
+                            min-width: 350px;
+                        }
+                    }
+
+                    .o_video_dialog_iframe {
+                        .o-we-preview-content();
+                        max-width: 100%;
+                        max-height: 100%;
+
+                        &.alert {
+                            .o-animation(fadeInDownSmall, 700ms, @fill-mode: forwards);
+                            max-width: 300px;
+                            margin: 0 auto;
+
+                            &:empty {
+                                display: none;
+                            }
+                        }
                     }
                 }
             }
