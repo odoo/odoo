@@ -134,6 +134,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Товарный продукт - это продукт, для которого вы управляете запасом. Должно быть установлено приложение \"Инвентарь\".\n"
+"С другой стороны, расходный продукт - это продукт, для которого запасы не управляются.\n"
+"Услуга - это нематериальный продукт, который вы предоставляете.\n"
+"Цифровой контент - это нематериальный продукт, который вы продаете в Интернете. Файлы, прикрепленные к продуктам, продаются в электронной торговле, например, в электронных книгах, музыке, картинках ... Необходимо установить модуль \"Цифровой продукт\"."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
@@ -423,7 +427,7 @@ msgstr "Срок поставки заказчика"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Справка клиента"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -1627,12 +1631,14 @@ msgstr "Сумма количеств в счетах поставщика"
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Техническое поле. Используется для поиска по прайс-листам, не хранится в "
+"базе данных."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "Технический: используется для вычисления количества."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
@@ -1657,6 +1663,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"Продажная цена управляется из шаблона продукта. Нажмите кнопку 'Варианты "
+"цен', чтобы установить цены дополнительных атрибутов."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume

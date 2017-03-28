@@ -59,6 +59,9 @@ msgid ""
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
+"\n"
+"Crée la route « expédition directe ” et ajoute des tests complexes\n"
+"- Le module stock_dropshipping sera installé"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:214
@@ -84,6 +87,13 @@ msgid ""
 " * Transferred: has been processed, can't be modified or cancelled anymore\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"* Brouillon : non confirmé et ne sera pas planifié avant d'être confirmé\n"
+"* En attente d'une autre opération : en attente d'un autre mouvement avant de devenir automatiquement disponible (p. ex. dans un flux de production à la demande)\n"
+"* En attente de disponibilité : encore en attente de la disponibilité des articles\n"
+"* Partiellement disponible : certains articles sont disponibles et réservés\n"
+"* Disponible : les articles sont réservés, simplement en attente de confirmation.\n"
+"* Transféré : a été traité, ne peut plus être modifié ou annulé\n"
+"* Annulé : a été annulé, ne peut plus être confirmé"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -5685,6 +5695,8 @@ msgstr "Montre diverses informations sur la disponibilité de ce mouvement"
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
+"Les unités de mesure d'achat ou de vente des produits peuvent varier "
+"(avancé)"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:790
