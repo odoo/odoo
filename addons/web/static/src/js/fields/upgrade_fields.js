@@ -109,6 +109,7 @@ var AbstractFieldUpgrade = {
     //--------------------------------------------------------------------------
 
     /**
+     * @private
      * @param {MouseEvent}
      */
     _onInputClicked: function (event) {
@@ -131,12 +132,14 @@ var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
 
     /**
      * @override
+     * @private
      */
     _insertEnterpriseLabel: function ($enterprise_label) {
         this.$el.append('&nbsp;').append($enterprise_label);
     },
     /**
      * @override
+     * @private
      */
     _resetValue: function () {
         this.$input.prop("checked", false).change();
@@ -163,12 +166,14 @@ var UpgradeRadio = FieldRadio.extend(AbstractFieldUpgrade, {
 
     /**
      * @override
+     * @private
      */
     _insertEnterpriseLabel: function ($enterprise_label) {
         this.$('label').last().append('&nbsp;').append($enterprise_label);
     },
     /**
      * @override
+     * @private
      */
     _resetValue: function () {
         this.$('input').first().prop("checked", true).click();

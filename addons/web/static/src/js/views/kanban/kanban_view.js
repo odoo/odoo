@@ -70,13 +70,3 @@ return KanbanView;
 
 });
 
-    // config: _.extend({}, AbstractView.prototype.config, {
-    //     openGroupByDefault: true,
-    // }),
-    // FIXME: adapt those options
-    // defaults: _.extend(BasicController.prototype.defaults, {
-    //     quick_creatable: true,
-    //     creatable: true,
-    //     read_only_mode: false,
-    //     confirm_on_delete: true,
-    // }),
