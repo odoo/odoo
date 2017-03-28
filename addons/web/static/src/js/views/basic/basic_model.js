@@ -652,50 +652,7 @@ var BasicModel = AbstractModel.extend({
      * @returns {string[]} list of changed fields
      */
     notifyChanges: function (record_id, changes) {
-        var self = this;
-        var record = this.localData[record_id];
-        var onChangeFields = []; // the fields that have changed and that have an on_change
-        var field;
-        var defs = [];
-        record._changes = record._changes || {};
-
-        // apply changes to local data
-        for (var fieldName in changes) {
-            field = record.fields[fieldName];
-            if (field.type === 'one2many' || field.type === 'many2many') {
-                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName]));
-            } else if (field.type === 'many2one') {
-                defs.push(this._applyMany2OneChange(record, fieldName, changes[fieldName]));
-            } else {
-                record._changes[fieldName] = changes[fieldName];
-            }
-            if (field.onChange) {
-                onChangeFields.push(fieldName);
-            }
-        }
-
-        return $.when.apply($, defs).then(function () {
-            var onchangeDef;
-            if (onChangeFields.length) {
-                onchangeDef = self._applyOnChange(record, onChangeFields).then(function (result) {
-                    return _.keys(changes).concat(Object.keys(result && result.value || {}));
-                });
-            } else {
-                onchangeDef = $.Deferred().resolve(_.keys(changes));
-            }
-            return onchangeDef.then(function (fieldNames) {
-                _.each(fieldNames, function (name) {
-                    if (record._changes && record._changes[name] === record.data[name]) {
-                        delete record._changes[name];
-                    }
-                });
-                return self._fetchSpecialData(record).then(function (fieldNames2) {
-                    // Return the names of the fields that changed (onchange or
-                    // associated special data change)
-                    return _.union(fieldNames, fieldNames2);
-                });
-            });
-        });
+        return this.mutex.exec(this._applyChange.bind(this, record_id, changes));
     },
     /**
      * Reload all data for a given resource
@@ -769,18 +726,17 @@ var BasicModel = AbstractModel.extend({
      */
     save: function (record_id, options) {
         var self = this;
-        options = options || {};
-        if (options.localSave) {
-            var record = self.localData[record_id];
-            if (record._changes) {
-                _.extend(record.data, record._changes);
-                record._changes = null;
-            }
-            return $.when();
-        }
-        var shouldReload = 'reload' in options ? options.reload : true;
         return this.mutex.exec(function () {
+            options = options || {};
             var record = self.localData[record_id];
+            if (options.localSave) {
+                if (record._changes) {
+                    _.extend(record.data, record._changes);
+                    record._changes = null;
+                }
+                return $.when();
+            }
+            var shouldReload = 'reload' in options ? options.reload : true;
             var method = self.isNew(record_id) ? 'create' : 'write';
             var changes = _.extend({}, record._changes);
             var commands = self._generateX2ManyCommands(record);
@@ -958,6 +914,61 @@ var BasicModel = AbstractModel.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * This method is the private version of notifyChanges.  Unlike
+     * notifyChanges, it is not protected by a mutex.  Every changes from the
+     * user to the model go through this method.
+     *
+     * @param {string} recordID 
+     * @param {Object} changes
+     * @returns {Deferred}
+     */
+    _applyChange: function (recordID, changes) {
+        var self = this;
+        var record = this.localData[recordID];
+        var onChangeFields = []; // the fields that have changed and that have an on_change
+        var field;
+        var defs = [];
+        record._changes = record._changes || {};
+
+        // apply changes to local data
+        for (var fieldName in changes) {
+            field = record.fields[fieldName];
+            if (field.type === 'one2many' || field.type === 'many2many') {
+                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName]));
+            } else if (field.type === 'many2one') {
+                defs.push(this._applyMany2OneChange(record, fieldName, changes[fieldName]));
+            } else {
+                record._changes[fieldName] = changes[fieldName];
+            }
+            if (field.onChange) {
+                onChangeFields.push(fieldName);
+            }
+        }
+
+        return $.when.apply($, defs).then(function () {
+            var onchangeDef;
+            if (onChangeFields.length) {
+                onchangeDef = self._applyOnChange(record, onChangeFields).then(function (result) {
+                    return _.keys(changes).concat(Object.keys(result && result.value || {}));
+                });
+            } else {
+                onchangeDef = $.Deferred().resolve(_.keys(changes));
+            }
+            return onchangeDef.then(function (fieldNames) {
+                _.each(fieldNames, function (name) {
+                    if (record._changes && record._changes[name] === record.data[name]) {
+                        delete record._changes[name];
+                    }
+                });
+                return self._fetchSpecialData(record).then(function (fieldNames2) {
+                    // Return the names of the fields that changed (onchange or
+                    // associated special data change)
+                    return _.union(fieldNames, fieldNames2);
+                });
+            });
+        });
+    },
+    /**
      * Apply a many2one onchange.  There is a need for this function because the
      * server only gives an id when a onchange modifies a many2one field.  For
      * this reason, we need (sometimes) to do a /name_get to fetch a
@@ -1032,102 +1043,100 @@ var BasicModel = AbstractModel.extend({
         if (fields.length === 1) {
             fields = fields[0];
         }
-        return this.mutex.exec(function () {
-            return self._rpc({
-                    model: record.model,
-                    method: 'onchange',
-                    args: [idList, currentData, fields, onchange_spec, context],
-                })
-                .then(function (result) {
-                    if (result.warning) {
-                        self.trigger_up('warning', {
-                            message: result.warning.message,
-                            title: result.warning.title,
-                            type: 'dialog',
-                        });
-                    }
-                    var defs = [];
-                    _.each(result.value, function (val, name) {
-                        var field = record.fields[name];
-                        if (!field) { return; } // ignore changes of unknown fields
+        return self._rpc({
+                model: record.model,
+                method: 'onchange',
+                args: [idList, currentData, fields, onchange_spec, context],
+            })
+            .then(function (result) {
+                if (result.warning) {
+                    self.trigger_up('warning', {
+                        message: result.warning.message,
+                        title: result.warning.title,
+                        type: 'dialog',
+                    });
+                }
+                var defs = [];
+                _.each(result.value, function (val, name) {
+                    var field = record.fields[name];
+                    if (!field) { return; } // ignore changes of unknown fields
 
-                        var rec;
-                        if (field.type === 'many2one' ) {
-                            // in some case, the value returned by the onchange can
-                            // be false (no value), so we need to avoid creating a
-                            // local record for that.
-                            // FIXME: shouldn't we erase the value in that case?
-                            if (val) {
-                                // when the value isn't false, it can be either
-                                // an array [id, display_name] or just an id.
-                                var data = _.isArray(val) ?
-                                    {id: val[0], display_name: val[1]} :
-                                    {id: val};
-                                rec = self._makeDataPoint({
-                                    context: context,
-                                    data: data,
-                                    modelName: field.relation,
-                                });
-                                record._changes[name] = rec.id;
-                            }
-                        } else if (field.type === 'one2many' || field.type === 'many2many') {
-                            record._changes = record._changes || {};
-                            var listId = record._changes[name] || record.data[name];
-                            var list = self.localData[listId];
-                            _.each(val, function (command) {
-                                if (command[0] === 0 || command[0] === 1) {
-                                    // CREATE or UPDATE
-                                    var params = {
-                                        context: context,
-                                        fields: list.fields,
-                                        fieldsInfo: list.fieldsInfo,
-                                        modelName: list.model,
-                                        fieldNames: _.keys(command[2]),
-                                    };
-                                    if (command[0] === 1) {
-                                        params.res_id = command[1];
-                                    }
-                                    rec = self._makeDataPoint(params);
-                                    var data = command[2];
-                                    _.each(rec.fieldNames, function (name) {
-                                        var field = rec.fields[name];
-                                        if (field.type === 'many2one') {
-                                            var r = self._makeDataPoint({
-                                                modelName: field.relation,
-                                                data: {
-                                                    id: data[name][0],
-                                                    display_name: data[name][1],
-                                                },
-                                            });
-                                            data[name] = r.id;
-                                        }
-                                    });
-                                    rec._changes = data;
-                                    for (var f in rec._changes) {
-                                        rec.data[f] = null;
-                                    }
-                                    list._changes.push(rec.id);
-                                }
-                                if (command[0] === 5) {
-                                    // DELETE ALL
-                                    list._changes = [];
-                                }
+                    var rec;
+                    if (field.type === 'many2one' ) {
+                        // in some case, the value returned by the onchange can
+                        // be false (no value), so we need to avoid creating a
+                        // local record for that.
+                        // FIXME: shouldn't we erase the value in that case?
+                        if (val) {
+                            // when the value isn't false, it can be either
+                            // an array [id, display_name] or just an id.
+                            var data = _.isArray(val) ?
+                                {id: val[0], display_name: val[1]} :
+                                {id: val};
+                            rec = self._makeDataPoint({
+                                context: context,
+                                data: data,
+                                modelName: field.relation,
                             });
-                        } else if (field.type === 'date') {
-                            // process data: convert into a moment instance
-                            record._changes[name] = fieldUtils.parse.date(val);
-                        } else if (field.type === 'datetime') {
-                            // process datetime: convert into a moment instance
-                            record._changes[name] = fieldUtils.parse.datetime(val);
-                        } else {
-                            record._changes[name] = val;
+                            record._changes[name] = rec.id;
                         }
-                    });
-                    return $.when.apply($, defs).then(function () {
-                        return result;
-                    });
+                    } else if (field.type === 'one2many' || field.type === 'many2many') {
+                        record._changes = record._changes || {};
+                        var listId = record._changes[name] || record.data[name];
+                        var list = self.localData[listId];
+                        _.each(val, function (command) {
+                            if (command[0] === 0 || command[0] === 1) {
+                                // CREATE or UPDATE
+                                var params = {
+                                    context: context,
+                                    fields: list.fields,
+                                    fieldsInfo: list.fieldsInfo,
+                                    modelName: list.model,
+                                    fieldNames: _.keys(command[2]),
+                                };
+                                if (command[0] === 1) {
+                                    params.res_id = command[1];
+                                }
+                                rec = self._makeDataPoint(params);
+                                var data = command[2];
+                                _.each(rec.fieldNames, function (name) {
+                                    var field = rec.fields[name];
+                                    if (field.type === 'many2one') {
+                                        var r = self._makeDataPoint({
+                                            modelName: field.relation,
+                                            data: {
+                                                id: data[name][0],
+                                                display_name: data[name][1],
+                                            },
+                                        });
+                                        data[name] = r.id;
+                                    }
+                                });
+                                rec._changes = data;
+                                for (var f in rec._changes) {
+                                    rec.data[f] = null;
+                                }
+                                list._changes.push(rec.id);
+                            }
+                            if (command[0] === 5) {
+                                // DELETE ALL
+                                list._changes = [];
+                            }
+                        });
+                    } else if (field.type === 'date') {
+                        // process data: convert into a moment instance
+                        record._changes[name] = fieldUtils.parse.date(val);
+                    } else if (field.type === 'datetime') {
+                        // process datetime: convert into a moment instance
+                        record._changes[name] = fieldUtils.parse.datetime(val);
+                    } else {
+                        record._changes[name] = val;
+                    }
                 });
-        });
+                return $.when.apply($, defs).then(function () {
+                    return result;
+                });
+            });
     },
     /**
      * When an operation is applied to a x2many field, the field widgets
@@ -1206,7 +1215,7 @@ var BasicModel = AbstractModel.extend({
                 defs.push(this.addDefaultRecord(list.id));
                 break;
             case 'UPDATE':
-                defs.push(this.notifyChanges(command.id, command.data));
+                defs.push(this._applyChange(command.id, command.data));
                 break;
             case 'REMOVE':
                 list._changes = _.without(list._changes, command.id);
