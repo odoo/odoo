@@ -182,4 +182,4 @@ class IrUiView(models.Model):
         """
         user_groups = set(self.env.user.groups_id)
         views = self.with_context(active_test=False)._views_get(key, bundles=bundles)
-        return views.filtered(lambda v: user_groups.issuperset(v.groups_id))
+        return views.filtered(lambda v: not v.groups_id or len(user_groups.intersection(v.groups_id)))

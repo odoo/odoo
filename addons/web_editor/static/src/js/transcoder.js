@@ -131,7 +131,7 @@ var font_to_img = function ($editable) {
         var icon, content;
         _.find(widget.fontIcons, function (font) {
             return _.find(widget.getCssSelectors(font.parser), function (css) {
-                if ($font.is(css[0].replace(/::?before$/, ''))) {
+                if ($font.is(css[0].replace(/::?before/g, ''))) {
                     icon = css[2].split("-").shift();
                     content = css[1].match(/content:\s*['"]?(.)['"]?/)[1];
                     return true;

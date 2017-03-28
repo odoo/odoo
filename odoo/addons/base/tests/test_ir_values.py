@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import tools
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
@@ -41,11 +42,12 @@ class TestIrValues(TransactionCase):
         self.assertTrue(d, "At least one value should be retrieved for this model.")
         self.assertEqual(d[2], '007', "Can't retrieve the created default value.")
 
-        # create invalid defaults
-        with self.assertRaises(ValidationError):
+        # create valid but unusable defaults, a ValidationError should not be thrown
+        with tools.mute_logger('odoo.addons.base.ir.ir_values'):
             ir_values.set_default('unknown_model', 'unknown_field', 42)
-        with self.assertRaises(ValidationError):
             ir_values.set_default('res.partner', 'unknown_field', 42)
+
+        # create invalid defaults
         with self.assertRaises(ValidationError):
             ir_values.set_default('res.partner', 'lang', 'some_LANG')
         with self.assertRaises(ValidationError):

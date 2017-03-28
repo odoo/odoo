@@ -1043,6 +1043,15 @@ class Lead(models.Model):
         return view_id
 
     @api.multi
+    def message_get_default_recipients(self):
+        return {
+            r.id : {'partner_ids': [],
+                    'email_to': r.email_from,
+                    'email_cc': False}
+            for r in self.sudo()
+        }
+
+    @api.multi
     def message_get_suggested_recipients(self):
         recipients = super(Lead, self).message_get_suggested_recipients()
         try:

@@ -26,15 +26,15 @@ class HrAttendance(models.Model):
         result = []
         for attendance in self:
             if not attendance.check_out:
-                result.append((self.id, _("%(empl_name)s from %(check_in)s") % {
-                    'empl_name': self.employee_id.name,
-                    'check_in': fields.Datetime.to_string(fields.Datetime.context_timestamp(self, fields.Datetime.from_string(self.check_in))),
+                result.append((attendance.id, _("%(empl_name)s from %(check_in)s") % {
+                    'empl_name': attendance.employee_id.name,
+                    'check_in': fields.Datetime.to_string(fields.Datetime.context_timestamp(attendance, fields.Datetime.from_string(attendance.check_in))),
                 }))
             else:
-                result.append((self.id, _("%(empl_name)s from %(check_in)s to %(check_out)s") % {
-                    'empl_name': self.employee_id.name,
-                    'check_in': fields.Datetime.to_string(fields.Datetime.context_timestamp(self, fields.Datetime.from_string(self.check_in))),
-                    'check_out': fields.Datetime.to_string(fields.Datetime.context_timestamp(self, fields.Datetime.from_string(self.check_out))),
+                result.append((attendance.id, _("%(empl_name)s from %(check_in)s to %(check_out)s") % {
+                    'empl_name': attendance.employee_id.name,
+                    'check_in': fields.Datetime.to_string(fields.Datetime.context_timestamp(attendance, fields.Datetime.from_string(attendance.check_in))),
+                    'check_out': fields.Datetime.to_string(fields.Datetime.context_timestamp(attendance, fields.Datetime.from_string(attendance.check_out))),
                 }))
         return result
 

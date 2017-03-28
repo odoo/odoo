@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
+from odoo.addons.calendar.models.calendar import calendar_id2real_id
 
 
 class TestRecurrentEvent(common.TransactionCase):
@@ -145,3 +146,26 @@ class TestRecurrentEvent(common.TransactionCase):
             ('start', '>=', '2017-06-30 08:00:00'), ('name', '=', 'Review code with programmer')
         ])
         self.assertEqual(meetings_count, 1, "Last recurrent weekly meetings are not found without stop filter !")
+
+    def test_recurrent_meeting5(self):
+        # I create a recurrent event and I check if the virtual_id are correct
+        self.CalendarEvent.create({
+            'count': 5,
+            'start': '2012-04-13 11:00:00',
+            'stop': '2012-04-13 12:00:00',
+            'duration': 1.0,
+            'name': 'Test Meeting',
+            'recurrency': True,
+            'rrule_type': 'daily'
+        })
+        # I search for the first recurrent meeting
+        meeting = self.CalendarEvent.with_context({'virtual_id': True}).search([
+            ('start', '=', '2012-04-13 11:00:00'), ('stop', '=', '2012-04-13 12:00:00')
+        ])
+        virutal_dates = calendar_id2real_id(meeting.id, with_date=True)
+
+        # virtual_dates are used by the calendar view and I check if the start date for the first virtual event is correct.
+        self.assertEqual(virutal_dates[1], '2012-04-13 11:00:00', "The virtual event doesn't have the correct start date !")
+
+        # virtual_dates are used by the calendar view and I check if the stop date for the first virtual event is correct.
+        self.assertEqual(virutal_dates[2], '2012-04-13 12:00:00', "The virtual event doesn't have the correct stop date !")

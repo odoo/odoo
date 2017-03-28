@@ -51,12 +51,13 @@
                     <button name="post_inventory" string="Post Inventory" type="object" attrs="{'invisible': [('post_visible', '=', False)]}"/>
                     <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'in', ('done','cancel')), ('check_to_done', '=', True)]}"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', ('availability', '=', 'none'), ('state', 'in', ('cancel'))]}"/>
-                    <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('availability', 'in', ['none', 'waiting'])]}"/>
+                    <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
                     <span class="label label-danger" attrs="{'invisible': ['|', ('availability', 'in', ('assigned', 'none')), ('state', 'not in', ('confirmed','progress'))]}">Raw materials not available!</span>
                     <field name="state" widget="statusbar" statusbar_visible="confirmed,progress,done"/>
                 </header>
                 <sheet>
                     <field name="post_visible" invisible="1"/>
+                    <field name="unreserve_visible" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(action_mrp_workorder_production_specific)d" type="action" attrs="{'invisible': [('workorder_count', '=', 0)]}" class="oe_stat_button" icon="fa-play-circle-o">
                             <div class="o_form_field o_stat_info">
@@ -265,7 +266,7 @@
                     <separator/>
                     <filter string="No Routing" domain="[('routing_id','=', False)]" name="norouting" groups="mrp.group_mrp_routings"/>
                     <field name="product_id"/>
-                    <field name="product_id" string="Raw Material" filter_domain="[('move_raw_ids.product_id','ilike',self)]"/>
+                    <field name="move_raw_ids" string="Raw Material" filter_domain="[('move_raw_ids.product_id','ilike',self)]"/>
                     <field name="name" string="Work Center" filter_domain="[('routing_id.operation_ids.workcenter_id','ilike',self)]"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <separator/>

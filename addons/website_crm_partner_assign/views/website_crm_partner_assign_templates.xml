@@ -99,7 +99,7 @@
                                 <div t-field="partner.website_short_description"/>
                                 <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
                                     <small><a t-attf-href="/partners/#{slug(partner)}#right_column">
-                                        <t t-raw="len([p for p in partner.implemented_partner_ids if p.website_published])"/> reference(s)
+                                        <t t-esc="partner.implemented_count"/> reference(s)
                                     </a></small>
                                 </t>
                             </div>

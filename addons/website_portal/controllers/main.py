@@ -99,7 +99,9 @@ class website_account(http.Controller):
             'redirect': redirect,
         })
 
-        return request.render("website_portal.details", values)
+        response = request.render("website_portal.details", values)
+        response.headers['X-Frame-Options'] = 'DENY'
+        return response
 
     def details_form_validate(self, data):
         error = dict()
