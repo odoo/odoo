@@ -492,7 +492,7 @@ var MockServer = Class.extend({
         if (!_.isArray(ids)) {
             ids = [ids];
         }
-        var fields = args[1] ? _.uniq(args[1].concat(['id'])) : Object.keys(this.data[model].fields);
+        var fields = args[1] && args[1].length ? _.uniq(args[1].concat(['id'])) : Object.keys(this.data[model].fields);
         var results = _.map(ids, function (id) {
             var record = _.findWhere(self.data[model].records, {id: id});
             if (!record) {
