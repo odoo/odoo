@@ -10,6 +10,7 @@ odoo.define('web.test_utils', function (require) {
  * instance of a view, appended in the dom, ready to be tested.
  */
 
+var AbstractField = require('web.AbstractField');
 var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
@@ -96,6 +97,8 @@ function createView(params) {
  *   the DOM. Also, the logLevel will be forced to 2 and the uncaught OdooEvent
  *   will be logged
  * @param {string[]} [params.groupBy] the initial groupBy for the view
+ * @param {integer} [params.fieldDebounce=0] the debounce value to use for the
+ *   duration of the test.
  * @param {AbstractView} params.View the class that will be instantiated
  * @param {string} params.model a model name, will be given to the view
  * @param {Object} params.intercepts an object with event names as key, and
@@ -109,6 +112,7 @@ function createAsyncView(params) {
     var $target = $('#qunit-fixture');
     var widget = new Widget();
 
+    // handle debug parameter: render target, log stuff, ...
     if (params.debug) {
         $target = $('body');
         params.logLevel = 2;
@@ -118,9 +122,12 @@ function createAsyncView(params) {
         console.log('%c[debug] debug mode activated', 'color: blue; font-weight: bold;', url);
         $target.addClass('debug');
     }
+
+    // add mock environment: mock server, session, fieldviewget, ...
     var mockServer = addMockEnvironment(widget, params);
     var viewInfo = mockServer.fieldsViewGet(params.arch, params.model);
 
+    // create the view
     var viewOptions = {
         modelName: params.model || 'foo',
         ids: 'res_id' in params ? [params.res_id] : undefined,
@@ -134,15 +141,10 @@ function createAsyncView(params) {
 
     var view = new params.View(viewInfo, viewOptions);
 
+    // make sure images do not trigger a GET on the server
     $('#qunit-fixture').on('DOMNodeInserted.removeSRC', function () {
         removeSrcAttribute($(this), widget);
     });
-
-    if (params.with_modifiers) {
-        _.each(params.with_modifiers, function (modifier, name) {
-            viewInfo.fields[name].__attrs.modifiers = JSON.stringify(modifier);
-        });
-    }
 
     // reproduce the DOM environment of views
     var $web_client = $('<div>').addClass('o_web_client').appendTo($target);
@@ -150,6 +152,7 @@ function createAsyncView(params) {
     var $content = $('<div>').addClass('o_content').appendTo($web_client);
     var $view_manager = $('<div>').addClass('o_view_manager_content').appendTo($content);
 
+    // make sure all Odoo events bubbling up are intercepted
     if (params.intercepts) {
         _.each(params.intercepts, function (cb, name) {
             intercept(widget, name, cb);
@@ -240,6 +243,10 @@ function addMockEnvironment(widget, params) {
     });
     var widgetDestroy;
 
+    // make sure the debounce value for input fields is set to 0
+    var initialDebounce = AbstractField.prototype.DEBOUNCE;
+    AbstractField.prototype.DEBOUNCE = params.fieldDebounce || 0;
+
     if ('session' in params) {
         var initialSession = _.extend({}, session);
         _.extend(session, params.session);
@@ -262,6 +269,7 @@ function addMockEnvironment(widget, params) {
                 delete config[key];
             }
             _.extend(config, initialConfig);
+            AbstractField.prototype.DEBOUNCE = initialDebounce;
             widgetDestroy.call(this);
         };
     }
@@ -278,6 +286,7 @@ function addMockEnvironment(widget, params) {
             oldDestroy.call(this);
         };
     }
+
 
     intercept(widget, 'call_service', function (event) {
         if (event.data.service === 'ajax') {

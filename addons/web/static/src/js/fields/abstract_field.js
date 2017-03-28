@@ -39,6 +39,10 @@ var AbstractField = Widget.extend({
     events: {
         'keydown': '_onKeydown',
     },
+    // for field widgets that may have a large number of field changes quickly,
+    // it could be a good idea to debounce the changes.  In that case, this is
+    // the suggested value.  For example, see InputField.
+    DEBOUNCE: 1000,
     /**
      * if this flag is set to true, the rest of the web client will assume that
      * it is not editable.  For example, the list view in editable mode will
@@ -150,6 +154,10 @@ var AbstractField = Widget.extend({
         // dom entity.  If done correctly, clicking on the corresponding label
         // (in form view) will focus and select the value.
         this.idForLabel = options.idForLabel;
+
+        // this is the last value that was set by the user, unparsed.  This is
+        // used to avoid setting the value twice in a row with the exact value.
+        this.lastSetValue = undefined;
     },
     /**
      * When a field widget is appended to the DOM, its start method is called,
@@ -292,6 +300,7 @@ var AbstractField = Widget.extend({
      * @param {OdooEvent} event the event that triggered the change
      */
     _reset: function (record, event) {
+        this.lastSetValue = undefined;
         this.record = record;
         this.value = record.data[this.name];
         this.recordData = record.data;
@@ -306,6 +315,12 @@ var AbstractField = Widget.extend({
      * @param {any} value
      */
     _setValue: function (value) {
+        // we try to avoid doing useless work, if the value given has not
+        // changed.  Note that we compare the unparsed values.
+        if (this.lastSetValue === value || (value !== false && value === this.value)) {
+            return;
+        }
+        this.lastSetValue = value;
         try {
             value = this._parseValue(value);
             this._isValid = true;

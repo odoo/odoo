@@ -1991,6 +1991,64 @@ QUnit.module('Views', {
 
         form.destroy();
     });
-});
 
+    QUnit.test('onchanges are not sent for each keystrokes', function (assert) {
+        var done = assert.async();
+        assert.expect(5);
+
+        var onchangeNbr = 0;
+
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.int_field = obj.foo.length + 1000;
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group><field name="foo"/><field name="int_field"/></group>' +
+                '</form>',
+            res_id: 2,
+            fieldDebounce: 3,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    onchangeNbr++;
+                    return concurrency.delay(3).then(function () {
+                        return result;
+                    });
+                }
+                return result;
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        form.$('input').first().val("1").trigger('input');
+        assert.strictEqual(onchangeNbr, 0, "no onchange has been called yet");
+        form.$('input').first().val("12").trigger('input');
+        assert.strictEqual(onchangeNbr, 0, "no onchange has been called yet");
+
+        return concurrency.delay(75).then(function () {
+            assert.strictEqual(onchangeNbr, 1, "one onchange has been called");
+
+            // add something in the input, then focus another input
+            form.$('input').first().val("123").trigger('input');
+            form.$('input').first().focusout();
+            assert.strictEqual(onchangeNbr, 2,
+                "one onchange has been called immediately");
+
+            return concurrency.delay(75);
+        }).then(function () {
+            assert.strictEqual(onchangeNbr, 2,
+                "no extra onchange should have been called");
+
+            form.destroy();
+            done();
+        });
+    });
+
+});
 });

@@ -30,6 +30,7 @@ var _t = core._t;
 var InputField = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'input': '_onInput',
+        'focusout': '_onFocusout',
     }),
 
     /**
@@ -41,6 +42,15 @@ var InputField = AbstractField.extend({
         this._super.apply(this, arguments);
         if (this.mode === 'edit') {
             this.tagName = 'input';
+
+            // we debounce the input changes to make sure they are not done too
+            // quickly.  Note that this is done here and not on the prototype,
+            // so each inputfield has its own debounced function to work with.
+            // Also, if the debounce value is set to 0, no debouncing is done,
+            // which is really useful for the unit tests.
+            if (this.DEBOUNCE) {
+                this._onInput = _.debounce(this._onInput.bind(this), this.DEBOUNCE);
+            }
         }
     },
 
@@ -54,7 +64,7 @@ var InputField = AbstractField.extend({
      * @override
      */
     activate: function () {
-        this.$el.focus();
+        this.$input.focus();
         setTimeout(this.$input.select.bind(this.$input), 0);
     },
 
@@ -76,19 +86,6 @@ var InputField = AbstractField.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * Formats the HTML input tag for edit mode and stores selection status.
-     *
-     * @override
-     * @private
-     */
-    _renderEdit: function () {
-        // Keep a reference to the input so $el can become something else
-        // without losing track of the actual input.
-        this.$input = this.$el;
-        this._prepareInput(this.$input);
-    },
 
     /**
      * Formats an input element for edit mode. This is in a separate function so
@@ -113,6 +110,19 @@ var InputField = AbstractField.extend({
     },
 
     /**
+     * Formats the HTML input tag for edit mode and stores selection status.
+     *
+     * @override
+     * @private
+     */
+    _renderEdit: function () {
+        // Keep a reference to the input so $el can become something else
+        // without losing track of the actual input.
+        this.$input = this.$el;
+        this._prepareInput(this.$input);
+    },
+
+    /**
      * Resets the content to the formated value in readonly mode.
      *
      * @override
@@ -126,6 +136,14 @@ var InputField = AbstractField.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * We immediately notify the outside world when this input loses focus.
+     *
+     * @private
+     */
+    _onFocusout: function () {
+        this._setValue(this.$input.val());
+    },
     /**
      * Implement keyboard movements.  Mostly useful for its environment, such
      * as a list view.
@@ -211,22 +229,6 @@ var FieldDate = InputField.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Automatically selects the input associated with the datepicker widget.
-     * When entering this field via a tab mechanism in list view for example.
-     *
-     * @override
-     */
-    activate: function () {
-        var $input = this.datewidget.$input;
-        $input.focus();
-        setTimeout($input.select.bind($input), 0);
-    },
-
-    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -247,6 +249,7 @@ var FieldDate = InputField.extend({
      */
     _renderEdit: function () {
         this.datewidget.set_value(this.value);
+        this.$input = this.datewidget.$input;
     },
 
 });

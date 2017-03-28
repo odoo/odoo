@@ -155,6 +155,9 @@ var RunningTourActionHelper = core.Class.extend({
             values.$element.text(text);
         }
         values.$element.trigger("change");
+        if (values.$element.is('.o_field_widget.o_form_input.o_form_field')) {
+            values.$element.focusout();
+        }
     },
     _drag_and_drop: function (values, to) {
         var $to = $(to || document.body);
