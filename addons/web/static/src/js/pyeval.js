@@ -854,7 +854,8 @@
         var result_domain = [];
         // Normalize only if the first domain is the array ["|"] or ["!"]
         var need_normalization = (
-            domains.length > 0
+            domains
+            && domains.length > 0
             && domains[0].length === 1
             && (domains[0][0] === "|" || domains[0][0] === "!")
         );
