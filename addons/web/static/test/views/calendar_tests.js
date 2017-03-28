@@ -276,7 +276,7 @@ QUnit.module('Views', {
         $('.modal-body input:first').val('new event in quick create').trigger('input');
         $('.modal button.btn:contains(Create)').trigger('click');
 
-        assert.ok(calendar.$('.fc-event:contains(new event in quick create)').length, "should display the new record");
+        assert.strictEqual(calendar.$('.fc-event:contains(new event in quick create)').length, 1, "should display the new record");
         assert.strictEqual(calendar.$('td.fc-event-container[colspan]').length, 2, "should the new record have only one day");
 
         // create a new event with 2 days
