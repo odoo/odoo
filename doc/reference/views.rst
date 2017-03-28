@@ -97,7 +97,7 @@ how the matched node should be altered:
     the content of the inheritance spec is appended to the matched node
 ``replace``
     the content of the inheritance spec replaces the matched node.
-    Any text node containing only `$0` within the contents of the spec will
+    Any text node containing only ``$0`` within the contents of the spec will
     be replaced  by a complete copy of the matched node, effectively wrapping
     the matched node.
 ``after``
