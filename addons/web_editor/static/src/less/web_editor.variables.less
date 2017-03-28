@@ -85,6 +85,26 @@
 }
 
 
+// ============    'Preview' component Mixins    ===============
+// Create a "preview" work-area to edit/customize specific elements
+
+.o-we-preview-box(@padding: 0px 25px 25px 25px, @color-text: white ) {
+    padding: @padding;
+    border-top: 1px solid black;
+    border-bottom: 1px solid white;
+    .o-linear-gradient(-150deg, @o-we-color-dark, @o-we-color-darker);
+
+    color:  @color-text;
+}
+
+.o-we-preview-content() {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    box-shadow: 0 0 15px 2px #000;
+}
+
+
 // ============    Preservetion mixins    ===============
 // Used to preserve web_editor and website UI from themes customizations
 

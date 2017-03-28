@@ -187,31 +187,48 @@
 
     <!-- Video choosing part of the Media Dialog -->
     <t t-name="web_editor.dialog.video">
-        <form action="#" class="form-inline">
-            <div class="well">
-                <div class="form-group btn-group">
-                    <span class="text-muted pull-right" style="margin-left:10px; line-height: 2em;">(Youtube, Vimeo, Dailymotion)</span>
-                    <label class="pull-left" for="urlvideo" style="width: 220px; line-height: 2em;">Set a video URL</label>
-                    <input class="form-control url pull-left" id="urlvideo" name="url" placeholder="//www.youtube.com/embed/yws1tbgNV7k" style="width: 400px;" t-translation="off" type="text"/>
-                    <button class="btn btn-default">Preview</button>
+        <form action="#" class="form-inline well">
+            <div class="o_video_dialog_form">
+                <div class="form-group" id="o_video_form_group">
+                    <label class="mt8" for="o_video_text">Video code <small class="text-muted">(URL or Embed)</small></label>
+                    <textarea class="form-control url" id="o_video_text" placeholder="Copy-paste your URL or embed code here"/>
+                    <label class="control-label o_validate_feedback" for="o_video_text"><i class="fa fa-check"/><i class="fa fa-exclamation-triangle"/></label>
                 </div>
-                <div class="form-group btn-group">
-                    <label class="pull-left" for="urlvideo" style="width: 220px; line-height: 2em;">
-                        <span class="text-muted">— or —</span>Embed Video (HTML)</label>
-                    <input class="form-control url pull-left" id="embedvideo" name="embed" placeholder="&lt;iframe src=&quot;//www.youtube.com/embed/yws1tbgNV7k&quot;&gt;&lt;/iframe&gt;" style="width: 400px;" t-translation="off" type="text"/>
-                    <button class="btn btn-default">Preview</button>
+                <div class="text-right">
+                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Instagram</i></b>, <b><i>Vine.co</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
+                </div>
+                <div class="o_video_dialog_options hidden mt48">
+                    <small class="text-muted">Options</small>
+                    <ul class="list-group">
+                        <li class="list-group-item o_yt_option o_vim_option o_dm_option">
+                            <label class="o_switch mb0"><input id="o_video_autoplay" type="checkbox"/><span/>Autoplay</label>
+                        </li>
+                        <li class="list-group-item o_yt_option o_vim_option">
+                            <label class="o_switch mb0"><input id="o_video_loop" type="checkbox"/><span/>Loop</label>
+                        </li>
+                        <li class="list-group-item o_yt_option o_dm_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_controls" type="checkbox"/><span/>Hide player controls</label>
+                        </li>
+                        <li class="list-group-item o_yt_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_fullscreen" type="checkbox"/><span/>Hide fullscreen button</label>
+                        </li>
+                        <li class="list-group-item o_yt_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_yt_logo" type="checkbox"/><span/>Hide Youtube logo</label>
+                        </li>
+                        <li class="list-group-item o_dm_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_dm_logo" type="checkbox"/><span/>Hide Dailymotion logo</label>
+                        </li>
+                        <li class="list-group-item o_dm_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_dm_share" type="checkbox"/><span/>Hide sharing button</label>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div id="video-preview">
+                <div class="o_video_dialog_preview_text small mt16 mb8 hidden">Preview</div>
                 <div class="media_iframe_video">
                     <div class="media_iframe_video_size"/>
-                    <iframe allowfullscreen="allowfullscreen" frameborder="0" src=""/>
-                </div>
-            </div>
-            <div class="text-center mt8">
-                <div class="checkbox">
-                    <label title="The feature might not be supported for every video type">
-                        <input id="autoplay" style="margin-right:5px" type="checkbox"/>Autoplay</label>
+                    <iframe class="o_video_dialog_iframe" allowfullscreen="allowfullscreen" frameborder="0" src=""/>
                 </div>
             </div>
         </form>
