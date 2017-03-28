@@ -831,7 +831,7 @@ QUnit.module('relational_fields', {
         // discard changes
         form.$buttons.find('.o_form_button_cancel').click();
         assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'new value',
-            "changes shouldn't have been discarding yet, waiting for user confirmation");
+            "changes shouldn't have been discarded yet, waiting for user confirmation");
         $('.modal .modal-footer .btn-primary').click();
         assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'relational record 1',
             "display name of first record in o2m list should be 'relational record 1'");
