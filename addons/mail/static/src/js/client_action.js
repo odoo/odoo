@@ -590,7 +590,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var self = this;
         var options = this.selected_message ? {} : {channel_id: this.channel.id};
         if (this.selected_message) {
-            message.subtype = 'mail.mt_comment';
+            message.subtype = this.selected_message.is_note ? 'mail.mt_note': 'mail.mt_comment';
             message.subtype_id = false;
             message.message_type = 'comment';
             message.content_subtype = 'html';
