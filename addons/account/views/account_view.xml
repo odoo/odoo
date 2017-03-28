@@ -2014,7 +2014,9 @@
             <field name="view_id" ref="product_product_view_tree"/>
         </record>
 
-        <menuitem id="menu_product_product_action" name="Products" action="product_product_action" parent="account.menu_finance_configuration" sequence="1"/>
+        <menuitem id="product_configuration_menu" name="Products" parent="account.menu_finance_configuration" sequence="1"/>
+        
+        <menuitem id="menu_product_product_action" name="Products" action="product_product_action" parent="product_configuration_menu" sequence="1"/>
 
 
         <menuitem id="menu_product_template_action" name="Sellable Products"
