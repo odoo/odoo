@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 
 
 class MailComposeMessage(models.TransientModel):
@@ -40,14 +40,28 @@ class MailComposeMessage(models.TransientModel):
                         'mailing_model': self.model,
                         'mailing_domain': self.active_domain,
                 })
+            blacklist = self._context.get('mass_mailing_blacklist')
+            seen_list = self._context.get('mass_mailing_seen_list')
             for res_id in res_ids:
-                res[res_id].update({
+                mail_values = res[res_id]
+                recips = tools.email_split(mail_values.get('email_to'))
+                mail_to = recips[0].lower() if recips else False
+                if (blacklist and mail_to in blacklist) or (seen_list and mail_to in seen_list):
+                    # prevent sending to blocked addresses that were included by mistake
+                    mail_values['state'] = 'cancel'
+                elif seen_list is not None:
+                    seen_list.add(mail_to)
+                stat_vals = {
+                    'model': self.model,
+                    'res_id': res_id,
+                    'mass_mailing_id': mass_mailing.id
+                }
+                # propagate exception state to stat when still-born
+                if mail_values.get('state') == 'cancel':
+                    stat_vals['exception'] = fields.Datetime.now()
+                mail_values.update({
                     'mailing_id': mass_mailing.id,
-                    'statistics_ids': [(0, 0, {
-                        'model': self.model,
-                        'res_id': res_id,
-                        'mass_mailing_id': mass_mailing.id,
-                    })],
+                    'statistics_ids': [(0, 0, stat_vals)],
                     # email-mode: keep original message for routing
                     'notification': mass_mailing.reply_to_mode == 'thread',
                     'auto_delete': not mass_mailing.keep_archives,

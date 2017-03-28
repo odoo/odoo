@@ -79,6 +79,12 @@
             <xpath expr="//img[@t-att-title='record.owner_user_id.value']" position='replace'>
                 <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="27" height="27" class="oe_kanban_avatar"/>
             </xpath>
+            <div t-if="!record.owner_user_id.raw_value" position='replace'/>
+            <div t-if="record.owner_user_id.raw_value" position='replace'>
+                <div t-if="record.employee_id.value"><field name="employee_id"/></div>
+                <div t-if="record.department_id.value"><field name="department_id"/>
+            </div>
+            </div>
         </field>
     </record>
 

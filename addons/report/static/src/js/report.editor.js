@@ -1,6 +1,8 @@
 odoo.define('report.editor', function (require) {
 'use strict';
 
+var ajax = require('web.ajax');
+var core = require('web.core');
 var utils = require('report.utils');
 var editor = require('web_editor.editor');
 var options = require('web_editor.snippets.options');
@@ -9,6 +11,8 @@ var web_base_url = $('html').attr('web-base-url');
 var trusted_host = utils.get_host_from_url(web_base_url);
 var trusted_protocol = utils.get_protocol_from_url(web_base_url);
 var trusted_origin = utils.build_origin(trusted_protocol, trusted_host);
+
+ajax.loadXML('/web/static/src/xml/base_common.xml', core.qweb);
 
 // Patch the editor's behavior when it is launched inside an iframe.
 if (window.self !== window.top) {
