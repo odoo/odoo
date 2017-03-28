@@ -1122,6 +1122,22 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     },
 });
 
+var KanbanFieldMany2ManyTags = FieldMany2Many.extend({
+    _render: function () {
+        var self = this;
+        this.$el.addClass('o_form_field_many2manytags o_kanban_tags');
+        _.each(this.value.data, function (m2m) {
+            // 10th color is invisible
+            if ('color' in m2m.data && m2m.data.color !== 10) {
+                $('<span>')
+                    .addClass('o_tag o_tag_color_' + m2m.data.color)
+                    .attr('title', _.str.escapeHTML(m2m.data.display_name))
+                    .appendTo(self.$el);
+            }
+        });
+    },
+});
+
 var FieldMany2ManyCheckBoxes = AbstractField.extend({
     template: 'FieldMany2ManyCheckBoxes',
     events: _.extend({}, AbstractField.prototype.events, {
@@ -1464,6 +1480,7 @@ return {
     FieldMany2ManyCheckBoxes: FieldMany2ManyCheckBoxes,
     FieldMany2ManyTags: FieldMany2ManyTags,
     FormFieldMany2ManyTags: FormFieldMany2ManyTags,
+    KanbanFieldMany2ManyTags: KanbanFieldMany2ManyTags,
 
     FieldRadio: FieldRadio,
     FieldSelection: FieldSelection,

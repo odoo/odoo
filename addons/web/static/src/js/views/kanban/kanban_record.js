@@ -176,8 +176,11 @@ var KanbanRecord = Widget.extend({
             var $field = $(this);
             var field_name = $field.attr("name");
             var field_widget = $field.attr("widget");
-            if (field_widget) {
-                // a widget is specified for that field
+
+            // a widget is specified for that field or a field is a many2many ;
+            // in this latest case, we want to display the widget many2manytags
+            // even if it is not specified in the view.
+            if (field_widget || self.fields[field_name].type === 'many2many') {
                 var widget = self.subWidgets[field_name];
                 if (!widget) {
                     // the widget doesn't exist yet, so instanciate it
@@ -270,28 +273,8 @@ var KanbanRecord = Widget.extend({
         this._processFields();
         this._setupColor();
         this._setupColorPicker();
-        this._renderM2MTags();
         this._attachTooltip();
-    },
-    /**
-     * @private
-     */
-    _renderM2MTags: function () {
-        var self = this;
-        _.each(this.recordData, function (values, field_name) {
-            if (self.fields[field_name].type !== 'many2many') { return; }
-            var rel_ids = self.record[field_name].raw_value;
-            var $m2m_tags = self.$('.o_form_field_many2manytags[name=' + field_name + ']');
-            _.each(rel_ids, function (id) {
-                var m2m = _.findWhere(values.data, {res_id: id}).data;
-                if (typeof m2m.color !== 'undefined' && m2m.color !== 10) { // 10th color is invisible
-                    $('<span>')
-                        .addClass('o_tag o_tag_color_' + m2m.color)
-                        .attr('title', _.str.escapeHTML(m2m.display_name))
-                        .appendTo($m2m_tags);
-                }
-            });
-        });
+
         // We use boostrap tooltips for better and faster display
         this.$('span.o_tag').tooltip({delay: {'show': 50}});
     },
