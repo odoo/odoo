@@ -561,6 +561,7 @@ class StockMove(models.Model):
         moves_to_assign = self.env['stock.move']
         moves_to_do = self.env['stock.move']
         operations = self.env['stock.pack.operation']
+        ancestors_list = {}
 
         # work only on in progress moves
         moves = self.filtered(lambda move: move.state in ['confirmed', 'waiting', 'assigned'])
@@ -583,6 +584,7 @@ class StockMove(models.Model):
                 # we always search for yet unassigned quants
                 main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
 
+                ancestors_list[move.id] = True if ancestors else False
                 if move.state == 'waiting' and not ancestors:
                     # if the waiting move hasn't yet any ancestor (PO/MO not confirmed yet), don't find any quant available in stock
                     main_domain[move.id] += [('id', '=', False)]
@@ -626,7 +628,9 @@ class StockMove(models.Model):
                             lot_qty[lot] -= qty
                             move_qty -= qty
 
-        for move in moves_to_do:
+        # Sort moves to reserve first the ones with ancestors, in case the same product is listed in
+        # different stock moves.
+        for move in sorted(moves_to_do, key=lambda x: -1 if ancestors_list.get(x.id) else 0):
             # then if the move isn't totally assigned, try to find quants without any specific domain
             if move.state != 'assigned' and not self.env.context.get('reserve_only_ops'):
                 qty_already_assigned = move.reserved_availability

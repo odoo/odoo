@@ -48,7 +48,7 @@ class ProductCategory(models.Model):
         def get_names(cat):
             """ Return the list [cat.name, cat.parent_id.name, ...] """
             res = []
-            while cat:
+            while cat and cat.id:
                 res.append(cat.name)
                 cat = cat.parent_id
             return res

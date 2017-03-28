@@ -42,7 +42,7 @@ class PurchaseOrder(models.Model):
             if min_date:
                 order.date_planned = min_date
 
-    @api.depends('state', 'order_line.qty_invoiced', 'order_line.product_qty')
+    @api.depends('state', 'order_line.qty_invoiced', 'order_line.qty_received', 'order_line.product_qty')
     def _get_invoiced(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for order in self:
@@ -50,9 +50,9 @@ class PurchaseOrder(models.Model):
                 order.invoice_status = 'no'
                 continue
 
-            if any(float_compare(line.qty_invoiced, line.product_qty, precision_digits=precision) == -1 for line in order.order_line):
+            if any(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) == -1 for line in order.order_line):
                 order.invoice_status = 'to invoice'
-            elif all(float_compare(line.qty_invoiced, line.product_qty, precision_digits=precision) >= 0 for line in order.order_line):
+            elif all(float_compare(line.qty_invoiced, line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received, precision_digits=precision) >= 0 for line in order.order_line):
                 order.invoice_status = 'invoiced'
             else:
                 order.invoice_status = 'no'
@@ -524,7 +524,10 @@ class PurchaseOrderLine(models.Model):
             qty = 0.0
             for inv_line in line.invoice_lines:
                 if inv_line.invoice_id.state not in ['cancel']:
-                    qty += inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
+                    if inv_line.invoice_id.type == 'in_invoice':
+                        qty += inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
+                    elif inv_line.invoice_id.type == 'in_refund':
+                        qty -= inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
     @api.depends('order_id.state', 'move_ids.state')
@@ -582,8 +585,8 @@ class PurchaseOrderLine(models.Model):
     invoice_lines = fields.One2many('account.invoice.line', 'purchase_line_id', string="Bill Lines", readonly=True, copy=False)
 
     # Replace by invoiced Qty
-    qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty", store=True)
-    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty", store=True)
+    qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty", digits=dp.get_precision('Product Unit of Measure'), store=True)
+    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty", digits=dp.get_precision('Product Unit of Measure'), store=True)
 
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', string='Partner', readonly=True, store=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
@@ -1050,7 +1053,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_buy_route(self):
-        buy_route = self.env.ref('purchase.route_warehouse0_buy')
+        buy_route = self.env.ref('purchase.route_warehouse0_buy', raise_if_not_found=False)
         if buy_route:
             return buy_route.ids
         return []

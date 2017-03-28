@@ -8,6 +8,7 @@ from collections import Mapping, defaultdict, deque
 from contextlib import closing
 from functools import partial
 from operator import attrgetter
+from weakref import WeakValueDictionary
 import logging
 import os
 import threading
@@ -30,6 +31,9 @@ class Registry(Mapping):
     """
     _lock = threading.RLock()
     _saved_lock = None
+
+    # a cache for model classes, indexed by their base classes
+    model_cache = WeakValueDictionary()
 
     @lazy_classproperty
     def registries(cls):
@@ -179,12 +183,6 @@ class Registry(Mapping):
     def __setitem__(self, model_name, model):
         """ Add or replace a model in the registry."""
         self.models[model_name] = model
-
-    @lazy_classproperty
-    def model_cache(cls):
-        """ A cache for model classes, indexed by their base classes. """
-        # we cache 256 classes per registry on average
-        return LRU(cls.registries.count * 256)
 
     @lazy_property
     def field_sequence(self):

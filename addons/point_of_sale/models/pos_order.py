@@ -751,7 +751,7 @@ class PosOrder(models.Model):
 
 class PosOrderLine(models.Model):
     _name = "pos.order.line"
-    _description = "Lines of Point of Sale"
+    _description = "Lines of Point of Sale Orders"
     _rec_name = "product_id"
 
     def _order_line_fields(self, line, session_id=None):

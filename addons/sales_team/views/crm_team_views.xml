@@ -197,5 +197,18 @@
             action="sales_team_config_action"
             sequence="2"/>
 
+        <record id="mail_activity_type_action_config_sales" model="ir.actions.act_window">
+            <field name="name">Activity Types</field>
+            <field name="res_model">mail.activity.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', '=', 'res.partner')]</field>
+        </record>
+        <menuitem name="Activity Types"
+            id="sales_team_menu_config_activity_types"
+            sequence="2"
+            action="mail_activity_type_action_config_sales"
+            parent="sales_team.menu_sale_config"/>
+
     </data>
 </odoo>

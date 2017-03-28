@@ -948,9 +948,11 @@ ListView.List = Class.extend({
                     $row = self.$current.children(
                         '[data-id=' + record.get('id') + ']');
                 }
-                var $newRow = $(self.render_record(record));
-                $newRow.find('.o_list_record_selector input').prop('checked', !!$row.find('.o_list_record_selector input').prop('checked'));
-                $row.replaceWith($newRow);
+                if ($row.length) {
+                    var $newRow = $(self.render_record(record));
+                    $newRow.find('.o_list_record_selector input').prop('checked', !!$row.find('.o_list_record_selector input').prop('checked'));
+                    $row.replaceWith($newRow);
+                }
             },
             'add': function (ev, records, record, index) {
                 var $new_row = $(self.render_record(record));
