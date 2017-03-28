@@ -434,7 +434,7 @@ QUnit.module('Views', {
             arch: '<kanban class="o_kanban_test">' +
                         '<templates><t t-name="kanban-box">' +
                             '<div>' +
-                                '<div class="o_kanban_tags_section"><field name="category_ids" widget="many2many_tags"/></div>' +
+                                '<field name="category_ids"/>' +
                                 '<field name="foo"/>' +
                             '</div>' +
                         '</t></templates>' +
@@ -446,9 +446,9 @@ QUnit.module('Views', {
         });
 
         var $first_record = kanban.$('.o_kanban_record:first()');
-        assert.strictEqual($first_record.find('.o_form_field_many2manytags .badge').length, 2,
+        assert.strictEqual($first_record.find('.o_form_field_many2manytags .o_tag').length, 2,
             'first record should contain 2 tags');
-        assert.ok($first_record.find('span:first()').hasClass('o_tag_color_2'),
+        assert.ok($first_record.find('.o_tag:first()').hasClass('o_tag_color_2'),
             'first tag should have color 2');
         assert.strictEqual(count, 2,
             'two RPC should have been done(one search read and one read for the m2m');

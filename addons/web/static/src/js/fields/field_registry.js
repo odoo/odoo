@@ -58,8 +58,9 @@ registry
     .add('kanban.many2one', relational_fields.KanbanFieldMany2One)
     .add('many2many', relational_fields.FieldMany2Many)
     .add('many2many_tags', relational_fields.FieldMany2ManyTags)
-    .add('many2many_checkboxes', relational_fields.FieldMany2ManyCheckBoxes)
     .add('form.many2many_tags', relational_fields.FormFieldMany2ManyTags)
+    .add('kanban.many2many_tags', relational_fields.KanbanFieldMany2ManyTags)
+    .add('many2many_checkboxes', relational_fields.FieldMany2ManyCheckBoxes)
     .add('one2many', relational_fields.FieldOne2Many)
     .add('statusbar', relational_fields.FieldStatus)
     .add('one2many_list', relational_fields.FieldOne2Many);

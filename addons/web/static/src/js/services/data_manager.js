@@ -392,6 +392,10 @@ return core.Class.extend({
             if (!Widget) {
                 console.warn("Missing widget: ", attrs.widget, " for field", attrs.name, "of type", field.type);
             }
+        } else if (viewType === 'kanban' && field.type === 'many2many') {
+            // we want to display the widget many2manytags in kanban even if it
+            // is not specified in the view
+            Widget = fieldRegistry.get('kanban.many2many_tags');
         }
         return Widget || fieldRegistry.getAny([viewType + "." + field.type, field.type, "abstract"]);
     },

@@ -3,7 +3,6 @@ odoo.define('web.KanbanRenderer', function (require) {
 
 var BasicRenderer = require('web.BasicRenderer');
 var core = require('web.core');
-var field_registry = require('web.field_registry');
 var KanbanColumn = require('web.KanbanColumn');
 var KanbanRecord = require('web.KanbanRecord');
 var quick_create = require('web.kanban_quick_create');
@@ -45,37 +44,6 @@ function transformQwebTemplate(node, fields) {
         }
     }
     switch (node.tag) {
-        case 'field':
-            var ftype = fields[node.attrs.name].type;
-            ftype = node.attrs.widget ? node.attrs.widget : ftype;
-            if (ftype === 'many2many') {
-                node.tag = 'div';
-                node.attrs['class'] = (node.attrs['class'] || '') + ' oe_form_field o_form_field_many2manytags o_kanban_tags';
-            } else if (field_registry.contains(ftype)) {
-                // do nothing, the kanban record will handle it
-            } else {
-                node.tag = 'span';
-                var child_node = {
-                    attrs: {},
-                    children: [],
-                    tag: qweb.prefix,
-                };
-                child_node.attrs[qweb.prefix + '-esc'] = 'record.' + node.attrs.name + '.value';
-                node.children.push(child_node);
-
-                // set class according to field attribute
-                var child_classes = [];
-                if (node.attrs.display === 'right') {
-                    child_classes.push('pull-right');
-                } else if (node.attrs.display === 'full') {
-                    child_classes.push('o_text_block');
-                }
-                if (node.attrs.bold) {
-                    child_classes.push('o_text_bold');
-                }
-                node.attrs['class'] = child_classes.join(' ');
-            }
-            break;
         case 'button':
         case 'a':
             var type = node.attrs.type || '';
