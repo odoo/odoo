@@ -152,7 +152,7 @@
             <field name="model">fleet.vehicle.state</field>
             <field name="arch" type="xml">
                 <tree string="State" editable="bottom">
-                    <field name="sequence" widget="handler" invisible="1"/>
+                    <field name="sequence" widget="handler"/>
                     <field name="name" />
 
                 </tree>
@@ -176,8 +176,8 @@
 
         <menuitem name="Fleet" id="menu_root" sequence="115" groups="fleet_group_user" web_icon="fleet,static/description/icon.png"/>
         <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="100" groups="fleet_group_manager"/>
-        <menuitem action="fleet_vehicle_model_action" parent="fleet_configuration" id="fleet_vehicle_model_menu" groups="base.group_no_one"/>
-        <menuitem action="fleet_vehicle_model_brand_action" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" groups="base.group_no_one"/>
+        <menuitem action="fleet_vehicle_model_action" parent="fleet_configuration" id="fleet_vehicle_model_menu"/>
+        <menuitem action="fleet_vehicle_model_brand_action" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu"/>
         <menuitem action="fleet_vehicle_state_action" parent="fleet_configuration" id="fleet_vehicle_state_menu" groups="fleet_group_manager"/>
 
         <record id='fleet_vehicle_view_form' model='ir.ui.view'>
@@ -274,7 +274,7 @@
                                 <field name="transmission" />
                                 <field name="fuel_type" />
                                 <label for="co2"/>
-                                <div class="o_row">
+                                <div class="o_row" name="co2">
                                     <field name="co2"/><span>g/km</span>
                                 </div>
                                 <field name="horsepower" />
@@ -476,7 +476,11 @@
                                     </field>
 
                                 </group>
-                                <div class="oe_right"><group><field name="sum_cost" string="Indicative Costs Total"/></group></div>
+                                <div class="oe_right">
+                                    <group>
+                                        <field name="sum_cost" string="Indicative Costs Total"/>
+                                    </group>
+                                </div>
                             </page>
                             <page string="Generated Recurring Costs">
                                 <group>
@@ -879,7 +883,7 @@
             </field>
         </record>
 
-        <menuitem id="fleet_vehicle_tag_menu" parent="fleet_configuration" action="fleet_vehicle_tag_action" sequence="112" groups="base.group_no_one"/>
+        <menuitem id="fleet_vehicle_tag_menu" parent="fleet_configuration" action="fleet_vehicle_tag_action" sequence="112"/>
 
         <record id='fleet_vehicle_service_types_view_tree' model='ir.ui.view'>
             <field name="name">fleet.service.type.tree</field>
@@ -909,7 +913,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_service_types_action" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" groups="base.group_no_one"/>
+        <menuitem action="fleet_vehicle_service_types_action" parent="fleet_configuration" id="fleet_vehicle_service_types_menu"/>
 
         <record id='fleet_vehicle_cost_view_tree' model='ir.ui.view'>
             <field name="name">fleet.vehicle.cost.tree</field>

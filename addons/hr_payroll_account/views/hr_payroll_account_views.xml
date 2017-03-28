@@ -41,6 +41,7 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='duration_group']" position="after">
+                    <group/>
                    <group string="Accounting">
                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                         <field name="journal_id"/>

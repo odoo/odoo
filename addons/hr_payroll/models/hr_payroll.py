@@ -85,6 +85,33 @@ class HrContract(models.Model):
         ('bi-weekly', 'Bi-weekly'),
         ('bi-monthly', 'Bi-monthly'),
     ], string='Scheduled Pay', index=True, default='monthly')
+    advantage_ids = fields.One2many('hr.contract.advantage', 'contract_id', 'Contract Advantage', copy=True,
+        help="The default advantages will be set on the contract if they're defined for the country of the company you're logged in.")
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
+    resource_calendar_id = fields.Many2one(required=True)
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        # import pdb; pdb.set_trace()
+        # TODO: Should be a default_get on the advantage lines + an onchange on the company to remove/add the new advantages
+        if self.company_id.country_id:
+            advantages_to_create = self.env['hr.contract.advantage.template'].search([('country_id', '=', self.company_id.country_id.id)])
+            # import pdb; pdb.set_trace()
+            command = [
+                (0, 0, {
+                    'name': advantage.name,
+                    'code': advantage.code,
+                    'active': True,
+                    'lower_bound': advantage.lower_bound,
+                    'upper_bound': advantage.upper_bound,
+                    'country_id': advantage.country_id.id,
+                    'value': advantage.advantage_type in ['value', 'range'] and advantage.default_value or 0.0,
+                    'default_value': advantage.default_value,
+                    'advantage_type': advantage.advantage_type,
+                }) for advantage in advantages_to_create
+            ]
+            # import pdb; pdb.set_trace()
+            self.advantage_ids = command
 
     @api.multi
     def get_all_structures(self):
@@ -98,6 +125,97 @@ class HrContract(models.Model):
         # YTI TODO return browse records
         return list(set(structures._get_parent_structure().ids))
 
+    @api.multi
+    def get_value(self, code):
+        self.ensure_one()
+        advantage_line = self.advantage_ids.filtered(lambda x: x.code == code)
+        if advantage_line:
+            return advantage_line.value
+        else:
+            return 0.0
+
+    def is_active_advantage(self, code):
+        self.ensure_one()
+        return self.advantage_ids.filtered(lambda x: x.code == code).active
+
+    @api.multi
+    def get_attribute(self, code, attribute):
+        # import pdb; pdb.set_trace()
+        return getattr(self.env['hr.contract.advantage.template'].search([('code', '=', code)], limit=1), attribute)
+
+    @api.multi
+    def set_value(self, code, value):
+        advantage = self.advantage_ids.filtered(lambda x: x.code == code)
+        if advantage:
+            advantage.value = value
+
+    @api.multi
+    def set_attribute(self, code, attribute, value):
+        for contract in self:
+            advantage = contract.advantage_ids.filtered(lambda x: x.code == code)
+            if advantage:
+                setattr(advantage, attribute, value)
+                if attribute == 'active':
+                    advantage._onchange_active()
+
+
+class HrContractAdvandageTemplate(models.Model):
+    _name = 'hr.contract.advantage.template'
+    _description = "Employee's Advantage on Contract"
+
+    name = fields.Char('Name', required=True)
+    code = fields.Char('Code')
+    advantage_type = fields.Selection([
+        ('value', 'Value'),
+        ('range', 'Range'),
+        ('selection', 'Selection'),
+    ], string="Advantage Type", default="value")
+    lower_bound = fields.Float('Lower Bound', help="Lower bound authorized by the employer for this advantage")
+    upper_bound = fields.Float('Upper Bound', help="Upper bound authorized by the employer for this advantage")
+    country_id = fields.Many2one('res.country', "Country")
+    advantage_values = fields.One2many('hr.contract.advantage.value', 'advantage_template_id', string="Admissible Values")
+    default_value = fields.Float('Default value for this advantage')
+
+class HrContractAdvantage(models.Model):
+    _name = 'hr.contract.advantage'
+    _inherit = 'hr.contract.advantage.template'
+    _description = "Employee's Advantage on Contract"
+
+    contract_id = fields.Many2one('hr.contract', 'Related Contract')
+    value = fields.Float('Amount of the advantage', digits=dp.get_precision('Payroll'))
+    active = fields.Boolean('Active', default=True)
+
+    # _sql_constraints = [
+    #     ('code_uniq', 'unique (contract_id, code)', "The codes must be different on the same contract."),
+    # ]
+
+    @api.onchange('active')
+    def _onchange_active(self):
+        # import pdb; pdb.set_trace()
+        if self.active:
+            self.value = self.env['hr.contract.advantage.template'].search([('code', '=', self.code)], limit=1).default_value
+        else:
+            self.value = 0.0
+
+    # def write(self, vals):
+    #     if 'active' in vals:
+    #         for advantage in self:
+    #             self._onchange_active()
+
+    @api.onchange('value')
+    def _onchange_value(self):
+        if self.advantage_type == 'range':
+            if self.value <= self.lower_bound:
+                self.value = self.lower_bound
+            elif self.value >= self.upper_bound:
+                self.value = self.upper_bound
+
+class HrContractAdvantageValue(models.Model):
+    _name = 'hr.contract.advantage.value'
+    _description = "Advantage Possible Value"
+
+    advantage_template_id = fields.Many2one('hr.contract.advantage.template', 'Related Advantage Template')
+    value = fields.Float("Value")
 
 class HrContributionRegister(models.Model):
     _name = 'hr.contribution.register'
@@ -286,7 +404,7 @@ class HrPayslip(models.Model):
         clause_2 = ['&', ('date_start', '<=', date_to), ('date_start', '>=', date_from)]
         #OR if it starts before the date_from and finish after the date_end (or never finish)
         clause_3 = ['&', ('date_start', '<=', date_from), '|', ('date_end', '=', False), ('date_end', '>=', date_to)]
-        clause_final = [('employee_id', '=', employee.id), '|', '|'] + clause_1 + clause_2 + clause_3
+        clause_final = [('employee_id', '=', employee.id), ('state', '=', 'open'), '|', '|'] + clause_1 + clause_2 + clause_3
         return self.env['hr.contract'].search(clause_final).ids
 
     @api.multi
@@ -304,14 +422,14 @@ class HrPayslip(models.Model):
         return True
 
     @api.model
-    def get_worked_day_lines(self, contract_ids, date_from, date_to):
+    def get_worked_day_lines(self, contracts, date_from, date_to):
         """
-        @param contract_ids: list of contract id
+        @param contract: Browse record of contracts
         @return: returns a list of dict containing the input that should be applied for the given contract between date_from and date_to
         """
         res = []
         # fill only if the contract as a working schedule linked
-        for contract in self.env['hr.contract'].browse(contract_ids).filtered(lambda contract: contract.resource_calendar_id):
+        for contract in contracts.filtered(lambda contract: contract.resource_calendar_id):
             day_from = datetime.combine(fields.Date.from_string(date_from), datetime_time.min)
             day_to = datetime.combine(fields.Date.from_string(date_to), datetime_time.max)
 
@@ -329,7 +447,7 @@ class HrPayslip(models.Model):
                         'number_of_hours': 0.0,
                         'contract_id': contract.id,
                     })
-                    leave_time = (interval[1] - interval[0]).seconds/3600
+                    leave_time = (interval[1] - interval[0]).seconds / 3600
                     current_leave_struct['number_of_hours'] += leave_time
                     work_hours = contract.employee_id.get_day_work_hours_count(interval[0].date(), calendar=contract.resource_calendar_id)
                     current_leave_struct['number_of_days'] += leave_time / work_hours
@@ -348,12 +466,10 @@ class HrPayslip(models.Model):
             res += [attendances] + leaves.values()
         return res
 
-    # YTI TODO contract_ids should be a browse record
     @api.model
-    def get_inputs(self, contract_ids, date_from, date_to):
+    def get_inputs(self, contracts, date_from, date_to):
         res = []
 
-        contracts = self.env['hr.contract'].browse(contract_ids)
         structure_ids = contracts.get_all_structures()
         rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
@@ -374,9 +490,8 @@ class HrPayslip(models.Model):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
-            if category.code in localdict['categories'].dict:
-                amount += localdict['categories'].dict[category.code]
-            localdict['categories'].dict[category.code] = amount
+            print 'pourquoi', category.code, category.code in localdict['categories'].dict, amount, category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
+            localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
             return localdict
 
         class BrowsableObject(object):
@@ -478,11 +593,16 @@ class HrPayslip(models.Model):
                     amount, qty, rate = rule.compute_rule(localdict)
                     #check if there is already a rule computed with that code
                     previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
+                    print rule.name
+                    print 'zboub', amount
                     #set/overwrite the amount computed for this rule in the localdict
                     tot_rule = amount * qty * rate / 100.0
                     localdict[rule.code] = tot_rule
                     rules_dict[rule.code] = rule
                     #sum the amount for its salary category
+                    # print 'sum', _sum_salary_rule_category(localdict, rule.category_id, tot_rule - previous_amount)['categories'].DED
+                    # if rule.name == 'Reduction for dependent seniors':
+                    #     import pdb; pdb.set_trace()
                     localdict = _sum_salary_rule_category(localdict, rule.category_id, tot_rule - previous_amount)
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
@@ -509,6 +629,7 @@ class HrPayslip(models.Model):
                         'quantity': qty,
                         'rate': rate,
                     }
+                    print 'basic', categories.BASIC, 'allowance', categories.ALW, 'deduction', categories.DED, 'sum', categories.BASIC + categories.ALW + categories.DED
                 else:
                     #blacklist this rule and its children
                     blacklist += [id for id, seq in rule._recursive_search_of_rules()]
@@ -567,8 +688,9 @@ class HrPayslip(models.Model):
             'struct_id': struct.id,
         })
         #computation of the salary input
-        worked_days_line_ids = self.get_worked_day_lines(contract_ids, date_from, date_to)
-        input_line_ids = self.get_inputs(contract_ids, date_from, date_to)
+        contracts = self.env['hr.contract'].browse(contract_ids)
+        worked_days_line_ids = self.get_worked_day_lines(contracts, date_from, date_to)
+        input_line_ids = self.get_inputs(contracts, date_from, date_to)
         res['value'].update({
             'worked_days_line_ids': worked_days_line_ids,
             'input_line_ids': input_line_ids,
@@ -601,13 +723,14 @@ class HrPayslip(models.Model):
         self.struct_id = self.contract_id.struct_id
 
         #computation of the salary input
-        worked_days_line_ids = self.get_worked_day_lines(contract_ids, date_from, date_to)
+        contracts = self.env['hr.contract'].browse(contract_ids)
+        worked_days_line_ids = self.get_worked_day_lines(contracts, date_from, date_to)
         worked_days_lines = self.worked_days_line_ids.browse([])
         for r in worked_days_line_ids:
             worked_days_lines += worked_days_lines.new(r)
         self.worked_days_line_ids = worked_days_lines
 
-        input_line_ids = self.get_inputs(contract_ids, date_from, date_to)
+        input_line_ids = self.get_inputs(contracts, date_from, date_to)
         input_lines = self.input_line_ids.browse([])
         for r in input_line_ids:
             input_lines += input_lines.new(r)
@@ -621,6 +744,13 @@ class HrPayslip(models.Model):
         self.with_context(contract=True).onchange_employee()
         return
 
+    def get_salary_line_total(self, code):
+        self.ensure_one()
+        line = self.line_ids.filtered(lambda line: line.code == code)
+        if line:
+            return line[0].total
+        else:
+            return 0.0
 
 class HrPayslipWorkedDays(models.Model):
     _name = 'hr.payslip.worked_days'
@@ -750,6 +880,7 @@ class HrSalaryRule(models.Model):
         :return: returns a tuple build as the base/amount computed, the quantity and the rate
         :rtype: (float, float, float)
         """
+        print 'je suis con comme un piston', self.code, self.name
         self.ensure_one()
         if self.amount_select == 'fix':
             try:
@@ -765,6 +896,8 @@ class HrSalaryRule(models.Model):
                 raise UserError(_('Wrong percentage base or quantity defined for salary rule %s (%s).') % (self.name, self.code))
         else:
             try:
+                # if self.code == 'Red.Iso.Par':
+                #     import pdb; pdb.set_trace()
                 safe_eval(self.amount_python_compute, localdict, mode='exec', nocopy=True)
                 return float(localdict['result']), 'result_qty' in localdict and localdict['result_qty'] or 1.0, 'result_rate' in localdict and localdict['result_rate'] or 100.0
             except:
@@ -788,6 +921,9 @@ class HrSalaryRule(models.Model):
                 raise UserError(_('Wrong range condition defined for salary rule %s (%s).') % (self.name, self.code))
         else:  # python code
             try:
+                # if self.code == "ATN.CAR":
+                #     import pdb; pdb.set_trace()
+                print safe_eval(self.condition_python, localdict, mode='exec', nocopy=True)
                 safe_eval(self.condition_python, localdict, mode='exec', nocopy=True)
                 return 'result' in localdict and localdict['result'] or False
             except:

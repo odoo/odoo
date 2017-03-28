@@ -16,6 +16,7 @@ class Employee(models.Model):
     medic_exam = fields.Date(string='Medical Examination Date')
     place_of_birth = fields.Char('Place of Birth')
     children = fields.Integer(string='Number of Children')
+    # TODO make a many2one
     vehicle = fields.Char(string='Company Vehicle')
     vehicle_distance = fields.Integer(string='Home-Work Dist.', help="In kilometers")
     contract_ids = fields.One2many('hr.contract', 'employee_id', string='Contracts')
@@ -88,6 +89,20 @@ class Contract(models.Model):
     def _check_dates(self):
         if self.filtered(lambda c: c.date_end and c.date_start > c.date_end):
             raise ValidationError(_('Contract start date must be less than contract end date.'))
+
+    @api.model
+    def create(self, vals):
+        if vals.get('state', False) == 'open':
+            if self.env['hr.contract'].search_count([('employee_id', '=', self.employee_id.id), ('state', '=', 'open')]):
+                raise ValidationError(_("An employee can't have more than one open contract!"))
+        return super(Contract, self).create(vals)
+
+    def write(self, vals):
+        if vals.get('state', False) == 'open':
+            for contract in self:
+                if self.env['hr.contract'].search_count([('employee_id', '=', contract.employee_id.id), ('state', '=', 'open')]):
+                    raise ValidationError(_("An employee can't have more than one open contract!"))
+        return super(Contract, self).write(vals)
 
     @api.model
     def update_to_pending(self):

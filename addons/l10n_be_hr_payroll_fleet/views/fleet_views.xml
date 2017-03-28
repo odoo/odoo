@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_vehicle_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='co2']" position="after">
+                <field name="co2_fee"/>
+            </xpath>
+            <xpath expr="//field[@name='car_value']" position="after">
+                <field name="total_depreciated_cost"/>
+                <field name="atn"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_log_contract_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.contract.form</field>
+        <field name="model">fleet.vehicle.log.contract</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="after">
+                <field name="recurring_cost_amount_depreciated"/>
+            </xpath>
+            <xpath expr="//field[@name='sum_cost']" position="after">
+                <field name="total_depreciated_cost"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_model_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.model.form</field>
+        <field name="model">fleet.vehicle.model</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_model_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="before">
+                <group>
+                    <group>
+                        <field name="default_car_value"/>
+                        <field name="default_recurring_cost_amount_depreciated"/>
+                        <field name="default_co2"/>
+                        <field name="default_fuel_type" widget="selection"/>
+                        <field name="can_be_requested"/>
+                        <field name="default_atn"/>
+                        <field name="default_total_depreciated_cost"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
