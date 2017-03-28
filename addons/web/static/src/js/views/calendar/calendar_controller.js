@@ -23,6 +23,7 @@ var CalendarController = AbstractController.extend({
         confirm_on_delete: true,
     }),
     custom_events: _.extend({}, AbstractController.prototype.custom_events, {
+        quickCreate: '_onQuickCreate',
         openCreate: '_onOpenCreate',
         openEvent: '_onOpenEvent',
         dropRecord: '_onDropRecord',
@@ -147,6 +148,33 @@ var CalendarController = AbstractController.extend({
         this._updateRecord(event.data);
     },
     /**
+     * Handles saving data coming from quick create box
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onQuickCreate: function (event) {
+        var self = this;
+        var data = this.model.calendarEventToRecord(event.data.data);
+        var options = event.data.options;
+        return this._rpc({
+                model: this.model.modelName,
+                method: 'create',
+                args: [$.extend({}, this.quick.data_template, data)],
+                context: _.pick(options, 'context'),
+            })
+            .then(function (id) {
+                self.quick.destroy();
+                self.quick = null;
+                self.reload(id);
+            }, function () {
+                // This will occurs if there are some more fields required
+                data.disable_quick_create = true;
+                data.on_save = this.destroy.bind(this);
+                self._onOpenCreate({data: data});
+            });
+    },
+    /**
      * @param {OdooEvent} event
      */
     _onOpenCreate: function (event) {
@@ -173,13 +201,14 @@ var CalendarController = AbstractController.extend({
 
         if(!options.disable_quick_create && !event.data.disable_quick_create) {
             if (this.quick != null) {
-                return this.quick.close();
+                this.quick.destroy();
+                this.quick = null;
+                return;
             }
-            var model = this.modelName;
-            var quick = new QuickCreate(this, model, true, options, data, event.data);
-            quick.on('added', this, this.reload.bind(this));
-            quick.open();
-            quick.focus();
+            this.quick = new QuickCreate(this, true, options, data, event.data);
+            this.quick.on('added', this, this.reload.bind(this));
+            this.quick.open();
+            this.quick.focus();
             return;
         }
 

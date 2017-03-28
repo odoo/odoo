@@ -20,14 +20,12 @@ var QuickCreate = Dialog.extend({
     /**
      * @constructor
      * @param {Widget} parent
-     * @param {string} modelName
-     * @param {any} buttons
-     * @param {any} options
-     * @param {any} data_template
-     * @param {any} data_calendar
+     * @param {Object} buttons
+     * @param {Object} options
+     * @param {Object} data_template
+     * @param {Object} dataCalendar
      */
-    init: function (parent, modelName, buttons, options, data_template, data_calendar) {
-        this.modelName = modelName;
+    init: function (parent, buttons, options, data_template, dataCalendar) {
         this._buttons = buttons || false;
         this.options = options;
 
@@ -41,15 +39,15 @@ var QuickCreate = Dialog.extend({
             size: 'small',
             buttons: this._buttons ? [
                 {text: _t("Create"), classes: 'btn-primary', click: function () {
-                    if (!self._quickAdd()) {
+                    if (!self._quickAdd(dataCalendar)) {
                         self.focus();
                     }
                 }},
                 {text: _t("Edit"), click: function () {
-                    data_calendar.disable_quick_create = true;
-                    data_calendar.title = self.$input.val().trim();
-                    data_calendar.on_save = self.destroy.bind(self);
-                    self.trigger_up('openCreate', data_calendar);
+                    dataCalendar.disable_quick_create = true;
+                    dataCalendar.title = self.$input.val().trim();
+                    dataCalendar.on_save = self.destroy.bind(self);
+                    self.trigger_up('openCreate', dataCalendar);
                 }},
                 {text: _t("Cancel"), close: true},
             ] : [],
@@ -67,10 +65,6 @@ var QuickCreate = Dialog.extend({
             this.slow_create();
             return;
         }
-        this.on('added', this, function () {
-            self.close();
-        });
-
         this.$input = this.$('input').keyup(function enterHandler (e) {
             if(e.keyCode === $.ui.keyCode.ENTER) {
                 self.$input.off('keyup', enterHandler);
@@ -113,29 +107,10 @@ var QuickCreate = Dialog.extend({
     /**
      * Gathers data from the quick create dialog a launch quick_create(data) method
      */
-    _quickAdd: function () {
+    _quickAdd: function (dataCalendar) {
         var val = this.$input.val().trim();
-        return (val)? this._quickCreate({'name': val}, this.options) : false;
-    },
-    /**
-     * Handles saving data coming from quick create box
-     */
-    _quickCreate: function (data, options) {
-        var self = this;
-        return this._rpc({
-                model: this.modelName,
-                method: 'create',
-                args: [$.extend({}, this.data_template, data)],
-                context: _.pick(options, 'context'),
-            })
-            .then(function (id) {
-                self.trigger('added', id);
-                self.$input.val("");
-            }, function (r, event) {
-                event.preventDefault();
-                // This will occurs if there are some more fields required
-                self.slow_create(data);
-            });
+        dataCalendar.title = val;
+        return (val)? this.trigger_up('quickCreate', {data: dataCalendar, options: this.options}) : false;
     },
 });
 

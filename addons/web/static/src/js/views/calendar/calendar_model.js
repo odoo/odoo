@@ -161,6 +161,7 @@ return AbstractModel.extend({
         // Check whether the date field is editable (i.e. if the events can be
         // dragged and dropped)
         this.editable = params.editable;
+        this.creatable = params.creatable;
 
         // display more button when there are too much event on one day
         this.eventLimit = params.eventLimit;
@@ -319,7 +320,7 @@ return AbstractModel.extend({
         return {
             defaultView: (this.mode === "month")? "month" : ((this.mode === "week")? "agendaWeek" : ((this.mode === "day")? "agendaDay" : "agendaWeek")),
             header: false,
-            selectable: this.editable && this.create_right,
+            selectable: this.creatable && this.create_right,
             selectHelper: true,
             editable: this.editable,
             droppable: true,

@@ -885,6 +885,10 @@ var MockServer = Class.extend({
         for (var field_changed in values) {
             var field = this.data[model].fields[field_changed];
             var value = values[field_changed];
+            if (!field) {
+                console.warn("Mock: Can't write on field '" + field_changed + "' on model '" + model + "' (field is undefined)");
+                continue;
+            }
             if (_.contains(['one2many', 'many2many'], field.type)) {
                 // convert commands
                 _.each(value, function (command) {

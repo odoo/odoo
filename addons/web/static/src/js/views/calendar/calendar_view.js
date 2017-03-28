@@ -125,6 +125,7 @@ var CalendarView = AbstractView.extend({
         this.loadParams.fields = fields;
         this.loadParams.fieldsInfo = viewInfo.fieldsInfo;
         this.loadParams.editable = !this.controllerParams.read_only_mode && !fields[mapping.date_start].readonly;
+        this.loadParams.creatable = !this.controllerParams.read_only_mode;
         this.loadParams.eventLimit = eventLimit;
         this.loadParams.field_color = attrs.color;
 
@@ -132,7 +133,6 @@ var CalendarView = AbstractView.extend({
         this.loadParams.mode = attrs.mode;
         this.loadParams.scale_zoom = attrs.scale_zoom;
         this.loadParams.initialDate = params.initialDate || new Date();
-
     },
 });
 
