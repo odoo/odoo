@@ -18,38 +18,6 @@
                 <xpath expr="//field[@name='type_id']" position="before">
                     <field name="company_id"/>
                 </xpath>
-                <xpath expr="//group[@name='main_info']" position="after">
-                    <group>
-                        <group name="advantages">
-                            <field name="advantage_ids" nolabel="1" options="{'no_create': True}">
-                                <tree editable="bottom" delete="0">
-                                    <field name="name"/>
-                                    <field name="active"/>
-                                    <field name="value"/>
-                                    <field name="code" invisible="1"/>
-                                    <field name="default_value" invisible="1"/>
-                                    <field name="advantage_type" invisible="1"/>
-                                    <field name="lower_bound" invisible="1"/>
-                                    <field name="upper_bound" invisible="1"/>
-                                </tree>
-                                <form>
-                                    <div class="oe_title">
-                                        <h1>
-                                            <field name="name" placeholder="Advantage Name"/>
-                                        </h1>
-                                    </div>
-                                    <group>
-                                        <field name="code" readonly="1"/>
-                                        <field name="value"/>
-                                        <field name="lower_bound"/>
-                                        <field name="upper_bound"/>
-                                        <field name="country_id"/>
-                                    </group>
-                                </form>
-                            </field>
-                        </group>
-                    </group>
-                </xpath>
                  <xpath expr="//field[@name='resource_calendar_id']" position="after">
                     <field name="schedule_pay"/>
                 </xpath>
@@ -70,22 +38,13 @@
                         <group>
                             <group>
                                 <field name="code"/>
-                                <field name="country_id"/>
                             </group>
                         </group>
                         <group>
                             <group>
-                                <field name="advantage_type" widget="radio"/>
-                            </group>
-                            <group>
-                                <field name="default_value" attrs="{'invisible': [('advantage_type', '!=', 'value')]}"/>
-                                <field name="lower_bound" attrs="{'invisible': [('advantage_type', '!=', 'range')]}"/>
-                                <field name="upper_bound" attrs="{'invisible': [('advantage_type', '!=', 'range')]}"/>
-                                <field name="advantage_values" attrs="{'invisible': [('advantage_type', '!=', 'selection')]}">
-                                    <tree editable="top">
-                                        <field name="value"/>
-                                    </tree>
-                                </field>
+                                <field name="default_value"/>
+                                <field name="lower_bound"/>
+                                <field name="upper_bound"/>
                             </group>
                         </group>
                     </sheet>
@@ -100,7 +59,6 @@
                 <tree>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="country_id"/>
                     <field name="lower_bound"/>
                     <field name="upper_bound"/>
                     <field name="default_value"/>

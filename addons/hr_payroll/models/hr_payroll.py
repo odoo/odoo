@@ -85,33 +85,8 @@ class HrContract(models.Model):
         ('bi-weekly', 'Bi-weekly'),
         ('bi-monthly', 'Bi-monthly'),
     ], string='Scheduled Pay', index=True, default='monthly')
-    advantage_ids = fields.One2many('hr.contract.advantage', 'contract_id', 'Contract Advantage', copy=True,
-        help="The default advantages will be set on the contract if they're defined for the country of the company you're logged in.")
     company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
     resource_calendar_id = fields.Many2one(required=True)
-
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        # import pdb; pdb.set_trace()
-        # TODO: Should be a default_get on the advantage lines + an onchange on the company to remove/add the new advantages
-        if self.company_id.country_id:
-            advantages_to_create = self.env['hr.contract.advantage.template'].search([('country_id', '=', self.company_id.country_id.id)])
-            # import pdb; pdb.set_trace()
-            command = [
-                (0, 0, {
-                    'name': advantage.name,
-                    'code': advantage.code,
-                    'active': True,
-                    'lower_bound': advantage.lower_bound,
-                    'upper_bound': advantage.upper_bound,
-                    'country_id': advantage.country_id.id,
-                    'value': advantage.advantage_type in ['value', 'range'] and advantage.default_value or 0.0,
-                    'default_value': advantage.default_value,
-                    'advantage_type': advantage.advantage_type,
-                }) for advantage in advantages_to_create
-            ]
-            # import pdb; pdb.set_trace()
-            self.advantage_ids = command
 
     @api.multi
     def get_all_structures(self):
@@ -126,37 +101,18 @@ class HrContract(models.Model):
         return list(set(structures._get_parent_structure().ids))
 
     @api.multi
-    def get_value(self, code):
-        self.ensure_one()
-        advantage_line = self.advantage_ids.filtered(lambda x: x.code == code)
-        if advantage_line:
-            return advantage_line.value
-        else:
-            return 0.0
-
-    def is_active_advantage(self, code):
-        self.ensure_one()
-        return self.advantage_ids.filtered(lambda x: x.code == code).active
-
-    @api.multi
     def get_attribute(self, code, attribute):
         # import pdb; pdb.set_trace()
         return getattr(self.env['hr.contract.advantage.template'].search([('code', '=', code)], limit=1), attribute)
 
     @api.multi
-    def set_value(self, code, value):
-        advantage = self.advantage_ids.filtered(lambda x: x.code == code)
-        if advantage:
-            advantage.value = value
-
-    @api.multi
-    def set_attribute(self, code, attribute, value):
+    def set_attribute_value(self, code, active):
         for contract in self:
-            advantage = contract.advantage_ids.filtered(lambda x: x.code == code)
-            if advantage:
-                setattr(advantage, attribute, value)
-                if attribute == 'active':
-                    advantage._onchange_active()
+            if active:
+                value = self.env['hr.contract.advantage.template'].search([('code', '=', code)], limit=1).default_value
+                setattr(contract, code, value)
+            else:
+                setattr(contract, code, 0.0)
 
 
 class HrContractAdvandageTemplate(models.Model):
@@ -164,58 +120,10 @@ class HrContractAdvandageTemplate(models.Model):
     _description = "Employee's Advantage on Contract"
 
     name = fields.Char('Name', required=True)
-    code = fields.Char('Code')
-    advantage_type = fields.Selection([
-        ('value', 'Value'),
-        ('range', 'Range'),
-        ('selection', 'Selection'),
-    ], string="Advantage Type", default="value")
+    code = fields.Char('Code', required=True)
     lower_bound = fields.Float('Lower Bound', help="Lower bound authorized by the employer for this advantage")
     upper_bound = fields.Float('Upper Bound', help="Upper bound authorized by the employer for this advantage")
-    country_id = fields.Many2one('res.country', "Country")
-    advantage_values = fields.One2many('hr.contract.advantage.value', 'advantage_template_id', string="Admissible Values")
     default_value = fields.Float('Default value for this advantage')
-
-class HrContractAdvantage(models.Model):
-    _name = 'hr.contract.advantage'
-    _inherit = 'hr.contract.advantage.template'
-    _description = "Employee's Advantage on Contract"
-
-    contract_id = fields.Many2one('hr.contract', 'Related Contract')
-    value = fields.Float('Amount of the advantage', digits=dp.get_precision('Payroll'))
-    active = fields.Boolean('Active', default=True)
-
-    # _sql_constraints = [
-    #     ('code_uniq', 'unique (contract_id, code)', "The codes must be different on the same contract."),
-    # ]
-
-    @api.onchange('active')
-    def _onchange_active(self):
-        # import pdb; pdb.set_trace()
-        if self.active:
-            self.value = self.env['hr.contract.advantage.template'].search([('code', '=', self.code)], limit=1).default_value
-        else:
-            self.value = 0.0
-
-    # def write(self, vals):
-    #     if 'active' in vals:
-    #         for advantage in self:
-    #             self._onchange_active()
-
-    @api.onchange('value')
-    def _onchange_value(self):
-        if self.advantage_type == 'range':
-            if self.value <= self.lower_bound:
-                self.value = self.lower_bound
-            elif self.value >= self.upper_bound:
-                self.value = self.upper_bound
-
-class HrContractAdvantageValue(models.Model):
-    _name = 'hr.contract.advantage.value'
-    _description = "Advantage Possible Value"
-
-    advantage_template_id = fields.Many2one('hr.contract.advantage.template', 'Related Advantage Template')
-    value = fields.Float("Value")
 
 class HrContributionRegister(models.Model):
     _name = 'hr.contribution.register'
@@ -927,6 +835,8 @@ class HrSalaryRule(models.Model):
                 safe_eval(self.condition_python, localdict, mode='exec', nocopy=True)
                 return 'result' in localdict and localdict['result'] or False
             except:
+                # if self.code == "MEAL_V_EMP":
+                import pdb; pdb.set_trace()
                 raise UserError(_('Wrong python condition defined for salary rule %s (%s).') % (self.name, self.code))
 
 

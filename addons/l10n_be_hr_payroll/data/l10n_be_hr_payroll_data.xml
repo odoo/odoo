@@ -99,7 +99,7 @@
         <field name="code">SALARY</field>
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = contract.wage * 1 + contract.car_atn + contract.get_value('mobile') + contract.get_value('mobile_plus') + contract.get_value('internet')</field>
+        <field name="amount_python_compute">result = contract.wage * 1 + contract.car_atn + contract.mobile + contract.mobile_plus + contract.internet</field>
         <field name="sequence">20</field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
@@ -411,7 +411,7 @@ result = contract.car_atn
         <field name="code">ATN.INT</field>
         <field name="sequence">16</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.get_value('internet'))</field>
+        <field name="condition_python">result = bool(contract.internet)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = 5.0</field>
     </record>
@@ -421,7 +421,7 @@ result = contract.car_atn
         <field name="code">ATN.MOB</field>
         <field name="sequence">17</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.get_value('mobile'))</field>
+        <field name="condition_python">result = bool(contract.mobile)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = 12.0</field>
     </record>
@@ -445,7 +445,7 @@ result = -contract.car_atn
         <field name="code">ATN.INT.2</field>
         <field name="sequence">161</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = contract.get_value('internet')</field>
+        <field name="condition_python">result = contract.internet</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = -5.0</field>
     </record>
@@ -455,7 +455,7 @@ result = -contract.car_atn
         <field name="code">ATN.MOB.2</field>
         <field name="sequence">162</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = contract.get_value('mobile')</field>
+        <field name="condition_python">result = contract.mobile</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = -12.0</field>
     </record>
@@ -465,7 +465,7 @@ result = -contract.car_atn
         <field name="code">COM</field>
         <field name="sequence">170</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.get_value('commission_on_target'))</field>
+        <field name="condition_python">result = bool(contract.commission_on_target)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = contract.warrant_value_employee / 12.0</field>
         <field name="appears_on_payslip" eval="False"/>
@@ -476,10 +476,10 @@ result = -contract.car_atn
         <field name="code">MEAL_V_EMP</field>
         <field name="sequence">165</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.get_value('meal_voucher_employee_deduction'))</field>
+        <field name="condition_python">result = bool(contract.meal_voucher_amount)</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">-100.0</field>
-        <field name="amount_percentage_base">contract.get_value('meal_voucher_employee_deduction')</field>
+        <field name="amount_percentage_base">contract.meal_voucher_amount - contract.meal_voucher_paid_by_employer</field>
         <field name="quantity">worked_days.WORK100 and worked_days.WORK100.number_of_days</field>
         <field name="appears_on_payslip" eval="True"/>
         <field name="register_id" ref="contrib_register_meal_vouchers"/>
@@ -494,16 +494,6 @@ result = -contract.car_atn
         <field name="condition_python">result = bool(contract.others_employee_amount)</field>
         <field name="amount_python_compute">result = contract.others_employee_amount</field>
     </record>
-    <record id="hr_payroll_rules_insurance" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll.DED"/>
-        <field name="name">Insurance</field>
-        <field name="code">Ins</field>
-        <field name="amount_select">code</field>
-        <field name="sequence">165</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.get_value('insurance_employee_deduction'))</field>
-        <field name="amount_python_compute">result = -contract.get_value('insurance_employee_deduction')</field>
-    </record>
     <record id="hr_salary_rule_representation_fees" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
         <field name="name">Representation Fees</field>
@@ -511,8 +501,8 @@ result = -contract.car_atn
         <field name="amount_select">code</field>
         <field name="sequence">171</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.get_value('representation_fees'))</field>
-        <field name="amount_python_compute">result = contract.get_value('representation_fees')</field>
+        <field name="condition_python">result = bool(contract.representation_fees)</field>
+        <field name="amount_python_compute">result = contract.representation_fees</field>
     </record>
     <record id="hr_payroll_rules_suppl_net" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
@@ -521,8 +511,8 @@ result = -contract.car_atn
         <field name="amount_select">code</field>
         <field name="sequence">185</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.get_value('additional_net_amount'))</field>
-        <field name="amount_python_compute">result = contract.get_value('additional_net_amount')</field>
+        <field name="condition_python">result = bool(contract.additional_net_amount)</field>
+        <field name="amount_python_compute">result = contract.additional_net_amount</field>
     </record>
     <record id="hr_payroll_rules_retained_net" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
@@ -531,8 +521,8 @@ result = -contract.car_atn
         <field name="amount_select">code</field>
         <field name="sequence">190</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.get_value('retained_net_amount'))</field>
-        <field name="amount_python_compute">result = -contract.get_value('retained_net_amount')</field>
+        <field name="condition_python">result = bool(contract.retained_net_amount)</field>
+        <field name="amount_python_compute">result = -contract.retained_net_amount</field>
     </record>
     <record id="hr_payroll_salary_structure_employee" model="hr.payroll.structure">
         <field name="code">C.P.218</field>
@@ -556,7 +546,6 @@ result = -contract.car_atn
             ref('hr_payroll_rules_reim_travel'),
             ref('hr_payroll_rules_mis_ex_onss_1'),
             ref('hr_payroll_rules_mis_ex_onss_2'),
-            ref('hr_payroll_rules_insurance'),
             ref('hr_salary_rule_representation_fees'),
             ref('hr_payroll_rules_suppl_net'),
             ref('hr_payroll_rules_retained_net'),
@@ -584,7 +573,6 @@ result = -contract.car_atn
             ref('hr_payroll_rules_reim_travel'),
             ref('hr_payroll_rules_mis_ex_onss_1'),
             ref('hr_payroll_rules_mis_ex_onss_2'),
-            ref('hr_payroll_rules_insurance'),
             ref('hr_salary_rule_representation_fees'),
             ref('hr_payroll_rules_suppl_net'),
             ref('hr_payroll_rules_retained_net'),
@@ -599,79 +587,59 @@ result = -contract.car_atn
         <record id="hr_contract_advantage_template_meal_voucher_amount" model="hr.contract.advantage.template">
             <field name="name">Check Value Meal</field>
             <field name="code">meal_voucher_amount</field>
-            <field name="country_id" ref="base.be"/>
-            <field name="advantage_type">value</field>
             <field name="default_value">7.45</field>
         </record>
         <record id="hr_contract_advantage_template_internet" model="hr.contract.advantage.template">
             <field name="name">Internet</field>
             <field name="code">internet</field>
-            <field name="advantage_type">value</field>
             <field name="default_value">38.0</field>
-            <field name="country_id" ref="base.be"/>
         </record>
         <record id="hr_contract_advantage_template_mobile" model="hr.contract.advantage.template">
             <field name="name">Mobile</field>
             <field name="code">mobile</field>
-            <field name="advantage_type">value</field>
             <field name="default_value">30.0</field>
-            <field name="country_id" ref="base.be"/>
         </record>
         <record id="hr_contract_advantage_template_mobile_plus" model="hr.contract.advantage.template">
             <field name="name">Mobile +</field>
             <field name="code">mobile_plus</field>
-            <field name="advantage_type">value</field>
             <field name="default_value">50.0</field>
-            <field name="country_id" ref="base.be"/>
         </record>
         <record id="hr_contract_advantage_template_additional_net_amount" model="hr.contract.advantage.template">
             <field name="name">Net supplements</field>
             <field name="code">additional_net_amount</field>
-            <field name="country_id" ref="base.be"/>
         </record>
         <record id="hr_contract_advantage_template_retained_net_amount" model="hr.contract.advantage.template">
             <field name="name">Net retained</field>
             <field name="code">retained_net_amount</field>
-            <field name="country_id" ref="base.be"/>
         </record>
         <record id="hr_contract_advantage_template_commission_on_target" model="hr.contract.advantage.template">
             <field name="name">Commission on target</field>
             <field name="code">commission_on_target</field>
-            <field name="advantage_type">value</field>
             <field name="default_value">1000.0</field>
-            <field name="country_id" ref="base.be"/>
         </record>
         <record id="hr_contract_advantage_template_fuel_card" model="hr.contract.advantage.template">
             <field name="name">Fuel card</field>
             <field name="code">fuel_card</field>
-            <field name="country_id" ref="base.be"/>
             <field name="default_value">150.0</field>
-            <field name="advantage_type">range</field>
             <field name="lower_bound">0.0</field>
             <field name="upper_bound">500.0</field>
         </record>
         <record id="hr_contract_advantage_template_holidays" model="hr.contract.advantage.template">
             <field name="name">Holidays duration</field>
             <field name="code">holidays</field>
-            <field name="country_id" ref="base.be"/>
             <field name="default_value">20.0</field>
-            <field name="advantage_type">range</field>
             <field name="lower_bound">0.0</field>
             <field name="upper_bound">30.0</field>
         </record>
         <record id="hr_contract_advantage_template_representation_fees" model="hr.contract.advantage.template">
             <field name="name">Representation fees</field>
             <field name="code">representation_fees</field>
-            <field name="country_id" ref="base.be"/>
             <field name="default_value">150.0</field>
-            <field name="advantage_type">value</field>
         </record>
         <record id="hr_contract_advantage_template_eco_checks" model="hr.contract.advantage.template">
             <field name="name">Eco-checks</field>
             <field name="code">eco_checks</field>
-            <field name="country_id" ref="base.be"/>
             <field name="default_value">250.0</field>
-            <field name="advantage_type">value</field>
         </record>
 
 </odoo>

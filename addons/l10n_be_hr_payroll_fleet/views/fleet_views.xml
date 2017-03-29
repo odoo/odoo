@@ -37,15 +37,25 @@
             <xpath expr="//notebook" position="before">
                 <group>
                     <group>
-                        <field name="default_car_value"/>
-                        <field name="default_recurring_cost_amount_depreciated"/>
-                        <field name="default_co2"/>
-                        <field name="default_fuel_type" widget="selection"/>
                         <field name="can_be_requested"/>
-                        <field name="default_atn"/>
-                        <field name="default_total_depreciated_cost"/>
                     </group>
-                </group>
+                </group>                        
+            </xpath>
+            <xpath expr="//page[@name='vendors']" position="after">
+                <page string="Caracteristics">
+                    <group>
+                        <group>
+                            <field name="default_car_value"/>
+                            <field name="default_co2"/>
+                            <field name="default_fuel_type" widget="selection"/>
+                            <field name="default_recurring_cost_amount_depreciated"/>
+                        </group>
+                        <group>
+                            <field name="default_atn"/>
+                            <field name="default_total_depreciated_cost"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>

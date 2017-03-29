@@ -27,6 +27,12 @@
                     </div>
                 </div>
             </xpath>
+            <xpath expr="//group[@name='salary_and_advantages']" position="inside">
+                <field name="fuel_card"/>
+                <field name="internet"/>
+                <field name="mobile"/>
+                <field name="mobile_plus"/>
+            </xpath>
             <xpath expr="//group[@name='salary_and_advantages']" position="after">
                 <group string="Employee Costs" groups="hr.group_hr_manager">
                     <field name="yearly_cost_before_charges" invisible="1"/>
@@ -37,6 +43,18 @@
                     <field name="meal_voucher_paid_by_employer" invisible="1"/>
                     <field name="final_yearly_costs"/>
                     <field name="monthly_yearly_costs"/>
+                </group>
+                <group string="Monthly Advantages">
+                    <field name="meal_voucher_amount"/>
+                    <field name="representation_fees"/>
+                    <field name="additional_net_amount"/>
+                    <field name="retained_net_amount"/>
+                    <field name="commission_on_target"/>
+                </group>
+                <group string="Yearly Advantages">
+                    <field name="eco_checks"/>
+                    <field name="thirteen_month"/>
+                    <field name="double_holidays"/>
                 </group>
             </xpath>
         </field>

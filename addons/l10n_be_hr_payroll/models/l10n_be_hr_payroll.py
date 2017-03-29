@@ -35,23 +35,37 @@ class HrContract(models.Model):
     company_car_total_depreciated_cost = fields.Float()
     warrants_cost = fields.Float(compute='_compute_warrants_cost')
 
-    @api.depends('advantage_ids', 'advantage_ids.value')
+    # Advantages
+    commission_on_target = fields.Float(string="Commission on Target", default=1000)
+    fuel_card = fields.Float(string="Fuel Card", default=150)
+    internet = fields.Float(string="Internet", default=38)
+    representation_fees = fields.Float(string="Representation Fees", default=150)
+    mobile = fields.Float(string="Mobile", default=30)
+    mobile_plus = fields.Float(string="International Communication", default=50)
+    meal_voucher_amount = fields.Float(string="Meal Voucher", default=7.45)
+    holidays = fields.Float(string="Holidays", default=20)
+    additional_net_amount = fields.Float(string="Net Supplements")
+    retained_net_amount = fields.Float(sting="Net Retained")
+    eco_checks = fields.Float("Eco-checks", default=250)
+
+    @api.depends('commission_on_target')
     def _compute_warrants_cost(self):
         for contract in self:
-            contract.warrants_cost = contract.get_value('commission_on_target') * 1.326 / 1.05 * 12.0
+            contract.warrants_cost = contract.commission_on_target * 1.326 / 1.05 * 12.0
             contract.warrant_value_employee = contract.warrants_cost * 0.54
 
-    @api.depends('wage', 'advantage_ids', 'company_car_total_depreciated_cost')
+    @api.depends('wage', 'fuel_card', 'representation_fees', 'company_car_total_depreciated_cost',
+        'internet', 'mobile', 'mobile_plus')
     def _compute_yearly_cost_before_charges(self):
         for contract in self:
             # import pdb; pdb.set_trace()
             contract.yearly_cost_before_charges = 12.0 * (
                 contract.wage * (1.0 + 1.0 / 12.0) +
-                contract.get_value('fuel_card') +
-                contract.get_value('representation_fees') +
-                contract.get_value('internet') +
-                contract.get_value('mobile') +
-                contract.get_value('mobile_plus') +
+                contract.fuel_card +
+                contract.representation_fees +
+                contract.internet +
+                contract.mobile +
+                contract.mobile_plus +
                 contract.company_car_total_depreciated_cost
             )
 
@@ -67,12 +81,12 @@ class HrContract(models.Model):
                 (220.0 * contract.meal_voucher_paid_by_employer)
             )
 
-    @api.depends('advantage_ids', 'advantage_ids.value')
+    @api.depends('meal_voucher_amount')
     def _compute_meal_voucher_paid_by_employer(self):
         for contract in self:
-            contract.meal_voucher_paid_by_employer = contract.get_value('meal_voucher_amount') * (1 - 0.1463)
+            contract.meal_voucher_paid_by_employer = contract.meal_voucher_amount * (1 - 0.1463)
 
-    @api.depends('wage', 'advantage_ids.value')
+    @api.depends('wage')
     def _compute_social_security_contributions(self):
         for contract in self:
             total_wage = contract.wage * 13.0
@@ -103,30 +117,28 @@ class HrContract(models.Model):
             contract.thirteen_month = contract.wage
 
     def _get_internet_amount(self, has_internet):
-        default_value = self.get_attribute('internet', 'default_value')
         if has_internet:
-            return default_value
+            return self.get_attribute('internet', 'default_value')
         else:
             return 0.0
 
     def _get_mobile_amount(self, has_mobile, international_communication):
-        values = self.get_attribute('mobile', 'advantage_values')
         if has_mobile and international_communication:
-            return values[1].value
+            return self.get_attribute('mobile', 'default_value') + self.get_attribute('mobile_plus', 'default_value')
         elif has_mobile:
-            return values[0].value
+            return self.get_attribute('mobile', 'default_value')
         else:
             return 0.0
 
     def _get_gross_from_employer_costs(self, yearly_cost):
         contract = self
         remaining_for_gross = yearly_cost \
-            - 12.0 * contract.get_value('representation_fees') \
-            - 12.0 * contract.get_value('fuel_card') \
-            - 12.0 * contract.get_value('internet') \
-            - 12.0 * (contract.get_value('mobile') + contract.get_value('mobile_plus')) \
+            - 12.0 * contract.representation_fees \
+            - 12.0 * contract.fuel_card \
+            - 12.0 * contract.internet \
+            - 12.0 * (contract.mobile + contract.mobile_plus) \
             - 12.0 * contract.company_car_total_depreciated_cost \
-            - (1.326 / 1.05 * 12.0) * contract.get_value('commission_on_target') \
+            - (1.326 / 1.05 * 12.0) * contract.commission_on_target \
             - 220.0 * contract.meal_voucher_paid_by_employer
         gross = remaining_for_gross / (12.0 * 0.05 + 13.0 + 13.0 * 0.3507 + 0.92)
         return gross
