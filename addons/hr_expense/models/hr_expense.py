@@ -172,24 +172,19 @@ class HrExpense(models.Model):
         '''
         main function that is called when trying to create the accounting entries related to an expense
         '''
-        move_group_by_sheet = {}
         for expense in self:
             journal = expense.sheet_id.bank_journal_id if expense.payment_mode == 'company_account' else expense.sheet_id.journal_id
             #create the move that will contain the accounting entries
             acc_date = expense.sheet_id.accounting_date or expense.date
-            if not expense.sheet_id.id in move_group_by_sheet:
-                move = self.env['account.move'].create({
-                    'journal_id': journal.id,
-                    'company_id': self.env.user.company_id.id,
-                    'date': acc_date,
-                    'ref': expense.sheet_id.name,
-                    # force the name to the default value, to avoid an eventual 'default_name' in the context
-                    # to set it to '' which cause no number to be given to the account.move when posted.
-                    'name': '/',
-                })
-                move_group_by_sheet[expense.sheet_id.id] = move
-            else:
-                move = move_group_by_sheet[expense.sheet_id.id]
+            move = self.env['account.move'].create({
+                'journal_id': journal.id,
+                'company_id': self.env.user.company_id.id,
+                'date': acc_date,
+                'ref': expense.sheet_id.name,
+                # force the name to the default value, to avoid an eventual 'default_name' in the context
+                # to set it to '' which cause no number to be given to the account.move when posted.
+                'name': '/',
+            })
             company_currency = expense.company_id.currency_id
             diff_currency_p = expense.currency_id != company_currency
             #one account.move.line per expense (+taxes..)
@@ -240,10 +235,9 @@ class HrExpense(models.Model):
             lines = map(lambda x: (0, 0, expense._prepare_move_line(x)), move_lines)
             move.with_context(dont_create_taxes=True).write({'line_ids': lines})
             expense.sheet_id.write({'account_move_id': move.id})
+            move.post()
             if expense.payment_mode == 'company_account':
                 expense.sheet_id.paid_expense_sheets()
-        for move in move_group_by_sheet.values():
-            move.post()
         return True
 
     @api.multi
@@ -540,6 +534,7 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def action_open_journal_entries(self):
         res = self.env['ir.actions.act_window'].for_xml_id('account', 'action_move_journal_line')
-        res['domain'] = [('id', 'in', self.mapped('account_move_id').ids)]
+        #DO NOT FORWARD-PORT
+        res['domain'] = [('ref', 'in', self.mapped('name'))]
         res['context'] = {}
         return res
