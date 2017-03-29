@@ -4,24 +4,17 @@ odoo.define('hr_attendance.kiosk_mode', function (require) {
 var core = require('web.core');
 var Widget = require('web.Widget');
 var Session = require('web.session');
-var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
 var QWeb = core.qweb;
 
 
-var KioskMode = Widget.extend(BarcodeHandlerMixin, {
+var KioskMode = Widget.extend({
     events: {
         "click .o_hr_attendance_button_employees": function(){ this.do_action('hr_attendance.hr_employee_attendance_action_kanban'); },
     },
 
-    init: function (parent, action) {
-        // Note: BarcodeHandlerMixin.init calls this._super.init, so there's no need to do it here.
-        // Yet, "_super" must be present in a function for the class mechanism to replace it with the actual parent method.
-        this._super;
-        BarcodeHandlerMixin.init.apply(this, arguments);
-    },
-
     start: function () {
         var self = this;
+        core.bus.on('barcode_scanned', this, this._onBarcodeScanned);
         self.session = Session;
         this._rpc({
                 model: 'res.company',
@@ -37,7 +30,7 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
         return self._super.apply(this, arguments);
     },
 
-    on_barcode_scanned: function(barcode) {
+    _onBarcodeScanned: function(barcode) {
         var self = this;
         this._rpc({
                 model: 'hr.employee',
@@ -60,6 +53,7 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
     },
 
     destroy: function () {
+        core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
         clearInterval(this.clock_start);
         this._super.apply(this, arguments);
     },

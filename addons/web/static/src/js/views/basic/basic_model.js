@@ -1052,7 +1052,13 @@ var BasicModel = AbstractModel.extend({
                 defs.push(def);
                 break;
             case 'CREATE':
-                defs.push(this.addDefaultRecord(list.id));
+                if (command.data) {
+                    defs.push(this.addDefaultRecord(list.id).then(function (id) {
+                        return this.notifyChanges(id, command.data);
+                    }));
+                } else {
+                    defs.push(this.addDefaultRecord(list.id));
+                }
                 break;
             case 'UPDATE':
                 defs.push(this._applyChange(command.id, command.data));

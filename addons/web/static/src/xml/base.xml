@@ -4,13 +4,13 @@
 <div t-name="EmptyComponent"/>
 <div t-name="Loading" class="o_loading"/>
 <t t-name="Notification">
-    <div class="o_notification" t-translation="off">
+    <div t-attf-class="o_notification #{className}" t-translation="off">
         <a t-if="widget.sticky" class="fa fa-times o_close" href="#"/>
         <div class="o_notification_title">
             <span class="o_icon fa fa-3x fa-lightbulb-o"/>
             <t t-raw="widget.title"/>
         </div>
-        <div class="o_notification_content"><t t-raw="widget.text"/></div>
+        <div class="o_notification_content" t-if="widget.text"><t t-raw="widget.text"/></div>
     </div>
 </t>
 <t t-name="Warning" t-extend="Notification">
