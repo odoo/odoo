@@ -41,8 +41,8 @@
                                 <field name="discount" widget="monetary"/>
                                 <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                 <field name="tax_ids" widget="many2many_tags" invisible="1"/>
-                                <field name="price_subtotal" widget="monetary"/>
-                                <field name="price_subtotal_incl" widget="monetary"/>
+                                <field name="price_subtotal" widget="monetary" force_save="1"/>
+                                <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
                             </tree>
                             <form string="Order lines">
                                 <group col="4">
@@ -50,8 +50,8 @@
                                     <field name="qty"/>
                                     <field name="discount" widget="monetary"/>
                                     <field name="price_unit" widget="monetary"/>
-                                    <field name="price_subtotal" invisible="1" widget="monetary"/>
-                                    <field name="price_subtotal_incl" invisible="1" widget="monetary"/>
+                                    <field name="price_subtotal" invisible="1" widget="monetary" force_save="1"/>
+                                    <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/>
                                     <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                     <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                     <field name="notice"/>
@@ -59,13 +59,19 @@
                             </form>
                         </field>
                         <group class="oe_subtotal_footer oe_right" colspan="2" name="order_total">
-                            <field name="amount_tax" widget="monetary"/>
+                            <field name="amount_tax"
+                                   force_save="1"
+                                   widget="monetary"/>
                             <div class="oe_subtotal_footer_separator oe_inline">
                                 <label for="amount_total" />
                                 <button name="button_dummy"
                                     states="draft" string="(update)" class="oe_edit_only oe_link"/>
                             </div>
-                            <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+                            <field name="amount_total"
+                                   force_save="1"
+                                   nolabel="1"
+                                   class="oe_subtotal_footer_separator"
+                                   widget="monetary"/>
                         </group>
                         <div class="oe_clear"/>
                     </page>
