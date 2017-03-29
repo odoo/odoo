@@ -549,7 +549,7 @@ which tends to be a huge amount.
             $records = $models->execute_kw($db, $uid, $password,
                 'res.partner', 'read', array($ids));
             // count the number of fields fetched by default
-            count($records[0]);
+            count($records);
     
         .. code-block:: java
     
