@@ -426,12 +426,12 @@ class AccountAssetDepreciationLine(models.Model):
     @api.multi
     def create_move(self, post_move=True):
         created_moves = self.env['account.move']
+        prec = self.env['decimal.precision'].precision_get('Account')
         for line in self:
             depreciation_date = self.env.context.get('depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
             company_currency = line.asset_id.company_id.currency_id
             current_currency = line.asset_id.currency_id
             amount = current_currency.compute(line.amount, company_currency)
-            sign = (line.asset_id.category_id.journal_id.type == 'purchase' or line.asset_id.category_id.journal_id.type == 'sale' and 1) or -1
             asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
             reference = line.asset_id.code
             journal_id = line.asset_id.category_id.journal_id.id
@@ -439,7 +439,6 @@ class AccountAssetDepreciationLine(models.Model):
             categ_type = line.asset_id.category_id.type
             debit_account = line.asset_id.category_id.account_income_recognition_id.id or line.asset_id.category_id.account_asset_id.id
             credit_account = line.asset_id.category_id.account_depreciation_id.id
-            prec = self.env['decimal.precision'].precision_get('Account')
             move_line_1 = {
                 'name': asset_name,
                 'account_id': credit_account,
@@ -448,7 +447,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'journal_id': journal_id,
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
-                'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
+                'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'sale' else False,
                 'date': depreciation_date,
             }
@@ -460,7 +459,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'journal_id': journal_id,
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
-                'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
+                'amount_currency': company_currency != current_currency and line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'purchase' else False,
                 'date': depreciation_date,
             }
