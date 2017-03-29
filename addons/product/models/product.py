@@ -269,9 +269,8 @@ class ProductProduct(models.Model):
     @api.one
     def _get_pricelist_items(self):
         self.pricelist_item_ids = self.env['product.pricelist.item'].search([
-            '|',
-            ('product_id', '=', self.id),
-            ('product_tmpl_id', '=', self.product_tmpl_id.id)]).ids
+            ('product_tmpl_id', '=', self.product_tmpl_id.id),
+            '|', ('product_id', '=', self.id), ('product_id', '=', False)]).ids
 
     @api.constrains('attribute_value_ids')
     def _check_attribute_value_ids(self):
