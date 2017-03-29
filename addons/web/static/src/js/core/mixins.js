@@ -508,11 +508,11 @@ var ServicesMixin = {
         this.trigger_up('do_action', {'action': action, options: options});
         return def;
     },
-    do_notify: function (title, message, sticky) {
-        this.trigger_up('notification', {title: title, message: message, sticky: sticky});
+    do_notify: function (title, message, sticky, className) {
+        this.trigger_up('notification', {title: title, message: message, sticky: sticky, className: className});
     },
-    do_warn: function (title, message, sticky) {
-        this.trigger_up('warning', {title: title, message: message, sticky: sticky});
+    do_warn: function (title, message, sticky, className) {
+        this.trigger_up('warning', {title: title, message: message, sticky: sticky, className: className});
     },
 };
 

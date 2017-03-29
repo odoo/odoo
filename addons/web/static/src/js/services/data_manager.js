@@ -271,7 +271,7 @@ return core.Class.extend({
             field.onChange = "1";
         }
 
-        if (field.views) {
+        if (!_.isEmpty(field.views)) {
             // process the inner fields_view as well to find the fields they use.
             // register those fields' description directly on the view.
             // for those inner views, the list of all fields isn't necessary, so

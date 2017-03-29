@@ -1011,7 +1011,7 @@ var ManualModel = StatementModel.extend({
                     }
                 }));
             });
-            return $.when(defs).then(function() {
+            return $.when.apply($, defs).then(function() {
                 if (account_ids.length) {
                     self._rpc({
                             model: 'account.account',
