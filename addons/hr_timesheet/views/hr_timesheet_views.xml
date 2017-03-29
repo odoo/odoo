@@ -140,6 +140,49 @@
                 </search>
             </field>
         </record>
+        <record id="view_kanban_account_analytic_line" model="ir.ui.view">
+            <field name="name">account.analytic.line.kanban</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="date"/>
+                    <field name="user_id"/>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
+                    <field name="unit_amount"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-2">
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="40" height="40" class="oe_kanban_avatar pull-left"/>
+                                    </div>
+                                    <div class="col-xs-10">
+                                        <div>
+                                            <strong><t t-esc="record.project_id.value"/></strong>
+                                        </div>
+                                        <div class="text-muted">
+                                            <span>
+                                                <t t-esc="record.name.value"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="mt4 mb4"/>
+                                <span>
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    <t t-esc="record.date.value"/>
+                                </span>
+                                <span class="pull-right">
+                                    <strong>Duration: </strong><field name="unit_amount" widget="float_time"/>
+                                </span>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
         <!--
             Menus and Actions
@@ -173,6 +216,13 @@
             <field name="view_mode">form</field>
             <field name="sequence" eval="5"/>
             <field name="view_id" ref="hr_timesheet_line_form"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line"/>
+        </record>
+
+        <record id="act_hr_timesheet_line_view_kanban" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="sequence">3</field>
+            <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
             <field name="act_window_id" ref="act_hr_timesheet_line"/>
         </record>
 
@@ -221,6 +271,9 @@
             name="All Timesheets"
             parent="menu_hr_time_tracking"
             action="timesheet_action_all"/>
+
+        <menuitem id="menu_hr_working_hours" parent="menu_hr_time_tracking" action="act_hr_timesheet_line"
+            name="Detailed Activities"/>
 
     </data>
 </odoo>
