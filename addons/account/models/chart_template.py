@@ -41,6 +41,13 @@ def migrate_tags_on_taxes(cr, registry):
         if len(tax_id.ids) == 1:
             tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
 
+
+def _parseattr(obj, field_str):
+    field_value = obj[field_str]
+    if obj._fields[field_str].type == 'many2one':
+        field_value = field_value.id
+    return field_value
+
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
 #  ---------------------------------------------------------------
@@ -448,10 +455,17 @@ class AccountChartTemplate(models.Model):
             :param company_id: company_id selected from wizard.multi.charts.accounts.
             :returns: True
         """
-        self.ensure_one()
+        fp_template_fields = ['name',
+                              'auto_apply',
+                              'note',
+                              'country_group_id',
+                              'vat_required',
+                              'country_id']
         positions = self.env['account.fiscal.position.template'].search([('chart_template_id', '=', self.id)])
         for position in positions:
-            new_fp = self.create_record_with_xmlid(company, position, 'account.fiscal.position', {'company_id': company.id, 'name': position.name, 'auto_apply': position.auto_apply, 'note': position.note, 'country_group_id': position.country_group_id.id})
+            vals = dict((field, _parseattr(position, field)) for field in fp_template_fields)
+            vals.update({'company_id': company.id})
+            new_fp = self.create_record_with_xmlid(company, position, 'account.fiscal.position', vals)
             for tax in position.tax_ids:
                 self.create_record_with_xmlid(company, tax, 'account.fiscal.position.tax', {
                     'tax_src_id': tax_template_ref[tax.tax_src_id.id],
@@ -594,6 +608,9 @@ class AccountFiscalPositionTemplate(models.Model):
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
         help="Apply only if delivery or invocing country match the group.")
+    vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
+    country_id = fields.Many2one('res.country', string='Country',
+        help="Apply only if delivery or invoicing country match.")
 
 
 class AccountFiscalPositionTaxTemplate(models.Model):
