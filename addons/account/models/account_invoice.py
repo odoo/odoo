@@ -612,7 +612,7 @@ class AccountInvoice(models.Model):
         return self.action_cancel()
 
     @api.multi
-    def get_formview_id(self):
+    def get_formview_id(self, access_uid=None):
         """ Update form view id of action to open the invoice """
         if self.type in ('in_invoice', 'in_refund'):
             return self.env.ref('account.invoice_supplier_form').id

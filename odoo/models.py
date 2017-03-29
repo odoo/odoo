@@ -1347,10 +1347,13 @@ class BaseModel(object):
         return result
 
     @api.multi
-    def get_formview_id(self):
+    def get_formview_id(self, access_uid=None):
         """ Return an view id to open the document ``self`` with. This method is
             meant to be overridden in addons that want to give specific view ids
             for example.
+
+            Optional access_uid holds the user that would access the form view
+            id different from the current environment user.
         """
         return False
 
@@ -1360,7 +1363,7 @@ class BaseModel(object):
             to be overridden in addons that want to give specific view ids for
             example.
         """
-        view_id = self.get_formview_id()
+        view_id = self.sudo().get_formview_id(access_uid=self.env.uid)
         return {
             'type': 'ir.actions.act_window',
             'res_model': self._name,

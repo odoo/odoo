@@ -1035,7 +1035,7 @@ class Lead(models.Model):
         return {lead.id: aliases.get(lead.team_id.id or 0, False) for lead in leads}
 
     @api.multi
-    def get_formview_id(self):
+    def get_formview_id(self, access_uid=None):
         if self.type == 'opportunity':
             view_id = self.env.ref('crm.crm_case_form_view_oppor').id
         else:
