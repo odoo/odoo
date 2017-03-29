@@ -17,9 +17,9 @@
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
 <p>Dear ${object.partner_id.name}
-% set access_action = object.get_access_action()
-% set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)
+% set access_action = object.with_context(force_website=True).get_access_action()
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
+% set access_url = is_online and '/mail/view?model=account.invoice&res_id=%d' % (object.id) or '/report/pdf/account.report_invoice/' + str(object.id)
 
 % if object.partner_id.parent_id:
     (<i>${object.partner_id.parent_id.name}</i>)

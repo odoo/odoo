@@ -20,7 +20,7 @@ class AccountInvoice(models.Model):
     def get_access_action(self):
         """ Instead of the classic form view, redirect to the online invoice for portal users. """
         self.ensure_one()
-        if self.env.user.share:
+        if self.env.user.share or self.env.context.get('force_website'):
             try:
                 self.check_access_rule('read')
             except exceptions.AccessError:
