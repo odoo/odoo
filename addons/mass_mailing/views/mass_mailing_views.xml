@@ -142,7 +142,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('list_ids', 'in', [active_id])]</field>
-            <field name="context">{'search_default_not_opt_out': 1}</field>
+            <field name="context">{'search_default_not_opt_out': 1, 'default_list_ids': [(4,active_id)]}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a recipient.
