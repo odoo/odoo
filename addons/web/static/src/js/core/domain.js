@@ -222,7 +222,7 @@ var Domain = collections.Tree.extend({
      * @returns {Array}
      */
     stringToArray: function (domain, evalContext) {
-        if (!_.isString(domain)) return domain;
+        if (!_.isString(domain)) return _.clone(domain);
         return pyeval.eval("domain", domain || "[]", evalContext);
     },
     /**
