@@ -1228,6 +1228,10 @@ class account_move_line(osv.osv):
 
         if update_check and affects_move:
             self._update_check(cr, uid, ids, context)
+        if vals.get('move_id', False):
+            move = self.pool.get('account.move').browse(cr, uid, vals['move_id'], context=context)
+            if move.state != 'draft':
+                raise osv.except_osv(_('Bad Journal Entry!'), _('You cannot add a line to a confirmed entry.'))
 
         todo_date = None
         if vals.get('date', False):
@@ -1307,10 +1311,13 @@ class account_move_line(osv.osv):
         context = dict(context or {})
         if vals.get('move_id', False):
             move = self.pool.get('account.move').browse(cr, uid, vals['move_id'], context=context)
+            if move.state != 'draft':
+                raise osv.except_osv(_('Bad Journal Entry!'), _('You cannot add a line to a confirmed entry.'))
             if move.company_id:
                 vals['company_id'] = move.company_id.id
             if move.date and not vals.get('date'):
                 vals['date'] = move.date
+            
         if ('account_id' in vals) and not account_obj.read(cr, uid, [vals['account_id']], ['active'])[0]['active']:
             raise osv.except_osv(_('Bad Account!'), _('You cannot use an inactive account.'))
         if 'journal_id' in vals and vals['journal_id']:
