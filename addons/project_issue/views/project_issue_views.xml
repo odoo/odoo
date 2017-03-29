@@ -372,8 +372,4 @@
             parent="project.menu_project_management"
             action="project_issue_action_activity"
             sequence="25"/>
-
-        <record id="project.mail_activity_type_action_config_project_types" model="ir.actions.act_window">
-            <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', 'in', ['project.task', 'project.issue'])]</field>
-        </record>
 </odoo>
