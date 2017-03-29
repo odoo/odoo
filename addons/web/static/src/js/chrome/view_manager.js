@@ -178,7 +178,9 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             }
             core.bus.on('clear_uncommitted_changes', self, function(chain_callbacks) {
                 chain_callbacks(function() {
-                    return self.active_view.controller.canBeDiscarded();
+                    if (self.active_view.controller) {
+                        return self.active_view.controller.canBeDiscarded();
+                    }
                 });
             });
         });
