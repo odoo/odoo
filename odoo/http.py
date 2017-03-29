@@ -1025,6 +1025,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
                     to authenticate the user.
         """
 
+        old_uid = request.uid
         if uid is None:
             wsgienv = request.httprequest.environ
             env = dict(
@@ -1039,7 +1040,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.uid = uid
         self.login = login
         self.password = password
-        request.uid = uid
+        request.uid = uid or old_uid
         request.disable_db = False
 
         if uid: self.get_context()
