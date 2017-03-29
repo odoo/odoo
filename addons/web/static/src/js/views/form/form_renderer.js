@@ -392,7 +392,7 @@ return BasicRenderer.extend({
                     fieldNodes.push(children[i+1]);
                     i++;
                 }
-                $result = this._renderInnerGroupRow($result, fieldNodes);
+                $result.append(this._renderInnerGroupRow(fieldNodes));
             } else if (children[i].tag === 'label') {
                 var label =  children[i];
                 // If there is a "for" attribute, we expect to have an id concerned in the next node.
@@ -425,17 +425,18 @@ return BasicRenderer.extend({
         return $result.append($tr);
     },
     /**
+     * Render a group row, with all the nodes inside.
+     *
      * @private
-     * @param {jQueryElement} $result
      * @param {Object[]} nodes
      * @returns {jQueryElement}
      */
-    _renderInnerGroupRow: function ($result, nodes) {
+    _renderInnerGroupRow: function (nodes) {
         var $tr = $('<tr>');
         for (var i = 0; i < nodes.length; i++) {
             $tr.append(this._renderInnerField(nodes[i]).contents());
         }
-        return $result.append($tr);
+        return $tr;
     },
     /**
      * Render a node, from the arch of the view. It is a generic method, that
