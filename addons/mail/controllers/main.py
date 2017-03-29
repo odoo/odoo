@@ -65,7 +65,20 @@ class MailController(http.Controller):
         if not record_sudo:
             # record does not seem to exist -> redirect to login
             return cls._redirect_to_messaging()
-        record_action = record_sudo.get_access_action()
+
+        # the record has a window redirection: check access rights
+        if uid is not None:
+            record = record_sudo.sudo(uid)
+            if not RecordModel.sudo(uid).check_access_rights('read', raise_exception=False):
+                return cls._redirect_to_messaging()
+            try:
+                record_sudo.sudo(uid).check_access_rule('read')
+            except AccessError:
+                return cls._redirect_to_messaging()
+            else:
+                record_action = record.get_access_action()
+        else:
+            record_action = record_sudo.get_access_action()
 
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
@@ -73,15 +86,6 @@ class MailController(http.Controller):
         # other choice: act_window (no support of anything else currently)
         elif not record_action['type'] == 'ir.actions.act_window':
             return cls._redirect_to_messaging()
-
-        # the record has a window redirection: check access rights
-        if uid is not None:
-            if not RecordModel.sudo(uid).check_access_rights('read', raise_exception=False):
-                return cls._redirect_to_messaging()
-            try:
-                record_sudo.sudo(uid).check_access_rule('read')
-            except AccessError:
-                return cls._redirect_to_messaging()
 
         url_params = {
             'view_type': record_action['view_type'],
