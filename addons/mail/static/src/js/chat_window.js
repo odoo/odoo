@@ -15,8 +15,12 @@ var HEIGHT_FOLDED = '28px';
 
 return Widget.extend({
     template: "mail.ChatWindow",
+    custom_events: {
+        escape_pressed: '_onEscapePressed'
+    },
     events: {
         "click .o_chat_composer": "focus_input", // focus even if jquery's blockUI is enabled
+        "click .o_mail_thread": "_onChatWindowClicked",
         "keydown .o_chat_composer": "on_keydown",
         "keypress .o_chat_composer": "on_keypress",
         "click .o_chat_window_close": "on_click_close",
@@ -138,6 +142,17 @@ return Widget.extend({
         if (config.device.size_class !== config.device.SIZES.XS) {
             this.toggle_fold();
             this.trigger("fold_channel", this.channel_id, this.folded);
+        }
+    },
+    _onChatWindowClicked: function() {
+        var selectObj = window.getSelection();
+        if (selectObj.anchorOffset === selectObj.focusOffset){
+            this.$input.focus();
+        }
+    },
+    _onEscapePressed: function(event) {
+        if (!this.folded) {
+            this.trigger("close_chat_session");
         }
     },
 });
