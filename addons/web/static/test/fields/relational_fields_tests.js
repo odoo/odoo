@@ -2852,6 +2852,53 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('fieldmany2many tags view a domain', function (assert) {
+        assert.expect(7);
+
+        this.data.partner.fields.timmy.domain = [['id', '<', 50]];
+        this.data.partner.records[0].timmy = [12];
+        this.data.partner_type.records.push({id: 99, display_name: "red", color: 8});
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy" widget="many2many_tags" options="{\'no_create_edit\': True}"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'name_search') {
+                    assert.deepEqual(args.kwargs.args, [['id', '<', 50], ['id', 'not in', [12]]],
+                        "domain sent to name_search should be correct");
+                    return $.when([[14, 'silver']]);
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+        assert.strictEqual(form.$('.o_form_field_many2manytags > span').length, 1,
+            "should contain 1 tag");
+        assert.ok(form.$('span:contains(gold)').length,
+            'should have fetched and rendered gold partner tag');
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // add an other existing tag
+        var $input = form.$('.o_form_field_many2manytags input');
+        $input.click(); // opens the dropdown
+        assert.strictEqual($input.autocomplete('widget').find('li').length, 1,
+            "autocomplete dropdown should have 1 entry");
+        assert.strictEqual($input.autocomplete('widget').find('li a:contains("silver")').length, 1,
+            "autocomplete dropdown should contain 'silver'");
+        $input.autocomplete('widget').find('li').click(); // add 'silver'
+        assert.strictEqual(form.$('.o_form_field_many2manytags > span').length, 2,
+            "should contain 2 tags");
+        assert.ok(form.$('.o_form_field_many2manytags > span:contains("silver")').length,
+            "should contain newly added tag 'silver'");
+
+        form.destroy();
+    });
+
     QUnit.test('fieldmany2many tags in a new record', function (assert) {
         assert.expect(7);
 
