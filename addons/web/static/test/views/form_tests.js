@@ -790,7 +790,7 @@ QUnit.module('Views', {
             res_id: 1,
             mockRPC: function (route, args) {
                 if (args.method === "onchange") {
-                    assert.deepEqual(args.args[3], 
+                    assert.deepEqual(args.args[3],
                         {"foo": "1", "p": "", "p.bar": "", "p.display_name": "", "p.product_id": "", "timmy": "", "timmy.name": ""},
                         "should send only the fields used in the views");
                 }
@@ -2003,6 +2003,7 @@ QUnit.module('Views', {
                 obj.int_field = obj.foo.length + 1000;
             },
         };
+        var def = $.Deferred();
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -2017,6 +2018,7 @@ QUnit.module('Views', {
                 if (args.method === 'onchange') {
                     onchangeNbr++;
                     return concurrency.delay(3).then(function () {
+                        def.resolve();
                         return result;
                     });
                 }
@@ -2031,16 +2033,16 @@ QUnit.module('Views', {
         form.$('input').first().val("12").trigger('input');
         assert.strictEqual(onchangeNbr, 0, "no onchange has been called yet");
 
-        return concurrency.delay(75).then(function () {
+        return waitForFinishedOnChange().then(function () {
             assert.strictEqual(onchangeNbr, 1, "one onchange has been called");
 
             // add something in the input, then focus another input
             form.$('input').first().val("123").trigger('input');
-            form.$('input').first().focusout();
+            form.$('input').first().change();
             assert.strictEqual(onchangeNbr, 2,
                 "one onchange has been called immediately");
 
-            return concurrency.delay(75);
+            return waitForFinishedOnChange();
         }).then(function () {
             assert.strictEqual(onchangeNbr, 2,
                 "no extra onchange should have been called");
@@ -2048,7 +2050,13 @@ QUnit.module('Views', {
             form.destroy();
             done();
         });
-    });
 
+        function waitForFinishedOnChange() {
+            return def.then(function () {
+                def = $.Deferred();
+                return concurrency.delay(0);
+            });
+        }
+    });
 });
 });
