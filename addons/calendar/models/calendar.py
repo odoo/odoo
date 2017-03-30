@@ -1176,7 +1176,7 @@ class Meeting(models.Model):
             data['month_by'] = 'date'
             data['rrule_type'] = 'monthly'
 
-        #repeat yearly but for openerp it's monthly, take same information as monthly but interval is 12 times
+        #repeat yearly but for odoo it's monthly, take same information as monthly but interval is 12 times
         if rule._bymonth:
             data['interval'] = data['interval'] * 12
 

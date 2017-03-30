@@ -4,7 +4,7 @@
 New extensible file import for Odoo
 ======================================
 
-Re-implement openerp's file import system:
+Re-implement Odoo's file import system:
 
 * Server side, the previous system forces most of the logic into the
   client which duplicates the effort (between clients), makes the

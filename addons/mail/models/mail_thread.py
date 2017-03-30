@@ -38,7 +38,7 @@ class MailThread(models.AbstractModel):
         communication history. ``mail.thread`` also manages followers of
         inheriting classes. All features and expected behavior are managed
         by mail.thread. Widgets has been designed for the 7.0 and following
-        versions of OpenERP.
+        versions of Odoo.
 
         Inheriting classes are not required to implement any method, as the
         default implementation will work for any model. However it is common
