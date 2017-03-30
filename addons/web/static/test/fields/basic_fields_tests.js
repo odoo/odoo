@@ -109,7 +109,7 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldBoolean');
 
-    QUnit.test('boolean field in form view', function(assert) {
+    QUnit.test('boolean field in form view', function (assert) {
         assert.expect(7);
 
         var form = createView({
@@ -142,8 +142,11 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('.o_field_boolean input:checked').length, 0,
             "checkbox should still be unchecked");
-        // check the checkbox
-        form.$('.o_field_boolean input').click();
+        // check the checkbox by hitting the "enter" key after focusing it
+        form.$('.o_field_boolean input')
+            .trigger("focusin")
+            .trigger({type: "keydown", which: $.ui.keyCode.ENTER})
+            .trigger({type: "keyup", which: $.ui.keyCode.ENTER});
         assert.strictEqual(form.$('.o_field_boolean input:checked').length, 1,
             "checkbox should now be checked");
 
@@ -154,7 +157,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('boolean field in editable list view', function(assert) {
+    QUnit.test('boolean field in editable list view', function (assert) {
         assert.expect(11);
 
         var list = createView({
