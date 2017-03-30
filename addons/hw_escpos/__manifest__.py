@@ -11,7 +11,7 @@
 ESC/POS Hardware Driver
 =======================
 
-This module allows openerp to print with ESC/POS compatible printers and
+This module allows Odoo to print with ESC/POS compatible printers and
 to open ESC/POS controlled cashdrawers in the point of sale and other modules
 that would need such functionality.
 

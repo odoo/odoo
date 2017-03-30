@@ -9,7 +9,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
-from openerp.tools import float_compare
+from odoo.tools import float_compare
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)

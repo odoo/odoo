@@ -16,7 +16,7 @@ Minimal accounting configuration for Mexico.
 ============================================
 
 This Chart of account is a minimal proposal to be able to use OoB the
-accounting feature of Openerp.
+accounting feature of Odoo.
 
 This doesn't pretend be all the localization for MX it is just the minimal
 data required to start from 0 in mexican localization.
