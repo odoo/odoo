@@ -30,7 +30,7 @@ var _t = core._t;
 var InputField = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'input': '_onInput',
-        'focusout': '_onFocusout',
+        'change': '_onChange',
     }),
 
     /**
@@ -137,11 +137,12 @@ var InputField = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * We immediately notify the outside world when this input loses focus.
+     * We immediately notify the outside world when this input confirms its
+     * changes.
      *
      * @private
      */
-    _onFocusout: function () {
+    _onChange: function () {
         this._setValue(this.$input.val());
     },
     /**
