@@ -500,11 +500,11 @@ class ProductChangeMixin(object):
 
         if product:
             product_obj = self.pool.get('product.product').browse(cr, uid, product, context=ctx)
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
             if partner_id:
-                partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
                 result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position_id, product_obj.taxes_id, context=ctx)
 
-            result['name'] = product_obj.display_name
+            result['name'] = product_obj.with_context(lang=partner.lang).display_name
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id or False
             if not pricelist:
                 warning = {
