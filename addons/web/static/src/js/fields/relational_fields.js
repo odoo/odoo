@@ -197,7 +197,7 @@ var FieldMany2One = AbstractField.extend({
         var self = this;
         var slowCreate = this._searchCreatePopup.bind(this, "form", false, this._createContext(name));
         if (this.nodeOptions.quick_create) {
-            this._rpc({
+            return this._rpc({
                     model: this.field.relation,
                     method: 'name_create',
                     args: [name],
