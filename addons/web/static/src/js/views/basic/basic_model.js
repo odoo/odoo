@@ -1049,6 +1049,13 @@ var BasicModel = AbstractModel.extend({
                 args: [idList, currentData, fields, onchange_spec, context],
             })
             .then(function (result) {
+                if (!record._changes) {
+                    // if the _changes key does not exist anymore, it means that
+                    // it was removed by discarding the changes after the rpc
+                    // to onchange. So, in that case, the proper response is to
+                    // ignore the onchange.
+                    return;
+                }
                 if (result.warning) {
                     self.trigger_up('warning', {
                         message: result.warning.message,
