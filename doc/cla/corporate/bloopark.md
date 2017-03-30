@@ -16,5 +16,4 @@ Jens Holze jholze@bloopark.de https://github.com/jholze
 Christoph Giesel cgiesel@bloopark.de https://github.com/christophlsa
 Benjamin Bachmann bBachmann@bloopark.de https://github.com/benniphx
 Robert Rübner rruebner@bloopark.de https://github.com/rruebner
-Florian Fischer ffischer@bloopark.de https://github.com/florianfischer
-Mercerdes Scenna mscenna@bloopark.de https://github.com/mscenna
+Andrei Poehlmann andrei.poehlmann90@gmail.com https://github.com/reinka
