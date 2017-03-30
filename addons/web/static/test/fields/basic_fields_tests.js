@@ -689,6 +689,67 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('field changes are correctly debounced in text fields', function (assert) {
+        var done = assert.async();
+        assert.expect(5);
+
+        this.data.partner.fields.foo.type = 'text';
+
+        var def = $.Deferred();
+        var nbNotifyChanges = 0;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                '</form>',
+            res_id: 2,
+            fieldDebounce: 3,
+        });
+
+        var _onFieldChanged = form._onFieldChanged;
+        form._onFieldChanged = function () {
+            _onFieldChanged.apply(form, arguments);
+            nbNotifyChanges++;
+            def.resolve();
+        };
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        form.$('textarea').val("1").trigger('input');
+        assert.strictEqual(nbNotifyChanges, 0,
+            "no event should have been triggered");
+        form.$('textarea').val("12").trigger('input');
+        assert.strictEqual(nbNotifyChanges, 0,
+            "no event should have been triggered");
+
+        return waitForChangeTriggered().then(function () {
+            assert.strictEqual(nbNotifyChanges, 1,
+                "one event should have been triggered");
+
+            // add something in the textarea, then focus another input
+            form.$('textarea').first().val("123").trigger('input');
+            form.$('textarea').first().change();
+            assert.strictEqual(nbNotifyChanges, 2,
+                "one event should have been triggered immediately");
+
+            return waitForChangeTriggered();
+        }).then(function () {
+            assert.strictEqual(nbNotifyChanges, 2,
+                "no extra event should have been triggered");
+
+            form.destroy();
+            done();
+        });
+
+        function waitForChangeTriggered() {
+            return def.then(function () {
+                def = $.Deferred();
+                return concurrency.delay(0);
+            });
+        }
+    });
 
     QUnit.module('JournalDashboardGraph');
 
