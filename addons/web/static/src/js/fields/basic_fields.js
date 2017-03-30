@@ -26,13 +26,69 @@ var view_dialogs = require('web.view_dialogs');
 var qweb = core.qweb;
 var _t = core._t;
 
-
-var InputField = AbstractField.extend({
+var DebouncedField = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'input': '_onInput',
         'change': '_onChange',
     }),
 
+    /**
+     * Override init to debounce the input changes to make sure they are not
+     * done too quickly.  Note that this is done here and not on the prototype,
+     * so each inputfield has its own debounced function to work with.
+     * Also, if the debounce value is set to 0, no debouncing is done, which is
+     * really useful for the unit tests.
+     *
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        if (this.DEBOUNCE && this.mode === 'edit') {
+            this._onInput = _.debounce(this._onInput.bind(this), this.DEBOUNCE);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Should return the current value of the field, in the DOM (for example,
+     * the content of the input)
+     *
+     * @abstract
+     * @private
+     * @returns {*}
+     */
+    _getValue: function () {
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * We immediately notify the outside world when this field confirms its
+     * changes
+     *
+     * @private
+     */
+    _onChange: function () {
+        this._setValue(this._getValue());
+    },
+    /**
+     * We notify the outside world for each change in this field. It does not
+     * necessarily mean that onchanges will be triggered instantly.
+     *
+     * @private
+     */
+    _onInput: function () {
+        this._setValue(this._getValue());
+    },
+});
+
+var InputField = DebouncedField.extend({
     /**
      * The very purpose of this field is to be an input tag in edit mode.
      *
@@ -42,15 +98,6 @@ var InputField = AbstractField.extend({
         this._super.apply(this, arguments);
         if (this.mode === 'edit') {
             this.tagName = 'input';
-
-            // we debounce the input changes to make sure they are not done too
-            // quickly.  Note that this is done here and not on the prototype,
-            // so each inputfield has its own debounced function to work with.
-            // Also, if the debounce value is set to 0, no debouncing is done,
-            // which is really useful for the unit tests.
-            if (this.DEBOUNCE) {
-                this._onInput = _.debounce(this._onInput.bind(this), this.DEBOUNCE);
-            }
         }
     },
 
@@ -67,7 +114,6 @@ var InputField = AbstractField.extend({
         this.$input.focus();
         setTimeout(this.$input.select.bind(this.$input), 0);
     },
-
     /**
      * Do not re-render this field if it was the origin of the onchange call.
      * FIXME: make the onchange work on itself without disturbing the user typing
@@ -87,6 +133,13 @@ var InputField = AbstractField.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     * @returns {string} the content of the input
+     */
+    _getValue: function () {
+        return this.$input.val();
+    },
     /**
      * Formats an input element for edit mode. This is in a separate function so
      * extending widgets can use it on their input without having input as tagName.
@@ -108,7 +161,6 @@ var InputField = AbstractField.extend({
         this.$input[0].selectionStart = selectionStart;
         this.$input[0].selectionEnd = selectionEnd;
     },
-
     /**
      * Formats the HTML input tag for edit mode and stores selection status.
      *
@@ -121,7 +173,6 @@ var InputField = AbstractField.extend({
         this.$input = this.$el;
         this._prepareInput(this.$input);
     },
-
     /**
      * Resets the content to the formated value in readonly mode.
      *
@@ -136,15 +187,6 @@ var InputField = AbstractField.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * We immediately notify the outside world when this input confirms its
-     * changes.
-     *
-     * @private
-     */
-    _onChange: function () {
-        this._setValue(this.$input.val());
-    },
     /**
      * Implement keyboard movements.  Mostly useful for its environment, such
      * as a list view.
@@ -180,16 +222,6 @@ var InputField = AbstractField.extend({
                 break;
         }
         this._super.apply(this, arguments);
-    },
-
-    /**
-     * We notify the outside world for each change in this input value. It does
-     * not necessarily mean that onchanges will be triggered instantly.
-     *
-     * @private
-     */
-    _onInput: function () {
-        this._setValue(this.$input.val());
     },
 });
 
@@ -569,12 +601,7 @@ var FieldFloatTime = FieldFloat.extend({
     },
 });
 
-var FieldText = AbstractField.extend({
-    events: _.extend({}, AbstractField.prototype.events, {
-        'input': function () {
-            this._setValue(this.$textarea.val());
-        },
-    }),
+var FieldText = DebouncedField.extend({
     supportedFieldTypes: ['text'],
 
     /**
@@ -619,6 +646,13 @@ var FieldText = AbstractField.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     * @returns {string} the content of the textarea
+     */
+    _getValue: function () {
+        return this.$textarea.val();
+    },
     /**
      * Format the value and put it in the textarea.
      *
