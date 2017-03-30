@@ -373,7 +373,6 @@ var FieldBoolean = AbstractField.extend({
     className: 'o_field_boolean',
     events: _.extend({}, AbstractField.prototype.events, {
         change: '_onChange',
-        keydown: '_onKeyDown',
     }),
     replace_element: true,
     supportedFieldTypes: ['boolean'],
@@ -455,6 +454,7 @@ var FieldBoolean = AbstractField.extend({
      * @param {KeyEvent} event
      */
     _onKeydown: function (event) {
+        this._super.apply(this, arguments);
         switch (event.which) {
             case $.ui.keyCode.DOWN:
                 this.trigger_up('move_down');
@@ -467,10 +467,6 @@ var FieldBoolean = AbstractField.extend({
                 break;
             case $.ui.keyCode.RIGHT:
                 this.trigger_up('move_right');
-                break;
-            case $.ui.keyCode.TAB:
-                this.trigger_up('move_next');
-                event.preventDefault();
                 break;
             case $.ui.keyCode.ENTER:
                 this.$input.prop('checked', !this.value);
