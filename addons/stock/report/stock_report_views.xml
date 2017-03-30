@@ -10,7 +10,7 @@
             file="stock.report_picking_operations"
         />
         <record id="action_report_picking" model="ir.actions.report.xml">
-            <field name="print_report_name">'Picking Operations'+'-'+(object.partner_id.name)+'-'+(object.name)</field>
+            <field name="print_report_name">'Picking Operations'+'-'+(object.partner_id.name) if object.partner_id else ''+'-'+(object.name)</field>
         </record>
         <report
             string="Delivery Slip"
