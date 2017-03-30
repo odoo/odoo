@@ -515,7 +515,7 @@ openerp.point_of_sale.load_devices = function load_devices(instance,module){ //m
             }
             var parsed_result = this.barcode_parser.parse_barcode(code);
             
-            if(parsed_result.type in {'product':'', 'weight':'', 'price':''}){    //barcode is associated to a product
+            if(parsed_result.type in {'product':'', 'weight':'', 'price':'', 'lot':''}){    //barcode is associated to a product
                 if(this.action_callback['product']){
                     this.action_callback['product'](parsed_result);
                 }
