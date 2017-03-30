@@ -74,6 +74,7 @@ odoo.define('website_sale.website_sale', function (require) {
     var ajax = require('web.ajax');
     var utils = require('web.utils');
     var core = require('web.core');
+    var config = require('web.config');
     var _t = core._t;
 
     if(!$('.oe_website_sale').length) {
@@ -452,5 +453,8 @@ odoo.define('website_sale.website_sale', function (require) {
         $("select[name='country_id']").change();
     });
 
-    $('.ecom-zoomable img[data-zoom]').zoomOdoo({ attach: '#o-carousel-product'});
+    // Deactivate image zoom for mobile devices, since it might prevent users to scroll
+    if (config.device.size_class > config.device.SIZES.XS) {
+        $('.ecom-zoomable img[data-zoom]').zoomOdoo({ attach: '#o-carousel-product'});
+    }
 });
