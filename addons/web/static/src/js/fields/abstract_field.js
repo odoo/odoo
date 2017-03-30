@@ -348,7 +348,7 @@ var AbstractField = Widget.extend({
      */
     _onKeydown: function (event) {
         if (event.which === $.ui.keyCode.TAB) {
-            this.trigger_up('move_next');
+            this.trigger_up(event.shiftKey ? 'move_previous' : 'move_next');
             event.preventDefault();
         }
     },

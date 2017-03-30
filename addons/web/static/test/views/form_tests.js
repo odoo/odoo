@@ -2110,5 +2110,40 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('navigation with tab key in form view', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                            '<field name="bar"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        // go to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // focus first input, trigger tab
+        form.$('input[name="foo"]').focus();
+        form.$('input[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.ok($.contains(form.$('div[name="bar"]')[0], document.activeElement),
+            "bar checkbox should be focused");
+
+        // simulate shift+tab on active element
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "first input should be focused");
+
+        form.destroy();
+    });
 });
 });

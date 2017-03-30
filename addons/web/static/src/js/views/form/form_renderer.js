@@ -15,6 +15,10 @@ var FIELD_CLASSES = {
 
 return BasicRenderer.extend({
     className: "o_form_view",
+    custom_events: {
+        move_next: '_onMoveNext',
+        move_previous: '_onMovePrevious',
+    },
     /**
      * @override method from BasicRenderer
      * @param {Object} params
@@ -715,6 +719,40 @@ return BasicRenderer.extend({
             });
 
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * When someone presses TAB in a widget, it is nice to be able to go to the
+     * next widget, especially since the TAB key event is preventDefaulted
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onMoveNext: function (event) {
+        event.stopPropagation();
+        var index = this.widgets.indexOf(event.target);
+        if (index + 1 < this.widgets.length) {
+            this.widgets[index + 1].activate();
+        }
+    },
+    /**
+     * When someone presses SHIFT+TAB in a widget, it is nice to be able to go
+     * back to the previous widget, especially since the TAB key event is
+     * preventDefaulted
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onMovePrevious: function (event) {
+        event.stopPropagation();
+        var index = this.widgets.indexOf(event.target);
+        if (index >= 1) {
+            this.widgets[index - 1].activate();
+        }
     },
 });
 
