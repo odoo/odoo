@@ -36,6 +36,7 @@ import werkzeug.routing
 import werkzeug.wrappers
 import werkzeug.wsgi
 from werkzeug.wsgi import wrap_file
+from werkzeug.posixemulation import rename
 
 try:
     import psutil
@@ -932,6 +933,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.inited = True
         self._default_values()
         self.modified = False
+        self.rotate = False
 
     def __getattr__(self, attr):
         return self.get(attr, None)
@@ -963,6 +965,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             uid = dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
+        self.rotate = True
         self.db = db
         self.uid = uid
         self.login = login
@@ -1270,6 +1273,23 @@ class DisableCacheMiddleware(object):
             start_response(status, new_headers)
         return self.app(environ, start_wrapped)
 
+class OpenERPSessionStore(werkzeug.contrib.sessions.FilesystemSessionStore):
+
+    def rotate(self, session):
+        new_session_id = self.generate_key()
+        if session.should_save:
+            self.save(session)
+        try:
+            fn = self.get_session_filename(session.sid)
+            new_fn = self.get_session_filename(new_session_id)
+            rename(fn, new_fn)
+            return self.get(new_session_id)
+        except (IOError, OSError):
+            pass
+
+        # FAIL: just return the existing session :(
+        return session
+
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
     """
@@ -1281,7 +1301,7 @@ class Root(object):
         # Setup http sessions
         path = openerp.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
-        return werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
+        return OpenERPSessionStore(path, session_class=OpenERPSession)
 
     @lazy_property
     def nodb_routing_map(self):
@@ -1453,6 +1473,9 @@ class Root(object):
                 else:
                     result = _dispatch_nodb()
 
+                if request.session.rotate:
+                    # change the session id
+                    httprequest.session = self.session_store.rotate(request.session)
                 response = self.get_response(httprequest, result, explicit_session)
             return response(environ, start_response)
 
