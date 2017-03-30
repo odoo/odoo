@@ -1053,8 +1053,9 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many list (non editable): edition', function (assert) {
-        assert.expect(9);
+        assert.expect(12);
 
+        var nbWrite = 0;
         this.data.partner.records[0].p = [2, 4];
         var form = createView({
             View: FormView,
@@ -1071,6 +1072,15 @@ QUnit.module('relational_fields', {
                     '</field>' +
                 '</form>',
             res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    nbWrite++;
+                    assert.deepEqual(args.args[1], {
+                        p: [[1, 2, {display_name: 'new name'}], [2, 4, false]]
+                    }, "should have sent the correct commands");
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
         assert.ok(!form.$('.o_list_record_delete').length,
@@ -1096,16 +1106,21 @@ QUnit.module('relational_fields', {
         $('.modal .modal-footer .btn-primary').click(); // save
         assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'new name',
             'value of subrecord should have been updated');
+        assert.strictEqual(nbWrite, 0, "should not have write anything in DB");
 
         // create new subrecords
         // TODO when 'Add an item' will be implemented
 
         // delete subrecords
-        form.$('.o_list_record_delete:first()').click();
+        form.$('.o_list_record_delete:nth(1)').click();
         assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 1,
             'should contain 1 subrecord');
-        assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'aaa',
-            'the remaining subrecord should be "aaa"');
+        assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'new name',
+            'the remaining subrecord should be "new name"');
+
+        form.$buttons.find('.o_form_button_save').click(); // save the record
+        assert.strictEqual(nbWrite, 1, "should have write the changes in DB");
+
         form.destroy();
     });
 

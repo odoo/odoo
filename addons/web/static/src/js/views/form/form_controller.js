@@ -209,7 +209,7 @@ var FormController = BasicController.extend({
      *   readonly mode after saving the record
      * @param {boolean} [options.reload=true] if true, reload the record after
      *   saving
-     * @param {boolean} [options.localSave=false] if true, the record will only
+     * @param {boolean} [options.savePoint=false] if true, the record will only
      *   be 'locally' saved: its changes will move from the _changes key to the
      *   data key
      * @returns {Deferred}
@@ -228,7 +228,7 @@ var FormController = BasicController.extend({
             if (this.checkInvalidFields()) {
                 return $.Deferred().reject();
             } else {
-                return this.model.save(this.handle, {reload: shouldReload, localSave: options.localSave})
+                return this.model.save(this.handle, {reload: shouldReload, savePoint: options.savePoint})
                     .then(function () {
                         if (!stayInEdit) {
                             self._toReadOnlyMode();

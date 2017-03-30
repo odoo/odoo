@@ -201,7 +201,7 @@ var BasicModel = AbstractModel.extend({
             })
             .then(function () {
                 _.each(records, function (record) {
-                    record.res_ids.splice(record.offset, 1)[0];
+                    record.res_ids.splice(record.offset, 1);
                     record.res_id = record.res_ids[record.offset];
                     record.count--;
                 });
@@ -215,11 +215,15 @@ var BasicModel = AbstractModel.extend({
      * everything that was stored in a _changes key.
      *
      * @param {string} id local resource id
+     * @param {Object} [options]
+     * @param {boolean} [options.rollback=false] if true, the changes will
+     *   be reset to the last _savePoint, otherwise, they are reset to null
      */
-    discardChanges: function (id) {
+    discardChanges: function (id, options) {
+        options = options || {};
         var element = this.localData[id];
         this._visitChildren(element, function (elem) {
-            elem._changes = null;
+            elem._changes = options.rollback && elem._savePoint || null;
         });
     },
     /**
@@ -550,9 +554,9 @@ var BasicModel = AbstractModel.extend({
      * @param {string} record_id local resource
      * @param {Object} [options]
      * @param {boolean} [options.reload=true] if true, data will be reloaded
-     * @param {boolean} [options.localSave=false] if true, the record will only
-     *   be 'locally' saved: its changes will move from the _changes key to the
-     *   data key
+     * @param {boolean} [options.savePoint=false] if true, the record will only
+     *   be 'locally' saved: its changes written in a _savePoint key that can
+     *   be restored later by call discardChanges with option rollback to true
      * @returns {Deferred}
      */
     save: function (record_id, options) {
@@ -560,10 +564,9 @@ var BasicModel = AbstractModel.extend({
         return this.mutex.exec(function () {
             options = options || {};
             var record = self.localData[record_id];
-            if (options.localSave) {
+            if (options.savePoint) {
                 if (record._changes) {
-                    _.extend(record.data, record._changes);
-                    record._changes = null;
+                    record._savePoint = _.extend(record._savePoint || {}, record._changes);
                 }
                 return $.when();
             }
@@ -735,7 +738,7 @@ var BasicModel = AbstractModel.extend({
      * notifyChanges, it is not protected by a mutex.  Every changes from the
      * user to the model go through this method.
      *
-     * @param {string} recordID 
+     * @param {string} recordID
      * @param {Object} changes
      * @returns {Deferred}
      */
@@ -1647,25 +1650,25 @@ var BasicModel = AbstractModel.extend({
                     addedIds = _.difference(relIds, list.res_ids);
                     keptIds = _.intersection(list.res_ids, relIds);
                     for (i = 0; i < keptIds.length; i++) {
-                        commands[fieldName].push(x2ManyCommands.link_to(keptIds[i]));
-                    }
-                    for (i = 0; i < removedIds.length; i++) {
-                        commands[fieldName].push(x2ManyCommands.delete(removedIds[i]));
+                        relRecord = _.findWhere(relData, {res_id: keptIds[i]});
+                        var command;
+                        if (!_.isEmpty(relRecord._changes)) {
+                            var r = this.get(relRecord.id, {raw: true});
+                            var changes = _.pick(r.data, Object.keys(relRecord._changes));
+                            command = x2ManyCommands.update(relRecord.res_id, changes);
+                        } else {
+                            command = x2ManyCommands.link_to(keptIds[i]);
+                        }
+                        commands[fieldName].push(command);
                     }
                     for (i = 0; i < addedIds.length; i++) {
                         relRecord = _.findWhere(relData, {res_id: addedIds[i]});
                         relRecord = this.get(relRecord.id, {raw: true});
                         commands[fieldName].push(x2ManyCommands.create(_.omit(relRecord.data, 'id')));
                     }
-                    // FIXME: update of records temporarily disabled as it doesn't work if we updated
-                    // the record in a form view, as the _changes contains all the fields of the
-                    // form view instead of the one that have changed
-                    // _.each(relData, function (relRecord) {
-                    //     var new_values = relRecord._changes;
-                    //     if (!_.isEmpty(new_values)) {
-                    //         commands[fieldName].push(x2ManyCommands.update(relRecord.res_id, new_values));
-                    //     }
-                    // });
+                    for (i = 0; i < removedIds.length; i++) {
+                        commands[fieldName].push(x2ManyCommands.delete(removedIds[i]));
+                    }
                 }
             }
         }

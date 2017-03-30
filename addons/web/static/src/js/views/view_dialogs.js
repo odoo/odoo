@@ -109,7 +109,9 @@ var FormViewDialog = ViewDialog.extend({
                 close: true,
                 click: function () {
                     if (!readonly) {
-                        self.form_view.model.discardChanges(self.form_view.handle);
+                        self.form_view.model.discardChanges(self.form_view.handle, {
+                            rollback: self.shouldSaveLocally,
+                        });
                     }
                 },
             }];
@@ -180,7 +182,7 @@ var FormViewDialog = ViewDialog.extend({
             self.form_view = formView;
             var fragment = document.createDocumentFragment();
             if (self.recordID && self.shouldSaveLocally) {
-                self.model.save(self.recordID, {localSave: true});
+                self.model.save(self.recordID, {savePoint: true});
             }
             self.form_view.appendTo(fragment)
                 .then(function () {
@@ -213,7 +215,7 @@ var FormViewDialog = ViewDialog.extend({
             def = this.form_view.saveRecord({
                 stayInEdit: true,
                 reload: false,
-                localSave: this.shouldSaveLocally,
+                savePoint: this.shouldSaveLocally,
             });
         }
         return $.when(def).then(function () {
