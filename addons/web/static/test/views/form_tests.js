@@ -2058,5 +2058,57 @@ QUnit.module('Views', {
             });
         }
     });
+
+    QUnit.test('onchanges that complete after discarding', function (assert) {
+        assert.expect(4);
+
+        var def1 = $.Deferred();
+
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.int_field = obj.foo.length + 1000;
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group><field name="foo"/><field name="int_field"/></group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    assert.step('onchange is done');
+                    return def1.then(function () {
+                        return result;
+                    });
+                }
+                return result;
+            },
+        });
+
+        // go into edit mode
+        assert.strictEqual(form.$('span[name="foo"]').text(), "blip",
+            "field foo should be displayed to initial value");
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // edit a value
+        form.$('input').first().val("1234").trigger('input');
+
+        // discard changes
+        form.$buttons.find('.o_form_button_cancel').click();
+        $('.modal .modal-footer .btn-primary').click();
+        assert.strictEqual(form.$('span[name="foo"]').text(), "blip",
+            "field foo should still be displayed to initial value");
+
+        // complete the onchange
+        def1.resolve();
+        assert.strictEqual(form.$('span[name="foo"]').text(), "blip",
+            "field foo should still be displayed to initial value");
+
+        form.destroy();
+    });
 });
 });
