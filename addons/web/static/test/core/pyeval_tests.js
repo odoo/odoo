@@ -2,7 +2,6 @@ odoo.define('web.pyEval_tests', function(require) {
 "use strict";
 
 var Context = require('web.Context');
-var data = require('web.data');
 var pyEval = require('web.pyeval');
 var time = require('web.time');
 
@@ -47,7 +46,7 @@ QUnit.module('core', function () {
         return function (a, b, message) {
             assert.ok(py.eval(a + ' == ' + b, c), message);
         };
-    };
+    }
 
     QUnit.test('strftime', function (assert) {
         assert.expect(3);
@@ -535,8 +534,8 @@ QUnit.module('core', function () {
         assert.deepEqual(result.domain, [
             ["type", "=", "contract"],
             "|", ["state", "in", ["open", "draft"]],
-                "&", ["type", "=", "contract"],
-                     ["state", "=", "pending"],
+                 [["type", "=", "contract"],
+                  ["state", "=", "pending"]],
             "|",
                 "&", ["date", "!=", false],
                         ["date", "<=", today],
