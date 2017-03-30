@@ -453,6 +453,12 @@ def get_unaccent_wrapper(cr):
         return lambda x: "unaccent(%s)" % (x,)
     return lambda x: x
 
+def make_existsselect_leaf(operator, ids, rel_table, rel_id1, rel_id2):
+    exists_op = 'not existsselect' if operator in NEGATIVE_TERM_OPERATORS else 'existsselect'
+    ids_str = ",".join(['%s'] * len(ids))
+    existsselect = 'SELECT 1 FROM "%s" WHERE "%s"={exists_link} AND "%s" IN (%s)' % (rel_table, rel_id1, rel_id2, ids_str)
+    return ('id', exists_op, (existsselect, (ids, )))
+
 # --------------------------------------------------
 # ExtendedLeaf class for managing leafs and contexts
 # -------------------------------------------------
@@ -994,17 +1000,17 @@ class expression(object):
 
             elif column._type == 'many2many':
                 rel_table, rel_id1, rel_id2 = column._sql_names(model)
+
                 #FIXME
                 if operator == 'child_of':
-                    def _rec_convert(ids):
-                        if comodel == model:
-                            return ids
-                        return select_from_where(cr, rel_id1, rel_table, rel_id2, ids, operator)
-
                     ids2 = to_ids(right, comodel, context)
                     dom = child_of_domain('id', ids2, comodel)
                     ids2 = comodel.search(cr, uid, dom, context=context)
-                    push(create_substitution_leaf(leaf, ('id', 'in', _rec_convert(ids2)), model))
+                    if comodel == model:
+                        push(create_substitution_leaf(leaf, ('id', 'in', ids2), model))
+                    else:
+                        existsselect_leaf = make_existsselect_leaf('in', ids2, rel_table, rel_id1, rel_id2)
+                        push(create_substitution_leaf(leaf, existsselect_leaf, internal=True))
                 else:
                     call_null_m2m = True
                     if right is not False:
@@ -1026,10 +1032,8 @@ class expression(object):
                                 operator = 'in'  # operator changed because ids are directly related to main object
                         else:
                             call_null_m2m = False
-                            exists_op = 'not existsselect' if operator in NEGATIVE_TERM_OPERATORS else 'existsselect'
-                            res_ids_str = ",".join(['%s'] * len(res_ids))
-                            existsselect = 'SELECT 1 FROM "%s" WHERE "%s"={exists_link} AND "%s" IN (%s)' % (rel_table, rel_id1, rel_id2, res_ids_str)
-                            push(create_substitution_leaf(leaf, ('id', exists_op, (existsselect, (res_ids, ))), internal=True))
+                            existsselect_leaf = make_existsselect_leaf(operator, res_ids, rel_table, rel_id1, rel_id2)
+                            push(create_substitution_leaf(leaf, existsselect_leaf, internal=True))
 
                     if call_null_m2m:
                         m2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
