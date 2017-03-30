@@ -38,6 +38,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from num2words import num2words
 from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
@@ -96,6 +97,7 @@ class rml_parse(object):
             'strip_name' : self._strip_name,
             'time' : time,
             'display_address': self.display_address,
+            'num_to_words':self.num_to_words,
             # more context members are setup in setCompany() below:
             #  - company_id
             #  - logo
@@ -111,6 +113,12 @@ class rml_parse(object):
         self.default_lang = {}
         self.lang_dict_called = False
         self._transl_regex = re.compile('(\[\[.+?\]\])')
+    
+    def num_to_words(self,data,upper=False):
+        res = num2words(data)
+        if upper:
+            res = res.upper()
+        return res
 
     def setTag(self, oldtag, newtag, attrs=None):
         return newtag, attrs
