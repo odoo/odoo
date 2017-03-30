@@ -478,7 +478,7 @@ function openerp_picking_widgets(instance){
                     }
                     self.pickings_by_type[0] = [];
 
-                    return new instance.web.Model('stock.picking').call('search_read',[ [['state','in', ['assigned', 'partially_available']], ['picking_type_id', 'in', type_ids]], [] ], {context: new instance.web.CompoundContext()});
+                    return new instance.web.Model('stock.picking').call('search_read',[ [['state','in', ['assigned', 'partially_available']], ['picking_type_id', 'in', type_ids]], ['id','name','picking_type_id'] ], {context: new instance.web.CompoundContext()});
 
                 }).then(function(pickings){
                     self.pickings = pickings;
