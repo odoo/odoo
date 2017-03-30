@@ -1136,9 +1136,10 @@
                                         <field name="credit"/>
                                         <field name="quantity"/>
                                     </group>
-                                    <group string="Accounting" invisible="[('move_id','=',False), ('statement_id','=',False)]">
-                                        <field name="move_id" required="False" invisible="[('move_id','=',False)]"/>
-                                        <field name="statement_id" readonly="True" invisible="[('statement_id','=',False)]"/>
+                                    <group string="Accounting Documents">
+                                        <field name="move_id"/>
+                                        <field name="statement_id" readonly="True" attrs="{'invisible': [('statement_id','=',False)]}"/>
+                                        <field name="invoice_id" attrs="{'invisible': [('invoice_id','=',False)]}"/>
                                     </group>
                                     <group string="Dates">
                                         <field name="date_maturity"/>
@@ -1220,7 +1221,7 @@
                     <field name="date_maturity"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
-                    <button name="open_move" type="object" string="Source"/>
+                    <button name="open_move" type="object" string="Journal Entry"/>
                 </tree>
             </field>
         </record>
@@ -2080,6 +2081,10 @@
             <field name="view_id" ref="product_product_view_tree"/>
         </record>
 
+        <menuitem id="product_configuration_menu" name="Products" parent="account.menu_finance_configuration" sequence="1"/>
+
+        <menuitem id="menu_product_product_action" name="Products" action="product_product_action" parent="product_configuration_menu" sequence="1"/>
+
         <record id="product_product_action_purchasable" model="ir.actions.act_window">
             <field name="name">Purchasable Products</field>
             <field name="type">ir.actions.act_window</field>
@@ -2095,7 +2100,7 @@
         <menuitem id="product_product_menu_purchasable" name="Purchasable Products" action="product_product_action_purchasable" parent="account.menu_finance_payables" sequence="101"/>
 
         <menuitem id="product_configuration_menu" name="Products" parent="account.menu_finance_configuration" sequence="1"/>
-        
+
         <menuitem id="menu_account_supplier" name="Vendors"
             parent="menu_finance_payables"
             action="base.action_partner_supplier_form" sequence="100"/>

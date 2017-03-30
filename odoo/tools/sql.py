@@ -229,10 +229,3 @@ def reverse_order(order):
         direction = 'asc' if item[1:] == ['desc'] else 'desc'
         items.append('%s %s' % (item[0], direction))
     return ', '.join(items)
-
-def sql_tuple(list_to_convert):
-    """ Converts the list given in parameter into a SQL tuple, written in a string.
-    Beware that SQL tuples differ from Python tuples when they contain a single
-    element ! Example : Python: (42,)  SQL: (42).
-    """
-    return '(' + str(list_to_convert)[1:-1] + ')'
