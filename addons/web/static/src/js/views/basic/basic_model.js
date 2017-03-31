@@ -770,6 +770,7 @@ var BasicModel = AbstractModel.extend({
             var onchangeDef;
             if (onChangeFields.length) {
                 onchangeDef = self._applyOnChange(record, onChangeFields).then(function (result) {
+                    delete record._warning;
                     return _.keys(changes).concat(Object.keys(result && result.value || {}));
                 });
             } else {
@@ -884,6 +885,7 @@ var BasicModel = AbstractModel.extend({
                         title: result.warning.title,
                         type: 'dialog',
                     });
+                    record._warning = true;
                 }
                 var defs = [];
                 _.each(result.value, function (val, name) {
@@ -2045,7 +2047,11 @@ var BasicModel = AbstractModel.extend({
                             }
                         }
                         if (shouldApplyOnchange) {
-                            return self._applyOnChange(record, fields_key);
+                            return self._applyOnChange(record, fields_key).then(function () {
+                                if (record._warning) {
+                                    return $.Deferred().reject();
+                                }
+                            });
                         } else {
                             return $.when();
                         }
