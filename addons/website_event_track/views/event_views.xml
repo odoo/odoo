@@ -7,10 +7,10 @@
         <field name="inherit_id" ref="website_event.event_type_view_form_inherit_website"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='event_type_visibility_website']/div[@class='o_setting_right_pane']" position='inside'>
-                <div class="row mt16">
+                <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
                     <label class="col-md-4" for="website_track"/> <field name="website_track"/>
                 </div>
-                <div class="row mt16">
+                <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
                     <label class="col-md-4" for="website_track_proposal"/> <field name="website_track_proposal"/>
                 </div>
             </xpath>

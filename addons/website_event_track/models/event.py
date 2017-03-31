@@ -11,6 +11,12 @@ class EventType(models.Model):
     website_track = fields.Boolean('Tracks on Website')
     website_track_proposal = fields.Boolean('Tracks Proposals on Website')
 
+    @api.onchange('website_menu')
+    def _onchange_website_menu(self):
+        if not self.website_menu:
+            self.website_track = False
+            self.website_track_proposal = False
+
 
 class Event(models.Model):
     _inherit = "event.event"
@@ -64,9 +70,15 @@ class Event(models.Model):
     @api.onchange('event_type_id')
     def _onchange_type(self):
         super(Event, self)._onchange_type()
-        if self.event_type_id:
+        if self.event_type_id and self.website_menu:
             self.website_track = self.event_type_id.website_track
             self.website_track_proposal = self.event_type_id.website_track_proposal
+
+    @api.onchange('website_menu')
+    def _onchange_website_menu(self):
+        if not self.website_menu:
+            self.website_track = False
+            self.website_track_proposal = False
 
     def _get_menu_entries(self):
         self.ensure_one()
