@@ -186,11 +186,14 @@ var PivotModel = AbstractModel.extend({
      */
     get: function (options) {
         var isRaw = options && options.raw;
+        if (!this.data.has_data) {
+            return {has_data: false};
+        }
         return {
             colGroupBys: this.data.main_col.groupbys,
             fields: this.fields,
-            has_data: this.data.has_data,
             headers: !isRaw && this._computeHeaders(),
+            has_data: true,
             mainColWidth: this.data.main_col.width,
             measures: this.data.measures,
             rows: !isRaw && this._computeRows(),
@@ -243,8 +246,6 @@ var PivotModel = AbstractModel.extend({
      */
     reload: function (handle, params) {
         var self = this;
-        var old_row_root = this.data.main_row.root;
-        var old_col_root = this.data.main_col.root;
         if ('domain' in params) {
             this.data.domain = params.domain;
         } else {
@@ -253,7 +254,12 @@ var PivotModel = AbstractModel.extend({
         if ('groupBy' in params) {
             this.data.groupedBy = params.groupBy;
         }
+        if (!this.data.has_data) {
+            return this._loadData(params);
+        }
 
+        var old_row_root = this.data.main_row.root;
+        var old_col_root = this.data.main_col.root;
         return this._loadData(params).then(function () {
             var new_groupby_length;
             if (!('groupBy' in params)) {
