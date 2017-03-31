@@ -105,9 +105,7 @@
         report_type="qweb-pdf"
         name="hr_expense.report_expense_sheet"
         file="hr_expense.report_expense_sheet"
+        print_report_name="'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', ''))"
     />
-    <record id="action_report_hr_expense_sheet" model="ir.actions.report">
-        <field name="print_report_name">'Expenses'+'-'+(object.employee_id.name)+'-'+(object.name)</field>
-    </record>
 
 </odoo>
