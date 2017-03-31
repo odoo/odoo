@@ -6,10 +6,9 @@
         model="hr.employee"
         report_type="qweb-pdf"
         name="hr_attendance.print_employee_badge"
-        file="hr_attendance.print_employee_badge"/>
-    <record id="hr_employee_print_badge" model="ir.actions.report">
-        <field name="print_report_name">'Print Badge'+'-'+(object.name)</field>
-    </record>
+        file="hr_attendance.print_employee_badge"
+        print_report_name="'Print Badge - %s' % (object.name).replace('/', '')"
+    />
 
     <template id="print_employee_badge">
         <t t-call="web.basic_layout">
