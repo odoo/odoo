@@ -52,28 +52,9 @@ var KanbanController = BasicController.extend({
      * @param {jQueryElement} $node
      */
     renderButtons: function ($node) {
-        var self = this;
         if (this.hasButtons && this.is_action_enabled('create')) {
             this.$buttons = $(qweb.render('KanbanView.buttons', {widget: this}));
-            this.$buttons.on('click', 'button.o-kanban-button-new', function () {
-                var data = self.model.get(self.handle, {raw: true});
-                if (data.groupedBy.length > 0 && data.count > 0 && self.on_create === 'quick_create') {
-                    // Activate the quick create in the first column
-                    self.renderer.addQuickCreate();
-                } else if (self.on_create && self.on_create !== 'quick_create') {
-                    // Execute the given action
-                    self.do_action(self.on_create, {
-                        on_close: self.reload.bind(self),
-                        additional_context: data.context,
-                    });
-                } else {
-                    // Open the form view
-                    self.trigger_up('switch_view', {
-                        view_type: 'form',
-                        res_id: undefined
-                    });
-                }
-            });
+            this.$buttons.on('click', 'button.o-kanban-button-new', this._onButtonNew.bind(this));
             this._updateButtons();
             this.$buttons.appendTo($node);
         }
@@ -290,6 +271,28 @@ var KanbanController = BasicController.extend({
                 });
             },
         });
+    },
+    /**
+     * @private
+     */
+    _onButtonNew: function () {
+        var data = this.model.get(this.handle, {raw: true});
+        if (data.groupedBy.length > 0 && data.count > 0 && this.on_create === 'quick_create') {
+            // Activate the quick create in the first column
+            this.renderer.addQuickCreate();
+        } else if (this.on_create && this.on_create !== 'quick_create') {
+            // Execute the given action
+            this.do_action(this.on_create, {
+                on_close: this.reload.bind(this),
+                additional_context: data.context,
+            });
+        } else {
+            // Open the form view
+            this.trigger_up('switch_view', {
+                view_type: 'form',
+                res_id: undefined
+            });
+        }
     },
     /**
      * @param {OdooEvent} event
