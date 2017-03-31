@@ -387,10 +387,6 @@ odoo.define('web.test.x2many', function (require) {
     //     trigger: '.o_list_view .o_selected_row td:nth(3):contains(3)',
     //     run: function () {}, // don't blur the many2one
     // }, {
-        content: "test one2many field not triggered onchange",
-        trigger: '.o_content:not(:has(.o_form_textarea [name="message_concat"] textarea:propValueContains(ccc)))',
-        run: function () {}, // don't blur the many2one
-    }, {
         content: "open the many2one to select an other user",
         trigger: '.o_list_view .o_form_field_many2one[name="author"] .o_form_input_dropdown > input',
         run: 'text Demo',
@@ -404,17 +400,12 @@ odoo.define('web.test.x2many', function (require) {
     //     // trigger: '.o_list_editable_form span.o_form_field:contains([test_trigger2] Demo User)',
     //     run: function () {}, // don't blur the many2one
     }, {
-        content: "test one2many field not triggered onchange",
-        trigger: '.o_content:not(:has(.o_form_textarea[name="message_concat"] textarea:propValueContains(ccc)))',
-        run: function () {}, // don't blur the many2one
-    }, {
         content: "change text value",
         trigger: '.o_form_textarea[name="body"] textarea:first',
         run: 'text ccccc',
     }, { // check onchange
         content: "click outside to trigger one2many onchange",
         trigger: 'input.o_form_required',
-        extra_trigger: 'body:not(:has(.o_form_textarea[name="message_concat"] textarea:first:propValueContains(Demo User)))',
         run: 'click'
     }, {
     // FIXME (problem 2)
