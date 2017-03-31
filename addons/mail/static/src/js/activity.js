@@ -51,11 +51,12 @@ var AbstractActivityField = AbstractField.extend({
     },
 
     // private
-    _markActivityDone: function (id) {
+    _markActivityDone: function (id, feedback) {
         return this._rpc({
                 model: 'mail.activity',
                 method: 'action_done',
                 args: [[id]],
+                kwargs: {feedback: feedback},
             });
     },
     _readActivities: function () {
@@ -133,7 +134,7 @@ var Activity = AbstractActivityField.extend({
     },
 
     // public
-    schedule_activity: function () {
+    scheduleActivity: function () {
         var callback = this._reload.bind(this, {activity: true, thread: true});
         return this._scheduleActivity(false, callback);
     },
@@ -181,9 +182,48 @@ var Activity = AbstractActivityField.extend({
     },
     _onMarkActivityDone: function (event) {
         event.preventDefault();
-        var activity_id = $(event.currentTarget).data('activity-id');
-        return this._markActivityDone(activity_id)
-            .then(this._reload.bind(this, {activity: true, thread: true}));
+        var self = this;
+        var $popover_el = $(event.currentTarget);
+        var activity_id = $popover_el.data('activity-id');
+        if (!$popover_el.data('bs.popover')) {
+            $popover_el.popover({
+                title : _t('Feedback'),
+                html: 'true',
+                trigger:'click',
+                content : function() {
+                    var $popover = $(QWeb.render("mail.activity_feedback_form", {}));
+                    $popover.on('click', '.o_activity_popover_done_next', function () {
+                        var feedback = _.escape($popover.find('#activity_feedback').val());
+                        self._markActivityDone(activity_id, feedback)
+                            .then(self.scheduleActivity.bind(self));
+                    });
+                    $popover.on('click', '.o_activity_popover_done', function () {
+                        var feedback = _.escape($popover.find('#activity_feedback').val());
+                        self._markActivityDone(activity_id, feedback)
+                            .then(self._reload.bind(self, {activity: true, thread: true}));
+                    });
+                    $popover.on('click', '.o_activity_popover_discard', function () {
+                        $popover_el.popover('hide');
+                    });
+                    return $popover;
+                },
+            }).on("show.bs.popover", function (e) {
+                var $popover = $(this).data("bs.popover").tip();
+                $popover.addClass('o_mail_activity_feedback').attr('tabindex', 0);
+                $(".o_mail_activity_feedback.popover").not(e.target).popover("hide");
+            }).on("shown.bs.popover", function () {
+                var $popover = $(this).data("bs.popover").tip();
+                $popover.find('#activity_feedback').focus();
+                $popover.off('focusout');
+                $popover.focusout(function (e) {
+                    // outside click of popover hide the popover
+                    // e.relatedTarget is the element receiving the focus
+                    if(!$popover.is(e.relatedTarget) && !$popover.find(e.relatedTarget).length) {
+                        $popover.popover('hide');
+                    }
+                });
+            }).popover('show');
+        }
     },
 });
 

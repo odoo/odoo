@@ -438,7 +438,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
 });
 
 QUnit.test('form activity widget: mark as done and remove', function (assert) {
-    assert.expect(11);
+    assert.expect(14);
 
     var self = this;
 
@@ -481,6 +481,8 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
                 assert.ok(_.isEqual(args.args[0], [1]), "should call 'unlink' for id 1");
             } else if (route === '/web/dataset/call_kw/mail.activity/action_done') {
                 assert.ok(_.isEqual(args.args[0], [2]), "should call 'action_done' for id 2");
+                assert.strictEqual(args.kwargs.feedback, 'everything is ok',
+                    "the feedback should be sent correctly");
                 // should generate a message and unlink the activity
                 self.data.partner.records[0].message_ids = [1];
                 messages.push({
@@ -534,6 +536,12 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
     assert.ok(!form.$('.o_mail_thread .o_thread_message').length,
         "there should be no chatter message");
     form.$('.o_mail_activity .o_activity_done[data-activity-id=2]').click();
+    assert.strictEqual(form.$('.o_mail_activity_feedback.popover').length, 1,
+        "a feedback popover should be visible");
+    $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
+    form.$('.o_activity_popover_done').click(); // send feedback
+    assert.strictEqual(form.$('.o_mail_activity_feedback.popover').length, 0,
+        "the feedback popover should be closed");
     assert.ok(!form.$('.o_mail_activity .o_thread_message').length,
         "there should be no more activity");
     assert.strictEqual(form.$('.o_mail_thread .o_thread_message').length, 1,
