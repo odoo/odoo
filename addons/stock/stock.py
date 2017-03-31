@@ -631,8 +631,10 @@ class stock_quant(osv.osv):
         domain += [('product_id', '=', product.id)]
         if context.get('force_company'):
             domain += [('company_id', '=', context.get('force_company'))]
+        elif location and location.company_id:
+            domain += [('company_id', '=', location.company_id.id)]
         else:
-            domain += [('company_id', '=', self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id)]
+            domain += [('company_id', 'child_of', self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id)]
         res = []
         offset = 0
         while float_compare(quantity, 0, precision_rounding=product.uom_id.rounding) > 0:
