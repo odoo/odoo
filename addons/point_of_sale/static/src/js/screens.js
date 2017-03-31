@@ -1404,7 +1404,9 @@ var ReceiptScreenWidget = ScreenWidget.extend({
 
         this.render_change();
         this.render_receipt();
-
+        this.handle_auto_print();
+    },
+    handle_auto_print: function() {
         if (this.should_auto_print()) {
             this.print();
             if (this.should_close_immediately()){
@@ -1413,7 +1415,6 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         } else {
             this.lock_screen(false);
         }
-
     },
     should_auto_print: function() {
         return this.pos.config.iface_print_auto && !this.pos.get_order()._printed;
