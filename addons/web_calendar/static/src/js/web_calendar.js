@@ -271,7 +271,7 @@ var CalendarView = View.extend({
         bindCalendarButton('.o_calendar_button_month', 'changeView', 'month');
 
         this.$buttons.find('.o_calendar_button_' + this.mode).addClass('active');
-
+        
         if(this.is_mobile) {
             $(this.$buttons).on("click",'.dropdown-menu li a',function(ev){
                 this.$button = $(ev.currentTarget).text();
@@ -299,6 +299,42 @@ var CalendarView = View.extend({
             .attr('title', display ? _('Close Sidebar') : _('Open Sidebar'));
         this.$sidebar_container.toggleClass('o_sidebar_hidden', !display);
     },
+    do_swipe: function() {
+        var self = this;
+        var $fc_view = this.$calendar.find('.fc-view');
+        var touch_start_x;
+        var touch_end_x;
+        var right_swipe = false;
+        var left_swipe = false;
+        var calender_width = $fc_view.outerWidth();
+        $fc_view.off('touchstart').on('touchstart', function (event) {
+            touch_start_x = event.originalEvent.touches[0].pageX;
+            var scroll_width = $fc_view[0].scrollWidth;
+            if (scroll_width - calender_width === $fc_view.scrollLeft()) {
+                right_swipe = true;
+            }
+            if ($fc_view.scrollLeft() === 0) {
+                left_swipe = true;
+            }
+        });
+        $fc_view.off('touchend').on('touchend', function (event) {
+            touch_end_x = event.originalEvent.changedTouches[0].pageX;;
+            if (touch_start_x - touch_end_x > 100 && right_swipe) {
+                var scroll_width = $fc_view[0].scrollWidth;
+                if (scroll_width - calender_width === $fc_view.scrollLeft()) {
+                    self.$calendar.fullCalendar('next');
+                    $fc_view.scrollLeft(0);
+                }
+            } else if (touch_start_x - touch_end_x < -100 && left_swipe) {
+                if ($fc_view.scrollLeft() === 0) {
+                    self.$calendar.fullCalendar('prev');
+                    $fc_view.scrollLeft(0);
+                }
+            }
+            right_swipe = false;
+            left_swipe = false;
+        });
+    },
     get_fc_init_options: function () {
         //Documentation here : http://arshaw.com/fullcalendar/docs/
         var self = this;
@@ -323,6 +359,10 @@ var CalendarView = View.extend({
 
                 self.$calendar.fullCalendar('option', 'height', Math.max(290, parseInt(self.$('.o_calendar_view').height())));
 
+                if (self.is_mobile)
+                {
+                    self.do_swipe();
+                }
                 setTimeout(function() {
                     var $fc_view = self.$calendar.find('.fc-view');
                     var width = $fc_view.find('> table').width();
