@@ -10,7 +10,7 @@ tour.register('sale_tour', {
     url: "/web",
 }, [tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
-    content: _t('Organize your sales activities with the <b>Sales app</b>.'),
+    content: _t('Organize your sales activities with the <b>Sales Management app</b>.'),
     position: 'bottom',
 }, {
     trigger: ".oe_kanban_action_button",

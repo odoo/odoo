@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem name="Sales"
+        id="sales_team.menu_base_partner"
+        web_icon="sale_management,static/description/icon.png"/>
+
+    <menuitem id="sale_management_menu_product_catalog" name="Catalog" action="product.product_template_action" parent="sales_team.menu_base_partner" sequence="7"/>
+    <menuitem id="sale_management_menu_product" name="Product Variants" parent="sale_management_menu_product_catalog" sequence="2" groups="product.group_product_variant"/>
+    <menuitem action="product.product_template_action" id="sale_management_menu_product_template_action" parent="sale_management_menu_product_catalog" sequence="1" />
+    <menuitem id="sale_management_menu_products" action="product.product_normal_action_sell" parent="sale_management_menu_product_catalog" groups="product.group_product_variant" sequence="2"/>
+    <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="sale_management_menu_product_catalog" action="product.product_pricelist_action2" groups="product.group_sale_pricelist" sequence="3"/>
+
+    <menuitem id="sales_team.menu_sales" name="Sales" parent="sales_team.menu_base_partner" sequence="4"/>
+    <menuitem action="sale.action_orders" id="sale_management_menu_sale_order" parent="sales_team.menu_sales" sequence="12" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
+    <menuitem id="sale_management_menu_sale_quotations" action="sale.action_quotations" parent="sales_team.menu_sales" sequence="11"/>
+
+    <menuitem name="Invoicing" id="sale_management_menu_sale_invoicing" parent="sales_team.menu_base_partner" sequence="5"/>
+    <menuitem action="sale.action_orders_to_invoice" id="sale_management_menu_sale_order_invoice" parent="sale_management_menu_sale_invoicing" sequence="2"/>
+    <menuitem action="sale.action_orders_upselling" id="sale_management_menu_sale_order_upselling" parent="sale_management_menu_sale_invoicing" sequence="5"/>
+
+    <menuitem id="sale_management_menu_prod_config_main" name="Products" parent="sales_team.menu_sale_config" sequence="5"/>
+    <menuitem action="product.attribute_action" id="menu_attribute_action" parent="sale_management_menu_prod_config_main" sequence="1" groups="product.group_product_variant"/>
+    <menuitem action="product.variants_action" id="menu_variants_action" parent="sale_management_menu_prod_config_main" sequence="2" groups="product.group_product_variant"/>
+    <menuitem action="product.product_category_action_form" name="Internal Categories" id="menu_product_category_action_form" parent="sale_management_menu_prod_config_main" sequence="4"/>
+    <menuitem id="next_id_16" name="Units of Measure" parent="sale_management_menu_prod_config_main" sequence="6" groups="product.group_uom"/>
+    <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale_management_menu_prod_config_main" sequence="7" groups="product.group_uom"/>
+    <menuitem action="product.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale_management_menu_prod_config_main" sequence="8" groups="product.group_uom"/>
+
+    <menuitem id="sale_management_menu_config" parent="sales_team.menu_sale_config" sequence="3" name="Sales" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman,account.group_account_manager,account.group_account_user"/>
+    <menuitem action="sale.report_configuration_action" id="sale_management_menu_Report_configuration" parent="sale_management_menu_config" sequence="2" name="Report Layout Categories" groups="sale.group_sale_layout" />
+
+    <!-- Report View Menu -->
+    <menuitem name="Sales" action="sale.action_order_report_all" id="sale_management_menu_report_product_all" parent="sales_team.menu_sale_report" sequence="8"/>
+
+</odoo>

@@ -15,7 +15,7 @@ This module does not add any feature, despite a few demo data to
 test the features easily.
 """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['sale', 'hr_expense'],
+    'depends': ['sale_management', 'hr_expense'],
     'data': [
         'views/product_view.xml',
     ],

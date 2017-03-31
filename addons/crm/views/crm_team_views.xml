@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+        <!--
+            This menu item's purpose is to overwrite another one defined in
+            the sales_team module in order to set action.
+        -->
+
+        <menuitem id="sales_team.menu_sales_team_act" action="sales_team.crm_team_salesteams_act" sequence="1" parent="sales_team.menu_base_partner" name="Dashboard"/>
+
+        <menuitem id="sales_team.menu_partner_form" parent="sales_team.menu_sales" action="base.action_partner_form" sequence="3"/>
+
+        <menuitem id="sales_team.menu_sale_general_settings" name="Settings" parent="sales_team.menu_sale_config" sequence="0" action="sales_team.action_sale_config" groups="base.group_system"/>
+        <menuitem name="Sales Channels" id="sales_team.sales_team_config" parent="sales_team.menu_sale_config" action="sales_team.sales_team_config_action" sequence="2"/>
+        <menuitem name="Activity Types" id="sales_team.sales_team_menu_config_activity_types" sequence="2" action="sales_team.mail_activity_type_action_config_sales" parent="sales_team.menu_sale_config"/>
+
+        <menuitem action="base.action_partner_category_form" id="sales_team.menu_partner_category_form" name="Contact Tags" sequence="1" parent="sales_team.menu_config_address_book" groups="base.group_no_one"/>
+        <menuitem action="base.action_partner_title_contact" id="sales_team.menu_partner_title_contact" name="Contact Titles" parent="sales_team.menu_config_address_book" sequence="3" groups="base.group_no_one"/>
+
+        <menuitem action="base.action_country" id="sales_team.menu_country_partner" parent="sales_team.menu_localisation" sequence="1" groups="base.group_no_one"/>
+        <menuitem action="base.action_country_group" id="sales_team.menu_country_group" name="Country Group" parent="sales_team.menu_localisation" sequence="3" groups="base.group_no_one"/>
+        <menuitem action="base.action_country_state" id="sales_team.menu_country_state_partner" parent="sales_team.menu_localisation" sequence="2" groups="base.group_no_one"/>
+        <menuitem action="base.action_currency_form" id="sales_team.menu_action_currency_form" parent="sales_team.menu_localisation" sequence="3" groups="base.group_multi_currency"/>
+
+        <menuitem action="base.action_res_bank_form" id="sales_team.menu_action_res_bank_form" parent="sales_team.menu_config_bank_accounts" sequence="1" groups="base.group_no_one"/>
+        <menuitem action="base.action_res_partner_bank_account_form" id="sales_team.menu_action_res_partner_bank_form" parent="sales_team.menu_config_bank_accounts" groups="base.group_no_one" sequence="2"/>
+
         <!-- CRM lead search by Salesteams -->
         <record id="crm_case_form_view_salesteams_lead" model="ir.actions.act_window">
             <field name="name">Leads</field>
