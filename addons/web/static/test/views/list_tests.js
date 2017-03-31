@@ -1238,6 +1238,27 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('edition: create new line, then discard', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
+        });
+
+
+        assert.strictEqual(list.$('tr.o_data_row').length, 4,
+            "should have 4 records");
+        list.$buttons.find('.o_list_button_add').click();
+        list.$buttons.find('.o_list_button_discard').click();
+        assert.strictEqual(list.$('tr.o_data_row').length, 4,
+            "should still have 4 records");
+        list.destroy();
+    });
 });
+
 
 });
