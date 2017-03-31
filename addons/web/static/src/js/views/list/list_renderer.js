@@ -49,9 +49,11 @@ var ListRenderer = BasicRenderer.extend({
         this._super.apply(this, arguments);
         var self = this;
         this.hasHandle = false;
+        this.handleField = 'sequence';
         this.columns = _.reject(this.arch.children, function (c) {
             if (c.attrs.widget === 'handle') {
                 self.hasHandle = true;
+                self.handleField = c.attrs.name;
             }
             return !!JSON.parse(c.attrs.modifiers || "{}").tree_invisible;
         });
