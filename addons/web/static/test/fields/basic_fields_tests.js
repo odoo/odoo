@@ -1333,6 +1333,38 @@ QUnit.module('basic_fields', {
     });
 
 
+    QUnit.test('monetary field with real monetary field in model', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.qux.type = "monetary";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 5,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        assert.strictEqual(form.$('.o_form_field_monetary').html(), "$&nbsp;9.10",
+            "readonly value should contain the currency");
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_form_field_monetary > input').val(), "9.10",
+            "input value in edition should only contain the value, without the currency");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldInteger');
 
     QUnit.test('integer field when unset', function(assert) {
