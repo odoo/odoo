@@ -146,12 +146,44 @@
         </field>
     </record>
 
+    <record id="marketing_campaign_view_kanban" model="ir.ui.view">
+        <field name="name">marketing.campaign.kanban</field>
+        <field name="model">marketing.campaign</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="object_id"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="mb4">
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 text-muted">
+                                    <field name="object_id"/>
+                                </div>
+                                <div class="col-xs-6">
+                                    <span class="pull-right text-right">
+                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'info', 'running': 'default',
+                                        'done': 'success', 'cancelled': 'danger'}}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_marketing_campaign_form">
         <field name="name">Campaigns</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">marketing.campaign</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,diagram</field>
+        <field name="view_mode">tree,kanban,form,diagram</field>
         <field name="view_id" ref="view_marketing_campaign_tree"/>
         <field name="context">{'group_by': []}</field>
         <field name="search_view_id" ref="view_marketing_campaign_search"/>
@@ -230,6 +262,38 @@
         </field>
     </record>
 
+    <record id="marketing_campaign_segment_view_kanban" model="ir.ui.view">
+        <field name="name">marketing.campaign.segment.kanban</field>
+        <field name="model">marketing.campaign.segment</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="object_id"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="mb4">
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 text-muted">
+                                    <field name="object_id"/>
+                                </div>
+                                <div class="col-xs-6">
+                                    <span class="pull-right text-right">
+                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'info', 'running': 'default',
+                                        'done': 'success', 'cancelled': 'danger'}}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="view_marketing_campaign_segment_search" model="ir.ui.view">
         <field name="name">marketing.campaign.segment.search</field>
         <field name="model">marketing.campaign.segment</field>
@@ -259,7 +323,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">marketing.campaign.segment</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="view_marketing_campaign_segment_tree"/>
         <field name="search_view_id" ref="view_marketing_campaign_segment_search"/>
         <field name="context">{'group_by': []}</field>
