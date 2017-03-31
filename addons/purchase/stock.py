@@ -128,7 +128,7 @@ class stock_warehouse(osv.osv):
         warehouse = self.browse(cr, uid, ids[0], context=context)
         pull_obj = self.pool.get('procurement.rule')
         #change the buy procurement rule name
-        if warehouse.buy_pull_id:
+        if name and warehouse.buy_pull_id:
             pull_obj.write(cr, uid, warehouse.buy_pull_id.id, {'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
         return res
 
