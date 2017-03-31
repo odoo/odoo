@@ -389,6 +389,53 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('no content helper when no data, part 2', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records = [];
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot string="Partners"></pivot>',
+        });
+
+        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+            "should have a no_content_helper");
+        pivot.destroy();
+    });
+
+    QUnit.test('no content helper when no data, part 3', function (assert) {
+        assert.expect(4);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot string="Partners"></pivot>',
+            viewOptions: {
+                domain: [['foo', '=', 12345]]
+            },
+        });
+
+        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+            "should have a no_content_helper");
+        pivot.update({domain: [['foo', '=', 12345]]});
+        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+            "should still have a no_content_helper");
+        pivot.update({domain: []});
+        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+            "should not have a no_content_helper");
+
+        // tries to open a field selection menu, to make sure it was not
+        // removed from the dom.
+        pivot.$('.o_pivot_header_cell_closed').first().click();
+        assert.strictEqual(pivot.$('ul.o_pivot_field_menu').length, 1,
+            "the field selector menu exists");
+        pivot.destroy();
+    });
+
     QUnit.test('tries to restore previous state after domain change', function (assert) {
         assert.expect(5);
 

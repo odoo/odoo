@@ -18,6 +18,9 @@ var PivotRenderer = AbstractRenderer.extend({
      * @returns {Deferred}
      */
     _render: function () {
+        if (!this.state.has_data) {
+            return this._super.apply(this, arguments);
+        }
         var $fragment = $(document.createDocumentFragment());
         var $table = $('<table>').appendTo($fragment);
         var $thead = $('<thead>').appendTo($table);
