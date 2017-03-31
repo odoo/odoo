@@ -756,9 +756,9 @@ class PosOrderLine(models.Model):
 
     def _order_line_fields(self, line, session_id=None):
         if line and 'name' not in line[2]:
-            if session_id:
+            session = self.env['pos.session'].browse(session_id).exists() if session_id else None
+            if session and session.config_id.sequence_line_id:
                 # set name based on the sequence specified on the config
-                session = self.env['pos.session'].browse(session_id)
                 line[2]['name'] = session.config_id.sequence_line_id._next()
             else:
                 # fallback on any pos.order.line sequence
