@@ -1460,6 +1460,39 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('handling dirty state: canBeDiscarded should be idempotent', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"></field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_form_input').val(), 'yop', 'input should contain yop');
+
+        // edit the foo field to make it dirty
+        form.$('.o_form_input').val('new value').trigger('input');
+
+        // discard changes once
+        form.canBeDiscarded();
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        $('.modal .modal-footer .btn-primary').click(); // click on confirm
+
+        // discard changes a second time
+        form.canBeDiscarded();
+        assert.strictEqual($('.modal').length, 0, 'no confirm modal should be displayed');
+
+        form.destroy();
+    });
+
+
     QUnit.test('restore local state when switching to another record', function (assert) {
         assert.expect(4);
 

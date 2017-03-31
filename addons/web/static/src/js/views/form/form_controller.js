@@ -54,6 +54,7 @@ var FormController = BasicController.extend({
      *   can be discarded.  If it is rejected, then we cannot discard.
      */
     canBeDiscarded: function () {
+        var self = this;
         if (!this.isDirty) {
             return $.when();
         }
@@ -62,7 +63,10 @@ var FormController = BasicController.extend({
         var options = {
             title: _t("Warning"),
             confirm_callback: function () {
-                this.on('closed', null, def.resolve.bind(def));
+                this.on('closed', null, function () {
+                    self.isDirty = false;
+                    def.resolve();
+                });
             },
             cancel_callback: def.reject.bind(def)
         };
