@@ -100,8 +100,8 @@ function formatDateTime(value) {
  *   should be used.
  * @param {Object} [options] additional options to override the values in the
  *   python description of the field.
- * @param {integer} [options.digit] the number of digit that should be used,
- *   instead of the default digit precision in the field.
+ * @param {integer[]} [options.digits] the number of digits that should be used,
+ *   instead of the default digits precision in the field.
  * @returns {string}
  */
 function formatFloat(value, field, options) {
@@ -191,21 +191,50 @@ function formatMany2Many(value) {
     }
 }
 
+/**
+ * Returns a string representing a monetary value. The result takes into account
+ * the user settings (to display the correct decimal separator, currency, ...).
+ *
+ * @param {float} value the value that should be formatted
+ * @param {Object} [field]
+ *        a description of the field (returned by fields_get for example). It
+ *        may contain a description of the number of digits that should be used.
+ * @param {Object} [options]
+ *        additional options to override the values in the python description of
+ *        the field.
+ * @param {Object} [options.currency] - the description of the currency to use
+ * @param {integer} [options.currency_id]
+ *        the id of the 'res.currency' to use (ignored if options.currency)
+ * @param {string} [options.currency_field]
+ *        the name of the field whose value is the currency id
+ *        (ignore if options.currency or options.currency_id)
+ *        Note: if not given it will default to the field currency_field value
+ *        or to 'currency_id'.
+ * @param {Object} [options.data]
+ *        a mapping of field name to field value, required with
+ *        options.currency_field
+ * @param {integer[]} [options.digits]
+ *        the number of digits that should be used, instead of the default
+ *        digits precision in the field. Note: if the currency defines a
+ *        precision, the currency's one is used.
+ * @returns {string}
+ */
 function formatMonetary(value, field, options) {
     options = options || {};
-    var currency_id = options.currency_id;
-    if (!currency_id && options.data) {
-        var currency_field = options.currency_field || field.currency_field || 'currency_id';
-        currency_id = options.data[currency_field] && options.data[currency_field].res_id;
-    }
-    var currency = session.get_currency(currency_id);
 
-    var digits_precision = (currency && currency.digits) || [69,2];
-    var precision = digits_precision[1];
-    var formatted = _.str.sprintf('%.' + precision + 'f', value || 0).split('.');
-    formatted[0] = utils.insert_thousand_seps(formatted[0]);
-    var l10n = core._t.database.parameters;
-    var formatted_value = formatted.join(l10n.decimal_point);
+    var currency = options.currency;
+    if (!currency) {
+        var currency_id = options.currency_id;
+        if (!currency_id && options.data) {
+            var currency_field = options.currency_field || field.currency_field || 'currency_id';
+            currency_id = options.data[currency_field] && options.data[currency_field].res_id;
+        }
+        currency = session.get_currency(currency_id);
+    }
+
+    var formatted_value = formatFloat(value, field, {
+        digits:  (currency && currency.digits) || options.digits,
+    });
 
     if (!currency) {
         return formatted_value;

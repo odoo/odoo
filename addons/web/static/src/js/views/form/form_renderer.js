@@ -155,7 +155,7 @@ return BasicRenderer.extend({
         this.field_values = this._getFieldValues(this.state);
         var defs = [];
         _.each(this.widgets, function (widget) {
-            if (_.contains(fields, widget.name)) {
+            if (_.contains(fields, widget.name) || widget.resetOnAnyFieldChange) {
                 defs.push(widget.reset(state, event));
             }
         });
