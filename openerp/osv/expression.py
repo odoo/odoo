@@ -162,7 +162,6 @@ TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
                   'child_of')
 INTERNAL_TERM_OPERATORS = ('inselect', 'not inselect', 'existsselect', 'not existsselect')
->>>>>>> 35bbdef... [IMP] search performance in many2many relations using WHERE EXISTS
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
