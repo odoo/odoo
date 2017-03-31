@@ -180,7 +180,7 @@ var InputField = DebouncedField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.empty().html(this._formatValue(this.value));
+        this.$el.html(this._formatValue(this.value));
     },
 
     //--------------------------------------------------------------------------
@@ -429,7 +429,7 @@ var FieldBoolean = AbstractField.extend({
      *
      * @override
      */
-    isSet: function () {
+    isSet: function () {
         return true;
     },
 
@@ -670,7 +670,7 @@ var FieldText = DebouncedField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.empty().text(this._formatValue(this.value));
+        this.$el.text(this._formatValue(this.value));
     },
 });
 
@@ -701,20 +701,6 @@ var HandleWidget = AbstractField.extend({
     readonly: true,
     replace_element: true,
     supportedFieldTypes: ['integer'],
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * The display of this widget is handled by css thanks to the class names.
-     *
-     * @override
-     * @private
-     */
-    _render: function () {
-        this.$el.empty();
-    },
 });
 
 var EmailWidget = InputField.extend({
@@ -779,7 +765,7 @@ var FieldPhone = EmailWidget.extend({
      */
     _renderReadonly: function () {
         this._super();
-        if(this._canCall()) {
+        if (this._canCall()) {
             var text = this.$el.text();
             this.$el.html(text.substr(0, text.length/2) + "&shy;" + text.substr(text.length/2)); // To prevent Skype app to find the phone number
         } else {
@@ -998,7 +984,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
         }
     },
     _renderEdit: function () {
-        if(this.value) {
+        if (this.value) {
             this.$el.children().removeClass('o_hidden');
             this.$('.o_select_file_button').first().addClass('o_hidden');
             this.$('.o_form_input').eq(0).val(this.filename_value || this.value);
@@ -1124,7 +1110,7 @@ var PriorityWidget = AbstractField.extend({
         event.stopPropagation();
         var index = $(event.currentTarget).data('index');
         var newValue = this.field.selection[index][0];
-        if(newValue === this.value) {
+        if (newValue === this.value) {
             newValue = this.empty_value;
         }
         this._setValue(newValue);
@@ -1294,7 +1280,7 @@ var FieldBooleanButton = AbstractField.extend({
      *
      * @override
      */
-    isSet: function () {
+    isSet: function () {
         return true;
     },
 
@@ -1376,7 +1362,7 @@ var StatInfo = AbstractField.extend({
             value: this.value || 0,
         };
         if (! this.nodeOptions.nolabel) {
-            if(this.nodeOptions.label_field && this.recordData[this.nodeOptions.label_field]) {
+            if (this.nodeOptions.label_field && this.recordData[this.nodeOptions.label_field]) {
                 options.text = this.recordData[this.nodeOptions.label_field];
             } else {
                 options.text = this.string;
@@ -1459,7 +1445,7 @@ var FieldProgressBar = AbstractField.extend({
         'change input': 'on_change_input',
         'input input': 'on_change_input',
         'keyup input': function (e) {
-            if(e.which === $.ui.keyCode.ENTER) {
+            if (e.which === $.ui.keyCode.ENTER) {
                 this.on_change_input(e);
             }
         },
@@ -1484,8 +1470,8 @@ var FieldProgressBar = AbstractField.extend({
         var self = this;
         this._render_value();
 
-        if(!this.readonly) {
-            if(this.edit_on_click) {
+        if (!this.readonly) {
+            if (this.edit_on_click) {
                 this.$el.on('click', '.o_progress', function (e) {
                     var $target = $(e.currentTarget);
                     self.value = Math.floor((e.pageX - $target.offset().left) / $target.outerWidth() * self.max_value);
@@ -1507,12 +1493,12 @@ var FieldProgressBar = AbstractField.extend({
         return this._super();
     },
     on_update: function (value) {
-        if(!isNaN(value)) {
+        if (!isNaN(value)) {
             if (this.edit_max_value) {
                 try {
                     this.max_value = this._parseValue(value);
                     this._isValid = true;
-                } catch(e) {
+                } catch (e) {
                     this._isValid = false;
                 }
                 var changes = {};
@@ -1528,19 +1514,19 @@ var FieldProgressBar = AbstractField.extend({
     },
     on_change_input: function (e) {
         var $input = $(e.target);
-        if(e.type === 'change' && !$input.is(':focus')) {
+        if (e.type === 'change' && !$input.is(':focus')) {
             return;
         }
-        if(isNaN($input.val())) {
+        if (isNaN($input.val())) {
             this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
         } else {
-            if(e.type === 'input') {
+            if (e.type === 'input') {
                 this._render_value($input.val());
-                if(parseFloat($input.val()) === 0) {
+                if (parseFloat($input.val()) === 0) {
                     $input.select();
                 }
             } else {
-                if(this.edit_max_value) {
+                if (this.edit_max_value) {
                     this.max_value = $(e.target).val();
                 } else {
                     this.value = $(e.target).val() || 0;
@@ -1557,8 +1543,8 @@ var FieldProgressBar = AbstractField.extend({
     _render_value: function (v) {
         var value = this.value;
         var max_value = this.max_value;
-        if(!isNaN(v)) {
-            if(this.edit_max_value) {
+        if (!isNaN(v)) {
+            if (this.edit_max_value) {
                 max_value = v;
             } else {
                 value = v;
@@ -1568,7 +1554,7 @@ var FieldProgressBar = AbstractField.extend({
         max_value = max_value || 0;
 
         var widthComplete;
-        if(value <= max_value) {
+        if (value <= max_value) {
             widthComplete = value/max_value * 100;
         } else {
             widthComplete = 100;
@@ -1577,13 +1563,13 @@ var FieldProgressBar = AbstractField.extend({
         this.$('.o_progress').toggleClass('o_progress_overflow', value > max_value);
         this.$('.o_progressbar_complete').css('width', widthComplete + '%');
 
-        if(!this.write_mode) {
-            if(max_value !== 100) {
+        if (!this.write_mode) {
+            if (max_value !== 100) {
                 this.$('.o_progressbar_value').html(utils.human_number(value) + " / " + utils.human_number(max_value));
             } else {
                 this.$('.o_progressbar_value').html(utils.human_number(value) + "%");
             }
-        } else if(isNaN(v)) {
+        } else if (isNaN(v)) {
             this.$('.o_progressbar_value').val(this.edit_max_value ? max_value : value);
             this.$('.o_progressbar_value').focus().select();
         }
@@ -1663,7 +1649,7 @@ var JournalDashboardGraph = AbstractField.extend({
         this.chart = null;
         nv.addGraph(function () {
             self.$svg = self.$el.append('<svg>');
-            switch(self.graph_type) {
+            switch (self.graph_type) {
                 case "line":
                     self.$svg.addClass('o_graph_linechart');
 
