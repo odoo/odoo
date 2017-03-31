@@ -64,7 +64,7 @@ return AbstractRenderer.extend({
      */
     _getFieldValues: function (record) {
         var result = {};
-        _.each(record.fieldNames, function (name) {
+        _.each(record.getFieldNames(), function (name) {
             var field = record.fields[name];
             var value = record.data[name];
             result[name] = value;

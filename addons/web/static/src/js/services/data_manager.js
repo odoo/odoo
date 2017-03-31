@@ -280,6 +280,7 @@ return core.Class.extend({
             // as _ doesn't behave correctly when there is a length key in the object
             attrs.views = {};
             _.each(field.views, function (innerFieldsView, viewType) {
+                viewType = viewType === 'tree' ? 'list' : viewType;
                 innerFieldsView.type = viewType;
                 attrs.views[viewType] = self._processFieldsView(_.extend({}, innerFieldsView));
             });
@@ -317,10 +318,12 @@ return core.Class.extend({
                     display_name: {type: 'char'},
                     //id: {type: 'integer'},
                 };
-                attrs.fieldsInfo = {display_name: {}, id: {}};
+                attrs.fieldsInfo = {};
+                attrs.fieldsInfo.default = {display_name: {}, id: {}};
+                attrs.viewType = 'default';
                 if (attrs.color || 'color') {
-                    attrs.relatedFields[attrs.color || 'color'] = {type: 'int'};
-                    attrs.fieldsInfo.color = {};
+                    attrs.relatedFields[attrs.color || 'color'] = {type: 'integer'};
+                    attrs.fieldsInfo.default.color = {};
                 }
             }
         }
@@ -359,12 +362,14 @@ return core.Class.extend({
      * @returns {Object} viewInfo
      */
     _processFieldsView: function (viewInfo) {
-        viewInfo.fieldsInfo = this._processFields(viewInfo.type, viewInfo.arch, viewInfo.fields);
-        // by default display fetch display_name and id
+        var viewFields = this._processFields(viewInfo.type, viewInfo.arch, viewInfo.fields);
+        // by default fetch display_name and id
         if (!viewInfo.fields.display_name) {
             viewInfo.fields.display_name = {type: 'char'};
-            viewInfo.fieldsInfo.display_name = {};
+            viewFields.display_name = {};
         }
+        viewInfo.fieldsInfo = {};
+        viewInfo.fieldsInfo[viewInfo.type] = viewFields;
         utils.deepFreeze(viewInfo.fields);
         return viewInfo;
     },

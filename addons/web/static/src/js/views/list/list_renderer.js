@@ -284,8 +284,10 @@ var ListRenderer = BasicRenderer.extend({
         }
         var name = node.attrs.name;
         if (node.attrs.widget) {
-            var widget = new this.state.fieldsInfo[name].Widget(this, name, record, {
+            var Widget = this.state.fieldsInfo.list[name].Widget;
+            var widget = new Widget(this, name, record, {
                 mode: 'readonly',
+                viewType: 'list',
             });
             widget.appendTo($td);
             $td.addClass('o_' + node.attrs.widget + '_cell');
@@ -504,7 +506,7 @@ var ListRenderer = BasicRenderer.extend({
         }
         var description;
         if (node.attrs.widget) {
-            description = this.state.fieldsInfo[name].Widget.prototype.description;
+            description = this.state.fieldsInfo.list[name].Widget.prototype.description;
         }
         if (description === undefined) {
             description = node.attrs.string || field.string;

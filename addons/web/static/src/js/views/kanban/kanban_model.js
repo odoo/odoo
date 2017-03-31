@@ -27,8 +27,8 @@ var KanbanModel = BasicModel.extend({
             res_id: resId,
             modelName: group.model,
             fields: group.fields,
-            fieldNames: group.fieldNames,
             fieldsInfo: group.fieldsInfo,
+            viewType: group.viewType,
         });
         group.data.unshift(new_record);
         group.count++;
@@ -65,13 +65,14 @@ var KanbanModel = BasicModel.extend({
                     context: parent.context,
                     domain: parent.domain.concat([[groupBy,"=",result[0]]]),
                     fields: parent.fields,
-                    fieldNames: parent.fieldNames,
+                    fieldsInfo: parent.fieldsInfo,
                     groupedBy: parent.groupedBy,
                     isOpen: true,
                     limit: parent.limit,
                     openGroupByDefault: true,
                     orderedBy: parent.orderedBy,
                     value: result,
+                    viewType: parent.viewType,
                 });
 
                 // newGroup.is_open = true;

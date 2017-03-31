@@ -40,9 +40,9 @@ var BasicView = AbstractView.extend({
                 'action_buttons' in params ? params.action_buttons : true;
 
         this.loadParams.fieldsInfo = viewInfo.fieldsInfo;
-        this.loadParams.fieldNames = _.keys(viewInfo.fieldsInfo);
         this.loadParams.fields = viewInfo.fields;
         this.loadParams.limit = parseInt(viewInfo.arch.attrs.limit, 10) || params.limit;
+        this.loadParams.viewType = this.viewType;
         this.recordID = params.recordID;
     },
 
@@ -60,9 +60,14 @@ var BasicView = AbstractView.extend({
     _loadData: function () {
         if (this.recordID) {
             var record = this.model.get(this.recordID);
-            var fieldNames = _.difference(record.fieldNames, Object.keys(record.data));
+            var viewType = this.viewType;
+            var viewFields = Object.keys(record.fieldsInfo[viewType]);
+            var fieldNames = _.difference(viewFields, Object.keys(record.data));
             if (fieldNames.length && !this.model.isNew(record.id)) {
-                return this.model.reload(this.recordID, {fieldNames: fieldNames});
+                return this.model.reload(this.recordID, {
+                    fieldNames: fieldNames,
+                    viewType: viewType,
+                });
             } else {
                 return $.when(this.recordID);
             }

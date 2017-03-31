@@ -99,6 +99,9 @@ var FieldMany2One = AbstractField.extend({
             quick_create: true,
         });
         this.m2o_value = field_utils.format.many2one(this.value);
+        // 'recordParams' is a dict of params used when calling functions
+        // 'getDomain' and 'getContext' on this.record
+        this.recordParams = {fieldName: this.name, viewType: this.viewType};
     },
     start: function () {
         // what is 'this.floating' for? add a comment!
@@ -201,7 +204,7 @@ var FieldMany2One = AbstractField.extend({
                     model: this.field.relation,
                     method: 'name_create',
                     args: [name],
-                    context: this.record.getContext({fieldName: this.name})
+                    context: this.record.getContext(this.recordParams),
                 })
                 .then(function (result) {
                     if (self.mode === "edit") {
@@ -261,8 +264,8 @@ var FieldMany2One = AbstractField.extend({
         var def = $.Deferred();
         this.orderer.add(def);
 
-        var context = this.record.getContext({fieldName: this.name});
-        var domain = this.record.getDomain({fieldName: this.name});
+        var context = this.record.getContext(this.recordParams);
+        var domain = this.record.getDomain(this.recordParams);
 
         var blacklisted_ids = this._getSearchBlacklist();
         if (blacklisted_ids.length > 0) {
@@ -356,7 +359,7 @@ var FieldMany2One = AbstractField.extend({
         new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, {
             res_model: this.field.relation,
             domain: this.record.getDomain({fieldName: this.name}),
-            context: _.extend({}, this.record.getContext({fieldName: this.name}), context || {}),
+            context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
             title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
             initial_ids: ids ? _.map(ids, function (x) { return x[0]; }) : undefined,
             initial_view: view,
@@ -394,7 +397,7 @@ var FieldMany2One = AbstractField.extend({
                     model: this.field.relation,
                     method: 'get_formview_action',
                     args: [[this.value.res_id]],
-                    context: this.record.getContext({fieldName: this.name}),
+                    context: this.record.getContext(this.recordParams),
                 })
                 .then(function (action) {
                     self.trigger_up('do_action', {action: action});
@@ -410,7 +413,7 @@ var FieldMany2One = AbstractField.extend({
             return;
         }
         var self = this;
-        var context = this.record.getContext({fieldName: this.name});
+        var context = this.record.getContext(this.recordParams);
         this._rpc({
                 model: this.field.relation,
                 method: 'get_formview_id',
@@ -531,6 +534,7 @@ var FieldX2Many = AbstractField.extend({
         this.isReadonly = this.mode === 'readonly';
         this.view = this.attrs.views.list || this.attrs.views.kanban;
         this.activeActions = {};
+        this.recordParams = {fieldName: this.name, viewType: this.viewType};
         var arch = this.view && this.view.arch;
         if (arch) {
             this.activeActions.create = arch.attrs.create ?
@@ -780,8 +784,8 @@ var FieldOne2Many = FieldX2Many.extend({
      */
     _openFormDialog: function (params) {
         this.trigger_up('open_one2many_record', _.extend(params, {
-            domain: this.record.getDomain({fieldName: this.name}),
-            context: this.record.getContext({fieldName: this.name}),
+            domain: this.record.getDomain(this.recordParams),
+            context: this.record.getContext(this.recordParams),
             field: this.field,
             fields_view: this.attrs.views && this.attrs.views.form,
             viewInfo: this.view,
@@ -873,7 +877,7 @@ var FieldMany2Many = FieldX2Many.extend({
         new dialogs.SelectCreateDialog(this, {
             res_model: this.field.relation,
             domain: domain.concat(["!", ["id", "in", this.value.res_ids]]),
-            context: this.record.getContext({fieldName: this.name}),
+            context: this.record.getContext(this.recordParams),
             title: _t("Add: ") + this.string,
             no_create: this.nodeOptions.no_create || !this.activeActions.create,
             fields_view: this.attrs.views.form,
@@ -900,8 +904,8 @@ var FieldMany2Many = FieldX2Many.extend({
      */
     _onOpenRecord: function (event) {
         _.extend(event.data, {
-            context: this.record.getContext({fieldName: this.name}),
-            domain: this.record.getDomain({fieldName: this.name}),
+            context: this.record.getContext(this.recordParams),
+            domain: this.record.getDomain(this.recordParams),
             fields_view: this.attrs.views && this.attrs.views.form,
             on_saved: this.trigger_up.bind(this, 'reload', {db_id: event.data.id}),
             readonly: this.mode === 'readonly',
@@ -976,6 +980,7 @@ var FieldMany2ManyTags = AbstractField.extend({
         this.many2one = new FieldMany2One(this, this.name, this.record, {
             idForLabel: this.idForLabel,
             mode: 'edit',
+            viewType: this.viewType,
         });
         // to prevent the M2O to take the value of the M2M
         this.many2one.value = false;

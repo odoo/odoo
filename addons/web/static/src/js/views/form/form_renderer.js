@@ -301,8 +301,9 @@ return BasicRenderer.extend({
             mode: is_readonly ? 'readonly' : this.mode,
             required: is_required,
             idForLabel: this._getIDForLabel(name),
+            viewType: 'form',
         };
-        var attrs = this.state.fieldsInfo[name];
+        var attrs = this.state.fieldsInfo.form[name];
         var widget = new attrs.Widget(this, name, this.state, options);
         this.widgets.push(widget);
         var def = widget.__widgetRenderAndInsert(function () {});

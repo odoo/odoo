@@ -18,7 +18,7 @@ var FormView = BasicView.extend({
     icon: 'fa-edit',
     multi_record: false,
     searchable: false,
-
+    viewType: 'form',
     /**
      * @override
      */
@@ -55,7 +55,7 @@ var FormView = BasicView.extend({
         var defs = [];
         var fields = this.loadParams.fields;
 
-        _.each(self.loadParams.fieldsInfo, function (attrs, fieldName) {
+        _.each(self.loadParams.fieldsInfo.form, function (attrs, fieldName) {
             var field = fields[fieldName];
             if (field.type !== 'one2many' && field.type !== 'many2many') {
                 return;

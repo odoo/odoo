@@ -27,7 +27,7 @@ var KanbanRecord = Widget.extend({
         this._super(parent);
 
         this.fields = state.fields;
-        this.fieldsInfo = state.fieldsInfo;
+        this.fieldsInfo = state.fieldsInfo.kanban;
         this.modelName = state.model;
 
         this.options = options;
@@ -359,7 +359,7 @@ var KanbanRecord = Widget.extend({
     _transformRecord: function (recordData) {
         var self = this;
         var new_record = {};
-        _.each(this.state.fieldNames, function (name) {
+        _.each(this.state.getFieldNames(), function (name) {
             var value = recordData[name];
             var r = _.clone(self.fields[name] || {});
 
