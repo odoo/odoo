@@ -92,17 +92,19 @@ var FormController = BasicController.extend({
     createRecord: function () {
         var self = this;
         var record = this.model.get(this.handle, {raw: true});
-        return this.model.makeDefaultRecord(this.modelName, {
-                context: this.context,
-                fieldsInfo: record.fieldsInfo,
-                fieldNames: record.fieldNames,
-                fields: record.fields,
-                res_ids: record.res_ids,
-            }).then(function (handle) {
-                self.handle = handle;
-                self._updateEnv();
-                self._toEditMode();
-            });
+        return this.model.load({
+            context: this.context,
+            fields: record.fields,
+            fieldsInfo: record.fieldsInfo,
+            modelName: this.modelName,
+            res_ids: record.res_ids,
+            type: 'record',
+            viewType: 'form',
+        }).then(function (handle) {
+            self.handle = handle;
+            self._updateEnv();
+            self._toEditMode();
+        });
     },
     /**
      * Returns the current res_id, wrapped in a list. This is only used by the
@@ -512,32 +514,25 @@ var FormController = BasicController.extend({
      * shouldn't be saved in DB when the user clicks on 'Save' in the dialog,
      * but later on when he clicks on 'Save' in the main form view. For this to
      * work correctly, the main model and the local id of the opened record must
-     * be given to the dialog, which will update the list of fields of the
-     * record with the one of the form view, and this list of fields will be
-     * reset when the related record is saved (or when the dialog is closed).
+     * be given to the dialog, which will complete the viewInfo of the record
+     * with the one of the form view.
      *
      * @private
      * @param {OdooEvent} event
      */
     _onOpenOne2ManyRecord: function (event) {
-        var self = this;
         var data = event.data;
         var record;
         if (data.id) {
             record = this.model.get(data.id, {raw: true});
         }
-        // reset the list of fields when the user clicks on 'Save' in the modal
-        var on_saved = function (record) {
-            self.model.setFieldProps(record.id, data.viewInfo);
-            data.on_saved(record);
-        };
 
-        var dialog = new dialogs.FormViewDialog(this, {
+        new dialogs.FormViewDialog(this, {
             context: data.context,
             domain: data.domain,
             fields_view: data.fields_view,
             model: this.model,
-            on_saved: on_saved,
+            on_saved: event.data.on_saved,
             parentID: this.handle,
             readonly: data.readonly,
             recordID: record && record.id,
@@ -546,16 +541,6 @@ var FormController = BasicController.extend({
             shouldSaveLocally: true,
             title: (record ? _t("Open:") : _t("Create")) + data.field.string,
         }).open();
-
-        // reset the list of fields when the user closes the modal (this is
-        // necessary if he didn't save, but this is not sufficient if he saved
-        // because in this case, a (re-)rendering of the related record is
-        // done in the kanban/list o2m field before the dialog is closed)
-        dialog.on('closed', this, function () {
-            if (record) {
-                this.model.setFieldProps(record.id, data.viewInfo);
-            }
-        });
     },
     /**
      * Open an existing record in a form view dialog

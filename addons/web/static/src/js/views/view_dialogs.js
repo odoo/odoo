@@ -160,7 +160,7 @@ var FormViewDialog = ViewDialog.extend({
 
         fields_view_def.then(function (viewInfo) {
             if (self.recordID) {
-                self.model.setFieldProps(self.recordID, viewInfo);
+                self.model.addFieldsInfo(self.recordID, viewInfo);
             }
             var formview = new FormView(viewInfo, {
                 modelName: self.res_model,

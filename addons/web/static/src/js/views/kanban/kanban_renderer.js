@@ -94,7 +94,10 @@ var KanbanRenderer = BasicRenderer.extend({
         transformQwebTemplate(templates, state.fields);
         this.qweb.add_template(utils.json_node_to_xml(templates));
 
-        this.recordOptions = _.extend({}, params.record_options, { qweb: this.qweb });
+        this.recordOptions = _.extend({}, params.record_options, {
+            qweb: this.qweb,
+            viewType: 'kanban',
+        });
         this.columnOptions = _.extend({}, params.column_options, { qweb: this.qweb });
     },
 

@@ -309,11 +309,15 @@ QUnit.module('Views', {
         assert.expect(3);
 
         this.params.res_id = 1;
-        this.params.fieldNames = ['category'];
-        this.params.fieldsInfo = {category: {
-            relatedFields: {display_name: {type: "char"}},
-            fieldsInfo: {display_name: {}},
-        }};
+        this.params.fieldsInfo = {
+            default: {
+                category: {
+                    fieldsInfo: {default: {display_name: {}}},
+                    relatedFields: {display_name: {type: "char"}},
+                    viewType: 'default',
+                },
+            },
+        };
 
         var model = createModel({
             Model: BasicModel,
@@ -336,11 +340,15 @@ QUnit.module('Views', {
     QUnit.test('can use command add and get many2many value with date field', function (assert) {
         assert.expect(2);
 
-        this.params.fieldNames = ['category'];
-        this.params.fieldsInfo = {category: {
-            relatedFields: {date: {type: "date"}},
-            fieldsInfo: {date: {}},
-        }};
+        this.params.fieldsInfo = {
+            default: {
+                category: {
+                    fieldsInfo: {default: {date: {}}},
+                    relatedFields: {date: {type: "date"}},
+                    viewType: 'default',
+                },
+            },
+        };
 
         var model = createModel({
             Model: BasicModel,
@@ -424,16 +432,17 @@ QUnit.module('Views', {
     QUnit.test('can make a default_record, no onchange', function (assert) {
         assert.expect(3);
 
+        this.params.context = {};
         this.params.fieldNames = ['product_id', 'category', 'product_ids'];
         this.params.res_id = undefined;
-        this.params.context = {};
+        this.params.type = 'record';
 
         var model = createModel({
             Model: BasicModel,
             data: this.data,
         });
 
-        model.makeDefaultRecord('partner', this.params).then(function (resultID) {
+        model.load(this.params).then(function (resultID) {
             var record = model.get(resultID);
             assert.strictEqual(record.data.product_id, false, "m2o default value should be false");
             assert.deepEqual(record.data.product_ids.data, [], "o2m default should be []");
@@ -449,9 +458,10 @@ QUnit.module('Views', {
         // of 'false', which does not work with the mockserver mockOnChange method.
         this.data.partner.onchanges.product_id = true;
 
+        this.params.context = {};
         this.params.fieldNames = ['product_id'];
         this.params.res_id = undefined;
-        this.params.context = {};
+        this.params.type = 'record';
 
         var model = createModel({
             Model: BasicModel,
@@ -464,7 +474,7 @@ QUnit.module('Views', {
             },
         });
 
-        model.makeDefaultRecord('partner', this.params).then(function (resultID) {
+        model.load(this.params).then(function (resultID) {
             var record = model.get(resultID);
             assert.strictEqual(record.data.product_id, false, "m2o default value should be false");
         });
@@ -493,9 +503,11 @@ QUnit.module('Views', {
             context: {},
             fieldNames: ['other_product_id', 'product_id'],
             fields: fields,
+            modelName: 'partner',
+            type: 'record',
         };
 
-        model.makeDefaultRecord('partner', params).then(function (resultID) {
+        model.load(params).then(function (resultID) {
             var record = model.get(resultID);
             assert.strictEqual(record.data.product_id.data.display_name, "xphone",
                 "should have fetched correct name");
@@ -675,6 +687,8 @@ QUnit.module('Views', {
         assert.expect(4);
 
         this.params.fieldNames = ['product_ids'];
+        this.params.res_id = undefined;
+        this.params.type = 'record';
 
         var id;
         var model = createModel({
@@ -696,7 +710,7 @@ QUnit.module('Views', {
             },
         });
 
-        model.makeDefaultRecord('partner', this.params).then(function (resultID) {
+        model.load(this.params).then(function (resultID) {
             var record = model.get(resultID);
             model.save(record.id, {reload: false});
             record = model.get(resultID);
@@ -759,6 +773,8 @@ QUnit.module('Views', {
         };
 
         this.params.fieldNames = ['total', 'product_ids'];
+        this.params.res_id = undefined;
+        this.params.type = 'record';
 
         var model = createModel({
             Model: BasicModel,
@@ -772,7 +788,7 @@ QUnit.module('Views', {
             },
         });
 
-        model.makeDefaultRecord('partner', this.params).then(function (resultID) {
+        model.load(this.params).then(function (resultID) {
 
             var record = model.get(resultID);
             assert.strictEqual(record.data.product_ids.data.length, 0,
@@ -868,9 +884,10 @@ QUnit.module('Views', {
             fieldNames: ['date'],
             fields: this.data.partner.fields,
             modelName: 'partner',
+            type: 'record',
         };
 
-        model.makeDefaultRecord('partner', params).then(function (resultID) {
+        model.load(params).then(function (resultID) {
             var record = model.get(resultID);
             assert.strictEqual(record.data.date, false, "date default value should be false");
         });
@@ -891,9 +908,10 @@ QUnit.module('Views', {
             fieldNames: ['category'],
             fields: this.data.partner.fields,
             modelName: 'partner',
+            type: 'record',
         };
 
-        model.makeDefaultRecord('partner', params).then(function (resultID) {
+        model.load(params).then(function (resultID) {
             var record = model.get(resultID);
             assert.ok(_.isEqual(record.data.category.res_ids, [12, 14]),
                 "category field should have correct default value");
@@ -943,10 +961,13 @@ QUnit.module('Views', {
         });
 
         this.params.fieldsInfo = {
-            product_id: {
-                context: "{'hello2': 'world', 'test2': foo}",
-                domain: "[['hello2', 'like', 'world'], ['test2', 'like', foo]]",
-            },
+            default: {
+                foo: {},
+                product_id: {
+                    context: "{'hello2': 'world', 'test2': foo}",
+                    domain: "[['hello2', 'like', 'world'], ['test2', 'like', foo]]",
+                },
+            }
         };
 
         model.load(this.params).then(function (resultID) {

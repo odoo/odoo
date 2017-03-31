@@ -46,7 +46,7 @@ var KanbanColumn = Widget.extend({
         // todo: handle group_by_m2o (nameget)
         this.title = value || _t('Undefined');
         this.folded = !data.isOpen;
-        this.has_active_field = _.contains(data.fieldNames, 'active');
+        this.has_active_field = 'active' in data.fields;
         this.size = data.count;
         this.values = data.values;
         this.fields = data.fields;

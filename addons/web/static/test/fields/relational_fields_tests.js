@@ -949,6 +949,8 @@ QUnit.module('relational_fields', {
                         '</kanban>' +
                         '<form string="Partners">' +
                             '<field name="display_name"/>' +
+                            // foo will be in the form but not in the kanban
+                            '<field name="foo"/>' +
                         '</form>' +
                     '</field>' +
                 '</form>',

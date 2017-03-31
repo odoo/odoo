@@ -20,6 +20,7 @@ var KanbanView = BasicView.extend({
         Controller: KanbanController,
         Renderer: KanbanRenderer,
     },
+    viewType: 'kanban',
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 

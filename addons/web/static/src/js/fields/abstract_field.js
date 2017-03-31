@@ -92,9 +92,14 @@ var AbstractField = Widget.extend({
         // such as the type, the comodel (relation), ...
         this.field = record.fields[name];
 
+        // the 'viewType' is the type of the view in which the field widget is
+        // instantiated. For standalone widgets, a 'default' viewType is set.
+        this.viewType = options.viewType || 'default';
+
         // the 'attrs' property contains the attributes of the xml 'field' tag,
         // the inner views...
-        this.attrs = record.fieldsInfo && record.fieldsInfo[name] || {};
+        var fieldsInfo = record.fieldsInfo[this.viewType];
+        this.attrs = fieldsInfo && fieldsInfo[name] || {};
 
         // modifiers
         this.modifiers =  JSON.parse(this.attrs.modifiers || "{}");

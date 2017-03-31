@@ -335,19 +335,12 @@ function addMockEnvironment(widget, params) {
  * @param {Object} params This object will be given to addMockEnvironment, so
  *   any parameters from that method applies
  * @param {Class} params.Model the model class to use
- * @param {string[]} [params.fieldNames] the fields given to the model
- * @param {Object[]} [params.fields] map of field names to field description
- * @param {Object[]} [params.fieldsInfo] map of field names to field attributes
  * @returns {Model}
  */
 function createModel(params) {
     var widget = new Widget();
 
-    var model = new params.Model(widget, {
-        fieldsInfo: params.fieldsInfo,
-        fieldNames: params.fieldNames,
-        fields: params.fields,
-    });
+    var model = new params.Model(widget);
 
     addMockEnvironment(widget, params);
 

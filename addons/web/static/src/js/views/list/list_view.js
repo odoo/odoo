@@ -24,6 +24,7 @@ var ListView = BasicView.extend({
         Renderer: ListRenderer,
         Controller: ListController,
     }),
+    viewType: 'list',
     /**
      * @override
      *
