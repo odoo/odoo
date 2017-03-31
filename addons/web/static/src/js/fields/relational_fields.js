@@ -565,6 +565,7 @@ var FieldX2Many = AbstractField.extend({
         list_record_delete: '_onDeleteRecord',
         open_record: '_onOpenRecord',
         save_line: '_onSaveLine',
+        resequence: '_onResequence',
         toggle_column_order: '_onToggleColumnOrder',
     }),
 
@@ -637,7 +638,7 @@ var FieldX2Many = AbstractField.extend({
      * @returns {Deferred}
      */
     reset: function (record, ev) {
-        if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree' && this.editable) {
+        if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
             var command = ev.data.changes[this.name];
             if (command.operation === 'UPDATE') {
                 var state = record.data[this.name];
@@ -901,6 +902,24 @@ var FieldX2Many = AbstractField.extend({
                     .fail(ev.data.onFailure);
             },
         });
+    },
+    /**
+     * Forces a resequencing of the records.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onResequence: function (event) {
+        var self = this;
+        _.each(event.data.rowIDs, function (rowID, index) {
+            var data = {};
+            data[event.data.handleField] = event.data.offset + index;
+            self._setValue({
+                operation: 'UPDATE',
+                id: rowID,
+                data: data,
+            });
+        })
     },
     /**
      * Adds field name information to the event, so that the view upstream is
