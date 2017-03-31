@@ -1868,6 +1868,50 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('do nothing if add a line in one2many result in a onchange with a warning', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.onchanges = { foo: true };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree editable="top">' +
+                            '<field name="foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return $.when({
+                        value: {},
+                        warning: {
+                            title: "Warning",
+                            message: "You must first select a partner"
+                        }
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                warning: function () {
+                    assert.step("should have triggered a warning");
+                },
+            },
+        });
+
+        // go to edit mode, click to add a record in the o2m
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            "should not have added a line");
+        form.destroy();
+    });
+
     QUnit.test('attrs are properly transmitted to new records', function (assert) {
         assert.expect(2);
 
