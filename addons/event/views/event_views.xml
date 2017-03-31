@@ -230,7 +230,11 @@
                             <group>
                                 <field name="event_type_id" options="{'no_create':True}"/>
                                 <field name="reply_to" string="Contact Email"/>
-                                <field name="twitter_hashtag"/>
+                                <label for="twitter_hashtag"/>
+                                <div>
+                                    <span class="oe_inline"># </span>
+                                    <field name="twitter_hashtag" nolabel="1" class="oe_inline"/>
+                                </div>
                                 <field name="auto_confirm" groups="base.group_no_one"/>
                             </group>
                             <group>
