@@ -313,6 +313,7 @@ var FieldMonetary = InputField.extend({
     className: 'o_form_field_monetary o_list_number',
     replace_element: true,
     supportedFieldTypes: ['float', 'monetary'],
+    resetOnAnyFieldChange: true, // Have to listen to currency changes
 
     /**
      * Float fields using a monetary widget have an additional currency_field
@@ -331,18 +332,9 @@ var FieldMonetary = InputField.extend({
     init: function () {
         this._super.apply(this, arguments);
 
-        // Options for _formatValue
-        this.nodeOptions.digits = [16,2];
-        if (this.attrs.currency_field) {
-            this.nodeOptions.currency_field = this.attrs.currency_field;
-        } else {
-            this.nodeOptions.currency_field = this.field.currency_field || 'currency_id';
-        }
-        if (this.record.data[this.nodeOptions.currency_field]) {
-            this.nodeOptions.currency_id = this.record.data[this.nodeOptions.currency_field].res_id;
-        }
+        this._setCurrency();
 
-        if (this.mode === 'edit' && this.nodeOptions.currency_id) {
+        if (this.mode === 'edit' && this.currency) {
             this.tagName = 'div';
         }
     },
@@ -372,7 +364,7 @@ var FieldMonetary = InputField.extend({
      * @private
      */
     _renderEdit: function () {
-        if (!this.nodeOptions.currency_id) {
+        if (!this.currency) {
             this._super.apply(this, arguments);
             return;
         }
@@ -381,15 +373,35 @@ var FieldMonetary = InputField.extend({
         // Prepare and add the input
         this._prepareInput().appendTo(this.$el);
         // prepare and add the currency symbol
-        var currency = session.get_currency(this.nodeOptions.currency_id);
-        var $currencySymbol = $('<span>', {text: currency.symbol});
-        if (currency.position === "after") {
+        var $currencySymbol = $('<span>', {text: this.currency.symbol});
+        if (this.currency.position === "after") {
             this.$el.append($currencySymbol);
         } else {
             this.$el.prepend($currencySymbol);
         }
     },
-
+    /**
+     * Re-gets the currency as its value may have changed.
+     * @see FieldMonetary.resetOnAnyFieldChange
+     *
+     * @override
+     * @private
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setCurrency();
+    },
+    /**
+     * Deduces the currency description from the field options and view state.
+     * The description is then available at this.currency.
+     *
+     * @private
+     */
+    _setCurrency: function () {
+        var currencyField = this.attrs.currency_field || this.field.currency_field || 'currency_id';
+        var currencyID = this.record.data[currencyField] && this.record.data[currencyField].res_id;
+        this.currency = session.get_currency(currencyID);
+    },
     /**
      * FieldMonetary overrides _formatValue to use the format monetary method
      * in readonly.
@@ -400,7 +412,10 @@ var FieldMonetary = InputField.extend({
      */
     _formatValue: function (value) {
         var format = field_utils.format[this.mode === 'edit' ? "float" : "monetary"];
-        return format(value, this.field, this.nodeOptions);
+        return format(value, this.field, {
+            digits: [16, 2],
+            currency: this.currency,
+        });
     },
 });
 

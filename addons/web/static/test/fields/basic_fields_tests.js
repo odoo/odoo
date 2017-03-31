@@ -100,10 +100,12 @@ QUnit.module('basic_fields', {
                 },
                 records: [{
                     id: 1,
+                    display_name: "$",
                     symbol: "$",
                     position: "before",
                 }, {
                     id: 2,
+                    display_name: "€",
                     symbol: "€",
                     position: "after",
                 }]
@@ -1333,7 +1335,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('monetary field with real monetary field in model', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         this.data.partner.fields.qux.type = "monetary";
 
@@ -1350,7 +1352,7 @@ QUnit.module('basic_fields', {
             arch:'<form string="Partners">' +
                     '<sheet>' +
                         '<field name="qux"/>' +
-                        '<field name="currency_id" invisible="1"/>' +
+                        '<field name="currency_id"/>' +
                         '<field name="bar"/>' +
                     '</sheet>' +
                 '</form>',
@@ -1371,6 +1373,12 @@ QUnit.module('basic_fields', {
         form.$('input[type="checkbox"]').click(); // Change the field on which the monetary depends
         assert.strictEqual(form.$('.o_form_field_monetary > input').length, 1,
             "After the onchange, the monetary <input/> should not have been duplicated");
+
+        var $dropdown = form.$('.o_form_field_many2one input').autocomplete('widget');
+        form.$('.o_form_field_many2one input').click();
+        $dropdown.find('li:not(.o_m2o_dropdown_option):last').mouseenter().click();
+        assert.strictEqual(form.$('.o_form_field_monetary > span').html(), "€",
+            "After currency change, the monetary field currency should have been updated");
 
         form.destroy();
     });
