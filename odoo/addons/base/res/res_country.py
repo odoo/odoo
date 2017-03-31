@@ -59,6 +59,11 @@ class Country(models.Model):
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
     state_ids = fields.One2many('res.country.state', 'country_id', string='States')
+    name_position = fields.Selection([
+            ('before', 'Before Address'),
+            ('after', 'After Address'),
+        ], string="Customer Name Position", default="before",
+        help="Determines where the customer/company name should be placed, i.e. after or before the address.")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)',
