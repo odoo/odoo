@@ -167,10 +167,11 @@ var BasicModel = AbstractModel.extend({
         };
         return this._makeDefaultRecord(list.model, params).then(function (id) {
             list.count++;
+            list._changes = list.data.slice(0);
             if (position === 'top') {
-                list.data.unshift(id);
+                list._changes.unshift(id);
             } else {
-                list.data.push(id);
+                list._changes.push(id);
             }
             return id;
         });
