@@ -1332,11 +1332,16 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
-
     QUnit.test('monetary field with real monetary field in model', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         this.data.partner.fields.qux.type = "monetary";
+
+        this.data.partner.onchanges = {
+            bar: function (obj) {
+                obj.qux = obj.bar ? 100 : obj.qux;
+            },
+        };
 
         var form = createView({
             View: FormView,
@@ -1346,6 +1351,7 @@ QUnit.module('basic_fields', {
                     '<sheet>' +
                         '<field name="qux"/>' +
                         '<field name="currency_id" invisible="1"/>' +
+                        '<field name="bar"/>' +
                     '</sheet>' +
                 '</form>',
             res_id: 5,
@@ -1361,6 +1367,10 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(form.$('.o_form_field_monetary > input').val(), "9.10",
             "input value in edition should only contain the value, without the currency");
+
+        form.$('input[type="checkbox"]').click(); // Change the field on which the monetary depends
+        assert.strictEqual(form.$('.o_form_field_monetary > input').length, 1,
+            "After the onchange, the monetary <input/> should not have been duplicated");
 
         form.destroy();
     });

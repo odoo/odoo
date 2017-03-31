@@ -144,22 +144,27 @@ var InputField = DebouncedField.extend({
      * Formats an input element for edit mode. This is in a separate function so
      * extending widgets can use it on their input without having input as tagName.
      *
-     * @param {jQueryElement} $input
      * @private
+     * @param {jQuery|undefined} $input
+     *        The <input/> element to prepare and save as the $input attribute.
+     *        If no element is given, the <input/> is created.
+     * @returns {jQuery} the prepared this.$input element
      */
     _prepareInput: function ($input) {
-        $input.addClass('o_form_input');
-        $input.attr('type', 'text');
-        if (this.attrs.placeholder) {
-            $input.attr('placeholder', this.attrs.placeholder);
-        }
-        $input.attr('id', this.idForLabel);
-        // save cursor position to restore it after updating value
+        this.$input = $input || $("<input/>");
+        this.$input.addClass('o_form_input');
+        this.$input.attr({
+            type: 'text',
+            id: this.idForLabel,
+            placeholder: this.attrs.placeholder || "",
+        });
+        // Save cursor position to restore it after updating value
         var selectionStart = this.$input[0].selectionStart;
         var selectionEnd = this.$input[0].selectionEnd;
         this.$input.val(this._formatValue(this.value));
         this.$input[0].selectionStart = selectionStart;
         this.$input[0].selectionEnd = selectionEnd;
+        return this.$input;
     },
     /**
      * Formats the HTML input tag for edit mode and stores selection status.
@@ -170,8 +175,7 @@ var InputField = DebouncedField.extend({
     _renderEdit: function () {
         // Keep a reference to the input so $el can become something else
         // without losing track of the actual input.
-        this.$input = this.$el;
-        this._prepareInput(this.$input);
+        this._prepareInput(this.$el);
     },
     /**
      * Resets the content to the formated value in readonly mode.
@@ -368,20 +372,21 @@ var FieldMonetary = InputField.extend({
      * @private
      */
     _renderEdit: function () {
-        if (this.nodeOptions.currency_id) {
-            var currency = session.get_currency(this.nodeOptions.currency_id);
-            var $currencySymbol = $('<span>').text(currency.symbol);
-            this.$input = $('<input>');
-            this._prepareInput(this.$input);
-            this.$input.appendTo(this.$el);
-            if (currency.position === "after") {
-                this.$el.append($currencySymbol);
-            } else {
-                this.$el.prepend($currencySymbol);
-            }
-        }
-        else {
+        if (!this.nodeOptions.currency_id) {
             this._super.apply(this, arguments);
+            return;
+        }
+
+        this.$el.empty();
+        // Prepare and add the input
+        this._prepareInput().appendTo(this.$el);
+        // prepare and add the currency symbol
+        var currency = session.get_currency(this.nodeOptions.currency_id);
+        var $currencySymbol = $('<span>', {text: currency.symbol});
+        if (currency.position === "after") {
+            this.$el.append($currencySymbol);
+        } else {
+            this.$el.prepend($currencySymbol);
         }
     },
 
