@@ -394,11 +394,8 @@ var FieldMonetary = InputField.extend({
      * @param {float} value
      */
     _formatValue: function (value) {
-        if (this.mode === 'readonly') {
-            return field_utils.format.monetary(value, this.field, this.nodeOptions);
-        } else if (this.mode === 'edit') {
-            return this._super.apply(this, arguments);
-        }
+        var format = field_utils.format[this.mode === 'edit' ? "float" : "monetary"];
+        return format(value, this.field, this.nodeOptions);
     },
 });
 
