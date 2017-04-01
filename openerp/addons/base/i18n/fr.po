@@ -23,7 +23,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-22 07:25+0000\n"
-"PO-Revision-Date: 2017-03-25 16:57+0000\n"
+"PO-Revision-Date: 2017-03-28 14:32+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -4791,7 +4791,7 @@ msgstr "Module de test pour la désinstallation."
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
 msgid "A module to verify the Assets Bundle mechanism."
-msgstr ""
+msgstr "Module de vérification du mécanisme d'« Assets Bundle »."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
@@ -5750,7 +5750,7 @@ msgstr "Installation automatisée"
 #: code:addons/base/module/module.py:693
 #, python-format
 msgid "Automatic install of downloaded Apps is currently disabled."
-msgstr ""
+msgstr "L'installation automatique des applications téléchargées est désactivée"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
@@ -6040,7 +6040,7 @@ msgstr "Date de Naissance"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_blackbox_be
 msgid "Blackbox Hardware Driver"
-msgstr ""
+msgstr "Pilote Blackbox"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
@@ -7054,7 +7054,7 @@ msgstr "Nom du contact"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_category_form
 msgid "Contact Tag"
-msgstr ""
+msgstr "Étiquette de contact"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
@@ -7296,7 +7296,7 @@ msgstr "Créer des sondages, collecter les réponses et imprimer les statistique
 #. module: base
 #: model:ir.module.module,summary:base.module_board
 msgid "Create your custom dashboard"
-msgstr ""
+msgstr "Créez votre tableau de bord personnalisé"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_crud_model_name
@@ -8150,7 +8150,7 @@ msgstr "Afficher"
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_display_name
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -8405,7 +8405,7 @@ msgstr "Employés"
 #: code:addons/base/ir/ir_model.py:339
 #, python-format
 msgid "Empty dependency in %r"
-msgstr ""
+msgstr "Dépendance vide dans %r"
 
 #. module: base
 #: model:res.groups,name:base.group_light_multi_company
@@ -8487,7 +8487,7 @@ msgstr "Détails de l'erreur :"
 #: code:addons/models.py:1281
 #, python-format
 msgid "Error while validating constraint"
-msgstr ""
+msgstr "Erreur lors de la validation de la contrainte"
 
 #. module: base
 #: constraint:res.company:0
@@ -8757,7 +8757,7 @@ msgstr "Expédition Fedex"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_fr_fec
 msgid "Fichier d'Échange Informatisé (FEC) for France"
-msgstr ""
+msgstr "Fichier d'Échange Informatisé (FEC) pour la France"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_fec
@@ -8802,7 +8802,7 @@ msgid ""
 "\n"
 "* Alexis de Lattre <alexis.delattre@akretion.com>\n"
 "\n"
-msgstr ""
+msgstr "Fichier d'Échange Informatisé (FEC) pour la France\n==================================================\n\nCe module permet de générer le fichier FEC tel que définit par `l'arrêté du 29\nJuillet 2013 <http://legifrance.gouv.fr/eli/arrete/2013/7/29/BUDE1315492A/jo/texte>`\nportant modification des dispositions de l'article A. 47 A-1 du\nlivre des procédures fiscales.\n\nCet arrêté prévoit l'obligation pour les sociétés ayant une comptabilité\ninformatisée de pouvoir fournir à l'administration fiscale un fichier\nregroupant l'ensemble des écritures comptables de l'exercice. Le format de ce\nfichier, appelé *FEC*, est définit dans l'arrêté.\n\nLe détail du format du FEC est spécifié dans le bulletin officiel des finances publiques `BOI-CF-IOR-60-40-20-20131213 <http://bofip.impots.gouv.fr/bofip/ext/pdf/createPdfWithAnnexePermalien/BOI-CF-IOR-60-40-20-20131213.pdf?doc=9028-PGP&identifiant=BOI-CF-IOR-60-40-20-20131213>` du 13 Décembre 2013. Ce module implémente le fichier\nFEC au format texte et non au format XML, car le format texte sera facilement\nlisible et vérifiable par le comptable en utilisant un tableur.\n\nLa structure du fichier FEC généré par ce module a été vérifiée avec le logiciel\n*Test Compta Demat* version 1_00_05 disponible sur\n`le site de la direction générale des finances publiques <http://www.economie.gouv.fr/dgfip/outil-test-des-fichiers-des-ecritures-comptables-fec>`\nen utilisant une base de donnée Odoo réelle.\n\nConfiguration\n=============\n\nAucune configuration n'est nécessaire.\n\nUtilisation\n===========\n\nPour générer le *FEC*, allez dans le menu *Accounting > Reporting > French Statements > FEC* qui va démarrer l'assistant de génération du FEC.\n\nCredits\n=======\n\nContributors\n------------\n\n* Alexis de Lattre <alexis.delattre@akretion.com>\n\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_model_object_field
@@ -9620,7 +9620,7 @@ msgstr "Pilote pour lecteurs de code-barres"
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_blackbox_be
 msgid "Hardware Driver for Belgian Fiscal Data Modules"
-msgstr ""
+msgstr "Pilote matériel pour les modules de données fiscales belges"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -10873,7 +10873,7 @@ msgstr "Paquet de langue"
 #: code:addons/base/res/res_lang.py:187
 #, python-format
 msgid "Language code cannot be modified."
-msgstr ""
+msgstr "Le code langue ne peut pas être modifié."
 
 #. module: base
 #: sql_constraint:ir.translation:0
@@ -12293,7 +12293,7 @@ msgstr "Nouvelle Zélande"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz
 msgid "New Zealand - Accounting"
-msgstr ""
+msgstr "Nouvelle-Zélande – Comptabilité"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:536
@@ -12393,7 +12393,7 @@ msgstr "Mise à jour impossible"
 #: code:addons/base/ir/ir_model.py:348
 #, python-format
 msgid "Non-relational field %r in dependency %r"
-msgstr ""
+msgstr "Champ %r non relationnel pour la dépendance %r  "
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:305
@@ -13553,7 +13553,7 @@ msgstr "Les propriétés des champs de la base ne peuvent pas être modifiées d
 #. module: base
 #: model:ir.module.module,description:base.module_website_theme_install
 msgid "Propose to install a theme on website installation"
-msgstr ""
+msgstr "Propose d'installer un thème lors de l'installation du site web"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -13937,7 +13937,7 @@ msgstr "Renommer le champ fragmenté \"%s\" n'est pas autorisé"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_repair
 msgid "Repair broken or damaged products"
-msgstr ""
+msgstr "Réparation des produits endommagés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
