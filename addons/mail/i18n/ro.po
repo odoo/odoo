@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-02-16 18:08+0000\n"
+"PO-Revision-Date: 2017-03-30 11:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -230,7 +230,7 @@ msgid ""
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
 "                            </span>\n"
 "                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n                                <strong>Email în masă</strong> on\n                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">înregistrările selectate</span>\n                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">filtrul curent de căutare</span>.\n                            </span>\n                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Urmăritorii documentului și</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1554,7 +1554,7 @@ msgstr "Wizard invitație"
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Invited people only"
-msgstr ""
+msgstr "Numai persoane invitate"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_is_follower
@@ -2669,7 +2669,7 @@ msgstr "Selectati campul tinta din modelul documentului asociat.\nDaca este un c
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Selected group of users"
-msgstr ""
+msgstr "Grup selectat de utilizatori"
 
 #. module: mail
 #. openerp-web
@@ -3249,7 +3249,7 @@ msgstr "Vizualizare"
 msgid ""
 "Warning! \n"
 " If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove this follower ?"
-msgstr ""
+msgstr "Atenție! \nDacă elimini o persoană interesată de document, ea nu va mai fi înștiințată de emailuri sau discuții legate de acest document.\nDoriți într-adevăr să îl ștergeți de la persoanele interesate ?"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_model_object_field
@@ -3275,7 +3275,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Who can follow the group's activities?"
-msgstr ""
+msgstr "Cine poate urmări activitățile grupului?"
 
 #. module: mail
 #. openerp-web
@@ -3391,7 +3391,7 @@ msgstr "document"
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "enable desktop notifications"
-msgstr ""
+msgstr "activare notificări."
 
 #. module: mail
 #. openerp-web

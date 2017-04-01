@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2016-10-16 18:19+0000\n"
+"PO-Revision-Date: 2017-03-28 15:53+0000\n"
 "Last-Translator: Evgeny <transingularity@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -51,14 +51,14 @@ msgid ""
 "                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
 "                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
 "                                if the regular expression matches a prefix of the barcode."
-msgstr ""
+msgstr "<i>Номенклатура штрих-кодов</i>> определяет, как штрих-коды распознаются и классифицируются.\n                                 Когда штрих-код сканируется, он ассоциируется с правилом <i>первый</i> с соответствием\n                                 шаблона. Синтаксис шаблона - это регулярное выражение, и штрих-код сопоставляется\n                                 если регулярное выражение совпадает с префиксом штрих-кода."
 
 #. module: barcodes
 #: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
-msgstr ""
+msgstr "Номенклатура штрих-кодов определяет, как точка продажи идентифицирует и интерпретирует штрих-коды"
 
 #. module: barcodes
 #: code:addons/barcodes/barcodes.py:191
@@ -240,7 +240,7 @@ msgstr "Таблицы"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_pattern
 msgid "The barcode matching pattern"
-msgstr ""
+msgstr "Шаблон совпадения штрих-кодов"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_rule_ids
@@ -250,7 +250,7 @@ msgstr "Список правил штрих-кода"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_alias
 msgid "The matched pattern will alias to this barcode"
-msgstr ""
+msgstr "Совпавший шаблон будет иметь псевдоним этого штрих-кода"
 
 #. module: barcodes
 #: code:addons/barcodes/barcodes.py:217 code:addons/barcodes/barcodes.py:219
@@ -264,7 +264,7 @@ msgstr "Допущена синтаксическая ошибка в рисун
 msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
-msgstr ""
+msgstr "Это правило применяется только в том случае, если штрих-код закодирован с указанной кодировкой"
 
 #. module: barcodes
 #. openerp-web
@@ -291,29 +291,29 @@ msgid ""
 "UPC Codes can be converted to EAN by prefixing them with a zero. This "
 "setting determines if a UPC/EAN barcode should be automatically converted in"
 " one way or another when trying to match a rule with the other encoding."
-msgstr ""
+msgstr "Коды UPC можно преобразовать в EAN, поставив перед ними нуль. Этот параметр определяет, должен ли штрих-код UPC/EAN автоматически преобразовываться так или иначе при попытке сопоставить правило с другой кодировкой."
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
 msgid "UPC-A to EAN-13"
-msgstr ""
+msgstr "UPC-A к EAN-13"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_upc_ean_conv
 msgid "UPC/EAN Conversion"
-msgstr ""
+msgstr "UPC/EAN преобразования"
 
 #. module: barcodes
 #: code:addons/barcodes/barcodes.py:191
 #, python-format
 msgid "Unit Product"
-msgstr ""
+msgstr "Единица продукции"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
-msgstr ""
+msgstr "Используется для упорядочивания правил таким образом, чтобы правила с меньшей последовательностью соответствовали первым"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
@@ -323,7 +323,7 @@ msgstr "Значение последнего отсканированного �
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
 msgid "barcode.nomenclature"
-msgstr ""
+msgstr "barcode.nomenclature"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_rule

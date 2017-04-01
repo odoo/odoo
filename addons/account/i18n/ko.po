@@ -5,13 +5,14 @@
 # Translators:
 # Jongkwan, Yeom <jongkwanyeom@gmail.com>, 2016
 # MinGi KYUNG <moonend@gmail.com>, 2015-2016
+# Spike Lee <rurouni24@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-11-12 00:30+0000\n"
-"Last-Translator: Jongkwan, Yeom <jongkwanyeom@gmail.com>\n"
+"PO-Revision-Date: 2017-03-29 08:40+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,7 +105,7 @@ msgstr "자리수"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
 msgid "# of Lines"
-msgstr ""
+msgstr "행 수"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -200,7 +201,7 @@ msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> 지금설치"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<span class=\"fa\"/> Invite Your Users"
-msgstr ""
+msgstr "<span class=\"fa\"/> 사용자 초대"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -352,12 +353,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New Invoice</span>"
-msgstr ""
+msgstr "<span>새 송장</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New</span>"
-msgstr ""
+msgstr "<span>신규</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -387,7 +388,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>-The Odoo Team</strong>"
-msgstr ""
+msgstr "<strong>-오두 팀</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -414,7 +415,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>Balance :</strong>"
-msgstr ""
+msgstr "<strong>이자 :</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1168,7 +1169,7 @@ msgstr "회계 보고서"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Accounting Settings"
-msgstr ""
+msgstr "회계 설정"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1228,7 +1229,7 @@ msgstr "추가"
 #: model:ir.model.fields,field_description:account.field_account_operation_template_has_second_line
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_form
 msgid "Add a second line"
-msgstr ""
+msgstr "두번째 행 추가"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
@@ -1360,7 +1361,7 @@ msgstr "모든 계정"
 msgid ""
 "All invoices and payments have been matched, your accounts' balances are "
 "clean."
-msgstr ""
+msgstr "모든 송장과 지급액이 일치하고 계좌잔액이 깨끗합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_all_lines_reconciled
@@ -1505,7 +1506,7 @@ msgstr "금액 유형"
 #: code:addons/account/static/src/xml/account_payment.xml:68
 #, python-format
 msgid "Amount:"
-msgstr ""
+msgstr "수량:"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.account:0
@@ -1662,7 +1663,7 @@ msgstr "자산"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
 msgid "Assets management"
-msgstr ""
+msgstr "자산 관리"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -1687,12 +1688,12 @@ msgstr "8월"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Auto-detect"
-msgstr ""
+msgstr "자동감지"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Automate Payments"
-msgstr ""
+msgstr "지급 자동화"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -1721,7 +1722,7 @@ msgstr "평균 가격"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Awaiting payments"
-msgstr ""
+msgstr "지불 대기중"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:156
@@ -2048,7 +2049,7 @@ msgstr "취소"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Cancel Bill"
-msgstr ""
+msgstr "계산 취소"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
@@ -2214,7 +2215,7 @@ msgstr "현금보관함 명세"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_cashbox_id
 msgid "Cashbox"
-msgstr ""
+msgstr "현금보관함"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_cashbox_lines_ids
@@ -2365,12 +2366,12 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_journal_form
 msgid "Click to add a bank account."
-msgstr ""
+msgstr "은행 계좌를 추가하려면 클릭 하십시오."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Click to add a journal."
-msgstr ""
+msgstr "분개장을 추가하려면 클릭 하십시오."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -2690,7 +2691,7 @@ msgstr "축하합니다, 완료했습니다 !"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Congratulations, you're done!"
-msgstr ""
+msgstr "축하합니다, 완료했습니다!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_abstract_payment
@@ -2778,7 +2779,7 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:213
 #, python-format
 msgid "Create invoice/bill"
-msgstr ""
+msgstr "송장/계산서 작성"
 
 #. module: account
 #. openerp-web
@@ -2984,13 +2985,13 @@ msgstr "회사 국가별 환율."
 #: code:addons/account/models/account_move.py:1188
 #, python-format
 msgid "Currency exchange rate difference"
-msgstr ""
+msgstr "현재 환율차"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Current Assets"
-msgstr ""
+msgstr "현재 자산"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
@@ -3537,7 +3538,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_invoice_action_report_duplicate
 msgid "Duplicates"
-msgstr ""
+msgstr "복제"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:135
@@ -3665,7 +3666,7 @@ msgstr "오류 !"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Excel template"
-msgstr ""
+msgstr "엑셀 형식"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:158
@@ -3754,12 +3755,12 @@ msgstr "2월"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_state_ids
 msgid "Federal States"
-msgstr ""
+msgstr "연방 주"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "File Import"
-msgstr ""
+msgstr "파일 첨부"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.cash_box_in_form
@@ -4031,7 +4032,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Get started"
-msgstr ""
+msgstr "시작하기"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_plaid
@@ -4388,7 +4389,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
-msgstr ""
+msgstr "스스로 수행하려면:"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -4503,7 +4504,7 @@ msgstr "샹품 서식의 수익 계정"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1787
 #, python-format
 msgid "Incorrect Operation"
-msgstr ""
+msgstr "잘못된 작업"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -5406,7 +5407,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.account_management_menu
 #: model:ir.ui.menu,name:account.account_reports_management_menu
 msgid "Management"
-msgstr ""
+msgstr "관리"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5416,7 +5417,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_manual
 msgid "Manual"
-msgstr ""
+msgstr "수동"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_invoice_tax_form
@@ -5432,7 +5433,7 @@ msgstr ""
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "March"
-msgstr ""
+msgstr "3월"
 
 #. module: account
 #: selection:account.payment,payment_difference_handling:0
@@ -5452,7 +5453,7 @@ msgstr ""
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "May"
-msgstr ""
+msgstr "5월"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_inbound_payment_method_ids
@@ -5476,20 +5477,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment_communication
 #: model:ir.model.fields,field_description:account.field_account_register_payments_communication
 msgid "Memo"
-msgstr ""
+msgstr "메모"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:64
 #, python-format
 msgid "Memo:"
-msgstr ""
+msgstr "메모:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_ids
 msgid "Messages"
-msgstr ""
+msgstr "메시지"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -5809,7 +5810,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:192
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "확인"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -8178,6 +8179,14 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:414
 #, python-format
 msgid "The sequence of journal %s is deactivated."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:91
+#, python-format
+msgid ""
+"There are still unposted entries in the period you want to lock. You should "
+"either post or delete them."
 msgstr ""
 
 #. module: account
