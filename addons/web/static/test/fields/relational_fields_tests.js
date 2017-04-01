@@ -1177,6 +1177,57 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many list (editable): edition, part 2', function (assert) {
+        assert.expect(8);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree editable="top">' +
+                            '<field name="foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].p[0][0], 0,
+                        "should send a 0 command for field p");
+                    assert.strictEqual(args.args[1].p[1][0], 0,
+                        "should send a second 0 command for field p");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // edit mode, then click on Add an item and enter a value
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        form.$('td.o_edit_mode input').val('kartoffel').trigger('input');
+
+        // click again on Add an item
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('td:contains(kartoffel)').length, 1,
+            "should have one td with the new value");
+        assert.strictEqual(form.$('td.o_edit_mode input').length, 1,
+            "should have one other new td");
+        assert.strictEqual(form.$('tr.o_data_row').length, 2, "should have 2 data rows");
+
+        // enter another value and save
+        form.$('td.o_edit_mode input').val('gemuse').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('tr.o_data_row').length, 2, "should have 2 data rows");
+        assert.strictEqual(form.$('td:contains(kartoffel)').length, 1,
+            "should have one td with the new value");
+        assert.strictEqual(form.$('td:contains(gemuse)').length, 1,
+            "should have one td with the new value");
+
+        form.destroy();
+    });
+
     QUnit.test('onchange in a one2many', function (assert) {
         assert.expect(1);
 

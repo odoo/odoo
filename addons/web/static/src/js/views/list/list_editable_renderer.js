@@ -485,9 +485,13 @@ ListRenderer.include({
     _onAddRecord: function (event) {
         // we don't want the browser to navigate to a the # url
         event.preventDefault();
+
         // we don't want the click to cause other effects, such as unselecting
         // the row that we are creating, because it counts as a click on a tr
         event.stopPropagation();
+
+        // but we do want to unselect current row
+        this._unselectRow();
 
         this.trigger_up('add_record');
     },
