@@ -167,7 +167,7 @@ var BasicModel = AbstractModel.extend({
         };
         return this._makeDefaultRecord(list.model, params).then(function (id) {
             list.count++;
-            list._changes = list.data.slice(0);
+            list._changes = list._changes || list.data.slice(0);
             if (position === 'top') {
                 list._changes.unshift(id);
             } else {
