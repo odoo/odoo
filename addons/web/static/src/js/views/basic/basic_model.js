@@ -989,7 +989,7 @@ var BasicModel = AbstractModel.extend({
         var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
         var rec;
         var defs = [];
-        list._changes = list._changes || list.data;
+        list._changes = list._changes || list.data.slice(0);
 
         switch (command.operation) {
             case 'ADD':
