@@ -62,6 +62,7 @@ var ListRenderer = BasicRenderer.extend({
             if (c.attrs.widget === 'handle') {
                 self.hasHandle = true;
             }
+            c.name = c.attrs.name;
             return false;
         });
         this.rowDecorations = _.chain(this.arch.attrs)

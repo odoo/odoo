@@ -423,13 +423,19 @@ ListRenderer.include({
      * Updates the row of a particular record of the editable list view.
      *
      * @param {index} index the index of the record whose row needs updating
-     * @param {string[]} changed_fields names of the fields which changed
+     * @param {string[]} changedFields names of the fields which changed
      * @param {OdooEvent} event the event that triggered the change
      */
-    _updateRow: function (index, changed_fields, event) {
+    _updateRow: function (index, changedFields, event) {
         var self = this;
         var record = this.state.data[index];
-        _.each(changed_fields, function (field_name) {
+
+        // filter out fields that are not present in the view.  They may come
+        // from an onchange, but we need to ignore them.
+        changedFields = _.filter(changedFields, function (fieldName) {
+            return _.findWhere(self.columns, {name: fieldName});
+        });
+        _.each(changedFields, function (field_name) {
             var widget = _.findWhere(self.widgets, {name: field_name});
             if (widget && widget.__rowIndex === index) {
                 widget.reset(record, event);

@@ -92,6 +92,7 @@ QUnit.module('relational_fields', {
                     turtle_bar: {string: "Bar", type: "boolean", default: true},
                     turtle_int: {string: "int", type: "integer", sortable: true},
                     turtle_qux: {string: "Qux", type: "float", digits: [16,1], required: true, default: 1.5},
+                    turtle_description: {string: "Description", type: "text"},
                     turtle_trululu: {string: "Trululu", type: "many2one", relation: 'partner'},
                     product_id: {string: "Product", type: "many2one", relation: 'product', required: true},
                     partner_ids: {string: "Partner", type: "many2many", relation: 'partner'},
@@ -1262,6 +1263,52 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('tr.o_data_row').length, 1,
             "should have 1 data rows");
 
+        form.destroy();
+    });
+
+    QUnit.test('one2many list (editable): edition, part 4', function (assert) {
+        assert.expect(3);
+
+        this.data.turtle.onchanges = {
+            turtle_trululu: function (obj) {
+                if (obj.turtle_trululu) {
+                    obj.turtle_description = "Some Description";
+                }
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree editable="top">' +
+                                '<field name="turtle_trululu"/>' +
+                                '<field name="turtle_description"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        // edit mode, then click on Add an item
+        assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            "should have 0 data rows");
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('textarea').val(), "",
+            "field turtle_description should be empty");
+
+        // add a value in the turtle_trululu field to trigger an onchange
+        var $dropdown = form.$('.o_form_field_many2one[name=turtle_trululu] input')
+                            .autocomplete('widget');
+        form.$('.o_form_field_many2one[name=turtle_trululu] input').click();
+        $dropdown.find('a:contains(first record)').mouseenter().click();
+        assert.strictEqual(form.$('textarea').val(), "Some Description",
+            "field turtle_description should be set to the result of the onchange");
         form.destroy();
     });
 
