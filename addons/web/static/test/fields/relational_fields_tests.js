@@ -1228,6 +1228,43 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many list (editable): edition, part 3', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree editable="top">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // edit mode, then click on Add an item 2 times
+        assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            "should have 1 data rows");
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('tr.o_data_row').length, 3,
+            "should have 3 data rows");
+
+        // cancel the edition
+        form.$buttons.find('.o_form_button_cancel').click();
+        $('.modal-footer button.btn-primary').first().click();
+        assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            "should have 1 data rows");
+
+        form.destroy();
+    });
+
     QUnit.test('onchange in a one2many', function (assert) {
         assert.expect(1);
 
