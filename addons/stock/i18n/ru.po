@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-10-09 11:38+0000\n"
+"PO-Revision-Date: 2017-03-30 16:48+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -2824,7 +2824,7 @@ msgstr ""
 msgid ""
 "Operations that impact this move for the computation of the remaining "
 "quantities"
-msgstr ""
+msgstr "Операции, которые влияют на этот шаг, для вычисления оставшихся количеств"
 
 #. module: stock
 #: help:stock.move,partner_id:0
@@ -2852,7 +2852,7 @@ msgstr "Опционально: следующее перемещение ТМЦ
 #. module: stock
 #: help:stock.move,move_orig_ids:0
 msgid "Optional: previous stock move when chaining them"
-msgstr ""
+msgstr "Необязательно: предыдущее перемещение запаса при объединении цепочки"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -3261,14 +3261,14 @@ msgstr "Предпочтительные Маршруты"
 #. module: stock
 #: help:stock.move,route_ids:0
 msgid "Preferred route to be followed by the procurement order"
-msgstr ""
+msgstr "Предпочтительный маршрут, за которым следует заказ на поставку"
 
 #. module: stock
 #: help:procurement.order,route_ids:0
 msgid ""
 "Preferred route to be followed by the procurement order. Usually copied from"
 " the generating document (SO) but could be set up manually."
-msgstr ""
+msgstr "Предпочтительный маршрут, за которым следует заказ на поставку. Обычно копируется из генерирующего документа (SO), но может быть настроен вручную."
 
 #. module: stock
 #. openerp-web
@@ -3300,7 +3300,7 @@ msgstr "Приоритет"
 msgid ""
 "Priority for this picking. Setting manually a value here would set it as "
 "priority for all the moves"
-msgstr ""
+msgstr "Приоритет для этого упаковки. Установка значения вручную здесь задала бы его приоритетом для всех передвижений"
 
 #. module: stock
 #: view:stock.move:stock.view_move_tree
@@ -3705,7 +3705,7 @@ msgid ""
 "Quantity of products to consider when talking about the contribution of this"
 " pack operation towards the remaining quantity of the move (and inverse). "
 "Given in the product main uom."
-msgstr ""
+msgstr "Количество продуктов, которые следует учитывать, когда речь идет о вкладе этой операции упаковки в оставшееся количество движения (и обратно). Дано в основном продукте uom."
 
 #. module: stock
 #: help:stock.move,reserved_availability:0
@@ -3869,12 +3869,12 @@ msgstr "Оставшееся Количество"
 msgid ""
 "Remaining Quantity in default UoM according to operations matched with this "
 "move"
-msgstr ""
+msgstr "Остаточное количество по умолчанию UoM в соответствии с операциями, соответствующими этому перемещению"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Remaining parts of picking partially processed"
-msgstr ""
+msgstr "Остальные части упаковки частично обработаны"
 
 #. module: stock
 #: help:stock.pack.operation,remaining_qty:0
@@ -4556,21 +4556,21 @@ msgid ""
 "Technical field containing the quant that created this link between an "
 "operation and a stock move. Used at the stock_move_obj.action_done() time to"
 " avoid seeking a matching quant again"
-msgstr ""
+msgstr "Техническое поле, содержащее квант, создавший эту связь между операцией и перемещением запаса. Используется во время stock_move_obj.action_done() чтобы избежать повторного поиска соответствующего кванта"
 
 #. module: stock
 #: help:stock.move,warehouse_id:0
 msgid ""
 "Technical field depicting the warehouse to consider for the route selection "
 "on the next procurement (if any)."
-msgstr ""
+msgstr "Техническое поле, представляющее склад для рассмотрения выбора маршрута при следующей закупке (при наличии)."
 
 #. module: stock
 #: help:res.company,internal_transit_location_id:0
 msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
-msgstr ""
+msgstr "Техническое поле, используемое для маршрутов пополнения запасов между складами, принадлежащими этой компании"
 
 #. module: stock
 #: help:stock.move,restrict_lot_id:0
@@ -4584,7 +4584,7 @@ msgstr ""
 msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
-msgstr ""
+msgstr "Техническое поле, используемое для обозначения ограничения на владение квантами, которое необходимо учитывать при маркировке этого перемещения как 'сделано'"
 
 #. module: stock
 #: help:stock.picking,picking_type_code:0
@@ -4603,7 +4603,7 @@ msgstr ""
 msgid ""
 "Technical field used to record the destination location of a move that "
 "created a negative quant"
-msgstr ""
+msgstr "Техническое поле, используемое для записи места назначения перемещения, создавшего отрицательный квант"
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -4611,14 +4611,14 @@ msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
-msgstr ""
+msgstr "Техническое поле, используемое для записи стоимости продукта, заданной пользователем во время подтверждения комплектования (когда используется метод калькуляции 'средняя цена' или 'реальный'). Значение, указанное в валюте компании и в продукте uom."
 
 #. module: stock
 #: help:stock.move,split_from:0
 msgid ""
 "Technical field used to track the origin of a split move, which can be "
 "useful in case of debug"
-msgstr ""
+msgstr "Техническое поле, используемое для отслеживания происхождения раздельного перемещения, которое может быть полезно в случае отладки"
 
 #. module: stock
 #: help:product.template,sale_delay:0
@@ -4732,7 +4732,7 @@ msgstr ""
 #. module: stock
 #: help:stock.move,push_rule_id:0
 msgid "The push rule that created this stock move"
-msgstr ""
+msgstr "Правило пуш, создавшее это перемещение запаса"
 
 #. module: stock
 #: code:addons/stock/stock.py:1699
@@ -4740,7 +4740,7 @@ msgstr ""
 msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
-msgstr ""
+msgstr "Запрошенная операция не может быть обработана из-за ошибки программирования, устанавливающей поле `product_qty` вместо` product_uom_qty`."
 
 #. module: stock
 #. openerp-web
@@ -4800,7 +4800,7 @@ msgid ""
 "The warehouse to propagate on the created move/procurement, which can be "
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
-msgstr ""
+msgstr "Склад для распространения по созданному перемещению/заготовке, которое может отличаться от склада, для которого это правило предназначено (например, для повторной поставки правил с другого склада)"
 
 #. module: stock
 #: field:stock.inventory.line,theoretical_qty:0
@@ -4822,7 +4822,7 @@ msgid ""
 "This allows to manipulate packages.  You can put something in, take "
 "something from a package, but also move entire packages and put them even in"
 " another package.  "
-msgstr ""
+msgstr "Это позволяет манипулировать пакетами. Вы можете что-то вставить, взять что-то из пакета, но также перемещать целые пакеты и помещать их даже в другой пакет."
 
 #. module: stock
 #: help:stock.config.settings,group_stock_production_lot:0
@@ -4830,7 +4830,7 @@ msgid ""
 "This allows you to assign a lot (or serial number) to the pickings and "
 "moves.  This can make it possible to know which production lot was sent to a"
 " certain client, ..."
-msgstr ""
+msgstr "Это позволяет вам назначить лот (или серийный номер) для упаковки и перемещения. Это может позволить узнать, какая лот продукции была отправлена определенному клиенту, ..."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.quantsact
@@ -4844,7 +4844,7 @@ msgstr ""
 msgid ""
 "This field should be completed only if everything inside the package share "
 "the same product, otherwise it doesn't really makes sense."
-msgstr ""
+msgstr "Это поле должно быть заполнено только в том случае, если все внутри пакета используют один и тот же продукт, иначе это не имеет смысла."
 
 #. module: stock
 #: help:stock.quant,owner_id:0
@@ -4865,7 +4865,7 @@ msgid ""
 "be moved. Lowering this quantity does not generate a backorder. Changing "
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
-msgstr ""
+msgstr "Это количество продуктов с точки зрения запасов. Для перемещений в состоянии 'сделано' это количество продуктов, которые были фактически перемещены. Для других перемещений это количество продукта, которое планируется перенести. Понижение этой величины не приводит к освобождению от заказа. Изменение этого количества в назначенных перемещениях влияет на резервирование продукта, и должно быть сделано с осторожностью."
 
 #. module: stock
 #: help:stock.location.path,auto:0
@@ -4879,7 +4879,7 @@ msgstr "Это используется для определения путей
 msgid ""
 "This option supplements the warehouse application by effectively "
 "implementing Push and Pull inventory flows through Routes."
-msgstr ""
+msgstr "Этот вариант дополняет приложение склад, эффективно реализуя потоки ресурсов толкая и тянуть через маршруты."
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -5042,7 +5042,7 @@ msgstr "Транзитное Место хранения"
 msgid ""
 "True if reserved quants changed, which mean we might need to recompute the "
 "package operations"
-msgstr ""
+msgstr "Истинно, если зарезервированные кванты изменены, что означает, что нам может потребоваться пересчитать операции упаковки"
 
 #. module: stock
 #: field:stock.picking.type,code:0
@@ -5450,7 +5450,7 @@ msgstr "Вы не можете отменить перемещение по ск
 #: code:addons/stock/stock.py:638
 #, python-format
 msgid "You cannot move to a location of type view %s."
-msgstr ""
+msgstr "Вы не можете перейти к расположению типа вида %s."
 
 #. module: stock
 #: code:addons/stock/stock.py:2625

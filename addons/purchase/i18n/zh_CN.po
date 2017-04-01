@@ -5,6 +5,7 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
 # Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
 # liAnGjiA <liangjia@qq.com>, 2016-2017
@@ -17,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-03-22 03:37+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
+"PO-Revision-Date: 2017-03-30 06:34+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -268,7 +269,7 @@ msgid ""
 "                You can generate a supplier invoice based on those receipts.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个新的进仓入库.\n                当开票方式是“基于进仓入库”时，这里能跟踪所有采购单的入库, 和还没有收到供应商发票的产品接收单。\n                您能基于这些收货单生成一个供应商发票。\n </p>"
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个新的进仓入库.\n                当开票方式是“基于入向送货”时，这里能跟踪所有采购单的入库, 和还没有收到供应商发票的产品接收单。\n                您能基于这些收货单生成一个供应商发票。\n </p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -468,7 +469,7 @@ msgid ""
 "Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n"
 "Based on generated invoice: create a draft invoice you can validate later.\n"
 "Based on incoming shipments: let you create an invoice when receipts are validated."
-msgstr "基于采购单行: 在 '发票管理 ->基于采购单行 '您可以单独为每个订单行开票。\n基于订单: 生成一个发票草稿供您以后确认。\n基于进仓入库: 入库后根据入库单手动开票。"
+msgstr "基于采购单行: 在 '发票管理 ->基于采购单行 '您可以单独为每个订单行开票。\n基于生成的发票: 生成一个发票草稿供您以后确认。\n基于入向送货: 让你在收据验证时创建发票。"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -479,7 +480,7 @@ msgstr "基于生成的发票草稿"
 #: selection:purchase.config.settings,default_invoice_method:0
 #: selection:purchase.order,invoice_method:0
 msgid "Based on incoming shipments"
-msgstr "基于进仓入库"
+msgstr "基于入向送货"
 
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
@@ -914,23 +915,23 @@ msgstr "在公开招标流程中，您可以对出价行进行比较，并为每
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 msgid "Incoming  Products"
-msgstr "产品入库"
+msgstr "入向产品"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
 msgid "Incoming Products"
-msgstr "产品入库"
+msgstr "入向产品"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_2_stock_picking
 #: field:purchase.order,shipment_count:0
 msgid "Incoming Shipments"
-msgstr "进来的送货"
+msgstr "入向送货"
 
 #. module: purchase
 #: view:stock.picking:purchase.view_picking_in_search_picking_inherit
 msgid "Incoming Shipments to Invoice"
-msgstr "待开票进来的送货"
+msgstr "待开票的入向送货"
 
 #. module: purchase
 #: field:purchase.order,incoterm_id:0
@@ -995,7 +996,7 @@ msgstr "已收到发票"
 #. module: purchase
 #: field:stock.picking,reception_to_invoice:0
 msgid "Invoiceable on incoming shipment?"
-msgstr "基于进仓入库开票？"
+msgstr "开票基于入向送货？"
 
 #. module: purchase
 #: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
@@ -1011,7 +1012,7 @@ msgstr "发票"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_form
 msgid "Invoices and Incoming Shipments"
-msgstr "开票和进来的送货"
+msgstr "发票和入向送货"
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -1202,7 +1203,7 @@ msgstr "基于草稿发票"
 #: model:ir.actions.act_window,name:purchase.action_picking_tree_picking_to_invoice
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_picking_to_invoice
 msgid "On Incoming Shipments"
-msgstr "基于进仓入库"
+msgstr "基于入向送货"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
@@ -1966,7 +1967,7 @@ msgstr "这价格表将替代当前业务伙伴采购的默认价格表"
 #. module: purchase
 #: help:purchase.order,picking_type_id:0
 msgid "This will determine picking type of incoming shipment"
-msgstr "这将确定收货的拣货类型"
+msgstr "这将确定入向送货的分拣类型"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
