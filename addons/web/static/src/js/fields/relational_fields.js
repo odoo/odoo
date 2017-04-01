@@ -746,9 +746,9 @@ var FieldOne2Many = FieldX2Many.extend({
         if (event && event.target === this && self.view.arch.tag === 'tree' && this.editable) {
             var command = event.data.changes[this.name];
             if (command.operation === 'UPDATE') {
-                var fieldsChanged = _.keys(command.data);
-                // FIXME: other fields might have change with onchange
-                this.renderer.confirmChange(record.data[this.name], command.id, fieldsChanged);
+                var state = record.data[this.name];
+                var fieldNames = state.getFieldNames();
+                this.renderer.confirmChange(state, command.id, fieldNames);
                 return $.when();
             }
         }
