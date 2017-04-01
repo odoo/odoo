@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
 # liAnGjiA <liangjia@qq.com>, 2015-2017
@@ -12,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-03-11 01:26+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
+"PO-Revision-Date: 2017-03-30 06:34+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -508,7 +509,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr "标准价格：成本价格一般在特定周期后人工更新（一般是每年）。\n平均价格：成本价格在每次收货时重新计算，并用做产品估价。 \n实际价格：成本价显示的是最后一出货的价格（例如：用于库存盘亏情况）。"
+msgstr "标准价格：成本价格一般在特定周期后人工更新（一般是每年）。\n平均价格：成本价格在每一入向送货重新计算，并用做产品估价。 \n实际价格：成本价显示的是最后一出货的价格（例如：用于库存盘亏情况）。"
 
 #. module: stock_account
 #: field:product.category,property_stock_account_input_categ:0
@@ -552,12 +553,12 @@ msgstr "库存估值科目"
 #. module: stock_account
 #: field:stock.location,valuation_in_account_id:0
 msgid "Stock Valuation Account (Incoming)"
-msgstr "库存估值科目（进货）"
+msgstr "库存估值科目（入向）"
 
 #. module: stock_account
 #: field:stock.location,valuation_out_account_id:0
 msgid "Stock Valuation Account (Outgoing)"
-msgstr "库存估值科目（出货）"
+msgstr "库存估值科目（出向）"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_history.py:30
