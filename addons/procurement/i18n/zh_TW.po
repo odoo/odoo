@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2017-03-11 03:53+0000\n"
+"PO-Revision-Date: 2017-03-26 06:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-8/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -79,7 +79,7 @@ msgstr "取消"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Cancel Procurement"
-msgstr ""
+msgstr "取消採購"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -90,12 +90,12 @@ msgstr "取消"
 #: code:addons/procurement/procurement.py:156
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr ""
+msgstr "不能刪除在 %s 狀態的採購訂單。"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Check Procurement"
-msgstr ""
+msgstr "採購檢查"
 
 #. module: procurement
 #: help:procurement.order,rule_id:0
@@ -103,7 +103,7 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but"
 " can be manually set by the procurement manager to force an unusual "
 "behavior."
-msgstr ""
+msgstr "選擇採購方案的規則。通常是由系統選擇的，但可以通過採購管理員進行手動設置，強制出現異常行為。"
 
 #. module: procurement
 #: field:procurement.order,company_id:0 field:procurement.rule,company_id:0
@@ -113,12 +113,12 @@ msgstr "公司"
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "在背景計算所有採購。"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
 msgid "Compute all schedulers"
-msgstr ""
+msgstr "計算所有調度"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -167,7 +167,7 @@ msgstr "異常情況"
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Exceptions"
-msgstr ""
+msgstr "異常情況"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
@@ -177,7 +177,7 @@ msgstr "外部備註..."
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Extra Information"
-msgstr ""
+msgstr "其它資訊"
 
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
@@ -187,7 +187,7 @@ msgstr "固定"
 #. module: procurement
 #: field:procurement.rule,group_id:0
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "固定的採購群組"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -208,7 +208,7 @@ msgstr "分組方式"
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr ""
+msgstr "同群組的採購"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -271,7 +271,7 @@ msgstr "延遲"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Leave Empty"
-msgstr ""
+msgstr "保持空白"
 
 #. module: procurement
 #: view:res.company:procurement.mrp_company
@@ -297,7 +297,7 @@ msgstr "名稱"
 #: code:addons/procurement/procurement.py:212
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "沒有與此採購相匹配的規則"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -345,12 +345,12 @@ msgstr "補貨組"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view
 msgid "Procurement Lines"
-msgstr ""
+msgstr "採購明細"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action
 msgid "Procurement Orders"
-msgstr ""
+msgstr "採購訂單"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
@@ -365,7 +365,7 @@ msgstr "補貨規則"
 #. module: procurement
 #: view:procurement.group:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "採購群組"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -398,17 +398,17 @@ msgstr "產品銷售單位"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "沿用"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "沿用選項"
 
 #. module: procurement
 #: field:procurement.rule,group_propagation_option:0
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "採購群組的傳播"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
@@ -428,7 +428,7 @@ msgstr "數量"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr ""
+msgstr "再次確認採購"
 
 #. module: procurement
 #: field:procurement.group,name:0
@@ -440,17 +440,17 @@ msgstr "參照"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr ""
+msgstr "建立此採購單的原始單據。\n此項由 Odoo 自動填寫。"
 
 #. module: procurement
 #: field:procurement.order,rule_id:0
 msgid "Rule"
-msgstr ""
+msgstr "規則"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Run Procurement"
-msgstr ""
+msgstr "執行採購"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
@@ -471,22 +471,22 @@ msgstr "預定日期"
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "預定月份"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Scheduler Parameters"
-msgstr ""
+msgstr "調度參數"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Scheduling"
-msgstr ""
+msgstr "調度"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Search Procurement"
-msgstr ""
+msgstr "搜索採購"
 
 #. module: procurement
 #: field:procurement.rule,sequence:0
@@ -512,7 +512,7 @@ msgstr "摘要"
 #. module: procurement
 #: help:procurement.rule,name:0
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr ""
+msgstr "這個欄位將填入分揀來源和庫存調動的名稱"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view
@@ -542,7 +542,7 @@ msgstr "非常緊急"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "e.g. SO005"
-msgstr ""
+msgstr "例如：SO005"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
