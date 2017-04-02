@@ -13,6 +13,7 @@ odoo.define('web.EditableListRenderer', function (require) {
  */
 
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var Domain = require('web.Domain');
 var ListRenderer = require('web.ListRenderer');
 
@@ -59,6 +60,10 @@ ListRenderer.include({
 
         this.currentRow = null;
         this.currentCol = null;
+
+        // the dirtyRows object is there to keep track of lines that have been
+        // modified by the user
+        this.dirtyRows = {};
     },
     /**
      * @override
@@ -76,6 +81,36 @@ ListRenderer.include({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @returns {Deferred}
+     */
+    canBeSaved: function () {
+        var self = this;
+        var invalidDirtyWidgets = [];
+        var invalidCleanWidgets = [];
+        _.each(this.widgets, function (widget) {
+            // Note: the isValid method may return a deferred in general, but
+            // not in this case.  Here, this method is called by a fieldone2many
+            // when it need to make sure the state is valid.  So, the widgets
+            // that we consider here are widgets that can be in a one2many, and
+            // we don't support a list inside a list (for now at least).
+            if (!widget.isValid()) {
+                if (self.dirtyRows[widget.dataPointID]) {
+                    invalidDirtyWidgets.push(widget);
+                } else {
+                    invalidCleanWidgets.push(widget);
+                }
+            }
+        });
+        if (invalidDirtyWidgets.length) {
+            // TODO: ask for confirmation, open dialog, and depending on user
+            // input, resolve and reject deferred
+        }
+        if (invalidCleanWidgets.length) {
+            this._unselectRow();
+        }
+        return $.when();
+    },
     /**
      * This method is called by the controller, when a change has been confirmed
      * by the model.  In that situation, we need to properly update the cell
@@ -452,30 +487,84 @@ ListRenderer.include({
      * This method is called whenever we click/move outside of a row that was
      * in edit mode. This is the moment we save all accumulated changes on that
      * row, if needed.
+     *
+     * If the current row is valid, then it can be unselected. If it is not
+     * valid, we need to check if it is dirty. If it is not dirty, it can be
+     * unselected (and will be removed). If it is dirty, we need to ask the user
+     * for confirmation.  If the user agrees, the row will be removed, otherwise
+     * nothing happens (it is still selected)
+     *
+     * @returns {Deferred} The deferred resolves if the row was unselected (and
+     *   possibly removed).  If may be rejected, when the row is dirty and the
+     *   user refuses to discard its changes.
      */
     _unselectRow: function () {
         var self = this;
+
+        // We need to protect against calling this method when no row is
+        // selected.
         if (this.currentRow === null) {
-            return;
+            return $.when();
         }
-        // trigger the save (if the record isn't dirty, the datamodel won't save
-        // anything)
-        this.trigger_up('field_changed', {
-            dataPointID: this.state.data[this.currentRow].id,
-            changes: {},
-            force_save: true,
+
+        var discarded = false;
+
+        function discardLine() {
+            self.trigger_up('discard_line', {id: currentLineID});
+            discarded = true;
+            def.resolve();
+        }
+
+        var rowWidgets = _.where(this.widgets, {__rowIndex: this.currentRow});
+        var isRowValid = _.every(rowWidgets, function (w) { return w.isValid();});
+        var $row = this.$('tbody tr.o_selected_row');
+
+        var def;
+
+        if (isRowValid) {
+            // trigger the save (if the record isn't dirty, the datamodel won't save
+            // anything)
+            self.trigger_up('field_changed', {
+                dataPointID: self.state.data[self.currentRow].id,
+                changes: {},
+                force_save: true,
+            });
+            self.trigger_up('change_mode', {mode: 'readonly'});
+            $row.removeClass('o_selected_row');
+            $row.find('td').removeClass('o_edit_mode');
+            def = $.when();
+        } else {
+            def = $.Deferred();
+            var currentLineID = this.state.data[this.currentRow].id;
+            var isDirty = this.dirtyRows[currentLineID];
+            if (isDirty) {
+                // if the currently selected record is dirty, we want to ask for
+                // confirmation before discarding it
+                var message = _t("The line has been modified, your changes will be discarded. Are you sure you want to discard the changes ?");
+                var options = {
+                    title: _t("Warning"),
+                    confirm_callback: discardLine,
+                    cancel_callback: def.reject.bind(def)
+                };
+                var dialog = Dialog.confirm(this, message, options);
+                dialog.$modal.on('hidden.bs.modal', def.reject.bind(def));
+            } else {
+                discardLine();
+            }
+        }
+
+        return def.then(function finalizeUnselect() {
+            var widgets = _.where(self.widgets, {__rowIndex: self.currentRow});
+            _.each(widgets, function (widget) {
+                self._setCellValue(self.currentRow, widget.__colIndex, true);
+                widget.destroy();
+            });
+            if (discarded) {
+                $row.remove();
+            }
+            self.widgets = _.without(self.widgets, widgets);
+            self.currentRow = null;
         });
-        this.trigger_up('change_mode', {mode: 'readonly'});
-        var widgets = _.where(this.widgets, {__rowIndex: this.currentRow});
-        _.each(widgets, function (widget) {
-            self._setCellValue(self.currentRow, widget.__colIndex, true);
-            widget.destroy();
-        });
-        self.widgets = _.without(self.widgets, widgets);
-        var $row = this.$('tbody tr').eq(this.currentRow);
-        $row.removeClass('o_selected_row');
-        $row.find('td').removeClass('o_edit_mode');
-        this.currentRow = null;
     },
 
     //--------------------------------------------------------------------------
@@ -547,6 +636,7 @@ ListRenderer.include({
      * @param {OdooEvent} event
      */
     _onFieldChanged: function (event) {
+        this.dirtyRows[event.data.dataPointID] = true;
         var $td = event.target.$el.parent();
         $td.addClass('o_field_dirty');
     },

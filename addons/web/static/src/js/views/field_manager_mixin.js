@@ -12,6 +12,7 @@ var BasicModel = require('web.BasicModel');
 
 var FieldManagerMixin = {
     custom_events: {
+        discard_line: '_onDiscardLine',
         field_changed: '_onFieldChanged',
         load: '_onLoad',
     },
@@ -58,6 +59,19 @@ var FieldManagerMixin = {
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * In some case, we may need to remove an element from a list, without going
+     * through the notifyChanges machinery.  The motivation for this is when the
+     * user click on 'Add an item' in a field one2many with a required field,
+     * then clicks somewhere else.  The new line need to be discarded, but we
+     * don't want to trigger a real notifyChanges (no need for that, and also,
+     * we don't want to rerender the UI).
+     *
+     * @param {OdooEvent} event
+     */
+    _onDiscardLine: function (event) {
+        this.model.removeLine(event.data.id);
+    },
     /**
      * This is the main job of the FMM: deciding what to do when a controlled
      * field changes.  Most of the time, it notifies the model that a change

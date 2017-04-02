@@ -1312,6 +1312,163 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many list (editable): discarding required empty data', function (assert) {
+        assert.expect(7);
+
+        this.data.turtle.fields.turtle_foo.required = true;
+        delete this.data.turtle.fields.turtle_foo.default;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree editable="top">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method) {
+                    assert.step(args.method);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // edit mode, then click on Add an item, then click elsewhere
+        assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            "should have 0 data rows");
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        form.$('label.o_form_label').first().click();
+        assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            "should still have 0 data rows");
+
+        // click on Add an item again, then click on save
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            "should still have 0 data rows");
+
+        assert.verifySteps(['read', 'default_get', 'default_get']);
+        form.destroy();
+    });
+
+    QUnit.test('unselecting a line with missing required data', function (assert) {
+        assert.expect(5);
+
+        this.data.turtle.fields.turtle_foo.required = true;
+        delete this.data.turtle.fields.turtle_foo.default;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree editable="top">' +
+                                '<field name="turtle_foo"/>' +
+                                '<field name="turtle_int"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        // edit mode, then click on Add an item, then click elsewhere
+        assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            "should have 0 data rows");
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            "should have 1 data rows");
+
+        // adding a value in the non required field, so it is dirty, but with
+        // a missing required field
+        form.$('input[name="turtle_int"]').val('12345').trigger('input');
+
+        // click elsewhere,
+        form.$('label.o_form_label').click();
+        assert.strictEqual($('.modal').length, 1,
+            'a confirmation model should be opened');
+
+        // click on cancel, the line should still be selected
+        $('.modal .modal-footer button.btn-default').click();
+        assert.strictEqual(form.$('tr.o_data_row.o_selected_row').length, 1,
+            "should still have 1 selected data row");
+
+        // click elsewhere, and click on ok (on the confirmation dialog)
+        form.$('label.o_form_label').click();
+        $('.modal .modal-footer button.btn-primary').click();
+        assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            "should have 0 data rows (invalid line has been discarded");
+
+        form.destroy();
+    });
+
+    QUnit.test('editing a o2m, with required field and onchange', function (assert) {
+        assert.expect(12);
+
+        this.data.turtle.fields.turtle_foo.required = true;
+        delete this.data.turtle.fields.turtle_foo.default;
+        this.data.turtle.onchanges = {
+            turtle_foo: function (obj) {
+                obj.turtle_int = obj.turtle_foo.length;
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree editable="top">' +
+                                '<field name="turtle_foo"/>' +
+                                '<field name="turtle_int"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method) {
+                    assert.step(args.method);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // edit mode, then click on Add an item
+        assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            "should have 0 data rows");
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_form_field_x2many_list_row_add a').click();
+
+        // input some text in required turtle_foo field
+        form.$('input[name="turtle_foo"]').val('aubergine').trigger('input');
+        assert.strictEqual(form.$('input[name="turtle_int"]').val(), "9",
+            "onchange should have been triggered");
+
+        // save and check everything is fine
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_data_row td:contains(aubergine)').length, 1,
+            "should have one row with turtle_foo value");
+        assert.strictEqual(form.$('.o_data_row td:contains(9)').length, 1,
+            "should have one row with turtle_int value");
+
+        assert.verifySteps(['read', 'default_get', 'onchange', 'onchange', 'write', 'read', 'read']);
+        form.destroy();
+    });
+
     QUnit.test('onchange in a one2many', function (assert) {
         assert.expect(1);
 

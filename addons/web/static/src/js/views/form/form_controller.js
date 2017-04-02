@@ -75,14 +75,11 @@ var FormController = BasicController.extend({
         return def;
     },
     /**
-     * @returns {boolean}
+     * @returns {Deferred}
      */
-    checkInvalidFields: function () {
-        var invalidFields = this.renderer.checkInvalidFields();
-        if (invalidFields.length) {
-            this._notifyInvalidFields(invalidFields);
-        }
-        return !!invalidFields.length;
+    canBeSaved: function () {
+        return this.renderer.canBeSaved()
+            .fail(this._notifyInvalidFields.bind(this));
     },
     /**
      * This method switches the form view in edit mode, with a new record.
@@ -225,17 +222,19 @@ var FormController = BasicController.extend({
             }
             return $.Deferred().resolve();
         } else {
-            if (this.checkInvalidFields()) {
-                return $.Deferred().reject();
-            } else {
-                return this.model.save(this.handle, {reload: shouldReload, savePoint: options.savePoint})
-                    .then(function () {
-                        if (!stayInEdit) {
-                            self._toReadOnlyMode();
-                        }
-                        self.isDirty = false;
+            return this.canBeSaved()
+                .then(function () {
+                    return self.model.save(self.handle, {
+                        reload: shouldReload,
+                        savePoint: options.savePoint
                     });
-            }
+                })
+                .then(function () {
+                    if (!stayInEdit) {
+                        self._toReadOnlyMode();
+                    }
+                    self.isDirty = false;
+                });
         }
     },
     /**

@@ -545,6 +545,22 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
+     * In some case, we may need to remove an element from a list, without going
+     * through the notifyChanges machinery.  The motivation for this is when the
+     * user click on 'Add an item' in a field one2many with a required field,
+     * then clicks somewhere else.  The new line need to be discarded, but we
+     * don't want to trigger a real notifyChanges (no need for that, and also,
+     * we don't want to rerender the UI).
+     *
+     * @param {string} elementID some valid element id. It is necessary that the
+     *   corresponding element has a parent.
+     */
+    removeLine: function (elementID) {
+        var record = this.localData[elementID];
+        var parent = this.localData[record.parentID];
+        parent._changes = _.without(parent._changes, elementID);
+    },
+    /**
      * Save a local resource, if needed.  This is a complicated operation,
      * - it needs to check all changes,
      * - generate commands for x2many fields,
@@ -1652,6 +1668,11 @@ var BasicModel = AbstractModel.extend({
                     removedIds = _.difference(list.res_ids, relIds);
                     addedIds = _.difference(relIds, list.res_ids);
                     keptIds = _.intersection(list.res_ids, relIds);
+
+                    // the didChange variable keep track of the fact that at
+                    // least one id was updated
+                    var didChange = false;
+
                     for (i = 0; i < keptIds.length; i++) {
                         relRecord = _.findWhere(relData, {res_id: keptIds[i]});
                         var command;
@@ -1659,10 +1680,17 @@ var BasicModel = AbstractModel.extend({
                             var r = this.get(relRecord.id, {raw: true});
                             var changes = _.pick(r.data, Object.keys(relRecord._changes));
                             command = x2ManyCommands.update(relRecord.res_id, changes);
+                            didChange = true;
                         } else {
                             command = x2ManyCommands.link_to(keptIds[i]);
                         }
                         commands[fieldName].push(command);
+                    }
+                    if (!didChange && addedIds.length === 0 && removedIds.length === 0) {
+                        // in this situation, we have no changed ids, no added
+                        // ids and no removed ids, so we can safely ignore the
+                        // last changes
+                        commands[fieldName] = null;
                     }
                     for (i = 0; i < addedIds.length; i++) {
                         relRecord = _.findWhere(relData, {res_id: addedIds[i]});
