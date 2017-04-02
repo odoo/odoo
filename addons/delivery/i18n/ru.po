@@ -3,32 +3,14 @@
 # * delivery
 # 
 # Translators:
-# Максим Дронь <dronmax@gmail.com>, 2016
-# KingOPl Slav <87slava13@gmail.com>, 2016
-# Masha Koc <mariya.kos.ua@gmail.com>, 2016
-# Sergey Vilizhanin <sv@grimmette.ru>, 2016
-# Andrey Samorukov <andrey.samorukov@me.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Danil Bochevkin <danil.borchevkin@gmail.com>, 2016
-# Viktor Pogrebniak <vp@aifil.ru>, 2016
-# Gennady Marchenko <gennadym@gmail.com>, 2016
-# Alex Puchkov <ap@alteco.co>, 2016
-# Max Belyanin <maxbelyanin@gmail.com>, 2016
-# Denis Trepalin <zekarious@gmail.com>, 2016
-# Artur Komishenko <Archi1792@gmail.com>, 2016
-# Evgeny <transingularity@gmail.com>, 2016
-# Vitaly Sotnikov <veesot@yandex.ru>, 2016
-# Андрей Гусев <gaussgss@gmail.com>, 2016
 # Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
-# Василий Коробатов <boxat@mail.ru>, 2016
-# Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Артур Чеботарь <artcha.chebotar@gmail.com>, 2017\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,6 +66,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p<p class=\"oe_view_nocontent\">\n"
+"                    Купить Odoo Enterprise сейчас, чтобы получить больше провайдеров.\n"
+"                </p>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
@@ -140,6 +125,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Товарный продукт - это продукт, для которого вы управляете запасом. Должно быть установлено приложение \"Инвентарь\".\n"
+"С другой стороны, расходный продукт - это продукт, для которого запасы не управляются.\n"
+"Услуга - это нематериальный продукт, который вы предоставляете.\n"
+"Цифровой контент - это нематериальный продукт, который вы продаете в Интернете. Файлы, прикрепленные к продуктам, продаются в электронной торговле, например, в электронных книгах, музыке, картинках ... Необходимо установить модуль \"Цифровой продукт\"."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
@@ -149,7 +138,7 @@ msgstr "Требуется реакция"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "Действие при подтверждении заказов на поставку"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -281,6 +270,8 @@ msgid ""
 "Can be changed during the 'put in pack' to adjust the weight of the "
 "shipping."
 msgstr ""
+"Может быть изменен во время 'положить в пакет', чтобы отрегулировать вес "
+"доставки."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -429,7 +420,7 @@ msgstr "Срок поставки заказчика"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Справка клиента"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -481,12 +472,12 @@ msgstr "Доставка"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "Перевозчик доставки"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "Информация о доставке"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -639,6 +630,8 @@ msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
 msgstr ""
+"Заполнение этой формы позволяет фильтровать носители доставки в соответствии"
+" с адресом доставки вашего клиента."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -693,12 +686,12 @@ msgstr "Бесплатно, если итоговая сумма заказа п
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate"
-msgstr ""
+msgstr "Получить оценку"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "Получить процентную ставку и создать отправку"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
@@ -735,7 +728,7 @@ msgstr "Высота"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr ""
+msgstr "Высота должна быть положительной"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -827,12 +820,12 @@ msgstr "Входящие"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "Установить дополнительных провайдеров"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "Уровень интеграции"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
@@ -924,7 +917,7 @@ msgstr "Длина"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Length must be positive"
-msgstr ""
+msgstr "Длина должна быть положительной"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
@@ -939,7 +932,7 @@ msgstr "Логистические единицы"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Manage Package Type"
-msgstr ""
+msgstr "Управление типом упаковки"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
@@ -975,17 +968,17 @@ msgstr "Дата маржи до"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr ""
+msgstr "Маржа не может быть ниже -100%"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "Максимальный вес"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "Максимальный вес должен быть положительным"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
@@ -995,7 +988,7 @@ msgstr "Максимальное значение"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr ""
+msgstr "Максимальный вес, упакованный в эту упаковку"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
@@ -1047,7 +1040,7 @@ msgstr "Имя"
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
 msgid "No carrier integration"
-msgstr ""
+msgstr "Нет интеграции с доставщиком"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -1133,14 +1126,14 @@ msgstr "Пакет"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
 msgid "Package Code"
-msgstr ""
+msgstr "Код пакета"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:128
 #, python-format
 msgid "Package Details"
-msgstr ""
+msgstr "Сведения о пакете"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1203,7 +1196,7 @@ msgstr "Позиции прайс-листа"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
 msgid "Pricelist item ids"
-msgstr ""
+msgstr "Прайс лист элементов ids"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1365,12 +1358,12 @@ msgstr "Правила повторных заказов"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
 msgid "Reordering max qty"
-msgstr ""
+msgstr "Переупорядочение максимальное кол."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
 msgid "Reordering min qty"
-msgstr ""
+msgstr "Переупорядочение минимум кол."
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -1469,6 +1462,8 @@ msgstr "Установить цену"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
+"Установите значение Истина, если ваши учетные данные сертифицированы для "
+"производства."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:147
@@ -1477,6 +1472,8 @@ msgid ""
 "Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost:"
 " %.2f %s"
 msgstr ""
+"Упаковка отправлена к перевозчику %s для экспедиции с номером отслеживания "
+"%s<br/>Стоимость: %.2f %s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
@@ -1486,7 +1483,7 @@ msgstr "Стоимость доставки"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Вес с упаковкой"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1545,12 +1542,12 @@ msgstr "Счет стоимости исходящих ТМЦ"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
 msgid "Stock move ids"
-msgstr ""
+msgstr "Движение запасов ids"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Stock quant ids"
-msgstr ""
+msgstr "Количество запасов ids"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
@@ -1590,12 +1587,14 @@ msgstr "Сумма Количества в Счет-фактурах Поста�
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Техническое поле. Используется для поиска по прайс-листам, не хранится в "
+"базе данных."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "Технический: используется для вычисления количества."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -1626,6 +1625,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"Продажная цена управляется из шаблона продукта. Нажмите кнопку 'Варианты "
+"цен', чтобы установить цены дополнительных атрибутов."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
@@ -1697,7 +1698,7 @@ msgstr "Это сумма дополнительной цены всех атр�
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "Этот процент будет добавлен к цене доставки."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
@@ -1773,7 +1774,7 @@ msgstr "Отслеживание"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "Ссылка для отслеживания"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1890,12 +1891,12 @@ msgstr "Вес * объем"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
 msgid "Weight Unit of Measure"
-msgstr ""
+msgstr "Единица измерения веса"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "Вес для перевозкы груза"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
@@ -1977,7 +1978,7 @@ msgstr "Ширина"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Width must be positive"
-msgstr ""
+msgstr "Ширина должна быть положительной"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:187
@@ -1986,6 +1987,8 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"Вы отправляете различные типы упаковок в одной отгрузке.\n"
+"Типы упаковки: %s"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:163
@@ -2010,4 +2013,4 @@ msgstr "Почтовые До"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr " например UPS Express"
+msgstr "нап. UPS Экспресс"
