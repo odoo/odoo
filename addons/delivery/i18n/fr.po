@@ -29,13 +29,14 @@
 # Nicolas Seinlet <nicolas@seinlet.com>, 2016
 # zoe <yann.hoareau@migs.re>, 2016
 # Richard Mathot <rim@odoo.com>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Richard Mathot <rim@odoo.com>, 2017\n"
+"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -150,6 +151,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Un produit « stockable » est un produit pour lequel vous désirez gérer le stock. L'application « Inventaire » doit être installée.\n"
+"Un produit « consommable », en revanche, est un produit non géré en stock.\n"
+"Un service est un bien immatériel que vous fournissez ou achetez.\n"
+"Un contenu numérique est un bien immatériel que vous vendez en ligne. Les fichier liés aux produits sont ceux vendu sur la boutique en ligne (livres électronique, musique, photos, …). Le module « Produits numériques » doit être installé."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
@@ -396,6 +401,8 @@ msgid ""
 "Create a task under this project on sale order validation. This setting must"
 " be set for each company."
 msgstr ""
+"Crée une tâche au sein de ce projet lors d'une validation de commande vente."
+" Ce paramétrage est propre à chaque société."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
@@ -958,6 +965,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sale order validation and track the work hours."
 msgstr ""
+"Définition manuelle des quantités sur la commande : facture selon les quantités saisies manuellement, sans création de compte analytique.\n"
+"Feuilles de temps sur les contrats : facture selon les heures passées en fonction de la feuille de temps liée.\n"
+"Créer une tâche et suivre les heures : crée une tâche à validation de la commande et effectue un suivi du temps passé."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
@@ -1110,6 +1120,8 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"Sur quantités commandées : facture en fonction des quantités commandées.\n"
+"Sur quantités reçues : facture en fonction des quantités reçues"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
@@ -1122,6 +1134,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"Quantités commandées : facturation basée sur les quantités commandées par le client.\n"
+"Quantités livrées : facturation basée sur les quantités que le fournisseur a livré (temps passé dans le cas de prestations)."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty

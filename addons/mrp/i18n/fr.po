@@ -945,7 +945,7 @@ msgstr "Annuler"
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_is_done
@@ -3509,7 +3509,13 @@ msgstr ""
 " concernés d'abord."
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:123
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You can only produce 1.0 %s for products with unique serial number."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:135
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
 msgstr ""

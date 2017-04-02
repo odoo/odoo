@@ -66,7 +66,7 @@ msgstr ""
 "\n"
 "<p>Dragă ${object.partner_id.name}\n"
 "% set access_action = object.get_access_action()\n"
-"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'\n"
+"% set doc_name = 'oferta' if object.state in ('draft', 'sent') else 'comanda'\n"
 "% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
 "% set access_name = is_online and object.template_id and 'Acceptați și plătiți %s online' % doc_name or 'Vedeți %s' % doc_name\n"
 "% set access_url = is_online and access_action['url'] or object.get_signup_url()\n"
@@ -122,7 +122,7 @@ msgstr "Linii"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_count
 msgid "# of Orders"
-msgstr ""
+msgstr "# de comenzi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
@@ -140,6 +140,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -147,7 +149,7 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and 'Cotație' "
+"${object.company_id.name} ${object.state in ('draft', 'sent') and 'Ofertă' "
 "or 'Comandă'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
@@ -428,7 +430,7 @@ msgstr "Avans: %s"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Advanced pricing based on formulas (discounts, margins, rounding)"
-msgstr ""
+msgstr "Avansat - Preț bazat pe o formulă (reducere, profit, rotunjire)"
 
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
@@ -1212,6 +1214,8 @@ msgid ""
 "Let's create a new quotation.<br/><i>Note that colored buttons usually "
 "points to the next logical actions in any screen.</i>"
 msgstr ""
+"Să facem o ofertă nouă.<br/><i>Note that colored buttons usually points to "
+"the next logical actions in any screen.</i>"
 
 #. module: sale
 #. openerp-web
