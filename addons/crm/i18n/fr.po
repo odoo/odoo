@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Clo <clo@odoo.com>, 2016
 # Christophe Dubuit <cdubuit@yahoo.com>, 2016
@@ -170,6 +170,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>Bonjour ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>L'opportunité <strong>${object.name}</strong> n'a connu aucune activité depuis au moins 5 jours.</p>\n"
+"%if object.description:\n"
+"<p>Voici sa description :</p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Merci !</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -1720,7 +1727,7 @@ msgstr "Annuler"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

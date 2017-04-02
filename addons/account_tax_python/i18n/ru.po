@@ -6,13 +6,14 @@
 # Denis Trepalin <zekarious@gmail.com>, 2017
 # Алексей Билькевич (belskiy) <mmmbrsk@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>, 2017\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +39,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Вычислите сумму налога, установив переменную 'результат'.\n"
+"\n"
+": параметр base_amount: float, фактическая сумма, на которую применяется налог\n"
+": параметр price_unit: float\n"
+": параметр количество: float\n"
+": параметр компании: res.company набор записей singleton\n"
+": параметр продукта: product.product набор записей singleton или Нет\n"
+": параметр партнера: res.partner набор записей singleton или Нет"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
@@ -50,6 +59,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Вычислите сумму налога, установив переменную 'результат'.\n"
+"\n"
+": параметр base_amount: float, фактическая сумма, на которую применяется налог\n"
+": параметр price_unit: float\n"
+": параметр количество: float\n"
+": параметр продукта: product.product набор записей singleton или Нет\n"
+": параметр партнера: res.partner набор записей singleton или Нет"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
@@ -62,6 +78,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Определите, будет ли налог применяться, установив переменную 'результат' в значение Истина или Ложь.\n"
+"\n"
+": параметр price_unit: float\n"
+": параметр продукта: float\n"
+": параметр компании: res.company набор записей singleton\n"
+": параметр продукта: product.product набор записей singleton или Нет\n"
+": параметр партнера: res.partner набор записей singleton или Нет"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
@@ -73,6 +96,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Определите, будет ли налог применяться, установив переменную 'результат' в значение Истина или Ложь.\n"
+"\n"
+": параметр price_unit: float\n"
+": параметр продукта: float\n"
+": параметр продукта: product.product набор записей singleton или Нет\n"
+": параметр партнера: res.partner набор записей singleton или Нет"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute
