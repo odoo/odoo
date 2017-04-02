@@ -560,6 +560,28 @@ var FieldX2Many = AbstractField.extend({
     isSet: function () {
         return true;
     },
+    /**
+     * This is a tricky override.  For relational fields, we don't just need to
+     * know if the field is valid.  We also need to discard some invalid lines,
+     * if the user is ok with it (or automatically if the invalid line is not
+     * dirty). This is the reason why we need to change the signature of the
+     * AbstractField isValid method to optionally return a deferred.
+     *
+     * @override
+     * @returns {boolean|Deferred} if there is a renderer (sub list or kanban
+     *   view), we may need to ask the user => it will return a deferred.
+     *   Otherwise, it returns a boolean
+     */
+    isValid: function () {
+        if (!this.renderer) {
+            return this._super.apply(this, arguments);
+        }
+        var def = $.Deferred();
+        this.renderer.canBeSaved()
+            .then(def.resolve.bind(def, true))
+            .fail(def.resolve.bind(def, false));
+        return def;
+    },
 
     //--------------------------------------------------------------------------
     // Private

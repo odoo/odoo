@@ -153,7 +153,7 @@ var AbstractField = Widget.extend({
 
         // the 'required' flag is basically only needed to determine if the widget
         // is in a valid state (not valid if empty and required)
-        this.required = options.required || false;
+        this.required = options.required || this.field.required;
 
         // the 'idForLabel' is the (html) id that should be set to the relevent
         // dom entity.  If done correctly, clicking on the corresponding label
@@ -202,7 +202,13 @@ var AbstractField = Widget.extend({
      * a field widget is valid if its value is valid and if there is a value when
      * it is required.  This is checked before saving a record, by the form view.
      *
-     * @returns {boolean}
+     * Note: the return value may be a boolean.  It is necessary for some fields
+     * (x2many) to sometimes ask confirmation to the user if the current dirty
+     * invalid line can be discarded.  This is an asynchronous operation, so we
+     * need the expressivity of something like a deferred.
+     *
+     * @returns {boolean|Deferred} true/false if the widget is valid, or a
+     *   deferred which resolves to true/false if the widget is valid or not
      */
     isValid: function () {
         var is_required = this.required;

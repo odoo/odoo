@@ -42,22 +42,39 @@ return BasicRenderer.extend({
      * toggling the o_form_invalid css class.  It has to be done both on the
      * widget, and on the label, if there is a label.
      *
-     * @returns {string[]} the list of invalid field names
+     * @returns {Deferred}
+     *   if it fails, it gives the list of invalid field names
      */
-    checkInvalidFields: function () {
+    canBeSaved: function () {
         var self = this;
-        var invalid_fields = [];
-        _.each(this.widgets, function (widget) {
-            var is_valid = widget.isValid();
-            if (!is_valid) {
-                invalid_fields.push(widget.name);
+        var invalidFields = [];
+        var defs = [];
+
+        function markWidget(widget, isValid) {
+            if (!isValid) {
+                invalidFields.push(widget.name);
             }
-            widget.$el.toggleClass('o_form_invalid', !is_valid);
+            widget.$el.toggleClass('o_form_invalid', !isValid);
             var idForLabel = self.idsForLabels[widget.name];
             var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
-            $label.toggleClass('o_form_invalid', !is_valid);
+            $label.toggleClass('o_form_invalid', !isValid);
+        }
+
+        _.each(this.widgets, function (widget) {
+            var isValid = widget.isValid();
+            if (isValid instanceof $.Deferred) {
+                defs.push(isValid.then(function (isValid) {
+                    markWidget(widget, isValid);
+                }));
+            } else {
+                markWidget(widget, isValid);
+            }
         });
-        return invalid_fields;
+        return $.when.apply($, defs).then(function () {
+            if (invalidFields.length) {
+                return $.Deferred().reject(invalidFields);
+            }
+        });
     },
     /**
      * returns the active tab pages for each notebook
