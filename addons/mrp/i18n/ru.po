@@ -18,13 +18,14 @@
 # Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2016
 # Danil Bochevkin <danil.borchevkin@gmail.com>, 2016
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:42+0000\n"
 "PO-Revision-Date: 2016-10-10 08:42+0000\n"
-"Last-Translator: Артур Чеботарь <artcha.chebotar@gmail.com>, 2017\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3480,7 +3481,15 @@ msgstr ""
 "Пожалуйста, прежде закройте или отмените его."
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:123
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You can only produce 1.0 %s for products with unique serial number."
+msgstr ""
+"Вы можете производить только 1.0 %s для продуктов с уникальным серийным "
+"номером."
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:135
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
 msgstr ""

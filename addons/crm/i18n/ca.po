@@ -8,7 +8,7 @@
 # Gemma Bochaca <gemma.bochaca@gmail.com>, 2016
 # Eugeni Chafer <eugenichafer@me.com>, 2016
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
-# francescbassas <francesc@babu.cat>, 2016
+# Francesc Bassas i Bullich <francesc@babu.cat>, 2016
 # Josep Sànchez <papapep@gmx.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Eric Antones <eantones@users.noreply.github.com>, 2016
@@ -130,6 +130,107 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"\n"
+"<div style=\"margin: 10px auto;\">\n"
+"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Inici de sessió automàtic</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                        <p style=\"color:#875A7B;margin:0\" >Visca!</p><br>\n"
+"\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>La teva aplicació de CRM Odoo està en marxa i funcionant</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">Que segueix?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                    <li dir=\"ltr\">\n"
+"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>Prova creant una avantatja enviant un e-mail a </span>\n"
+"                                            <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                            </a>\n"
+"                                        </p>\n"
+"                                    </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>\n"
+"                                        Segueixi les seves oportunitats en el seu embut de venda simplement arrossegant i deixant anar les targetes d'una columna a una altra.</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Descobreix el </span>\n"
+"                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">planificador de CRM</span></a></span>\n"
+"                                <span> per activar caracteristiques extra</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Asigni automaticament el seus client potencials als seus venedors amb la puntuació més añta</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Mantingui's amb contacte amb el client potencial amb eficients campanyes de correu electrònic,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Obtingui informació d'alta qualitat de les enquestes,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Obtingui informes intel·ligents i panells de control precisos,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>I molt més...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Necessita ajuda?</span>\n"
+"                                <span style=\"font-style:italic;\">Vostè no està sol</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>Estarem encantats d'ajudar-lo en el camí. Poseu-vos en contacte amb nosaltres a \n"
+"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
+"                                help@odoo.com</span></a> si vostè té qualsevol pregunta. També pot descobrir com treure el màxim partit al CRM Odoo amb la nostra </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/9.0/crm.html\">\n"
+"                                <span style=\"text-decoration:underline;\">documentació de l'usuari</span></a>\n"
+"                                </span><span> o amb la nostra </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">documentació de l'Api</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Gaudeix de la seva experiència amb Odoo,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>L'equip Odoo<br/>PS: Gent que li encanta Odoo, comprova </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">que hi tenen a dir.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -142,6 +243,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>Hola ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>L'oportunitat <strong>${object.name}</strong> no ha tingut cap activitat des de fa 5 dies.</p>\n"
+"%if object.description:\n"
+"<p>Aquí està la descripció sobre l'oportunitat: </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Gràcies!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -229,6 +337,12 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"<p>Hola ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>L'oportunitat <strong>${object.name}</strong> no ha tingut cap activitat des de fa 5 dies.</p>\n"
+"%if object.description:\n"
+"<p>Aquí està la descripció sobre l'oportunitat: </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Gràcies!</p>\n"
 
 #. module: crm
 #. openerp-web
@@ -240,6 +354,10 @@ msgid ""
 "after</li><li>second call 3 days after, ...</li></ol><p "
 "class='mb0'><i>Select a standard activity for now on.</i></p>"
 msgstr ""
+"<p>Podràs personalitzar les activitats de seguiment. "
+"Exemples:</p><ol><li>e-mail introductori</li><li>truca 10 dies "
+"després</li><li>segona trucada 3 dies després, ...</li></ol><p "
+"class='mb0'><i>Selecciona una activitat estàndard a partir d'ara.</i></p>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1008,7 +1126,8 @@ msgid ""
 "                    create new opportunity. Update your business card, phone book, social media,...\n"
 "                    Send an email right now and see it here."
 msgstr ""
-"Tots els correus entrats a %s crearan automàticament una nova oportunitat."
+"Tots els correus entrants %s crearan automàticament una oportunitat. Actualitzi la seva targeta de negocis, agenda de telèfons, mitjans de comunicació social, ...\n"
+"Enviï un correu ara mateix i vegi-ho aquí."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1098,7 +1217,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Attach a qualification form to every house opportunity"
-msgstr "Adjunta un formulari de qualificació a cada amb oportunitat"
+msgstr "Adjunta un formulari de qualificació a cada casa amb oportunitat"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1279,7 +1398,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:54
 #, python-format
 msgid "Click on an opportunity to zoom to it."
-msgstr "Feu clic per crear una oportunitat per fer zoom en aquest client."
+msgstr "Feu clic per crear una oportunitat per fer zoom en ella."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:867
@@ -1310,7 +1429,7 @@ msgstr "Clica per definir una nova etiqueta de vendes."
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Click to set a new stage in your opportunity pipeline."
-msgstr ""
+msgstr "Fes clic per configurar una nova etapa al seu canal d'oportunitats."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1330,6 +1449,8 @@ msgid ""
 "Close opportunity if: \"pre-sales days * $500\" < \"expected revenue\" * "
 "probability"
 msgstr ""
+"Tancar oportunitat si: \"dies de prevenda * 500 €\" < \"remuneració "
+"prevista\" * probabilitat"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_closed
@@ -1400,7 +1521,7 @@ msgstr "Felicitats, ha acabat!"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor7
 msgid "Consulting"
-msgstr ""
+msgstr "Consultoria"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1524,7 +1645,7 @@ msgstr "Crear venedors"
 #: code:addons/crm/static/src/js/web_planner_crm.js:31
 #, python-format
 msgid "Create a Proof of Concept with consultants"
-msgstr ""
+msgstr "Crear una prova de concepte amb els consultors"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -2056,7 +2177,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/web_planner_crm.js:32
 #, python-format
 msgid "Final Proposal sent"
-msgstr ""
+msgstr "Proposta final enviada"
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -2122,7 +2243,7 @@ msgstr "De %s : %s"
 #: code:addons/crm/static/src/js/web_planner_crm.js:31
 #, python-format
 msgid "GAP analysis with customer"
-msgstr ""
+msgstr "Anàlisis GAP amb un client"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2155,6 +2276,8 @@ msgid ""
 "Good job! Your completed the tour of the CRM. You can continue with the "
 "<b>implementation guide</b> to help you setup the CRM in your company."
 msgstr ""
+"Bona feina! Ha completat el tour del CRM. Pot continuar amb la <b>guia "
+"d'implementació</b> per ajudarlo a configurar el CRM de la seva companyia."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2229,6 +2352,8 @@ msgid ""
 "Here is the list of your next activities. Those are linked to your opportunities.\n"
 "                   To set a next activity, go on an opportunity and add one. It will then appear in this list."
 msgstr ""
+"Aquí té una llista de les següents activitats. Aquestes estan enllaçades amb les seves oportunitats.\n"
+"Per configurar la següent activitat, vagi a oportunitats i afegeixi una. Apareixerà en aquesta llista."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_hidden
@@ -2303,6 +2428,9 @@ msgid ""
 "                        the foundations to a strong process leading to\n"
 "                        continuous improvements of your sales teams."
 msgstr ""
+"Si has seguit els passos anteriors, ja ha d'haver configurat els fonaments "
+"d'un fort procés que el guiï cap a contínues millores per al seu equip de "
+"vendes."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2474,7 +2602,7 @@ msgstr "Última actualització el"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "Última notificació marcada com a llegida des de la base del calendari"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:841
@@ -2785,6 +2913,7 @@ msgstr ""
 #, python-format
 msgid "Meeting with a demo. Set Fields: expected revenue, closing date"
 msgstr ""
+"Reunio amb una demo. Establir camps: ingressos esperats, data de tancament"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -2993,7 +3122,7 @@ msgstr "Nom"
 #: code:addons/crm/static/src/js/web_planner_crm.js:28
 #, python-format
 msgid "Needs assessment"
-msgstr ""
+msgstr "Necessita valoració"
 
 #. module: crm
 #. openerp-web
@@ -3023,7 +3152,7 @@ msgstr "Nova oportunitat"
 #: code:addons/crm/static/src/js/web_planner_crm.js:17
 #, python-format
 msgid "New propspect assigned to the right salesperson"
-msgstr ""
+msgstr "Nova perspectiva assignada al venedor adequat"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action_next
@@ -3396,14 +3525,14 @@ msgstr "Propietari"
 #: code:addons/crm/static/src/js/web_planner_crm.js:28
 #, python-format
 msgid "POC Sold"
-msgstr ""
+msgstr "Pagament fora de tancament venut"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:32
 #, python-format
 msgid "POC demonstration to the customer"
-msgstr ""
+msgstr "Demostració de pagament fora de tancament al client"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_parent_id
@@ -3484,7 +3613,7 @@ msgstr "Telèfon"
 #: code:addons/crm/static/src/js/web_planner_crm.js:24
 #, python-format
 msgid "Phone call with following questions: ..."
-msgstr ""
+msgstr "Trucades de telèfon amb les següents preguntes: ..."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3613,19 +3742,19 @@ msgstr "Probabilitat (%)"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_expected_revenue
 msgid "Probable Turnover"
-msgstr "Facturació probable"
+msgstr "Volum de negoci probable"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor1
 msgid "Product"
-msgstr ""
+msgstr "Producte"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:23
 #, python-format
 msgid "Product Demonstration"
-msgstr ""
+msgstr "Demostració del producte"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3670,28 +3799,28 @@ msgstr "Qualificat"
 #: code:addons/crm/static/src/js/web_planner_crm.js:15
 #, python-format
 msgid "Qualified Sponsor"
-msgstr ""
+msgstr "Patrocinador qualificat"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:26
 #, python-format
 msgid "Quotation sent"
-msgstr ""
+msgstr "Pressupost enviat"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:20
 #, python-format
 msgid "Quotation sent to customer"
-msgstr ""
+msgstr "Pressupost enviat al client"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/web_planner_crm.js:21
 #, python-format
 msgid "Quotation signed by the customer"
-msgstr ""
+msgstr "Pressupost signat pel client"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_priority
@@ -3711,6 +3840,8 @@ msgid ""
 "Ready to boost you sales? Your <b>sales pipeline</b> can be found here, "
 "under this app."
 msgstr ""
+"Preparat per augmentar les seves vendes? La seva <b>línia de vendes</b> pot "
+"ser trobada aquí, sota aquesta app."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -3761,6 +3892,8 @@ msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and "
 "object.partner_id.name or object.contact_name}"
 msgstr ""
+"Recordatori: L'iniciativa ${object.name} de ${object.partner_id != False and"
+" object.partner_id.name or object.contact_name}"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3940,7 +4073,7 @@ msgstr "Seqüència"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor3
 msgid "Services"
-msgstr ""
+msgstr "Serveis"
 
 #. module: crm
 #. openerp-web
@@ -3949,6 +4082,8 @@ msgstr ""
 #, python-format
 msgid "Set fields: Expected Revenue, Expected Closing Date, Next Action"
 msgstr ""
+"Establir camps: ingressos esperats, data de tancament esperada, acció "
+"següent"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_set_team_sales_department
@@ -4064,6 +4199,8 @@ msgid ""
 "Specific team that uses this stage. Other teams will not be able to see or "
 "use this stage."
 msgstr ""
+"Equip específic que utilitza aquesta etapa. Altres equips no seran capaços "
+"d'utilitzar o veure aquesta etapa."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_stage_id
@@ -4115,6 +4252,8 @@ msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
 msgstr ""
+"Els estats permeten als comercials a seguir fàcilment com una oportunitat "
+"específica és posicionada al cicle de vendes."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_state
@@ -4228,7 +4367,7 @@ msgstr "Territori"
 #: code:addons/crm/static/src/js/web_planner_crm.js:20
 #, python-format
 msgid "The customer came back to you to discuss your quotation"
-msgstr ""
+msgstr "El client torna per discutir el pressupost"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_id
@@ -4341,6 +4480,9 @@ msgid ""
 "\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
 msgstr ""
+"Hi ha diverses formes perquè la seva empresa pugui generar clients potencials amb Odoo CRM. Un d'ells és l'ús de correu electrònic genèric de la seva empresa com un disparador per crear una nova pista al sistema. En Odoo, cada un dels seus equips de vendes està vinculat a la seva pròpia adreça de correu electrònic des que les perspectives poden arribar a ells. Per exemple, si l'adreça de correu electrònic personal del seu equip de directe és **direct@mycompany.example.com**, cada correu electrònic enviat quan un client potencial el contacta crearà automàticament una nova oportunitat en l'equip de vendes.\n"
+"\n"
+"És la forma més fàcil per integrar Odoo amb aplicacions de tercers."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -4385,6 +4527,8 @@ msgid ""
 "This opportunity has <b>no next activity scheduled</b>. <i>Click to set "
 "one.</i>"
 msgstr ""
+"Aquesta oportunitat <b>no te cap activitat més programada</b>. <i>Faci clic "
+"per afegir-ne una</i>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_probability
@@ -4443,6 +4587,8 @@ msgid ""
 "applied to it. This is settable in the pricelist configuration if you allow "
 "discounts."
 msgstr ""
+"Per estimular als clients, mostri'ls el preu amb un descompte aplicat a ell."
+" Això és configurable en la configuració de preus si permet els descomptes."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -4577,6 +4723,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Use our import templates to get your catalog ready in no time!"
 msgstr ""
+"Utilitzi el nostre importador de plantilles per tenir el catàleg llest en un"
+" moment!"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4596,6 +4744,8 @@ msgstr ""
 #, python-format
 msgid "Use the <b>implementation guide</b> to setup the CRM in your company."
 msgstr ""
+"Utilitzi la <b>guia d'implementació</b> per configurar el CRM en la teva "
+"companyia."
 
 #. module: crm
 #. openerp-web
@@ -4752,8 +4902,8 @@ msgstr ""
 msgid ""
 "What are the main KPIs you need to track for your the sales activities?"
 msgstr ""
-"Quines són les principals KPIs que necessita segui per les seves activitats "
-"de venda?"
+"Quines són les principals KPIs que necessita seguir per les seves activitats"
+" de venda?"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4823,6 +4973,8 @@ msgid ""
 "You are in discussion with the decision maker and HE agreed on his pain "
 "points"
 msgstr ""
+"Estàs en discussió amb el prenedor de decisions i ell està d'acord amb els "
+"seus punts crítics"
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:306

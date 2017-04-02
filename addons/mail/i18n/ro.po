@@ -305,8 +305,7 @@ msgstr ""
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr ""
-"<div><p>Bună,</p><p>%s vă invită să urmăriți %s document: %s.</p></div>"
+msgstr "<div><p>Bună,</p><p>%s vă invită să urmăriți %s : %s.</p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:26
@@ -360,6 +359,12 @@ msgid ""
 "                            </span>\n"
 "                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                <strong>Email în masă</strong> on\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">înregistrările selectate</span>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">filtrul curent de căutare</span>.\n"
+"                            </span>\n"
+"                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Urmăritorii documentului și</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1334,7 +1339,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/followers.js:114
 #, python-format
 msgid "Edit Subscription of "
-msgstr "Editare abonament pentru"
+msgstr "Editare abonament pentru "
 
 #. module: mail
 #. openerp-web
@@ -2175,7 +2180,7 @@ msgstr "Asistent invitație"
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Invited people only"
-msgstr ""
+msgstr "Numai persoane invitate"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_is_follower
@@ -3804,7 +3809,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Selected group of users"
-msgstr ""
+msgstr "Grup selectat de utilizatori"
 
 #. module: mail
 #. openerp-web
@@ -4541,6 +4546,9 @@ msgid ""
 "Warning! \n"
 " If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove this follower ?"
 msgstr ""
+"Atenție! \n"
+"Dacă elimini o persoană interesată de document, ea nu va mai fi înștiințată de emailuri sau discuții legate de acest document.\n"
+"Doriți într-adevăr să îl ștergeți de la persoanele interesate ?"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_model_object_field
@@ -4572,7 +4580,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Who can follow the group's activities?"
-msgstr ""
+msgstr "Cine poate urmări activitățile grupului?"
 
 #. module: mail
 #. openerp-web
@@ -4738,7 +4746,7 @@ msgstr "document"
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "enable desktop notifications"
-msgstr ""
+msgstr "activare notificări."
 
 #. module: mail
 #. openerp-web
