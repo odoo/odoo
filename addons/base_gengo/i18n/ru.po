@@ -49,7 +49,7 @@ msgstr "Автоматическое подтверждение перевода
 #: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_auto_approve
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_auto_approve
 msgid "Auto Approve Translation ?"
-msgstr ""
+msgstr "Автоматически утвердить перевод?"
 
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
@@ -68,11 +68,13 @@ msgid ""
 "Check this box if you're using the sandbox mode of Gengo, mainly used for "
 "testing purpose."
 msgstr ""
+"Установите этот флажок, если вы используете изолированный режим Gengo, "
+"главным образом используется для тестирования."
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Click here to Configure Gengo Parameters"
-msgstr ""
+msgstr "Нажмите здесь, чтобы настроить параметры Gengo"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
@@ -118,34 +120,34 @@ msgstr "Комментарии и мероприятия Gengo..."
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_ir_translation_order_id
 msgid "Gengo Order ID"
-msgstr ""
+msgstr "Gengo заказ ID"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_private_key
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_private_key
 msgid "Gengo Private Key"
-msgstr ""
+msgstr "Gengo приватный ключ"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_public_key
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_public_key
 msgid "Gengo Public Key"
-msgstr ""
+msgstr "Gengo публичный ключ"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Gengo Public or Private keys are wrong or missing."
-msgstr ""
+msgstr "Gengo публичный или приватный ключи неправильные или отсутствуют."
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Gengo Request Form"
-msgstr ""
+msgstr "Форма запроса Gengo"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid "Gengo Translation Service"
-msgstr ""
+msgstr "Услуги Gengo перевода"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_ir_translation_gengo_translation
@@ -159,6 +161,8 @@ msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
 "authentication parameters under `Settings > Companies > Gengo Parameters`."
 msgstr ""
+"Отсутствует `Публичный ключ` или `Приватный ключ` Gengo. Введите параметры "
+"аутентификации Gengo в разделе `Настройки> Компании> Параметры Gengo`."
 
 #. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:95
@@ -167,6 +171,8 @@ msgid ""
 "Gengo connection failed with this message:\n"
 "``%s``"
 msgstr ""
+"Сбой подключения Gengo с этим сообщением:\n"
+"``%s``"
 
 #. module: base_gengo
 #: model:ir.actions.act_window,name:base_gengo.action_wizard_base_gengo_translations
@@ -222,7 +228,7 @@ msgstr "Последнее обновление"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_sync_limit
 msgid "No. of terms to sync"
-msgstr ""
+msgstr "No. Терминов для синхронизации"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
@@ -231,6 +237,9 @@ msgid ""
 "translation has to be approved to be uploaded in this system. You are "
 "supposed to do that directly by using your Gengo Account"
 msgstr ""
+"Примечание: Если состояние перевода ' В прогрессе', это означает, что "
+"перевод должен быть утвержден для загрузки в этой системе. Вы должны сделать"
+" это непосредственно с помощью вашей учетной записи Gengo"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
@@ -240,7 +249,7 @@ msgstr ""
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
 msgid "Pro"
-msgstr ""
+msgstr "Про"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
@@ -250,14 +259,14 @@ msgstr ""
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
 msgid "Receive Translation"
-msgstr ""
+msgstr "Получить перевод"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_sandbox
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_sandbox
 #: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
 msgid "Sandbox Mode"
-msgstr ""
+msgstr "Режим песочницы"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
@@ -267,7 +276,7 @@ msgstr "Отправить"
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
 msgid "Send New Terms"
-msgstr ""
+msgstr "Отправлять новые термины"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -277,7 +286,7 @@ msgstr "Стандарт"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_sync_type
 msgid "Sync Type"
-msgstr ""
+msgstr "Тип синхронизации"
 
 #. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:114
@@ -286,11 +295,13 @@ msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
 "translation services."
 msgstr ""
+"Количество терминов для синхронизации должно быть от 1 до 200 для работы с "
+"Gengo переводческих услуг."
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_authorized_credentials
 msgid "The private and public keys are valid"
-msgstr ""
+msgstr "Приватный и публичный ключи действительны"
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_base_config_settings_gengo_comment

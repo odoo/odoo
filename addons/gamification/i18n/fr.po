@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
@@ -46,6 +46,13 @@ msgid ""
 "    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
 msgstr ""
+"\n"
+"    <p>\n"
+"        <strong>Rappel ${object.name}</strong>\n"
+"    </p>\n"
+"    \n"
+"    <p>Vous n'avez pas mis à jour votre progression concernant l'objectif ${object.definition_id.name} (actuellement rempli à ${object.completeness}%) depuis au moins ${object.remind_update_delay} jours. Ne l'oubliez pas.</p>\n"
+"            "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -639,7 +646,7 @@ msgstr "Mode d'affichage"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display
